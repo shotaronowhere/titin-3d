@@ -1,0 +1,9 @@
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+data/structures/*
+!data/structures/manifest.json
+_standalone_entry.mjs
+_test_bundle.mjs

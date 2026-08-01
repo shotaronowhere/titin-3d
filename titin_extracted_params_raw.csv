@@ -1,0 +1,229 @@
+component,quantity,value,units,year,doi,title
+study cohort - referent control,patient count,17,n,2015,10.1161/circulationaha.114.013215,Myocardial stiffness in patients with heart failure and a preserved ejection fraction: contributions of collagen and titin.
+study cohort - hypertension without HFpEF,patient count,31,n,2015,10.1161/circulationaha.114.013215,Myocardial stiffness in patients with heart failure and a preserved ejection fraction: contributions of collagen and titin.
+study cohort - hypertension with HFpEF,patient count,22,n,2015,10.1161/circulationaha.114.013215,Myocardial stiffness in patients with heart failure and a preserved ejection fraction: contributions of collagen and titin.
+titin phosphorylation site,PEVK domain residue position,11878,S (serine),2015,10.1161/circulationaha.114.013215,Myocardial stiffness in patients with heart failure and a preserved ejection fraction: contributions of collagen and titin.
+titin phosphorylation site,N2B domain residue position,4185,S (serine),2015,10.1161/circulationaha.114.013215,Myocardial stiffness in patients with heart failure and a preserved ejection fraction: contributions of collagen and titin.
+sarcomere,length range,2.0–2.4,μm,2016,10.1073/pnas.1516732113,Titin strain contributes to the Frank-Starling law of the heart by structural rearrangements of both thin- and thick-filament proteins.
+titin Ig domains,unfolding/folding force range,6-8,pN,2016,10.1016/j.celrep.2016.01.025,Work Done by Titin Protein Folding Assists Muscle Contraction.
+titin Ig domains,spontaneous folding force threshold,10,pN,2016,10.1016/j.celrep.2016.01.025,Work Done by Titin Protein Folding Assists Muscle Contraction.
+titin Ig domains,energy per folding event,105,zJ,2016,10.1016/j.celrep.2016.01.025,Work Done by Titin Protein Folding Assists Muscle Contraction.
+α-actinin cross-linked actin doublets,spacing,6,nm,2021,10.1016/j.cell.2021.02.047,The molecular basis for sarcomere organization in vertebrate skeletal muscle.
+"myosin, tropomyosin, actin structures",resolution,~10,Å,2021,10.1016/j.cell.2021.02.047,The molecular basis for sarcomere organization in vertebrate skeletal muscle.
+TTN gene,coding exons,363,count,2016,10.3233/jnd-160158,Increasing Role of Titin Mutations in Neuromuscular Disorders.
+titin protein,sarcomeric span,Z-disk to M-band,anatomical region,2016,10.3233/jnd-160158,Increasing Role of Titin Mutations in Neuromuscular Disorders.
+TTNtv prevalence in DCM cohort,fraction of patients with identified TTNtv,22,out of 113 patients (19.5%),2021,10.1126/scitranslmed.abd3079,Truncated titin proteins and titin haploinsufficiency are targets for functional recovery in human cardiomyopathy due to <i>TTN</i> mutations.
+truncated titin protein expression,maximum proportion of total titin protein pool,0.5,fraction (up to half),2021,10.1126/scitranslmed.abd3079,Truncated titin proteins and titin haploinsufficiency are targets for functional recovery in human cardiomyopathy due to <i>TTN</i> mutations.
+titin I27 immunoglobulin domain,critical force (equilibrium unfolding/folding),5.4,pN,2015,10.1021/ja5119368,Dynamics of equilibrium folding and unfolding transitions of titin immunoglobulin domain under constant forces.
+titin molecular spring,exons deleted,47,exons,2018,10.7554/elife.40532,Downsizing the molecular spring of the giant protein titin reveals that skeletal muscle titin determines passive stiffness and drives longitudinal hypertrophy.
+sarcomeres in series,increase in number,30,%,2018,10.7554/elife.40532,Downsizing the molecular spring of the giant protein titin reveals that skeletal muscle titin determines passive stiffness and drives longitudinal hypertrophy.
+titin I-band Ig domains,fraction containing conserved cysteine triad,21,%,2018,10.1038/s41467-017-02528-7,Disulfide isomerization reactions in titin immunoglobulin domains enable a mode of protein elasticity.
+Filamin C (FLNC),immunoglobulin-like repeats,24,count,2020,10.3390/ijms21082696,Structure and Function of Filamin C in the Muscle Z-Disc.
+Filamin C (FLNC),insertion in repeat 20,82,amino acid residues,2020,10.3390/ijms21082696,Structure and Function of Filamin C in the Muscle Z-Disc.
+titin phosphorylation site,S4099 phosphorylation state,hypophosphorylated,qualitative,2018,10.1161/circresaha.117.312166,Diabetes-Induced Cardiomyocyte Passive Stiffening Is Caused by Impaired Insulin-Dependent Titin Modification and Can Be Modulated by Neuregulin-1.
+titin phosphorylation site,S11878 phosphorylation state,hyperphosphorylated,qualitative,2018,10.1161/circresaha.117.312166,Diabetes-Induced Cardiomyocyte Passive Stiffening Is Caused by Impaired Insulin-Dependent Titin Modification and Can Be Modulated by Neuregulin-1.
+titin phosphorylation site,S4010 phosphorylation response,increased by insulin/metformin,qualitative,2018,10.1161/circresaha.117.312166,Diabetes-Induced Cardiomyocyte Passive Stiffening Is Caused by Impaired Insulin-Dependent Titin Modification and Can Be Modulated by Neuregulin-1.
+myosin head,periodicity change,observed only under active calcium-activated tension,qualitative,2018,10.1016/j.bpj.2018.08.038,Thick-Filament Extensibility in Intact Skeletal Muscle.
+titin Ig domain,physiological force range,4-15,pN,2018,10.1146/annurev-physiol-021317-121254,The Work of Titin Protein Folding as a Major Driver in Muscle Contraction.
+titin Ig domain,work generation relative to entropic recoil,200,%,2018,10.1146/annurev-physiol-021317-121254,The Work of Titin Protein Folding as a Major Driver in Muscle Contraction.
+sarcomere,length range,2.5–6.0,μm,2016,10.1242/jeb.132027,Decreased force enhancement in skeletal muscle sarcomeres with a deletion in titin.
+sarcomere length (psoas),range,1.93–3.37,μm,2016,10.1152/ajpcell.00156.2015,The increase in non-cross-bridge forces after stretch of activated striated muscle is related to titin isoforms.
+sarcomere length (soleus),range,2.68–4.21,μm,2016,10.1152/ajpcell.00156.2015,The increase in non-cross-bridge forces after stretch of activated striated muscle is related to titin isoforms.
+sarcomere length (ventricle),range,1.51–2.86,μm,2016,10.1152/ajpcell.00156.2015,The increase in non-cross-bridge forces after stretch of activated striated muscle is related to titin isoforms.
+titin protein,molecular weight,3-4,MDa,2019,10.1007/s00424-019-02272-5,Titin mutations and muscle disease.
+titin,sarcomeric span,0.5,sarcomere length (Z-disk to M-line),2019,10.1007/s00424-019-02272-5,Titin mutations and muscle disease.
+TTN truncating variants,frequency in familial DCM,20,percent of cases,2019,10.1007/s00424-019-02272-5,Titin mutations and muscle disease.
+denervated hemidiaphragm mass,mass increase,48 ± 3,%,2018,10.1002/jcsm.12319,Titin-based mechanosensing modulates muscle hypertrophy.
+denervated hemidiaphragm mass change (RBM20^ΔRRM),hypertrophy response attenuation,20 ± 6,%,2018,10.1002/jcsm.12319,Titin-based mechanosensing modulates muscle hypertrophy.
+denervated hemidiaphragm mass change (Ttn^ΔIAjxn),hypertrophy response exaggeration,18 ± 8,%,2018,10.1002/jcsm.12319,Titin-based mechanosensing modulates muscle hypertrophy.
+UDD treatment duration,time period,6,days,2018,10.1002/jcsm.12319,Titin-based mechanosensing modulates muscle hypertrophy.
+titin I27 domain,force range for non-monotonic unfolding,< 100,pN,2017,10.1002/anie.201700411,Elasticity of the Transition State Leading to an Unexpected Mechanical Stabilization of Titin Immunoglobulin Domains.
+titin I27 domain,slowest unfolding rate force,22,pN,2017,10.1002/anie.201700411,Elasticity of the Transition State Leading to an Unexpected Mechanical Stabilization of Titin Immunoglobulin Domains.
+titin immunoglobulin domains,force range studied by AFM,> 100,pN,2017,10.1002/anie.201700411,Elasticity of the Transition State Leading to an Unexpected Mechanical Stabilization of Titin Immunoglobulin Domains.
+myosin rod coiled-coil,number of skip residues,4,count,2015,10.1073/pnas.1505813112,Skip residues modulate the structural properties of the myosin rod and guide thick filament assembly.
+titin,sarcomere span,Z-disk to M-band,structural position,2019,10.1161/circulationaha.118.037588,Deleting Full Length Titin Versus the Titin M-Band Region Leads to Differential Mechanosignaling and Cardiac Phenotypes.
+skeletal muscle,lethality age,2,weeks,2019,10.1161/circulationaha.118.037588,Deleting Full Length Titin Versus the Titin M-Band Region Leads to Differential Mechanosignaling and Cardiac Phenotypes.
+thick filament,"axial periodicity (shorter, myosin helix)",43.1,nm,2021,10.1085/jgp.202012713,Dependence of thick filament structure in relaxed mammalian skeletal muscle on temperature and interfilament spacing.
+thick filament,axial periodicity (titin super-repeat associated),45.5,nm,2021,10.1085/jgp.202012713,Dependence of thick filament structure in relaxed mammalian skeletal muscle on temperature and interfilament spacing.
+filament lattice,compression (Dextran-induced),5,%,2021,10.1085/jgp.202012713,Dependence of thick filament structure in relaxed mammalian skeletal muscle on temperature and interfilament spacing.
+myofiber,diameter threshold,20,μm,2018,10.1637/11766-110217-reg.1,The Effect of the Wooden Breast Myopathy on Sarcomere Structure and Organization.
+Molecular dynamics simulation,trajectory duration,50,ns,2017,10.1080/07391102.2016.1166456,Influence of V54M mutation in giant muscle protein titin: a computational screening and molecular dynamics approach.
+titin UN2A three-helix bundle,length,45,residues,2021,10.1016/j.jmb.2021.166901,Molecular Characterisation of Titin N2A and Its Binding of CARP Reveals a Titin/Actin Cross-linking Mechanism.
+titin domains,axial spacing,4,nm,2020,10.1016/j.jmb.2020.06.025,The Axial Alignment of Titin on the Muscle Thick Filament Supports Its Role as a Molecular Ruler.
+myosin binding protein-C,number of stripes,9,stripes,2020,10.1016/j.jmb.2020.06.025,The Axial Alignment of Titin on the Muscle Thick Filament Supports Its Role as a Molecular Ruler.
+accessory protein stripes,total count,11,stripes,2020,10.1016/j.jmb.2020.06.025,The Axial Alignment of Titin on the Muscle Thick Filament Supports Its Role as a Molecular Ruler.
+myosin heads,levels per half filament,49,levels,2020,10.1016/j.jmb.2020.06.025,The Axial Alignment of Titin on the Muscle Thick Filament Supports Its Role as a Molecular Ruler.
+titin fibronectin domains,number per myosin head level,2-3,domains,2020,10.1016/j.jmb.2020.06.025,The Axial Alignment of Titin on the Muscle Thick Filament Supports Its Role as a Molecular Ruler.
+NEBL gene,coding exons,28,count,2016,10.5114/aoms.2016.59250,Mutations in NEBL encoding the cardiac Z-disk protein nebulette are associated with various cardiomyopathies.
+NEBL mutations,identified in patient cohort,6,count,2016,10.5114/aoms.2016.59250,Mutations in NEBL encoding the cardiac Z-disk protein nebulette are associated with various cardiomyopathies.
+patients with NEBL mutations,total,7,count,2016,10.5114/aoms.2016.59250,Mutations in NEBL encoding the cardiac Z-disk protein nebulette are associated with various cardiomyopathies.
+NEBL mutation frequency,in cardiomyopathy patients,1.8,%,2016,10.5114/aoms.2016.59250,Mutations in NEBL encoding the cardiac Z-disk protein nebulette are associated with various cardiomyopathies.
+control individuals,Caucasian unaffected,320,count,2016,10.5114/aoms.2016.59250,Mutations in NEBL encoding the cardiac Z-disk protein nebulette are associated with various cardiomyopathies.
+blood donors,Caucasian without heart disease,192,count,2016,10.5114/aoms.2016.59250,Mutations in NEBL encoding the cardiac Z-disk protein nebulette are associated with various cardiomyopathies.
+total patients analyzed,study cohort,389,count,2016,10.5114/aoms.2016.59250,Mutations in NEBL encoding the cardiac Z-disk protein nebulette are associated with various cardiomyopathies.
+sarcomere,length range,1.6–3.25,µm,2018,10.1093/icb/icy055,A Spatially Explicit Model Shows How Titin Stiffness Modulates Muscle Mechanics and Energetics.
+sarcomere,length (descending limb threshold),2.5,µm,2018,10.1093/icb/icy055,A Spatially Explicit Model Shows How Titin Stiffness Modulates Muscle Mechanics and Energetics.
+sarcomere,length (maximum force test),3.0,µm,2018,10.1093/icb/icy055,A Spatially Explicit Model Shows How Titin Stiffness Modulates Muscle Mechanics and Energetics.
+thick filament system (4-filament),"maximum force at SL 3.0 µm, low titin stiffness",103.2 ± 2,pN,2018,10.1093/icb/icy055,A Spatially Explicit Model Shows How Titin Stiffness Modulates Muscle Mechanics and Energetics.
+thick filament system (4-filament),"maximum force at SL 3.0 µm, high titin stiffness",58.8 ± 1,pN,2018,10.1093/icb/icy055,A Spatially Explicit Model Shows How Titin Stiffness Modulates Muscle Mechanics and Energetics.
+muscle contraction,"efficiency at SL 3.0 µm, low titin stiffness",13.9 ± 0.4,pN/ATP,2018,10.1093/icb/icy055,A Spatially Explicit Model Shows How Titin Stiffness Modulates Muscle Mechanics and Energetics.
+muscle contraction,"efficiency at SL 3.0 µm, high titin stiffness",7.0 ± 0.3,pN/ATP,2018,10.1093/icb/icy055,A Spatially Explicit Model Shows How Titin Stiffness Modulates Muscle Mechanics and Energetics.
+actin filament terminal region,length devoid of α-actinin links,5-7,nm,2015,10.1016/j.jmb.2015.08.018,Three-Dimensional Structure of Vertebrate Muscle Z-Band: The Small-Square Lattice Z-Band in Rat Cardiac Muscle.
+Z-band,number of layers of links,4-6,layers,2015,10.1016/j.jmb.2015.08.018,Three-Dimensional Structure of Vertebrate Muscle Z-Band: The Small-Square Lattice Z-Band in Rat Cardiac Muscle.
+thin filament length (TFL),length difference between right and left atrium,0.05,μm,2016,10.1016/j.yjmcc.2016.04.013,Thin filament length in the cardiac sarcomere varies with sarcomere length but is independent of titin and nebulin.
+titin spring region,length increase in heterozygous Rbm20(ΔRRM) mice,500,kDa,2016,10.1016/j.yjmcc.2016.04.013,Thin filament length in the cardiac sarcomere varies with sarcomere length but is independent of titin and nebulin.
+titin spring region,length increase in homozygous Rbm20(ΔRRM) mice,1000,kDa,2016,10.1016/j.yjmcc.2016.04.013,Thin filament length in the cardiac sarcomere varies with sarcomere length but is independent of titin and nebulin.
+thin filament length (TFL),increase per sarcomere length change,0.1,μm per 0.35 μm SL,2016,10.1016/j.yjmcc.2016.04.013,Thin filament length in the cardiac sarcomere varies with sarcomere length but is independent of titin and nebulin.
+thin filament length (TFL),maximum length at maximum sarcomere length,1.05,μm,2016,10.1016/j.yjmcc.2016.04.013,Thin filament length in the cardiac sarcomere varies with sarcomere length but is independent of titin and nebulin.
+sarcomere length (SL),length at TFL maximum,3.0,μm,2016,10.1016/j.yjmcc.2016.04.013,Thin filament length in the cardiac sarcomere varies with sarcomere length but is independent of titin and nebulin.
+thick filament,axial repeat period,429,Å,2024,10.1073/pnas.2311883121,Structure of mavacamten-free human cardiac thick filaments within the sarcomere by cryoelectron tomography.
+thick filament,number of myosin head crowns per repeat,3,count,2024,10.1073/pnas.2311883121,Structure of mavacamten-free human cardiac thick filaments within the sarcomere by cryoelectron tomography.
+N2A-Us (unique sequence),length,104,residues,2020,10.3389/fphys.2020.00173,Single-Molecule Force Spectroscopy on the N2A Element of Titin: Effects of Phosphorylation and CARP.
+N2A-Us,persistence length,0.35,nm,2020,10.3389/fphys.2020.00173,Single-Molecule Force Spectroscopy on the N2A Element of Titin: Effects of Phosphorylation and CARP.
+N2A-Us,contour length,39,nm,2020,10.3389/fphys.2020.00173,Single-Molecule Force Spectroscopy on the N2A Element of Titin: Effects of Phosphorylation and CARP.
+N2A element,passive force reduction by N2A-Us compliance,1.4,%,2020,10.3389/fphys.2020.00173,Single-Molecule Force Spectroscopy on the N2A Element of Titin: Effects of Phosphorylation and CARP.
+N2A element,additional passive force reduction by CARP,0.3,%,2020,10.3389/fphys.2020.00173,Single-Molecule Force Spectroscopy on the N2A Element of Titin: Effects of Phosphorylation and CARP.
+α-actinin cross-link orientation,angle from actin filament axes,25,degrees,2019,10.1073/pnas.1902235116,Three-dimensional structure of the basketweave Z-band in midshipman fish sonic muscle.
+Knee extensor MVIC force,diurnal difference,67,N,2020,10.3390/proteomes8030022,Diurnal Differences in Human Muscle Isometric Force In Vivo Are Associated with Differential Phosphorylation of Sarcomeric M-Band Proteins.
+Knee extensor MVIC force,diurnal difference percentage,10.2,%,2020,10.3390/proteomes8030022,Diurnal Differences in Human Muscle Isometric Force In Vivo Are Associated with Differential Phosphorylation of Sarcomeric M-Band Proteins.
+2D gel analysis,proteoforms analyzed,122,count,2020,10.3390/proteomes8030022,Diurnal Differences in Human Muscle Isometric Force In Vivo Are Associated with Differential Phosphorylation of Sarcomeric M-Band Proteins.
+2D gel analysis,significant diurnal differences,6,count,2020,10.3390/proteomes8030022,Diurnal Differences in Human Muscle Isometric Force In Vivo Are Associated with Differential Phosphorylation of Sarcomeric M-Band Proteins.
+Phosphopeptide analysis,phosphopeptides identified,1693,count,2020,10.3390/proteomes8030022,Diurnal Differences in Human Muscle Isometric Force In Vivo Are Associated with Differential Phosphorylation of Sarcomeric M-Band Proteins.
+Phosphopeptide analysis,phosphopeptides more phosphorylated in morning,140,count,2020,10.3390/proteomes8030022,Diurnal Differences in Human Muscle Isometric Force In Vivo Are Associated with Differential Phosphorylation of Sarcomeric M-Band Proteins.
+Phosphorylated proteins,proteins with morning-elevated phosphopeptides,104,count,2020,10.3390/proteomes8030022,Diurnal Differences in Human Muscle Isometric Force In Vivo Are Associated with Differential Phosphorylation of Sarcomeric M-Band Proteins.
+N2A-IS region,amino acid length,117,amino acids,2017,10.1016/j.bbapap.2016.10.003,The insertion sequence of the N2A region of titin exists in an extended structure with helical characteristics.
+N2A-IS protein,α-helical structure content,13,%,2017,10.1016/j.bbapap.2016.10.003,The insertion sequence of the N2A region of titin exists in an extended structure with helical characteristics.
+smooth muscle titin (SMT),molecular weight,500,kDa,2016,10.1042/bsr20160066,Smooth muscle titin forms in vitro amyloid aggregates.
+titin amyloid aggregates,hydrodynamic radius (Rh),700–4500,nm,2016,10.1042/bsr20160066,Smooth muscle titin forms in vitro amyloid aggregates.
+initial titin aggregates,hydrodynamic radius (Rh),700,nm,2016,10.1042/bsr20160066,Smooth muscle titin forms in vitro amyloid aggregates.
+titin aggregation,time to initial aggregate formation,20,min,2016,10.1042/bsr20160066,Smooth muscle titin forms in vitro amyloid aggregates.
+titin/MHC ratio,relative abundance white vs red,1.3,fold higher in white muscle,2018,10.1155/2018/5816875,Analysis of Titin in Red and White Muscles: Crucial Role on Muscle Contractions Using a Fish Model.
+titin immunoglobulin domains,total count,169,domains,2022,10.1016/j.csbj.2022.09.034,Pairwise sequence similarity mapping with PaSiMap: Reclassification of immunoglobulin domains from titin as case study.
+SMT(Gly) aggregates - spherical subunits,diameter,300-500,nm,2018,10.1080/07391102.2017.1348988,Different amyloid aggregation of smooth muscles titin in vitro.
+SMT(Gly) aggregates - spherical subunits,height,35,nm,2018,10.1080/07391102.2017.1348988,Different amyloid aggregation of smooth muscles titin in vitro.
+SMT(KCl) aggregates - sponge-like strands,height,8-10,nm,2018,10.1080/07391102.2017.1348988,Different amyloid aggregation of smooth muscles titin in vitro.
+Thioflavine T fluorescence intensity ratio,SMT(Gly) vs SMT(KCl),~3,fold,2018,10.1080/07391102.2017.1348988,Different amyloid aggregation of smooth muscles titin in vitro.
+cardiomyocyte work output,work production ratio HET vs WT,55,% of WT,2019,10.1113/jp277985,End-diastolic force pre-activates cardiomyocytes and determines contractile force: role of titin and calcium.
+diastolic calcium concentration (low),diastolic [Ca2+],1,nm,2019,10.1113/jp277985,End-diastolic force pre-activates cardiomyocytes and determines contractile force: role of titin and calcium.
+diastolic calcium concentration (high),diastolic [Ca2+],80,nm,2019,10.1113/jp277985,End-diastolic force pre-activates cardiomyocytes and determines contractile force: role of titin and calcium.
+activating calcium concentration,transient [Ca2+] exposure,2,µm,2019,10.1113/jp277985,End-diastolic force pre-activates cardiomyocytes and determines contractile force: role of titin and calcium.
+force response to diastolic [Ca2+],force increase from 1 to 80 nm diastolic [Ca2+],2,fold,2019,10.1113/jp277985,End-diastolic force pre-activates cardiomyocytes and determines contractile force: role of titin and calcium.
+myofibril,initial sarcomere length (passive),2.4,µm,2018,10.1152/ajpcell.00183.2017,Does partial titin degradation affect sarcomere length nonuniformities and force in active and passive myofibrils?
+myofibril,sarcomere length after passive stretch 1,3.4,µm,2018,10.1152/ajpcell.00183.2017,Does partial titin degradation affect sarcomere length nonuniformities and force in active and passive myofibrils?
+myofibril,sarcomere length after passive stretch 2,4.4,µm,2018,10.1152/ajpcell.00183.2017,Does partial titin degradation affect sarcomere length nonuniformities and force in active and passive myofibrils?
+myofibril,initial sarcomere length (active),2.8,µm,2018,10.1152/ajpcell.00183.2017,Does partial titin degradation affect sarcomere length nonuniformities and force in active and passive myofibrils?
+myofibril,active stretch magnitude,1.0,µm/sarcomere,2018,10.1152/ajpcell.00183.2017,Does partial titin degradation affect sarcomere length nonuniformities and force in active and passive myofibrils?
+sarcomere,length,2.5,μm,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+sarcomere,length,2.0,μm,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+dextran T-500,osmotic compression concentration,4,%,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+MgADP release rate,rate at 2.5 μm sarcomere length (no dextran),11.2 ± 0.5,s⁻¹,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+MgADP release rate,rate at 2.0 μm sarcomere length (no dextran),13.5 ± 0.7,s⁻¹,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+MgADP release rate,rate at 2.5 μm sarcomere length (with 4% dextran),10.1 ± 0.6,s⁻¹,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+MgADP release rate,rate at 2.0 μm sarcomere length (with 4% dextran),12.9 ± 0.5,s⁻¹,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+cross-bridge detachment rate,slowing without dextran,15,%,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+cross-bridge detachment rate,slowing with dextran,20,%,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+force-pCa relationship,pCa₅₀ at 2.5 μm sarcomere length,5.68 ± 0.01,dimensionless,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+force-pCa relationship,pCa₅₀ at 2.0 μm sarcomere length,5.60 ± 0.01,dimensionless,2016,10.1016/j.bpj.2016.09.024,Myosin MgADP Release Rate Decreases as Sarcomere Length Increases in Skinned Rat Soleus Muscle Fibers.
+Z-band titin splicing variants,number of new variants discovered,4,count,2018,10.1002/jcb.27328,Z-band and M-band titin splicing and regulation by RNA binding motif 20 in striated muscles.
+Z repeats (Zr) in skeletal muscle,number of new Z repeats detected,3,count,2018,10.1002/jcb.27328,Z-band and M-band titin splicing and regulation by RNA binding motif 20 in striated muscles.
+M-band titin splicing variants,number of new variants discovered,2,count,2018,10.1002/jcb.27328,Z-band and M-band titin splicing and regulation by RNA binding motif 20 in striated muscles.
+M-band exon 363,exon number with alternative 3' splice site,363,exon,2018,10.1002/jcb.27328,Z-band and M-band titin splicing and regulation by RNA binding motif 20 in striated muscles.
+M-band intron 362,intron number with alternative 5' splice site,362,intron,2018,10.1002/jcb.27328,Z-band and M-band titin splicing and regulation by RNA binding motif 20 in striated muscles.
+extensor digitorum longus muscle,plantar flexion angle (long position),170,degrees,2024,10.1002/ar.25240,The effect of neuromuscular electrical stimulation applied at different muscle lengths on muscle architecture and sarcomere morphology in rats.
+extensor digitorum longus muscle,plantar flexion angle (medium position),90,degrees,2024,10.1002/ar.25240,The effect of neuromuscular electrical stimulation applied at different muscle lengths on muscle architecture and sarcomere morphology in rats.
+NMES intervention,duration,8,weeks,2024,10.1002/ar.25240,The effect of neuromuscular electrical stimulation applied at different muscle lengths on muscle architecture and sarcomere morphology in rats.
+NMES intervention,daily application time,10,minutes/day,2024,10.1002/ar.25240,The effect of neuromuscular electrical stimulation applied at different muscle lengths on muscle architecture and sarcomere morphology in rats.
+NMES intervention,weekly frequency,3,days/week,2024,10.1002/ar.25240,The effect of neuromuscular electrical stimulation applied at different muscle lengths on muscle architecture and sarcomere morphology in rats.
+titin C-zone,super-repeat count,11,dimensionless,2022,10.1016/j.yjmcc.2022.01.002,Shortening the thick filament by partial deletion of titin's C-zone alters cardiac function by reducing the operating sarcomere length range.
+titin C-zone deletion,super-repeats removed,2,dimensionless,2022,10.1016/j.yjmcc.2022.01.002,Shortening the thick filament by partial deletion of titin's C-zone alters cardiac function by reducing the operating sarcomere length range.
+MLC2 phosphorylation level,phosphorylation percentage in normal heart,30-40,% of total MLC2,2019,10.1038/s41598-019-48884-w,Cardiac MLC2 kinase is localized to the Z-disc and interacts with α-actinin2.
+cMLCK–α-actinin2 interaction,binding affinity (Kd),13.4 ± 0.1,nM,2019,10.1038/s41598-019-48884-w,Cardiac MLC2 kinase is localized to the Z-disc and interacts with α-actinin2.
+sarcomere length,measurement point 1,2.4,μm,2022,10.1152/japplphysiol.00327.2022,Eccentric muscle contraction potentiates titin stiffness-related contractile properties in rat fast-twitch muscles.
+sarcomere length,measurement point 2,2.6,μm,2022,10.1152/japplphysiol.00327.2022,Eccentric muscle contraction potentiates titin stiffness-related contractile properties in rat fast-twitch muscles.
+sarcomere length,measurement point 3,3.0,μm,2022,10.1152/japplphysiol.00327.2022,Eccentric muscle contraction potentiates titin stiffness-related contractile properties in rat fast-twitch muscles.
+eccentric contractions,repetitions,200,count,2022,10.1152/japplphysiol.00327.2022,Eccentric muscle contraction potentiates titin stiffness-related contractile properties in rat fast-twitch muscles.
+myosin heads,repeating organization spacing,430,Å,2025,10.1016/j.bpj.2025.09.019,Annotating the x-ray diffraction pattern of vertebrate striated muscle.
+titin domains,domain length,42,Å,2025,10.1016/j.bpj.2025.09.019,Annotating the x-ray diffraction pattern of vertebrate striated muscle.
+titin domains,number per repeat,11,count,2025,10.1016/j.bpj.2025.09.019,Annotating the x-ray diffraction pattern of vertebrate striated muscle.
+M11 layer line,spacing,39,Å,2025,10.1016/j.bpj.2025.09.019,Annotating the x-ray diffraction pattern of vertebrate striated muscle.
+thick filament,repeat unit,430,Å,2025,10.1016/j.bpj.2025.09.019,Annotating the x-ray diffraction pattern of vertebrate striated muscle.
+sarcomere,length,2,μm,2024,10.1371/journal.pone.0300348,An optimized approach to study nanoscale sarcomere structure utilizing super-resolution microscopy with nanobodies.
+z-disc,width (confocal microscopy),353,nm,2024,10.1371/journal.pone.0300348,An optimized approach to study nanoscale sarcomere structure utilizing super-resolution microscopy with nanobodies.
+z-disc,width (super-resolution microscopy),62,nm,2024,10.1371/journal.pone.0300348,An optimized approach to study nanoscale sarcomere structure utilizing super-resolution microscopy with nanobodies.
+thick filament,resolution,6,Å,2022,10.3390/ijms24010377,"Structure of the Flight Muscle Thick Filament from the Bumble Bee, <i>Bombus ignitus</i>, at 6 Å Resolution."
+mechanical ventilation duration,exposure time,8,hours,2022,10.3390/ijms232415689,"Rbm20&lt;sup&gt;ΔRRM&lt;/sup&gt; Mice, Expressing a Titin Isoform with Lower Stiffness, Are Protected from Mechanical Ventilation-Induced Diaphragm Weakness."
+thick filament cryo-EM reconstruction,resolution,5.5,Å,2021,10.3390/biology10070613,Contiguity and Structural Impacts of a Non-Myosin Protein within the Thick Filament Myosin Layers.
+red density (flightin) linkage,myosin dimers linked in layer,4,dimers,2021,10.3390/biology10070613,Contiguity and Structural Impacts of a Non-Myosin Protein within the Thick Filament Myosin Layers.
+red density (flightin) linkage,myosin dimers linked in neighboring layer,1,dimer,2021,10.3390/biology10070613,Contiguity and Structural Impacts of a Non-Myosin Protein within the Thick Filament Myosin Layers.
+LMM binding region,helical turns spanned,10,turns,2021,10.3390/biology10070613,Contiguity and Structural Impacts of a Non-Myosin Protein within the Thick Filament Myosin Layers.
+sarcomere,length at rest (mean),2.6,μm,2022,10.1109/tbme.2021.3089739,Structure-Function Relationships in Muscle Fibres: MyoRobot Online Assessment of Muscle Fibre Elasticity and Sarcomere Length Distributions.
+sarcomere,length at 140% stretch (mean),3.4,μm,2022,10.1109/tbme.2021.3089739,Structure-Function Relationships in Muscle Fibres: MyoRobot Online Assessment of Muscle Fibre Elasticity and Sarcomere Length Distributions.
+sarcomere,length variability at rest,5,%,2022,10.1109/tbme.2021.3089739,Structure-Function Relationships in Muscle Fibres: MyoRobot Online Assessment of Muscle Fibre Elasticity and Sarcomere Length Distributions.
+muscle fibre,stretch rate,1,μm/s,2022,10.1109/tbme.2021.3089739,Structure-Function Relationships in Muscle Fibres: MyoRobot Online Assessment of Muscle Fibre Elasticity and Sarcomere Length Distributions.
+calpain-3 full-length,molecular weight,94,kDa,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+calpain-3 ΔNS ΔIS1 (stable form),molecular weight,85,kDa,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+calpain-3 NS/IS1/IS2 sequences,length,40+,residues,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+calpain-3 hexamer complex,molecular weight,0.5,MDa,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+calpain-3 dimer (expected),molecular weight,170,kDa,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+calpain-3 hexamer (cryo-EM),resolution,3.85,Å,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+calpain-3 hexamer,stoichiometry,3,dimers,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+calpain-3 hexamer,penta-EF-hand domains at core,6,count,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+titin N2A region,molecular weight,37,kDa,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+calpain-3 + titin N2A complex,molecular weight,320,kDa,2025,10.1016/j.jbc.2024.108133,Human calpain-3 and its structural plasticity: Dissociation of a homohexamer into dimers on binding titin.
+sarcomere,length,2.1,μm,2024,10.1152/ajpcell.00530.2023,Sarcomere level mechanics of the fast skeletal muscle of the medaka fish larva.
+half-thick filament,myosin motors per unit,300,count,2024,10.1152/ajpcell.00530.2023,Sarcomere level mechanics of the fast skeletal muscle of the medaka fish larva.
+muscle,temperature range tested,10–30,°C,2024,10.1152/ajpcell.00530.2023,Sarcomere level mechanics of the fast skeletal muscle of the medaka fish larva.
+titin,sarcomere span,half,sarcomere length,2023,10.1016/j.jsb.2023.108009,Structure determination and analysis of titin A-band fibronectin type III domains provides insights for disease-linked variants and protein oligomerisation.
+titin Fn3 domains (wild-type and HCM variants),structures determined,9,domains,2023,10.1016/j.jsb.2023.108009,Structure determination and analysis of titin A-band fibronectin type III domains provides insights for disease-linked variants and protein oligomerisation.
+titin Fn3 domains with HCM variants,thermal destabilization,7–13,°C,2023,10.1016/j.jsb.2023.108009,Structure determination and analysis of titin A-band fibronectin type III domains provides insights for disease-linked variants and protein oligomerisation.
+A-band titin stoichiometry,myosin molecules per titin molecules,300,myosins per 12 titins,2018,10.1016/j.jsb.2018.05.001,Topology of interaction between titin and myosin thick filaments.
+ionic strength condition,KCl concentration range,100-300,mM,2018,10.1016/j.jsb.2018.05.001,Topology of interaction between titin and myosin thick filaments.
+insect muscle contraction frequency,operating frequency range,1–1000,hertz,2025,10.1126/sciadv.ads8716,Titin-dependent biomechanical feedback tailors sarcomeres to specialized muscle functions in insects.
+titin aggregate β-sheets,interstrand spacing,8-12,Å,2020,10.31857/s0026898420040047,[Changes in Titin Structure during Its Aggregation].
+EDL muscle,initial length,28.7,mm,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+EDL muscle,final length (long length),32.7,mm,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+muscle,optimum length shift (active state titin-II),29.6,mm,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+muscle,total force increase (active titin-I at 32.7 mm),14,%,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+muscle,total force increase (active titin-II at 32.7 mm),29,%,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+muscle,active force increase (active titin-I at 32.7 mm),37.5,%,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+muscle,active force increase (active titin-II at 32.7 mm),77.4,%,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+sarcomere,shortening limitation (active titin-I at 32.7 mm),10,%,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+sarcomere,shortening limitation (active titin-II at 32.7 mm),20,%,2021,10.1016/j.jbiomech.2020.110197,The effects of an activation-dependent increase in titin stiffness on whole muscle properties using finite element modeling.
+connectin gene,gene length,238,kb,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+connectin gene,exon count,300,exons,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+elephant shark connectin middle-Ig segment,6-Ig super-repeats,6,repeats,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+elephant shark connectin middle-Ig segment,10-Ig super-repeats,1,repeats,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+human connectin middle-Ig segment,6-Ig super-repeats,3,repeats,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+human connectin middle-Ig segment,10-Ig super-repeats,3,repeats,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+zebrafish connectin middle-Ig segment,6-Ig super-repeats,3,repeats,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+zebrafish connectin middle-Ig segment,10-Ig super-repeats,1,repeats,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+ancestral jawed vertebrate,evolutionary timepoint,450,million years ago,2025,10.1038/s41598-025-10916-z,Cartilaginous fish and mammalian connectin evolved independently from an ancestral bony fish-like structure.
+amyloid cross β-structure reflection,d-spacing,4.6,Å,2024,10.31857/s0026898424020143,[The Structural Features of Skeletal Muscle Titin Aggregates].
+Common carotid artery (CCA) ultrasound M-lines,Number of M-lines,17,lines,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+Common carotid artery (CCA) ultrasound coverage,Spatial extent,16,mm,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+Ultrasound recording,Frame rate,500,frames per second,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+Common carotid artery diameter,Reproducibility coefficient of variation (single M-line),2.5,%,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+Intima-media thickness (IMT),Reproducibility coefficient of variation (single M-line),11.9,%,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+Carotid artery distension,Reproducibility coefficient of variation (single M-line),10,%,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+Distensibility coefficient (DC),Reproducibility coefficient of variation (single M-line),10.9,%,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+Young's elastic modulus (YEM),Reproducibility coefficient of variation (single M-line),26.5,%,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+Study population,Number of subjects,500,subjects,2021,10.3389/fphys.2021.787083,Single M-Line Is as Reliable as Multiple M-Line Ultrasound for Carotid Artery Screening.
+M-line,location within sarcomere,center of A-band,relative position,2018,10.1093/jnen/nly079,Acute Sarcomeric M-Line Disease Associated With ATP Synthase Subunit α Autoantibodies in Ankylosing Spondylitis.
+titin,contribution to longitudinal passive stiffness,>50,%,2025,10.1007/s00395-025-01119-8,Direction-dependent contributions of cardiac myofilament networks to myocardial passive stiffness reveal a major disparity for titin.
+actin,contribution to longitudinal passive stiffness in fiber bundles,15-20,%,2025,10.1007/s00395-025-01119-8,Direction-dependent contributions of cardiac myofilament networks to myocardial passive stiffness reveal a major disparity for titin.
+actin,total contribution to longitudinal passive stiffness,<35,%,2025,10.1007/s00395-025-01119-8,Direction-dependent contributions of cardiac myofilament networks to myocardial passive stiffness reveal a major disparity for titin.
+titin,contribution to transverse passive stiffness in cardiac slices,20-26,%,2025,10.1007/s00395-025-01119-8,Direction-dependent contributions of cardiac myofilament networks to myocardial passive stiffness reveal a major disparity for titin.
+actin,contribution to transverse passive stiffness in cardiac slices,20-26,%,2025,10.1007/s00395-025-01119-8,Direction-dependent contributions of cardiac myofilament networks to myocardial passive stiffness reveal a major disparity for titin.
+myosin-titin composite thick-filament network,contribution to longitudinal passive stiffness,~55,%,2025,10.1007/s00395-025-01119-8,Direction-dependent contributions of cardiac myofilament networks to myocardial passive stiffness reveal a major disparity for titin.
+myosin-titin composite thick-filament network,contribution to transverse passive stiffness,~35,%,2025,10.1007/s00395-025-01119-8,Direction-dependent contributions of cardiac myofilament networks to myocardial passive stiffness reveal a major disparity for titin.
+Ig domain refolding work contribution,energy recovered percentage,25.6 ± 13.4,%,2026,10.1152/ajpcell.00469.2025,Titin immunoglobulin domain refolding produces mechanical work in situ.
+Ig domain refolding,force during refolding,5.6 ± 3.7,pN,2026,10.1152/ajpcell.00469.2025,Titin immunoglobulin domain refolding produces mechanical work in situ.
+titin epitope shift (P-zone domains A164-A167 deletion),spatial displacement toward M-band,40,nm,2026,10.1085/jgp.202513891,Titin's P-zone domains A164-167 are essential for thick filament structural arrangement.
+titin P-zone domains,number of domains studied,4,domains,2026,10.1085/jgp.202513891,Titin's P-zone domains A164-167 are essential for thick filament structural arrangement.
+thick filament,length change,one myosin helical repeat,relative,2026,10.1085/jgp.202513891,Titin's P-zone domains A164-167 are essential for thick filament structural arrangement.
+Light Meromyosin (LMM) paracrystals,periodicity in pure LMM,14,nm,2025,10.1002/cm.70063,Four New Muscle Myosin II Binding Properties of Titin: Implications for Myofibrillogenesis.
+LMM paracrystals with titin,periodicity in LMM-titin copolymerization,42,nm,2025,10.1002/cm.70063,Four New Muscle Myosin II Binding Properties of Titin: Implications for Myofibrillogenesis.
+HA-ITI photoswitch (Z isomer),absorption wavelength,470,nm,2026,10.1039/d5sc08074f,"Heteroaryl iminothioindoxyl (HA-ITI) photoswitches &lt;i&gt;via&lt;/i&gt; regioselective aza-Wittig synthesis: unifying red-shifted absorption, large &lt;i&gt;E&lt;/i&gt;/&lt;i&gt;Z&lt;/i&gt; band separation, and tunable thermal recovery."
+HA-ITI photoswitch (E isomer),absorption wavelength,525–550,nm,2026,10.1039/d5sc08074f,"Heteroaryl iminothioindoxyl (HA-ITI) photoswitches &lt;i&gt;via&lt;/i&gt; regioselective aza-Wittig synthesis: unifying red-shifted absorption, large &lt;i&gt;E&lt;/i&gt;/&lt;i&gt;Z&lt;/i&gt; band separation, and tunable thermal recovery."
+E → Z thermal back-isomerization,timescale,µs to ms,timescale,2026,10.1039/d5sc08074f,"Heteroaryl iminothioindoxyl (HA-ITI) photoswitches &lt;i&gt;via&lt;/i&gt; regioselective aza-Wittig synthesis: unifying red-shifted absorption, large &lt;i&gt;E&lt;/i&gt;/&lt;i&gt;Z&lt;/i&gt; band separation, and tunable thermal recovery."
+Benzimidazole-containing photoswitch,E isomer kinetic stabilization timescale,µs to ms,timescale,2026,10.1039/d5sc08074f,"Heteroaryl iminothioindoxyl (HA-ITI) photoswitches &lt;i&gt;via&lt;/i&gt; regioselective aza-Wittig synthesis: unifying red-shifted absorption, large &lt;i&gt;E&lt;/i&gt;/&lt;i&gt;Z&lt;/i&gt; band separation, and tunable thermal recovery."

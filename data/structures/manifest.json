@@ -1,0 +1,240 @@
+{
+  "schema": "titin-structural-sources/1",
+  "purpose": "Exact raw inputs for Phase-6 archetype/interdomain measurements and Phase-7 context remeasurement. Raw files are offline scientific cache, never browser assets.",
+  "reproduce": "python3 scripts/fetch_structures.py",
+  "integrity": "Every URL is pinned by SHA-256 and byte count. A changed upstream object is rejected until scientifically reviewed and deliberately repinned.",
+  "files": [
+    {
+      "file": "3PUC.cif",
+      "url": "https://files.rcsb.org/download/3PUC.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_structures.py",
+      "sha256": "dab3dcf85c9f5c9d6ee99363fbbcf515e6934b08825be7ab5ebae6be4165a8bb",
+      "bytes": 305351
+    },
+    {
+      "file": "5JDJ.cif",
+      "url": "https://files.rcsb.org/download/5JDJ.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_structures.py",
+      "sha256": "b06cbacdc9a951b5716a775a8996a5ab28deb456ad25a36c1345ab6b8748662a",
+      "bytes": 1379554
+    },
+    {
+      "file": "1TIT.cif",
+      "url": "https://files.rcsb.org/download/1TIT.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_structures.py",
+      "sha256": "9b53fbf0825333e210b4211c4e980ef498e7527407aaf87f80ea1960c95e2001",
+      "bytes": 188623
+    },
+    {
+      "file": "8OMW.cif",
+      "url": "https://files.rcsb.org/download/8OMW.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_structures.py",
+      "sha256": "c5562c488987490acfa707ddd8a2e9ad191d9aac9db7f5d4c812dcdf8fbabaaa",
+      "bytes": 361029
+    },
+    {
+      "file": "8OT5.cif",
+      "url": "https://files.rcsb.org/download/8OT5.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_structures.py",
+      "sha256": "4308ac1ffcf97970aea4c1de3f2888e5e7e8f306f4f54dfb5b3a310e4a7dcc3a",
+      "bytes": 1755340
+    },
+    {
+      "file": "1TKI.cif",
+      "url": "https://files.rcsb.org/download/1TKI.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_structures.py",
+      "sha256": "e9059f9833f3701b8845a00e90485ad40f57a3154c47c16a12d170fee692cb74",
+      "bytes": 628840
+    },
+    {
+      "file": "4JNW.cif",
+      "url": "https://files.rcsb.org/download/4JNW.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_structures.py",
+      "sha256": "1d6a03597478a0fd72a01cfca164f428fe9afda56909d106ad94eb2e94cccd7a",
+      "bytes": 1063452
+    },
+    {
+      "file": "3LPW.cif",
+      "url": "https://files.rcsb.org/download/3LPW.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_interdomain.py",
+      "sha256": "6c8d86da9f08e7a5c754c70b9dd44ed20eda38ceb7c793bba1fe03a18587ba21",
+      "bytes": 697931
+    },
+    {
+      "file": "8BXR.cif",
+      "url": "https://files.rcsb.org/download/8BXR.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_interdomain.py",
+      "sha256": "0c6cde582375e8e1553bb8c3ac90114896d6f6fa879f2ebd8586a0e2c41d8f9f",
+      "bytes": 543752
+    },
+    {
+      "file": "8BNQ.cif",
+      "url": "https://files.rcsb.org/download/8BNQ.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_interdomain.py",
+      "sha256": "3e53c770d9c5865ca5caf39c15bd9baed1e32b4c11b762304f661e57e85d1af9",
+      "bytes": 1018293
+    },
+    {
+      "file": "2J8O.cif",
+      "url": "https://files.rcsb.org/download/2J8O.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_interdomain.py",
+      "sha256": "1db46143ef0d1b094f539def58bc0e56a11ecbeddb2c5b25bd04a12dea94a257",
+      "bytes": 360711
+    },
+    {
+      "file": "6YGN.cif",
+      "url": "https://files.rcsb.org/download/6YGN.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_interdomain.py",
+      "sha256": "014e66b18701e3882d80e0d7d58664c55d673d5341e19ae5bc6353e9bb50bf59",
+      "bytes": 1860579
+    },
+    {
+      "file": "8G4L.cif",
+      "url": "https://files.rcsb.org/download/8G4L.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_context.py + measure_interdomain.py",
+      "sha256": "4082342243e5d53346262316f2ce03348b4e76d743392330d04c5f7d4a8e3fb4",
+      "bytes": 99765727
+    },
+    {
+      "file": "8G4L_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/8g4l",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_interdomain.py",
+      "sha256": "5ec547d74c0ef28ab1df1160e32fb20d460e5baa15ef86cab6d7d8ff97ead69e",
+      "bytes": 35121
+    },
+    {
+      "file": "6KN7.cif",
+      "url": "https://files.rcsb.org/download/6KN7.cif",
+      "provider": "RCSB PDB",
+      "consumer": "measure_context.py",
+      "sha256": "df14009f46605706ed315af77d009e963a430ab6e8c2a455f526a24be6eb115a",
+      "bytes": 6291513
+    },
+    {
+      "file": "3PUC_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/3puc",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_structures.py",
+      "sha256": "3182080ea4350e8dc84c8e1a78d4d7b6d60c5ac5aefa4ef576ae27a438ca65f2",
+      "bytes": 378
+    },
+    {
+      "file": "5JDJ_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/5jdj",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_structures.py",
+      "sha256": "f6a920f38b13bb3706305791895b7e5ca7f0f2866497057456407e0b7ff546e0",
+      "bytes": 4598
+    },
+    {
+      "file": "1TIT_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/1tit",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_structures.py",
+      "sha256": "d7ed096f540b0805c21deff9d055129fa5e70d6d0f97f0d25ee0bdeb1ebca7f8",
+      "bytes": 380
+    },
+    {
+      "file": "8OMW_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/8omw",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_structures.py",
+      "sha256": "628ff59c568b5370a0f21bfe8be82a73d8bb870d65f169e894185fc7f3a38e4e",
+      "bytes": 378
+    },
+    {
+      "file": "8OT5_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/8ot5",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_structures.py",
+      "sha256": "83d663e75b57fad2f4e9cdf4ff08516e0b85589ffc6520e3d78af4cfaf6fa61b",
+      "bytes": 1805
+    },
+    {
+      "file": "1TKI_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/1tki",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_structures.py",
+      "sha256": "1a214a9107335183c469f324c01ed4a122d2cebfc8394bbc0a7d9ad1aaf00c2a",
+      "bytes": 664
+    },
+    {
+      "file": "4JNW_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/4jnw",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_structures.py",
+      "sha256": "2c19686d65e24d0d270aaf0f162a9e202ce2ac75eded5afe211eca4a7cba4092",
+      "bytes": 665
+    },
+    {
+      "file": "3LPW_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/3lpw",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_interdomain.py",
+      "sha256": "3f373add576537d19d30cb717eb0aba35c3298c52efe870d0c3ce117c9417d62",
+      "bytes": 664
+    },
+    {
+      "file": "8BXR_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/8bxr",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_interdomain.py",
+      "sha256": "f055f73b9016944fadb925a7ef883ecf595b760eb35db587c735e415256c337e",
+      "bytes": 380
+    },
+    {
+      "file": "8BNQ_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/8bnq",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_interdomain.py",
+      "sha256": "561eac523ce85f054aa7d05829226f963f455588a65cfed1c0d22ede6e0d86a1",
+      "bytes": 665
+    },
+    {
+      "file": "2J8O_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/2j8o",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_interdomain.py",
+      "sha256": "e9e312e4a4d7c7aef6af59fdafe58e26bbec6cd2800f1b779147f178fc51ebb7",
+      "bytes": 664
+    },
+    {
+      "file": "6YGN_sifts.json",
+      "url": "https://www.ebi.ac.uk/pdbe/api/mappings/uniprot/6ygn",
+      "provider": "PDBe SIFTS",
+      "consumer": "measure_interdomain.py",
+      "sha256": "a086254ef1b8220d56e5abcc940488f43a9760a88756f8fbb80bb511aba9426a",
+      "bytes": 662
+    },
+    {
+      "file": "Q8WZ42.fasta",
+      "url": "https://rest.uniprot.org/uniprotkb/Q8WZ42.fasta",
+      "provider": "UniProt",
+      "consumer": "measure_structures.py + measure_interdomain.py",
+      "sha256": "2bb79b409b2540249a432bd638215e5a789e69116eaf1ea0d15e48304e5c80f2",
+      "bytes": 34993
+    },
+    {
+      "file": "Q8WZ42_ft_domain.json",
+      "url": "https://rest.uniprot.org/uniprotkb/Q8WZ42.json?fields=ft_domain",
+      "provider": "UniProt",
+      "consumer": "measure_interdomain.py",
+      "sha256": "d2ecb64181959639ca0fabe430debe0ecfae45a07c4529b96061a7e0845b51a9",
+      "bytes": 53932
+    }
+  ]
+}

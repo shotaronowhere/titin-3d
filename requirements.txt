@@ -1,0 +1,4 @@
+# Versions used to produce data/structure_measurements.json and the Phase 6 fits.
+numpy==2.4.6
+gemmi==0.7.5
+scipy==1.18.0

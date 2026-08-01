@@ -1,0 +1,314 @@
+{
+ "meta": {
+  "description": "Half-sarcomere geometric specification (Z-disc center -> M-line). Source of truth for the renderer.",
+  "coordinate_system": {
+   "X": "longitudinal (nm), origin at Z-disc center",
+   "Y_Z": "transverse lattice plane (nm)",
+   "unit": "nm"
+  },
+  "reference_state": "resting, SL=2200 nm",
+  "see_also": [
+   "geometry_sources.json",
+   "references.json"
+  ],
+  "isoform_reconciliation": "Titin geometry (titin.json) is modeled on the canonical SKELETAL N2A isoform (Q8WZ42). Some sarcomere-scale filament values (e.g. thick-filament cryo-EM periodicity) derive from CARDIAC preparations where the architecture is highly conserved across striated muscle. Each value carries its own muscle_type in geometry_sources.json; this cross-muscle use is intentional and documented, NOT a silent combination. Cardiac-specific N2B/N2BA titin is a DIFFERENT isoform and is out of scope for this reference model."
+ },
+ "reference_lengths_nm": {
+  "thick_filament": 1600.0,
+  "half_thick": 800.0,
+  "thin_filament": 1050.0,
+  "zdisc_width": 50.0,
+  "m_line_bare_zone": 160.0
+ },
+ "sarcomere_length_states_nm": {
+  "contracted": 1900,
+  "resting": 2200,
+  "stretched": 2400,
+  "extended_reference": 3000,
+  "working_range": [
+   2000,
+   2400
+  ],
+  "cross_study_tested_range": [
+   1510,
+   4400
+  ]
+ },
+ "components": [
+  {
+   "id": "zdisc",
+   "name": "Z-disc",
+   "biological_role": "Anchors thin filaments and titin N-termini; sarcomere boundary",
+   "parent": "sarcomere",
+   "position_nm": {
+    "X": 0.0,
+    "center": true
+   },
+   "dimensions_nm": {
+    "width_X": 50.0,
+    "lateral_extent_YZ": "lattice-wide"
+   },
+   "orientation": "plane normal to X",
+   "principal_axis": "YZ plane",
+   "attachment_points": [
+    {
+     "binds": "thin filament barbed (+) ends",
+     "via": "alpha-actinin"
+    },
+    {
+     "binds": "titin Z1Z2",
+     "via": "telethonin/T-cap"
+    }
+   ],
+   "relationships": [
+    "mirror-symmetry plane between adjacent half-sarcomeres"
+   ],
+   "repeating_geometry": {
+    "lattice": "square in Z-disc, transitions to hexagonal in A-band"
+   },
+   "mechanical_behavior": "rigid anchor; width ~invariant",
+   "state_dependence": "position fixed at X=0",
+   "species": "human/mammal",
+   "isoform": "\u2014",
+   "biological_condition": "relaxed",
+   "evidence_class": "MEASURED (dimensions); render shape SCHEMATIC \u2014 see evidence_by_claim",
+   "primary_references": [
+    "10.1016/j.cell.2021.02.047",
+    "10.1371/journal.pone.0300348"
+   ],
+   "notes": "Z-disc width 30-62 nm species/muscle dependent; using 50 nm skeletal reference.",
+   "evidence_by_claim": {
+    "dimensions_and_positions": "MEASURED",
+    "render_geometry_proxy": "SCHEMATIC"
+   }
+  },
+  {
+   "id": "thin_filament",
+   "name": "Thin filament (actin-tropomyosin-troponin)",
+   "biological_role": "Interacts with myosin cross-bridges; carries regulatory proteins",
+   "parent": "sarcomere",
+   "position_nm": {
+    "X_start": 25.0,
+    "X_end": 1075.0,
+    "direction": "+X from Z-disc"
+   },
+   "dimensions_nm": {
+    "length_X": 1050.0,
+    "diameter": 9.0
+   },
+   "orientation": "parallel to X",
+   "principal_axis": "X",
+   "attachment_points": [
+    {
+     "barbed_end": "Z-disc (X=0)"
+    },
+    {
+     "pointed_end": "toward M-line, free tip in I/A overlap"
+    }
+   ],
+   "relationships": [
+    "overlaps thick filament in A-band",
+    "1 thick : 2 thin hexagonal ratio"
+   ],
+   "repeating_geometry": {
+    "lattice_positions": "trigonal points of hexagonal thick-filament lattice"
+   },
+   "mechanical_behavior": "rigid rod",
+   "state_dependence": "length invariant; overlap with thick changes with SL",
+   "species": "human/mammal",
+   "isoform": "\u2014",
+   "biological_condition": "relaxed",
+   "evidence_class": "MEASURED (dimensions); render shape SCHEMATIC \u2014 see evidence_by_claim",
+   "primary_references": [
+    "10.1016/j.yjmcc.2016.04.013"
+   ],
+   "notes": "Skeletal thin filament ~1.0-1.3 um; using 1.05 um.",
+   "evidence_by_claim": {
+    "dimensions_and_positions": "MEASURED",
+    "render_geometry_proxy": "SCHEMATIC"
+   }
+  },
+  {
+   "id": "thick_filament",
+   "name": "Thick filament (myosin + titin A-band)",
+   "biological_role": "Myosin motor filament; scaffolds titin A-band and provides cross-bridges",
+   "parent": "sarcomere",
+   "position_nm": {
+    "X_center": "half-sarc (SL/2)",
+    "X_start": "SL/2 - 800",
+    "X_end": "SL/2 + 800",
+    "note": "centered on M-line, spans A-band"
+   },
+   "dimensions_nm": {
+    "length_X": 1600.0,
+    "diameter": 15.0,
+    "bare_zone_center": 160.0
+   },
+   "orientation": "parallel to X",
+   "principal_axis": "X",
+   "attachment_points": [
+    {
+     "M-line": "cross-linked at center via myomesin"
+    },
+    {
+     "titin": "A-band titin bound along surface"
+    }
+   ],
+   "relationships": [
+    "tip defines I/A junction",
+    "axial myosin-crown repeat 43.1 nm, 3 crowns/repeat, 14.3 nm crown spacing"
+   ],
+   "repeating_geometry": {
+    "axial_period_nm": 43.1,
+    "crowns_per_period": 3,
+    "crown_spacing_nm": 14.3,
+    "titin_super_repeat_nm": 45.5,
+    "C_zone_super_repeats": 11
+   },
+   "mechanical_behavior": "rigid; length INVARIANT with SL",
+   "state_dependence": "A-band width constant; only overlap changes",
+   "species": "human/mammal",
+   "isoform": "\u2014",
+   "biological_condition": "relaxed",
+   "evidence_class": "MEASURED (dimensions); render shape SCHEMATIC \u2014 see evidence_by_claim",
+   "primary_references": [
+    "10.1073/pnas.2311883121",
+    "10.1085/jgp.202012713"
+   ],
+   "notes": "43.1 nm myosin + 45.5 nm titin periodicities (Caremani 2021).",
+   "evidence_by_claim": {
+    "dimensions_and_positions": "MEASURED",
+    "render_geometry_proxy": "SCHEMATIC"
+   }
+  },
+  {
+   "id": "mline",
+   "name": "M-line",
+   "biological_role": "Cross-links thick filaments at their centers; anchors titin C-termini",
+   "parent": "sarcomere",
+   "position_nm": {
+    "X": "SL/2 (half-sarcomere midline end)",
+    "center": true
+   },
+   "dimensions_nm": {
+    "width_X": 160.0,
+    "lateral_extent_YZ": "lattice-wide"
+   },
+   "orientation": "plane normal to X",
+   "principal_axis": "YZ plane",
+   "attachment_points": [
+    {
+     "binds": "thick filament centers",
+     "via": "myomesin"
+    },
+    {
+     "binds": "titin M10 C-terminus",
+     "via": "obscurin/myomesin"
+    }
+   ],
+   "relationships": [
+    "mirror plane at half-sarcomere end",
+    "bare zone free of cross-bridges"
+   ],
+   "repeating_geometry": {
+    "myomesin_bridges": "hexagonal cross-links"
+   },
+   "mechanical_behavior": "rigid anchor",
+   "state_dependence": "position = SL/2 (moves with half-sarcomere length)",
+   "species": "human/mammal",
+   "isoform": "\u2014",
+   "biological_condition": "relaxed",
+   "evidence_class": "MEASURED (dimensions); render shape SCHEMATIC \u2014 see evidence_by_claim",
+   "primary_references": [
+    "10.1073/pnas.2311883121"
+   ],
+   "notes": "M-line bare zone ~160 nm.",
+   "evidence_by_claim": {
+    "dimensions_and_positions": "MEASURED",
+    "render_geometry_proxy": "SCHEMATIC"
+   }
+  },
+  {
+   "id": "lattice",
+   "name": "Transverse myofilament lattice",
+   "biological_role": "Hexagonal packing of thick/thin filaments; sets interfilament spacing",
+   "parent": "A-band cross-section",
+   "position_nm": {
+    "plane": "YZ"
+   },
+   "dimensions_nm": {
+    "d10_spacing": 34.99,
+    "lattice_constant": 40.4,
+    "myosin_actin_center": 23.33
+   },
+   "orientation": "hexagonal in YZ plane",
+   "principal_axis": "YZ",
+   "attachment_points": [],
+   "relationships": [
+    "1 thick : 2 thin (vertebrate)",
+    "thick at hex vertices, thin at trigonal points"
+   ],
+   "repeating_geometry": {
+    "symmetry": "hexagonal",
+    "d10_nm": 34.99,
+    "scaling_law": "d10 = sqrt(V_cell / ((2/sqrt(3)) * SL)); d10 \u221d 1/sqrt(SL) (constant-volume idealization)",
+    "V_cell_nm3": 4030000.0,
+    "verified": "reproduces Desmos calculator: d10=34.99, d_MA=23.33, d_y=20.20 at SL=2.85um"
+   },
+   "mechanical_behavior": "spacing decreases as SL increases (constant-volume first-order)",
+   "state_dependence": "d10(SL) per scaling law; REAL muscle Poisson ratio time-varying (not strictly isovolumetric)",
+   "species": "human/mammal",
+   "isoform": "\u2014",
+   "biological_condition": "relaxed",
+   "evidence_class": "MODELED (absolute dimensions and scaling); render shape SCHEMATIC \u2014 see evidence_by_claim",
+   "primary_references": [
+    "10.1152/ajpheart.2000.279.5.h2568",
+    "10.1016/j.bpj.2021.08.006"
+   ],
+   "notes": "The stored 4.03e6 nm3 cell-volume parameter reproduces the referenced calculator and is MODELED, not an absolute value adopted from Irving 2000. Irving independently measures the direction and preparation dependence of d10(SL). The constant-volume law is a labelled quasi-static idealization; do NOT present it as exact instantaneous contraction behavior (Cass 2021).",
+   "evidence_by_claim": {
+    "dimensions_and_positions": "MODELED",
+    "render_geometry_proxy": "SCHEMATIC",
+    "d10_absolute_value": "MODELED (calculator parameterization)",
+    "d10_length_and_preparation_response": "MEASURED",
+    "constant_volume_scaling_law": "STRONGLY INFERRED",
+    "instantaneous_behavior_during_contraction": "UNKNOWN (real Poisson ratio time-varying; Cass 2021)"
+   }
+  }
+ ],
+ "copy_number": {
+  "titin_per_half_thick_filament": 6,
+  "titin_per_thick_filament": 12,
+  "evidence_class": "MEASURED",
+  "note": "~6 titin molecules per half-thick-filament (hexagonal symmetry)",
+  "primary_references": [
+   "10.1006/jmbi.2000.4279"
+  ]
+ },
+ "unknowns": [
+  {
+   "item": "Azimuthal arrangement of the 6 titin molecules around the thick filament",
+   "class": "MEASURED (human cardiac C-zone) / INFERRED (skeletal transfer)",
+   "reason": "Resolved by 6 A cryo-EM of the human cardiac thick-filament C-zone (PDB 8G4L, doi:10.1038/s41586-023-06691-4). Measured from the deposited coordinates: the six strands are NOT equally spaced on one radius. They form three 120 deg sectors, each carrying a TA/TB pair 30 deg apart, TA at r=8.57 nm and TB at r=6.85 nm. The 120 deg sector repeat is exact only because 3-fold symmetry was IMPOSED during reconstruction.",
+   "modeling_directive": "For this skeletal N2A reference, retain the declared six-fold-at-one-radius SCHEMATIC until skeletal evidence exists. Preserve the measured cardiac C-zone two-shell sector arrangement in data/context_measurements.json as an alternative, not as a silent transfer. A future cardiac mode may use it as MEASURED only in the C-zone; skeletal or D-zone use would remain INFERRED and must be explicitly selected.",
+   "superseded": {
+    "previous_class": "UNKNOWN",
+    "previous_reason": "Six-fold symmetry inferred; exact angular positions not resolved.",
+    "superseded_on": "session 15",
+    "superseded_by": "PDB 8G4L coordinate measurement"
+   }
+  },
+  {
+   "item": "Precise Z-disc internal lattice register for the skeletal N2A isoform",
+   "class": "INFERRED",
+   "reason": "Z-disc architecture resolved by cryo-ET in general; isoform-specific register not fully mapped.",
+   "modeling_directive": "Use general cryo-ET architecture; flag isoform specificity as unresolved."
+  },
+  {
+   "item": "Exact thin-filament pointed-end position (nebulin-capped) per muscle type",
+   "class": "STRONGLY INFERRED",
+   "reason": "Thin-filament length varies by muscle; 1.05 um is a skeletal reference.",
+   "modeling_directive": "Parameterize by muscle type; do not fix a single universal value."
+  }
+ ]
+}

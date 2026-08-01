@@ -1,0 +1,31 @@
+{
+  "name": "titin-visualization",
+  "version": "0.3.0",
+  "description": "Scientifically-defensible interactive 3D titin/sarcomere visualization. The scientific geometric specification (data/*.json) is the source of truth; the renderer consumes it.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "serve": "python3 -m http.server 8000",
+    "validate": "python3 scripts/validate_geometry.py",
+    "validate:spec": "python3 scripts/validate_spec.py",
+    "validate:python": ".venv/bin/python scripts/smoke_structure_pipeline.py",
+    "test:negative": "node scripts/neg_control_phase5.mjs && node scripts/neg_control_phase6.mjs && python3 scripts/neg_control_phase6_spec.py && python3 scripts/neg_control_phase6_review.py",
+    "fetch:structures": ".venv/bin/python scripts/fetch_structures.py",
+    "check:structures": ".venv/bin/python scripts/fetch_structures.py --check",
+    "typecheck": "tsc -p tsconfig.json",
+    "verify": "npm run typecheck && npm test && npm run test:negative && npm run validate && npm run validate:spec && npm run validate:python",
+    "build:standalone": "node scripts/build_standalone.mjs"
+  },
+  "license": "CC-BY-4.0",
+  "dependencies": {
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.2",
+    "esbuild": "0.28.1",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

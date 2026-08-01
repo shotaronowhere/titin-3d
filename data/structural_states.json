@@ -1,0 +1,384 @@
+{
+  "meta": {
+    "description": "Discrete sarcomere-length structural states. Renderer interpolates component transforms between adjacent states.",
+    "coordinate_system": {
+      "X": "longitudinal (nm), origin Z-disc center",
+      "unit": "nm"
+    },
+    "invariants": [
+      "thick filament length (1600 nm)",
+      "thin filament length (1050 nm)",
+      "Z-disc width",
+      "titin A-band bound segment length"
+    ],
+    "variant": [
+      "sarcomere length",
+      "I-band width",
+      "titin I-band element extension",
+      "filament overlap",
+      "transverse lattice d10"
+    ],
+    "extension_rule": "All titin length change occurs in I-band elastic elements via recruitment order (Ig straighten -> N2A -> PEVK). A-band titin does not extend.",
+    "see_also": [
+      "sarcomere.json",
+      "titin.json",
+      "geometry_sources.json"
+    ],
+    "evidence_by_claim": {
+      "sarcomere_length_states": "MEASURED (physiological working range 2.0-2.4um; 3.0um illustrative)",
+      "filament_positions_and_overlap": "STRONGLY INFERRED (geometric consequence of measured filament lengths)",
+      "I_band_titin_extension_partition": "MODELED (series force balance over MEASURED chain parameters)",
+      "lattice_d10_per_state": "STRONGLY INFERRED (constant-volume idealization)",
+      "titin_3D_path_per_state": "UNKNOWN (only end-to-end span constrained)"
+    },
+    "evidence_by_claim_notes": {
+      "I_band_titin_extension_partition": "Superseded 'STRONGLY INFERRED (recruitment ORDER measured; exact nm partition inferred)'. The order/partition distinction that label drew still holds and is now sharper: the recruitment ORDER is no longer asserted at all \u2014 it EMERGES from the model as a compliance ranking (see mechanical_model.json.derived_recruitment), and its agreement with the measured order is independent corroboration, since no force or ordering datum was used to build the model. The nm partition is MODELED."
+    }
+  },
+  "states": {
+    "contracted": {
+      "sarcomere_length_nm": 1900,
+      "half_sarcomere_nm": 950.0,
+      "biological_condition": "active/shortened",
+      "positions_nm": {
+        "zdisc": 0.0,
+        "thick_tip_I_A_junction": 150.0,
+        "mline": 950.0,
+        "thin_pointed_end": 1075.0,
+        "overlap_start": 150.0,
+        "overlap_len": 720.0
+      },
+      "I_band_half_width_nm": 150.0,
+      "titin_I_band_extension_nm": {
+        "prox_Ig": 96.14,
+        "N2A": 4.229,
+        "PEVK": 5.902,
+        "dist_Ig": 18.729
+      },
+      "titin_I_band_total_nm": 125.0,
+      "lattice_d10_nm": 42.86,
+      "titin_iband_layout_nm": {
+        "prox_Ig": {
+          "X_start": 25.0,
+          "X_end": 121.14,
+          "length_nm": 96.14
+        },
+        "N2A": {
+          "X_start": 121.14,
+          "X_end": 125.369,
+          "length_nm": 4.229
+        },
+        "PEVK": {
+          "X_start": 125.369,
+          "X_end": 131.271,
+          "length_nm": 5.902
+        },
+        "dist_Ig": {
+          "X_start": 131.271,
+          "X_end": 150.0,
+          "length_nm": 18.729
+        }
+      },
+      "titin_I_band_extension_evidence_class": "MODELED (series force balance over MEASURED chain parameters)",
+      "titin_I_band_extension_provenance": {
+        "route": "scripts/mechanical_model.py \u2014 series force balance over sourced force-extension laws. poly-Ig tandems: WLC A=21 nm. PEVK: extensible WLC A=0.55 nm, K0=185 pN. N2A: rigid folded Ig domain (4.0 nm) in series with the remaining unique sequence as a WLC coil (A=0.35 nm, total contour 39 nm).",
+        "common_force_pN": 0.116,
+        "per_region_implied_force_spread": "1.000x (series topology requires ONE common force)",
+        "superseded_partition_nm": {
+          "prox_Ig": 81.1,
+          "N2A": 7.5,
+          "PEVK": 15.7,
+          "dist_Ig": 20.7
+        },
+        "reproduce": "python3 scripts/mechanical_model.py",
+        "superseded_because": "the previous partition (prox_Ig 81.1 / N2A 7.5 / PEVK 15.7 / dist_Ig 20.7) was inferred independently of the other states; inverting each region against its sourced force-extension law gave forces spanning 41.2x (0.09-3.85 pN), and a series chain must bear ONE common force.",
+        "total_unchanged": "the I-band TOTAL is bit-identical to the superseded partition (125.0 nm), so no filament, overlap, M-line or lattice geometry moved.",
+        "precision_note": "stored to 0.001 nm \u2014 far below any measurement's resolution, but required so the per-region implied-force inversion stays faithful: near N2A's rigid folded-domain floor the coil is barely extended, and 0.05 nm of rounding shifts N2A's implied force by ~22%, which would show up as a spurious force-spread failure rather than a real inconsistency.",
+        "model_basis": "Marko-Siggia worm-like chain (and its extensible form for PEVK) applied to the four I-band regions in mechanical SERIES, so they bear one common force; that single scalar fixes the partition. Law and all persistence lengths / stretch modulus from 10.1073/pnas.95.14.8052; folded-domain length from geometry_sources.parameters[10].",
+        "modeled_from": {
+          "chain persistence lengths, stretch modulus": "MEASURED (10.1073/pnas.95.14.8052)",
+          "region contour lengths": "STRONGLY INFERRED (domain counts MEASURED x sourced per-unit length)",
+          "N2A folded-domain rigid length": "MEASURED (geometry_sources.parameters[10])",
+          "I-band total at this state": "STRONGLY INFERRED (sarcomere geometry: SL, Z-disc width, thick half-length)"
+        },
+        "evidence_class_note": "Was 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes. MODELED is now a defined class ranking below STRONGLY INFERRED, so this label is a small DOWNGRADE in declared confidence, which is the honest direction: the partition is a derived consequence of a cited law, not an observation."
+      }
+    },
+    "resting": {
+      "sarcomere_length_nm": 2200,
+      "half_sarcomere_nm": 1100.0,
+      "biological_condition": "relaxed (reference)",
+      "positions_nm": {
+        "zdisc": 0.0,
+        "thick_tip_I_A_junction": 300.0,
+        "mline": 1100.0,
+        "thin_pointed_end": 1075.0,
+        "overlap_start": 300.0,
+        "overlap_len": 720.0
+      },
+      "I_band_half_width_nm": 300.0,
+      "titin_I_band_extension_nm": {
+        "prox_Ig": 204.405,
+        "N2A": 5.005,
+        "PEVK": 25.771,
+        "dist_Ig": 39.819
+      },
+      "titin_I_band_total_nm": 275.0,
+      "lattice_d10_nm": 39.83,
+      "titin_iband_layout_nm": {
+        "prox_Ig": {
+          "X_start": 25.0,
+          "X_end": 229.405,
+          "length_nm": 204.405
+        },
+        "N2A": {
+          "X_start": 229.405,
+          "X_end": 234.41,
+          "length_nm": 5.005
+        },
+        "PEVK": {
+          "X_start": 234.41,
+          "X_end": 260.181,
+          "length_nm": 25.771
+        },
+        "dist_Ig": {
+          "X_start": 260.181,
+          "X_end": 300.0,
+          "length_nm": 39.819
+        }
+      },
+      "titin_I_band_extension_evidence_class": "MODELED (series force balance over MEASURED chain parameters)",
+      "titin_I_band_extension_provenance": {
+        "route": "scripts/mechanical_model.py \u2014 series force balance over sourced force-extension laws. poly-Ig tandems: WLC A=21 nm. PEVK: extensible WLC A=0.55 nm, K0=185 pN. N2A: rigid folded Ig domain (4.0 nm) in series with the remaining unique sequence as a WLC coil (A=0.35 nm, total contour 39 nm).",
+        "common_force_pN": 0.517,
+        "per_region_implied_force_spread": "1.000x (series topology requires ONE common force)",
+        "superseded_partition_nm": {
+          "prox_Ig": 195.1,
+          "N2A": 12.0,
+          "PEVK": 25.0,
+          "dist_Ig": 42.9
+        },
+        "reproduce": "python3 scripts/mechanical_model.py",
+        "superseded_because": "the previous partition (prox_Ig 195.1 / N2A 12.0 / PEVK 25.0 / dist_Ig 42.9) implied per-region forces spanning 15.5x (0.44-6.86 pN); N2A alone implied 6.86 pN, which is inside the 6-8 pN Ig equilibrium fold/unfold band and cannot be the resting force.",
+        "total_unchanged": "the I-band TOTAL is bit-identical to the superseded partition (275.0 nm), so no filament, overlap, M-line or lattice geometry moved.",
+        "precision_note": "stored to 0.001 nm \u2014 far below any measurement's resolution, but required so the per-region implied-force inversion stays faithful: near N2A's rigid folded-domain floor the coil is barely extended, and 0.05 nm of rounding shifts N2A's implied force by ~22%, which would show up as a spurious force-spread failure rather than a real inconsistency.",
+        "model_basis": "Marko-Siggia worm-like chain (and its extensible form for PEVK) applied to the four I-band regions in mechanical SERIES, so they bear one common force; that single scalar fixes the partition. Law and all persistence lengths / stretch modulus from 10.1073/pnas.95.14.8052; folded-domain length from geometry_sources.parameters[10].",
+        "modeled_from": {
+          "chain persistence lengths, stretch modulus": "MEASURED (10.1073/pnas.95.14.8052)",
+          "region contour lengths": "STRONGLY INFERRED (domain counts MEASURED x sourced per-unit length)",
+          "N2A folded-domain rigid length": "MEASURED (geometry_sources.parameters[10])",
+          "I-band total at this state": "STRONGLY INFERRED (sarcomere geometry: SL, Z-disc width, thick half-length)"
+        },
+        "evidence_class_note": "Was 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes. MODELED is now a defined class ranking below STRONGLY INFERRED, so this label is a small DOWNGRADE in declared confidence, which is the honest direction: the partition is a derived consequence of a cited law, not an observation."
+      }
+    },
+    "stretched": {
+      "sarcomere_length_nm": 2400,
+      "half_sarcomere_nm": 1200.0,
+      "biological_condition": "passive stretch (upper working range)",
+      "positions_nm": {
+        "zdisc": 0.0,
+        "thick_tip_I_A_junction": 400.0,
+        "mline": 1200.0,
+        "thin_pointed_end": 1075.0,
+        "overlap_start": 400.0,
+        "overlap_len": 675.0
+      },
+      "I_band_half_width_nm": 400.0,
+      "titin_I_band_extension_nm": {
+        "prox_Ig": 249.406,
+        "N2A": 6.781,
+        "PEVK": 70.227,
+        "dist_Ig": 48.586
+      },
+      "titin_I_band_total_nm": 375.0,
+      "lattice_d10_nm": 38.13,
+      "titin_iband_layout_nm": {
+        "prox_Ig": {
+          "X_start": 25.0,
+          "X_end": 274.406,
+          "length_nm": 249.406
+        },
+        "N2A": {
+          "X_start": 274.406,
+          "X_end": 281.187,
+          "length_nm": 6.781
+        },
+        "PEVK": {
+          "X_start": 281.187,
+          "X_end": 351.414,
+          "length_nm": 70.227
+        },
+        "dist_Ig": {
+          "X_start": 351.414,
+          "X_end": 400.0,
+          "length_nm": 48.586
+        }
+      },
+      "titin_I_band_extension_evidence_class": "MODELED (series force balance over MEASURED chain parameters)",
+      "titin_I_band_extension_provenance": {
+        "route": "scripts/mechanical_model.py \u2014 series force balance over sourced force-extension laws. poly-Ig tandems: WLC A=21 nm. PEVK: extensible WLC A=0.55 nm, K0=185 pN. N2A: rigid folded Ig domain (4.0 nm) in series with the remaining unique sequence as a WLC coil (A=0.35 nm, total contour 39 nm).",
+        "common_force_pN": 1.473,
+        "per_region_implied_force_spread": "1.000x (series topology requires ONE common force)",
+        "superseded_partition_nm": {
+          "prox_Ig": 278.8,
+          "N2A": 12.0,
+          "PEVK": 25.0,
+          "dist_Ig": 59.2
+        },
+        "reproduce": "python3 scripts/mechanical_model.py",
+        "superseded_because": "the ORIGINAL partition (step 1) held N2A and PEVK EXACTLY constant from resting (12.0 and 25.0 nm at both), so the entire +100 nm of stretch fell on the two Ig tandems, driving dist_Ig to 98.7% of contour and implying 277.5 pN \u2014 inside the 150-300 pN AFM regime domain_unfolding classifies as EXTREME / non-physiological and transition_rules.forbidden bars depicting as ordinary contraction. Per-region spread was 553.2x. See supersession_chain for the intermediate step and why it too was insufficient.",
+        "total_unchanged": "the I-band TOTAL is bit-identical to the superseded partition (375.0 nm), so no filament, overlap, M-line or lattice geometry moved.",
+        "precision_note": "stored to 0.001 nm \u2014 far below any measurement's resolution, but required so the per-region implied-force inversion stays faithful: near N2A's rigid folded-domain floor the coil is barely extended, and 0.05 nm of rounding shifts N2A's implied force by ~22%, which would show up as a spurious force-spread failure rather than a real inconsistency.",
+        "supersession_chain": [
+          {
+            "step": 1,
+            "partition_nm": {
+              "prox_Ig": 278.8,
+              "N2A": 12.0,
+              "PEVK": 25.0,
+              "dist_Ig": 59.2
+            },
+            "defect": "per-region implied forces spanned 553.2x (0.50-277.5 pN); dist_Ig sat at 98.7% of contour, implying 277.5 pN \u2014 inside the forbidden 150-300 pN regime",
+            "source_of_record": "recovered from artifact version 23f42113-81bb-46d9-a06a-0f62a7d38423",
+            "derivation": "STRONGLY INFERRED"
+          },
+          {
+            "step": 2,
+            "partition_nm": {
+              "prox_Ig": 250.5,
+              "N2A": 3.2,
+              "PEVK": 72.5,
+              "dist_Ig": 48.8
+            },
+            "defect": "an intermediate fix that corrected THIS state alone. It removed the 553x spread but left N2A DECREASING with sarcomere length (12.0 nm at resting -> 3.2 nm here), which a series chain forbids, and put N2A below the 4.0 nm folded Ig domain the region contains. Superseded by the all-state re-derivation.",
+            "derivation": "MODELED (bare-WLC N2A)"
+          },
+          {
+            "step": 3,
+            "partition_nm": {
+              "prox_Ig": 249.406,
+              "N2A": 6.781,
+              "PEVK": 70.227,
+              "dist_Ig": 48.586
+            },
+            "defect": null,
+            "status": "current",
+            "derivation": "STRONGLY INFERRED (MODELED: series force balance over MEASURED chain parameters)",
+            "derivation_note": "recorded as 'STRONGLY INFERRED (MODELED: ...)' when the vocabulary was closed at five classes; the same partition is now labelled 'MODELED (series force balance over MEASURED chain parameters)' with MODELED a defined class."
+          }
+        ],
+        "model_basis": "Marko-Siggia worm-like chain (and its extensible form for PEVK) applied to the four I-band regions in mechanical SERIES, so they bear one common force; that single scalar fixes the partition. Law and all persistence lengths / stretch modulus from 10.1073/pnas.95.14.8052; folded-domain length from geometry_sources.parameters[10].",
+        "modeled_from": {
+          "chain persistence lengths, stretch modulus": "MEASURED (10.1073/pnas.95.14.8052)",
+          "region contour lengths": "STRONGLY INFERRED (domain counts MEASURED x sourced per-unit length)",
+          "N2A folded-domain rigid length": "MEASURED (geometry_sources.parameters[10])",
+          "I-band total at this state": "STRONGLY INFERRED (sarcomere geometry: SL, Z-disc width, thick half-length)"
+        },
+        "evidence_class_note": "Was 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes. MODELED is now a defined class ranking below STRONGLY INFERRED, so this label is a small DOWNGRADE in declared confidence, which is the honest direction: the partition is a derived consequence of a cited law, not an observation."
+      }
+    },
+    "extended_reference": {
+      "sarcomere_length_nm": 3000,
+      "half_sarcomere_nm": 1500.0,
+      "biological_condition": "passive over-stretch (illustrative; beyond normal working range)",
+      "positions_nm": {
+        "zdisc": 0.0,
+        "thick_tip_I_A_junction": 700.0,
+        "mline": 1500.0,
+        "thin_pointed_end": 1075.0,
+        "overlap_start": 700.0,
+        "overlap_len": 375.0
+      },
+      "I_band_half_width_nm": 700.0,
+      "titin_I_band_extension_nm": {
+        "prox_Ig": 286.611,
+        "N2A": 18.321,
+        "PEVK": 314.235,
+        "dist_Ig": 55.833
+      },
+      "titin_I_band_total_nm": 675.0,
+      "lattice_d10_nm": 34.11,
+      "titin_iband_layout_nm": {
+        "prox_Ig": {
+          "X_start": 25.0,
+          "X_end": 311.611,
+          "length_nm": 286.611
+        },
+        "N2A": {
+          "X_start": 311.611,
+          "X_end": 329.932,
+          "length_nm": 18.321
+        },
+        "PEVK": {
+          "X_start": 329.932,
+          "X_end": 644.167,
+          "length_nm": 314.235
+        },
+        "dist_Ig": {
+          "X_start": 644.167,
+          "X_end": 700.0,
+          "length_nm": 55.833
+        }
+      },
+      "titin_I_band_extension_evidence_class": "MODELED (series force balance over MEASURED chain parameters)",
+      "titin_I_band_extension_provenance": {
+        "route": "scripts/mechanical_model.py \u2014 series force balance over sourced force-extension laws. poly-Ig tandems: WLC A=21 nm. PEVK: extensible WLC A=0.55 nm, K0=185 pN. N2A: rigid folded Ig domain (4.0 nm) in series with the remaining unique sequence as a WLC coil (A=0.35 nm, total contour 39 nm).",
+        "common_force_pN": 10.359,
+        "per_region_implied_force_spread": "1.000x (series topology requires ONE common force)",
+        "superseded_partition_nm": {
+          "prox_Ig": 283.0,
+          "N2A": 39.0,
+          "PEVK": 293.0,
+          "dist_Ig": 60.0
+        },
+        "reproduce": "python3 scripts/mechanical_model.py",
+        "superseded_because": "the previous partition placed N2A and dist_Ig AT their contour lengths (39.0 and 60.0 nm), which a worm-like chain only approaches asymptotically and never reaches at finite force, so no force could reproduce the state as written.",
+        "total_unchanged": "the I-band TOTAL is bit-identical to the superseded partition (675.0 nm), so no filament, overlap, M-line or lattice geometry moved.",
+        "precision_note": "stored to 0.001 nm \u2014 far below any measurement's resolution, but required so the per-region implied-force inversion stays faithful: near N2A's rigid folded-domain floor the coil is barely extended, and 0.05 nm of rounding shifts N2A's implied force by ~22%, which would show up as a spurious force-spread failure rather than a real inconsistency.",
+        "model_basis": "Marko-Siggia worm-like chain (and its extensible form for PEVK) applied to the four I-band regions in mechanical SERIES, so they bear one common force; that single scalar fixes the partition. Law and all persistence lengths / stretch modulus from 10.1073/pnas.95.14.8052; folded-domain length from geometry_sources.parameters[10].",
+        "modeled_from": {
+          "chain persistence lengths, stretch modulus": "MEASURED (10.1073/pnas.95.14.8052)",
+          "region contour lengths": "STRONGLY INFERRED (domain counts MEASURED x sourced per-unit length)",
+          "N2A folded-domain rigid length": "MEASURED (geometry_sources.parameters[10])",
+          "I-band total at this state": "STRONGLY INFERRED (sarcomere geometry: SL, Z-disc width, thick half-length)"
+        },
+        "evidence_class_note": "Was 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes. MODELED is now a defined class ranking below STRONGLY INFERRED, so this label is a small DOWNGRADE in declared confidence, which is the honest direction: the partition is a derived consequence of a cited law, not an observation."
+      }
+    }
+  },
+  "transition_rules": {
+    "interpolation": "linear in SL for filament positions; nonlinear (recruitment-order) for titin I-band elements \u2014 use titin_I_band_extension per state, do not linearly scale titin uniformly.",
+    "lattice": "d10 follows constant-volume law d10 \u221d 1/sqrt(SL); labelled idealization for quasi-static change.",
+    "forbidden": [
+      "Do not extend the A-band (thick filament) length.",
+      "Do not uniformly stretch titin \u2014 I-band only.",
+      "Do not depict Ig domain unfolding during normal contraction (physiological fold/unfold 6-8 pN, rare).",
+      "Do not animate active titin force generation as established (contested hypothesis)."
+    ],
+    "evidence_class": "STRONGLY INFERRED (extension partition); MEASURED (filament lengths, SL states, lattice law)"
+  },
+  "mechanical_states_note": {
+    "domain_unfolding": {
+      "physiological_fold_unfold_force_pN": "6-8",
+      "AFM_unfolding_force_pN": "150-300",
+      "classification": "AFM regime = EXTREME / non-physiological",
+      "evidence_class": "MEASURED",
+      "primary_references": [
+        "10.1016/j.celrep.2016.01.025",
+        "10.1021/ja5119368"
+      ],
+      "directive": "Represent Ig unfolding only as a rare/extreme state, clearly labelled, never as ordinary contraction."
+    },
+    "I_band_partition_correction": {
+      "phase": 8,
+      "what_changed": "All four keyframe I-band partitions were re-derived by series force balance. Previously each was independently inferred, and the inferences were not mutually consistent.",
+      "why": "The four I-band elastic regions are in mechanical SERIES between the Z-disc and the thick-filament tip, so they must bear a COMMON force. Inverting each region of the previous partitions independently gave forces spanning 41x (contracted), 16x (resting) and 553x (stretched) \u2014 not states a real chain can adopt. The stretched partition was the worst: it held N2A and PEVK EXACTLY constant from resting, so the entire +100 nm of stretch fell on the two Ig tandems, driving dist_Ig to 98.7% of contour = 277.5 pN. That sits inside the 150-300 pN AFM regime domain_unfolding classifies as EXTREME / non-physiological and that transition_rules.forbidden bars depicting as ordinary contraction. Correcting stretched alone then exposed that the N2A column DECREASED with stretch (12.0 -> 3.2 nm), which a series chain forbids; the inconsistency was never confined to one state.",
+      "corroboration": "The corrected common forces (0.116 / 0.517 / 1.473 / 10.359 pN) match the scale 10.1073/pnas.95.14.8052 reports for skeletal titin \u2014 ~1.5 pN at comparable SL, rising to ~8 pN near SL 2.9 um. Persistence lengths were taken from that literature and never fitted to this spec, so the agreement is corroboration, not a fit.",
+      "what_did_NOT_change": "Every state's I-band TOTAL is unchanged, so filament positions, overlap, the M-line, the lattice and all A-band geometry are bit-identical. Only titin's internal region boundaries moved.",
+      "evidence_class": "MODELED (series force balance over MEASURED chain parameters) \u2014 was STRONGLY INFERRED (independent per-state inference), then 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes",
+      "gate": "scripts/validate_geometry.py enforces per-state force-spread <= 3.0x and monotone extension, so this class of defect cannot re-enter.",
+      "evidence_class_rationale": "The closed vocabulary defines six evidence classes: MEASURED / STRONGLY INFERRED / MODELED / INFERRED / SCHEMATIC / UNKNOWN. A common-force partition is an executable model output derived from measured chain parameters and an established polymer law, not a direct observation; MODELED is therefore the honest class, and SpecLoader enforces it."
+    }
+  }
+}

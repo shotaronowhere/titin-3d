@@ -1,0 +1,2253 @@
+{
+ "schema": "titin-structure-measurements/1",
+ "raw_source_manifest": "data/structures/manifest.json (SHA-256 and byte-pinned)",
+ "phase": "Phase 6 \u2014 PDB / Structural Data Pipeline",
+ "uniprot": {
+  "accession": "Q8WZ42",
+  "sequence_length": 34350
+ },
+ "provenance": {
+  "coordinates": "RCSB mmCIF (files.rcsb.org)",
+  "residue_mapping": "PDBe SIFTS, verified by explicit sequence alignment",
+  "software": "gemmi 0.7.5, numpy 2.4.6",
+  "units": "nm throughout (mmCIF Angstrom / 10)"
+ },
+ "method": {
+  "assembly": "biological assembly checked per entry (see entries[].assemblies and entries[].assembly_note). Every measured chain is fitted INDIVIDUALLY, so assembly stoichiometry does not affect any reported dimension. 5JDJ declares 8 dimeric assemblies, but its three largest inter-chain interfaces are between chains that are NOT declared assembly partners, so the annotated dimer is crystal packing rather than a biological interface; titin's Ig domains are tandem beads on one polypeptide, not homodimers.",
+  "chain_extraction": "polymer of the SIFTS-mapped chain; altlocs, hydrogens, ligands and waters removed",
+  "residue_filter": "only residues whose one-letter code matches the aligned UniProt position are kept (drops expression-tag remnants)",
+  "axes": "PCA of heavy-atom cloud; PC1 = longest axis",
+  "axial_definition": "N-to-C CA distance is the tandem-relevant axial length; PC1 extent is the bounding length and is reported separately",
+  "statistics": "between-entry over one maximum-coverage chain per entry (independent); within-entry reported separately (crystallographic copies are NOT independent)",
+  "validation": "enclosure fraction of heavy atoms + primitive volume vs convex hull"
+ },
+ "entries": {
+  "3PUC": {
+   "pdb_id": "3PUC",
+   "assemblies": [
+    {
+     "name": "1",
+     "oligomeric_details": "monomeric"
+    }
+   ],
+   "n_models": 1,
+   "assembly_note": {
+    "declared": "monomeric",
+    "affects_measurements": false,
+    "note": "single-chain assembly; nothing to disambiguate"
+   },
+   "chains": [
+    {
+     "chain": "A",
+     "n_residues_mapped": 97,
+     "n_heavy_atoms": 702,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9898,
+     "n_residues_observed": 98,
+     "unp_start_aligned": 33774,
+     "unp_end_aligned": 33870,
+     "unp_start_sifts": 33774,
+     "unp_end_sifts": 33871,
+     "sifts_offset_delta": -1,
+     "unmapped_construct_residues": [
+      1
+     ],
+     "extent_long_nm": 5.4287276246132405,
+     "extent_mid_nm": 2.645265028246051,
+     "extent_short_nm": 2.5883985467799016,
+     "radius_of_gyration_nm": 1.3744340997093443,
+     "mean_cross_section_nm": 2.616831787512976,
+     "n_to_c_nm": 5.172219547737702,
+     "n_to_c_vs_pc1_deg": 6.132288858687305,
+     "max_bend_from_nc_axis_nm": 1.5634863799667758,
+     "ca_contour_nm": 36.277860423442874,
+     "straightness": 0.1425723426730921,
+     "ellipsoid_semi_axes_nm": [
+      3.1619461462254477,
+      1.332913652534821,
+      1.324388249357439
+     ],
+     "capsule_radius_nm": 1.428633794263837,
+     "capsule_length_nm": 5.4287276246132405,
+     "capsule_cylinder_nm": 2.5714600360855666,
+     "ellipsoid_enclosure_frac": 0.9772079772079773,
+     "capsule_enclosure_frac": 0.9843304843304843,
+     "ellipsoid_volume_nm3": 23.380856328640213,
+     "capsule_volume_nm3": 28.701949129007055,
+     "convex_hull_volume_nm3": 13.768699470925167,
+     "ellipsoid_volume_ratio_vs_hull": 1.6981165416539643,
+     "capsule_volume_ratio_vs_hull": 2.0845795341539595
+    }
+   ],
+   "role": "primary"
+  },
+  "5JDJ": {
+   "pdb_id": "5JDJ",
+   "assemblies": [
+    {
+     "name": "1",
+     "oligomeric_details": "dimeric"
+    },
+    {
+     "name": "2",
+     "oligomeric_details": "dimeric"
+    },
+    {
+     "name": "3",
+     "oligomeric_details": "dimeric"
+    },
+    {
+     "name": "4",
+     "oligomeric_details": "dimeric"
+    },
+    {
+     "name": "5",
+     "oligomeric_details": "dimeric"
+    },
+    {
+     "name": "6",
+     "oligomeric_details": "dimeric"
+    },
+    {
+     "name": "7",
+     "oligomeric_details": "dimeric"
+    },
+    {
+     "name": "8",
+     "oligomeric_details": "dimeric"
+    }
+   ],
+   "n_models": 1,
+   "assembly_note": {
+    "declared": [
+     "dimeric"
+    ],
+    "n_declared_assemblies": 8,
+    "largest_interfaces": [
+     {
+      "chains": [
+       "D",
+       "H"
+      ],
+      "contacts_lt_4A": 126,
+      "is_declared_partner": false
+     },
+     {
+      "chains": [
+       "A",
+       "K"
+      ],
+      "contacts_lt_4A": 122,
+      "is_declared_partner": false
+     },
+     {
+      "chains": [
+       "B",
+       "F"
+      ],
+      "contacts_lt_4A": 107,
+      "is_declared_partner": false
+     }
+    ],
+    "declared_partners_are_largest": false,
+    "affects_measurements": false,
+    "note": "declared multimer is NOT supported by the largest observed interfaces \u2014 consistent with crystal packing, not a biological dimer. Titin Ig/Fn3 domains are tandem beads on one polypeptide. Each chain is fitted individually, so this does not affect any reported dimension."
+   },
+   "chains": [
+    {
+     "chain": "A",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.967,
+     "n_residues_observed": 91,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -3,
+     "unmapped_construct_residues": [
+      1,
+      2,
+      3
+     ],
+     "extent_long_nm": 4.831253465416109,
+     "extent_mid_nm": 2.5031093866674197,
+     "extent_short_nm": 2.931418679779223,
+     "radius_of_gyration_nm": 1.2957118501055063,
+     "mean_cross_section_nm": 2.7172640332233216,
+     "n_to_c_nm": 4.171608402043509,
+     "n_to_c_vs_pc1_deg": 8.383261048046897,
+     "max_bend_from_nc_axis_nm": 1.8323961119212449,
+     "ca_contour_nm": 33.024543123953045,
+     "straightness": 0.12631842888441952,
+     "ellipsoid_semi_axes_nm": [
+      2.7964930111445208,
+      1.338051195641177,
+      1.5253175896954083
+     ],
+     "capsule_radius_nm": 1.5443072766665196,
+     "capsule_length_nm": 4.831253465416109,
+     "capsule_cylinder_nm": 1.7426389120830692,
+     "ellipsoid_enclosure_frac": 0.976878612716763,
+     "capsule_enclosure_frac": 0.9913294797687862,
+     "ellipsoid_volume_nm3": 23.907565623607763,
+     "capsule_volume_nm3": 28.483732386095216,
+     "convex_hull_volume_nm3": 14.508958279763512,
+     "ellipsoid_volume_ratio_vs_hull": 1.6477796105426146,
+     "capsule_volume_ratio_vs_hull": 1.9631824585106936
+    },
+    {
+     "chain": "B",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.967,
+     "n_residues_observed": 91,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -3,
+     "unmapped_construct_residues": [
+      1,
+      2,
+      3
+     ],
+     "extent_long_nm": 4.881381694633568,
+     "extent_mid_nm": 2.5287949315106864,
+     "extent_short_nm": 2.831265529976613,
+     "radius_of_gyration_nm": 1.2944611795329255,
+     "mean_cross_section_nm": 2.6800302307436494,
+     "n_to_c_nm": 4.224902150346208,
+     "n_to_c_vs_pc1_deg": 8.507740244072867,
+     "max_bend_from_nc_axis_nm": 1.7648976626938921,
+     "ca_contour_nm": 33.04603622064481,
+     "straightness": 0.12784898382780294,
+     "ellipsoid_semi_axes_nm": [
+      2.7895777293808206,
+      1.353533238128598,
+      1.4509644213152169
+     ],
+     "capsule_radius_nm": 1.6650779255519257,
+     "capsule_length_nm": 4.881381694633568,
+     "capsule_cylinder_nm": 1.5512258435297164,
+     "ellipsoid_enclosure_frac": 0.9754335260115607,
+     "capsule_enclosure_frac": 0.9913294797687862,
+     "ellipsoid_volume_nm3": 22.94841868758854,
+     "capsule_volume_nm3": 32.84834592724546,
+     "convex_hull_volume_nm3": 14.446700864943177,
+     "ellipsoid_volume_ratio_vs_hull": 1.5884885346574802,
+     "capsule_volume_ratio_vs_hull": 2.273761063811898
+    },
+    {
+     "chain": "C",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.967,
+     "n_residues_observed": 91,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -3,
+     "unmapped_construct_residues": [
+      1,
+      2,
+      3
+     ],
+     "extent_long_nm": 4.784442157447366,
+     "extent_mid_nm": 2.685112711506295,
+     "extent_short_nm": 2.749812858935191,
+     "radius_of_gyration_nm": 1.2992979564757925,
+     "mean_cross_section_nm": 2.717462785220743,
+     "n_to_c_nm": 4.152445353041987,
+     "n_to_c_vs_pc1_deg": 8.594226063391178,
+     "max_bend_from_nc_axis_nm": 1.815430381495219,
+     "ca_contour_nm": 33.04189516028832,
+     "straightness": 0.1256721302727405,
+     "ellipsoid_semi_axes_nm": [
+      2.79596092695427,
+      1.4899698269472617,
+      1.5752048284793552
+     ],
+     "capsule_radius_nm": 1.585712229523583,
+     "capsule_length_nm": 4.784442157447366,
+     "capsule_cylinder_nm": 1.6130176984001996,
+     "ellipsoid_enclosure_frac": 0.9913294797687862,
+     "capsule_enclosure_frac": 0.9927745664739884,
+     "ellipsoid_volume_nm3": 27.487434994961134,
+     "capsule_volume_nm3": 29.443745245292515,
+     "convex_hull_volume_nm3": 14.276552939147658,
+     "ellipsoid_volume_ratio_vs_hull": 1.925355168864887,
+     "capsule_volume_ratio_vs_hull": 2.062384762680001
+    },
+    {
+     "chain": "D",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9778,
+     "n_residues_observed": 90,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 4.923723759010729,
+     "extent_mid_nm": 2.738795688613135,
+     "extent_short_nm": 2.925602065277525,
+     "radius_of_gyration_nm": 1.297086338594149,
+     "mean_cross_section_nm": 2.8321988769453297,
+     "n_to_c_nm": 4.231460923841789,
+     "n_to_c_vs_pc1_deg": 7.723841955477453,
+     "max_bend_from_nc_axis_nm": 1.7139562134090753,
+     "ca_contour_nm": 33.06748535932785,
+     "straightness": 0.12796440000987727,
+     "ellipsoid_semi_axes_nm": [
+      2.8236813822267885,
+      1.469445526936573,
+      1.5194074589209148
+     ],
+     "capsule_radius_nm": 1.5364283945842812,
+     "capsule_length_nm": 4.923723759010729,
+     "capsule_cylinder_nm": 1.8508669698421663,
+     "ellipsoid_enclosure_frac": 0.9898843930635838,
+     "capsule_enclosure_frac": 0.9927745664739884,
+     "ellipsoid_volume_nm3": 26.40778922007048,
+     "capsule_volume_nm3": 28.918553098531543,
+     "convex_hull_volume_nm3": 14.454787392607987,
+     "ellipsoid_volume_ratio_vs_hull": 1.8269233924239607,
+     "capsule_volume_ratio_vs_hull": 2.0006211307763793
+    },
+    {
+     "chain": "E",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9888,
+     "n_residues_observed": 89,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -1,
+     "unmapped_construct_residues": [
+      3
+     ],
+     "extent_long_nm": 4.52960046648475,
+     "extent_mid_nm": 2.8593995278398445,
+     "extent_short_nm": 2.661383504915327,
+     "radius_of_gyration_nm": 1.2970962217469097,
+     "mean_cross_section_nm": 2.760391516377586,
+     "n_to_c_nm": 4.074530914105328,
+     "n_to_c_vs_pc1_deg": 6.027079482978761,
+     "max_bend_from_nc_axis_nm": 1.8617018952168736,
+     "ca_contour_nm": 33.05182569093577,
+     "straightness": 0.12327703020722207,
+     "ellipsoid_semi_axes_nm": [
+      2.4303607506252733,
+      1.6053005121966013,
+      1.3988026482609004
+     ],
+     "capsule_radius_nm": 1.6474409290872642,
+     "capsule_length_nm": 4.52960046648475,
+     "capsule_cylinder_nm": 1.2347186083102215,
+     "ellipsoid_enclosure_frac": 0.9754335260115607,
+     "capsule_enclosure_frac": 0.9869942196531792,
+     "ellipsoid_volume_nm3": 22.859785044496427,
+     "capsule_volume_nm3": 29.25695274303012,
+     "convex_hull_volume_nm3": 14.238835854887832,
+     "ellipsoid_volume_ratio_vs_hull": 1.6054532320947603,
+     "capsule_volume_ratio_vs_hull": 2.0547292658751277
+    },
+    {
+     "chain": "F",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9778,
+     "n_residues_observed": 90,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 4.9150238307076695,
+     "extent_mid_nm": 2.8407082463129214,
+     "extent_short_nm": 2.6346095050162908,
+     "radius_of_gyration_nm": 1.298813895073288,
+     "mean_cross_section_nm": 2.7376588756646063,
+     "n_to_c_nm": 4.207749209494309,
+     "n_to_c_vs_pc1_deg": 8.478839421349498,
+     "max_bend_from_nc_axis_nm": 1.7748695583536116,
+     "ca_contour_nm": 33.043697647721196,
+     "straightness": 0.12733893326204337,
+     "ellipsoid_semi_axes_nm": [
+      2.8002913521547494,
+      1.5246843167440418,
+      1.3664443534178214
+     ],
+     "capsule_radius_nm": 1.5300150943376862,
+     "capsule_length_nm": 4.9150238307076695,
+     "capsule_cylinder_nm": 1.8549936420322968,
+     "ellipsoid_enclosure_frac": 0.9841040462427746,
+     "capsule_enclosure_frac": 0.9927745664739884,
+     "ellipsoid_volume_nm3": 24.437890354568186,
+     "capsule_volume_nm3": 28.64509721894538,
+     "convex_hull_volume_nm3": 14.328954068809175,
+     "ellipsoid_volume_ratio_vs_hull": 1.7054901730590255,
+     "capsule_volume_ratio_vs_hull": 1.9991059418146329
+    },
+    {
+     "chain": "G",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9778,
+     "n_residues_observed": 90,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 4.859123633912426,
+     "extent_mid_nm": 2.6635454766574624,
+     "extent_short_nm": 2.857540213466076,
+     "radius_of_gyration_nm": 1.2994900344702733,
+     "mean_cross_section_nm": 2.7605428450617695,
+     "n_to_c_nm": 4.211497003441888,
+     "n_to_c_vs_pc1_deg": 8.21462236219667,
+     "max_bend_from_nc_axis_nm": 1.7948277822318641,
+     "ca_contour_nm": 33.04628583505205,
+     "straightness": 0.1274423705121733,
+     "ellipsoid_semi_axes_nm": [
+      2.8480627281260356,
+      1.4678421800124157,
+      1.5190882454897352
+     ],
+     "capsule_radius_nm": 1.5436135756825204,
+     "capsule_length_nm": 4.859123633912426,
+     "capsule_cylinder_nm": 1.7718964825473846,
+     "ellipsoid_enclosure_frac": 0.9898843930635838,
+     "capsule_enclosure_frac": 0.9913294797687862,
+     "ellipsoid_volume_nm3": 26.601156996015586,
+     "capsule_volume_nm3": 28.670235407556277,
+     "convex_hull_volume_nm3": 14.415482356412166,
+     "ellipsoid_volume_ratio_vs_hull": 1.8453185497593214,
+     "capsule_volume_ratio_vs_hull": 1.9888502305164584
+    },
+    {
+     "chain": "H",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.967,
+     "n_residues_observed": 91,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -3,
+     "unmapped_construct_residues": [
+      1,
+      2,
+      3
+     ],
+     "extent_long_nm": 4.825538737952119,
+     "extent_mid_nm": 2.782106872782717,
+     "extent_short_nm": 2.638282704632118,
+     "radius_of_gyration_nm": 1.2923274036460841,
+     "mean_cross_section_nm": 2.7101947887074176,
+     "n_to_c_nm": 4.202720474882907,
+     "n_to_c_vs_pc1_deg": 8.46134368817254,
+     "max_bend_from_nc_axis_nm": 1.7760717205083214,
+     "ca_contour_nm": 33.06061646554149,
+     "straightness": 0.12712166088201438,
+     "ellipsoid_semi_axes_nm": [
+      2.8013764409761928,
+      1.5120387344585844,
+      1.4696779774376274
+     ],
+     "capsule_radius_nm": 1.603989448365941,
+     "capsule_length_nm": 4.825538737952119,
+     "capsule_cylinder_nm": 1.617559841220237,
+     "ellipsoid_enclosure_frac": 0.9855491329479769,
+     "capsule_enclosure_frac": 0.9898843930635838,
+     "ellipsoid_volume_nm3": 26.07625291174409,
+     "capsule_volume_nm3": 30.360088504937952,
+     "convex_hull_volume_nm3": 14.246092452460509,
+     "ellipsoid_volume_ratio_vs_hull": 1.83041441003988,
+     "capsule_volume_ratio_vs_hull": 2.131116908461051
+    },
+    {
+     "chain": "I",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.967,
+     "n_residues_observed": 91,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -3,
+     "unmapped_construct_residues": [
+      1,
+      2,
+      3
+     ],
+     "extent_long_nm": 4.488014230800421,
+     "extent_mid_nm": 2.844685679296559,
+     "extent_short_nm": 2.648682468753929,
+     "radius_of_gyration_nm": 1.299196680092065,
+     "mean_cross_section_nm": 2.746684074025244,
+     "n_to_c_nm": 4.0666567238949485,
+     "n_to_c_vs_pc1_deg": 6.790892818242773,
+     "max_bend_from_nc_axis_nm": 1.904405680243146,
+     "ca_contour_nm": 33.02918077136874,
+     "straightness": 0.12312314834705554,
+     "ellipsoid_semi_axes_nm": [
+      2.414624733858382,
+      1.5981652105106066,
+      1.3784066571652982
+     ],
+     "capsule_radius_nm": 1.6527993222869992,
+     "capsule_length_nm": 4.488014230800421,
+     "capsule_cylinder_nm": 1.1824155862264227,
+     "ellipsoid_enclosure_frac": 0.9710982658959537,
+     "capsule_enclosure_frac": 0.9913294797687862,
+     "ellipsoid_volume_nm3": 22.281133907505247,
+     "capsule_volume_nm3": 29.0600303168716,
+     "convex_hull_volume_nm3": 14.674077555593508,
+     "ellipsoid_volume_ratio_vs_hull": 1.518400991346271,
+     "capsule_volume_ratio_vs_hull": 1.980365048963123
+    },
+    {
+     "chain": "J",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 688,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 88,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 4.328441711886713,
+     "extent_mid_nm": 2.754957317406235,
+     "extent_short_nm": 2.939715811694757,
+     "radius_of_gyration_nm": 1.2920102723474378,
+     "mean_cross_section_nm": 2.8473365645504964,
+     "n_to_c_nm": 3.973838900861483,
+     "n_to_c_vs_pc1_deg": 13.014746250170123,
+     "max_bend_from_nc_axis_nm": 1.8551183630874462,
+     "ca_contour_nm": 33.07595703212403,
+     "straightness": 0.12014282449943962,
+     "ellipsoid_semi_axes_nm": [
+      2.258460246670156,
+      1.5499690873781784,
+      1.5721169990896007
+     ],
+     "capsule_radius_nm": 1.5735363532063835,
+     "capsule_length_nm": 4.328441711886713,
+     "capsule_cylinder_nm": 1.1813690054739463,
+     "ellipsoid_enclosure_frac": 0.9738372093023255,
+     "capsule_enclosure_frac": 0.9840116279069767,
+     "ellipsoid_volume_nm3": 23.05201854021126,
+     "capsule_volume_nm3": 25.509393965736788,
+     "convex_hull_volume_nm3": 14.215657515749001,
+     "ellipsoid_volume_ratio_vs_hull": 1.62159355025772,
+     "capsule_volume_ratio_vs_hull": 1.7944575505899656
+    },
+    {
+     "chain": "K",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9888,
+     "n_residues_observed": 89,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -1,
+     "unmapped_construct_residues": [
+      3
+     ],
+     "extent_long_nm": 4.556823054507368,
+     "extent_mid_nm": 2.885809662642052,
+     "extent_short_nm": 2.687733172747201,
+     "radius_of_gyration_nm": 1.290976863088051,
+     "mean_cross_section_nm": 2.7867714176946263,
+     "n_to_c_nm": 4.192979761458431,
+     "n_to_c_vs_pc1_deg": 9.368957615664925,
+     "max_bend_from_nc_axis_nm": 1.8020033637320871,
+     "ca_contour_nm": 33.04849844140874,
+     "straightness": 0.12687353311655325,
+     "ellipsoid_semi_axes_nm": [
+      2.5279595710251597,
+      1.5258661295582712,
+      1.4043199865556122
+     ],
+     "capsule_radius_nm": 1.5280107620671917,
+     "capsule_length_nm": 4.556823054507368,
+     "capsule_cylinder_nm": 1.500801530372985,
+     "ellipsoid_enclosure_frac": 0.9812138728323699,
+     "capsule_enclosure_frac": 0.9826589595375722,
+     "ellipsoid_volume_nm3": 22.69035251737761,
+     "capsule_volume_nm3": 25.95247869185623,
+     "convex_hull_volume_nm3": 13.953383840668668,
+     "ellipsoid_volume_ratio_vs_hull": 1.6261541126134642,
+     "capsule_volume_ratio_vs_hull": 1.8599415731841964
+    },
+    {
+     "chain": "L",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9778,
+     "n_residues_observed": 90,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 4.57001070898333,
+     "extent_mid_nm": 2.870028193057974,
+     "extent_short_nm": 2.642663565893189,
+     "radius_of_gyration_nm": 1.2956500845814767,
+     "mean_cross_section_nm": 2.7563458794755817,
+     "n_to_c_nm": 4.103644458283393,
+     "n_to_c_vs_pc1_deg": 6.872417425017815,
+     "max_bend_from_nc_axis_nm": 1.8728179733731019,
+     "ca_contour_nm": 33.03938797900919,
+     "straightness": 0.12420461483398385,
+     "ellipsoid_semi_axes_nm": [
+      2.475724379550496,
+      1.638626665936697,
+      1.4164792329315872
+     ],
+     "capsule_radius_nm": 1.6780346927702972,
+     "capsule_length_nm": 4.57001070898333,
+     "capsule_cylinder_nm": 1.2139413234427352,
+     "ellipsoid_enclosure_frac": 0.9826589595375722,
+     "capsule_enclosure_frac": 0.9913294797687862,
+     "ellipsoid_volume_nm3": 24.070279451022166,
+     "capsule_volume_nm3": 30.53072284418213,
+     "convex_hull_volume_nm3": 14.352633448261505,
+     "ellipsoid_volume_ratio_vs_hull": 1.6770636230480567,
+     "capsule_volume_ratio_vs_hull": 2.1271861330702504
+    },
+    {
+     "chain": "M",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 88,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 4.433105458654626,
+     "extent_mid_nm": 2.5258614856690347,
+     "extent_short_nm": 2.8531344677825263,
+     "radius_of_gyration_nm": 1.298581545061574,
+     "mean_cross_section_nm": 2.6894979767257805,
+     "n_to_c_nm": 4.0362799828555005,
+     "n_to_c_vs_pc1_deg": 5.52662867881061,
+     "max_bend_from_nc_axis_nm": 1.916547948247791,
+     "ca_contour_nm": 33.04893031446091,
+     "straightness": 0.12213042735272384,
+     "ellipsoid_semi_axes_nm": [
+      2.3079855041746855,
+      1.3307504341927092,
+      1.5028520913218946
+     ],
+     "capsule_radius_nm": 1.6830913312395843,
+     "capsule_length_nm": 4.433105458654626,
+     "capsule_cylinder_nm": 1.0669227961754573,
+     "ellipsoid_enclosure_frac": 0.9508670520231214,
+     "capsule_enclosure_frac": 0.9869942196531792,
+     "ellipsoid_volume_nm3": 19.33457110591512,
+     "capsule_volume_nm3": 29.466616167251388,
+     "convex_hull_volume_nm3": 14.408531257659998,
+     "ellipsoid_volume_ratio_vs_hull": 1.34188355219317,
+     "capsule_volume_ratio_vs_hull": 2.045081184217584
+    },
+    {
+     "chain": "N",
+     "n_residues_mapped": 86,
+     "n_heavy_atoms": 671,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 86,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2965,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 4.508552254484353,
+     "extent_mid_nm": 2.6372974758640835,
+     "extent_short_nm": 2.8541377534859387,
+     "radius_of_gyration_nm": 1.2757971049260164,
+     "mean_cross_section_nm": 2.7457176146750113,
+     "n_to_c_nm": 3.3905630933518993,
+     "n_to_c_vs_pc1_deg": 7.801039532589483,
+     "max_bend_from_nc_axis_nm": 2.0459385394330782,
+     "ca_contour_nm": 32.31405838651348,
+     "straightness": 0.10492532546660795,
+     "ellipsoid_semi_axes_nm": [
+      2.344913609482526,
+      1.4542436108517778,
+      1.4331666995084689
+     ],
+     "capsule_radius_nm": 1.5316335339170755,
+     "capsule_length_nm": 4.508552254484353,
+     "capsule_cylinder_nm": 1.445285186650202,
+     "ellipsoid_enclosure_frac": 0.9731743666169895,
+     "capsule_enclosure_frac": 0.9910581222056631,
+     "ellipsoid_volume_nm3": 20.471484149785642,
+     "capsule_volume_nm3": 25.702137515828458,
+     "convex_hull_volume_nm3": 13.83993663184116,
+     "ellipsoid_volume_ratio_vs_hull": 1.4791602515496685,
+     "capsule_volume_ratio_vs_hull": 1.8570993639303417
+    },
+    {
+     "chain": "O",
+     "n_residues_mapped": 86,
+     "n_heavy_atoms": 673,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 86,
+     "unp_start_aligned": 2882,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": 2,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 4.1351551986727575,
+     "extent_mid_nm": 2.6303461765472647,
+     "extent_short_nm": 2.6234833558444772,
+     "radius_of_gyration_nm": 1.2647589440117437,
+     "mean_cross_section_nm": 2.6269147661958714,
+     "n_to_c_nm": 3.5195393079208537,
+     "n_to_c_vs_pc1_deg": 11.98612102559263,
+     "max_bend_from_nc_axis_nm": 1.8256851243404473,
+     "ca_contour_nm": 32.26422535655095,
+     "straightness": 0.10908488485393758,
+     "ellipsoid_semi_axes_nm": [
+      2.0852809690402596,
+      1.4478369689803476,
+      1.3819248284105516
+     ],
+     "capsule_radius_nm": 1.5744272835962672,
+     "capsule_length_nm": 4.1351551986727575,
+     "capsule_cylinder_nm": 0.9863006314802227,
+     "ellipsoid_enclosure_frac": 0.9465081723625557,
+     "capsule_enclosure_frac": 0.9895988112927192,
+     "ellipsoid_volume_nm3": 17.476613040688413,
+     "capsule_volume_nm3": 24.02845498956529,
+     "convex_hull_volume_nm3": 13.400935996168172,
+     "ellipsoid_volume_ratio_vs_hull": 1.3041337594393128,
+     "capsule_volume_ratio_vs_hull": 1.7930430379218227
+    },
+    {
+     "chain": "P",
+     "n_residues_mapped": 87,
+     "n_heavy_atoms": 636,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 87,
+     "unp_start_aligned": 2881,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": 1,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 4.405851356539845,
+     "extent_mid_nm": 2.4940322591440824,
+     "extent_short_nm": 2.568377284024424,
+     "radius_of_gyration_nm": 1.2560748764927472,
+     "mean_cross_section_nm": 2.531204771584253,
+     "n_to_c_nm": 3.8728188635669505,
+     "n_to_c_vs_pc1_deg": 12.212698638500497,
+     "max_bend_from_nc_axis_nm": 1.8346781002023387,
+     "ca_contour_nm": 32.71032612724177,
+     "straightness": 0.11839743964954219,
+     "ellipsoid_semi_axes_nm": [
+      2.243539461073701,
+      1.3814027006943503,
+      1.455743297910565
+     ],
+     "capsule_radius_nm": 1.5844688713345003,
+     "capsule_length_nm": 4.405851356539845,
+     "capsule_cylinder_nm": 1.2369136138708445,
+     "ellipsoid_enclosure_frac": 0.960691823899371,
+     "capsule_enclosure_frac": 0.9952830188679245,
+     "ellipsoid_volume_nm3": 18.898503786778083,
+     "capsule_volume_nm3": 26.4181441301178,
+     "convex_hull_volume_nm3": 12.852879281521991,
+     "ellipsoid_volume_ratio_vs_hull": 1.4703712197738925,
+     "capsule_volume_ratio_vs_hull": 2.055426146271986
+    }
+   ],
+   "role": "alternate"
+  },
+  "1TIT": {
+   "pdb_id": "1TIT",
+   "assemblies": [
+    {
+     "name": "1",
+     "oligomeric_details": "monomeric"
+    }
+   ],
+   "n_models": 1,
+   "assembly_note": {
+    "declared": "monomeric",
+    "affects_measurements": false,
+    "note": "single-chain assembly; nothing to disambiguate"
+   },
+   "chains": [
+    {
+     "chain": "A",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 679,
+     "core_identity_frac": 0.9888,
+     "internal_mismatches": [
+      3
+     ],
+     "internal_mismatch_detail": [
+      {
+       "pdb_resnum": 3,
+       "uniprot_position": 12679,
+       "observed": "E",
+       "canonical": "K",
+       "documented": "Observed GLU where canonical Q8WZ42 has LYS. RCSB reports rcsb_mutation_count 0 for entity 1, so this is not an annotated engineered mutation; 1TIT is a 1996 NMR structure of the I91 (I27) domain, predating the current canonical sequence. Single conservative surface position, 1 of 89 residues, with no effect on the fitted envelope: the domain remains a valid Ig exemplar."
+      }
+     ],
+     "native_residue_frac": 0.9888,
+     "n_residues_observed": 89,
+     "unp_start_aligned": 12677,
+     "unp_end_aligned": 12765,
+     "unp_start_sifts": 12674,
+     "unp_end_sifts": 12765,
+     "sifts_offset_delta": 3,
+     "unmapped_construct_residues": [
+      3
+     ],
+     "extent_long_nm": 4.71158095406968,
+     "extent_mid_nm": 2.6811201471927726,
+     "extent_short_nm": 2.5900607222869168,
+     "radius_of_gyration_nm": 1.3078282192198254,
+     "mean_cross_section_nm": 2.6355904347398447,
+     "n_to_c_nm": 4.318747578870523,
+     "n_to_c_vs_pc1_deg": 11.558287595690542,
+     "max_bend_from_nc_axis_nm": 1.6219219092703026,
+     "ca_contour_nm": 33.59242747432121,
+     "straightness": 0.12856312876382237,
+     "ellipsoid_semi_axes_nm": [
+      2.4511745424770535,
+      1.435772514775048,
+      1.413489609969273
+     ],
+     "capsule_radius_nm": 1.4554227957420731,
+     "capsule_length_nm": 4.71158095406968,
+     "capsule_cylinder_nm": 1.8007353625855334,
+     "ellipsoid_enclosure_frac": 0.9690721649484536,
+     "capsule_enclosure_frac": 0.9882179675994109,
+     "ellipsoid_volume_nm3": 20.837283598106694,
+     "capsule_volume_nm3": 24.897207949801892,
+     "convex_hull_volume_nm3": 14.07317670993416,
+     "ellipsoid_volume_ratio_vs_hull": 1.4806382402203333,
+     "capsule_volume_ratio_vs_hull": 1.7691249433560459
+    }
+   ],
+   "role": "alternate"
+  },
+  "8OMW": {
+   "pdb_id": "8OMW",
+   "assemblies": [
+    {
+     "name": "1",
+     "oligomeric_details": "monomeric"
+    }
+   ],
+   "n_models": 1,
+   "assembly_note": {
+    "declared": "monomeric",
+    "affects_measurements": false,
+    "note": "single-chain assembly; nothing to disambiguate"
+   },
+   "chains": [
+    {
+     "chain": "A",
+     "n_residues_mapped": 106,
+     "n_heavy_atoms": 805,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9907,
+     "n_residues_observed": 107,
+     "unp_start_aligned": 16525,
+     "unp_end_aligned": 16630,
+     "unp_start_sifts": 16525,
+     "unp_end_sifts": 16630,
+     "sifts_offset_delta": -1,
+     "unmapped_construct_residues": [
+      3
+     ],
+     "extent_long_nm": 4.658343743669982,
+     "extent_mid_nm": 3.8094665387646707,
+     "extent_short_nm": 3.118349413717084,
+     "radius_of_gyration_nm": 1.3601646303016852,
+     "mean_cross_section_nm": 3.463907976240877,
+     "n_to_c_nm": 4.1908505152010616,
+     "n_to_c_vs_pc1_deg": 25.140038646709552,
+     "max_bend_from_nc_axis_nm": 2.1593824910499952,
+     "ca_contour_nm": 39.81359806324041,
+     "straightness": 0.10526178790834885,
+     "ellipsoid_semi_axes_nm": [
+      2.406453287975396,
+      2.0013663139250544,
+      1.7854379301837073
+     ],
+     "capsule_radius_nm": 2.0021484722998295,
+     "capsule_length_nm": 4.658343743669982,
+     "capsule_cylinder_nm": 0.6540467990703227,
+     "ellipsoid_enclosure_frac": 0.9801242236024845,
+     "capsule_enclosure_frac": 0.9788819875776398,
+     "ellipsoid_volume_nm3": 36.019475761878006,
+     "capsule_volume_nm3": 41.85509393038489,
+     "convex_hull_volume_nm3": 17.98700247444327,
+     "ellipsoid_volume_ratio_vs_hull": 2.0025279816943415,
+     "capsule_volume_ratio_vs_hull": 2.3269632608242787
+    }
+   ],
+   "role": "primary"
+  },
+  "8OT5": {
+   "pdb_id": "8OT5",
+   "assemblies": [
+    {
+     "name": "1",
+     "oligomeric_details": "monomeric"
+    },
+    {
+     "name": "2",
+     "oligomeric_details": "monomeric"
+    },
+    {
+     "name": "3",
+     "oligomeric_details": "monomeric"
+    },
+    {
+     "name": "4",
+     "oligomeric_details": "monomeric"
+    },
+    {
+     "name": "5",
+     "oligomeric_details": "monomeric"
+    },
+    {
+     "name": "6",
+     "oligomeric_details": "monomeric"
+    }
+   ],
+   "n_models": 1,
+   "assembly_note": {
+    "declared": "monomeric",
+    "affects_measurements": false,
+    "note": "single-chain assembly; nothing to disambiguate"
+   },
+   "chains": [
+    {
+     "chain": "A",
+     "n_residues_mapped": 102,
+     "n_heavy_atoms": 795,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9808,
+     "n_residues_observed": 104,
+     "unp_start_aligned": 25430,
+     "unp_end_aligned": 25531,
+     "unp_start_sifts": 25430,
+     "unp_end_sifts": 25531,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 5.031185018102936,
+     "extent_mid_nm": 3.356743779444129,
+     "extent_short_nm": 2.5777733460402663,
+     "radius_of_gyration_nm": 1.4026663850053374,
+     "mean_cross_section_nm": 2.9672585627421975,
+     "n_to_c_nm": 4.647042813390145,
+     "n_to_c_vs_pc1_deg": 21.251848118216863,
+     "max_bend_from_nc_axis_nm": 2.24873578701314,
+     "ca_contour_nm": 38.30193930327168,
+     "straightness": 0.12132656721622458,
+     "ellipsoid_semi_axes_nm": [
+      2.6012708355029632,
+      1.7823686698355505,
+      1.3093220058723098
+     ],
+     "capsule_radius_nm": 1.783607005100943,
+     "capsule_length_nm": 5.031185018102936,
+     "capsule_cylinder_nm": 1.46397100790105,
+     "ellipsoid_enclosure_frac": 0.959748427672956,
+     "capsule_enclosure_frac": 0.9849056603773585,
+     "ellipsoid_volume_nm3": 25.428350432607097,
+     "capsule_volume_nm3": 38.398868054450766,
+     "convex_hull_volume_nm3": 17.39896555970114,
+     "ellipsoid_volume_ratio_vs_hull": 1.4614863363775679,
+     "capsule_volume_ratio_vs_hull": 2.2069627026211744
+    },
+    {
+     "chain": "B",
+     "n_residues_mapped": 102,
+     "n_heavy_atoms": 796,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9808,
+     "n_residues_observed": 104,
+     "unp_start_aligned": 25430,
+     "unp_end_aligned": 25531,
+     "unp_start_sifts": 25430,
+     "unp_end_sifts": 25531,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 4.986205338511733,
+     "extent_mid_nm": 3.456097721150898,
+     "extent_short_nm": 2.7209624395448806,
+     "radius_of_gyration_nm": 1.3970104148976237,
+     "mean_cross_section_nm": 3.0885300803478892,
+     "n_to_c_nm": 4.639373015919932,
+     "n_to_c_vs_pc1_deg": 20.97711567296969,
+     "max_bend_from_nc_axis_nm": 2.232519067434433,
+     "ca_contour_nm": 38.322049563100066,
+     "straightness": 0.12106275809389747,
+     "ellipsoid_semi_axes_nm": [
+      2.6502528811876775,
+      1.9167877741297747,
+      1.373828169368214
+     ],
+     "capsule_radius_nm": 1.918643765182253,
+     "capsule_length_nm": 4.986205338511733,
+     "capsule_cylinder_nm": 1.1489178081472275,
+     "ellipsoid_enclosure_frac": 0.9723618090452262,
+     "capsule_enclosure_frac": 0.9849246231155779,
+     "ellipsoid_volume_nm3": 29.2336048492003,
+     "capsule_volume_nm3": 42.87202328151573,
+     "convex_hull_volume_nm3": 17.836834436350294,
+     "ellipsoid_volume_ratio_vs_hull": 1.6389457980068558,
+     "capsule_volume_ratio_vs_hull": 2.403566811953211
+    },
+    {
+     "chain": "C",
+     "n_residues_mapped": 102,
+     "n_heavy_atoms": 792,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9808,
+     "n_residues_observed": 104,
+     "unp_start_aligned": 25430,
+     "unp_end_aligned": 25531,
+     "unp_start_sifts": 25430,
+     "unp_end_sifts": 25531,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 5.021718115704951,
+     "extent_mid_nm": 3.0633163949980107,
+     "extent_short_nm": 2.8299296008824384,
+     "radius_of_gyration_nm": 1.3999492219950331,
+     "mean_cross_section_nm": 2.9466229979402248,
+     "n_to_c_nm": 4.87316063533073,
+     "n_to_c_vs_pc1_deg": 18.909448567699688,
+     "max_bend_from_nc_axis_nm": 2.058376341599483,
+     "ca_contour_nm": 38.349346746040595,
+     "straightness": 0.1270728460539908,
+     "ellipsoid_semi_axes_nm": [
+      2.636485403129785,
+      1.7335572099138012,
+      1.4557409625837514
+     ],
+     "capsule_radius_nm": 1.7440483849187458,
+     "capsule_length_nm": 5.021718115704951,
+     "capsule_cylinder_nm": 1.5336213458674592,
+     "ellipsoid_enclosure_frac": 0.9747474747474747,
+     "capsule_enclosure_frac": 0.9835858585858586,
+     "ellipsoid_volume_nm3": 27.869954630481956,
+     "capsule_volume_nm3": 36.87600539760209,
+     "convex_hull_volume_nm3": 17.300844558083103,
+     "ellipsoid_volume_ratio_vs_hull": 1.6109013948374489,
+     "capsule_volume_ratio_vs_hull": 2.1314569513528925
+    },
+    {
+     "chain": "D",
+     "n_residues_mapped": 101,
+     "n_heavy_atoms": 787,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9806,
+     "n_residues_observed": 103,
+     "unp_start_aligned": 25430,
+     "unp_end_aligned": 25530,
+     "unp_start_sifts": 25430,
+     "unp_end_sifts": 25531,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 4.669760445592286,
+     "extent_mid_nm": 3.0971780881709927,
+     "extent_short_nm": 2.7756213195416324,
+     "radius_of_gyration_nm": 1.3791421268359838,
+     "mean_cross_section_nm": 2.9363997038563125,
+     "n_to_c_nm": 4.600908125577275,
+     "n_to_c_vs_pc1_deg": 18.854092261801856,
+     "max_bend_from_nc_axis_nm": 1.9830184844027028,
+     "ca_contour_nm": 37.950789842560724,
+     "straightness": 0.12123352754090742,
+     "ellipsoid_semi_axes_nm": [
+      2.3568278386231887,
+      1.829494803674305,
+      1.396552666381962
+     ],
+     "capsule_radius_nm": 1.8741222267618103,
+     "capsule_length_nm": 4.669760445592286,
+     "capsule_cylinder_nm": 0.9215159920686652,
+     "ellipsoid_enclosure_frac": 0.9695044472681067,
+     "capsule_enclosure_frac": 0.9822109275730623,
+     "ellipsoid_volume_nm3": 25.22347783712157,
+     "capsule_volume_nm3": 37.74119867106041,
+     "convex_hull_volume_nm3": 16.84471950866713,
+     "ellipsoid_volume_ratio_vs_hull": 1.49741156711712,
+     "capsule_volume_ratio_vs_hull": 2.2405358932596884
+    },
+    {
+     "chain": "E",
+     "n_residues_mapped": 102,
+     "n_heavy_atoms": 798,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9903,
+     "n_residues_observed": 103,
+     "unp_start_aligned": 25430,
+     "unp_end_aligned": 25531,
+     "unp_start_sifts": 25430,
+     "unp_end_sifts": 25531,
+     "sifts_offset_delta": -1,
+     "unmapped_construct_residues": [
+      3
+     ],
+     "extent_long_nm": 5.189974332184116,
+     "extent_mid_nm": 3.215898523512996,
+     "extent_short_nm": 2.6965398077991884,
+     "radius_of_gyration_nm": 1.4024108003921747,
+     "mean_cross_section_nm": 2.9562191656560923,
+     "n_to_c_nm": 4.779816969319746,
+     "n_to_c_vs_pc1_deg": 20.04539816427451,
+     "max_bend_from_nc_axis_nm": 2.1421822957119177,
+     "ca_contour_nm": 38.31829343833664,
+     "straightness": 0.12473981851544673,
+     "ellipsoid_semi_axes_nm": [
+      2.6497098641592887,
+      1.769750318547865,
+      1.3551295106541101
+     ],
+     "capsule_radius_nm": 1.770041880633095,
+     "capsule_length_nm": 5.189974332184116,
+     "capsule_cylinder_nm": 1.6498905709179255,
+     "ellipsoid_enclosure_frac": 0.9699248120300752,
+     "capsule_enclosure_frac": 0.9837092731829574,
+     "ellipsoid_volume_nm3": 26.618264362476694,
+     "capsule_volume_nm3": 39.46894573542365,
+     "convex_hull_volume_nm3": 16.856758392998497,
+     "ellipsoid_volume_ratio_vs_hull": 1.57908559533799,
+     "capsule_volume_ratio_vs_hull": 2.34143153833285
+    },
+    {
+     "chain": "F",
+     "n_residues_mapped": 102,
+     "n_heavy_atoms": 796,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9903,
+     "n_residues_observed": 103,
+     "unp_start_aligned": 25430,
+     "unp_end_aligned": 25531,
+     "unp_start_sifts": 25430,
+     "unp_end_sifts": 25531,
+     "sifts_offset_delta": -1,
+     "unmapped_construct_residues": [
+      3
+     ],
+     "extent_long_nm": 4.953031593535698,
+     "extent_mid_nm": 3.3472192235641884,
+     "extent_short_nm": 2.6574927853034076,
+     "radius_of_gyration_nm": 1.397356291306593,
+     "mean_cross_section_nm": 3.002356004433798,
+     "n_to_c_nm": 4.799348454244285,
+     "n_to_c_vs_pc1_deg": 20.152000222527708,
+     "max_bend_from_nc_axis_nm": 2.106743863665877,
+     "ca_contour_nm": 38.335265500944764,
+     "straightness": 0.1251940841292988,
+     "ellipsoid_semi_axes_nm": [
+      2.560019604880958,
+      1.9198564252600785,
+      1.3562798693758036
+     ],
+     "capsule_radius_nm": 1.920761256804647,
+     "capsule_length_nm": 4.953031593535698,
+     "capsule_cylinder_nm": 1.1115090799264038,
+     "ellipsoid_enclosure_frac": 0.9711055276381909,
+     "capsule_enclosure_frac": 0.9824120603015075,
+     "ellipsoid_volume_nm3": 27.922221496437214,
+     "capsule_volume_nm3": 42.5658489931872,
+     "convex_hull_volume_nm3": 17.05007710821088,
+     "ellipsoid_volume_ratio_vs_hull": 1.637659543662157,
+     "capsule_volume_ratio_vs_hull": 2.496519442289712
+    }
+   ],
+   "role": "alternate"
+  },
+  "1TKI": {
+   "pdb_id": "1TKI",
+   "assemblies": [
+    {
+     "name": "1",
+     "oligomeric_details": "monomeric"
+    },
+    {
+     "name": "2",
+     "oligomeric_details": "monomeric"
+    }
+   ],
+   "n_models": 1,
+   "assembly_note": {
+    "declared": "monomeric",
+    "affects_measurements": false,
+    "note": "single-chain assembly; nothing to disambiguate"
+   },
+   "chains": [
+    {
+     "chain": "A",
+     "n_residues_mapped": 321,
+     "n_heavy_atoms": 2612,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 321,
+     "unp_start_aligned": 32172,
+     "unp_end_aligned": 32492,
+     "unp_start_sifts": 32172,
+     "unp_end_sifts": 32492,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 6.52647160067666,
+     "extent_mid_nm": 5.0071382507466655,
+     "extent_short_nm": 4.2350218983995465,
+     "radius_of_gyration_nm": 1.9666512778201664,
+     "mean_cross_section_nm": 4.621080074573106,
+     "n_to_c_nm": 4.447112067398347,
+     "n_to_c_vs_pc1_deg": 44.54270947874887,
+     "max_bend_from_nc_axis_nm": 4.420548073035999,
+     "ca_contour_nm": 121.86312548689939,
+     "straightness": 0.036492680206831093,
+     "ellipsoid_semi_axes_nm": [
+      3.463202230209384,
+      2.6790665140925616,
+      2.170274761754672
+     ],
+     "capsule_radius_nm": 3.0382691543033107,
+     "capsule_length_nm": 6.52647160067666,
+     "capsule_cylinder_nm": 0.44993329207003896,
+     "ellipsoid_enclosure_frac": 0.9663093415007658,
+     "capsule_enclosure_frac": 0.9900459418070444,
+     "ellipsoid_volume_nm3": 84.34603619098927,
+     "capsule_volume_nm3": 130.52911767062085,
+     "convex_hull_volume_nm3": 65.22678781212136,
+     "ellipsoid_volume_ratio_vs_hull": 1.2931195758702514,
+     "capsule_volume_ratio_vs_hull": 2.0011581445125843
+    },
+    {
+     "chain": "B",
+     "n_residues_mapped": 321,
+     "n_heavy_atoms": 2612,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 321,
+     "unp_start_aligned": 32172,
+     "unp_end_aligned": 32492,
+     "unp_start_sifts": 32172,
+     "unp_end_sifts": 32492,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 6.525760895878174,
+     "extent_mid_nm": 5.006248566835619,
+     "extent_short_nm": 4.234688485044572,
+     "radius_of_gyration_nm": 1.9666336056539069,
+     "mean_cross_section_nm": 4.620468525940096,
+     "n_to_c_nm": 4.445738736138236,
+     "n_to_c_vs_pc1_deg": 44.506253293552,
+     "max_bend_from_nc_axis_nm": 4.419826776924685,
+     "ca_contour_nm": 121.83955435194147,
+     "straightness": 0.036488468459893,
+     "ellipsoid_semi_axes_nm": [
+      3.4624851220534287,
+      2.678733174898582,
+      2.170070340874685
+     ],
+     "capsule_radius_nm": 3.0350175743601366,
+     "capsule_length_nm": 6.525760895878174,
+     "capsule_cylinder_nm": 0.4557257471579014,
+     "ellipsoid_enclosure_frac": 0.9663093415007658,
+     "capsule_enclosure_frac": 0.9896630934150077,
+     "ellipsoid_volume_nm3": 84.3101365823981,
+     "capsule_volume_nm3": 130.29204403247294,
+     "convex_hull_volume_nm3": 65.22572438830831,
+     "ellipsoid_volume_ratio_vs_hull": 1.292590268227219,
+     "capsule_volume_ratio_vs_hull": 1.9975561061891058
+    }
+   ],
+   "role": "primary"
+  },
+  "4JNW": {
+   "pdb_id": "4JNW",
+   "assemblies": [
+    {
+     "name": "1",
+     "oligomeric_details": "monomeric"
+    },
+    {
+     "name": "2",
+     "oligomeric_details": "monomeric"
+    }
+   ],
+   "n_models": 1,
+   "assembly_note": {
+    "declared": "monomeric",
+    "affects_measurements": false,
+    "note": "single-chain assembly; nothing to disambiguate"
+   },
+   "chains": [
+    {
+     "chain": "A",
+     "n_residues_mapped": 320,
+     "n_heavy_atoms": 2604,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 320,
+     "unp_start_aligned": 32172,
+     "unp_end_aligned": 32491,
+     "unp_start_sifts": 32172,
+     "unp_end_sifts": 32492,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 6.6604137557097856,
+     "extent_mid_nm": 4.945749288977591,
+     "extent_short_nm": 4.3062137886065175,
+     "radius_of_gyration_nm": 1.971503276527803,
+     "mean_cross_section_nm": 4.625981538792054,
+     "n_to_c_nm": 4.48820906041597,
+     "n_to_c_vs_pc1_deg": 39.18152704894029,
+     "max_bend_from_nc_axis_nm": 4.48812699951414,
+     "ca_contour_nm": 121.33576207569156,
+     "straightness": 0.036989993581745005,
+     "ellipsoid_semi_axes_nm": [
+      3.597650243650093,
+      2.6256435302093903,
+      2.2026526396872597
+     ],
+     "capsule_radius_nm": 2.8406048342706463,
+     "capsule_length_nm": 6.6604137557097856,
+     "capsule_cylinder_nm": 0.9792040871684933,
+     "ellipsoid_enclosure_frac": 0.9750384024577573,
+     "capsule_enclosure_frac": 0.9907834101382489,
+     "ellipsoid_volume_nm3": 87.15440190996911,
+     "capsule_volume_nm3": 120.83347315368871,
+     "convex_hull_volume_nm3": 65.03151788738879,
+     "ellipsoid_volume_ratio_vs_hull": 1.340187108363197,
+     "capsule_volume_ratio_vs_hull": 1.858075546736105
+    },
+    {
+     "chain": "B",
+     "n_residues_mapped": 321,
+     "n_heavy_atoms": 2612,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 321,
+     "unp_start_aligned": 32172,
+     "unp_end_aligned": 32492,
+     "unp_start_sifts": 32172,
+     "unp_end_sifts": 32492,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 6.76868759864131,
+     "extent_mid_nm": 5.045873355634616,
+     "extent_short_nm": 4.3517009266772195,
+     "radius_of_gyration_nm": 1.9767660087979255,
+     "mean_cross_section_nm": 4.6987871411559174,
+     "n_to_c_nm": 4.614914268976185,
+     "n_to_c_vs_pc1_deg": 40.912080015955596,
+     "max_bend_from_nc_axis_nm": 4.505646305952506,
+     "ca_contour_nm": 121.7537290496753,
+     "straightness": 0.037903679049479534,
+     "ellipsoid_semi_axes_nm": [
+      3.7125578845350944,
+      2.739519164362613,
+      2.2484329934823157
+     ],
+     "capsule_radius_nm": 3.08392020434867,
+     "capsule_length_nm": 6.76868759864131,
+     "capsule_cylinder_nm": 0.6008471899439698,
+     "ellipsoid_enclosure_frac": 0.9823889739663093,
+     "capsule_enclosure_frac": 0.9934915773353752,
+     "ellipsoid_volume_nm3": 95.78910939584806,
+     "capsule_volume_nm3": 140.80876555352617,
+     "convex_hull_volume_nm3": 66.25096334948213,
+     "ellipsoid_volume_ratio_vs_hull": 1.4458523250529733,
+     "capsule_volume_ratio_vs_hull": 2.1253844236308277
+    }
+   ],
+   "role": "alternate"
+  }
+ },
+ "classes": {
+  "Ig_like": {
+   "n_independent_entries": 3,
+   "entries_used": [
+    "3PUC",
+    "5JDJ",
+    "1TIT"
+   ],
+   "between_entry": {
+    "extent_long_nm": {
+     "n": 3,
+     "mean": 4.990520681366343,
+     "sd": 0.3841866360577012,
+     "median": 4.831253465416109,
+     "min": 4.71158095406968,
+     "max": 5.4287276246132405
+    },
+    "extent_mid_nm": {
+     "n": 3,
+     "mean": 2.6098315207020812,
+     "sd": 0.09414673551618806,
+     "median": 2.645265028246051,
+     "min": 2.5031093866674197,
+     "max": 2.6811201471927726
+    },
+    "extent_short_nm": {
+     "n": 3,
+     "mean": 2.703292649615347,
+     "sd": 0.19756468544656772,
+     "median": 2.5900607222869168,
+     "min": 2.5883985467799016,
+     "max": 2.931418679779223
+    },
+    "mean_cross_section_nm": {
+     "n": 3,
+     "mean": 2.6565620851587144,
+     "sd": 0.053399593496339014,
+     "median": 2.6355904347398447,
+     "min": 2.616831787512976,
+     "max": 2.7172640332233216
+    },
+    "n_to_c_nm": {
+     "n": 3,
+     "mean": 4.554191842883911,
+     "sd": 0.5402602773797702,
+     "median": 4.318747578870523,
+     "min": 4.171608402043509,
+     "max": 5.172219547737702
+    },
+    "radius_of_gyration_nm": {
+     "n": 3,
+     "mean": 1.3259913896782252,
+     "sd": 0.0423877779141336,
+     "median": 1.3078282192198254,
+     "min": 1.2957118501055063,
+     "max": 1.3744340997093443
+    },
+    "capsule_radius_nm": {
+     "n": 3,
+     "mean": 1.4761212888908097,
+     "sd": 0.06055088229548895,
+     "median": 1.4554227957420731,
+     "min": 1.428633794263837,
+     "max": 1.5443072766665196
+    },
+    "ellipsoid_enclosure_frac": {
+     "n": 3,
+     "mean": 0.9743862516243981,
+     "sd": 0.004605079602092148,
+     "median": 0.976878612716763,
+     "min": 0.9690721649484536,
+     "max": 0.9772079772079773
+    },
+    "capsule_enclosure_frac": {
+     "n": 3,
+     "mean": 0.9879593105662271,
+     "sd": 0.0035066596472931475,
+     "median": 0.9882179675994109,
+     "min": 0.9843304843304843,
+     "max": 0.9913294797687862
+    },
+    "n_to_c_vs_pc1_deg": {
+     "n": 3,
+     "mean": 8.691279167474915,
+     "sd": 2.7260817935110015,
+     "median": 8.383261048046897,
+     "min": 6.132288858687305,
+     "max": 11.558287595690542
+    },
+    "max_bend_from_nc_axis_nm": {
+     "n": 3,
+     "mean": 1.6726014670527742,
+     "sd": 0.14143699716738292,
+     "median": 1.6219219092703026,
+     "min": 1.5634863799667758,
+     "max": 1.8323961119212449
+    },
+    "straightness": {
+     "n": 3,
+     "mean": 0.13248463344044467,
+     "sd": 0.008808012123003582,
+     "median": 0.12856312876382237,
+     "min": 0.12631842888441952,
+     "max": 0.1425723426730921
+    }
+   },
+   "within_entry_crystallographic_copies": {
+    "5JDJ": {
+     "extent_long_nm": {
+      "n": 16,
+      "mean": 4.623502607505884,
+      "sd": 0.23998332135040182,
+      "median": 4.563416881745349,
+      "min": 4.1351551986727575,
+      "max": 4.923723759010729
+     },
+     "n_to_c_nm": {
+      "n": 16,
+      "mean": 4.039577220211962,
+      "sd": 0.2502241143606576,
+      "median": 4.12804490566269,
+      "min": 3.3905630933518993,
+      "max": 4.231460923841789
+     },
+     "mean_cross_section_nm": {
+      "n": 16,
+      "mean": 2.7278885635544556,
+      "sd": 0.07549567369610743,
+      "median": 2.741688245169809,
+      "min": 2.531204771584253,
+      "max": 2.8473365645504964
+     }
+    }
+   },
+   "primary_chains": [
+    {
+     "pdb_id": "3PUC",
+     "role": "primary",
+     "chain": "A",
+     "n_residues_mapped": 97,
+     "n_heavy_atoms": 702,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9898,
+     "n_residues_observed": 98,
+     "unp_start_aligned": 33774,
+     "unp_end_aligned": 33870,
+     "unp_start_sifts": 33774,
+     "unp_end_sifts": 33871,
+     "sifts_offset_delta": -1,
+     "unmapped_construct_residues": [
+      1
+     ],
+     "extent_long_nm": 5.4287276246132405,
+     "extent_mid_nm": 2.645265028246051,
+     "extent_short_nm": 2.5883985467799016,
+     "radius_of_gyration_nm": 1.3744340997093443,
+     "mean_cross_section_nm": 2.616831787512976,
+     "n_to_c_nm": 5.172219547737702,
+     "n_to_c_vs_pc1_deg": 6.132288858687305,
+     "max_bend_from_nc_axis_nm": 1.5634863799667758,
+     "ca_contour_nm": 36.277860423442874,
+     "straightness": 0.1425723426730921,
+     "ellipsoid_semi_axes_nm": [
+      3.1619461462254477,
+      1.332913652534821,
+      1.324388249357439
+     ],
+     "capsule_radius_nm": 1.428633794263837,
+     "capsule_length_nm": 5.4287276246132405,
+     "capsule_cylinder_nm": 2.5714600360855666,
+     "ellipsoid_enclosure_frac": 0.9772079772079773,
+     "capsule_enclosure_frac": 0.9843304843304843,
+     "ellipsoid_volume_nm3": 23.380856328640213,
+     "capsule_volume_nm3": 28.701949129007055,
+     "convex_hull_volume_nm3": 13.768699470925167,
+     "ellipsoid_volume_ratio_vs_hull": 1.6981165416539643,
+     "capsule_volume_ratio_vs_hull": 2.0845795341539595
+    },
+    {
+     "pdb_id": "5JDJ",
+     "role": "alternate",
+     "chain": "A",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 692,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.967,
+     "n_residues_observed": 91,
+     "unp_start_aligned": 2880,
+     "unp_end_aligned": 2967,
+     "unp_start_sifts": 2880,
+     "unp_end_sifts": 2967,
+     "sifts_offset_delta": -3,
+     "unmapped_construct_residues": [
+      1,
+      2,
+      3
+     ],
+     "extent_long_nm": 4.831253465416109,
+     "extent_mid_nm": 2.5031093866674197,
+     "extent_short_nm": 2.931418679779223,
+     "radius_of_gyration_nm": 1.2957118501055063,
+     "mean_cross_section_nm": 2.7172640332233216,
+     "n_to_c_nm": 4.171608402043509,
+     "n_to_c_vs_pc1_deg": 8.383261048046897,
+     "max_bend_from_nc_axis_nm": 1.8323961119212449,
+     "ca_contour_nm": 33.024543123953045,
+     "straightness": 0.12631842888441952,
+     "ellipsoid_semi_axes_nm": [
+      2.7964930111445208,
+      1.338051195641177,
+      1.5253175896954083
+     ],
+     "capsule_radius_nm": 1.5443072766665196,
+     "capsule_length_nm": 4.831253465416109,
+     "capsule_cylinder_nm": 1.7426389120830692,
+     "ellipsoid_enclosure_frac": 0.976878612716763,
+     "capsule_enclosure_frac": 0.9913294797687862,
+     "ellipsoid_volume_nm3": 23.907565623607763,
+     "capsule_volume_nm3": 28.483732386095216,
+     "convex_hull_volume_nm3": 14.508958279763512,
+     "ellipsoid_volume_ratio_vs_hull": 1.6477796105426146,
+     "capsule_volume_ratio_vs_hull": 1.9631824585106936
+    },
+    {
+     "pdb_id": "1TIT",
+     "role": "alternate",
+     "chain": "A",
+     "n_residues_mapped": 88,
+     "n_heavy_atoms": 679,
+     "core_identity_frac": 0.9888,
+     "internal_mismatches": [
+      3
+     ],
+     "internal_mismatch_detail": [
+      {
+       "pdb_resnum": 3,
+       "uniprot_position": 12679,
+       "observed": "E",
+       "canonical": "K",
+       "documented": "Observed GLU where canonical Q8WZ42 has LYS. RCSB reports rcsb_mutation_count 0 for entity 1, so this is not an annotated engineered mutation; 1TIT is a 1996 NMR structure of the I91 (I27) domain, predating the current canonical sequence. Single conservative surface position, 1 of 89 residues, with no effect on the fitted envelope: the domain remains a valid Ig exemplar."
+      }
+     ],
+     "native_residue_frac": 0.9888,
+     "n_residues_observed": 89,
+     "unp_start_aligned": 12677,
+     "unp_end_aligned": 12765,
+     "unp_start_sifts": 12674,
+     "unp_end_sifts": 12765,
+     "sifts_offset_delta": 3,
+     "unmapped_construct_residues": [
+      3
+     ],
+     "extent_long_nm": 4.71158095406968,
+     "extent_mid_nm": 2.6811201471927726,
+     "extent_short_nm": 2.5900607222869168,
+     "radius_of_gyration_nm": 1.3078282192198254,
+     "mean_cross_section_nm": 2.6355904347398447,
+     "n_to_c_nm": 4.318747578870523,
+     "n_to_c_vs_pc1_deg": 11.558287595690542,
+     "max_bend_from_nc_axis_nm": 1.6219219092703026,
+     "ca_contour_nm": 33.59242747432121,
+     "straightness": 0.12856312876382237,
+     "ellipsoid_semi_axes_nm": [
+      2.4511745424770535,
+      1.435772514775048,
+      1.413489609969273
+     ],
+     "capsule_radius_nm": 1.4554227957420731,
+     "capsule_length_nm": 4.71158095406968,
+     "capsule_cylinder_nm": 1.8007353625855334,
+     "ellipsoid_enclosure_frac": 0.9690721649484536,
+     "capsule_enclosure_frac": 0.9882179675994109,
+     "ellipsoid_volume_nm3": 20.837283598106694,
+     "capsule_volume_nm3": 24.897207949801892,
+     "convex_hull_volume_nm3": 14.07317670993416,
+     "ellipsoid_volume_ratio_vs_hull": 1.4806382402203333,
+     "capsule_volume_ratio_vs_hull": 1.7691249433560459
+    }
+   ]
+  },
+  "Fn3": {
+   "n_independent_entries": 2,
+   "entries_used": [
+    "8OMW",
+    "8OT5"
+   ],
+   "between_entry": {
+    "extent_long_nm": {
+     "n": 2,
+     "mean": 4.844764380886459,
+     "sd": 0.26363859345777624,
+     "median": 4.844764380886459,
+     "min": 4.658343743669982,
+     "max": 5.031185018102936
+    },
+    "extent_mid_nm": {
+     "n": 2,
+     "mean": 3.5831051591043996,
+     "sd": 0.32012333311304025,
+     "median": 3.5831051591043996,
+     "min": 3.356743779444129,
+     "max": 3.8094665387646707
+    },
+    "extent_short_nm": {
+     "n": 2,
+     "mean": 2.848061379878675,
+     "sd": 0.38224500320143584,
+     "median": 2.848061379878675,
+     "min": 2.5777733460402663,
+     "max": 3.118349413717084
+    },
+    "mean_cross_section_nm": {
+     "n": 2,
+     "mean": 3.215583269491537,
+     "sd": 0.35118416815723785,
+     "median": 3.215583269491537,
+     "min": 2.9672585627421975,
+     "max": 3.463907976240877
+    },
+    "n_to_c_nm": {
+     "n": 2,
+     "mean": 4.4189466642956035,
+     "sd": 0.3225766675745767,
+     "median": 4.4189466642956035,
+     "min": 4.1908505152010616,
+     "max": 4.647042813390145
+    },
+    "radius_of_gyration_nm": {
+     "n": 2,
+     "mean": 1.3814155076535113,
+     "sd": 0.03005327896327967,
+     "median": 1.3814155076535113,
+     "min": 1.3601646303016852,
+     "max": 1.4026663850053374
+    },
+    "capsule_radius_nm": {
+     "n": 2,
+     "mean": 1.8928777387003861,
+     "sd": 0.15453215342679014,
+     "median": 1.8928777387003861,
+     "min": 1.783607005100943,
+     "max": 2.0021484722998295
+    },
+    "ellipsoid_enclosure_frac": {
+     "n": 2,
+     "mean": 0.9699363256377203,
+     "sd": 0.014407863473842882,
+     "median": 0.9699363256377203,
+     "min": 0.959748427672956,
+     "max": 0.9801242236024845
+    },
+    "capsule_enclosure_frac": {
+     "n": 2,
+     "mean": 0.9818938239774991,
+     "sd": 0.00425937988433006,
+     "median": 0.9818938239774991,
+     "min": 0.9788819875776398,
+     "max": 0.9849056603773585
+    },
+    "n_to_c_vs_pc1_deg": {
+     "n": 2,
+     "mean": 23.195943382463206,
+     "sd": 2.749365889242487,
+     "median": 23.195943382463206,
+     "min": 21.251848118216863,
+     "max": 25.140038646709552
+    },
+    "max_bend_from_nc_axis_nm": {
+     "n": 2,
+     "mean": 2.2040591390315676,
+     "sd": 0.06318232149690817,
+     "median": 2.2040591390315676,
+     "min": 2.1593824910499952,
+     "max": 2.24873578701314
+    },
+    "straightness": {
+     "n": 2,
+     "mean": 0.11329417756228671,
+     "sd": 0.011359514386864257,
+     "median": 0.11329417756228671,
+     "min": 0.10526178790834885,
+     "max": 0.12132656721622458
+    }
+   },
+   "within_entry_crystallographic_copies": {
+    "8OT5": {
+     "extent_long_nm": {
+      "n": 6,
+      "mean": 4.97531247393862,
+      "sd": 0.1704887517235342,
+      "median": 5.003961727108342,
+      "min": 4.669760445592286,
+      "max": 5.189974332184116
+     },
+     "n_to_c_nm": {
+      "n": 6,
+      "mean": 4.72327500229702,
+      "sd": 0.1088801263570055,
+      "median": 4.713429891354945,
+      "min": 4.600908125577275,
+      "max": 4.87316063533073
+     },
+     "mean_cross_section_nm": {
+      "n": 6,
+      "mean": 2.982897752496086,
+      "sd": 0.056517377598742584,
+      "median": 2.9617388641991447,
+      "min": 2.9363997038563125,
+      "max": 3.0885300803478892
+     }
+    }
+   },
+   "primary_chains": [
+    {
+     "pdb_id": "8OMW",
+     "role": "primary",
+     "chain": "A",
+     "n_residues_mapped": 106,
+     "n_heavy_atoms": 805,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9907,
+     "n_residues_observed": 107,
+     "unp_start_aligned": 16525,
+     "unp_end_aligned": 16630,
+     "unp_start_sifts": 16525,
+     "unp_end_sifts": 16630,
+     "sifts_offset_delta": -1,
+     "unmapped_construct_residues": [
+      3
+     ],
+     "extent_long_nm": 4.658343743669982,
+     "extent_mid_nm": 3.8094665387646707,
+     "extent_short_nm": 3.118349413717084,
+     "radius_of_gyration_nm": 1.3601646303016852,
+     "mean_cross_section_nm": 3.463907976240877,
+     "n_to_c_nm": 4.1908505152010616,
+     "n_to_c_vs_pc1_deg": 25.140038646709552,
+     "max_bend_from_nc_axis_nm": 2.1593824910499952,
+     "ca_contour_nm": 39.81359806324041,
+     "straightness": 0.10526178790834885,
+     "ellipsoid_semi_axes_nm": [
+      2.406453287975396,
+      2.0013663139250544,
+      1.7854379301837073
+     ],
+     "capsule_radius_nm": 2.0021484722998295,
+     "capsule_length_nm": 4.658343743669982,
+     "capsule_cylinder_nm": 0.6540467990703227,
+     "ellipsoid_enclosure_frac": 0.9801242236024845,
+     "capsule_enclosure_frac": 0.9788819875776398,
+     "ellipsoid_volume_nm3": 36.019475761878006,
+     "capsule_volume_nm3": 41.85509393038489,
+     "convex_hull_volume_nm3": 17.98700247444327,
+     "ellipsoid_volume_ratio_vs_hull": 2.0025279816943415,
+     "capsule_volume_ratio_vs_hull": 2.3269632608242787
+    },
+    {
+     "pdb_id": "8OT5",
+     "role": "alternate",
+     "chain": "A",
+     "n_residues_mapped": 102,
+     "n_heavy_atoms": 795,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 0.9808,
+     "n_residues_observed": 104,
+     "unp_start_aligned": 25430,
+     "unp_end_aligned": 25531,
+     "unp_start_sifts": 25430,
+     "unp_end_sifts": 25531,
+     "sifts_offset_delta": -2,
+     "unmapped_construct_residues": [
+      2,
+      3
+     ],
+     "extent_long_nm": 5.031185018102936,
+     "extent_mid_nm": 3.356743779444129,
+     "extent_short_nm": 2.5777733460402663,
+     "radius_of_gyration_nm": 1.4026663850053374,
+     "mean_cross_section_nm": 2.9672585627421975,
+     "n_to_c_nm": 4.647042813390145,
+     "n_to_c_vs_pc1_deg": 21.251848118216863,
+     "max_bend_from_nc_axis_nm": 2.24873578701314,
+     "ca_contour_nm": 38.30193930327168,
+     "straightness": 0.12132656721622458,
+     "ellipsoid_semi_axes_nm": [
+      2.6012708355029632,
+      1.7823686698355505,
+      1.3093220058723098
+     ],
+     "capsule_radius_nm": 1.783607005100943,
+     "capsule_length_nm": 5.031185018102936,
+     "capsule_cylinder_nm": 1.46397100790105,
+     "ellipsoid_enclosure_frac": 0.959748427672956,
+     "capsule_enclosure_frac": 0.9849056603773585,
+     "ellipsoid_volume_nm3": 25.428350432607097,
+     "capsule_volume_nm3": 38.398868054450766,
+     "convex_hull_volume_nm3": 17.39896555970114,
+     "ellipsoid_volume_ratio_vs_hull": 1.4614863363775679,
+     "capsule_volume_ratio_vs_hull": 2.2069627026211744
+    }
+   ]
+  },
+  "kinase": {
+   "n_independent_entries": 2,
+   "entries_used": [
+    "1TKI",
+    "4JNW"
+   ],
+   "between_entry": {
+    "extent_long_nm": {
+     "n": 2,
+     "mean": 6.647579599658985,
+     "sd": 0.17127257467267062,
+     "median": 6.647579599658985,
+     "min": 6.52647160067666,
+     "max": 6.76868759864131
+    },
+    "extent_mid_nm": {
+     "n": 2,
+     "mean": 5.026505803190641,
+     "sd": 0.027389855336242146,
+     "median": 5.026505803190641,
+     "min": 5.0071382507466655,
+     "max": 5.045873355634616
+    },
+    "extent_short_nm": {
+     "n": 2,
+     "mean": 4.293361412538383,
+     "sd": 0.08250453211739957,
+     "median": 4.293361412538383,
+     "min": 4.2350218983995465,
+     "max": 4.3517009266772195
+    },
+    "mean_cross_section_nm": {
+     "n": 2,
+     "mean": 4.659933607864511,
+     "sd": 0.05494719372682054,
+     "median": 4.659933607864511,
+     "min": 4.621080074573106,
+     "max": 4.6987871411559174
+    },
+    "n_to_c_nm": {
+     "n": 2,
+     "mean": 4.5310131681872665,
+     "sd": 0.11865407463372123,
+     "median": 4.5310131681872665,
+     "min": 4.447112067398347,
+     "max": 4.614914268976185
+    },
+    "radius_of_gyration_nm": {
+     "n": 2,
+     "mean": 1.971708643309046,
+     "sd": 0.007152194864251146,
+     "median": 1.971708643309046,
+     "min": 1.9666512778201664,
+     "max": 1.9767660087979255
+    },
+    "capsule_radius_nm": {
+     "n": 2,
+     "mean": 3.0610946793259903,
+     "sd": 0.03228016705536001,
+     "median": 3.0610946793259903,
+     "min": 3.0382691543033107,
+     "max": 3.08392020434867
+    },
+    "ellipsoid_enclosure_frac": {
+     "n": 2,
+     "mean": 0.9743491577335375,
+     "sd": 0.011370017155373216,
+     "median": 0.9743491577335375,
+     "min": 0.9663093415007658,
+     "max": 0.9823889739663093
+    },
+    "capsule_enclosure_frac": {
+     "n": 2,
+     "mean": 0.9917687595712098,
+     "sd": 0.00243643224757998,
+     "median": 0.9917687595712098,
+     "min": 0.9900459418070444,
+     "max": 0.9934915773353752
+    },
+    "n_to_c_vs_pc1_deg": {
+     "n": 2,
+     "mean": 42.727394747352236,
+     "sd": 2.567242713116795,
+     "median": 42.727394747352236,
+     "min": 40.912080015955596,
+     "max": 44.54270947874887
+    },
+    "max_bend_from_nc_axis_nm": {
+     "n": 2,
+     "mean": 4.463097189494253,
+     "sd": 0.06017353756225428,
+     "median": 4.463097189494253,
+     "min": 4.420548073035999,
+     "max": 4.505646305952506
+    },
+    "straightness": {
+     "n": 2,
+     "mean": 0.03719817962815532,
+     "sd": 0.0009977268498830827,
+     "median": 0.03719817962815532,
+     "min": 0.036492680206831093,
+     "max": 0.037903679049479534
+    }
+   },
+   "within_entry_crystallographic_copies": {
+    "1TKI": {
+     "extent_long_nm": {
+      "n": 2,
+      "mean": 6.526116248277417,
+      "sd": 0.0005025441824312736,
+      "median": 6.526116248277417,
+      "min": 6.525760895878174,
+      "max": 6.52647160067666
+     },
+     "n_to_c_nm": {
+      "n": 2,
+      "mean": 4.446425401768291,
+      "sd": 0.0009710918468399303,
+      "median": 4.446425401768291,
+      "min": 4.445738736138236,
+      "max": 4.447112067398347
+     },
+     "mean_cross_section_nm": {
+      "n": 2,
+      "mean": 4.620774300256601,
+      "sd": 0.0004324301854269271,
+      "median": 4.620774300256601,
+      "min": 4.620468525940096,
+      "max": 4.621080074573106
+     }
+    },
+    "4JNW": {
+     "extent_long_nm": {
+      "n": 2,
+      "mean": 6.714550677175548,
+      "sd": 0.0765611685620079,
+      "median": 6.714550677175548,
+      "min": 6.6604137557097856,
+      "max": 6.76868759864131
+     },
+     "n_to_c_nm": {
+      "n": 2,
+      "mean": 4.551561664696077,
+      "sd": 0.08959411218458362,
+      "median": 4.551561664696077,
+      "min": 4.48820906041597,
+      "max": 4.614914268976185
+     },
+     "mean_cross_section_nm": {
+      "n": 2,
+      "mean": 4.662384339973986,
+      "sd": 0.05148133513985919,
+      "median": 4.662384339973986,
+      "min": 4.625981538792054,
+      "max": 4.6987871411559174
+     }
+    }
+   },
+   "primary_chains": [
+    {
+     "pdb_id": "1TKI",
+     "role": "primary",
+     "chain": "A",
+     "n_residues_mapped": 321,
+     "n_heavy_atoms": 2612,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 321,
+     "unp_start_aligned": 32172,
+     "unp_end_aligned": 32492,
+     "unp_start_sifts": 32172,
+     "unp_end_sifts": 32492,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 6.52647160067666,
+     "extent_mid_nm": 5.0071382507466655,
+     "extent_short_nm": 4.2350218983995465,
+     "radius_of_gyration_nm": 1.9666512778201664,
+     "mean_cross_section_nm": 4.621080074573106,
+     "n_to_c_nm": 4.447112067398347,
+     "n_to_c_vs_pc1_deg": 44.54270947874887,
+     "max_bend_from_nc_axis_nm": 4.420548073035999,
+     "ca_contour_nm": 121.86312548689939,
+     "straightness": 0.036492680206831093,
+     "ellipsoid_semi_axes_nm": [
+      3.463202230209384,
+      2.6790665140925616,
+      2.170274761754672
+     ],
+     "capsule_radius_nm": 3.0382691543033107,
+     "capsule_length_nm": 6.52647160067666,
+     "capsule_cylinder_nm": 0.44993329207003896,
+     "ellipsoid_enclosure_frac": 0.9663093415007658,
+     "capsule_enclosure_frac": 0.9900459418070444,
+     "ellipsoid_volume_nm3": 84.34603619098927,
+     "capsule_volume_nm3": 130.52911767062085,
+     "convex_hull_volume_nm3": 65.22678781212136,
+     "ellipsoid_volume_ratio_vs_hull": 1.2931195758702514,
+     "capsule_volume_ratio_vs_hull": 2.0011581445125843
+    },
+    {
+     "pdb_id": "4JNW",
+     "role": "alternate",
+     "chain": "B",
+     "n_residues_mapped": 321,
+     "n_heavy_atoms": 2612,
+     "core_identity_frac": 1.0,
+     "internal_mismatches": [],
+     "internal_mismatch_detail": [],
+     "native_residue_frac": 1.0,
+     "n_residues_observed": 321,
+     "unp_start_aligned": 32172,
+     "unp_end_aligned": 32492,
+     "unp_start_sifts": 32172,
+     "unp_end_sifts": 32492,
+     "sifts_offset_delta": 0,
+     "unmapped_construct_residues": [],
+     "extent_long_nm": 6.76868759864131,
+     "extent_mid_nm": 5.045873355634616,
+     "extent_short_nm": 4.3517009266772195,
+     "radius_of_gyration_nm": 1.9767660087979255,
+     "mean_cross_section_nm": 4.6987871411559174,
+     "n_to_c_nm": 4.614914268976185,
+     "n_to_c_vs_pc1_deg": 40.912080015955596,
+     "max_bend_from_nc_axis_nm": 4.505646305952506,
+     "ca_contour_nm": 121.7537290496753,
+     "straightness": 0.037903679049479534,
+     "ellipsoid_semi_axes_nm": [
+      3.7125578845350944,
+      2.739519164362613,
+      2.2484329934823157
+     ],
+     "capsule_radius_nm": 3.08392020434867,
+     "capsule_length_nm": 6.76868759864131,
+     "capsule_cylinder_nm": 0.6008471899439698,
+     "ellipsoid_enclosure_frac": 0.9823889739663093,
+     "capsule_enclosure_frac": 0.9934915773353752,
+     "ellipsoid_volume_nm3": 95.78910939584806,
+     "capsule_volume_nm3": 140.80876555352617,
+     "convex_hull_volume_nm3": 66.25096334948213,
+     "ellipsoid_volume_ratio_vs_hull": 1.4458523250529733,
+     "capsule_volume_ratio_vs_hull": 2.1253844236308277
+    }
+   ]
+  }
+ }
+}

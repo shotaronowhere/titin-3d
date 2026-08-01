@@ -1,0 +1,453 @@
+{
+ "schema": "titin-mechanical-model/1",
+ "purpose": "Force-based mechanistic basis for I-band extension; supplies the recruitment order as a DERIVED result rather than prose.",
+ "evidence_class": "MODELED",
+ "physics": {
+  "topology": "The four I-band elastic regions are in mechanical SERIES between the Z-disc and the thick-filament tip, therefore they bear a COMMON force. One scalar force fixes the entire partition.",
+  "kT_pN_nm": 4.141947,
+  "T_kelvin": 300.0,
+  "T_rationale": "300 K is the temperature of the pnas.95.14.8052 experiments, i.e. the temperature at which the sourced persistence lengths were measured.",
+  "laws": {
+   "wlc": "f = (kT/A) * [ 1/(4(1-y)^2) - 1/4 + y ],  y = z/Lc  (Marko-Siggia)",
+   "ewlc": "z/Lc = y(f) + f/K0  -- entropic + enthalpic; no contour ceiling"
+  }
+ },
+ "chain_parameters": {
+  "prox_Ig": {
+   "law": "wlc",
+   "A_nm": 21.0,
+   "Lc_nm": 308.0,
+   "source": "10.1073/pnas.95.14.8052 (via Linke 1998 J Cell Sci 111:1567)"
+  },
+  "N2A": {
+   "law": "folded_plus_wlc",
+   "A_nm": 0.35,
+   "Lc_nm": 39.0,
+   "rigid_nm": 4.0,
+   "source": "10.3389/fphys.2020.00173 (geometry_sources[11],[12]); rigid folded-domain length from geometry_sources[10] (10.1016/j.jmb.2020.06.025)"
+  },
+  "PEVK": {
+   "law": "ewlc",
+   "A_nm": 0.55,
+   "Lc_nm": 542.1,
+   "K0_pN": 185.0,
+   "source": "10.1073/pnas.95.14.8052"
+  },
+  "dist_Ig": {
+   "law": "wlc",
+   "A_nm": 21.0,
+   "Lc_nm": 60.0,
+   "source": "10.1073/pnas.95.14.8052 (via Linke 1998 J Cell Sci 111:1567)"
+  }
+ },
+ "no_fitted_parameters": "Every A, K0 and Lc above is taken from a cited source or from the spec. None was adjusted to improve agreement with structural_states.json. The agreement reported below is therefore independent corroboration, not a fit.",
+ "source_validation": [
+  {
+   "quantity": "PEVK force at 20% extension",
+   "reported_pN": 1.5,
+   "model_pN": 2.171,
+   "tolerance_pN": 1.0,
+   "pass": true,
+   "source": "10.1073/pnas.95.14.8052"
+  },
+  {
+   "quantity": "PEVK force at 50% extension",
+   "reported_pN": 8.0,
+   "model_pN": 7.965,
+   "tolerance_pN": 0.5,
+   "pass": true,
+   "source": "10.1073/pnas.95.14.8052"
+  },
+  {
+   "quantity": "force at the paper's stated 60% validity boundary",
+   "reported_pN": 12.0,
+   "model_pN": 12.187,
+   "tolerance_pN": 1.0,
+   "pass": true,
+   "source": "10.1073/pnas.95.14.8052 ('below ~12 pN, or relative extensions <60%')"
+  },
+  {
+   "quantity": "poly-Ig fractional extension at the 35 pN fit limit",
+   "reported_pN": null,
+   "model_pN": 0.9624,
+   "tolerance_pN": null,
+   "pass": true,
+   "source": "10.1073/pnas.95.14.8052 (entropic WLC fit valid to ~35 pN)"
+  }
+ ],
+ "continuity": {
+  "sweeps": [
+   {
+    "samples": 20000,
+    "max_step_nm": 0.907704
+   },
+   {
+    "samples": 200000,
+    "max_step_nm": 0.090801
+   }
+  ],
+  "step_ratio_on_10x_refinement": 10.0,
+  "continuous": true,
+  "interpretation": "ratio ~10 means the apparent step is finite sampling of a steep but continuous limb; ratio ~1 would mean a true jump"
+ },
+ "per_state": {
+  "contracted": {
+   "sarcomere_length_nm": 1900,
+   "titin_I_band_total_nm": 125.0,
+   "model_force_pN": 0.1165,
+   "model_partition_nm": {
+    "prox_Ig": 96.14,
+    "N2A": 4.23,
+    "PEVK": 5.9,
+    "dist_Ig": 18.73
+   },
+   "spec_partition_nm": {
+    "prox_Ig": 96.14,
+    "N2A": 4.229,
+    "PEVK": 5.902,
+    "dist_Ig": 18.729
+   },
+   "deviation_nm": {
+    "prox_Ig": 0.0,
+    "N2A": -0.0,
+    "PEVK": -0.0,
+    "dist_Ig": -0.0
+   },
+   "worst_deviation_nm": 0.0,
+   "fraction_of_contour": {
+    "prox_Ig": 0.3121,
+    "N2A": 0.1084,
+    "PEVK": 0.0109,
+    "dist_Ig": 0.3121
+   },
+   "compliance_share": {
+    "prox_Ig": 0.7813,
+    "N2A": 0.0025,
+    "PEVK": 0.064,
+    "dist_Ig": 0.1522
+   },
+   "compliance_rank": [
+    "prox_Ig",
+    "dist_Ig",
+    "PEVK",
+    "N2A"
+   ],
+   "spec_implied_force_pN": {
+    "prox_Ig": 0.1165,
+    "N2A": 0.1165,
+    "PEVK": 0.1165,
+    "dist_Ig": 0.1165
+   },
+   "spec_implied_force_spread": 1.0,
+   "spec_values_unreachable_at_finite_force": [],
+   "spec_values_at_rigid_floor": []
+  },
+  "resting": {
+   "sarcomere_length_nm": 2200,
+   "titin_I_band_total_nm": 275.0,
+   "model_force_pN": 0.5174,
+   "model_partition_nm": {
+    "prox_Ig": 204.4,
+    "N2A": 5.01,
+    "PEVK": 25.77,
+    "dist_Ig": 39.82
+   },
+   "spec_partition_nm": {
+    "prox_Ig": 204.405,
+    "N2A": 5.005,
+    "PEVK": 25.771,
+    "dist_Ig": 39.819
+   },
+   "deviation_nm": {
+    "prox_Ig": -0.0,
+    "N2A": 0.0,
+    "PEVK": 0.0,
+    "dist_Ig": 0.0
+   },
+   "worst_deviation_nm": 0.0,
+   "fraction_of_contour": {
+    "prox_Ig": 0.6637,
+    "N2A": 0.1283,
+    "PEVK": 0.0475,
+    "dist_Ig": 0.6637
+   },
+   "compliance_share": {
+    "prox_Ig": 0.605,
+    "N2A": 0.0105,
+    "PEVK": 0.2667,
+    "dist_Ig": 0.1179
+   },
+   "compliance_rank": [
+    "prox_Ig",
+    "PEVK",
+    "dist_Ig",
+    "N2A"
+   ],
+   "spec_implied_force_pN": {
+    "prox_Ig": 0.5174,
+    "N2A": 0.5173,
+    "PEVK": 0.5174,
+    "dist_Ig": 0.5174
+   },
+   "spec_implied_force_spread": 1.0,
+   "spec_values_unreachable_at_finite_force": [],
+   "spec_values_at_rigid_floor": []
+  },
+  "stretched": {
+   "sarcomere_length_nm": 2400,
+   "titin_I_band_total_nm": 375.0,
+   "model_force_pN": 1.4729,
+   "model_partition_nm": {
+    "prox_Ig": 249.41,
+    "N2A": 6.78,
+    "PEVK": 70.23,
+    "dist_Ig": 48.59
+   },
+   "spec_partition_nm": {
+    "prox_Ig": 249.406,
+    "N2A": 6.781,
+    "PEVK": 70.227,
+    "dist_Ig": 48.586
+   },
+   "deviation_nm": {
+    "prox_Ig": 0.0,
+    "N2A": -0.0,
+    "PEVK": 0.0,
+    "dist_Ig": -0.0
+   },
+   "worst_deviation_nm": 0.0,
+   "fraction_of_contour": {
+    "prox_Ig": 0.8098,
+    "N2A": 0.1739,
+    "PEVK": 0.1295,
+    "dist_Ig": 0.8098
+   },
+   "compliance_share": {
+    "prox_Ig": 0.2966,
+    "N2A": 0.0252,
+    "PEVK": 0.6204,
+    "dist_Ig": 0.0578
+   },
+   "compliance_rank": [
+    "PEVK",
+    "prox_Ig",
+    "dist_Ig",
+    "N2A"
+   ],
+   "spec_implied_force_pN": {
+    "prox_Ig": 1.4729,
+    "N2A": 1.4731,
+    "PEVK": 1.4729,
+    "dist_Ig": 1.473
+   },
+   "spec_implied_force_spread": 1.0,
+   "spec_values_unreachable_at_finite_force": [],
+   "spec_values_at_rigid_floor": []
+  },
+  "extended_reference": {
+   "sarcomere_length_nm": 3000,
+   "titin_I_band_total_nm": 675.0,
+   "model_force_pN": 10.3588,
+   "model_partition_nm": {
+    "prox_Ig": 286.61,
+    "N2A": 18.32,
+    "PEVK": 314.23,
+    "dist_Ig": 55.83
+   },
+   "spec_partition_nm": {
+    "prox_Ig": 286.611,
+    "N2A": 18.321,
+    "PEVK": 314.235,
+    "dist_Ig": 55.833
+   },
+   "deviation_nm": {
+    "prox_Ig": -0.0,
+    "N2A": -0.0,
+    "PEVK": -0.0,
+    "dist_Ig": 0.0
+   },
+   "worst_deviation_nm": 0.0,
+   "fraction_of_contour": {
+    "prox_Ig": 0.9306,
+    "N2A": 0.4698,
+    "PEVK": 0.5797,
+    "dist_Ig": 0.9306
+   },
+   "compliance_share": {
+    "prox_Ig": 0.0586,
+    "N2A": 0.0484,
+    "PEVK": 0.8816,
+    "dist_Ig": 0.0114
+   },
+   "compliance_rank": [
+    "PEVK",
+    "prox_Ig",
+    "N2A",
+    "dist_Ig"
+   ],
+   "spec_implied_force_pN": {
+    "prox_Ig": 10.3588,
+    "N2A": 10.3589,
+    "PEVK": 10.3588,
+    "dist_Ig": 10.3573
+   },
+   "spec_implied_force_spread": 1.0,
+   "spec_values_unreachable_at_finite_force": [],
+   "spec_values_at_rigid_floor": []
+  }
+ },
+ "worst_deviation_nm_over_all_states": 0.0,
+ "derived_recruitment": {
+  "method": "Rank each region by the force at which it first reaches 25% of its own contour length, using only the sourced force-extension laws. Independent of structural_states.json.",
+  "onset_fraction": 0.25,
+  "onset_force_pN": {
+   "prox_Ig": 0.0877,
+   "N2A": 3.2217,
+   "PEVK": 3.078,
+   "dist_Ig": 0.0877
+  },
+  "derived_order": [
+   "prox_Ig",
+   "dist_Ig",
+   "PEVK",
+   "N2A"
+  ],
+  "spec_recruitment_order_ranks": {
+   "prox_Ig": 1,
+   "N2A": 2,
+   "PEVK": 3,
+   "dist_Ig": 1
+  },
+  "compliance_share_by_state": {
+   "contracted": {
+    "prox_Ig": 0.7813,
+    "N2A": 0.0025,
+    "PEVK": 0.064,
+    "dist_Ig": 0.1522
+   },
+   "resting": {
+    "prox_Ig": 0.605,
+    "N2A": 0.0105,
+    "PEVK": 0.2667,
+    "dist_Ig": 0.1179
+   },
+   "stretched": {
+    "prox_Ig": 0.2966,
+    "N2A": 0.0252,
+    "PEVK": 0.6204,
+    "dist_Ig": 0.0578
+   },
+   "extended_reference": {
+    "prox_Ig": 0.0586,
+    "N2A": 0.0484,
+    "PEVK": 0.8816,
+    "dist_Ig": 0.0114
+   }
+  },
+  "compliance_rank_by_state": {
+   "contracted": [
+    "prox_Ig",
+    "dist_Ig",
+    "PEVK",
+    "N2A"
+   ],
+   "resting": [
+    "prox_Ig",
+    "PEVK",
+    "dist_Ig",
+    "N2A"
+   ],
+   "stretched": [
+    "PEVK",
+    "prox_Ig",
+    "dist_Ig",
+    "N2A"
+   ],
+   "extended_reference": [
+    "PEVK",
+    "prox_Ig",
+    "N2A",
+    "dist_Ig"
+   ]
+  },
+  "qualitative_claim_under_test": "Compliance should migrate from the poly-Ig tandems at short SL to PEVK at long SL (the spec's prose ordering: Ig straightening -> N2A -> PEVK).",
+  "migration_test": {
+   "states_by_sl": [
+    "contracted",
+    "resting",
+    "stretched",
+    "extended_reference"
+   ],
+   "prox_Ig_compliance_share": [
+    0.7813,
+    0.605,
+    0.2966,
+    0.0586
+   ],
+   "PEVK_compliance_share": [
+    0.064,
+    0.2667,
+    0.6204,
+    0.8816
+   ],
+   "prox_Ig_monotonically_falls": true,
+   "PEVK_monotonically_rises": true,
+   "crossover_between": "resting->stretched",
+   "verdict": "PASS -- the prose ordering is reproduced by the sourced physics"
+  }
+ },
+ "isoform_scope": {
+  "spec_isoform": "Human canonical titin, UniProt Q8WZ42 \u2014 PEVK 1807 aa, contour length 542.1 nm as computed from this spec's own residue span.",
+  "chain_parameter_isoform": "Rat psoas skeletal titin (10.1073/pnas.95.14.8052). The persistence lengths and the PEVK stretch modulus are measured on that isoform, not on Q8WZ42.",
+  "why_this_is_acceptable_for_A_and_K0": "Persistence length A and stretch modulus K0 are per-unit-length MATERIAL properties of the polymer, so they transfer across isoforms. Contour lengths are NOT transferred: every Lc in chain_parameters is computed from this spec's own domain counts and residue spans, never adopted from the source isoform.",
+  "consequence_for_relative_extension": "None. Fractional extension z/Lc is a function of force alone, so it is isoform-independent: at 10 pN the model gives 56.9% for PEVK Lc = 542.1, 300.0 and 240.0 nm alike (spread 0.0). Relative extension claims therefore carry over from the source isoform without adjustment.",
+  "consequence_for_absolute_force": "Absolute force IS isoform-sensitive, because a shorter contour reaches the same absolute extension at a higher force. At SL 3.0 um the predicted force rises 10.4 -> 14.6 -> 25.8 -> 67.2 pN as PEVK contour falls 542.1 -> 450 -> 350 -> 240 nm. Forces predicted here for the long-PEVK canonical isoform are therefore LOWER BOUNDS relative to a short-PEVK psoas fibre at equal sarcomere length, and any agreement in absolute pN across isoforms cannot be claimed as validation.",
+  "isoform_force_sensitivity_at_SL_3um": [
+   {
+    "PEVK_Lc_nm": 542.1,
+    "force_pN": 10.4
+   },
+   {
+    "PEVK_Lc_nm": 450.0,
+    "force_pN": 14.6
+   },
+   {
+    "PEVK_Lc_nm": 350.0,
+    "force_pN": 25.8
+   },
+   {
+    "PEVK_Lc_nm": 240.0,
+    "force_pN": 67.2
+   }
+  ],
+  "evidence_class": "MODELED (series force balance over MEASURED chain parameters)"
+ },
+ "cross_isoform_plausibility_check": {
+  "status": "PLAUSIBILITY CHECK \u2014 NOT VALIDATION",
+  "source": "10.1073/pnas.95.14.8052",
+  "source_statement": "At 2.9-3.0 um sarcomere length, force per titin is near 10 pN with PEVK extension about 50%.",
+  "model_prediction_over_that_window": [
+   {
+    "SL_um": 2.9,
+    "I_band_total_nm": 625.0,
+    "force_pN": 7.911,
+    "PEVK_percent_of_contour": 49.9
+   },
+   {
+    "SL_um": 2.95,
+    "I_band_total_nm": 650.0,
+    "force_pN": 9.052,
+    "PEVK_percent_of_contour": 53.9
+   },
+   {
+    "SL_um": 3.0,
+    "I_band_total_nm": 675.0,
+    "force_pN": 10.359,
+    "PEVK_percent_of_contour": 58.0
+   }
+  ],
+  "why_the_prediction_is_not_a_fit": "The model consumes no force datum and no extension datum. Each I-band total follows from sarcomere geometry alone (SL, Z-disc width, thick-filament half-length), and the force is then the single scalar that makes the four series regions sum to that total. Both columns are outputs.",
+  "why_not_validation": "The agreement has two halves and only one is informative. The PEVK-percent half is isoform-independent (z/Lc depends on force alone), so matching ~50% is just a restatement of the source's own force-extension relation \u2014 already covered by source_validation. The absolute-force half IS isoform-sensitive, and this spec's isoform differs from the source's, so a pN match across the two cannot be read as confirming this spec's numbers.",
+  "what_makes_it_non_circular": "No parameter was fitted to the quantity being checked: the chain parameters come from force-extension experiments, while the I-band totals come from independently sourced sarcomere geometry. The check can therefore fail \u2014 it is not guaranteed by construction \u2014 which is what makes it worth recording even though it is not validation."
+ }
+}

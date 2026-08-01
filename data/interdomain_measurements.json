@@ -1,0 +1,573 @@
+{
+ "schema": "titin-interdomain-measurements/1",
+ "raw_source_manifest": "data/structures/manifest.json (SHA-256 and byte-pinned)",
+ "phase": "Phase 6 step 5 \u2014 interaction geometry between consecutive domains",
+ "purpose": "measure domain-to-domain rise, bend and AZIMUTHAL twist, which single-domain entries cannot provide",
+ "uniprot": {
+  "accession": "Q8WZ42",
+  "domains_annotated": 284
+ },
+ "provenance": {
+  "coordinates": "RCSB mmCIF (files.rcsb.org)",
+  "domain_boundaries": "UniProt Q8WZ42 Domain feature annotations",
+  "residue_mapping": "PDBe SIFTS, verified by explicit sequence alignment",
+  "software": "gemmi 0.7.5, numpy 2.4.6",
+  "units": "nm and degrees"
+ },
+ "method": {
+  "entry_selection": "RCSB search: Q8WZ42 polymer entities with sample sequence length > 180 aa, filtered to crystal structures of contiguous annotated domain runs",
+  "excluded_from_angles": {
+   "8G4L": "cryo-EM human cardiac myosin filament at 6.4 A \u2014 titin in situ. EXCLUDED from bend/twist because a 6.4 A backbone cannot support a per-domain axis fit precise enough to claim an angle. INCLUDED for centroid spacing as the lattice-free cross-check (see in_situ_cross_check); also Phase 7 evidence for titin on the thick filament."
+  },
+  "pair_definition": "consecutive UniProt-annotated domains, both with >=60 observed CA, separated by <=40 unannotated residues",
+  "axes": "PC1 of each domain's CA cloud, oriented N->C",
+  "twist_definition": "signed dihedral of the two domain axes about the centre-to-centre vector = azimuthal rotation",
+  "independence": "one representative pair per entry for the summary"
+ },
+ "entries": {
+  "3LPW": {
+   "chains": [
+    {
+     "chain": "A",
+     "core_identity_frac": 0.9848,
+     "unp_span": [
+      22874,
+      23070
+     ],
+     "domains_observed": [
+      "Fibronectin type-III 66",
+      "Fibronectin type-III 67"
+     ]
+    },
+    {
+     "chain": "B",
+     "core_identity_frac": 0.9949,
+     "unp_span": [
+      22876,
+      23070
+     ],
+     "domains_observed": [
+      "Fibronectin type-III 66",
+      "Fibronectin type-III 67"
+     ]
+    }
+   ],
+   "n_pairs": 2
+  },
+  "8BXR": {
+   "chains": [
+    {
+     "chain": "A",
+     "core_identity_frac": 0.9832,
+     "unp_span": [
+      14316,
+      14613
+     ],
+     "domains_observed": [
+      "Fibronectin type-III 4",
+      "Fibronectin type-III 5"
+     ]
+    }
+   ],
+   "n_pairs": 1
+  },
+  "8BNQ": {
+   "chains": [
+    {
+     "chain": "A",
+     "core_identity_frac": 0.9901,
+     "unp_span": [
+      23559,
+      23862
+     ],
+     "domains_observed": [
+      "Fibronectin type-III 71",
+      "Fibronectin type-III 72",
+      "Fibronectin type-III 73"
+     ]
+    },
+    {
+     "chain": "B",
+     "core_identity_frac": 0.9901,
+     "unp_span": [
+      23559,
+      23861
+     ],
+     "domains_observed": [
+      "Fibronectin type-III 71",
+      "Fibronectin type-III 72",
+      "Fibronectin type-III 73"
+     ]
+    }
+   ],
+   "n_pairs": 4
+  },
+  "2J8O": {
+   "chains": [
+    {
+     "chain": "A",
+     "core_identity_frac": 0.9898,
+     "unp_span": [
+      31852,
+      32047
+     ],
+     "domains_observed": [
+      "Ig-like 141",
+      "Ig-like 142"
+     ]
+    },
+    {
+     "chain": "B",
+     "core_identity_frac": 0.9949,
+     "unp_span": [
+      31853,
+      32047
+     ],
+     "domains_observed": [
+      "Ig-like 141",
+      "Ig-like 142"
+     ]
+    }
+   ],
+   "n_pairs": 2
+  },
+  "6YGN": {
+   "chains": [
+    {
+     "chain": "A",
+     "core_identity_frac": 1.0,
+     "unp_span": [
+      32046,
+      32594
+     ],
+     "domains_observed": [
+      "Fibronectin type-III 132",
+      "Ig-like 143"
+     ]
+    },
+    {
+     "chain": "B",
+     "core_identity_frac": 1.0,
+     "unp_span": [
+      32046,
+      32594
+     ],
+     "domains_observed": [
+      "Fibronectin type-III 132",
+      "Ig-like 143"
+     ]
+    }
+   ],
+   "n_pairs": 0
+  }
+ },
+ "pairs": [
+  {
+   "pdb_id": "3LPW",
+   "chain": "A",
+   "pair": "Fibronectin type-III 66 -> Fibronectin type-III 67",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 1,
+   "n_res": [
+    96,
+    93
+   ],
+   "centre_to_centre_nm": 4.083,
+   "bend_deg": 51.385,
+   "twist_deg": -175.014,
+   "axis_vs_link_deg": 27.947
+  },
+  {
+   "pdb_id": "3LPW",
+   "chain": "B",
+   "pair": "Fibronectin type-III 66 -> Fibronectin type-III 67",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 1,
+   "n_res": [
+    96,
+    93
+   ],
+   "centre_to_centre_nm": 4.069,
+   "bend_deg": 52.108,
+   "twist_deg": -179.188,
+   "axis_vs_link_deg": 29.301
+  },
+  {
+   "pdb_id": "8BXR",
+   "chain": "A",
+   "pair": "Fibronectin type-III 4 -> Fibronectin type-III 5",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 3,
+   "n_res": [
+    96,
+    97
+   ],
+   "centre_to_centre_nm": 4.551,
+   "bend_deg": 69.876,
+   "twist_deg": 161.855,
+   "axis_vs_link_deg": 45.476
+  },
+  {
+   "pdb_id": "8BNQ",
+   "chain": "A",
+   "pair": "Fibronectin type-III 71 -> Fibronectin type-III 72",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 5,
+   "n_res": [
+    95,
+    96
+   ],
+   "centre_to_centre_nm": 4.603,
+   "bend_deg": 82.909,
+   "twist_deg": -173.759,
+   "axis_vs_link_deg": 49.658
+  },
+  {
+   "pdb_id": "8BNQ",
+   "chain": "A",
+   "pair": "Fibronectin type-III 72 -> Fibronectin type-III 73",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 5,
+   "n_res": [
+    96,
+    96
+   ],
+   "centre_to_centre_nm": 4.693,
+   "bend_deg": 69.317,
+   "twist_deg": 164.521,
+   "axis_vs_link_deg": 47.335
+  },
+  {
+   "pdb_id": "8BNQ",
+   "chain": "B",
+   "pair": "Fibronectin type-III 71 -> Fibronectin type-III 72",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 5,
+   "n_res": [
+    95,
+    96
+   ],
+   "centre_to_centre_nm": 4.703,
+   "bend_deg": 74.709,
+   "twist_deg": -168.844,
+   "axis_vs_link_deg": 44.993
+  },
+  {
+   "pdb_id": "8BNQ",
+   "chain": "B",
+   "pair": "Fibronectin type-III 72 -> Fibronectin type-III 73",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 5,
+   "n_res": [
+    96,
+    95
+   ],
+   "centre_to_centre_nm": 4.779,
+   "bend_deg": 24.942,
+   "twist_deg": 74.324,
+   "axis_vs_link_deg": 24.047
+  },
+  {
+   "pdb_id": "2J8O",
+   "chain": "A",
+   "pair": "Ig-like 141 -> Ig-like 142",
+   "classes": [
+    "Ig_like",
+    "Ig_like"
+   ],
+   "linker_gap_residues": 9,
+   "n_res": [
+    91,
+    92
+   ],
+   "centre_to_centre_nm": 4.254,
+   "bend_deg": 23.64,
+   "twist_deg": 62.758,
+   "axis_vs_link_deg": 18.139
+  },
+  {
+   "pdb_id": "2J8O",
+   "chain": "B",
+   "pair": "Ig-like 141 -> Ig-like 142",
+   "classes": [
+    "Ig_like",
+    "Ig_like"
+   ],
+   "linker_gap_residues": 9,
+   "n_res": [
+    91,
+    92
+   ],
+   "centre_to_centre_nm": 4.28,
+   "bend_deg": 26.363,
+   "twist_deg": 76.987,
+   "axis_vs_link_deg": 19.447
+  }
+ ],
+ "independent_pairs": [
+  {
+   "pdb_id": "3LPW",
+   "chain": "A",
+   "pair": "Fibronectin type-III 66 -> Fibronectin type-III 67",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 1,
+   "n_res": [
+    96,
+    93
+   ],
+   "centre_to_centre_nm": 4.083,
+   "bend_deg": 51.385,
+   "twist_deg": -175.014,
+   "axis_vs_link_deg": 27.947
+  },
+  {
+   "pdb_id": "8BXR",
+   "chain": "A",
+   "pair": "Fibronectin type-III 4 -> Fibronectin type-III 5",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 3,
+   "n_res": [
+    96,
+    97
+   ],
+   "centre_to_centre_nm": 4.551,
+   "bend_deg": 69.876,
+   "twist_deg": 161.855,
+   "axis_vs_link_deg": 45.476
+  },
+  {
+   "pdb_id": "8BNQ",
+   "chain": "A",
+   "pair": "Fibronectin type-III 72 -> Fibronectin type-III 73",
+   "classes": [
+    "Fn3",
+    "Fn3"
+   ],
+   "linker_gap_residues": 5,
+   "n_res": [
+    96,
+    96
+   ],
+   "centre_to_centre_nm": 4.693,
+   "bend_deg": 69.317,
+   "twist_deg": 164.521,
+   "axis_vs_link_deg": 47.335
+  },
+  {
+   "pdb_id": "2J8O",
+   "chain": "A",
+   "pair": "Ig-like 141 -> Ig-like 142",
+   "classes": [
+    "Ig_like",
+    "Ig_like"
+   ],
+   "linker_gap_residues": 9,
+   "n_res": [
+    91,
+    92
+   ],
+   "centre_to_centre_nm": 4.254,
+   "bend_deg": 23.64,
+   "twist_deg": 62.758,
+   "axis_vs_link_deg": 18.139
+  }
+ ],
+ "summary_independent": {
+  "centre_to_centre_nm": {
+   "n": 4,
+   "median": 4.402,
+   "mean": 4.395,
+   "sd": 0.277,
+   "min": 4.083,
+   "max": 4.693
+  },
+  "bend_deg": {
+   "n": 4,
+   "median": 60.351,
+   "mean": 53.554,
+   "sd": 21.714,
+   "min": 23.64,
+   "max": 69.876
+  },
+  "twist_deg": {
+   "n": 4,
+   "median": 112.306,
+   "mean": 53.53,
+   "sd": 159.552,
+   "min": -175.014,
+   "max": 164.521
+  },
+  "abs_twist_deg": {
+   "n": 4,
+   "median": 163.188,
+   "mean": 141.037,
+   "sd": 52.494,
+   "min": 62.758,
+   "max": 175.014
+  },
+  "axis_vs_link_deg": {
+   "n": 4,
+   "median": 36.712,
+   "mean": 34.724,
+   "sd": 14.091,
+   "min": 18.139,
+   "max": 47.335
+  }
+ },
+ "summary_all_pairs": {
+  "centre_to_centre_nm": {
+   "n": 9,
+   "median": 4.551,
+   "mean": 4.446,
+   "sd": 0.277,
+   "min": 4.069,
+   "max": 4.779
+  },
+  "bend_deg": {
+   "n": 9,
+   "median": 52.108,
+   "mean": 52.805,
+   "sd": 23.127,
+   "min": 23.64,
+   "max": 82.909
+  },
+  "abs_twist_deg": {
+   "n": 9,
+   "median": 164.521,
+   "mean": 137.472,
+   "sd": 50.006,
+   "min": 62.758,
+   "max": 179.188
+  }
+ },
+ "in_situ_cross_check": {
+  "available": true,
+  "pdb_id": "8G4L",
+  "description": "cryo-EM human cardiac myosin filament, 6.4 A; titin Ig117-Fn73 (A-band super-repeat) in situ",
+  "resolution_A": 6.4,
+  "method": "ELECTRON MICROSCOPY",
+  "chains": [
+   {
+    "chain": "bm",
+    "core_identity_frac": 1.0,
+    "unp_span": [
+     22784,
+     23867
+    ],
+    "n_domains_observed": 11,
+    "n_consecutive_pairs": 10
+   },
+   {
+    "chain": "bn",
+    "core_identity_frac": 1.0,
+    "unp_span": [
+     22784,
+     23867
+    ],
+    "n_domains_observed": 11,
+    "n_consecutive_pairs": 10
+   },
+   {
+    "chain": "am",
+    "core_identity_frac": 1.0,
+    "unp_span": [
+     22784,
+     23867
+    ],
+    "n_domains_observed": 11,
+    "n_consecutive_pairs": 10
+   },
+   {
+    "chain": "an",
+    "core_identity_frac": 1.0,
+    "unp_span": [
+     22784,
+     23867
+    ],
+    "n_domains_observed": 11,
+    "n_consecutive_pairs": 10
+   },
+   {
+    "chain": "m",
+    "core_identity_frac": 1.0,
+    "unp_span": [
+     22784,
+     23867
+    ],
+    "n_domains_observed": 11,
+    "n_consecutive_pairs": 10
+   },
+   {
+    "chain": "n",
+    "core_identity_frac": 1.0,
+    "unp_span": [
+     22784,
+     23867
+    ],
+    "n_domains_observed": 11,
+    "n_consecutive_pairs": 10
+   }
+  ],
+  "centre_to_centre_nm": {
+   "n": 60,
+   "median": 4.102,
+   "mean": 4.205,
+   "sd": 0.405,
+   "min": 3.401,
+   "max": 4.859
+  },
+  "measures": [
+   "centroid spacing between consecutive domains"
+  ],
+  "deliberately_not_measured": [
+   "per-domain principal axes, inter-axis bend, and azimuthal twist \u2014 a 6.4 A backbone does not support an axis fit precise enough to claim an angle"
+  ],
+  "why_it_matters": "the tandem crystals' stated limitation is lattice packing; this entry has none, so it is an independent check on the crystal spacing"
+ },
+ "findings": {
+  "consecutive_domains_rotate": true,
+  "twist_is_uniform_in_sign": false,
+  "in_situ_vs_crystal_spacing": {
+   "in_situ_median_nm": 4.102,
+   "crystal_median_nm": 4.551,
+   "difference_nm": -0.449,
+   "literature_axial_length_nm": 4.0,
+   "in_situ_minus_literature_nm": 0.102,
+   "interpretation": "In-situ spacing (4.102 nm, n=60, no lattice) is 0.449 nm below the crystal median (4.551 nm) and within 0.102 nm of the literature 4.0 nm axial length the spec retains. The crystal tandems are therefore not grossly packing-distorted in spacing, and the retained literature value is independently corroborated in situ."
+  },
+  "interpretation": "Consecutive domains show substantial azimuthal rotation (|twist| median 163.188 deg over 4 independent pairs, range 62.758-175.014 deg). A CONSTANT azimuth for every domain in a tandem run is therefore not supported by observed tandems; the spec's alternating-azimuth schematic is the better of the two available conventions, and remains SCHEMATIC."
+ },
+ "not_claimed": [
+  "a canonical inter-domain azimuth (Ig-Ig linkers are flexible; each crystal shows one conformation, influenced by lattice packing)",
+  "that these conformations are the in vivo conformations",
+  "that the measured twist should be adopted as a per-domain azimuth",
+  "inter-domain geometry for PEVK or N2A (disordered; no tandem crystal)"
+ ]
+}

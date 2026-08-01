@@ -1,0 +1,37 @@
+{
+  "//": [
+    "Phase 9 names 'Three.js + TypeScript' as the implementation stack. This project",
+    "type-checks with TypeScript but EMITS NOTHING (noEmit), so the ES modules the",
+    "browser loads through the importmap stay byte-identical to the modules the Node",
+    "test suite verifies. ARCHITECTURE.md records that as a deliberate invariant: a",
+    "build step would create a second artifact that could drift from the tested one.",
+    "Types are expressed in JSDoc and checked with checkJs, so TypeScript's checker",
+    "and TypeScript's strictness both apply to every source file.",
+    "",
+    "Run:  npm run typecheck"
+  ],
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  },
+  "//include": [
+    "The GATE covers src/ only, and src/ is clean at zero diagnostics.",
+    "Tests are enforced by node --test. They deliberately pass wrong-typed and",
+    "malformed inputs to prove runtime guards reject them, so presenting strict",
+    "static analysis of the test fixtures as a supported command would be misleading."
+  ],
+  "include": ["src/**/*.js"],
+  "exclude": ["node_modules"]
+}

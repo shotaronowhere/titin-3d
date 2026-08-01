@@ -1,0 +1,277 @@
+{
+ "schema": "titin-context-measurements/1",
+ "raw_source_manifest": "data/structures/manifest.json (SHA-256 and byte-pinned)",
+ "purpose": "Measured geometry of titin's structural context (myosin thick filament, actin thin filament), taken from deposited coordinates rather than from figures or recall.",
+ "method": "Polymer CA coordinates parsed from mmCIF; each filament axis is the first principal axis of the chains belonging to that filament (6KN7 regulatory proteins do not enter the actin-axis fit). Helical rise/twist are the mean consecutive-subunit advances, preserving the global end-to-end advance. Cylindrical coordinates are measured about the fitted axis; azimuths of 3-fold-related copies are averaged mod 120 deg.",
+ "structures": {
+  "8G4L": {
+   "title": "Human cardiac myosin (thick) filament C-zone, 6 A cryo-EM",
+   "doi": "10.1038/s41586-023-06691-4",
+   "emdb": [
+    "EMD-29722",
+    "EMD-29726",
+    "EMD-29734"
+   ],
+   "chains": {
+    "myosin_heavy": 78,
+    "ELC": 18,
+    "RLC": 18,
+    "titin": 6,
+    "cMyBP-C": 3
+   }
+  },
+  "6KN7": {
+   "title": "Human cardiac thin filament, Ca2+-free \u2014 NOTE the actin entity is alpha SKELETAL actin; only the troponin subunits are cardiac isoforms",
+   "resolution_A": 6.6,
+   "chains": {
+    "actin": 15,
+    "tropomyosin": 8,
+    "TnT": 2,
+    "TnI": 2,
+    "TnC": 2
+   },
+   "entity_isoforms": {
+    "actin": "alpha skeletal muscle",
+    "tropomyosin": "alpha-1",
+    "TnT": "cardiac",
+    "TnI": "cardiac",
+    "TnC": "slow skeletal and cardiac"
+   }
+  }
+ },
+ "measurements": [
+  {
+   "quantity": "titin strands per repeat unit",
+   "value": 6,
+   "unit": "count",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "note": "3 radial sectors x 2 strands (TA outer, TB inner)",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "titin strand radius, outer (TA)",
+   "value": 8.571,
+   "unit": "nm",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "titin strand radius, inner (TB)",
+   "value": 6.855,
+   "unit": "nm",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "titin pair azimuthal separation (within a sector)",
+   "value": 30.021,
+   "unit": "deg",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "titin sector azimuthal separation",
+   "value": 120.0,
+   "unit": "deg",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "note": "exact by the reconstruction's IMPOSED 3-fold symmetry",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "titin TA-TB centroid separation",
+   "value": 4.325,
+   "unit": "nm",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "note": "paper quotes ~4.8 nm (48 A) between TA and TB",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "myosin crowns per repeat",
+   "value": 3,
+   "unit": "count",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "crown axial spacing",
+   "value": 14.444,
+   "unit": "nm",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "note": "measured 144.4 A; X-ray value 14.3-14.4 nm",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "inter-crown azimuthal rotations",
+   "value": [
+    32,
+    16,
+    72
+   ],
+   "unit": "deg",
+   "source": "10.1038/s41586-023-06691-4",
+   "evidence_class": "MEASURED",
+   "note": "PAPER values, measured to the head-tail junction of each IHM. Our own centroid-based estimate gave {29.3, 30.2, 60.4}: also unequal, also sums to 120, but numerically different because the reference point differs. Use the paper's values, not ours.",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes"
+  },
+  {
+   "quantity": "thick filament backbone diameter",
+   "value": 14.254,
+   "unit": "nm",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "note": "tail residues >1100, p95 radius; our spec uses 15 nm",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "thick filament diameter including heads",
+   "value": 32.356,
+   "unit": "nm",
+   "source": "8G4L",
+   "evidence_class": "MEASURED",
+   "note": "p99 radius; literature quotes ~30 nm",
+   "muscle_type": "cardiac",
+   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "actin axial rise per subunit",
+   "value": 2.755,
+   "unit": "nm",
+   "source": "6KN7",
+   "evidence_class": "MEASURED",
+   "note": "literature 2.735 nm",
+   "muscle_type": "skeletal (actin entity in 6KN7 is 'Actin, alpha skeletal muscle')",
+   "skeletal_transfer": "DIRECT \u2014 this is skeletal actin; no cross-muscle transfer required",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "actin twist per subunit",
+   "value": -166.628,
+   "unit": "deg",
+   "source": "6KN7",
+   "evidence_class": "MEASURED",
+   "muscle_type": "skeletal (actin entity in 6KN7 is 'Actin, alpha skeletal muscle')",
+   "skeletal_transfer": "DIRECT \u2014 this is skeletal actin; no cross-muscle transfer required",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "actin crossover repeat",
+   "value": 37.091,
+   "unit": "nm",
+   "source": "6KN7",
+   "evidence_class": "MEASURED",
+   "note": "derived: 180/(180-|twist|) subunits x rise; literature 36-37 nm",
+   "muscle_type": "skeletal (actin entity in 6KN7 is 'Actin, alpha skeletal muscle')",
+   "skeletal_transfer": "DIRECT \u2014 this is skeletal actin; no cross-muscle transfer required",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  },
+  {
+   "quantity": "actin filament diameter (CA envelope)",
+   "value": 8.235,
+   "unit": "nm",
+   "source": "6KN7",
+   "evidence_class": "MEASURED",
+   "note": "CA atoms only; side chains bring it to ~9-10 nm. Spec uses 9 nm.",
+   "muscle_type": "skeletal (actin entity in 6KN7 is 'Actin, alpha skeletal muscle')",
+   "skeletal_transfer": "DIRECT \u2014 this is skeletal actin; no cross-muscle transfer required",
+   "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
+  }
+ ],
+ "not_claimed": [
+  "that the 3-fold symmetry of 8G4L is exact in vivo (it was IMPOSED during reconstruction)",
+  "that the C-zone titin arrangement holds in the D-zone (7-domain super-repeat, different)",
+  "that the cardiac (8G4L) titin arrangement transfers unchanged to skeletal muscle",
+  "individual myosin head conformations as a function of activation state",
+  "troponin/tropomyosin azimuthal register relative to myosin crowns"
+ ],
+ "phase": "Phase 6 \u2014 PDB / Structural Data Pipeline (out-of-band; see followup_register)",
+ "provenance": {
+  "how_measured": "Re-derived through the Phase 6 pipeline: scripts/parse_structure.py -> scripts/measure_structure.py, driven by scripts/measure_context.py. Supersedes the ad hoc regex-parser measurement of session 15; the diff is recorded in geometry_strategy.json:followup_register item PH6-1.",
+  "isoform_caveat": "8G4L is cardiac and its titin arrangement is not transferred silently to the skeletal N2A model. 6KN7 has cardiac troponin subunits, but the actin entity measured for rise/twist is alpha-skeletal actin, so that geometry is direct for the declared skeletal scope. Every row carries muscle_type and skeletal_transfer.",
+  "software": "gemmi (see parse_structure), numpy 2.4.6",
+  "reproduce": "python3 scripts/measure_context.py --write"
+ },
+ "chain_counts_verified": {
+  "8G4L": {
+   "Myosin-7": 78,
+   "Myosin light chain 3": 18,
+   "Myosin regulatory light chain 2, ventricular/cardiac muscle isoform": 18,
+   "Titin": 6,
+   "Myosin-binding protein C, cardiac-type": 3
+  },
+  "6KN7": {
+   "Actin, alpha skeletal muscle": 15,
+   "Tropomyosin alpha-1 chain": 4,
+   "Troponin T, cardiac muscle": 2,
+   "Troponin I, cardiac muscle": 2,
+   "Troponin C, slow skeletal and cardiac muscles": 2,
+   "ADENOSINE-5'-DIPHOSPHATE": 0
+  }
+ },
+ "head_projection_skeleton": {
+  "_purpose": "Geometry for the myosin crossbridge depiction. Replaces the single radial capsule the Phase 7b first pass drew (see geometry_strategy.json:followup_register PH7B-1).",
+  "source_pdb": "8G4L",
+  "muscle_type": "cardiac (human beta-cardiac myosin, interacting-heads motif)",
+  "resolution_A": 6.4,
+  "n_chains": 12,
+  "statistic": "median over chains; angles are to the FILAMENT AXIS",
+  "values_nm_deg": {
+   "s2_exit_radius_nm": 7.98,
+   "junction_radius_nm": 14.09,
+   "motor_centroid_radius_nm": 12.27,
+   "s2_length_nm": 26.0,
+   "motor_offset_length_nm": 9.21,
+   "s2_angle_to_axis_deg": 13.81,
+   "motor_angle_to_axis_deg": 17.01,
+   "motor_axial_displacement_nm": 8.78,
+   "s2_axial_displacement_nm": -25.25,
+   "s2_radial_displacement_nm": 6.01,
+   "motor_radial_displacement_nm": -2.19,
+   "tip_axial_displacement_nm": 10.39,
+   "tip_radial_displacement_nm": -2.32,
+   "tip_distance_from_junction_nm": 12.59,
+   "tip_angle_to_axis_deg": 18.63,
+   "s2_radius_nm": 0.79,
+   "tip_angle_of_median_displacements_deg": 12.59,
+   "motor_angle_of_median_displacements_deg": 13.99,
+   "s2_angle_of_median_displacements_deg": 13.38
+  },
+  "motor_domain_long_axis_nm": 9.31,
+  "motor_domain_width_nm": 5.75,
+  "axial_displacement_sign_agreement": "12 of 12 positive",
+  "note": "The myosin projection is a TWO-segment skeleton, not a radial spike. S2 leaves the backbone at a shallow angle to the filament axis and the motor domain is displaced axially from its own head-tail junction with a consistent sign across chains, which is what makes the standard 'angled crossbridge / golf club' depiction the structurally correct one.",
+  "axial_tilt_direction": "toward the M-line",
+  "axial_tilt_direction_how_determined": "Myosin polarity is fixed by sequence: the N-terminal motor domain faces the Z-disc and the C-terminal LMM tail runs into the M-line, so within a single chain the N-to-C axial direction IS 'toward the M-line'. Measured per chain: the 6 chains resolved furthest into the rod (to res 1172) give N-to-C steps of +25.3 to +30.4 nm, 6 of 6 positive. The 6 chains truncated at res 947 give small negative steps because their C-terminal window still lies inside the head, where the path doubles back \u2014 they do not contradict the polarity, they just do not reach rod-ward sequence. The motor domain then sits 8.78 nm on the M-line side of its own head-tail junction, 18 of 18 chains agreeing.",
+  "state_caveat": "IMPORTANT: 8G4L is a RELAXED filament in the interacting-heads motif, where heads fold back along the backbone toward the M-line. The two segment LENGTHS and the fact that the projection is angled rather than radial are general, but the SIGN of the axial tilt is specific to this relaxed state. Active, force-generating cross-bridges are not described by these numbers. The depiction therefore claims 'angled, tilted toward the M-line, relaxed state', not 'the cross-bridge angle'. CONTEXT_DETAIL_POLICY.not_claimed already disclaims head conformation as a function of activation state; this is the quantitative reason that disclaimer is needed.",
+  "envelope_constraint_nm": 32.356,
+  "envelope_constraint_meaning": "Any head depiction must fit inside this measured filament-including-heads diameter. The superseded radial capsule reached 47.0 nm, 45 percent over.",
+  "evidence_class": "MEASURED"
+ }
+}

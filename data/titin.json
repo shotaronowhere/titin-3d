@@ -1,0 +1,770 @@
+{
+  "meta": {
+    "description": "Titin molecule geometric+mechanical specification, Z-disc to M-line (single molecule, one half-sarcomere).",
+    "uniprot": "Q8WZ42",
+    "total_length_aa": 34350,
+    "span": "single titin spans one half-sarcomere (Z-disc N-term -> M-line C-term)",
+    "coordinate_system": {
+      "X": "longitudinal (nm), origin Z-disc center",
+      "unit": "nm"
+    },
+    "reference_state": "resting, SL=2200 nm",
+    "see_also": [
+      "sarcomere.json",
+      "structural_states.json",
+      "geometry_sources.json"
+    ]
+  },
+  "domain_totals": {
+    "Ig_like": 152,
+    "Fn3": 132,
+    "kinase": 1,
+    "source": "UniProt:Q8WZ42",
+    "evidence_class": "MEASURED"
+  },
+  "topology": "N-terminus anchored in Z-disc; C-terminus anchored in M-line; extensible I-band segment; thick-filament-bound A-band segment",
+  "regions": [
+    {
+      "id": "Z1Z2",
+      "name": "Z-disc anchor (Z1-Z2 Ig + Z-repeats)",
+      "band": "Z-disc",
+      "residue_span": {
+        "start": 1,
+        "end": 800,
+        "length_aa": 800
+      },
+      "domain_composition": {
+        "Ig_like": 2,
+        "Fn3": 0
+      },
+      "geometry_proxy": "capsule_chain",
+      "resting_axial_position_nm": {
+        "X_start": 0.0,
+        "X_end": 25.0,
+        "axial_length_nm": 25.0
+      },
+      "mechanical_class": "anchored",
+      "extension_model": {
+        "extensible": false,
+        "note": "Anchored/bound region; does not change end-to-end length with SL."
+      },
+      "biological_role": "Z1Z2 binds telethonin/T-cap; Z-repeats bind alpha-actinin",
+      "state_dependence": "Bound/anchored; axial position translates with SL but internal length is invariant.",
+      "species": "human",
+      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
+      "muscle_type": "skeletal (reference)",
+      "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
+      "primary_references": [
+        "10.1016/j.cell.2021.02.047",
+        "UniProt:Q8WZ42"
+      ],
+      "notes": "Axial geometry from the spec layout; lateral extent unresolved. See evidence_by_claim for per-claim classification and unknowns[] for explicit gaps.",
+      "evidence_by_claim": {
+        "residue_span_and_domain_count": "MEASURED",
+        "overall_axial_length_range": "MEASURED",
+        "resting_axial_position": "STRONGLY INFERRED",
+        "render_geometry_proxy": "SCHEMATIC",
+        "detailed_3D_conformation": "UNKNOWN"
+      },
+      "parent_structure": "Z-disc",
+      "attachment_points": [
+        {
+          "partner": "telethonin (TCAP)",
+          "interaction": "antiparallel Z1Z2:telethonin:Z1Z2 palindromic sandwich",
+          "structure": "PDB 1YA5",
+          "evidence_class": "MEASURED",
+          "source": "10.1038/nature04343"
+        },
+        {
+          "partner": "alpha-actinin-2 / Z-disc lattice",
+          "interaction": "Z-repeat binding within Z-disc",
+          "evidence_class": "STRONGLY INFERRED",
+          "source": "10.1016/j.cell.2021.02.047"
+        }
+      ],
+      "relationships": "N-terminal anchor embedded in the Z-disc; hands off distally to the elastic proximal Ig tandem at the Z-disc edge.",
+      "repeating_geometry": {
+        "repeat": "none (unique terminal region)",
+        "evidence_class": "MEASURED",
+        "source": "UniProt:Q8WZ42"
+      },
+      "biological_condition": "resting (reference state); state-dependence in structural_states.json",
+      "orientation": {
+        "principal_axis": "X (longitudinal sarcomere axis)",
+        "axial_direction": "Z-disc -> M-line (increasing X)",
+        "transverse_placement": "UNKNOWN \u2014 azimuth about the thick filament not resolved",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (azimuthal)",
+        "source": "10.1083/jcb.106.5.1563"
+      },
+      "principal_axes": {
+        "primary": "X",
+        "secondary": "Y/Z transverse lattice plane (not individually resolved)",
+        "evidence_class": "SCHEMATIC"
+      },
+      "dimensions_nm": {
+        "axial_length_X": 25.0,
+        "axial_length_note": "resting reference value; state-dependent for elastic I-band regions (see structural_states.json), invariant for anchored regions",
+        "lateral_extent_YZ": null,
+        "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
+      }
+    },
+    {
+      "id": "prox_Ig",
+      "name": "Proximal tandem Ig (I-band)",
+      "band": "I-band",
+      "residue_span": {
+        "start": 801,
+        "end": 9851,
+        "length_aa": 9051
+      },
+      "domain_composition": {
+        "Ig_like": 77,
+        "Fn3": 0
+      },
+      "geometry_proxy": "ig_bead_chain",
+      "resting_axial_position_nm": {
+        "X_start": 25.0,
+        "X_end": 229.405,
+        "axial_length_nm": 204.405
+      },
+      "mechanical_class": "extensible_straighten",
+      "extension_model": {
+        "resting_end2end_nm": 169.4,
+        "max_end2end_nm": 308.0,
+        "n_units": 77,
+        "recruitment_order": 1,
+        "geometry": "worm-like-chain / straightening tandem",
+        "evidence_class": "STRONGLY INFERRED",
+        "note": "Extension partition is force- and isoform-dependent; recruitment order (Ig straighten -> N2A -> PEVK) is established, exact nm partition inferred. NB: resting_end2end_nm/max_end2end_nm are worm-like-chain end-to-end ESTIMATES for this segment in isolation, NOT the schematic axial budget \u2014 the source-of-truth layout length per state is structural_states.json titin_I_band_extension_nm / titin_iband_layout_nm, which the engine consumes."
+      },
+      "biological_role": "Serially-linked Ig; straighten at low force (first recruited)",
+      "state_dependence": "Extends within I-band as SL increases; ALL titin length change occurs in I-band elastic elements.",
+      "species": "human",
+      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
+      "muscle_type": "skeletal (reference)",
+      "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
+      "primary_references": [
+        "10.1085/jgp.202012713",
+        "UniProt:Q8WZ42"
+      ],
+      "notes": "Axial geometry from the spec layout; lateral extent unresolved. See evidence_by_claim for per-claim classification and unknowns[] for explicit gaps.",
+      "evidence_by_claim": {
+        "residue_span_and_domain_count": "MEASURED",
+        "overall_axial_length_range": "MODELED (series force balance over MEASURED chain parameters)",
+        "resting_axial_position": "STRONGLY INFERRED",
+        "render_geometry_proxy": "SCHEMATIC",
+        "detailed_3D_conformation": "UNKNOWN"
+      },
+      "topology_note": "Elastic tandem-Ig spring emerges at the Z-disc periphery (X = Z-disc half-width): Z1Z2 is anchored within the Z-disc lattice (telethonin/T-cap), so the free I-band extension spans Z-disc edge -> thick-filament tip = (I-band half-width - Z-disc half-width). STRONGLY INFERRED from Z-disc titin topology.",
+      "parent_structure": "I-band",
+      "attachment_points": [
+        {
+          "partner": "none (free elastic segment)",
+          "interaction": "serially linked; no lateral binding partner modelled",
+          "evidence_class": "STRONGLY INFERRED",
+          "source": "10.1083/jcb.106.5.1563"
+        }
+      ],
+      "relationships": "Emerges at the Z-disc edge from Z1Z2; first element recruited on stretch; continues into the N2A element.",
+      "repeating_geometry": {
+        "repeat": "tandem Ig domains in series",
+        "n_units": 77,
+        "unit_axial_nm": 4.0,
+        "evidence_class": "MEASURED (unit axial length); STRONGLY INFERRED (serial arrangement)",
+        "source": "10.1016/j.jmb.2020.06.025"
+      },
+      "biological_condition": "resting (reference state); state-dependence in structural_states.json",
+      "orientation": {
+        "principal_axis": "X (longitudinal sarcomere axis)",
+        "axial_direction": "Z-disc -> M-line (increasing X)",
+        "transverse_placement": "UNKNOWN \u2014 azimuth about the thick filament not resolved",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (azimuthal)",
+        "source": "10.1083/jcb.106.5.1563"
+      },
+      "principal_axes": {
+        "primary": "X",
+        "secondary": "Y/Z transverse lattice plane (not individually resolved)",
+        "evidence_class": "SCHEMATIC"
+      },
+      "dimensions_nm": {
+        "axial_length_X": 204.405,
+        "axial_length_note": "resting reference value; state-dependent for elastic I-band regions (see structural_states.json). Phase 8: re-derived by series force balance \u2014 superseded 195.0 nm. MUST equal structural_states.states.resting.titin_I_band_extension_nm.prox_Ig; validate_geometry.py gates the two files.",
+        "lateral_extent_YZ": null,
+        "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
+      },
+      "phase8_correction": {
+        "superseded_axial_length_nm": 195.0,
+        "superseded_resting_axial_position_nm": {
+          "X_start": 25.0,
+          "X_end": 220.0,
+          "axial_length_nm": 195.0
+        },
+        "reason": "the previous per-state partitions were independently inferred and not mutually consistent: inverting each region gave forces spanning 41x-553x, and N2A DECREASED under stretch. Re-derived so all four regions bear one common force.",
+        "route": "scripts/mechanical_model.py"
+      }
+    },
+    {
+      "id": "N2A",
+      "name": "N2A unique-sequence spring element",
+      "band": "I-band",
+      "residue_span": {
+        "start": 9852,
+        "end": 10215,
+        "length_aa": 364
+      },
+      "domain_composition": {
+        "Ig_like": 1,
+        "Fn3": 0
+      },
+      "geometry_proxy": "folded_domain_plus_worm_like_chain",
+      "resting_axial_position_nm": {
+        "X_start": 229.405,
+        "X_end": 234.41,
+        "axial_length_nm": 5.005
+      },
+      "mechanical_class": "extensible_spring",
+      "extension_model": {
+        "resting_end2end_nm": 12.0,
+        "max_end2end_nm": 39.0,
+        "n_units": 1,
+        "recruitment_order": 2,
+        "geometry": "one rigid folded Ig-like domain in series with a worm-like unique-sequence coil",
+        "evidence_class": "STRONGLY INFERRED",
+        "note": "Extension partition is force- and isoform-dependent; recruitment order (Ig straighten -> N2A -> PEVK) is established, exact nm partition inferred. NB: resting_end2end_nm/max_end2end_nm are worm-like-chain end-to-end ESTIMATES for this segment in isolation, NOT the schematic axial budget \u2014 the source-of-truth layout length per state is structural_states.json titin_I_band_extension_nm / titin_iband_layout_nm, which the engine consumes."
+      },
+      "biological_role": "Unique sequence + Ig; CARP-binding; contour ~39 nm, Lp 0.35 nm",
+      "state_dependence": "Extends within I-band as SL increases; ALL titin length change occurs in I-band elastic elements.",
+      "species": "human",
+      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
+      "muscle_type": "skeletal (reference)",
+      "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
+      "primary_references": [
+        "10.3389/fphys.2020.00173",
+        "UniProt:Q8WZ42"
+      ],
+      "notes": "Axial geometry from the spec layout; lateral extent unresolved. See evidence_by_claim for per-claim classification and unknowns[] for explicit gaps.",
+      "evidence_by_claim": {
+        "residue_span_and_domain_count": "MEASURED",
+        "overall_axial_length_range": "MODELED (series force balance over MEASURED chain parameters)",
+        "resting_axial_position": "STRONGLY INFERRED",
+        "render_geometry_proxy": "SCHEMATIC",
+        "detailed_3D_conformation": "UNKNOWN",
+        "tertiary_structure": "MEASURED (one Ig-like fold is declared); UNKNOWN (unique-sequence coil conformation and region-internal order)"
+      },
+      "parent_structure": "I-band",
+      "attachment_points": [
+        {
+          "partner": "N2A-signalosome candidates (e.g. CARP/MARP family)",
+          "interaction": "reported binding; not geometrically resolved here",
+          "evidence_class": "INFERRED",
+          "source": "10.3389/fphys.2020.00173"
+        }
+      ],
+      "relationships": "Lies between the proximal Ig tandem and PEVK; contains the UN2A three-helix bundle.",
+      "repeating_geometry": {
+        "repeat": "none (unique sequence + UN2A helix bundle)",
+        "evidence_class": "MEASURED",
+        "source": "10.1016/j.jmb.2021.166901"
+      },
+      "biological_condition": "resting (reference state); state-dependence in structural_states.json",
+      "orientation": {
+        "principal_axis": "X (longitudinal sarcomere axis)",
+        "axial_direction": "Z-disc -> M-line (increasing X)",
+        "transverse_placement": "UNKNOWN \u2014 azimuth about the thick filament not resolved",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (azimuthal)",
+        "source": "10.1083/jcb.106.5.1563"
+      },
+      "principal_axes": {
+        "primary": "X",
+        "secondary": "Y/Z transverse lattice plane (not individually resolved)",
+        "evidence_class": "SCHEMATIC"
+      },
+      "dimensions_nm": {
+        "axial_length_X": 5.005,
+        "axial_length_note": "resting reference value; state-dependent for elastic I-band regions (see structural_states.json). Phase 8: re-derived by series force balance \u2014 superseded 12.0 nm. MUST equal structural_states.states.resting.titin_I_band_extension_nm.N2A; validate_geometry.py gates the two files.",
+        "lateral_extent_YZ": null,
+        "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
+      },
+      "phase8_correction": {
+        "superseded_axial_length_nm": 12.0,
+        "superseded_resting_axial_position_nm": {
+          "X_start": 220.0,
+          "X_end": 232.0,
+          "axial_length_nm": 12.0
+        },
+        "reason": "the previous per-state partitions were independently inferred and not mutually consistent: inverting each region gave forces spanning 41x-553x, and N2A DECREASED under stretch. Re-derived so all four regions bear one common force.",
+        "route": "scripts/mechanical_model.py"
+      }
+    },
+    {
+      "id": "PEVK",
+      "name": "PEVK entropic spring",
+      "band": "I-band",
+      "residue_span": {
+        "start": 10216,
+        "end": 12022,
+        "length_aa": 1807
+      },
+      "domain_composition": {
+        "Ig_like": 0,
+        "Fn3": 0
+      },
+      "geometry_proxy": "worm_like_chain",
+      "resting_axial_position_nm": {
+        "X_start": 234.41,
+        "X_end": 260.181,
+        "axial_length_nm": 25.771
+      },
+      "mechanical_class": "extensible_spring",
+      "extension_model": {
+        "resting_end2end_nm": 25.0,
+        "max_end2end_nm": 542.1,
+        "n_units": 31,
+        "recruitment_order": 3,
+        "geometry": "worm-like-chain / straightening tandem",
+        "evidence_class": "STRONGLY INFERRED",
+        "note": "Extension partition is force- and isoform-dependent; recruitment order (Ig straighten -> N2A -> PEVK) is established, exact nm partition inferred. NB: resting_end2end_nm/max_end2end_nm are worm-like-chain end-to-end ESTIMATES for this segment in isolation, NOT the schematic axial budget \u2014 the source-of-truth layout length per state is structural_states.json titin_I_band_extension_nm / titin_iband_layout_nm, which the engine consumes."
+      },
+      "biological_role": "31 PEVK repeats; entropic spring; extends at higher force; PKCa phospho-tuned",
+      "state_dependence": "Extends within I-band as SL increases; ALL titin length change occurs in I-band elastic elements.",
+      "species": "human",
+      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
+      "muscle_type": "skeletal (reference)",
+      "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
+      "primary_references": [
+        "10.1161/hh1001.090876",
+        "UniProt:Q8WZ42"
+      ],
+      "notes": "Axial geometry from the spec layout; lateral extent unresolved. See evidence_by_claim for per-claim classification and unknowns[] for explicit gaps.",
+      "evidence_by_claim": {
+        "residue_span_and_domain_count": "MEASURED",
+        "overall_axial_length_range": "MODELED (series force balance over MEASURED chain parameters)",
+        "resting_axial_position": "STRONGLY INFERRED",
+        "render_geometry_proxy": "SCHEMATIC",
+        "detailed_3D_conformation": "UNKNOWN",
+        "tertiary_structure": "UNKNOWN (intrinsically disordered \u2014 no folded structure exists)"
+      },
+      "parent_structure": "I-band",
+      "attachment_points": [
+        {
+          "partner": "actin (reported transient/electrostatic)",
+          "interaction": "not modelled as a fixed attachment",
+          "evidence_class": "INFERRED",
+          "source": "10.1161/hh1001.090876"
+        }
+      ],
+      "relationships": "Entropic spring between N2A and the distal Ig tandem; recruited only at higher force.",
+      "repeating_geometry": {
+        "repeat": "PEVK sequence motifs (no folded repeat)",
+        "evidence_class": "MEASURED (sequence); UNKNOWN (3D repeat)",
+        "source": "UniProt:Q8WZ42"
+      },
+      "biological_condition": "resting (reference state); state-dependence in structural_states.json",
+      "orientation": {
+        "principal_axis": "X (longitudinal sarcomere axis)",
+        "axial_direction": "Z-disc -> M-line (increasing X)",
+        "transverse_placement": "UNKNOWN \u2014 azimuth about the thick filament not resolved",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (azimuthal)",
+        "source": "10.1083/jcb.106.5.1563"
+      },
+      "principal_axes": {
+        "primary": "X",
+        "secondary": "Y/Z transverse lattice plane (not individually resolved)",
+        "evidence_class": "SCHEMATIC"
+      },
+      "dimensions_nm": {
+        "axial_length_X": 25.771,
+        "axial_length_note": "resting reference value; state-dependent for elastic I-band regions (see structural_states.json). Phase 8: re-derived by series force balance \u2014 superseded 25.0 nm. MUST equal structural_states.states.resting.titin_I_band_extension_nm.PEVK; validate_geometry.py gates the two files.",
+        "lateral_extent_YZ": null,
+        "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
+      },
+      "phase8_correction": {
+        "superseded_axial_length_nm": 25.0,
+        "superseded_resting_axial_position_nm": {
+          "X_start": 232.0,
+          "X_end": 257.0,
+          "axial_length_nm": 25.0
+        },
+        "reason": "the previous per-state partitions were independently inferred and not mutually consistent: inverting each region gave forces spanning 41x-553x, and N2A DECREASED under stretch. Re-derived so all four regions bear one common force.",
+        "route": "scripts/mechanical_model.py"
+      }
+    },
+    {
+      "id": "dist_Ig",
+      "name": "Distal tandem Ig (I-band)",
+      "band": "I-band",
+      "residue_span": {
+        "start": 12023,
+        "end": 14018,
+        "length_aa": 1996
+      },
+      "domain_composition": {
+        "Ig_like": 15,
+        "Fn3": 0
+      },
+      "geometry_proxy": "ig_bead_chain",
+      "resting_axial_position_nm": {
+        "X_start": 260.181,
+        "X_end": 300.0,
+        "axial_length_nm": 39.819
+      },
+      "mechanical_class": "extensible_straighten",
+      "extension_model": {
+        "resting_end2end_nm": 33.0,
+        "max_end2end_nm": 60.0,
+        "n_units": 15,
+        "recruitment_order": 1,
+        "geometry": "worm-like-chain / straightening tandem",
+        "evidence_class": "STRONGLY INFERRED",
+        "note": "Extension partition is force- and isoform-dependent; recruitment order (Ig straighten -> N2A -> PEVK) is established, exact nm partition inferred. NB: resting_end2end_nm/max_end2end_nm are worm-like-chain end-to-end ESTIMATES for this segment in isolation, NOT the schematic axial budget \u2014 the source-of-truth layout length per state is structural_states.json titin_I_band_extension_nm / titin_iband_layout_nm, which the engine consumes."
+      },
+      "biological_role": "Distal Ig tandem before A-band junction",
+      "state_dependence": "Extends within I-band as SL increases; ALL titin length change occurs in I-band elastic elements.",
+      "species": "human",
+      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
+      "muscle_type": "skeletal (reference)",
+      "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
+      "primary_references": [
+        "10.1085/jgp.202012713",
+        "UniProt:Q8WZ42"
+      ],
+      "notes": "Axial geometry from the spec layout; lateral extent unresolved. See evidence_by_claim for per-claim classification and unknowns[] for explicit gaps.",
+      "evidence_by_claim": {
+        "residue_span_and_domain_count": "MEASURED",
+        "overall_axial_length_range": "MODELED (series force balance over MEASURED chain parameters)",
+        "resting_axial_position": "STRONGLY INFERRED",
+        "render_geometry_proxy": "SCHEMATIC",
+        "detailed_3D_conformation": "UNKNOWN"
+      },
+      "parent_structure": "I-band",
+      "attachment_points": [
+        {
+          "partner": "none free; terminates at the thick-filament tip where A-band titin binds",
+          "interaction": "hand-off to the thick-filament-bound A-band segment",
+          "evidence_class": "STRONGLY INFERRED",
+          "source": "10.1083/jcb.106.5.1563"
+        }
+      ],
+      "relationships": "Distal elastic element; its distal end coincides with the A-band tip (I-band/A-band junction).",
+      "repeating_geometry": {
+        "repeat": "tandem Ig domains in series",
+        "n_units": 15,
+        "unit_axial_nm": 4.0,
+        "evidence_class": "MEASURED (unit axial length); STRONGLY INFERRED (serial arrangement)",
+        "source": "10.1016/j.jmb.2020.06.025"
+      },
+      "biological_condition": "resting (reference state); state-dependence in structural_states.json",
+      "orientation": {
+        "principal_axis": "X (longitudinal sarcomere axis)",
+        "axial_direction": "Z-disc -> M-line (increasing X)",
+        "transverse_placement": "UNKNOWN \u2014 azimuth about the thick filament not resolved",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (azimuthal)",
+        "source": "10.1083/jcb.106.5.1563"
+      },
+      "principal_axes": {
+        "primary": "X",
+        "secondary": "Y/Z transverse lattice plane (not individually resolved)",
+        "evidence_class": "SCHEMATIC"
+      },
+      "dimensions_nm": {
+        "axial_length_X": 39.819,
+        "axial_length_note": "resting reference value; state-dependent for elastic I-band regions (see structural_states.json). Phase 8: re-derived by series force balance \u2014 superseded 43.0 nm. MUST equal structural_states.states.resting.titin_I_band_extension_nm.dist_Ig; validate_geometry.py gates the two files.",
+        "lateral_extent_YZ": null,
+        "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
+      },
+      "phase8_correction": {
+        "superseded_axial_length_nm": 43.0,
+        "superseded_resting_axial_position_nm": {
+          "X_start": 257.0,
+          "X_end": 300.0,
+          "axial_length_nm": 43.0
+        },
+        "reason": "the previous per-state partitions were independently inferred and not mutually consistent: inverting each region gave forces spanning 41x-553x, and N2A DECREASED under stretch. Re-derived so all four regions bear one common force.",
+        "route": "scripts/mechanical_model.py"
+      }
+    },
+    {
+      "id": "Aband_super",
+      "name": "A-band super-repeats (Ig-Fn3)",
+      "band": "A-band",
+      "residue_span": {
+        "start": 14019,
+        "end": 32177,
+        "length_aa": 18159
+      },
+      "domain_composition": {
+        "Ig_like": 47,
+        "Fn3": 132
+      },
+      "geometry_proxy": "ig_fn3_super_repeat",
+      "resting_axial_position_nm": {
+        "X_start": 300.0,
+        "X_end": 920.0,
+        "axial_length_nm": 620.0
+      },
+      "mechanical_class": "anchored",
+      "extension_model": {
+        "extensible": false,
+        "note": "Anchored/bound region; does not change end-to-end length with SL."
+      },
+      "biological_role": "Bound to thick filament; D-zone + C-zone (11x11-domain super-repeats, 45.5 nm period); does NOT extend",
+      "state_dependence": "Bound/anchored; axial position translates with SL but internal length is invariant.",
+      "species": "human",
+      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
+      "muscle_type": "skeletal (reference)",
+      "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
+      "primary_references": [
+        "10.1085/jgp.202012713",
+        "UniProt:Q8WZ42"
+      ],
+      "notes": "Axial geometry from the spec layout; lateral extent unresolved. See evidence_by_claim for per-claim classification and unknowns[] for explicit gaps.",
+      "evidence_by_claim": {
+        "residue_span_and_domain_count": "MEASURED",
+        "overall_axial_length_range": "MEASURED",
+        "resting_axial_position": "STRONGLY INFERRED (pinned to A-band tip by chain continuity + rigid-filament span; not an independent measurement)",
+        "render_geometry_proxy": "SCHEMATIC",
+        "detailed_3D_conformation": "UNKNOWN"
+      },
+      "parent_structure": "A-band (thick filament)",
+      "attachment_points": [
+        {
+          "partner": "myosin thick filament / MyBP-C (C-zone)",
+          "interaction": "bound along the thick filament; defines the 43 nm axial register",
+          "evidence_class": "STRONGLY INFERRED",
+          "source": "10.1073/pnas.2311883121"
+        }
+      ],
+      "relationships": "Bound to the thick filament; does not extend \u2014 axial position translates with SL but internal length is invariant.",
+      "repeating_geometry": {
+        "repeat": "11-domain super-repeat (C-zone)",
+        "period_nm": 45.5,
+        "n_super_repeats": 11,
+        "evidence_class": "MEASURED",
+        "source": "10.1016/j.yjmcc.2019.05.026"
+      },
+      "biological_condition": "resting (reference state); state-dependence in structural_states.json",
+      "orientation": {
+        "principal_axis": "X (longitudinal sarcomere axis)",
+        "axial_direction": "Z-disc -> M-line (increasing X)",
+        "transverse_placement": "UNKNOWN \u2014 azimuth about the thick filament not resolved",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (azimuthal)",
+        "source": "10.1083/jcb.106.5.1563"
+      },
+      "principal_axes": {
+        "primary": "X",
+        "secondary": "Y/Z transverse lattice plane (not individually resolved)",
+        "evidence_class": "SCHEMATIC"
+      },
+      "dimensions_nm": {
+        "axial_length_X": 595.0,
+        "axial_length_note": "resting reference value; state-dependent for elastic I-band regions (see structural_states.json), invariant for anchored regions",
+        "lateral_extent_YZ": null,
+        "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
+      },
+      "topology_note": "X_start is pinned to the A-band tip (= thick-filament tip = dist_Ig.X_end), because titin is a single continuous polypeptide and the A-band segment is bound to the thick filament, which begins at that tip. The anchored chain (Aband_super 620 + kinase 30 + Mline 150 = 800 nm) therefore spans exactly the half thick-filament length (1600/2 = 800 nm), a quantity that is SL-invariant because the filament is rigid. Previously X_start was 325.0, leaving a 25 nm break in the polypeptide equal to the Z-disc half-width \u2014 a residue of the Z-disc origin correction that had been applied to the I-band regions only."
+    },
+    {
+      "id": "kinase",
+      "name": "Titin kinase domain",
+      "band": "M-line junction",
+      "residue_span": {
+        "start": 32178,
+        "end": 32432,
+        "length_aa": 255
+      },
+      "domain_composition": {
+        "Ig_like": 0,
+        "Fn3": 0
+      },
+      "geometry_proxy": "ellipsoid",
+      "resting_axial_position_nm": {
+        "X_start": 920.0,
+        "X_end": 950.0,
+        "axial_length_nm": 30.0
+      },
+      "mechanical_class": "anchored",
+      "extension_model": {
+        "extensible": false,
+        "note": "Anchored/bound region; does not change end-to-end length with SL."
+      },
+      "biological_role": "Mechanosensory kinase at A/M junction; strain-activated (contested mechanism)",
+      "state_dependence": "Bound/anchored; axial position translates with SL but internal length is invariant.",
+      "species": "human",
+      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
+      "muscle_type": "skeletal (reference)",
+      "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
+      "primary_references": [
+        "10.1016/j.jmb.2021.166901",
+        "UniProt:Q8WZ42"
+      ],
+      "notes": "Axial geometry from the spec layout; lateral extent unresolved. See evidence_by_claim for per-claim classification and unknowns[] for explicit gaps.",
+      "evidence_by_claim": {
+        "residue_span_and_domain_count": "MEASURED",
+        "overall_axial_length_range": "MEASURED",
+        "resting_axial_position": "STRONGLY INFERRED",
+        "render_geometry_proxy": "SCHEMATIC",
+        "detailed_3D_conformation": "UNKNOWN"
+      },
+      "parent_structure": "M-line periphery",
+      "attachment_points": [
+        {
+          "partner": "titin kinase domain interactors (mechanosensing; e.g. nbr1/p62 pathway)",
+          "interaction": "signalling, not a geometric anchor",
+          "evidence_class": "INFERRED",
+          "source": "10.1016/j.jmb.2015.08.018"
+        }
+      ],
+      "relationships": "Lies between the A-band super-repeat region and the M-line terminal segment.",
+      "repeating_geometry": {
+        "repeat": "none (single kinase domain)",
+        "evidence_class": "MEASURED",
+        "source": "UniProt:Q8WZ42"
+      },
+      "biological_condition": "resting (reference state); state-dependence in structural_states.json",
+      "orientation": {
+        "principal_axis": "X (longitudinal sarcomere axis)",
+        "axial_direction": "Z-disc -> M-line (increasing X)",
+        "transverse_placement": "UNKNOWN \u2014 azimuth about the thick filament not resolved",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (azimuthal)",
+        "source": "10.1083/jcb.106.5.1563"
+      },
+      "principal_axes": {
+        "primary": "X",
+        "secondary": "Y/Z transverse lattice plane (not individually resolved)",
+        "evidence_class": "SCHEMATIC"
+      },
+      "dimensions_nm": {
+        "axial_length_X": 30.0,
+        "axial_length_note": "resting reference value; state-dependent for elastic I-band regions (see structural_states.json), invariant for anchored regions",
+        "lateral_extent_YZ": null,
+        "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
+      }
+    },
+    {
+      "id": "Mline",
+      "name": "M-line Ig region (M1-M10)",
+      "band": "M-line",
+      "residue_span": {
+        "start": 32433,
+        "end": 34350,
+        "length_aa": 1918
+      },
+      "domain_composition": {
+        "Ig_like": 10,
+        "Fn3": 0
+      },
+      "geometry_proxy": "ig_bead_chain",
+      "resting_axial_position_nm": {
+        "X_start": 950.0,
+        "X_end": 1100.0,
+        "axial_length_nm": 150.0
+      },
+      "mechanical_class": "anchored",
+      "extension_model": {
+        "extensible": false,
+        "note": "Anchored/bound region; does not change end-to-end length with SL."
+      },
+      "biological_role": "M-line integration; M10 binds obscurin/myomesin; anchors titin C-terminus",
+      "state_dependence": "Bound/anchored; axial position translates with SL but internal length is invariant.",
+      "species": "human",
+      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
+      "muscle_type": "skeletal (reference)",
+      "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
+      "primary_references": [
+        "10.1016/j.jmb.2015.08.018",
+        "UniProt:Q8WZ42"
+      ],
+      "notes": "Axial geometry from the spec layout; lateral extent unresolved. See evidence_by_claim for per-claim classification and unknowns[] for explicit gaps.",
+      "evidence_by_claim": {
+        "residue_span_and_domain_count": "MEASURED",
+        "overall_axial_length_range": "MEASURED",
+        "resting_axial_position": "STRONGLY INFERRED",
+        "render_geometry_proxy": "SCHEMATIC",
+        "detailed_3D_conformation": "UNKNOWN"
+      },
+      "parent_structure": "M-line",
+      "attachment_points": [
+        {
+          "partner": "obscurin-like 1 (OBSL1)",
+          "interaction": "head-to-tail assembly at the titin C-terminus",
+          "structure": "PDB 3KNB",
+          "evidence_class": "MEASURED",
+          "source": "10.1038/embor.2010.65"
+        },
+        {
+          "partner": "myomesin / M-line lattice",
+          "interaction": "C-terminal integration into the M-line",
+          "evidence_class": "STRONGLY INFERRED",
+          "source": "10.1016/j.jmb.2015.08.018"
+        }
+      ],
+      "relationships": "C-terminal anchor; opposite terminus to Z1Z2, completing the Z-disc-to-M-line span of one titin molecule.",
+      "repeating_geometry": {
+        "repeat": "none (unique terminal region)",
+        "evidence_class": "MEASURED",
+        "source": "UniProt:Q8WZ42"
+      },
+      "biological_condition": "resting (reference state); state-dependence in structural_states.json",
+      "orientation": {
+        "principal_axis": "X (longitudinal sarcomere axis)",
+        "axial_direction": "Z-disc -> M-line (increasing X)",
+        "transverse_placement": "UNKNOWN \u2014 azimuth about the thick filament not resolved",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (azimuthal)",
+        "source": "10.1083/jcb.106.5.1563"
+      },
+      "principal_axes": {
+        "primary": "X",
+        "secondary": "Y/Z transverse lattice plane (not individually resolved)",
+        "evidence_class": "SCHEMATIC"
+      },
+      "dimensions_nm": {
+        "axial_length_X": 150.0,
+        "axial_length_note": "resting reference value; state-dependent for elastic I-band regions (see structural_states.json), invariant for anchored regions",
+        "lateral_extent_YZ": null,
+        "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
+        "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
+      }
+    }
+  ],
+  "mechanical_summary": {
+    "consensus": "Passive, isoform- and phosphorylation-tunable molecular spring (Granzier & Gotthardt labs).",
+    "extension_principle": "All titin elongation occurs in the I-band; A-band segment is bound to thick filament and does not extend.",
+    "recruitment_order": "Proximal/distal Ig straighten first (low force) -> N2A unique sequence -> PEVK entropic spring (higher force).",
+    "contested": "Whether titin ACTIVELY generates force (winding-filament / Ig-folding-assist, Herzog/Nishikawa/Fernandez) is NOT established; label as hypothesis, do not animate as fact.",
+    "forbidden_depiction": "Do NOT depict AFM-scale Ig unfolding (150-300 pN) as ordinary contraction. Physiological fold/unfold is 6-8 pN and rare.",
+    "evidence_class": "MEASURED (spring) / CONTESTED (active force)"
+  },
+  "unknowns": [
+    {
+      "item": "Exact 3D path/trajectory of I-band titin between Z-disc and thick-filament tip",
+      "class": "UNKNOWN",
+      "reason": "End-to-end span is constrained; the actual bent path/azimuth is not resolved at this scale.",
+      "modeling_directive": "Render as a straight or gently-curved connector; do not imply a specific resolved path."
+    },
+    {
+      "item": "Tertiary conformation of PEVK and N2A unique sequence",
+      "class": "UNKNOWN",
+      "reason": "Intrinsically disordered regions \u2014 no stable folded structure; behave as entropic/worm-like chains.",
+      "modeling_directive": "Represent as flexible chain whose end-to-end length varies with force; never a fixed fold."
+    },
+    {
+      "item": "Azimuthal (rotational) placement of the ~6 titin molecules around each half thick filament",
+      "class": "UNKNOWN",
+      "reason": "Six-fold symmetry is inferred; exact angular register per molecule is not resolved.",
+      "modeling_directive": "Distribute symmetrically as a SCHEMATIC choice; label as such."
+    },
+    {
+      "item": "Exact register of A-band titin super-repeats against specific myosin crowns in 3D",
+      "class": "INFERRED",
+      "reason": "45.5 nm titin period aligns with 43.1 nm myosin period (super-repeat model); precise 3D contact map not resolved for full length.",
+      "modeling_directive": "Encode the periodicity; do not assert atom-level contacts."
+    }
+  ]
+}
