@@ -24,6 +24,18 @@ export const VIEWS = Object.freeze({
   oblique: { dir: [0.7, 0.5, 0.7], label: 'Oblique — 3-D lattice organization' },
 });
 
+/** Default duration for deliberate camera moves in the Phase-10 interface. */
+export const CAMERA_TRANSITION_MS = 650;
+
+/**
+ * Symmetric cubic easing with zero velocity at both ends.
+ * Exported so the motion contract can be tested without constructing WebGL.
+ */
+export function easeCameraTransition(t) {
+  const x = THREE.MathUtils.clamp(t, 0, 1);
+  return x < 0.5 ? 4 * x * x * x : 1 - ((-2 * x + 2) ** 3) / 2;
+}
+
 /**
  * Close-up presets: where to look, and how wide a span to fill the viewport with.
  *
@@ -119,11 +131,37 @@ export class Viewer {
     );
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
+    // Explicit rather than relying on OrbitControls defaults: these are Phase 10
+    // completion conditions and a dependency update must not silently disable one.
+    this.controls.enableRotate = true;
+    this.controls.enableZoom = true;
+    this.controls.enablePan = true;
     // A myosin head is ~19 nm and a crown spacing ~14.3 nm, so approach has to be
     // allowed to a few nm for a head to fill a useful fraction of the viewport.
     // The ceiling keeps the whole sarcomere reachable at any length.
     this.controls.minDistance = 3;
     this.controls.maxDistance = 20000;
+    this._motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)') || null;
+    this.prefersReducedMotion = Boolean(this._motionQuery?.matches);
+    this._cameraTransition = null;
+    this._onMotionPreferenceChange = (event) => {
+      this.prefersReducedMotion = event.matches;
+      // If reduced motion is enabled during a transition, finish it immediately
+      // rather than leaving the camera stranded at an arbitrary intermediate pose.
+      if (event.matches && this._cameraTransition) {
+        const move = this._cameraTransition;
+        this.camera.position.copy(move.to_position);
+        this.controls.target.copy(move.to_target);
+        this._cameraTransition = null;
+        this._updateFrustum();
+        this.controls.update();
+      }
+    };
+    this._motionQuery?.addEventListener?.('change', this._onMotionPreferenceChange);
+    this._onControlStart = () => { this._cameraTransition = null; };
+    // Direct manipulation always wins over an automated move. Otherwise a user
+    // beginning to orbit mid-transition would fight the interpolation every frame.
+    this.controls.addEventListener('start', this._onControlStart);
 
     // Three lights, no shadows: shadows would imply an illumination geometry that
     // means nothing here, and they obscure the transparency that carries evidence.
@@ -186,6 +224,7 @@ export class Viewer {
       ...merged,
       domainBatches,
       contextDetail,
+      titinPath: this.model.backboneAt(sl),
       viewWidthNm: this.visibleWidthNm(),
       viewportPx: this.container.clientWidth,
     });
@@ -210,25 +249,54 @@ export class Viewer {
    */
   visibleWidthNm() {
     const dist = this.camera.position.distanceTo(this.controls.target);
+    return this.visibleWidthAtDistance(dist);
+  }
+
+  /** Width of the perspective frustum at an explicit orbit distance. */
+  visibleWidthAtDistance(dist) {
     const halfH = dist * Math.tan(THREE.MathUtils.degToRad(this.camera.fov) / 2);
     return 2 * halfH * this.camera.aspect;
   }
 
   /** Frame the whole sarcomere from a named or explicit direction. */
-  frame(view = 'longitudinal') {
+  frame(view = 'longitudinal', opts = {}) {
     const dir = Array.isArray(view) ? view : (VIEWS[view] || VIEWS.longitudinal).dir;
-    const box = new THREE.Box3().setFromObject(this.sarcomere.root);
+    const box = this._visibleBounds();
     const centre = box.getCenter(new THREE.Vector3());
     const radius = box.getBoundingSphere(new THREE.Sphere()).radius;
     const fov = THREE.MathUtils.degToRad(this.camera.fov);
     // 1.15 leaves a small margin so the structure does not touch the frame edge.
     const distance = (radius / Math.sin(fov / 2)) * 1.15;
     const v = new THREE.Vector3(...dir).normalize().multiplyScalar(distance);
-    this.camera.position.copy(centre).add(v);
-    this.controls.target.copy(centre);
     this._sceneRadius = radius;
-    this._updateFrustum();
-    this.controls.update();
+    this._moveCamera(centre.clone().add(v), centre, opts);
+    return {
+      target_nm: centre.toArray(),
+      distance_nm: distance,
+      animated: Boolean(opts.animate && !this.prefersReducedMotion),
+    };
+  }
+
+  /**
+   * Bounds of what is actually visible, excluding hidden context geometry.
+   * Box3.setFromObject(root) includes invisible descendants; using it made the
+   * isolated-titin scale retain the context camera distance and look like a few
+   * red pixels in empty space rather than a genuine detail view.
+   */
+  _visibleBounds() {
+    const box = new THREE.Box3().makeEmpty();
+    this.sarcomere.root.updateWorldMatrix(true, true);
+    this.sarcomere.root.traverse((object) => {
+      if (!(object.isMesh || object.isLine || object.isSprite || object.isInstancedMesh)) return;
+      let cursor = object;
+      while (cursor) {
+        if (!cursor.visible) return;
+        cursor = cursor.parent;
+      }
+      box.expandByObject(object, true);
+    });
+    if (box.isEmpty()) box.setFromObject(this.sarcomere.root, true);
+    return box;
   }
 
   /**
@@ -245,7 +313,7 @@ export class Viewer {
    * @param {string} name key of CLOSEUPS
    * @param {number} [sl] sarcomere length to take landmarks from (defaults to current)
    */
-  closeUp(name, sl = this.currentSL) {
+  closeUp(name, sl = this.currentSL, opts = {}) {
     const preset = CLOSEUPS[name];
     if (!preset) {
       throw new Error(
@@ -258,21 +326,20 @@ export class Viewer {
     // Fit the span across the WIDTH; height follows from the aspect ratio.
     const distance = (preset.spanNm / this.camera.aspect / 2) / Math.tan(fov / 2);
     const v = new THREE.Vector3(...preset.dir).normalize().multiplyScalar(distance);
-    this.controls.target.copy(target);
-    this.camera.position.copy(target).add(v);
-    this._updateFrustum();
-    this.controls.update();
+    this._moveCamera(target.clone().add(v), target, opts);
 
     const px = this.container.clientWidth;
-    const perNm = px / this.visibleWidthNm();
+    const finalSpan = this.visibleWidthAtDistance(distance);
+    const perNm = px / finalSpan;
     const cd = this.sarcomere.manifest?.context_detail;
     return {
       name,
       label: preset.label,
       shows: preset.shows,
       target_nm: target.toArray().map((n) => Number(n.toFixed(1))),
-      span_nm: Number(this.visibleWidthNm().toFixed(1)),
+      span_nm: Number(finalSpan.toFixed(1)),
       distance_nm: Number(distance.toFixed(1)),
+      animated: Boolean(opts.animate && !this.prefersReducedMotion),
       // Reported so a claim about resolving a periodicity is checkable, not asserted.
       crown_spacing_px: cd?.crown_spacing_nm != null
         ? Number((cd.crown_spacing_nm * perNm).toFixed(1)) : null,
@@ -280,6 +347,74 @@ export class Viewer {
         ? Number((cd.crossover_repeat_nm * perNm).toFixed(1)) : null,
       alias_threshold_px: cd?.alias_threshold_px ?? null,
     };
+  }
+
+  /**
+   * Focus an axial span without exposing camera objects to the biological facade.
+   * Used for titin-region navigation; the target and span still come from the
+   * canonical backbone, while this method performs presentation math only.
+   */
+  focusSpan(startNm, endNm, opts = {}) {
+    if (!Number.isFinite(startNm) || !Number.isFinite(endNm) || endNm <= startNm) {
+      throw new Error(`focusSpan: expected a positive finite range, got ${startNm}..${endNm}`);
+    }
+    const physicalSpan = endNm - startNm;
+    const viewSpan = Math.max(40, physicalSpan * 1.35);
+    const target = new THREE.Vector3((startNm + endNm) / 2, 0, 0);
+    const fov = THREE.MathUtils.degToRad(this.camera.fov);
+    const distance = (viewSpan / this.camera.aspect / 2) / Math.tan(fov / 2);
+    const direction = new THREE.Vector3(0.12, 0.25, 1).normalize();
+    this._moveCamera(target.clone().add(direction.multiplyScalar(distance)), target, opts);
+    return {
+      target_nm: target.toArray().map((n) => Number(n.toFixed(1))),
+      region_span_nm: Number(physicalSpan.toFixed(3)),
+      view_span_nm: Number(this.visibleWidthAtDistance(distance).toFixed(1)),
+      distance_nm: Number(distance.toFixed(1)),
+      animated: Boolean(opts.animate && !this.prefersReducedMotion),
+    };
+  }
+
+  /**
+   * Move immediately or start one interruptible camera interpolation.
+   * `opts.animate` is opt-in so programmatic tests and first paint remain
+   * deterministic; Phase-10 controls request it explicitly.
+   */
+  _moveCamera(position, target, opts = {}) {
+    const durationMs = opts.durationMs ?? CAMERA_TRANSITION_MS;
+    const animate = Boolean(opts.animate) && !this.prefersReducedMotion && durationMs > 0;
+    if (!animate) {
+      this._cameraTransition = null;
+      this.camera.position.copy(position);
+      this.controls.target.copy(target);
+      this._updateFrustum();
+      this.controls.update();
+      return false;
+    }
+    const now = opts.now ?? performance.now();
+    this._cameraTransition = {
+      start_ms: now,
+      duration_ms: durationMs,
+      from_position: this.camera.position.clone(),
+      to_position: position.clone(),
+      from_target: this.controls.target.clone(),
+      to_target: target.clone(),
+    };
+    return true;
+  }
+
+  /** Advance the active transition. Returns true while motion remains. */
+  _advanceCameraTransition(now = performance.now()) {
+    const move = this._cameraTransition;
+    if (!move) return false;
+    const raw = THREE.MathUtils.clamp(
+      (now - move.start_ms) / move.duration_ms, 0, 1,
+    );
+    const eased = easeCameraTransition(raw);
+    this.camera.position.lerpVectors(move.from_position, move.to_position, eased);
+    this.controls.target.lerpVectors(move.from_target, move.to_target, eased);
+    this._updateFrustum();
+    if (raw >= 1) this._cameraTransition = null;
+    return raw < 1;
   }
 
   /**
@@ -345,6 +480,7 @@ export class Viewer {
   start(onLODChange = null) {
     const tick = () => {
       this._raf = requestAnimationFrame(tick);
+      this._advanceCameraTransition();
       this.controls.update();
       // Before rendering, so a dolly this frame is already reflected in the depth
       // range. Without this the near plane would again be a floor on approach.
@@ -365,6 +501,8 @@ export class Viewer {
     this.stop();
     window.removeEventListener('resize', this._onResize);
     this.sarcomere.clear();
+    this.controls.removeEventListener('start', this._onControlStart);
+    this._motionQuery?.removeEventListener?.('change', this._onMotionPreferenceChange);
     this.controls.dispose();
     this.renderer.dispose();
     this.renderer.domElement.remove();

@@ -1,4 +1,4 @@
-# Titin Visualization — Completed Architecture (Phases 0–9)
+# Titin Visualization — Completed Architecture (Phases 0–10)
 
 **Governing principle (MASTER_PLAN Phase 2):** *the renderer consumes the
 scientific specification rather than containing biological constants in
@@ -664,3 +664,54 @@ defects that were actually found while building this phase, not hypothetical
 ones: lattice/axial SL divergence, axial-only scenes reporting no evidence,
 evidence flattened per component, an empty `not_claimed` list, an archetype
 collapsed to one opacity, and a shared geometry disposed once per user.
+
+## Phase 10 — Browser Experience
+
+Phase 10 completes the interaction layer without creating a second biological
+model inside the page. `TitinVisualization` remains the public boundary: the UI
+names biological states, scales, components, regions, and landmarks; `Viewer`
+alone owns camera math; `SarcomereScene` alone owns Three.js selection rendering.
+
+### Two scales with truthful framing
+
+The context scale shows the sarcomere and transverse lattice. The isolated scale
+forces lattice/context detail off, folded-domain detail on, and mirroring off:
+one titin is one Z-disc-to-M-line molecule, not the pair from adjacent
+half-sarcomeres. Context objects remain in the built tree only where their
+coordinates are needed to preserve titin anchoring, then are hidden. Framing walks
+visible descendants rather than using `Box3.setFromObject(root)`, which includes
+hidden objects and previously made an isolated titin occupy only a few pixels.
+
+Orbit, zoom, and pan are explicit `OrbitControls` capabilities. Named views,
+scale changes, and region focus use a 650 ms symmetric cubic transition that is
+cancelled as soon as direct manipulation starts. The transition listens to live
+`prefers-reduced-motion` changes; enabling reduced motion completes an in-flight
+move immediately. Region focus and close-ups solve camera distance from a
+canonical physical span and field of view rather than tuned scene coordinates.
+
+### Region selection is not evidence
+
+The titin backbone is split into eight render tubes at the canonical Level-0
+region boundaries. Interior control points still come from Level 1; a planar
+render-width clamp prevents an oblique TubeGeometry end ring from crossing the
+authoritative axial boundary. The clamp changes only the schematic tube surface,
+never the path or a domain coordinate.
+
+Gold/dim colour carries selection. Opacity continues to carry evidence class.
+Folded domains remain batched by archetype and evidence and use per-instance
+colours, so selection neither creates per-domain meshes nor promotes confidence.
+Selecting N2A or PEVK highlights its path but does not invent folded instances.
+The selected region is reapplied after every length, scale, and LOD rebuild and
+the camera tracks its newly solved span during continuous length changes.
+
+### UI state and accessibility
+
+Preset, view, scale, region, depiction, evidence, and component buttons expose
+their effective state through `aria-pressed`; unavailable scale/LOD controls are
+disabled rather than accepting no-op input. Component changes update the public
+state report and immediately re-filter the evidence panel. Zoom-driven LOD
+rebuilds also refresh the panel, so it cannot claim that withdrawn heads or twist
+are still drawn. Keyboard focus is visible, the WebGL region and live region
+readout are labelled, mobile layout is supported, and the canvas states the orbit,
+zoom, and pan gestures. Annotation anchors use fixed screen-space sprites, so a
+region close-up cannot enlarge a marker until it obscures the structure it labels.

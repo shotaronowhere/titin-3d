@@ -112,6 +112,10 @@ window.__titinBoot = { ready: false, problems: [] };
   button { background: #1f2630; color: var(--text); border: 1px solid var(--edge);
     border-radius: 4px; padding: 5px 9px; font-size: 11px; cursor: pointer; }
   button:hover { border-color: var(--accent); }
+  button:focus-visible, input:focus-visible, summary:focus-visible {
+    outline: 2px solid #f2d06b; outline-offset: 2px;
+  }
+  button:disabled { cursor: not-allowed; opacity: .42; }
   button.on { background: var(--accent); color: #0e1116; border-color: var(--accent); }
   .sl { font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 600; }
   .sl small { font-size: 11px; font-weight: 400; color: var(--dim); }
@@ -131,12 +135,29 @@ window.__titinBoot = { ready: false, problems: [] };
     font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
   .ev { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
   .ev b { font-weight: 500; color: var(--text); }
+  #interactionHelp { position: absolute; left: 12px; bottom: 10px; z-index: 2;
+    pointer-events: none; color: #aab4c2; background: rgb(14 17 22 / 78%);
+    border: 1px solid var(--edge); border-radius: 4px; padding: 4px 7px;
+    font-size: 10px; }
+  .region-chip.on { background: #f2d06b; border-color: #f2d06b; color: #17120a; }
+  @media (max-width: 760px) {
+    #app { grid-template-columns: 1fr; grid-template-rows: minmax(55vh, 1fr) auto; height: auto;
+      min-height: 100%; }
+    #canvas { min-height: 55vh; }
+    #panel { border-left: 0; border-top: 1px solid var(--edge); max-height: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; }
+  }
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="canvas"><div id="err"></div></div>
-  <div id="panel">
+  <div id="canvas" role="region" aria-label="Interactive 3D titin and sarcomere model">
+    <div id="err" role="alert"></div>
+    <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan</div>
+  </div>
+  <aside id="panel" aria-label="Visualization controls and scientific readouts">
     <h1 id="viewTitle">Sarcomere context view</h1>
     <div class="sub" id="viewDescription">Titin positioned in situ relative to the Z-disc, thin and
       thick filaments, M-line, and the transverse filament lattice.</div>
@@ -146,7 +167,7 @@ window.__titinBoot = { ready: false, problems: [] };
 
     <h2>Sarcomere length</h2>
     <div class="sl" id="slReadout">— <small>nm</small></div>
-    <input type="range" id="sl" step="10">
+    <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres">
     <div class="row" id="presets"></div>
     <div class="note warn" id="stateCaveat" hidden></div>
 
@@ -168,6 +189,12 @@ window.__titinBoot = { ready: false, problems: [] };
       drawn — never where anything sits. Titin's anchoring is unchanged.</div>
     <div class="row" id="components"></div>
 
+    <h2>Titin regions</h2>
+    <div class="sub" style="margin:0 0 6px">Select a region to highlight and focus its
+      canonical span. Gold carries selection only; opacity continues to encode evidence.</div>
+    <div class="row" id="regions"></div>
+    <div class="note" id="regionReadout" hidden aria-live="polite"></div>
+
     <h2>Geometry at this length</h2>
     <table id="metrics"></table>
 
@@ -177,7 +204,8 @@ window.__titinBoot = { ready: false, problems: [] };
     <h2>Evidence</h2>
     <div class="sub" style="margin:0 0 6px">Transparency encodes confidence;
       colour encodes identity.</div>
-    <div id="evidence"></div>
+    <button id="evidenceToggle" class="on" aria-pressed="true">confidence display</button>
+    <div id="evidence" style="margin-top:8px"></div>
 
     <h2>Structural annotations</h2>
     <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
@@ -188,7 +216,7 @@ window.__titinBoot = { ready: false, problems: [] };
     <ul id="notClaimed"></ul>
 
     <div id="notes"></div>
-  </div>
+  </aside>
 </div>
 
 <script type="module">
@@ -215,7 +243,7 @@ function fail(e) {
 let visualization; let model;
 const state = { showDomains: false, showLattice: true, showContextDetail: false,
                 rings: 1, mirror: true, view: 'longitudinal', closeup: null,
-                scale: SCALES.context };
+                scale: SCALES.context, region: null, showEvidence: true };
 
 try {
   visualization = await TitinVisualization.create($('canvas'), {
@@ -239,15 +267,20 @@ for (const scale of Object.values(SCALES)) {
     // and a biological readout for geometry that is no longer on screen.
     state.scale = scale; state.closeup = null;
     const report = visualization.setScale(scale);
-    visualization.frame(state.view);
+    if (state.region) visualization.focusTitinRegion(state.region, { animate: true });
+    else visualization.frame(state.view, { animate: true });
     render(report);
     syncScales();
     syncCloseups(null);
+    refreshRegionReadout();
   };
   $('scales').append(b);
 }
 function syncScales() {
-  for (const b of $('scales').children) b.classList.toggle('on', b.dataset.scale === state.scale);
+  for (const b of $('scales').children) {
+    const on = b.dataset.scale === state.scale;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  }
   const detail = state.scale === SCALES.detail;
   // The named close-ups all target context geometry (crowns, actin twist,
   // junction, Z-disc, M-line, or lattice). Disabling them is more honest than
@@ -262,8 +295,16 @@ for (const p of model.presets()) {
   const b = document.createElement('button');
   b.textContent = `${p.name} · ${p.sarcomere_length_nm}`;
   b.title = p.biological_condition;
+  b.dataset.sl = p.sarcomere_length_nm;
+  b.setAttribute('aria-pressed', 'false');
   b.onclick = () => { slider.value = p.sarcomere_length_nm; rebuild(); };
   $('presets').append(b);
+}
+function syncPresets(sl) {
+  for (const b of $('presets').children) {
+    const on = Number(b.dataset.sl) === sl;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  }
 }
 for (const [k, v] of Object.entries(VIEWS)) {
   const b = document.createElement('button');
@@ -272,12 +313,15 @@ for (const [k, v] of Object.entries(VIEWS)) {
     // A wide framing invalidates the close-up selection; leaving it highlighted
     // would claim the camera is somewhere it is not.
     state.view = k; state.closeup = null;
-    visualization.frame(k); syncViews(); syncCloseups(null);
+    visualization.frame(k, { animate: true }); syncViews(); syncCloseups(null);
   };
   $('views').append(b);
 }
 function syncViews() {
-  for (const b of $('views').children) b.classList.toggle('on', b.dataset.view === state.view);
+  for (const b of $('views').children) {
+    const on = b.dataset.view === state.view;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  }
 }
 
 // Close-ups. Selecting one turns the context-detail layer ON, because a close-up on
@@ -290,6 +334,11 @@ for (const [k, v] of Object.entries(CLOSEUPS)) {
   b.title = `${v.label} — ${v.shows} (fills view with ~${v.spanNm} nm)`;
   b.dataset.closeup = k;
   b.onclick = () => {
+    // Close-ups and region focus are two distinct navigation modes. Clear the
+    // biological selection so the active controls always describe the camera.
+    state.region = null;
+    visualization.highlightTitinRegion(null);
+    syncRegions(); refreshRegionReadout();
     state.showContextDetail = true;
     state.closeup = k;
     // Order matters. Move the camera first, then rebuild: the aliasing gate reads
@@ -305,7 +354,8 @@ for (const [k, v] of Object.entries(CLOSEUPS)) {
 }
 function syncCloseups(info = null) {
   for (const b of $('closeups').children) {
-    b.classList.toggle('on', b.dataset.closeup === state.closeup);
+    const on = b.dataset.closeup === state.closeup;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   }
   const out = $('closeupReadout');
   if (!info) { out.textContent = ''; return; }
@@ -331,11 +381,78 @@ for (const [key, label] of TOGGLES) {
   b.onclick = () => { state[key] = !state[key]; rebuild(); };
   $('toggles').append(b);
 }
+const DETAIL_DEPICTION = Object.freeze({
+  showLattice: false, showDomains: true, showContextDetail: false, mirror: false,
+});
+function syncDepictionToggles() {
+  const detail = state.scale === SCALES.detail;
+  for (const b of $('toggles').children) {
+    if (b.dataset.key) {
+      const on = detail ? DETAIL_DEPICTION[b.dataset.key] : Boolean(state[b.dataset.key]);
+      b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+      b.disabled = detail;
+      b.title = detail ? 'Fixed by the isolated-titin view' : '';
+    }
+    if (b.dataset.rings) b.disabled = detail;
+  }
+}
+
+// ---- titin-region highlighting and navigation (Phase 10) -----------------
+const regionMetadata = new Map(visualization.titinRegions().map((region) => [region.id, region]));
+for (const region of regionMetadata.values()) {
+  const b = document.createElement('button');
+  b.textContent = region.id.replace(/_/g, ' ');
+  b.title = `${region.name} — ${region.band}; ${region.mechanical_class}`;
+  b.dataset.region = region.id;
+  b.classList.add('region-chip');
+  b.onclick = () => {
+    state.region = state.region === region.id ? null : region.id;
+    state.closeup = null;
+    visualization.highlightTitinRegion(state.region);
+    if (state.region) visualization.focusTitinRegion(state.region, { animate: true });
+    else visualization.frame(state.view, { animate: true });
+    syncRegions(); syncCloseups(null); refreshRegionReadout();
+  };
+  $('regions').append(b);
+}
+function syncRegions() {
+  for (const b of $('regions').children) {
+    const on = b.dataset.region === state.region;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  }
+}
+function refreshRegionReadout() {
+  const out = $('regionReadout');
+  if (!state.region) { out.hidden = true; out.textContent = ''; return; }
+  const region = regionMetadata.get(state.region);
+  const chain = visualization.domainChain(state.region);
+  const foldedCount = chain.domains.filter((domain) => domain.folded_domains).length;
+  out.hidden = false;
+  out.textContent = `${region.name} · ${region.band} · ${chain.span_nm.toFixed(1)} nm at `
+    + `${visualization.currentState().sarcomere_length_nm} nm sarcomere length · `
+    + `${foldedCount} declared folded domain${foldedCount === 1 ? '' : 's'} · `
+    + `${region.mechanical_class} · ${region.evidence.top}`;
+}
+
+$('evidenceToggle').onclick = () => {
+  state.showEvidence = !state.showEvidence;
+  $('evidence').hidden = !state.showEvidence;
+  $('evidenceToggle').classList.toggle('on', state.showEvidence);
+  $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
+};
 {
   const b = document.createElement('button');
-  b.textContent = 'more neighbours';
-  b.onclick = () => { state.rings = state.rings >= 3 ? 1 : state.rings + 1; rebuild(); };
+  b.dataset.rings = 'true';
+  b.onclick = () => {
+    state.rings = state.rings >= 3 ? 1 : state.rings + 1;
+    syncNeighbourControl(); rebuild();
+  };
   $('toggles').append(b);
+  function syncNeighbourControl() {
+    b.textContent = `lattice neighbours · ${state.rings} ring${state.rings === 1 ? '' : 's'}`;
+    b.setAttribute('aria-label', `Show ${state.rings} rings of lattice neighbours`);
+  }
+  syncNeighbourControl();
 }
 
 // ---- rebuild --------------------------------------------------------------
@@ -352,16 +469,20 @@ function rebuild(refit = false) {
     });
     const report = visualization.setSarcomereLength(sl);
     if (refit) visualization.frame(state.view);
-    // build() produces a fresh tree with everything visible, so the user's choice
-    // must be re-applied or hidden components would reappear on every slider move.
-    applyVisibility();
+    // A selected region moves as the mechanical state changes. Keep the camera
+    // attached to its new canonical span; doing this immediately avoids queuing
+    // transitions while the slider emits continuous input.
+    if (!refit && state.region) visualization.focusTitinRegion(state.region);
     render(report);
+    refreshRegionReadout();
   } catch (e) { fail(e); }
 }
 
 function render(report) {
   const { manifest: man, sarcomere_length_nm: requestedSL, annotations = [] } = report;
   const g = model.geometryAt(requestedSL);
+  const hiddenComponents = new Set(report.hidden_components || []);
+  const hiddenSuffix = (component) => hiddenComponents.has(component) ? ' (hidden)' : '';
   $('slReadout').innerHTML = `${g.sarcomere_length_nm} <small>nm${report.clamped ? ' (clamped)' : ''}</small>`;
   // Phase 9's honesty requirement is user-facing, not merely an API field. Every
   // non-keyframe state visibly discloses that this is a computed intermediate
@@ -371,10 +492,8 @@ function render(report) {
   const caveat = $('stateCaveat');
   caveat.hidden = !disclosure;
   caveat.textContent = disclosure || '';
-
-  for (const b of $('toggles').children) {
-    if (b.dataset.key) b.classList.toggle('on', state[b.dataset.key]);
-  }
+  syncPresets(g.sarcomere_length_nm);
+  syncDepictionToggles();
 
   const rows = [
     ['Half-sarcomere', `${g.half_sarcomere_nm.toFixed(1)} nm`],
@@ -383,24 +502,30 @@ function render(report) {
     ['d10 spacing', `${g.lattice_d10_nm.toFixed(2)} nm`],
   ];
   if (man.lattice) {
-    rows.push(['Thick filaments drawn', man.lattice.thick_drawn],
-      ['Thin filaments drawn', man.lattice.thin_drawn]);
+    rows.push(['Thick filaments built', `${man.lattice.thick_drawn}${hiddenSuffix('thick_filament')}`],
+      ['Thin filaments built', `${man.lattice.thin_drawn}${hiddenSuffix('thin_filament')}`]);
   }
-  rows.push(['Titin strands', man.titin_strands_drawn]);
+  rows.push(['Titin strands built', `${man.titin_strands_drawn}${hiddenSuffix('titin')}`]);
   // Phase 7b. Reported whenever the layer is ON — including when a feature was
   // WITHDRAWN, because a silently empty detail layer is indistinguishable from a
   // rendering failure. The px figure is the measurement the decision was made on.
   const cd = man.context_detail;
   if (cd) {
-    rows.push(['Myosin heads', cd.heads_drawn
-      ? `${cd.head_instances} instances`
-      : `withdrawn — crown spacing ${cd.crown_spacing_px} px < ${cd.alias_threshold_px} px`]);
-    rows.push(['Thin-filament twist', cd.twist_drawn
-      ? `crossover ${cd.crossover_repeat_nm} nm (${cd.crossover_repeat_px} px)`
-      : `withdrawn — ${cd.crossover_repeat_px} px < ${cd.alias_threshold_px} px`]);
+    rows.push(['Myosin heads', hiddenComponents.has('myosin_heads')
+      ? 'hidden by component control'
+      : (cd.heads_drawn
+        ? `${cd.head_instances} instances`
+        : `withdrawn — crown spacing ${cd.crown_spacing_px} px < ${cd.alias_threshold_px} px`)]);
+    rows.push(['Thin-filament twist', hiddenComponents.has('thin_filament_twist')
+      ? 'hidden by component control'
+      : (cd.twist_drawn
+        ? `crossover ${cd.crossover_repeat_nm} nm (${cd.crossover_repeat_px} px)`
+        : `withdrawn — ${cd.crossover_repeat_px} px < ${cd.alias_threshold_px} px`)]);
   }
   if (man.domains) {
-    for (const b of man.domains.batches) rows.push([`${b.archetype} domains`, b.count]);
+    for (const b of man.domains.batches) {
+      rows.push([`${b.archetype} domains built`, `${b.count}${hiddenSuffix('titin_domains')}`]);
+    }
   }
   const dov = man.thin_filament_double_overlap;
   if (dov?.present) rows.push(['Thin-filament double overlap', `${dov.overshoot_past_mline_nm.toFixed(0)} nm`]);
@@ -408,12 +533,17 @@ function render(report) {
     .map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
 
   const legend = [
-    ['thick_filament', 'Thick filament (myosin)'],
-    ['thin_filament', 'Thin filament (actin)'],
-    ['zdisc', 'Z-disc'], ['mline', 'M-line'], ['titin', 'Titin'],
+    ['thick_filament', 'Thick filament (myosin)', 'thick_filament'],
+    ['thin_filament', 'Thin filament (actin)', 'thin_filament'],
+    ['zdisc', 'Z-disc', 'zdisc'], ['mline', 'M-line', 'mline'],
+    ['titin', 'Titin', 'titin'],
   ];
-  if (state.showContextDetail) legend.splice(1, 0, ['myosin_head', 'Myosin heads (crowns)']);
+  if (cd?.heads_drawn) legend.splice(1, 0,
+    ['myosin_head', 'Myosin heads (crowns)', 'myosin_heads']);
   $('legend').innerHTML = legend
+    .filter(([, , component]) => component === 'titin'
+      ? !(hiddenComponents.has('titin') && hiddenComponents.has('titin_domains'))
+      : !hiddenComponents.has(component))
     .map(([k, l]) => `<div class="key"><div class="sw" style="background:${hex(COMPONENT_COLOR[k])}"></div>${l}</div>`)
     .join('');
 
@@ -424,7 +554,7 @@ function render(report) {
   const CLASS_ORDER = EVIDENCE_CLASSES;
   const byLen = [...CLASS_ORDER].sort((a, b) => b.length - a.length);
   const groups = new Map(CLASS_ORDER.map((c) => [c, []]));
-  const hiddenComponents = new Set(report.hidden_components || []);
+  const regionIds = new Set(regionMetadata.keys());
   for (const [k, v] of Object.entries(man.evidence || {})) {
     // A scale may retain hidden context geometry internally so titin keeps the
     // exact same anchors. Do not present evidence for those hidden objects as if
@@ -432,6 +562,17 @@ function render(report) {
     if ([...hiddenComponents].some((component) => (
       k === component || k.startsWith(`${component}.`)
     ))) continue;
+    const [scope, claim] = k.split('.');
+    if (regionIds.has(scope)) {
+      const region = regionMetadata.get(scope);
+      const hasFolded = scope === 'kinase'
+        || Object.values(region.domains || {}).some((count) => count > 0);
+      const pathHidden = hiddenComponents.has('titin');
+      const domainsHidden = hiddenComponents.has('titin_domains');
+      if ((pathHidden && domainsHidden)
+          || (pathHidden && (claim === 'backbone_path' || !hasFolded))
+          || (domainsHidden && claim === 'domain_count')) continue;
+    }
     const cls = byLen.find((c) => String(v).toUpperCase().startsWith(c)) || 'UNKNOWN';
     groups.get(cls).push(k);
   }
@@ -465,6 +606,7 @@ function render(report) {
         + 'this double overlap is expected below ~2150 nm — it underlies the '
         + 'ascending limb of the length&ndash;tension relation.</div>'
       : '');
+  syncComponentButtons(report);
 }
 
 // ---- component visibility (Phase 9 / 10) ----------------------------------
@@ -490,18 +632,48 @@ function applyVisibility() {
   try {
     visualization.setComponentVisibility(vis);
   } catch (e) { fail(e); }
+  const report = visualization.currentState();
+  if (report) render(report);
+}
+function syncComponentButtons(report) {
+  const effectivelyHidden = new Set(report?.hidden_components || []);
+  const man = report?.manifest || {};
+  const absent = new Set();
+  if (!man.domains) absent.add('titin_domains');
+  if (!man.context_detail?.heads_drawn) absent.add('myosin_heads');
+  if (!man.context_detail?.twist_drawn) absent.add('thin_filament_twist');
   for (const b of $('components').children) {
-    b.classList.toggle('on', !hidden.has(b.dataset.component));
+    const component = b.dataset.component;
+    const unavailableAtScale = state.scale === SCALES.detail
+      && TitinVisualization.DETAIL_HIDDEN.includes(component);
+    const unavailable = unavailableAtScale || absent.has(component);
+    const on = !unavailable && !effectivelyHidden.has(component);
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    b.disabled = unavailable;
+    b.title = unavailableAtScale ? 'Not part of the isolated-titin view'
+      : (absent.has(component) ? 'This layer is not currently built at this zoom' : '');
   }
 }
 
-slider.oninput = () => rebuild();
+let pendingSliderFrame = null;
+slider.oninput = () => {
+  if (pendingSliderFrame !== null) return;
+  pendingSliderFrame = requestAnimationFrame(() => {
+    pendingSliderFrame = null;
+    rebuild();
+  });
+};
 rebuild(true);
 syncViews();
 syncScales();
+syncRegions();
 // The LOD callback fires ONLY when zooming crosses the aliasing threshold, so the
 // crown array appears and withdraws as the user zooms without a per-frame rebuild.
-visualization.start();
+visualization.start((report) => {
+  // A zoom-driven LOD crossing rebuilds the tree. Refresh the panel in the same
+  // frame so it never claims that withdrawn heads/twist are still visible.
+  render(report); refreshRegionReadout();
+});
 window.titinVisualization = visualization;   // biological facade for console inspection
 // Tell the boot diagnostic above that the module reached its end. Without this the
 // watchdog would fire on a perfectly healthy page, and a false alarm in an error

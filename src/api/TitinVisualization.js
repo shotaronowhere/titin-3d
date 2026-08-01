@@ -42,6 +42,9 @@ import {
  * @property {string|null} interpolation_caveat set iff interpolated
  * @property {object} manifest what the renderer actually drew
  * @property {string[]} notes verification notes from the scene check
+ * @property {string[]} hidden_components components not visible at this scale
+ * @property {string|null} highlighted_titin_region active selection, if any
+ * @property {object} region_highlight_applied selection counts in the built tree
  */
 
 /** The two scales the MVP presents. */
@@ -75,6 +78,7 @@ export class TitinVisualization {
     this._displayOptions = { ...(opts.buildOpts || {}) };
     this.viewer.buildOpts = this._optsForScale(this.scale, opts);
     this._state = null;
+    this._highlightedRegion = null;
   }
 
   /**
@@ -119,6 +123,10 @@ export class TitinVisualization {
         showLattice: false,
         showDomains: true,
         showContextDetail: false,
+        // One titin molecule spans one half-sarcomere (Z-disc to M-line).
+        // Mirroring would show the counterpart from the adjacent half and make
+        // the singular "isolated titin" label false.
+        mirror: false,
       };
     }
     return {
@@ -206,7 +214,18 @@ export class TitinVisualization {
       );
     }
     this._userVisibility = { ...(this._userVisibility || {}), ...visibility };
-    return this._applyScaleVisibility();
+    const applied = this._applyScaleVisibility();
+    // Visibility is an interactive state, not an out-of-band render mutation.
+    // Keep the public report synchronized so evidence/legend consumers cannot
+    // continue describing pixels the user just hid.
+    if (this._state) {
+      this._state = {
+        ...this._state,
+        hidden_components: this.viewer.sarcomere.hiddenComponents(),
+        visibility_applied: applied,
+      };
+    }
+    return applied;
   }
 
   /** The components this visualization can show or hide. */
@@ -285,6 +304,8 @@ export class TitinVisualization {
     const annotations = createAnnotations(this.model, sl, { scale: this.scale });
     this.viewer.sarcomere.setAnnotations(annotations);
     const visibilityApplied = this._applyScaleVisibility();
+    const regionHighlightApplied = this.viewer.sarcomere
+      .setTitinRegionHighlight(this._highlightedRegion);
     // The interpolation disclosure lives in the headless module so it can be
     // tested without WebGL; this class must not compute a second version of it.
     const described = describeLength(this.model, sl);
@@ -297,6 +318,8 @@ export class TitinVisualization {
       annotations,
       hidden_components: this.viewer.sarcomere.hiddenComponents(),
       visibility_applied: visibilityApplied,
+      highlighted_titin_region: this._highlightedRegion,
+      region_highlight_applied: regionHighlightApplied,
       ...extra,
     };
     return this._state;
@@ -319,6 +342,55 @@ export class TitinVisualization {
     return this.model.presets().map((p) => ({
       name: p.name, sarcomere_length_nm: p.sarcomere_length_nm,
     }));
+  }
+
+  /** Titin-region metadata available to the Phase-10 region navigator. */
+  titinRegions() { return this.model.titinRegions(); }
+
+  /**
+   * Highlight one named titin region, or pass null to clear the selection.
+   * Geometry and evidence opacity remain unchanged; only the selection colour
+   * channel changes.
+   */
+  highlightTitinRegion(regionId) {
+    if (!this._state) {
+      throw new Error('highlightTitinRegion: set a state before highlighting a region.');
+    }
+    const known = this.model.titinRegions().map((region) => region.id);
+    if (regionId !== null && !known.includes(regionId)) {
+      throw new Error(
+        `highlightTitinRegion: unknown region '${regionId}'. Known: ${known.join(', ')}`,
+      );
+    }
+    this._highlightedRegion = regionId;
+    const applied = this.viewer.sarcomere.setTitinRegionHighlight(regionId);
+    this._state = {
+      ...this._state,
+      highlighted_titin_region: regionId,
+      region_highlight_applied: applied,
+    };
+    return applied;
+  }
+
+  /**
+   * Smoothly focus the canonical Level-0 span of one region.
+   * Returns the camera measurement rather than exposing Three.js objects.
+   */
+  focusTitinRegion(regionId, opts = {}) {
+    const sl = this._state?.sarcomere_length_nm;
+    if (sl === undefined) {
+      throw new Error('focusTitinRegion: set a state before focusing a region.');
+    }
+    const segment = this.model.backboneAt(sl).segments
+      .find((candidate) => candidate.region_id === regionId);
+    if (!segment) {
+      const known = this.model.titinRegions().map((region) => region.id);
+      throw new Error(`focusTitinRegion: unknown region '${regionId}'. Known: ${known.join(', ')}`);
+    }
+    return {
+      region_id: regionId,
+      ...this.viewer.focusSpan(segment.X_start, segment.X_end, opts),
+    };
   }
 
   // -------------------------------------------------------------------------
@@ -408,15 +480,15 @@ export class TitinVisualization {
    * Frame the structure from a named anatomical direction.
    * @param {string} view e.g. 'longitudinal' | 'transverse'
    */
-  frame(view = 'longitudinal') { this.viewer.frame(view); return this; }
+  frame(view = 'longitudinal', opts = {}) { this.viewer.frame(view, opts); return this; }
 
   /** Move to a named biological close-up without exposing the camera. */
-  closeUp(name) {
+  closeUp(name, opts = {}) {
     const sl = this._state?.sarcomere_length_nm;
     if (sl === undefined) {
       throw new Error('TitinVisualization: set a state before selecting a close-up.');
     }
-    return this.viewer.closeUp(name, sl);
+    return this.viewer.closeUp(name, sl, opts);
   }
 
   /** Named camera directions available to {@link frame}. */
@@ -432,8 +504,15 @@ export class TitinVisualization {
    * automatic rebuild. The manifest it returns is intentionally discarded: the
    * gate's contract is void.
    */
-  start() {
-    this.viewer.start((sl) => { this.setSarcomereLength(sl); });
+  /** @param {((report: StateReport) => void)|null} [onStateChange] */
+  start(onStateChange = null) {
+    if (onStateChange !== null && typeof onStateChange !== 'function') {
+      throw new Error('TitinVisualization.start: onStateChange must be a function or null.');
+    }
+    this.viewer.start((sl) => {
+      const report = this.setSarcomereLength(sl);
+      if (onStateChange) onStateChange(report);
+    });
     return this;
   }
 

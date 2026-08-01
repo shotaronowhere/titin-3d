@@ -21,6 +21,15 @@ The goal is the simplest model that accurately preserves the known:
 
 Unknown structure must remain explicitly unknown rather than being invented.
 
+## Completion Scope
+
+For this repository's completed MVP, Phases 0–10 and Milestones 0–6 are the
+required release scope. Phases 11–12 are retained below as optional future
+extensions and were intentionally excluded from the completion requirement on
+2026-08-02. This scope decision does not remove the continuous numerical,
+scientific, source-integrity, and browser checks already included in the Phase 10
+release gate.
+
 ---
 
 # Core Architecture

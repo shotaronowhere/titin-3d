@@ -53,6 +53,9 @@ export const EVIDENCE_STYLE = Object.freeze({
  */
 export const ALIAS_THRESHOLD_PX = 2.0;
 
+/** Fixed screen-space scale for annotation markers (presentation only). */
+export const ANNOTATION_SCREEN_SCALE = 0.018;
+
 /**
  * The biological components a caller may show or hide, each mapped to a predicate
  * over the object names `build()` assigns.
@@ -98,6 +101,10 @@ export const COMPONENT_COLOR = Object.freeze({
   mline: 0x8f6b7a,
   titin: 0xd94f4f,
   titin_neighbour: 0x9c4a4a,
+  // Selection is an interaction channel, never an evidence channel. Opacity
+  // continues to encode confidence while colour temporarily identifies one region.
+  titin_highlight: 0xffd166,
+  titin_dim: 0x4f2930,
   lattice_guide: 0x556070,
   annotation: 0xf2d06b,
 });
@@ -203,15 +210,62 @@ export class SarcomereScene {
    * elastic regions are worm-like chains, not hinged rods; a smooth path is the
    * honest rendering of an unresolved conformation. The tube radius is a render
    * width (SCHEMATIC) and never implies a measured molecular diameter.
+   *
+   * @param {Array<{x:number,y?:number,z?:number}>} points
+   * @param {number} radiusNm
+   * @param {number} color
+   * @param {string} evidence
+   * @param {string} name
+   * @param {number} [tubularSegments]
+   * @param {[number, number]|null} [axialRange]
    */
-  _titinTube(points, radiusNm, color, evidence, name, tubularSegments) {
+  _titinTube(points, radiusNm, color, evidence, name, tubularSegments, axialRange = null) {
     const pts = points.map((p) => new THREE.Vector3(p.x, p.y ?? 0, p.z ?? 0));
     const curve = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.4);
     const segs = tubularSegments ?? Math.max(24, pts.length * 6);
     const geom = this._track(new THREE.TubeGeometry(curve, segs, radiusNm, 8, false));
+    if (axialRange) {
+      // A tube's end ring is perpendicular to the curve tangent. If that tangent
+      // is oblique, the schematic radius can otherwise make the *surface* cross
+      // the canonical X boundary even though the centreline endpoint is exact.
+      // Clamp only that render-width overhang, producing a planar colour boundary
+      // at the authoritative Level-0 interval without moving the path or domains.
+      const [startNm, endNm] = axialRange;
+      const positions = geom.getAttribute('position');
+      for (let i = 0; i < positions.count; i += 1) {
+        positions.setX(i, THREE.MathUtils.clamp(positions.getX(i), startNm, endNm));
+      }
+      positions.needsUpdate = true;
+      geom.computeVertexNormals();
+    }
     const mesh = new THREE.Mesh(geom, this._material(color, evidence));
     mesh.name = name;
     return mesh;
+  }
+
+  /**
+   * Control points for one canonical titin region on one transverse strand.
+   * Endpoints come from the Level-0 backbone; interior points come from Level 1.
+   * Splitting the previously monolithic tube at real region boundaries is what
+   * makes region highlighting possible without inventing geometry.
+   */
+  _titinRegionPath(domains, segment, off, aBandStartNm) {
+    const at = (x, y = 0, z = 0) => {
+      const f = x >= aBandStartNm ? 1 : x / aBandStartNm;
+      return {
+        x,
+        y: (off.y || 0) * f + y,
+        z: (off.z || 0) * f + z,
+      };
+    };
+    const regionPoints = domains.instances
+      .filter((d) => d.domain_id.split('.')[0] === segment.region_id)
+      .map((d) => at(d.position_nm.x, d.position_nm.y || 0, d.position_nm.z || 0));
+    const points = [at(segment.X_start), ...regionPoints, at(segment.X_end)]
+      .sort((a, b) => a.x - b.x);
+    // Duplicate endpoints can produce zero-length CatmullRom spans. Preserve the
+    // first point at each X; transverse coordinates are identical at boundaries.
+    return points.filter((point, i) => i === 0 || Math.abs(point.x - points[i - 1].x) > 1e-9);
   }
 
   /**
@@ -578,21 +632,45 @@ export class SarcomereScene {
     // context view. Default: domains on the central strand only, tubes elsewhere.
     const domainBatches = opts.domainBatches ?? null;
     const domainStrands = opts.domainStrands ?? (domainBatches ? [0] : []);
+    const titinPath = opts.titinPath ?? null;
+    const regionDescriptors = new Map(scene.titin.map((region) => [region.id, region]));
     for (const off of strandOffsets) {
-      const pts = this._titinPath(domains, off, aBandStart);
       if (domainBatches && domainStrands.includes(off.strand_index)) {
         titinGroup.add(this._domainInstances(domainBatches, off, aBandStart, off.strand_index));
       }
-      const tube = this._titinTube(
-        pts, titinRadius, COMPONENT_COLOR.titin,
-        // The PATH's evidence is the strand-placement policy's, which is the
-        // weakest link in the chain: axial placement is INFERRED but the
-        // azimuth is SCHEMATIC, and a rendering may not claim more than its
-        // weakest component.
-        off.evidence_class || 'SCHEMATIC',
-        `titin_strand_${off.strand_index}`,
-      );
-      titinGroup.add(tube);
+      if (titinPath?.segments?.length) {
+        const strand = new THREE.Group();
+        strand.name = `titin_strand_${off.strand_index}`;
+        for (const segment of titinPath.segments) {
+          const descriptor = regionDescriptors.get(segment.region_id);
+          const evidence = this._weakestEvidence([
+            off.evidence_class || 'SCHEMATIC',
+            descriptor?.evidence?.backbone_path || 'SCHEMATIC',
+          ]);
+          const tube = this._titinTube(
+            this._titinRegionPath(domains, segment, off, aBandStart),
+            titinRadius, COMPONENT_COLOR.titin, evidence,
+            `titin_region_${segment.region_id}_strand_${off.strand_index}`,
+            undefined,
+            [segment.X_start, segment.X_end],
+          );
+          tube.userData.titin_region = segment.region_id;
+          tube.userData.base_color = COMPONENT_COLOR.titin;
+          tube.userData.evidence_rendered = evidence;
+          strand.add(tube);
+        }
+        titinGroup.add(strand);
+      } else {
+        // Compatibility for direct renderer callers that predate the Level-0
+        // path option. The supported Viewer always passes the canonical path.
+        const tube = this._titinTube(
+          this._titinPath(domains, off, aBandStart),
+          titinRadius, COMPONENT_COLOR.titin,
+          off.evidence_class || 'SCHEMATIC',
+          `titin_strand_${off.strand_index}`,
+        );
+        titinGroup.add(tube);
+      }
     }
     half.add(titinGroup);
 
@@ -679,6 +757,12 @@ export class SarcomereScene {
         overshoot_past_mline_nm: Math.max(0, thin.transform.end_nm - mlineX),
       },
       titin_strands_drawn: strandOffsets.length,
+      titin_regions: scene.titin.map((region) => ({
+        id: region.id,
+        band: region.band,
+        mechanical_class: region.mechanical_class,
+      })),
+      highlighted_titin_region: /** @type {string|null} */ (null),
       mirrored: mirror,
       neighbour_titin: neighbourTitin,
       // Carried through from the descriptors so the render is self-documenting.
@@ -743,6 +827,10 @@ export class SarcomereScene {
         transparent: true,
         opacity: 0.9,
         depthTest: false,
+        // World-unit sizing made a harmless overview marker expand into an
+        // 80+ px square during region focus, obscuring the structure it labels.
+        // Anchors remain model coordinates; only marker footprint is screen-space.
+        sizeAttenuation: false,
       });
       this.disposables.add(material);
       const marker = new THREE.Sprite(material);
@@ -752,7 +840,7 @@ export class SarcomereScene {
         annotation.anchor_nm.y,
         annotation.anchor_nm.z,
       );
-      marker.scale.setScalar(7);
+      marker.scale.setScalar(ANNOTATION_SCREEN_SCALE);
       marker.renderOrder = 10;
       marker.userData.annotation = annotation;
       group.add(marker);
@@ -762,7 +850,7 @@ export class SarcomereScene {
       this.manifest.annotations = {
         count: annotations.length,
         ids: annotations.map((annotation) => annotation.id),
-        marker_geometry: 'screen-facing Three.js Sprite anchors; text in accessible HTML',
+        marker_geometry: 'fixed-size screen-space Three.js Sprite anchors; text in accessible HTML',
       };
     }
     return group;
@@ -834,9 +922,13 @@ export class SarcomereScene {
       const axisY = new THREE.Vector3(0, 1, 0);
       const direction = new THREE.Vector3();
       const one = new THREE.Vector3(1, 1, 1);
+      const baseDomainColor = new THREE.Color(COMPONENT_COLOR.titin);
       for (const [evidence, members] of byEvidence) {
         const mesh = new THREE.InstancedMesh(
-          geom, this._material(COMPONENT_COLOR.titin, evidence), members.length,
+          // Instance colours carry selection, so the material must be white;
+          // Three.js multiplies instanceColor by material.color. Evidence stays on
+          // the material's opacity and therefore cannot be promoted by selection.
+          geom, this._material(0xffffff, evidence), members.length,
         );
         members.forEach((t, i) => {
           const x = t.position_nm.x;
@@ -864,8 +956,10 @@ export class SarcomereScene {
             q, one,
           );
           mesh.setMatrixAt(i, m);
+          mesh.setColorAt(i, baseDomainColor);
         });
         mesh.instanceMatrix.needsUpdate = true;
+        if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
         // The archetype name is the stable part; the class is a suffix so a
         // caller can still find all meshes for an archetype by prefix.
         mesh.name = byEvidence.size === 1
@@ -880,6 +974,8 @@ export class SarcomereScene {
           not_claimed: g.not_claimed,
           representative_pdb_id: batch.representative_structure?.pdb_id,
           evidence_rendered: evidence,
+          instance_regions: members.map((member) => member.region),
+          base_color: COMPONENT_COLOR.titin,
         };
         group.add(mesh);
       }
@@ -926,6 +1022,66 @@ export class SarcomereScene {
       if (idx > worst) worst = idx;
     }
     return order[worst];
+  }
+
+  /**
+   * Highlight one biological titin region while retaining evidence opacity.
+   *
+   * Region tubes have one material each. Folded domains remain batched by
+   * archetype/evidence and use InstancedMesh instance colours, so highlighting
+   * does not create per-domain meshes or destroy the Phase-5 instancing contract.
+   * Passing null clears the selection.
+   *
+   * @param {string|null} regionId
+   */
+  setTitinRegionHighlight(regionId) {
+    if (!this._built) throw new Error('setTitinRegionHighlight: nothing built yet.');
+    const known = (this.manifest?.titin_regions || []).map((region) => region.id);
+    if (regionId !== null && !known.includes(regionId)) {
+      throw new Error(
+        `setTitinRegionHighlight: unknown region '${regionId}'. Known: ${known.join(', ')}`,
+      );
+    }
+
+    const base = new THREE.Color(COMPONENT_COLOR.titin);
+    const highlight = new THREE.Color(COMPONENT_COLOR.titin_highlight);
+    const dim = new THREE.Color(COMPONENT_COLOR.titin_dim);
+    const active = regionId !== null;
+    const result = {
+      region_id: regionId,
+      highlighted_tubes: 0,
+      dimmed_tubes: 0,
+      highlighted_domains: 0,
+      dimmed_domains: 0,
+    };
+
+    this.root.traverse((object) => {
+      const tubeRegion = object.userData?.titin_region;
+      if (tubeRegion && object.material?.color) {
+        const selected = active && tubeRegion === regionId;
+        object.material.color.copy(active ? (selected ? highlight : dim) : base);
+        if (active) {
+          if (selected) result.highlighted_tubes += 1;
+          else result.dimmed_tubes += 1;
+        }
+      }
+
+      const instanceRegions = object.userData?.instance_regions;
+      if (!object.isInstancedMesh || !Array.isArray(instanceRegions)) return;
+      for (let i = 0; i < instanceRegions.length; i += 1) {
+        const selected = active && instanceRegions[i] === regionId;
+        object.setColorAt(i, active ? (selected ? highlight : dim) : base);
+        if (active) {
+          if (selected) result.highlighted_domains += 1;
+          else result.dimmed_domains += 1;
+        }
+      }
+      if (object.instanceColor) object.instanceColor.needsUpdate = true;
+    });
+
+    this.highlightedTitinRegion = regionId;
+    if (this.manifest) this.manifest.highlighted_titin_region = regionId;
+    return result;
   }
 
   /**
@@ -981,5 +1137,6 @@ export class SarcomereScene {
     this.disposables = new Set();
     this.manifest = null;
     this._built = false;
+    this.highlightedTitinRegion = null;
   }
 }

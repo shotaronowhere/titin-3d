@@ -4,9 +4,9 @@
 below are historical snapshots; this header and the latest completion record are
 authoritative when an old snapshot says work is still open.*
 
-**Last updated:** 2026-08-01 — final phases 0–9 closure
-**Current phase:** Phase 9 (Primary Implementation Stack) — ✅ COMPLETE
-**Next phase:** Phase 10 (Browser Experience) — continue interaction/accessibility polish
+**Last updated:** 2026-08-02 — scoped MVP release closure
+**Current phase:** Project complete — Phases 0–10 and Milestones 0–6 ✅ COMPLETE
+**Next phase:** None — Phases 11–12 are optional future extensions and intentionally out of scope
 
 ---
 
@@ -24,9 +24,9 @@ authoritative when an old snapshot says work is still open.*
 | 7 | Sarcomere Context Model | ✅ **COMPLETE** |
 | 8 | Mechanical Model | ✅ **COMPLETE** |
 | 9 | Primary Implementation Stack | ✅ **COMPLETE** — release, source, and browser gates passed |
-| 10 | Browser Experience | 🟨 In progress — close-ups implemented; broader UX remains |
-| 11 | Validation | 🟨 In progress — automated release gate implemented |
-| 12 | AI-Assisted Engineering Workflow | ⬜ Not started |
+| 10 | Browser Experience | ✅ **COMPLETE** — interaction, scale navigation, region focus, accessibility, and state truth gates passed |
+| 11 | Validation | ⏭ **OUT OF SCOPE** — optional expansion skipped; continuous automated validation retained |
+| 12 | AI-Assisted Engineering Workflow | ⏭ **OUT OF SCOPE** — optional workflow expansion intentionally skipped |
 
 ## MVP milestone status
 
@@ -38,7 +38,7 @@ authoritative when an old snapshot says work is still open.*
 | M3 | Titin domain architecture | ✅ **COMPLETE** |
 | M4 | Experimental structural proxies | ✅ **COMPLETE** |
 | M5 | Mechanical states | ✅ **COMPLETE** |
-| M6 | Educational interface & polish | 🟨 In progress |
+| M6 | Educational interface & polish | ✅ **COMPLETE** |
 
 ---
 
@@ -1421,3 +1421,76 @@ The root page also rendered from a plain static HTTP server with one nonempty
 warnings/errors. Changing to the 2400 nm preset updated the live readout. The server
 received only the root HTML request, confirming that the deployed page made no
 requests for `node_modules`, `src`, or `data` siblings.
+
+---
+
+# 2026-08-01 — Phase 10 Browser Experience completion
+
+Phase 10 is complete. Every capability named in `MASTER_PLAN.md` is present in the
+supported generated application: explicit orbit/zoom/pan; sarcomere context and
+single-molecule isolated-titin scales; interruptible smooth navigation; the three
+named biological presets plus continuous 1 nm length control; coordinate-anchored
+structural labels; canonical titin-region highlighting/focus; truthful component
+visibility; and an optional confidence display.
+
+## Completion decisions
+
+- The eight Level-0 titin regions are distinct tubes with exact canonical axial
+  boundaries. Level-1 points shape their interiors. A planar surface clamp removes
+  only TubeGeometry radius overhang at an oblique end ring; no path or domain
+  coordinate moves.
+- Selection colour and evidence opacity are independent channels. Folded domains
+  retain archetype/evidence `InstancedMesh` batching and receive per-instance
+  colours. N2A and PEVK path selection creates no false folded domains.
+- Region selection persists through sarcomere-length, scale, and zoom-LOD rebuilds.
+  Continuous length changes refocus the newly solved canonical span and continue to
+  show the interpolation caveat.
+- Isolated titin is one Z-disc-to-M-line molecule: lattice/context detail and
+  mirroring are forced off, while domain detail is forced on. The corresponding
+  controls expose those effective states and are disabled rather than accepting
+  misleading no-op input.
+- Camera moves use a 650 ms symmetric cubic transition, yield immediately to direct
+  manipulation, and honor live `prefers-reduced-motion` changes. Visible-only scene
+  bounds keep hidden context geometry from contaminating isolated-titin framing.
+- Component visibility updates the public state report, evidence list, legend, and
+  built-versus-hidden metrics. LOD-triggered rebuilds refresh the same readout.
+  Fixed-size screen-space annotation markers stay legible at whole-sarcomere and
+  region-focus scales.
+
+## Automated gate
+
+`npm run verify` exits 0. Root `index.html` is current against its source/data inputs;
+strict production type analysis reports zero diagnostics; **240/240** Node tests
+pass; all Phase 5/6 negative controls pass; both scientific validators report
+`ALL CHECKS PASSED`; and the Gemmi/NumPy structural-coordinate smoke pipeline passes.
+The 12 Phase-10 tests additionally guard plan-capability coverage, exact region
+boundaries, geometry/evidence invariance under highlighting, disordered-region
+honesty, selection persistence, component-report synchronization, fixed-size
+markers, LOD readout refresh, camera motion/reduced motion, visible-only detail
+framing, and accessible page wiring.
+
+The final generated artifact is 1,692,922 bytes with SHA-256
+`43373ecda9ad8250be8e61045b21d67d823757f25bcecf16b322dcdb5babfee7`.
+
+## Rendered browser validation
+
+The generated root page was served and exercised in the in-app Chromium browser.
+It produced one nonempty 1920×1440 WebGL canvas at a 960×720 CSS viewport, eight
+region controls, four state presets, no visible error panel, and no browser warnings
+or errors. Isolated mode reported one titin strand and all 285 folded domains;
+context-only controls and components exposed their disabled/off states.
+
+Selecting PEVK highlighted and focused its canonical path, then a continuous move to
+2350 nm updated its live span from 25.8 to 55.7 nm and showed the explicit
+resting-to-stretched interpolation disclosure. The selection survived scale changes;
+the optional confidence panel toggled its pressed/hidden state; and hiding the thick
+filament removed its evidence and legend entry while changing its metric to
+`built … (hidden)`. Final visual inspection confirmed that screen-space annotation
+markers remain approximately 20 px rather than expanding into molecule-obscuring
+squares at region focus. Three reloads generated only three root HTML requests,
+confirming the standalone made no sibling `src`, `data`, or dependency requests.
+
+This record supersedes all earlier chronological notes that describe Phase 10 as
+open or partially complete. Phases 0–10 and Milestones 0–6 are complete. Under the
+final project scope recorded in `MASTER_PLAN.md`, Phases 11–12 are optional future
+extensions and intentionally excluded; there is no remaining required phase.

@@ -4,6 +4,10 @@ A scientifically traceable Three.js visualization of titin in sarcomere context.
 JSON records in `data/` are the scientific source of truth; the renderer and public
 API consume those records rather than restating biological constants.
 
+**Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
+0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
+and are intentionally outside the completed release scope.
+
 ## Open the visualization
 
 `index.html` is the complete application. It embeds Three.js, the project modules,
@@ -40,7 +44,7 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-Run the complete Phase 9 release gate:
+Run the complete Phase 10 release gate:
 
 ```sh
 npm run verify
@@ -66,8 +70,12 @@ every input. The large downloaded coordinate files are a reproducible cache and 
 not required by the clean-checkout release gate.
 
 The page uses `TitinVisualization`, the supported browser facade. Its biological
-controls set sarcomere length, structural state, component visibility, scale, and
-close-up target. Evidence-aware annotations are available through the same facade.
+controls set sarcomere length, structural state, component visibility, scale,
+close-up target, and titin-region selection/focus. Region selection is a separate
+colour channel from evidence opacity, persists through rebuilds, and follows the
+region's live mechanical span. Evidence-aware annotations are available through the
+same facade. Camera moves are smooth and interruptible, while the operating-system
+reduced-motion preference is honored immediately.
 The default intermediate-length partition is the common-force mechanical solution;
 the historical keyframe interpolation remains available only as an explicitly named
 reference/audit mode. Interactive clamping and interpolation caveats are disclosed
