@@ -34,6 +34,7 @@ import * as api from '../src/api/titinApi.js';
 import { readFileSync } from 'node:fs';
 
 const model = await TitinModel.create(nodeReader());
+const PAGE_SOURCE = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 
 // ---------------------------------------------------------------------------
 // 1. the named API surface exists and speaks biology
@@ -493,16 +494,16 @@ test('PHASE9: annotations carry anchors, evidence, sources, and Three.js markers
   for (const marker of group.children) assert.ok(marker.userData.annotation);
 });
 
-test('PHASE9: index.html consumes the biological visualization facade', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+test('PHASE9: the page source consumes the biological visualization facade', () => {
+  const html = PAGE_SOURCE;
   assert.match(html, /import \{ TitinVisualization, SCALES \} from '\.\/src\/api\/TitinVisualization\.js'/);
   assert.match(html, /TitinVisualization\.create/);
   assert.doesNotMatch(html, /new Viewer\s*\(/,
     'the page must not bypass the facade by constructing the low-level viewer');
 });
 
-test('PHASE9: index.html visibly consumes the interpolation caveat', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+test('PHASE9: the page source visibly consumes the interpolation caveat', () => {
+  const html = PAGE_SOURCE;
   assert.match(html, /id="stateCaveat"/,
     'the page needs a dedicated visible interpolation disclosure');
   assert.match(html, /report\.clamp_note\s*\|\|\s*report\.interpolation_caveat/,
@@ -512,7 +513,7 @@ test('PHASE9: index.html visibly consumes the interpolation caveat', () => {
 });
 
 test('PHASE9: isolated-titin scale cannot retain a context-only close-up claim', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = PAGE_SOURCE;
   assert.match(html, /state\.scale\s*=\s*scale;\s*state\.closeup\s*=\s*null/,
     'switching scale must clear the selected context landmark');
   assert.match(html, /syncCloseups\(null\)/,
@@ -528,12 +529,12 @@ test('PHASE9: isolated-titin scale cannot retain a context-only close-up claim',
 // ---------------------------------------------------------------------------
 // The page must not restate the evidence vocabulary.
 //
-// index.html previously hardcoded a five-class list that predated MODELED, so a
+// The page source previously hardcoded a five-class list that predated MODELED, so a
 // modelled claim silently displayed as UNKNOWN — four rungs weaker than the truth.
 // This gate makes that defect class impossible to reintroduce in the page.
 // ---------------------------------------------------------------------------
-test('PHASE9: index.html imports the evidence vocabulary instead of restating it', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+test('PHASE9: the page source imports the evidence vocabulary instead of restating it', () => {
+  const html = PAGE_SOURCE;
   assert.match(html, /import \{[^}]*EVIDENCE_CLASSES[^}]*\} from '\.\/src\/model\/SpecLoader\.js'/,
     'the page must import EVIDENCE_CLASSES from the loader');
 
@@ -577,7 +578,7 @@ test('PHASE9: all seven plan-named API entry points exist', () => {
 // page whose only explanation was in the devtools console.
 // ---------------------------------------------------------------------------
 test('PHASE9: the page reports boot failure visibly, not only to the console', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = PAGE_SOURCE;
 
   // The diagnostic must be a CLASSIC script. A module cannot report its own
   // failure to load, so putting the watchdog in one would defeat its purpose.
@@ -619,7 +620,6 @@ test('PHASE9: the page reports boot failure visibly, not only to the console', (
 test('PHASE9: package.json documents how to serve the page', () => {
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   assert.ok(pkg.scripts.serve, 'a serve script makes the correct invocation discoverable');
-  // Serving from the project root is the point: ./data and ./node_modules must resolve.
   assert.match(pkg.scripts.serve, /http\.server|serve|vite|http-server/,
     'serve must start a static HTTP server');
 });
@@ -635,7 +635,7 @@ test('PHASE9: package.json documents how to serve the page', () => {
 // ---------------------------------------------------------------------------
 test('PHASE9: the boot diagnostic fires on failure and stays silent on success', () => {
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const html = PAGE_SOURCE;
 const boot = (html.match(/<script>([\s\S]*?)<\/script>/g) || []).find(function (s) { return s.includes('__titinBoot'); })
   .replace(/^<script>/, '').replace(/<\/script>$/, '');
 

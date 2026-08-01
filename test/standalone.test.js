@@ -1,14 +1,14 @@
 /**
  * standalone.test.js — gates the single-file build.
  *
- * The standalone HTML is a DERIVED artifact: index.html plus data/ plus node_modules,
- * flattened into one file so it opens in a viewer that shows no sibling files. A
- * derived artifact can drift from its source, which would be worse than not shipping
- * it — a viewer would render stale science with no indication. These tests exist to
- * make that drift a test failure.
+ * The root index.html is a DERIVED artifact: src/index.template.html plus data/ plus
+ * node_modules, flattened into one file so it opens locally and deploys unchanged to
+ * any static host. A derived artifact can drift from its source, which would be worse
+ * than not shipping it — a viewer would render stale science with no indication.
+ * These tests exist to make that drift a test failure.
  *
  * They deliberately verify the BUILT FILE, not the builder's intentions: each one
- * extracts payloads from titin_standalone.html and executes them.
+ * extracts payloads from the shipped index.html and executes them.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -16,10 +16,10 @@ import { readFileSync, writeFileSync, rmSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 
-const OUT = 'titin_standalone.html';
+const OUT = 'index.html';
 
-// Build fresh, so the tests can never pass against a stale file left in the tree.
-execFileSync('node', ['scripts/build_standalone.mjs', OUT], { stdio: 'pipe' });
+// Check rather than rewrite: a stale committed deployment artifact must fail CI.
+execFileSync('node', ['scripts/build_standalone.mjs', '--check'], { stdio: 'pipe' });
 const html = readFileSync(OUT, 'utf8');
 const OPEN = '<script type="module">';
 const body = html.slice(html.indexOf(OPEN) + OPEN.length, html.lastIndexOf('</script>'));
@@ -167,6 +167,43 @@ test('standalone: the boot advice is not the served-page advice', () => {
   const i = html.indexOf('window.__titinStandalone');
   assert.ok(i > 0 && i < html.indexOf('const __titinBundle'),
     'the marker must be set before the module runs');
+  assert.match(html, /location\.protocol\s*===\s*'file:'\s*&&\s*!window\.__titinStandalone/,
+    'the file:// diagnostic must permit the generated self-contained page');
+});
+
+test('standalone: the real boot scripts permit a healthy file:// launch', () => {
+  const classic = (html.match(/<script>([\s\S]*?)<\/script>/g) || [])
+    .map((script) => script.replace(/^<script>/, '').replace(/<\/script>$/, ''));
+  const boot = classic.find((script) => script.includes('__titinBoot'));
+  const marker = classic.find((script) => script.includes('window.__titinStandalone = true'));
+  assert.ok(boot && marker, 'the generated page must contain boot and standalone scripts');
+
+  const err = { style: { display: 'none' }, textContent: '' };
+  const domReady = [];
+  const ctx = {
+    location: { protocol: 'file:' },
+    document: {
+      getElementById: (id) => (id === 'err' ? err : null),
+      addEventListener: (event, fn) => { if (event === 'DOMContentLoaded') domReady.push(fn); },
+    },
+    setTimeout: (fn, ms) => { ctx.timer = { fn, ms }; },
+    addEventListener: () => {},
+  };
+  ctx.window = ctx;
+
+  const execute = (source) => new Function(
+    'window', 'document', 'location', 'setTimeout', source,
+  )(ctx, ctx.document, ctx.location, ctx.setTimeout);
+  execute(boot);
+  execute(marker);
+  for (const ready of domReady) ready();
+
+  assert.equal(err.style.display, 'none',
+    'the standalone marker must prevent the source-only file:// rejection');
+  assert.ok(ctx.timer && ctx.timer.ms >= 3000, 'the ordinary boot watchdog must remain armed');
+  ctx.__titinBoot.ready = true;
+  ctx.timer.fn();
+  assert.equal(err.style.display, 'none', 'a completed standalone boot must stay error-free');
 });
 
 test('standalone: spec discovery is redundant, not single-point', () => {

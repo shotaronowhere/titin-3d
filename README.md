@@ -4,7 +4,30 @@ A scientifically traceable Three.js visualization of titin in sarcomere context.
 JSON records in `data/` are the scientific source of truth; the renderer and public
 API consume those records rather than restating biological constants.
 
-## Requirements
+## Open the visualization
+
+`index.html` is the complete application. It embeds Three.js, the project modules,
+and all scientific JSON records, so it makes no network requests and has no runtime
+installation step.
+
+On macOS:
+
+```sh
+open index.html
+```
+
+Alternatively, double-click `index.html`, or serve the repository and open
+<http://localhost:8000/>:
+
+```sh
+npm run serve
+```
+
+The same committed root file can be published directly with GitHub Pages using
+**Deploy from a branch → `main` → `/(root)`**. No Pages-specific build workflow is
+required.
+
+## Development requirements
 
 - Node.js 20.19 or newer
 - Python 3.12 or newer
@@ -23,11 +46,12 @@ Run the complete Phase 9 release gate:
 npm run verify
 ```
 
-This checks production JavaScript with strict TypeScript analysis, rebuilds and
-tests the standalone artifact, runs the Node test suite, validates the scientific
-specification, and exercises the Gemmi/NumPy structural-coordinate pipeline with an
-offline synthetic fixture. It also runs the destructive-in-memory/on-restored-copy
-negative controls that prove the scientific guards reject invalid geometry.
+This checks production JavaScript with strict TypeScript analysis, rejects a stale
+generated `index.html`, tests the standalone artifact, runs the Node test suite,
+validates the scientific specification, and exercises the Gemmi/NumPy
+structural-coordinate pipeline with an offline synthetic fixture. It also runs the
+destructive-in-memory/on-restored-copy negative controls that prove the scientific
+guards reject invalid geometry.
 
 To reproduce the coordinate-derived measurements from the pinned RCSB inputs, fetch
 the optional raw-structure cache and verify it before running the measurement scripts:
@@ -41,14 +65,6 @@ npm run check:structures
 every input. The large downloaded coordinate files are a reproducible cache and are
 not required by the clean-checkout release gate.
 
-## Run the visualization
-
-Start the local server and open <http://localhost:8000/>:
-
-```sh
-npm run serve
-```
-
 The page uses `TitinVisualization`, the supported browser facade. Its biological
 controls set sarcomere length, structural state, component visibility, scale, and
 close-up target. Evidence-aware annotations are available through the same facade.
@@ -57,13 +73,15 @@ the historical keyframe interpolation remains available only as an explicitly na
 reference/audit mode. Interactive clamping and interpolation caveats are disclosed
 in the visible readout.
 
-For a portable file that makes no network requests:
+After changing `src/index.template.html`, application modules, dependencies, or
+scientific data, regenerate the committed application:
 
 ```sh
-npm run build:standalone
+npm run build
 ```
 
-Then open `titin_standalone.html` in a WebGL-capable browser.
+`npm run check:build` verifies that `index.html` exactly matches its current inputs.
+`npm run build:standalone` remains as a compatibility alias for `npm run build`.
 
 ## Public modules
 

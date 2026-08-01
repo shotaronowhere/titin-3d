@@ -13,8 +13,10 @@
     "fetch:structures": ".venv/bin/python scripts/fetch_structures.py",
     "check:structures": ".venv/bin/python scripts/fetch_structures.py --check",
     "typecheck": "tsc -p tsconfig.json",
-    "verify": "npm run typecheck && npm test && npm run test:negative && npm run validate && npm run validate:spec && npm run validate:python",
-    "build:standalone": "node scripts/build_standalone.mjs"
+    "build": "node scripts/build_standalone.mjs",
+    "build:standalone": "npm run build",
+    "check:build": "node scripts/build_standalone.mjs --check",
+    "verify": "npm run check:build && npm run typecheck && npm test && npm run test:negative && npm run validate && npm run validate:spec && npm run validate:python"
   },
   "license": "CC-BY-4.0",
   "dependencies": {

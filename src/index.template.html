@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Sarcomere context view — titin in situ</title>
+<!--
+  Editable page source. scripts/build_standalone.mjs replaces this import map and
+  the browser JSON reader while generating the self-contained root index.html.
+  Tests inspect this source and independently reject a stale generated artifact.
+-->
+<script type="importmap">
+{
+  "imports": {
+    "three": "./node_modules/three/build/three.module.js",
+    "three/addons/": "./node_modules/three/examples/jsm/"
+  }
+}
+</script>
+<!--
+  Boot diagnostic. A CLASSIC script, deliberately: it must run even when the module
+  below never executes, which is exactly the failure it exists to report.
+
+  The module's own fail() writes into #err — but that is unreachable if the module
+  itself never starts. The generated page has no external module or JSON requests,
+  while the source graph still needs HTTP. This diagnostic handles both modes and
+  makes either failure visible. A scientific tool that fails silently is worse than
+  one that fails loudly.
+-->
+<script>
+window.__titinBoot = { ready: false, problems: [] };
+(function () {
+  var HTTP_HINT = 'Serve the project root over HTTP and open the http:// URL:\n\n'
+    + '    npm ci\n'
+    + '    npm run serve\n'
+    + '    open http://localhost:8000/index.html';
+  var BUILD_HINT = 'Rebuild the self-contained page and try again:\n\n'
+    + '    npm ci\n'
+    + '    npm run build';
+
+  function show(title, detail) {
+    var box = document.getElementById('err');
+    if (!box) return;
+    box.style.display = 'block';
+    box.textContent = title + '\n\n' + detail
+      + (window.__titinBoot.problems.length
+        ? '\n\nBrowser reported:\n  ' + window.__titinBoot.problems.join('\n  ')
+        : '');
+  }
+
+  // Fires for module resolution/network failures, which do NOT reach the module's
+  // own try/catch. Capture phase, because these events do not bubble.
+  window.addEventListener('error', function (e) {
+    var t = e.target || {};
+    var what = t.src || t.href || (e.message || 'unknown error');
+    window.__titinBoot.problems.push(String(what));
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) {
+    window.__titinBoot.problems.push('unhandled rejection: ' + ((e.reason && e.reason.message) || e.reason));
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // The editable template still needs HTTP because it imports source files and
+    // fetches JSON. The generated root index.html sets __titinStandalone before
+    // DOMContentLoaded and has no sibling-file dependencies, so file:// is valid.
+    if (location.protocol === 'file:' && !window.__titinStandalone) {
+      show('This page cannot run from a file:// URL.',
+        'ES module imports and the fetch() calls that load data/*.json are both '
+        + 'blocked by the browser same-origin policy for local files, so the '
+        + 'visualization never starts and only this static panel renders.\n\n' + HTTP_HINT);
+      return;
+    }
+    // The module is async (it awaits the spec fetch), so give it room before
+    // concluding it failed. Only a module that never reached its last line trips this.
+    setTimeout(function () {
+      if (window.__titinBoot.ready) return;
+      if (window.__titinStandalone) {
+        show('The visualization did not start.',
+          'The self-contained page loaded, but its embedded module did not finish. '
+          + 'The committed build may be corrupt or out of date.\n\n' + BUILD_HINT);
+      } else {
+        show('The visualization did not start.',
+          'The page shell rendered but the module did not finish. The usual cause is '
+          + 'a 404: this source page must be served from the project root itself, so '
+          + 'that ./data/ and ./node_modules/ resolve. Run `npm install` if '
+          + 'node_modules is absent.\n\n' + HTTP_HINT);
+      }
+    }, 6000);
+  });
+}());
+</script>
+<style>
+  :root {
+    --bg: #0e1116; --panel: #161b22; --edge: #2b3440;
+    --text: #d8dee6; --dim: #8b96a5; --accent: #7aa2d8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+    font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif; }
+  #app { display: grid; grid-template-columns: 1fr 320px; height: 100%; }
+  #canvas { position: relative; min-width: 0; }
+  #panel { background: var(--panel); border-left: 1px solid var(--edge);
+    overflow-y: auto; padding: 16px; }
+  h1 { font-size: 15px; margin: 0 0 4px; font-weight: 600; }
+  h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--dim); margin: 20px 0 8px; font-weight: 600; }
+  .sub { color: var(--dim); font-size: 11px; margin-bottom: 12px; }
+  label { display: block; font-size: 11px; color: var(--dim); margin-bottom: 4px; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  button { background: #1f2630; color: var(--text); border: 1px solid var(--edge);
+    border-radius: 4px; padding: 5px 9px; font-size: 11px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.on { background: var(--accent); color: #0e1116; border-color: var(--accent); }
+  .sl { font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 600; }
+  .sl small { font-size: 11px; font-weight: 400; color: var(--dim); }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  td { padding: 2px 0; vertical-align: top; }
+  td:first-child { color: var(--dim); padding-right: 8px; white-space: nowrap; }
+  td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  ul { margin: 4px 0 0; padding-left: 16px; color: var(--dim); font-size: 11px; }
+  li { margin-bottom: 3px; }
+  .key { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 3px; }
+  .sw { width: 20px; height: 9px; border-radius: 2px; flex: none; }
+  .note { background: #1a2029; border-left: 2px solid #6b7a8f; padding: 7px 9px;
+    font-size: 11px; color: var(--dim); margin-top: 8px; }
+  .warn { border-left-color: #d0a24c; }
+  #err { display: none; position: absolute; inset: 16px; background: #2a1416;
+    border: 1px solid #6b2a2a; border-radius: 6px; padding: 16px; overflow: auto;
+    font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
+  .ev { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
+  .ev b { font-weight: 500; color: var(--text); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="canvas"><div id="err"></div></div>
+  <div id="panel">
+    <h1 id="viewTitle">Sarcomere context view</h1>
+    <div class="sub" id="viewDescription">Titin positioned in situ relative to the Z-disc, thin and
+      thick filaments, M-line, and the transverse filament lattice.</div>
+
+    <h2>Scale</h2>
+    <div class="row" id="scales"></div>
+
+    <h2>Sarcomere length</h2>
+    <div class="sl" id="slReadout">— <small>nm</small></div>
+    <input type="range" id="sl" step="10">
+    <div class="row" id="presets"></div>
+    <div class="note warn" id="stateCaveat" hidden></div>
+
+    <h2>View</h2>
+    <div class="row" id="views"></div>
+
+    <h2>Close-up</h2>
+    <div class="sub" style="margin:0 0 6px">Flies to a landmark and fills the view
+      with a span small enough to resolve it. Landmarks are read from the geometry at
+      the current length, so they follow the slider. Enables the detail layer.</div>
+    <div class="row" id="closeups"></div>
+    <div class="sub" id="closeupReadout" style="margin:6px 0 0"></div>
+
+    <h2>Detail</h2>
+    <div class="row" id="toggles"></div>
+
+    <h2>Components</h2>
+    <div class="sub" style="margin:0 0 6px">Hiding a component changes only what is
+      drawn — never where anything sits. Titin's anchoring is unchanged.</div>
+    <div class="row" id="components"></div>
+
+    <h2>Geometry at this length</h2>
+    <table id="metrics"></table>
+
+    <h2>Legend</h2>
+    <div id="legend"></div>
+
+    <h2>Evidence</h2>
+    <div class="sub" style="margin:0 0 6px">Transparency encodes confidence;
+      colour encodes identity.</div>
+    <div id="evidence"></div>
+
+    <h2>Structural annotations</h2>
+    <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
+      each carries its weakest evidence class and primary sources.</div>
+    <div id="annotations"></div>
+
+    <h2>Not claimed by this render</h2>
+    <ul id="notClaimed"></ul>
+
+    <div id="notes"></div>
+  </div>
+</div>
+
+<script type="module">
+import { browserReader } from './src/model/readBrowser.js';
+import { TitinVisualization, SCALES } from './src/api/TitinVisualization.js';
+import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
+import { COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
+// The evidence vocabulary is imported, never restated here. This panel used to
+// hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
+// understating it by four rungs of the ladder. Importing makes that class of drift
+// impossible: adding a class to the vocabulary updates the panel automatically.
+import { EVIDENCE_CLASSES } from './src/model/SpecLoader.js';
+
+const $ = (id) => document.getElementById(id);
+const hex = (n) => `#${n.toString(16).padStart(6, '0')}`;
+
+function fail(e) {
+  const box = $('err');
+  box.style.display = 'block';
+  box.textContent = `${e.message}\n\n${e.stack || ''}`;
+  throw e;
+}
+
+let visualization; let model;
+const state = { showDomains: false, showLattice: true, showContextDetail: false,
+                rings: 1, mirror: true, view: 'longitudinal', closeup: null,
+                scale: SCALES.context };
+
+try {
+  visualization = await TitinVisualization.create($('canvas'), {
+    reader: browserReader('./data'), scale: state.scale,
+  });
+  model = visualization.model;
+} catch (e) { fail(e); }
+
+const { min, max } = model.slRange();
+const slider = $('sl');
+slider.min = min; slider.max = max; slider.value = 2200;
+
+// ---- controls -------------------------------------------------------------
+for (const scale of Object.values(SCALES)) {
+  const b = document.createElement('button');
+  b.textContent = scale === SCALES.context ? 'sarcomere context' : 'isolated titin';
+  b.dataset.scale = scale;
+  b.onclick = () => {
+    // Close-ups describe sarcomere-context landmarks and context-only detail.
+    // Carrying one into the isolated-titin scale leaves a highlighted control
+    // and a biological readout for geometry that is no longer on screen.
+    state.scale = scale; state.closeup = null;
+    const report = visualization.setScale(scale);
+    visualization.frame(state.view);
+    render(report);
+    syncScales();
+    syncCloseups(null);
+  };
+  $('scales').append(b);
+}
+function syncScales() {
+  for (const b of $('scales').children) b.classList.toggle('on', b.dataset.scale === state.scale);
+  const detail = state.scale === SCALES.detail;
+  // The named close-ups all target context geometry (crowns, actin twist,
+  // junction, Z-disc, M-line, or lattice). Disabling them is more honest than
+  // accepting a click whose target is hidden by the isolated-titin scale.
+  for (const b of $('closeups').children) b.disabled = detail;
+  $('viewTitle').textContent = detail ? 'Isolated titin detail view' : 'Sarcomere context view';
+  $('viewDescription').textContent = detail
+    ? 'Titin alone, retaining the same model-derived Z-disc and M-line anchor positions.'
+    : 'Titin positioned in situ relative to the Z-disc, thin and thick filaments, M-line, and transverse lattice.';
+}
+for (const p of model.presets()) {
+  const b = document.createElement('button');
+  b.textContent = `${p.name} · ${p.sarcomere_length_nm}`;
+  b.title = p.biological_condition;
+  b.onclick = () => { slider.value = p.sarcomere_length_nm; rebuild(); };
+  $('presets').append(b);
+}
+for (const [k, v] of Object.entries(VIEWS)) {
+  const b = document.createElement('button');
+  b.textContent = k; b.title = v.label; b.dataset.view = k;
+  b.onclick = () => {
+    // A wide framing invalidates the close-up selection; leaving it highlighted
+    // would claim the camera is somewhere it is not.
+    state.view = k; state.closeup = null;
+    visualization.frame(k); syncViews(); syncCloseups(null);
+  };
+  $('views').append(b);
+}
+function syncViews() {
+  for (const b of $('views').children) b.classList.toggle('on', b.dataset.view === state.view);
+}
+
+// Close-ups. Selecting one turns the context-detail layer ON, because a close-up on
+// the crown array with that layer off would show a bare cylinder and read as a
+// rendering failure. The rebuild happens BEFORE the camera move so the aliasing gate
+// is evaluated against the close-up's view width, not the wide shot's.
+for (const [k, v] of Object.entries(CLOSEUPS)) {
+  const b = document.createElement('button');
+  b.textContent = k;
+  b.title = `${v.label} — ${v.shows} (fills view with ~${v.spanNm} nm)`;
+  b.dataset.closeup = k;
+  b.onclick = () => {
+    state.showContextDetail = true;
+    state.closeup = k;
+    // Order matters. Move the camera first, then rebuild: the aliasing gate reads
+    // the CURRENT view width, so rebuilding before the move would evaluate it
+    // against the wide shot and leave the heads withdrawn. closeUp() is then called
+    // once more only to re-read the measurement now that the manifest is populated.
+    rebuild();
+    visualization.closeUp(k);
+    rebuild();
+    syncCloseups(visualization.closeUp(k));
+  };
+  $('closeups').append(b);
+}
+function syncCloseups(info = null) {
+  for (const b of $('closeups').children) {
+    b.classList.toggle('on', b.dataset.closeup === state.closeup);
+  }
+  const out = $('closeupReadout');
+  if (!info) { out.textContent = ''; return; }
+  const parts = [`${info.label} · view span ${info.span_nm} nm at X=${info.target_nm[0]} nm`];
+  if (info.crown_spacing_px != null) {
+    parts.push(`crown spacing ${info.crown_spacing_px} px, crossover `
+      + `${info.crossover_repeat_px} px (aliasing threshold ${info.alias_threshold_px} px)`);
+  }
+  out.textContent = parts.join(' — ');
+}
+const TOGGLES = [
+  ['showLattice', 'lattice'],
+  ['showDomains', 'domains'],
+  // Phase 7b. Off by default: it is context DETAIL, and the plan's objective makes
+  // titin the subject. The user turns it on when they want to see why titin sits
+  // where it does on the filament surface.
+  ['showContextDetail', 'myosin heads + twist'],
+  ['mirror', 'full sarcomere'],
+];
+for (const [key, label] of TOGGLES) {
+  const b = document.createElement('button');
+  b.textContent = label; b.dataset.key = key;
+  b.onclick = () => { state[key] = !state[key]; rebuild(); };
+  $('toggles').append(b);
+}
+{
+  const b = document.createElement('button');
+  b.textContent = 'more neighbours';
+  b.onclick = () => { state.rings = state.rings >= 3 ? 1 : state.rings + 1; rebuild(); };
+  $('toggles').append(b);
+}
+
+// ---- rebuild --------------------------------------------------------------
+function rebuild(refit = false) {
+  try {
+    const sl = Number(slider.value);
+    visualization.setDisplayOptions({
+      showLattice: state.showLattice,
+      rings: state.rings,
+      titinStrands: state.showLattice,
+      showDomains: state.showDomains,
+      showContextDetail: state.showContextDetail,
+      mirror: state.mirror,
+    });
+    const report = visualization.setSarcomereLength(sl);
+    if (refit) visualization.frame(state.view);
+    // build() produces a fresh tree with everything visible, so the user's choice
+    // must be re-applied or hidden components would reappear on every slider move.
+    applyVisibility();
+    render(report);
+  } catch (e) { fail(e); }
+}
+
+function render(report) {
+  const { manifest: man, sarcomere_length_nm: requestedSL, annotations = [] } = report;
+  const g = model.geometryAt(requestedSL);
+  $('slReadout').innerHTML = `${g.sarcomere_length_nm} <small>nm${report.clamped ? ' (clamped)' : ''}</small>`;
+  // Phase 9's honesty requirement is user-facing, not merely an API field. Every
+  // non-keyframe state visibly discloses that this is a computed intermediate
+  // geometry and not directly measured molecular motion. Clamp disclosure takes
+  // precedence because it changes which length is actually shown.
+  const disclosure = report.clamp_note || report.interpolation_caveat;
+  const caveat = $('stateCaveat');
+  caveat.hidden = !disclosure;
+  caveat.textContent = disclosure || '';
+
+  for (const b of $('toggles').children) {
+    if (b.dataset.key) b.classList.toggle('on', state[b.dataset.key]);
+  }
+
+  const rows = [
+    ['Half-sarcomere', `${g.half_sarcomere_nm.toFixed(1)} nm`],
+    ['I-band half-width', `${g.I_band_half_width_nm.toFixed(1)} nm`],
+    ['Thin/thick overlap', `${g.overlap_len_nm.toFixed(1)} nm`],
+    ['d10 spacing', `${g.lattice_d10_nm.toFixed(2)} nm`],
+  ];
+  if (man.lattice) {
+    rows.push(['Thick filaments drawn', man.lattice.thick_drawn],
+      ['Thin filaments drawn', man.lattice.thin_drawn]);
+  }
+  rows.push(['Titin strands', man.titin_strands_drawn]);
+  // Phase 7b. Reported whenever the layer is ON — including when a feature was
+  // WITHDRAWN, because a silently empty detail layer is indistinguishable from a
+  // rendering failure. The px figure is the measurement the decision was made on.
+  const cd = man.context_detail;
+  if (cd) {
+    rows.push(['Myosin heads', cd.heads_drawn
+      ? `${cd.head_instances} instances`
+      : `withdrawn — crown spacing ${cd.crown_spacing_px} px < ${cd.alias_threshold_px} px`]);
+    rows.push(['Thin-filament twist', cd.twist_drawn
+      ? `crossover ${cd.crossover_repeat_nm} nm (${cd.crossover_repeat_px} px)`
+      : `withdrawn — ${cd.crossover_repeat_px} px < ${cd.alias_threshold_px} px`]);
+  }
+  if (man.domains) {
+    for (const b of man.domains.batches) rows.push([`${b.archetype} domains`, b.count]);
+  }
+  const dov = man.thin_filament_double_overlap;
+  if (dov?.present) rows.push(['Thin-filament double overlap', `${dov.overshoot_past_mline_nm.toFixed(0)} nm`]);
+  $('metrics').innerHTML = rows
+    .map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+
+  const legend = [
+    ['thick_filament', 'Thick filament (myosin)'],
+    ['thin_filament', 'Thin filament (actin)'],
+    ['zdisc', 'Z-disc'], ['mline', 'M-line'], ['titin', 'Titin'],
+  ];
+  if (state.showContextDetail) legend.splice(1, 0, ['myosin_head', 'Myosin heads (crowns)']);
+  $('legend').innerHTML = legend
+    .map(([k, l]) => `<div class="key"><div class="sw" style="background:${hex(COMPONENT_COLOR[k])}"></div>${l}</div>`)
+    .join('');
+
+  // 49 individual claims is too many to list flat, and a plain count would hide
+  // which claims are weak. Group by class, strongest first, and name the claims
+  // inside each group — the UNKNOWN group especially must stay legible.
+  // EVIDENCE_CLASSES is already in certainty order, strongest first.
+  const CLASS_ORDER = EVIDENCE_CLASSES;
+  const byLen = [...CLASS_ORDER].sort((a, b) => b.length - a.length);
+  const groups = new Map(CLASS_ORDER.map((c) => [c, []]));
+  const hiddenComponents = new Set(report.hidden_components || []);
+  for (const [k, v] of Object.entries(man.evidence || {})) {
+    // A scale may retain hidden context geometry internally so titin keeps the
+    // exact same anchors. Do not present evidence for those hidden objects as if
+    // it described pixels in the isolated-titin render.
+    if ([...hiddenComponents].some((component) => (
+      k === component || k.startsWith(`${component}.`)
+    ))) continue;
+    const cls = byLen.find((c) => String(v).toUpperCase().startsWith(c)) || 'UNKNOWN';
+    groups.get(cls).push(k);
+  }
+  $('evidence').innerHTML = CLASS_ORDER
+    .filter((c) => groups.get(c).length)
+    .map((c) => {
+      const op = Math.max((EVIDENCE_STYLE[c] || EVIDENCE_STYLE.INFERRED).opacity, 0.45);
+      const claims = groups.get(c).map((k) => k.replace(/_/g, ' ')).join(', ');
+      return `<div class="ev" style="opacity:${op}"><span><b>${c}</b></span>`
+        + `<b>${groups.get(c).length}</b></div>`
+        + `<div style="font-size:10px;color:var(--dim);margin:0 0 6px">${claims}</div>`;
+    }).join('');
+
+  $('annotations').innerHTML = annotations.map((annotation) => {
+    const sources = annotation.sources.length ? annotation.sources.join(', ') : 'source recorded in spec';
+    return `<div class="note"><b>${annotation.label}</b> · ${annotation.evidence_class}`
+      + `<br><span style="color:var(--dim)">X=${annotation.anchor_nm.x.toFixed(1)} nm · ${sources}</span></div>`;
+  }).join('');
+
+  const allNotClaimed = [...(man.not_claimed || []), ...(man.render_only || [])];
+  const nc = state.scale === SCALES.detail
+    ? allNotClaimed.filter((claim) => /titin|domain|catmullrom/i.test(claim))
+    : allNotClaimed;
+  $('notClaimed').innerHTML = nc.map((x) => `<li>${x}</li>`).join('');
+
+  const notes = visualization.currentState()?.notes || [];
+  $('notes').innerHTML = notes.map((n) => `<div class="note">${n}</div>`).join('')
+    + (dov?.present
+      ? '<div class="note warn">Thin filaments from the two halves interdigitate '
+        + 'past the M-line at this length. Thin-filament length is invariant, so '
+        + 'this double overlap is expected below ~2150 nm — it underlies the '
+        + 'ascending limb of the length&ndash;tension relation.</div>'
+      : '');
+}
+
+// ---- component visibility (Phase 9 / 10) ----------------------------------
+// Applied to the BUILT tree, not by rebuilding from a reduced component set: the
+// A-band segment of titin is anchored relative to the thick filament, so
+// re-deriving the scene without it could move titin. Hiding must be a change of
+// what is drawn, never of what is claimed.
+const hidden = new Set();
+for (const c of Object.keys(COMPONENTS)) {
+  const b = document.createElement('button');
+  b.textContent = c.replace(/_/g, ' ');
+  b.dataset.component = c;
+  b.classList.add('on');
+  b.onclick = () => {
+    if (hidden.has(c)) hidden.delete(c); else hidden.add(c);
+    applyVisibility();
+  };
+  $('components').append(b);
+}
+function applyVisibility() {
+  const vis = {};
+  for (const c of Object.keys(COMPONENTS)) vis[c] = !hidden.has(c);
+  try {
+    visualization.setComponentVisibility(vis);
+  } catch (e) { fail(e); }
+  for (const b of $('components').children) {
+    b.classList.toggle('on', !hidden.has(b.dataset.component));
+  }
+}
+
+slider.oninput = () => rebuild();
+rebuild(true);
+syncViews();
+syncScales();
+// The LOD callback fires ONLY when zooming crosses the aliasing threshold, so the
+// crown array appears and withdraws as the user zooms without a per-frame rebuild.
+visualization.start();
+window.titinVisualization = visualization;   // biological facade for console inspection
+// Tell the boot diagnostic above that the module reached its end. Without this the
+// watchdog would fire on a perfectly healthy page, and a false alarm in an error
+// channel is as damaging as a missed one — it teaches the reader to ignore it.
+// Optional-chained: if the classic script were ever blocked (a strict CSP, say),
+// a bare assignment would throw here — at the very end, after everything already
+// rendered — turning a working page into one that reports a spurious error.
+if (window.__titinBoot) window.__titinBoot.ready = true;
+</script>
+</body>
+</html>

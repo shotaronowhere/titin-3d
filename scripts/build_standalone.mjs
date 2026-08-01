@@ -11,15 +11,14 @@
  *
  * WHY THIS EXISTS
  *
- * index.html loads Three.js from ./node_modules and fetches the spec from ./data.
- * That is the right structure for development: the code the browser runs is
- * byte-identical to the code `node --test` verifies, with no build step able to
- * introduce a second, drifting artifact. But it means the page only works when
- * served from the project root, and it therefore CANNOT work in a viewer
- * that shows one HTML file with no siblings — which is how the artifact opens.
+ * src/index.template.html is the editable page source. Its module imports target
+ * the same src/*.js files that `node --test` verifies, while its import map and JSON
+ * reader describe the unbundled development graph. The generated root index.html
+ * embeds that graph so it also works in a viewer with no sibling files.
  *
- * So this script produces a second, DERIVED deliverable: one file, no fetch, no
- * import map, no node_modules.
+ * So this script produces the repository's DERIVED root deliverable: one file, no
+ * fetch, no import map, no node_modules. That same index.html works via file://,
+ * any static server, and GitHub Pages.
  *
  * WHAT KEEPS IT FROM DRIFTING
  *
@@ -27,7 +26,7 @@
  * concatenates them. It does not reimplement, reformat, or hand-copy anything, and
  * it fails loudly rather than emitting a page that is missing a module or a spec:
  *
- *   - modules are discovered by following imports from index.html, not listed here;
+ *   - modules are discovered by following imports from the template, not listed here;
  *   - the spec files are discovered from SpecLoader's own manifest, not listed here;
  *   - a checksum of every inlined source is embedded in the output, so a standalone
  *     file can be checked against the tree it was built from.
@@ -40,14 +39,15 @@
  * same `fetchJson(name) -> Promise<object>` contract browserReader implements, so
  * SpecLoader is untouched and cannot tell the difference.
  *
- * Two behavioural differences from index.html, both intended and both necessary:
+ * Two behavioural differences from the editable template, both intended and
+ * necessary:
  *   1. the spec is read from the embedded object instead of fetched over HTTP;
  *   2. the boot diagnostic's advice is rewritten, since "serve over HTTP" is exactly
  *      the wrong instruction for a file that needs no server.
  * Everything else — geometry, evidence classes, scene construction — is the same code.
  */
 
-import { readFileSync, writeFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -56,14 +56,15 @@ import { build } from 'esbuild';
 const ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 
-const html = read('index.html');
+const SOURCE = 'src/index.template.html';
+const html = read(SOURCE);
 const MOD_OPEN = '<script type="module">';
 const pageModule = html.slice(
   html.indexOf(MOD_OPEN) + MOD_OPEN.length,
   html.lastIndexOf('</script>'),
 );
 if (!pageModule.includes('TitinVisualization')) {
-  throw new Error('build_standalone: could not extract the page module from index.html');
+  throw new Error(`build_standalone: could not extract the page module from ${SOURCE}`);
 }
 
 /**
@@ -111,7 +112,12 @@ try {
     legalComments: 'inline',
     logLevel: 'warning',
   });
-  bundle = out.outputFiles[0].text;
+  // Some upstream Three.js comments contain trailing spaces or spaces before an
+  // indentation tab. They are semantically inert but make the committed generated
+  // artifact fail Git's whitespace-integrity check, so normalize only that trivia.
+  bundle = out.outputFiles[0].text
+    .replace(/^[ ]+\t/gm, '\t')
+    .replace(/[ \t]+$/gm, '');
 } finally {
   rmSync(join(ROOT, ENTRY), { force: true });
 }
@@ -176,7 +182,6 @@ window.__titinStandalone = true;
 const standalone = html
   .replace(/<script type="importmap">[\s\S]*?<\/script>/,
     lit('<!-- import map removed: every module is inlined below -->'))
-  .replace('<title>', lit('<title>Standalone \u2014 '))
   .replace('</head>', lit(bootPatch + '\n</head>'))
   .replace(
     MOD_OPEN + pageModule + '</script>',
@@ -226,9 +231,27 @@ if (problems.length) {
   throw new Error('build_standalone refused to emit a corrupt bundle:\n  - ' + problems.join('\n  - '));
 }
 
-const outPath = process.argv[2] || 'titin_standalone.html';
-writeFileSync(join(ROOT, outPath), standalone);
-console.log(`wrote ${outPath}  ${(standalone.length / 1024 / 1024).toFixed(2)} MB`);
+const args = process.argv.slice(2);
+const check = args.includes('--check');
+const paths = args.filter((arg) => arg !== '--check');
+if (paths.length > 1) {
+  throw new Error('usage: node scripts/build_standalone.mjs [output.html] [--check]');
+}
+const outPath = paths[0] || 'index.html';
+const absoluteOut = join(ROOT, outPath);
+
+if (check) {
+  if (!existsSync(absoluteOut)) {
+    throw new Error(`${outPath} is missing; run npm run build`);
+  }
+  if (readFileSync(absoluteOut, 'utf8') !== standalone) {
+    throw new Error(`${outPath} is stale; run npm run build and commit the result`);
+  }
+  console.log(`${outPath} is current`);
+} else {
+  writeFileSync(absoluteOut, standalone);
+  console.log(`wrote ${outPath}  ${(standalone.length / 1024 / 1024).toFixed(2)} MB`);
+}
 console.log(`  bundle: ${(bundle.length / 1024).toFixed(0)} KB (three r${checksums['node_modules/three']} inlined)`);
 console.log(`  spec files embedded: ${specNames.length}`);
 console.log(`  page-module imports collapsed: ${importCount}`);

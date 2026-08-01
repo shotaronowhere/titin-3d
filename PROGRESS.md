@@ -1348,8 +1348,9 @@ diagnostics; **227/227** Node tests pass; all 46 runtime negative controls pass
 (9 Phase-5, 7 Phase-6 JavaScript, 8 Phase-6 specification, and 22 Phase-6 review);
 geometry and specification validators report `ALL CHECKS PASSED`; and the offline
 structural-coordinate smoke test reports `structure pipeline smoke: PASS`. The
-standalone artifact is rebuilt by the test suite, so the gate cannot pass against
-stale embedded code or data.
+committed standalone artifact is byte-compared with a fresh in-memory build, so the
+gate cannot pass against stale embedded code or data and does not conceal drift by
+rewriting the artifact during verification.
 
 The complete optional coordinate cache also passes its independent integrity gate:
 `npm run check:structures` verifies **29/29** URL/byte/SHA-256-pinned files. Re-running
@@ -1383,3 +1384,40 @@ The freshly rebuilt `titin_standalone.html` was also rendered independently: it
 started at 2200 nm with a nonempty 1920×1440 WebGL canvas, seven geometry rows, four
 context annotations, and no boot or error-panel entry. Its final SHA-256 is
 `d8917611c61e49e817e5b023b23f3167bce9ec75bbbbc54e35e96ccf108882bb`.
+
+---
+
+# 2026-08-01 — Root standalone and GitHub Pages deployment closure
+
+The editable page and deployable artifact now have unambiguous roles:
+
+- `src/index.template.html` is the reviewed page source.
+- Root `index.html` is the generated, self-contained application and the only
+  browser-facing deliverable.
+- `npm run build` regenerates it; `npm run check:build` byte-compares it with a
+  fresh build and fails on drift.
+
+The generated file embeds Three.js, application modules, and every scientific JSON
+record. Its boot guard explicitly permits `file://` only when the builder's
+`__titinStandalone` marker is present, retaining the visible failure diagnostic for
+an accidentally opened unbundled source page. Therefore the same committed root
+file can be double-clicked, served locally, or published from a GitHub Pages branch
+root without `node_modules`, a deployment workflow, or a second filename.
+
+The former `titin_standalone.html` is superseded by root `index.html`; retaining two
+equivalent generated entry points would recreate the drift risk this change removes.
+
+## Gate
+
+`npm run verify` exits 0 with **228/228** Node tests passing, strict type analysis
+clean, both scientific validators reporting `ALL CHECKS PASSED`, all negative
+controls passing, and the structural-coordinate smoke test passing. The standalone
+suite executes the generated page's real classic boot scripts under `file://` and
+proves that the marker suppresses the source-only rejection while preserving the
+healthy watchdog path.
+
+The root page also rendered from a plain static HTTP server with one nonempty
+1920×1440 WebGL canvas, seven metric rows, no visible error panel, and no browser
+warnings/errors. Changing to the 2400 nm preset updated the live readout. The server
+received only the root HTML request, confirming that the deployed page made no
+requests for `node_modules`, `src`, or `data` siblings.
