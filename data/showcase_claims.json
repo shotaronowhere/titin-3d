@@ -7,7 +7,8 @@
     "baseline_commit": "8925430",
     "purpose": "Machine-readable admission record for every biological or explanatory object proposed by the showcase plan. This file authorizes claims and presentation scope; it contains no authoritative biological coordinates.",
     "governing_plan": "SHOWCASE_COMPLETION_PLAN.md",
-    "human_readable_contract": "SHOWCASE_DESIGN_CONTRACT.md"
+    "human_readable_contract": "SHOWCASE_DESIGN_CONTRACT.md",
+    "contract_sha256": "e43c9fc807d19ee9eba40b3cb7dceedc6c8e804cb87c5e8ad4e1cafe211dd0b6"
   },
   "scope_lock": {
     "educational_narrative": "Broadly applicable titin concepts explained through the existing reference model.",
@@ -317,7 +318,7 @@
           "kind": "REFERENCE",
           "id": "10.1016/j.cell.2021.02.047",
           "role": "documents heterogeneous Z-disc forms and state interpretation limits",
-          "scope_compatibility": "DIRECT",
+          "scope_compatibility": "CONTEXT_ONLY",
           "transfer_limit": "The study supports omission of a universal motif; it does not establish one replacement motif for all tissues."
         },
         {
@@ -378,9 +379,16 @@
         {
           "kind": "REFERENCE",
           "id": "10.1016/j.cell.2021.02.047",
-          "role": "skeletal M-band composition and crosslink role",
-          "scope_compatibility": "DIRECT",
-          "transfer_limit": "Supports component relationships, not exact protein-specific line positions."
+          "role": "directly observes pleomorphic crosslinking densities in the mouse-psoas rigor M-band without assigning individual protein identities",
+          "scope_compatibility": "CONTEXT_ONLY",
+          "transfer_limit": "Supports the presence of heterogeneous skeletal M-band crosslinking density, not the identity or exact position of a particular protein."
+        },
+        {
+          "kind": "REFERENCE",
+          "id": "10.1083/jcb.134.6.1441",
+          "role": "primary immunoelectron localization of titin, myomesin, and M-protein across the skeletal M-band",
+          "scope_compatibility": "CONTEXT_ONLY",
+          "transfer_limit": "Establishes component relationships and relative M-band organization in vertebrate skeletal muscle; no line coordinate is transferred to the retained human reference."
         },
         {
           "kind": "REFERENCE",

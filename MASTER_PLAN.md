@@ -50,6 +50,9 @@ SC-0 was completed on 2026-08-02. It locks the existing human skeletal
 N2A-containing Q8WZ42 reference while allowing a broad titin narrative. It does
 not admit a cardiac titin mode, another isoform model, or a laboratory-specific
 narrative. Cross-tissue context must retain its source scope and transfer limit.
+The reviewed 20-object claim payload is digest-pinned in an independent
+validator, admitted sources require complete linkable citation metadata, and 18
+destructive mutations exercise the scope and evidence boundaries.
 
 The showcase implementation must preserve these boundaries:
 

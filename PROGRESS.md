@@ -47,7 +47,7 @@ The showcase sequence is an addendum and does not reopen or renumber MVP Phases
 
 | Showcase package | Name | Status |
 |---|---|---|
-| SC-0 | Claim audit, scope lock, and design contract | ✅ **COMPLETE** — 20-object claim matrix and executable validation gate |
+| SC-0 | Claim audit, scope lock, and design contract | ✅ **COMPLETE** — reviewer-pinned 20-object matrix, complete source records, and 18-mutation destructive gate |
 | SC-1 | Presentation data and dual-audience shell | ▶ **NEXT** |
 | SC-2 | Titin hierarchy, continuity, and length story | ⏳ Pending |
 | SC-3 | Z-disc and M-band correction | ⏳ Pending |
@@ -60,6 +60,8 @@ The showcase sequence is an addendum and does not reopen or renumber MVP Phases
 
 SC-0 artifacts: `SHOWCASE_DESIGN_CONTRACT.md`,
 `data/showcase_claims.json`, and `scripts/validate_showcase_claims.py`. The
+claim payload is SHA-256 pinned independently in the validator, and admitted
+external sources must provide complete linkable citation metadata. The
 reference remains human skeletal N2A-containing Q8WZ42; no cardiac titin mode or
 lab-specific narrative was admitted. MyBP-C is admitted only as optional
 schematic skeletal C-zone context, while thin-filament regulation is deferred.

@@ -212,24 +212,41 @@
   "identifier": "UniProt:Q8WZ42"
  },
  "10.1038/nature04343": {
+  "doi": "10.1038/nature04343",
+  "authors": "Zou et al.",
   "title": "Palindromic assembly of the giant muscle protein titin in the sarcomeric Z-disk",
   "journal": "Nature",
   "year": 2006,
+  "identifier": "10.1038/nature04343",
   "pdb": [
    "1YA5"
   ],
   "method": "X-ray crystallography",
-  "relevance": "Titin Z1Z2 : telethonin (T-cap) complex \u2014 N-terminal Z-disc anchoring."
+  "relevance": "Titin Z1Z2 : telethonin (T-cap) complex \u2014 N-terminal Z-disc anchoring.",
+  "used_for": "Measured palindromic 2:1 sandwich topology formed by two antiparallel human titin Z1Z2 fragments and one telethonin molecule. The isolated complex does not resolve the complete in-situ Z-disc route."
  },
  "10.1038/embor.2010.65": {
+  "doi": "10.1038/embor.2010.65",
+  "authors": "Sauer et al.",
   "title": "Molecular basis of the head-to-tail assembly of giant muscle proteins obscurin-like 1 and titin",
   "journal": "EMBO Reports",
   "year": 2010,
+  "identifier": "10.1038/embor.2010.65",
   "pdb": [
    "3KNB"
   ],
   "method": "X-ray crystallography",
-  "relevance": "Titin M-line C-terminus : obscurin-like 1 (OBSL1) complex \u2014 C-terminal M-line anchoring."
+  "relevance": "Titin M-line C-terminus : obscurin-like 1 (OBSL1) complex \u2014 C-terminal M-line anchoring.",
+  "used_for": "Measured human titin M10–OBSL1 Ig1 binding topology. The isolated binary complex does not resolve the complete in-situ M-band network or crosslink coordinates."
+ },
+ "10.1083/jcb.134.6.1441": {
+  "doi": "10.1083/jcb.134.6.1441",
+  "authors": "Obermann et al.",
+  "year": 1996,
+  "title": "The structure of the sarcomeric M band: localization of defined domains of myomesin, M-protein, and the 250-kD carboxy-terminal region of titin by immunoelectron microscopy",
+  "journal": "Journal of Cell Biology",
+  "identifier": "10.1083/jcb.134.6.1441",
+  "used_for": "Primary immunoelectron localization of titin, myomesin, and M-protein across the vertebrate skeletal M-band. Supports component relationships and the distinction between the M-band and a single opaque central plate; no exact coordinates are transferred into the retained human model."
  },
  "PDB:3PUC": {
   "doi": null,
@@ -387,6 +404,9 @@
  },
  "PDB:6KN7": {
   "identifier": "PDB:6KN7",
+  "pdb_id": "6KN7",
+  "doi": "10.1038/s41467-019-14008-1",
+  "authors": "Yamada, Namba, and Fujii",
   "year": 2020,
   "title": "Human cardiac thin filament in the calcium-free state",
   "journal": "Protein Data Bank",

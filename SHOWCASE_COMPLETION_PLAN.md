@@ -317,6 +317,7 @@ Hover previews, click pins, touch opens, Escape closes, and the DOM structure li
 #### Gate
 
 - Every proposed visual object has a claim, scope, source, evidence class, and omission statement.
+- The reviewed claim payload is independently digest-pinned, every admitted external source has complete linkable metadata, and destructive controls reject scope, evidence, transfer, object-manifest, visual-grammar, and attention-budget drift.
 - No source figure is copied into the product without an explicit compatible license; supplied illustrations are design references only.
 - No cardiac titin type, cardiac mechanical mode, or exact cardiac accessory-protein placement has entered the plan.
 - No Tier C work is required to make Tier A coherent.

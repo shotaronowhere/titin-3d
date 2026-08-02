@@ -59,6 +59,13 @@ Its replacement separates three concepts:
 
 The 160 nm interval may label the current bare-zone extent. It may not become the width of a protein plate or of an M1 density.
 
+Primary immunoelectron localization supports titin entering the M-band and the
+organization of myomesin and M-protein around its lines. Those measurements
+establish component relationships, but no source line coordinate is transferred
+into the retained human reference. Mouse-psoas cryo-ET independently shows
+pleomorphic M-band crosslinking density while explicitly leaving individual
+protein identities unresolved.
+
 The 2023 native cardiac M-band reconstruction is used only as a limitation source: M1 was absent from its averaged map, some protein density remained unresolved, and flexible links could average out. No coordinate from that reconstruction enters the retained model.
 
 ### MyBP-C
@@ -202,7 +209,9 @@ A citation permits discussion of a scientific claim; it does not grant permissio
 SC-0 is complete only when all of the following are true:
 
 - the claim matrix passes `scripts/validate_showcase_claims.py`;
+- the canonical claim payload matches its reviewer-pinned SHA-256 digest;
 - all external source IDs resolve in `data/references.json`;
+- every admitted external source has complete, directly linkable citation metadata;
 - all internal sources exist;
 - every visual object has claim, scope, claim evidence, render evidence, source, render meaning, non-claims, and asset policy;
 - the reference remains human skeletal N2A-containing Q8WZ42;
@@ -213,5 +222,10 @@ SC-0 is complete only when all of the following are true:
 - thin-filament regulation remains deferred;
 - source figures remain uncopied;
 - the full repository verification suite passes.
+
+The destructive negative-control suite must also reject scope changes, missing
+objects, stronger evidence, source-transfer promotion, altered attention rules,
+copied-source assets, missing primary M-band evidence, and incomplete citation
+metadata for the specific semantic reason under test.
 
 SC-0 authorizes SC-1 presentation-data and audience-shell work. It does not authorize SC-2/SC-3 biological geometry to bypass their own implementation tests.
