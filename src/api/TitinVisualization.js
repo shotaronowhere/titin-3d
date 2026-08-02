@@ -144,6 +144,7 @@ export class TitinVisualization {
         showLattice: false,
         showDomains: true,
         showContextDetail: false,
+        anchorDetail: null,
         // One titin molecule spans one half-sarcomere (Z-disc to M-line).
         // Mirroring would show the counterpart from the adjacent half and make
         // the singular "isolated titin" label false.
@@ -166,7 +167,7 @@ export class TitinVisualization {
     const allowed = new Set([
       'showLattice', 'rings', 'showDomains', 'showContextDetail', 'mirror',
       'showFilamentContext', 'latticeScope', 'titinStrands', 'neighbourTitin',
-      'domainStrands', 'presentationMode',
+      'domainStrands', 'presentationMode', 'anchorDetail',
     ]);
     const unknown = Object.keys(options).filter((key) => !allowed.has(key));
     if (unknown.length) {
@@ -193,6 +194,11 @@ export class TitinVisualization {
         && !['local', 'patch'].includes(options.latticeScope)) {
       throw new Error("setDisplayOptions: latticeScope must be 'local' or 'patch'.");
     }
+    if (Object.hasOwn(options, 'anchorDetail')
+        && options.anchorDetail !== null
+        && !['zdisc', 'mline'].includes(options.anchorDetail)) {
+      throw new Error("setDisplayOptions: anchorDetail must be null, 'zdisc', or 'mline'.");
+    }
     this._displayOptions = { ...this._displayOptions, ...options };
     this.viewer.buildOpts = this._optsForScale(this.scale);
     return { ...this.viewer.buildOpts };
@@ -202,7 +208,8 @@ export class TitinVisualization {
   static get DETAIL_HIDDEN() {
     return Object.freeze([
       'thick_filament', 'thin_filament', 'thin_filament_twist',
-      'myosin_heads', 'zdisc', 'mline',
+      'myosin_heads', 'zdisc', 'mline', 'alpha_actinin', 'telethonin',
+      'mband_crosslinks',
     ]);
   }
 
@@ -221,6 +228,7 @@ export class TitinVisualization {
     if (this._displayOptions?.showFilamentContext === false) {
       for (const component of [
         'thick_filament', 'thin_filament', 'thin_filament_twist', 'myosin_heads',
+        'alpha_actinin', 'telethonin', 'mband_crosslinks',
       ]) hidden.add(component);
     }
     /** @type {Record<string, boolean>} */

@@ -157,7 +157,8 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
     {
       // The current model has no independently resolved M-line substructure.
       // A point marker is more honest than inventing a second axial extent on
-      // top of the head-free bare-zone span. SC-3 will replace the old slab.
+      // top of the head-free bare-zone span. SC-3 replaced the old slab with this
+      // coordinate marker plus separately scoped schematic crosslink context.
       id: 'mband', label: 'M-band center', lane: 'marker', kind: 'marker',
       ...requireFiniteRange(mlineX, mlineX, 'mband'),
       evidence_class: bandEvidence.mband, source_ids: bandSources.mband,

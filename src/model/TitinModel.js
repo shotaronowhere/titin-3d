@@ -18,6 +18,8 @@ import { InstancingPlan } from '../geometry/InstancingPlan.js';
 import { StructuralProxies } from '../geometry/StructuralProxies.js';
 import { LatticeGeometry } from '../geometry/LatticeGeometry.js';
 import { ContextDetail } from '../geometry/ContextDetail.js';
+import { ZDiscDetail } from '../geometry/ZDiscDetail.js';
+import { MBandDetail } from '../geometry/MBandDetail.js';
 
 export class TitinModel {
   constructor(spec) {
@@ -137,6 +139,37 @@ export class TitinModel {
       },
       provenance: detail.provenance(),
     };
+  }
+
+  // --- SC-3: target-gated terminal-anchor detail -------------------------
+  _zdiscAnchorDetail() {
+    if (!this.zdiscAnchorDetail) {
+      this.zdiscAnchorDetail = new ZDiscDetail(this.spec, this.geometry);
+    }
+    return this.zdiscAnchorDetail;
+  }
+
+  _mbandAnchorDetail() {
+    if (!this.mbandAnchorDetail) {
+      this.mbandAnchorDetail = new MBandDetail(this.spec, this.geometry);
+    }
+    return this.mbandAnchorDetail;
+  }
+
+  /** Evidence-limited local Z-disc network; never a universal lattice. */
+  zdiscDetailAt(sl, { rings = 1 } = {}) {
+    return this._zdiscAnchorDetail().detailAt(sl, this.latticePatchAt(sl, rings).thin);
+  }
+
+  /** M-band midpoint and sparse relationship proxies; never an M-line slab. */
+  mbandDetailAt(sl, { rings = 1 } = {}) {
+    return this._mbandAnchorDetail().detailAt(sl, this.latticePatchAt(sl, rings).thick);
+  }
+
+  anchorDetailAt(sl, target, { rings = 1 } = {}) {
+    if (target === 'zdisc') return this.zdiscDetailAt(sl, { rings });
+    if (target === 'mline') return this.mbandDetailAt(sl, { rings });
+    throw new Error(`anchorDetailAt: unknown target '${target}'. Expected zdisc or mline.`);
   }
 
   // --- Phase 4: hierarchical titin representation ---

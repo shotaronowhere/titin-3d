@@ -93,11 +93,11 @@ export const CLOSEUPS = Object.freeze({
     shows: 'titin\u2019s N-terminal anchor and thin-filament attachment',
   },
   mline: {
-    label: 'M-line / bare zone',
+    label: 'M-band center within the head-free bare zone',
     at: (g) => [g.mline.X, 0, 0],
     spanNm: 220,
     dir: [0.2, 0.3, 1],
-    shows: 'the head-free bare zone and titin\u2019s C-terminal anchor',
+    shows: 'the head-free bare zone, midpoint reference, sparse M-band context, and opposing titin C-terminal anchors',
   },
   lattice: {
     label: 'Hexagonal lattice (down-axis)',
@@ -232,11 +232,16 @@ export class Viewer {
         && merged.showFilamentContext !== false)
       ? this.model.contextDetailSceneAt(sl, { rings: latticeRings })
       : null;
+    const anchorDetail = (merged.anchorDetail && showLattice
+        && merged.showFilamentContext !== false)
+      ? this.model.anchorDetailAt(sl, merged.anchorDetail, { rings: latticeRings })
+      : null;
 
     this.sarcomere.build(scene, this.model.domainInstancesAt(sl), {
       ...merged,
       domainBatches,
       contextDetail,
+      anchorDetail,
       titinPath: this.model.backboneAt(sl),
       viewWidthNm: this.visibleWidthNm(),
       viewportPx: this.container.clientWidth,
@@ -347,12 +352,17 @@ export class Viewer {
     // Fit the span across the WIDTH; height follows from the aspect ratio.
     const distance = (preset.spanNm / this.camera.aspect / 2) / Math.tan(fov / 2);
     const v = new THREE.Vector3(...preset.dir).normalize().multiplyScalar(distance);
-    this._moveCamera(target.clone().add(v), target, opts);
+    const move = opts.move !== false;
+    if (move) this._moveCamera(target.clone().add(v), target, opts);
 
     const px = this.container.clientWidth;
-    const finalSpan = this.visibleWidthAtDistance(distance);
+    // `move:false` is a read-only measurement path used after rebuilding the
+    // manifest. It must report the live camera span without restarting or
+    // cancelling an in-progress transition.
+    const finalSpan = move ? this.visibleWidthAtDistance(distance) : this.visibleWidthNm();
     const perNm = px / finalSpan;
     const cd = this.sarcomere.manifest?.context_detail;
+    const anchor = this.sarcomere.manifest?.anchor_detail;
     return {
       name,
       label: preset.label,
@@ -360,13 +370,21 @@ export class Viewer {
       target_nm: target.toArray().map((n) => Number(n.toFixed(1))),
       span_nm: Number(finalSpan.toFixed(1)),
       distance_nm: Number(distance.toFixed(1)),
-      animated: Boolean(opts.animate && !this.prefersReducedMotion),
+      animated: Boolean(move && opts.animate && !this.prefersReducedMotion),
       // Reported so a claim about resolving a periodicity is checkable, not asserted.
       crown_spacing_px: cd?.crown_spacing_nm != null
         ? Number((cd.crown_spacing_nm * perNm).toFixed(1)) : null,
       crossover_repeat_px: cd?.crossover_repeat_nm != null
         ? Number((cd.crossover_repeat_nm * perNm).toFixed(1)) : null,
       alias_threshold_px: cd?.alias_threshold_px ?? null,
+      anchor_detail: anchor?.target === name ? {
+        drawn: anchor.drawn,
+        feature: anchor.feature,
+        feature_nm: anchor.feature_nm,
+        feature_px: anchor.feature_px,
+        alias_threshold_px: anchor.alias_threshold_px,
+        omitted_because: anchor.omitted_because ?? null,
+      } : null,
     };
   }
 
@@ -501,26 +519,47 @@ export class Viewer {
   }
 
   /**
-   * Rebuild ONLY when zooming has crossed the Phase 7b aliasing threshold.
+   * Rebuild only when zooming crosses a screen-resolvability threshold.
    *
-   * The gate's decision depends on the camera, so zooming can invalidate it — but
-   * rebuilding every frame would re-derive 100+ crown levels per filament at 60 Hz.
-   * Instead: compare the CURRENT screen size of the crown spacing against the
-   * threshold and rebuild only when the boolean answer changes. Zooming within a
-   * regime costs nothing; crossing the regime boundary costs one rebuild.
+   * Crown spacing, thin-filament crossover spacing, and SC-3 anchor detail each
+   * have independent gates. Compare every live screen size with the boolean stored
+   * in the current manifest, then rebuild ONCE if any answer changed. Zooming inside
+   * a regime remains free, while no detail layer can become stale after a dolly.
    *
    * @param {(sl:number)=>void} rebuild caller's rebuild function (it owns the opts)
    */
   checkDetailLOD(rebuild) {
-    if (!this.lastBuildOpts?.showContextDetail) return false;
-    const r = this.sarcomere.manifest?.context_detail;
-    if (!r) return false;
-    // The manifest carries the spacing in NM, so the current screen size is a
-    // direct computation rather than a reconstruction from the last build's pixels.
-    if (r.crown_spacing_nm == null) return false;
-    const nowPx = (this.container.clientWidth * r.crown_spacing_nm) / this.visibleWidthNm();
-    const isResolvable = nowPx >= r.alias_threshold_px;
-    if (r.heads_drawn !== isResolvable) { rebuild(this.currentSL); return true; }
+    if (typeof rebuild !== 'function') {
+      throw new Error('checkDetailLOD: rebuild callback must be a function.');
+    }
+    const viewportPx = this.container.clientWidth;
+    const viewWidthNm = this.visibleWidthNm();
+    if (!(Number.isFinite(viewportPx) && viewportPx > 0
+        && Number.isFinite(viewWidthNm) && viewWidthNm > 0)) return false;
+    const resolves = (featureNm, thresholdPx) => (
+      Number.isFinite(featureNm) && Number.isFinite(thresholdPx)
+      && (viewportPx * featureNm) / viewWidthNm >= thresholdPx
+    );
+    const gates = [];
+    const context = this.sarcomere.manifest?.context_detail;
+    if (this.lastBuildOpts?.showContextDetail && context) {
+      if (context.crown_spacing_nm != null) {
+        gates.push(context.heads_drawn
+          === resolves(context.crown_spacing_nm, context.alias_threshold_px));
+      }
+      if (context.crossover_repeat_nm != null) {
+        gates.push(context.twist_drawn
+          === resolves(context.crossover_repeat_nm, context.alias_threshold_px));
+      }
+    }
+    const anchor = this.sarcomere.manifest?.anchor_detail;
+    if (this.lastBuildOpts?.anchorDetail && anchor?.feature_nm != null) {
+      gates.push(anchor.drawn === resolves(anchor.feature_nm, anchor.alias_threshold_px));
+    }
+    if (gates.some((unchanged) => !unchanged)) {
+      rebuild(this.currentSL);
+      return true;
+    }
     return false;
   }
 

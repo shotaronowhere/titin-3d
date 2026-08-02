@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0, SC-1, and SC-2 complete on 2026-08-02; SC-3 is next
+**Implementation status:** SC-0 through SC-3 complete on 2026-08-02; SC-4 is next
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -387,6 +387,18 @@ local verification command so exhaustive destructive controls can remain a CI jo
 - Existing continuity and mechanical tests plus new visual-state tests pass.
 
 ### SC-3 — Z-disc and M-band correction
+
+**Completed 2026-08-02.** The retained implementation removes the former 160 nm
+M-line slab, keeps that interval exclusively as the thick-filament bare zone,
+uses a zero-width midpoint ring plus sparse schematic M-band relationship
+proxies, and adds target- and resolvability-gated Z-disc topology. The completion
+audit also makes the local motif invariant to surrounding lattice-ring count,
+restricts the sourced ~6 nm alpha-actinin doublets and their LOD measurement to
+Evidence mode, depicts a finite antiparallel Z1Z2-telethonin sandwich, and
+reevaluates crown, twist, and anchor thresholds independently during live zoom.
+Nine focused positive and destructive tests are in
+`test/showcase_phase3.test.js`; the bounded gate is `npm run verify:sc3`, which
+also rejects a stale standalone `index.html`.
 
 #### Work: bare zone and M-band
 

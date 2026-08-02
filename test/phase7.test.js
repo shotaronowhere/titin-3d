@@ -271,9 +271,11 @@ test('PHASE7: shared components are drawn once, half-scoped components twice', (
   const s = new SarcomereScene();
   const root = s.build(sc, model.domainInstancesAt(2200));
   const count = {};
-  root.traverse((o) => { if (o.isMesh) count[o.name] = (count[o.name] || 0) + 1; });
-  // The thick filament spans the whole A-band and the M-line sits on the mirror
-  // plane: mirroring either would draw a coincident duplicate.
+  root.traverse((o) => {
+    if (o.isMesh || o.isLine) count[o.name] = (count[o.name] || 0) + 1;
+  });
+  // The thick filament spans the whole A-band and the M-band midpoint reference
+  // sits on the mirror plane: mirroring either would draw a coincident duplicate.
   assert.equal(count.thick_filament_central, 1);
   assert.equal(count.thick_filament_lattice, 1);
   assert.equal(count.mline, 1);

@@ -401,24 +401,28 @@
    }
   },
   "mline": {
-   "primitive": "box",
-   "orientation": "plane normal to X at half-sarcomere",
+   "primitive": "custom_mesh",
+   "orientation": "midpoint reference in the YZ plane plus target-gated schematic crosslinks",
    "dimension_source": {
-    "width_X": "sarcomere.json:mline.dimensions_nm.width_X"
+    "position_X": "GeometryEngine.geometryAt(SL).mline.X",
+    "bare_zone_extent": "sarcomere.json:thick_filament.dimensions_nm.bare_zone_center",
+    "crosslink_relationships": "showcase_claims.json:mband_midpoint_and_crosslinks"
    },
    "preserves": [
     "axial position (SL/2)",
-    "axial width",
-    "transverse extent",
+    "separation of M-band center from thick-filament bare-zone extent",
     "C-terminal titin anchoring plane"
    ],
    "not_claimed": [
-    "M-protein/myomesin bridge detail",
+    "an M-band or M1 width",
+    "exact myomesin/M-protein/OBSL1 coordinates",
+    "identity of unresolved crosslink density",
     "internal M-line striation"
    ],
    "evidence_by_claim": {
     "axial_position": "STRONGLY INFERRED",
-    "width": "MEASURED",
+    "crosslink_relationships": "STRONGLY INFERRED",
+    "axial_extent": "UNKNOWN",
     "primitive_choice": "SCHEMATIC"
    }
   },

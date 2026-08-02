@@ -12,7 +12,8 @@
  * Consequently this module is where the MASTER_PLAN primitive vocabulary is
  * honoured (Phase 7):
  *   cylinders     -> thick and thin filaments
- *   simple meshes -> Z-disc and M-line
+ *   simple mesh   -> Z-disc presentation envelope
+ *   line loop     -> zero-width M-band midpoint reference
  *   curves/tubes  -> representative titin paths
  *   InstancedMesh -> repeated domains and repeated filaments
  *
@@ -27,6 +28,8 @@
  * chance of a scale factor silently corrupting a comparison between states.
  */
 import * as THREE from 'three';
+import { validateZDiscDetail } from '../geometry/ZDiscDetail.js';
+import { validateMBandDetail } from '../geometry/MBandDetail.js';
 
 /** Visual encoding of evidence class. Presentation only — no geometry. */
 export const EVIDENCE_STYLE = Object.freeze({
@@ -79,6 +82,9 @@ export const COMPONENTS = Object.freeze({
   thin_filament_twist: (n) => n.startsWith('thin_filament_twist'),
   zdisc: (n) => n === 'zdisc',
   mline: (n) => n === 'mline',
+  alpha_actinin: (n) => n.startsWith('alpha_actinin'),
+  telethonin: (n) => n.startsWith('telethonin'),
+  mband_crosslinks: (n) => n.startsWith('mband_crosslink'),
   myosin_heads: (n) => n.startsWith('myosin_heads'),
   // Domain instances are grouped per strand as 'titin_domains_strand_N', but the
   // per-archetype InstancedMeshes inside are named 'domains_<archetype>__<evidence>'.
@@ -99,6 +105,9 @@ export const COMPONENT_COLOR = Object.freeze({
   thin_filament: 0x4fb39f,
   zdisc: 0x8794a3,
   mline: 0xa27c95,
+  alpha_actinin: 0x38b8c8,
+  telethonin: 0xe6edf5,
+  mband_crosslink: 0x8d6bc3,
   titin: 0xff5d7d,
   titin_neighbour: 0xa43d5c,
   // Selection is an interaction channel, never an evidence channel. Opacity
@@ -119,6 +128,9 @@ export const GUIDED_COMPONENT_COLOR = Object.freeze({
   thin_filament: 0x3b514b,
   zdisc: 0x343b45,
   mline: 0x2b2530,
+  alpha_actinin: 0x2d6470,
+  telethonin: 0x8a949f,
+  mband_crosslink: 0x4d405a,
   lattice_guide: 0x3c4653,
 });
 
@@ -214,12 +226,86 @@ export class SarcomereScene {
     return mesh;
   }
 
-  /** Z-disc / M-line as a simple box mesh spanning the lattice patch. */
+  /** A Z-disc presentation slab spanning the selected lattice context. */
   _slab(centreXNm, widthXNm, extentNm, color, evidence, name) {
     const geom = this._track(new THREE.BoxGeometry(widthXNm, extentNm, extentNm));
     const mesh = new THREE.Mesh(geom, this._material(color, evidence));
     mesh.position.set(centreXNm, 0, 0);
     mesh.name = name;
+    return mesh;
+  }
+
+  /**
+   * An exact M-band midpoint reference. Its ring has no axial extent and never
+   * borrows the 160 nm thick-filament bare-zone interval as a protein width.
+   */
+  _mbandMidpoint(centreXNm, thickRadiusNm, evidence) {
+    const ringRadius = thickRadiusNm * 1.45;
+    const points = Array.from({ length: 64 }, (_, index) => {
+      const angle = (2 * Math.PI * index) / 64;
+      return new THREE.Vector3(
+        centreXNm, ringRadius * Math.cos(angle), ringRadius * Math.sin(angle),
+      );
+    });
+    const geometry = this._track(new THREE.BufferGeometry().setFromPoints(points));
+    const style = evidenceStyle(evidence);
+    const material = new THREE.LineBasicMaterial({
+      color: COMPONENT_COLOR.mline,
+      transparent: style.opacity < 1,
+      opacity: style.opacity,
+      depthWrite: false,
+    });
+    this.disposables.add(material);
+    const line = new THREE.LineLoop(geometry, material);
+    line.name = 'mline';
+    line.renderOrder = 9;
+    line.userData.reference_kind = 'sarcomere_midpoint';
+    line.userData.axial_extent_nm = null;
+    line.userData.render_only = 'ring radius; zero-width coordinate marker, not M1 density';
+    return line;
+  }
+
+  /** Variable-length schematic connectors, batched into one InstancedMesh. */
+  _segmentInstances(segments, radiusNm, color, evidence, name) {
+    if (!segments.length) return null;
+    const geometry = this._track(new THREE.CylinderGeometry(radiusNm, radiusNm, 1, 8, 1));
+    const mesh = new THREE.InstancedMesh(
+      geometry, this._material(color, evidence), segments.length,
+    );
+    const up = new THREE.Vector3(0, 1, 0);
+    const a = new THREE.Vector3();
+    const b = new THREE.Vector3();
+    const v = new THREE.Vector3();
+    const middle = new THREE.Vector3();
+    const rotation = new THREE.Quaternion();
+    const matrix = new THREE.Matrix4();
+    segments.forEach((segment, index) => {
+      a.set(segment.start_nm.x, segment.start_nm.y, segment.start_nm.z);
+      b.set(segment.end_nm.x, segment.end_nm.y, segment.end_nm.z);
+      v.subVectors(b, a);
+      const length = v.length();
+      if (!(length > 0)) throw new Error(`_segmentInstances: '${segment.id}' has zero length.`);
+      middle.addVectors(a, b).multiplyScalar(0.5);
+      rotation.setFromUnitVectors(up, v.divideScalar(length));
+      matrix.compose(middle, rotation, new THREE.Vector3(1, length, 1));
+      mesh.setMatrixAt(index, matrix);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    mesh.name = name;
+    mesh.userData.segment_ids = segments.map((segment) => segment.id);
+    mesh.userData.render_radius_nm = radiusNm;
+    return mesh;
+  }
+
+  /** Small polarity marker for the antiparallel Z1Z2 sandwich schematic. */
+  _directionMarker(marker, sizeNm, color, name) {
+    const geometry = this._track(new THREE.ConeGeometry(sizeNm * 0.45, sizeNm, 8));
+    const mesh = new THREE.Mesh(geometry, this._material(color, 'SCHEMATIC'));
+    const direction = new THREE.Vector3(marker.direction, 0, 0);
+    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
+    mesh.position.set(marker.at_nm.x, marker.at_nm.y, marker.at_nm.z);
+    mesh.name = name;
+    mesh.userData.direction = marker.direction;
     return mesh;
   }
 
@@ -508,7 +594,7 @@ export class SarcomereScene {
       // camera actually shows, and it drives the aliasing gate — a caller that
       // does not supply it gets the A-band zoom width, at which the crown array
       // resolves, rather than a silently-empty detail layer.
-      contextDetail = null, viewWidthNm = 400, viewportPx = 1200,
+      contextDetail = null, anchorDetail = null, viewWidthNm = 400, viewportPx = 1200,
     } = opts;
     if (!['guided', 'evidence'].includes(presentationMode)) {
       throw new Error(`build: unknown presentationMode '${presentationMode}'.`);
@@ -516,13 +602,50 @@ export class SarcomereScene {
     if (!['local', 'patch'].includes(latticeScope)) {
       throw new Error(`build: unknown latticeScope '${latticeScope}'. Use 'local' or 'patch'.`);
     }
+    if (!(Number.isFinite(viewWidthNm) && viewWidthNm > 0)
+        || !(Number.isFinite(viewportPx) && viewportPx > 0)) {
+      throw new Error('build: viewWidthNm and viewportPx must be positive finite values.');
+    }
+    if (anchorDetail) {
+      if (anchorDetail.target === 'zdisc') validateZDiscDetail(anchorDetail);
+      else if (anchorDetail.target === 'mline') validateMBandDetail(anchorDetail);
+      else throw new Error(`build: unknown anchor-detail target '${anchorDetail.target}'.`);
+      if (anchorDetail.target === 'mline' && !mirror) {
+        throw new Error('build: M-band detail requires mirrored titin from both half-sarcomeres.');
+      }
+    }
     /**
      * The Phase 7b report. Fields beyond the always-present ones are attached only
      * when the corresponding layer draws or is withheld, so the record is typed as
      * an open map rather than a closed literal.
      * @type {Record<string, any>|null}
-     */
+    */
     let contextDetailReport = null;
+    /** @type {Record<string, any>|null} */
+    let anchorDetailReport = null;
+    let anchorDetailResolves = false;
+    if (anchorDetail) {
+      const anchorResolvability = anchorDetail.resolvability[presentationMode]
+        ?? anchorDetail.resolvability;
+      if (!(Number.isFinite(anchorResolvability?.feature_nm)
+          && anchorResolvability.feature_nm > 0) || !anchorResolvability.feature) {
+        throw new Error(`build: ${anchorDetail.target} detail has no ${presentationMode} resolvability record.`);
+      }
+      const anchorFeaturePx = (viewportPx * anchorResolvability.feature_nm) / viewWidthNm;
+      anchorDetailReport = {
+        target: anchorDetail.target,
+        drawn: false,
+        evidence_class: anchorDetail.evidence_class,
+        feature: anchorResolvability.feature,
+        feature_nm: anchorResolvability.feature_nm,
+        feature_render_only: Boolean(anchorResolvability.render_only),
+        // Rounded only for reporting. The gate uses the unrounded value, so a
+        // 1.996 px feature cannot be promoted to 2.00 px and admitted accidentally.
+        feature_px: Number(anchorFeaturePx.toFixed(2)),
+        alias_threshold_px: ALIAS_THRESHOLD_PX,
+      };
+      anchorDetailResolves = anchorFeaturePx >= ALIAS_THRESHOLD_PX;
+    }
 
     const find = (id) => scene.sarcomere.find((s) => s.id === id);
     const thick = find('thick_filament');
@@ -624,17 +747,21 @@ export class SarcomereScene {
       lat ? drawnThinSites[0] : { y: 0, z: 0 },
     ));
 
-    // ---- Z-disc and M-line as simple meshes ----
-    // The Z-disc straddles X=0 (its centre is the coordinate origin) whereas the
-    // M-line sits AT the half-sarcomere end; both widths come from descriptors.
-    half.add(this._slab(
+    // ---- Z-disc context and M-band midpoint reference ----
+    // The Z-disc slab remains a presentation envelope. In its own close-up it is
+    // muted so the supported local topology stays readable instead of appearing
+    // buried inside an opaque universal plate.
+    const zdiscMesh = this._slab(
       zdisc.transform.position_nm, zdisc.transform.width_nm, patchExtent,
       COMPONENT_COLOR.zdisc, zdisc.evidence, 'zdisc',
-    ));
-    // The M-line is NOT added to `half`: it sits exactly on the mirror plane and
-    // is a single structure shared by both half-sarcomeres. Mirroring the half
-    // would place a second coincident slab there — doubling the transparency and
-    // implying two M-lines where there is one. It is added once, below.
+    );
+    if (anchorDetail?.target === 'zdisc' && anchorDetailResolves) {
+      zdiscMesh.material.opacity *= 0.35;
+      zdiscMesh.material.depthWrite = false;
+      zdiscMesh.userData.presentation_muted_for_detail = true;
+    }
+    half.add(zdiscMesh);
+    // The midpoint marker is sarcomere-scoped and therefore drawn once below.
 
     // ---- neighbouring structure: the lattice patch, as InstancedMesh ----
     let latticeCounts = null;
@@ -810,6 +937,119 @@ export class SarcomereScene {
     }
     half.add(titinGroup);
 
+    // ---- SC-3 Z-disc local topology (close-up + resolvability gated) ----
+    if (anchorDetail?.target === 'zdisc') {
+      if (!anchorDetailReport) throw new Error('build: missing Z-disc detail report.');
+      if (anchorDetailResolves) {
+        const detailGroup = new THREE.Group();
+        detailGroup.name = 'zdisc_anchor_detail';
+        const actinRadius = thin.transform.diameter_nm / 2;
+        detailGroup.add(this._segmentInstances(
+          anchorDetail.actin_network.segments,
+          actinRadius,
+          COMPONENT_COLOR.thin_filament,
+          anchorDetail.actin_network.evidence_class,
+          'thin_filament_zdisc_interdigitating',
+        ));
+        const generalAlpha = anchorDetail.alpha_actinin.general_context;
+        const exactDoublets = anchorDetail.alpha_actinin.doublet_detail;
+        const doubletsDrawn = exactDoublets.audience
+          .some((audience) => audience.toLowerCase() === presentationMode);
+        const doubletPairs = new Set(
+          exactDoublets.crosslink_sets.map((set) => set.pair_index),
+        );
+        // In Evidence mode, replace the generic single on each measured pair with
+        // its two-member doublet. Guided retains the broader, topology-only
+        // alpha-actinin context without exposing the exact ~6 nm measurement.
+        const alphaConnectors = [
+          ...generalAlpha.connectors.filter((connector) => (
+            !doubletsDrawn || !doubletPairs.has(connector.pair_index)
+          )),
+          ...(doubletsDrawn ? exactDoublets.connectors : []),
+        ];
+        detailGroup.add(this._segmentInstances(
+          alphaConnectors,
+          actinRadius / 3,
+          COMPONENT_COLOR.alpha_actinin,
+          doubletsDrawn ? exactDoublets.evidence_class : generalAlpha.evidence_class,
+          'alpha_actinin_zdisc_crosslinks',
+        ));
+
+        // The existing canonical titin remains the authoritative full path. These
+        // two short overlays are a finite topology glyph: both Z1Z2 fragments share
+        // an interval around telethonin, then diverge toward opposing sarcomeres.
+        // This communicates the measured 2:1 sandwich without claiming an atomic
+        // fit or a resolved complete in-situ route.
+        for (const chain of anchorDetail.telethonin_complex.titin_chains) {
+          const canonical = chain.uses_existing_titin;
+          const tube = this._titinTube(
+            chain.complex_points_nm,
+            titinRadius,
+            canonical ? COMPONENT_COLOR.titin : COMPONENT_COLOR.titin_neighbour,
+            anchorDetail.telethonin_complex.evidence_class,
+            canonical
+              ? 'titin_zdisc_canonical_z1z2_sandwich_proxy'
+              : 'titin_zdisc_opposing_z1z2',
+          );
+          tube.userData.topology = canonical
+            ? 'canonical Z1Z2 fragment in finite 2:1 sandwich proxy'
+            : 'second, antiparallel Z1Z2 fragment in finite 2:1 sandwich proxy';
+          tube.userData.render_only = 'local binding-topology overlay; full lateral route unresolved';
+          detailGroup.add(tube);
+        }
+        detailGroup.add(this._segmentInstances(
+          [anchorDetail.telethonin_complex.telethonin_proxy],
+          actinRadius / 3,
+          COMPONENT_COLOR.telethonin,
+          anchorDetail.telethonin_complex.evidence_class,
+          'telethonin_zdisc_sandwich',
+        ));
+        for (const marker of anchorDetail.telethonin_complex.direction_markers) {
+          detailGroup.add(this._directionMarker(
+            marker,
+            actinRadius,
+            COMPONENT_COLOR.titin_highlight,
+            `titin_zdisc_direction_${marker.id}`,
+          ));
+        }
+        detailGroup.userData.evidence_class = anchorDetail.evidence_class;
+        detailGroup.userData.universal_lattice_rendered = false;
+        half.add(detailGroup);
+        anchorDetailReport = {
+          ...anchorDetailReport,
+          drawn: true,
+          actin_segments: anchorDetail.actin_network.segments.length,
+          alpha_actinin_crosslinks: alphaConnectors.length,
+          alpha_actinin_doublets_rendered: doubletsDrawn,
+          ...(doubletsDrawn ? {
+            alpha_actinin_doublet_spacing_nm: exactDoublets.spacing_nm,
+          } : {}),
+          telethonin_stoichiometry: anchorDetail.telethonin_complex.stoichiometry,
+          titin_chain_directions: anchorDetail.telethonin_complex.titin_chains
+            .map((chain) => chain.direction),
+          // Topology is supported; the proxy's 21 nm display span is not a measured
+          // complex dimension and therefore is deliberately absent from the report.
+          telethonin_finite_overlap_rendered: true,
+          universal_lattice_rendered: false,
+          source_ids: [...new Set([
+            ...anchorDetail.actin_network.source_ids,
+            ...(doubletsDrawn ? exactDoublets.source_ids : generalAlpha.source_ids),
+            ...anchorDetail.telethonin_complex.source_ids,
+          ])],
+          not_claimed: [...new Set([
+            anchorDetail.actin_network.not_claimed,
+            doubletsDrawn ? exactDoublets.not_claimed : generalAlpha.not_claimed,
+            anchorDetail.telethonin_complex.not_claimed,
+            anchorDetail.omission.not_claimed,
+          ].flat())],
+        };
+      } else {
+        anchorDetailReport.omitted_because = `${anchorDetailReport.feature} resolves to `
+          + `${anchorDetailReport.feature_px.toFixed(2)} px, below the `
+          + `${ALIAS_THRESHOLD_PX} px aliasing threshold`;
+      }
+    }
+
     this.root.add(half);
 
     // ---- the full repeating unit: the half, repeated through the M-line ----
@@ -833,11 +1073,68 @@ export class SarcomereScene {
       this.root.add(mirrored);
     }
 
-    // The M-line, drawn once on the shared mirror plane.
-    shared.add(this._slab(
-      mline.transform.position_nm, mline.transform.width_nm, patchExtent,
-      COMPONENT_COLOR.mline, mline.evidence, 'mline',
+    // One coordinate marker at the shared sarcomere midpoint. It is deliberately
+    // a ring, not a solid transverse block and not the 160 nm bare zone.
+    shared.add(this._mbandMidpoint(
+      mline.transform.position_nm,
+      thick.transform.diameter_nm / 2,
+      mline.evidence?.axial_position ?? mline.evidence,
     ));
+
+    // ---- SC-3 M-band relationship context (close-up + resolvability gated) ----
+    if (anchorDetail?.target === 'mline') {
+      if (!anchorDetailReport) throw new Error('build: missing M-band detail report.');
+      if (anchorDetailResolves) {
+        const detailGroup = new THREE.Group();
+        detailGroup.name = 'mband_anchor_detail';
+        detailGroup.add(this._filamentInstances(
+          anchorDetail.context_thick_slices,
+          anchorDetail.context_thick_slices[0].start_nm,
+          anchorDetail.context_thick_slices[0].end_nm,
+          anchorDetail.context_thick_slices[0].diameter_nm / 2,
+          COMPONENT_COLOR.thick_filament,
+          thick.evidence,
+          'thick_filament_mband_neighbour_slices',
+        ));
+        detailGroup.add(this._segmentInstances(
+          anchorDetail.crosslinks,
+          anchorDetail.render_dimensions_nm.crosslink_radius,
+          COMPONENT_COLOR.mband_crosslink,
+          anchorDetail.evidence_class,
+          'mband_crosslink_sparse_context',
+        ));
+        detailGroup.userData.m1_density_rendered = false;
+        detailGroup.userData.midpoint_has_width = false;
+        shared.add(detailGroup);
+        anchorDetailReport = {
+          ...anchorDetailReport,
+          drawn: true,
+          midpoint_nm: anchorDetail.midpoint.x_nm,
+          midpoint_has_width: false,
+          bare_zone: anchorDetail.bare_zone,
+          crosslinks_drawn: anchorDetail.crosslinks.length,
+          crosslink_identity_policy: anchorDetail.crosslink_claim.identity_policy,
+          required_visible_titin_halves:
+            anchorDetail.titin_relationship.required_visible_halves,
+          m1_density_rendered: false,
+          source_ids: [...new Set([
+            ...anchorDetail.bare_zone.source_ids,
+            ...anchorDetail.crosslink_claim.source_ids,
+            ...anchorDetail.m1_omission.source_ids,
+          ])],
+          not_claimed: [
+            anchorDetail.midpoint.not_claimed,
+            anchorDetail.bare_zone.not_claimed,
+            anchorDetail.crosslink_claim.not_claimed,
+            anchorDetail.m1_omission.not_claimed,
+          ].flat(),
+        };
+      } else {
+        anchorDetailReport.omitted_because = `${anchorDetailReport.feature} resolves to `
+          + `${anchorDetailReport.feature_px.toFixed(2)} px, below the `
+          + `${ALIAS_THRESHOLD_PX} px aliasing threshold`;
+      }
+    }
     this.root.add(shared);
 
     this.manifest = {
@@ -845,7 +1142,8 @@ export class SarcomereScene {
       units: 'nanometres (1 scene unit = 1 nm)',
       primitives_used: {
         cylinder: ['thick_filament', 'thin_filament'],
-        box: ['zdisc', 'mline'],
+        box: ['zdisc'],
+        line_loop: ['mline_midpoint_reference'],
         tube: ['titin'],
         // Read off the built tree rather than predicted from the inputs: an
         // inventory that disagreed with what was drawn would be worse than none.
@@ -862,6 +1160,7 @@ export class SarcomereScene {
       // the feature would not resolve. Both are auditable states; a missing key
       // would be indistinguishable from a feature that failed to draw.
       context_detail: contextDetailReport,
+      anchor_detail: anchorDetailReport,
       domains: domainBatches ? {
         strands_with_domain_detail: domainStrands,
         batches: domainBatches.batches.map((b) => ({
@@ -971,9 +1270,10 @@ export class SarcomereScene {
         'titin tube radius (render width, not a molecular diameter)',
         lat
           ? latticeScope === 'local'
-            ? 'Z-disc / M-line transverse extent (drawn to span the immediate filament neighbourhood)'
-            : 'Z-disc / M-line transverse extent (drawn to span the lattice patch)'
-          : 'Z-disc / M-line transverse extent (drawn to a nominal width)',
+            ? 'Z-disc transverse extent (drawn to span the immediate filament neighbourhood)'
+            : 'Z-disc transverse extent (drawn to span the lattice patch)'
+          : 'Z-disc transverse extent (drawn to a nominal width)',
+        'M-band midpoint ring size (coordinate marker, not M1 density or M-band width)',
         'radial titin path through the I-band (no thick filament to follow there)',
         'smooth CatmullRom interpolation between domain positions',
         'SC-2 continuity trace (exact Level-0 axial endpoints; representative '
@@ -1290,6 +1590,9 @@ export class SarcomereScene {
       thin_filament: COMPONENT_COLOR.thin_filament,
       zdisc: COMPONENT_COLOR.zdisc,
       mline: COMPONENT_COLOR.mline,
+      alpha_actinin: COMPONENT_COLOR.alpha_actinin,
+      telethonin: COMPONENT_COLOR.telethonin,
+      mband_crosslink: COMPONENT_COLOR.mband_crosslink,
       lattice_guide: COMPONENT_COLOR.lattice_guide,
     };
     const roleOf = (name) => {
@@ -1298,6 +1601,9 @@ export class SarcomereScene {
       if (name.startsWith('thin_filament')) return 'thin_filament';
       if (name === 'zdisc') return 'zdisc';
       if (name === 'mline') return 'mline';
+      if (name.startsWith('alpha_actinin')) return 'alpha_actinin';
+      if (name.startsWith('telethonin')) return 'telethonin';
+      if (name.startsWith('mband_crosslink')) return 'mband_crosslink';
       if (name.startsWith('lattice_guide')) return 'lattice_guide';
       return null;
     };

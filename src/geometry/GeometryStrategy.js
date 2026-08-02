@@ -155,7 +155,16 @@ export class GeometryStrategy {
                            bare_zone_center_nm: half, axis: 'X' };
         desc.invariant = 'length_nm is SL-independent (A-band never extends)';
       } else if (id === 'mline') {
-        desc.transform = { position_nm: half, width_nm: d.width_X, plane: 'YZ' };
+        // SC-3: the former descriptor copied the 160 nm thick-filament bare-zone
+        // interval into `mline.width_nm`, making a head-distribution property look
+        // like a protein plate. The M-band record now supplies only the midpoint;
+        // evidence-scoped crosslink detail is generated separately.
+        desc.transform = {
+          position_nm: half,
+          plane: 'YZ',
+          reference_kind: 'sarcomere_midpoint',
+          axial_extent_nm: null,
+        };
       } else if (id === 'lattice') {
         desc.transform = { d10_nm: geom.lattice_d10_nm, symmetry: 'hexagonal',
                            law: 'GeometryEngine.latticeD10(SL)' };

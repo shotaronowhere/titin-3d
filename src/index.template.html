@@ -434,8 +434,10 @@ state.cameraPreset = restored.state.camera_preset;
   const [kind, name] = state.cameraPreset.split('.');
   state.view = kind === 'view' ? name : 'titin_story';
   state.closeup = kind === 'closeup' ? name : null;
+  if (state.closeup === 'mline') state.mirror = true;
 }
 applyChapterVisibility(state.storyStep);
+if (state.closeup === 'mline') state.mirror = true;
 const slider = $('sl');
 slider.min = min; slider.max = max; slider.value = restored.state.sarcomere_length_nm;
 $('activationStatement').textContent = presentation.scope.activation_statement;
@@ -537,11 +539,14 @@ function syncFilamentContextToggle() {
   const on = available && state.showFilamentContext;
   button.classList.toggle('on', on);
   button.setAttribute('aria-pressed', String(on));
-  button.disabled = !available;
+  const requiredByAnchorDetail = ['zdisc', 'mline'].includes(state.closeup);
+  button.disabled = !available || requiredByAnchorDetail;
   const action = on ? 'Hide' : 'Show';
   button.setAttribute('aria-label', `${action} actin and myosin filament context`);
-  button.title = available
-    ? `${action} one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin`
+  button.title = requiredByAnchorDetail
+    ? 'The selected anchor close-up requires its immediate actin/myosin context'
+    : available
+      ? `${action} one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin`
     : 'Actin and myosin context is unavailable in the isolated-titin view';
 }
 document.addEventListener('keydown', (event) => {
@@ -770,7 +775,10 @@ function applyCameraPreset({ animate = false } = {}) {
     syncViews(); syncCloseups(null);
   } else if (kind === 'closeup') {
     state.closeup = name;
-    syncCloseups(visualization.closeUp(name, { animate }));
+    if (name === 'mline') state.mirror = true;
+    visualization.closeUp(name, { animate });
+    rebuild();
+    syncCloseups(visualization.closeUp(name, { move: false }));
   } else if (kind === 'region') {
     state.region = name; state.selectedTarget = name; state.closeup = null;
     visualization.highlightTitinRegion(name);
@@ -890,8 +898,11 @@ for (const [k, v] of Object.entries(VIEWS)) {
   b.onclick = () => {
     // A wide framing invalidates the close-up selection; leaving it highlighted
     // would claim the camera is somewhere it is not.
+    const hadAnchorDetail = ['zdisc', 'mline'].includes(state.closeup);
     state.view = k; state.closeup = null; state.cameraPreset = `view.${k}`;
-    visualization.frame(k, { animate: true }); syncViews(); syncCloseups(null);
+    visualization.frame(k, { animate: true });
+    if (hadAnchorDetail) rebuild();
+    syncViews(); syncCloseups(null);
     syncPublicPresentation(); syncUrl();
   };
   $('views').append(b);
@@ -905,8 +916,8 @@ function syncViews() {
 
 // Close-ups. Selecting one turns the context-detail layer ON, because a close-up on
 // the crown array with that layer off would show a bare cylinder and read as a
-// rendering failure. The rebuild happens BEFORE the camera move so the aliasing gate
-// is evaluated against the close-up's view width, not the wide shot's.
+// rendering failure. Move first, then rebuild, so an immediate move is evaluated at
+// the close-up span; animated moves are reevaluated by the live LOD gate as they cross it.
 for (const [k, v] of Object.entries(CLOSEUPS)) {
   const b = document.createElement('button');
   b.textContent = k;
@@ -920,15 +931,16 @@ for (const [k, v] of Object.entries(CLOSEUPS)) {
     visualization.highlightTitinRegion(null);
     syncRegions(); refreshRegionReadout();
     state.showContextDetail = true;
+    state.showFilamentContext = true;
     state.closeup = k; state.cameraPreset = `closeup.${k}`;
-    // Order matters. Move the camera first, then rebuild: the aliasing gate reads
-    // the CURRENT view width, so rebuilding before the move would evaluate it
-    // against the wide shot and leave the heads withdrawn. closeUp() is then called
-    // once more only to re-read the measurement now that the manifest is populated.
-    rebuild();
+    // The M-band relationship is defined by titin arriving from both opposing
+    // half-sarcomeres. Refuse the single-half presentation for this target.
+    if (k === 'mline') state.mirror = true;
+    // Move first so every LOD decision reads the close-up span, then rebuild once.
+    // This avoids the previous two consecutive full scene builds on every click.
     visualization.closeUp(k);
     rebuild();
-    syncCloseups(visualization.closeUp(k));
+    syncCloseups(visualization.closeUp(k, { move: false }));
     syncPublicPresentation(); syncUrl();
   };
   $('closeups').append(b);
@@ -940,10 +952,17 @@ function syncCloseups(info = null) {
   }
   const out = $('closeupReadout');
   if (!info) { out.textContent = ''; return; }
-  const parts = [`${info.label} · view span ${info.span_nm} nm at X=${info.target_nm[0]} nm`];
+  const parts = [`${info.label} · LOD-evaluated span ${info.span_nm} nm at X=${info.target_nm[0]} nm`];
   if (info.crown_spacing_px != null) {
     parts.push(`crown spacing ${info.crown_spacing_px} px, crossover `
       + `${info.crossover_repeat_px} px (aliasing threshold ${info.alias_threshold_px} px)`);
+  }
+  if (info.anchor_detail) {
+    const anchor = info.anchor_detail;
+    parts.push(anchor.drawn
+      ? `${anchor.feature} ${anchor.feature_nm} nm resolves to ${anchor.feature_px} px `
+        + `(threshold ${anchor.alias_threshold_px} px)`
+      : `anchor detail withdrawn — ${anchor.omitted_because}`);
   }
   out.textContent = parts.join(' — ');
 }
@@ -961,7 +980,10 @@ const TOGGLES = [
 for (const [key, label] of TOGGLES) {
   const b = document.createElement('button');
   b.textContent = label; b.dataset.key = key;
-  b.onclick = () => { state[key] = !state[key]; rebuild(); };
+  b.onclick = () => {
+    if (key === 'mirror' && state.closeup === 'mline') return;
+    state[key] = !state[key]; rebuild();
+  };
   $('toggles').append(b);
 }
 const DETAIL_DEPICTION = Object.freeze({
@@ -974,10 +996,12 @@ function syncDepictionToggles() {
       const on = detail ? DETAIL_DEPICTION[b.dataset.key] : Boolean(state[b.dataset.key]);
       const needsContext = ['extendedLattice', 'showContextDetail'].includes(b.dataset.key);
       const contextUnavailable = needsContext && !state.showFilamentContext;
+      const requiredByMband = b.dataset.key === 'mirror' && state.closeup === 'mline';
       b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
-      b.disabled = detail || contextUnavailable;
+      b.disabled = detail || contextUnavailable || requiredByMband;
       b.title = detail ? 'Fixed by the isolated-titin view'
-        : (contextUnavailable ? 'Turn on Actin + myosin context first' : '');
+        : requiredByMband ? 'M-band detail requires titin from both half-sarcomeres'
+          : (contextUnavailable ? 'Turn on Actin + myosin context first' : '');
     }
     if (b.dataset.rings) {
       b.disabled = detail || !state.showFilamentContext || !state.extendedLattice;
@@ -998,6 +1022,7 @@ for (const region of regionMetadata.values()) {
   $('regions').append(b);
 }
 function selectRegion(regionId) {
+  const hadAnchorDetail = ['zdisc', 'mline'].includes(state.closeup);
   state.region = regionId;
   state.selectedTarget = regionId;
   state.closeup = null;
@@ -1009,6 +1034,7 @@ function selectRegion(regionId) {
     state.cameraPreset = `view.${state.view}`;
     visualization.frame(state.view, { animate: true });
   }
+  if (hadAnchorDetail) rebuild();
   syncRegions(); syncExtensionRows(); syncCloseups(null); refreshRegionReadout();
   syncPublicPresentation(); syncUrl();
 }
@@ -1078,6 +1104,7 @@ function currentDisplayOptions() {
     showDomains: state.showDomains,
     showContextDetail: state.showContextDetail,
     mirror: state.mirror,
+    anchorDetail: ['zdisc', 'mline'].includes(state.closeup) ? state.closeup : null,
   };
 }
 
@@ -1166,6 +1193,27 @@ function render(report) {
         ? `crossover ${cd.crossover_repeat_nm} nm (${cd.crossover_repeat_px} px)`
         : `withdrawn — ${cd.crossover_repeat_px} px < ${cd.alias_threshold_px} px`)]);
   }
+  const anchorDetail = man.anchor_detail;
+  if (anchorDetail) {
+    rows.push(['Anchor detail', anchorDetail.drawn
+      ? `${anchorDetail.target === 'zdisc' ? 'Z-disc' : 'M-band'} · ${anchorDetail.feature_px} px resolved`
+      : `withdrawn — ${anchorDetail.feature_px} px < ${anchorDetail.alias_threshold_px} px`]);
+    if (anchorDetail.target === 'zdisc' && anchorDetail.drawn) {
+      rows.push(
+        ['Z-disc local actin context', `${anchorDetail.actin_segments} antiparallel segment proxies`],
+        ['α-actinin context', anchorDetail.alpha_actinin_doublets_rendered
+          ? `${anchorDetail.alpha_actinin_crosslinks} crosslinks · ${anchorDetail.alpha_actinin_doublet_spacing_nm} nm Evidence-only doublet spacing`
+          : `${anchorDetail.alpha_actinin_crosslinks} heterogeneous schematic crosslinks · exact doublets withheld in Guided mode`],
+        ['Telethonin topology', '2 antiparallel titin Z1Z2 chains : 1 telethonin'],
+      );
+    } else if (anchorDetail.target === 'mline' && anchorDetail.drawn) {
+      rows.push(
+        ['M-band midpoint', `${anchorDetail.midpoint_nm.toFixed(1)} nm · zero adopted width`],
+        ['Bare zone', `${anchorDetail.bare_zone.width_nm} nm · thick-filament head distribution`],
+        ['M-band context', `${anchorDetail.crosslinks_drawn} sparse schematic crosslinks · M1 omitted`],
+      );
+    }
+  }
   if (man.domains) {
     for (const b of man.domains.batches) {
       rows.push([`${b.archetype} domains built`, `${b.count}${hiddenSuffix('titin_domains')}`]);
@@ -1179,11 +1227,20 @@ function render(report) {
   const legend = [
     ['thick_filament', 'Thick filament (myosin)', 'thick_filament'],
     ['thin_filament', 'Thin filament (actin)', 'thin_filament'],
-    ['zdisc', 'Z-disc', 'zdisc'], ['mline', 'M-line', 'mline'],
+    ['zdisc', 'Z-disc envelope', 'zdisc'], ['mline', 'M-band midpoint', 'mline'],
     ['titin', 'Titin', 'titin'],
   ];
   if (cd?.heads_drawn) legend.splice(1, 0,
     ['myosin_head', 'Myosin heads (crowns)', 'myosin_heads']);
+  if (anchorDetail?.target === 'zdisc' && anchorDetail.drawn) {
+    legend.splice(-1, 0,
+      ['alpha_actinin', 'α-actinin (schematic)', 'alpha_actinin'],
+      ['telethonin', 'Telethonin (schematic)', 'telethonin']);
+  }
+  if (anchorDetail?.target === 'mline' && anchorDetail.drawn) {
+    legend.splice(-1, 0,
+      ['mband_crosslink', 'M-band crosslink context (schematic)', 'mband_crosslinks']);
+  }
   $('legend').innerHTML = legend
     .filter(([, , component]) => component === 'titin'
       ? !(hiddenComponents.has('titin') && hiddenComponents.has('titin_domains'))
@@ -1236,7 +1293,11 @@ function render(report) {
       + `<br><span style="color:var(--dim)">X=${annotation.anchor_nm.x.toFixed(1)} nm · ${sources}</span></div>`;
   }).join('');
 
-  const allNotClaimed = [...(man.not_claimed || []), ...(man.render_only || [])];
+  const allNotClaimed = [
+    ...(man.not_claimed || []),
+    ...(man.render_only || []),
+    ...(anchorDetail?.not_claimed || []),
+  ];
   const nc = state.scale === SCALES.detail
     ? allNotClaimed.filter((claim) => /titin|domain|catmullrom/i.test(claim))
     : allNotClaimed;
@@ -1286,6 +1347,13 @@ function syncComponentButtons(report) {
   if (!man.domains) absent.add('titin_domains');
   if (!man.context_detail?.heads_drawn) absent.add('myosin_heads');
   if (!man.context_detail?.twist_drawn) absent.add('thin_filament_twist');
+  if (!(man.anchor_detail?.target === 'zdisc' && man.anchor_detail.drawn)) {
+    absent.add('alpha_actinin');
+    absent.add('telethonin');
+  }
+  if (!(man.anchor_detail?.target === 'mline' && man.anchor_detail.drawn)) {
+    absent.add('mband_crosslinks');
+  }
   for (const b of $('components').children) {
     const component = b.dataset.component;
     const unavailableAtScale = state.scale === SCALES.detail
@@ -1369,8 +1437,11 @@ syncPublicPresentation(); syncUrl();
 // crown array appears and withdraws as the user zooms without a per-frame rebuild.
 visualization.start((report) => {
   // A zoom-driven LOD crossing rebuilds the tree. Refresh the panel in the same
-  // frame so it never claims that withdrawn heads/twist are still visible.
+  // frame so it never claims that withdrawn heads/twist/anchor detail are visible.
   render(report); refreshRegionReadout();
+  if (state.closeup) {
+    syncCloseups(visualization.closeUp(state.closeup, { move: false }));
+  }
 }, renderScienceOverlay);
 window.titinVisualization = visualization;   // biological facade for console inspection
 // Tell the boot diagnostic above that the module reached its end. Without this the

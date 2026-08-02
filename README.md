@@ -73,12 +73,13 @@ structural-coordinate pipeline with an offline synthetic fixture. It also runs t
 destructive-in-memory/on-restored-copy negative controls that prove the scientific
 guards reject invalid geometry.
 
-For routine SC-2 work on a local laptop, use the bounded serial gate instead of the
+For routine showcase work on a local laptop, use a bounded serial gate instead of the
 exhaustive destructive suite:
 
 ```sh
 npm run build
 npm run verify:sc2
+npm run verify:sc3
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
@@ -124,6 +125,8 @@ npm run build
 - `src/api/TitinAnnotations.js` — evidence-aware annotation descriptors
 - `src/model/` — specification loading, provenance, and model state
 - `src/geometry/` — representation, lattice, and mechanical geometry
+- `src/geometry/ZDiscDetail.js` and `src/geometry/MBandDetail.js` — SC-3
+  source-limited, target-gated terminal-anchor detail descriptors
 - `src/render/` — Three.js scene and viewer
 - `src/presentation/StoryController.js` — validated narrative state and URL codec
 - `src/presentation/ShowcaseOverlay.js` — SC-2 continuity, landmark, and live extension descriptors derived from canonical geometry
