@@ -168,14 +168,18 @@ window.__titinBoot = { ready: false, problems: [] };
   .brand-block, #scopeBadge, #guidedCard, #urlNotice { background: var(--chrome);
     border: 1px solid rgb(116 133 154 / 38%); box-shadow: 0 10px 32px rgb(0 0 0 / 28%);
     backdrop-filter: blur(10px); }
-  .brand-block { pointer-events: auto; display: flex; align-items: center; gap: 14px;
+  .brand-block { pointer-events: auto; display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap;
     border-radius: 8px; padding: 8px 10px 8px 12px; min-width: min(420px, 55vw); }
+  .brand-identity { flex: 1 1 190px; }
   .brand-title { font-size: 14px; font-weight: 650; letter-spacing: .01em; }
   .brand-title::before { content: ""; display: inline-block; width: 18px; height: 3px;
     margin-right: 8px; vertical-align: middle; border-radius: 2px; background: var(--titin); }
   .brand-sub { color: var(--dim); font-size: 10px; }
   .mode-switch { display: flex; gap: 4px; margin-left: auto; }
   .mode-switch button { white-space: nowrap; }
+  #filamentContextToggle { white-space: nowrap; border-color: rgb(79 179 159 / 62%); }
+  #filamentContextToggle.on { background: rgb(79 179 159 / 20%); border-color: #4fb39f;
+    color: #d9fff6; }
   #scopeBadge { max-width: 360px; border-radius: 8px; padding: 8px 11px; text-align: right; }
   .scope-kicker { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .11em;
     text-transform: uppercase; }
@@ -244,10 +248,13 @@ window.__titinBoot = { ready: false, problems: [] };
     <div id="stageChrome">
       <div id="stageHeader">
         <div class="brand-block">
-          <div>
+          <div class="brand-identity">
             <div class="brand-title">Titin across the sarcomere</div>
             <div class="brand-sub">One model · two levels of explanation</div>
           </div>
+          <button id="filamentContextToggle" class="on" aria-pressed="true"
+            aria-label="Show actin and myosin filament context"
+            title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
           <div class="mode-switch" role="group" aria-label="Audience mode">
             <button id="audienceGuided" class="on" aria-pressed="true">Guided</button>
             <button id="audienceEvidence" aria-pressed="false">Evidence</button>
@@ -300,8 +307,9 @@ window.__titinBoot = { ready: false, problems: [] };
     <div class="science-separator"></div>
 
     <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
-    <div class="sub" id="viewDescription">Titin positioned in situ relative to the Z-disc, thin and
-      thick filaments, M-line, and the transverse filament lattice.</div>
+    <div class="sub" id="viewDescription">Titin positioned on the thick-filament periphery beside
+      one myosin thick filament and its six nearest actin thin filaments; the representative
+      azimuth is schematic and the extended lattice is optional.</div>
 
     <h2>Scale</h2>
     <div class="row" id="scales"></div>
@@ -324,6 +332,8 @@ window.__titinBoot = { ready: false, problems: [] };
     <div class="sub" id="closeupReadout" style="margin:6px 0 0"></div>
 
     <h2>Detail</h2>
+    <div class="sub" style="margin:0 0 6px">The top control covers the immediate filament
+      neighbourhood. Expand to additional lattice rings here only when transverse organization matters.</div>
     <div class="row" id="toggles"></div>
 
     <h2>Components</h2>
@@ -386,7 +396,8 @@ function fail(e) {
 }
 
 let visualization; let model;
-const state = { showDomains: false, showLattice: true, showContextDetail: false,
+const state = { showDomains: false, showFilamentContext: true,
+                showContextDetail: false, extendedLattice: false,
                 rings: 1, mirror: true, view: 'titin_story', closeup: null,
                 scale: SCALES.context, region: null, showEvidence: false,
                 audienceMode: AUDIENCE_MODES.guided, storyStep: null,
@@ -492,9 +503,9 @@ function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {
   $('evidenceToggle').classList.toggle('on', state.showEvidence);
   $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
   syncAudienceMode();
-  // Guided shows one legible representative titin path; Evidence restores every
-  // lattice copy. Rebuild from identical model coordinates to change only that
-  // presentation density.
+  // Guided shows one legible representative titin path. Evidence keeps the same
+  // local context unless the user explicitly enables the extended lattice, which
+  // also restores its additional titin copies.
   rebuild();
   if (focusDrawer) requestAnimationFrame(() => $('closeEvidence').focus());
   if (restoreFocus) {
@@ -516,6 +527,23 @@ $('audienceGuided').onclick = () => setAudienceMode(AUDIENCE_MODES.guided);
 $('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'));
 $('closeEvidence').onclick = closeEvidence;
 $('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'));
+$('filamentContextToggle').onclick = () => {
+  state.showFilamentContext = !state.showFilamentContext;
+  rebuild();
+};
+function syncFilamentContextToggle() {
+  const button = $('filamentContextToggle');
+  const available = state.scale === SCALES.context;
+  const on = available && state.showFilamentContext;
+  button.classList.toggle('on', on);
+  button.setAttribute('aria-pressed', String(on));
+  button.disabled = !available;
+  const action = on ? 'Hide' : 'Show';
+  button.setAttribute('aria-label', `${action} actin and myosin filament context`);
+  button.title = available
+    ? `${action} one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin`
+    : 'Actin and myosin context is unavailable in the isolated-titin view';
+}
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && state.audienceMode === AUDIENCE_MODES.evidence) {
     event.preventDefault();
@@ -543,6 +571,26 @@ function svgElement(name, attributes = {}, textContent = null) {
   return node;
 }
 
+function renderedTitinAnchor(record) {
+  const placement = visualization.currentState()?.manifest?.representative_titin;
+  const offset = placement?.a_band_transverse_offset_nm;
+  if (!placement?.a_band_surface_bound || !offset || !record?.anchor_nm
+      || !Number.isFinite(placement.a_band_start_nm) || placement.a_band_start_nm <= 0) {
+    return record;
+  }
+  const x = record.anchor_nm.x;
+  const f = Math.max(0, Math.min(1, x / placement.a_band_start_nm));
+  return {
+    ...record,
+    anchor_nm: {
+      ...record.anchor_nm,
+      y: (record.anchor_nm.y || 0) + offset.y * f,
+      z: (record.anchor_nm.z || 0) + offset.z * f,
+    },
+    transverse_display_basis: placement.i_band_transverse_path,
+  };
+}
+
 function renderScienceOverlay() {
   const svg = $('scienceOverlay');
   if (!activeShowcaseOverlay || !$('canvas').clientWidth) {
@@ -564,7 +612,9 @@ function renderScienceOverlay() {
       records.push({ id: `${bracket.id}:end`, x: bracket.end_nm, y: 0, z: 0 });
     }
   }
-  if (bandsRequested || features.has('termini')) records.push(...activeShowcaseOverlay.termini);
+  if (bandsRequested || features.has('termini')) {
+    records.push(...activeShowcaseOverlay.termini.map(renderedTitinAnchor));
+  }
   const projected = new Map(visualization.projectPresentationAnchors(records)
     .map((point) => [point.id, point]));
   const showBands = bandsRequested && isLongitudinalProjection(
@@ -704,12 +754,12 @@ function renderChapter() {
 function applyChapterVisibility(chapterId) {
   const visibility = story.chapter(chapterId)?.recommended_state?.visibility;
   if (!visibility) return;
-  state.showLattice = visibility.show_lattice;
+  state.showFilamentContext = visibility.show_lattice;
   state.showDomains = visibility.show_domains;
   state.showContextDetail = visibility.show_context_detail;
   state.mirror = visibility.mirror;
   state.rings = visibility.rings;
-  syncNeighbourControl();
+  syncNeighbourControl(); syncFilamentContextToggle();
 }
 
 function applyCameraPreset({ animate = false } = {}) {
@@ -774,10 +824,15 @@ for (const scale of Object.values(SCALES)) {
     // Carrying one into the isolated-titin scale leaves a highlighted control
     // and a biological readout for geometry that is no longer on screen.
     state.scale = scale; state.closeup = null; state.cameraPreset = `view.${state.view}`;
+    if (scale === SCALES.context) state.showFilamentContext = true;
     if (scale === SCALES.detail
         && TitinVisualization.DETAIL_HIDDEN.includes(state.selectedTarget)) {
       state.selectedTarget = null;
     }
+    // Update the persistent options before setScale builds the target view. This
+    // keeps the scale transition to one scene construction; rebuilding again here
+    // is unnecessary work at exactly the moment the camera is also moving.
+    visualization.setDisplayOptions(currentDisplayOptions());
     const report = visualization.setScale(scale);
     if (state.region) {
       state.cameraPreset = `region.${state.region}`;
@@ -804,7 +859,8 @@ function syncScales() {
   $('viewTitle').textContent = detail ? 'Isolated titin detail view' : 'Sarcomere context view';
   $('viewDescription').textContent = detail
     ? 'Titin alone, retaining the same model-derived Z-disc and M-line anchor positions.'
-    : 'Titin positioned in situ relative to the Z-disc, thin and thick filaments, M-line, and transverse lattice.';
+    : 'Titin positioned on the thick-filament periphery beside one myosin thick filament and its six nearest actin thin filaments; the representative azimuth is schematic and the extended lattice is optional.';
+  syncFilamentContextToggle();
 }
 const presentationPresets = new Map(
   presentation.length_presets.map((preset) => [preset.structural_state_id, preset]),
@@ -892,7 +948,9 @@ function syncCloseups(info = null) {
   out.textContent = parts.join(' — ');
 }
 const TOGGLES = [
-  ['showLattice', 'lattice'],
+  // Immediate actin/myosin placement is promoted above the canvas. This expert
+  // control expands that local neighbourhood into the transverse lattice patch.
+  ['extendedLattice', 'extended lattice'],
   ['showDomains', 'domains'],
   // Phase 7b. Off by default: it is context DETAIL, and the plan's objective makes
   // titin the subject. The user turns it on when they want to see why titin sits
@@ -907,19 +965,25 @@ for (const [key, label] of TOGGLES) {
   $('toggles').append(b);
 }
 const DETAIL_DEPICTION = Object.freeze({
-  showLattice: false, showDomains: true, showContextDetail: false, mirror: false,
+  extendedLattice: false, showDomains: true, showContextDetail: false, mirror: false,
 });
 function syncDepictionToggles() {
   const detail = state.scale === SCALES.detail;
   for (const b of $('toggles').children) {
     if (b.dataset.key) {
       const on = detail ? DETAIL_DEPICTION[b.dataset.key] : Boolean(state[b.dataset.key]);
+      const needsContext = ['extendedLattice', 'showContextDetail'].includes(b.dataset.key);
+      const contextUnavailable = needsContext && !state.showFilamentContext;
       b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
-      b.disabled = detail;
-      b.title = detail ? 'Fixed by the isolated-titin view' : '';
+      b.disabled = detail || contextUnavailable;
+      b.title = detail ? 'Fixed by the isolated-titin view'
+        : (contextUnavailable ? 'Turn on Actin + myosin context first' : '');
     }
-    if (b.dataset.rings) b.disabled = detail;
+    if (b.dataset.rings) {
+      b.disabled = detail || !state.showFilamentContext || !state.extendedLattice;
+    }
   }
+  syncFilamentContextToggle();
 }
 
 // ---- titin-region highlighting and navigation (Phase 10) -----------------
@@ -988,25 +1052,39 @@ $('evidenceToggle').onclick = () => {
 function syncNeighbourControl() {
   const button = $('toggles').querySelector('[data-rings="true"]');
   if (!button) return;
-  button.textContent = `lattice neighbours · ${state.rings} ring${state.rings === 1 ? '' : 's'}`;
-  button.setAttribute('aria-label', `Show ${state.rings} rings of lattice neighbours`);
+  button.textContent = `extended lattice · ${state.rings} ring${state.rings === 1 ? '' : 's'}`;
+  button.setAttribute('aria-label', `Use ${state.rings} ring${state.rings === 1 ? '' : 's'} in the extended lattice patch`);
+  button.disabled = state.scale === SCALES.detail
+    || !state.showFilamentContext || !state.extendedLattice;
 }
 
 // ---- rebuild --------------------------------------------------------------
+function currentDisplayOptions() {
+  const contextScale = state.scale === SCALES.context;
+  const useExtendedLattice = contextScale
+    && state.audienceMode === AUDIENCE_MODES.evidence
+    && state.showFilamentContext
+    && state.extendedLattice;
+  return {
+    showLattice: contextScale,
+    latticeScope: useExtendedLattice ? 'patch' : 'local',
+    rings: useExtendedLattice ? state.rings : 1,
+    showFilamentContext: state.showFilamentContext,
+    // One representative molecule by default; the optional extended Evidence
+    // lattice restores its additional copies. This changes presentation density,
+    // never coordinates.
+    titinStrands: state.audienceMode === AUDIENCE_MODES.evidence && useExtendedLattice,
+    presentationMode: state.audienceMode,
+    showDomains: state.showDomains,
+    showContextDetail: state.showContextDetail,
+    mirror: state.mirror,
+  };
+}
+
 function rebuild(refit = false) {
   try {
     const sl = Number(slider.value);
-    visualization.setDisplayOptions({
-      showLattice: state.showLattice,
-      rings: state.rings,
-      // One representative molecule in Guided mode, full lattice copies in
-      // Evidence mode. This changes presentation density, never coordinates.
-      titinStrands: state.audienceMode === AUDIENCE_MODES.evidence && state.showLattice,
-      presentationMode: state.audienceMode,
-      showDomains: state.showDomains,
-      showContextDetail: state.showContextDetail,
-      mirror: state.mirror,
-    });
+    visualization.setDisplayOptions(currentDisplayOptions());
     syncPublicPresentation();
     const report = visualization.setSarcomereLength(sl);
     if (refit) visualization.frame(state.view);
@@ -1060,10 +1138,18 @@ function render(report) {
     ['d10 spacing', `${g.lattice_d10_nm.toFixed(2)} nm`],
   ];
   if (man.lattice) {
-    rows.push(['Thick filaments built', `${man.lattice.thick_drawn}${hiddenSuffix('thick_filament')}`],
+    rows.push(['Filament context', man.lattice.scope === 'local'
+      ? 'immediate neighbours (1 myosin thick filament + 6 actin thin filaments)'
+      : `extended lattice (${state.rings} ring${state.rings === 1 ? '' : 's'})`],
+    ['Thick filaments built', `${man.lattice.thick_drawn}${hiddenSuffix('thick_filament')}`],
       ['Thin filaments built', `${man.lattice.thin_drawn}${hiddenSuffix('thin_filament')}`]);
   }
   rows.push(['Titin strands built', `${man.titin_strands_drawn}${hiddenSuffix('titin')}`]);
+  if (man.representative_titin?.a_band_surface_bound) {
+    const radial = man.representative_titin.a_band_transverse_offset_nm.radius;
+    rows.push(['Representative titin A-band radius',
+      `${radial.toFixed(2)} nm · thick-filament periphery · schematic azimuth`]);
+  }
   // Phase 7b. Reported whenever the layer is ON — including when a feature was
   // WITHDRAWN, because a silently empty detail layer is indistinguishable from a
   // rendering failure. The px figure is the measurement the decision was made on.

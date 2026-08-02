@@ -264,14 +264,20 @@ export class SarcomereScene {
   }
 
   /**
-   * Exact Level-0 centreline for one canonical segment. This screen-readable
-   * trace is deliberately a Line rather than a biological mesh: it cannot move
-   * the tube, domains or any source-backed coordinate.
+   * Exact Level-0 AXIAL endpoints for one canonical segment, carried on the
+   * representative strand's declared transverse display offset. Keeping this
+   * screen-readable trace at y=z=0 while the biological tube sits on the thick-
+   * filament surface would falsely depict a second titin through the myosin core.
+   * The offset is schematic and changes no source-backed X coordinate.
    */
-  _titinContinuityTrace(segment) {
+  _titinContinuityTrace(segment, off, aBandStartNm) {
+    const at = (x) => {
+      const f = x >= aBandStartNm ? 1 : x / aBandStartNm;
+      return new THREE.Vector3(x, (off.y || 0) * f, (off.z || 0) * f);
+    };
     const geometry = this._track(new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(segment.X_start, 0, 0),
-      new THREE.Vector3(segment.X_end, 0, 0),
+      at(segment.X_start),
+      at(segment.X_end),
     ]));
     const material = new THREE.LineBasicMaterial({
       color: COMPONENT_COLOR.titin_highlight,
@@ -286,7 +292,10 @@ export class SarcomereScene {
     line.renderOrder = 12;
     line.userData.titin_trace_region = segment.region_id;
     line.userData.base_color = COMPONENT_COLOR.titin_highlight;
-    line.userData.coordinate_basis = 'exact canonical Level-0 segment endpoints';
+    line.userData.coordinate_basis = 'exact canonical Level-0 axial segment endpoints; '
+      + 'schematic representative-strand transverse offset';
+    line.userData.a_band_radial_offset_nm = Math.hypot(off.y || 0, off.z || 0);
+    line.userData.azimuth_evidence = off.evidence_class || 'SCHEMATIC';
     return line;
   }
 
@@ -345,6 +354,11 @@ export class SarcomereScene {
    * and one InstancedMesh has one geometry.
    */
   _crownHeads(crownsByFilament, sites, name) {
+    if (!Array.isArray(crownsByFilament) || !Array.isArray(sites)
+        || crownsByFilament.length !== sites.length) {
+      throw new Error(`_crownHeads: crown/site count mismatch (`
+        + `${crownsByFilament?.length ?? 'invalid'} crowns for ${sites?.length ?? 'invalid'} sites).`);
+    }
     const nHeads = crownsByFilament.reduce(
       (n, c) => n + c.levels.reduce((k, l) => k + l.heads.length, 0), 0,
     );
@@ -487,7 +501,7 @@ export class SarcomereScene {
     this.clear();
     const {
       titinStrands = true, mirror = true, neighbourTitin = false,
-      presentationMode = 'evidence',
+      presentationMode = 'evidence', latticeScope = 'patch',
       // Phase 7b. `contextDetail` is the OPT-IN payload from
       // model.contextDetailSceneAt(); omitting it leaves every pre-7b caller
       // getting exactly the scene it was written against. viewWidthNm is what the
@@ -498,6 +512,9 @@ export class SarcomereScene {
     } = opts;
     if (!['guided', 'evidence'].includes(presentationMode)) {
       throw new Error(`build: unknown presentationMode '${presentationMode}'.`);
+    }
+    if (!['local', 'patch'].includes(latticeScope)) {
+      throw new Error(`build: unknown latticeScope '${latticeScope}'. Use 'local' or 'patch'.`);
     }
     /**
      * The Phase 7b report. Fields beyond the always-present ones are attached only
@@ -514,11 +531,41 @@ export class SarcomereScene {
     const mline = find('mline');
     const lat = scene.lattice;
 
+    if (lat && lat.thin_sites.length === 0) {
+      throw new Error('lattice patch contains no trigonal thin sites — a patch '
+        + 'this small cannot support the 1:2 arrangement. Use the axial scene '
+        + '(sceneAt) instead of a degenerate lattice.');
+    }
+
+    // The promoted context view answers one question: where is titin relative to
+    // its immediate contractile-filament neighbours? A central thick filament has
+    // six equidistant nearest thin filaments in the hexagonal lattice. Keep exactly
+    // those six in `local`; the complete descriptor patch remains available in
+    // Evidence mode as `patch`. Sorting makes the selection independent of the
+    // lattice generator's site enumeration when callers provide a larger patch.
+    const localThinSites = lat
+      ? [...lat.thin_sites]
+        .sort((a, b) => Math.hypot(a.y, a.z) - Math.hypot(b.y, b.z))
+        .slice(0, 6)
+      : [];
+    const drawnThinSites = lat && latticeScope === 'local' ? localThinSites : lat?.thin_sites;
+    const centralThickSites = lat
+      ? lat.thick_sites.filter((site) => Math.hypot(site.y, site.z) < 1e-9)
+      : [];
+    if (lat && latticeScope === 'local'
+        && (localThinSites.length !== 6 || centralThickSites.length !== 1)) {
+      throw new Error('local lattice context requires one central thick site and '
+        + `six nearest thin sites; received ${centralThickSites.length} and ${localThinSites.length}.`);
+    }
+
     // Transverse extent of the slabs: the lattice patch if present, otherwise a
     // slab just wide enough to read as a disc against the central filaments.
-    const patchExtent = lat
-      ? 2 * Math.max(...lat.thick_sites.map((s) => Math.hypot(s.y, s.z)))
-        + lat.transform.lattice_constant_nm
+    const patchExtent = lat && latticeScope === 'local'
+      ? 2 * Math.max(...localThinSites.map((s) => Math.hypot(s.y, s.z)))
+        + 2 * thin.transform.diameter_nm
+      : lat
+        ? 2 * Math.max(...lat.thick_sites.map((s) => Math.hypot(s.y, s.z)))
+          + lat.transform.lattice_constant_nm
       : thick.transform.diameter_nm * 3;
 
     // Two scopes, and getting them wrong duplicates structure:
@@ -574,7 +621,7 @@ export class SarcomereScene {
       thin.transform.start_nm, thin.transform.end_nm,
       thin.transform.diameter_nm / 2,
       COMPONENT_COLOR.thin_filament, thin.evidence, 'thin_filament_central',
-      lat ? lat.thin_sites[0] : { y: 0, z: 0 },
+      lat ? drawnThinSites[0] : { y: 0, z: 0 },
     ));
 
     // ---- Z-disc and M-line as simple meshes ----
@@ -594,33 +641,29 @@ export class SarcomereScene {
     if (lat) {
       // The central filament is drawn individually above, so it is excluded here
       // to avoid two meshes occupying the same coordinates.
-      const others = lat.thick_sites.filter((s) => Math.hypot(s.y, s.z) > 1e-9);
-      const thinOthers = lat.thin_sites.slice(1);
-      shared.add(this._filamentInstances(
-        others, thick.transform.start_nm, thick.transform.end_nm,
-        thick.transform.diameter_nm / 2,
-        COMPONENT_COLOR.thick_filament, thick.evidence, 'thick_filament_lattice',
-      ));
+      const others = latticeScope === 'patch'
+        ? lat.thick_sites.filter((s) => Math.hypot(s.y, s.z) > 1e-9)
+        : [];
+      const thinOthers = drawnThinSites.slice(1);
+      if (others.length) {
+        shared.add(this._filamentInstances(
+          others, thick.transform.start_nm, thick.transform.end_nm,
+          thick.transform.diameter_nm / 2,
+          COMPONENT_COLOR.thick_filament, thick.evidence, 'thick_filament_lattice',
+        ));
+      }
       half.add(this._filamentInstances(
         thinOthers, thin.transform.start_nm, thin.transform.end_nm,
         thin.transform.diameter_nm / 2,
         COMPONENT_COLOR.thin_filament, thin.evidence, 'thin_filament_lattice',
       ));
-      // The "+1" counts the individually-drawn central filament. It is asserted
-      // rather than assumed: with rings=0 the patch has no complete triangles and
-      // therefore no trigonal thin site, so the central thin filament would be
-      // drawn at its on-axis axial idealization while the manifest still claimed
-      // a lattice thin site. Better to refuse than to miscount.
-      if (lat.thin_sites.length === 0) {
-        throw new Error('lattice patch contains no trigonal thin sites — a patch '
-          + 'this small cannot support the 1:2 arrangement. Use the axial scene '
-          + '(sceneAt) instead of a degenerate lattice.');
-      }
       latticeCounts = {
+        scope: latticeScope,
         thick_drawn: others.length + 1,
         thin_drawn: thinOthers.length + 1,
         thick_sites: lat.thick_sites.length,
         thin_sites: lat.thin_sites.length,
+        omitted_neighbour_thick: latticeScope === 'local' ? lat.thick_sites.length - 1 : 0,
       };
 
       // ---- Phase 7b: context detail on the lattice filaments ----
@@ -645,11 +688,20 @@ export class SarcomereScene {
           twist_drawn: false,
         };
         if (crownPx >= ALIAS_THRESHOLD_PX) {
-          const headMesh = this._crownHeads(contextDetail.crowns, lat.thick_sites, 'myosin_heads');
+          const headSites = latticeScope === 'local' ? centralThickSites : lat.thick_sites;
+          // contextDetail carries one identical-phase crown descriptor per site in
+          // the requested patch. Local context draws only the central thick
+          // filament, so filter BOTH arrays together. Passing seven crown records
+          // with one site used to crash every close-up on sites[1].y.
+          const headCrowns = latticeScope === 'local'
+            ? contextDetail.crowns.slice(0, 1)
+            : contextDetail.crowns;
+          const headMesh = this._crownHeads(headCrowns, headSites, 'myosin_heads');
           if (headMesh) {
             half.add(headMesh);
             contextDetailReport.heads_drawn = true;
             contextDetailReport.head_instances = headMesh.count;
+            contextDetailReport.thick_filaments_detailed = headSites.length;
           }
         } else {
           contextDetailReport.heads_omitted_because =
@@ -658,9 +710,10 @@ export class SarcomereScene {
             + 'moire periodicity the filament does not have';
         }
         if (crossoverPx >= ALIAS_THRESHOLD_PX && contextDetail.twist) {
-          half.add(this._thinTwist(contextDetail.twist, lat.thin_sites, 'thin_filament_twist',
+          half.add(this._thinTwist(contextDetail.twist, drawnThinSites, 'thin_filament_twist',
             contextDetail.twist.evidence_class));
           contextDetailReport.twist_drawn = true;
+          contextDetailReport.thin_filaments_detailed = drawnThinSites.length;
         } else if (contextDetail.twist) {
           contextDetailReport.twist_omitted_because =
             `crossover repeat resolves to ${crossoverPx.toFixed(2)} px, below the `
@@ -672,9 +725,25 @@ export class SarcomereScene {
     // ---- representative titin paths as tubes ----
     const titinGroup = new THREE.Group();
     titinGroup.name = 'titin';
-    const strandOffsets = titinStrands && lat
-      ? lat.titin_strands.offsets
-      : [{ strand_index: 0, y: 0, z: 0, azimuth_deg: 0, evidence_class: 'SCHEMATIC' }];
+    const axialFallback = {
+      strand_index: 0, y: 0, z: 0, radius_nm: 0, azimuth_deg: null,
+      evidence_class: 'SCHEMATIC — isolated axial presentation',
+      policy: 'axial_without_lattice',
+    };
+    // With a lattice present, even ONE representative titin must retain the
+    // surface offset already declared for the six-strand model. Replacing it with
+    // y=z=0 buries the A-band tube inside the myosin cylinder and contradicts the
+    // spec's “A-band titin bound along surface” relationship. Zero offset is valid
+    // only for the explicitly isolated axial scene, where no thick filament is
+    // being shown as spatial context.
+    const latticeStrandOffsets = lat?.titin_strands?.offsets || [];
+    const strandOffsets = lat
+      ? (titinStrands ? latticeStrandOffsets : latticeStrandOffsets.slice(0, 1))
+      : [axialFallback];
+    if (!strandOffsets.length) {
+      throw new Error('lattice scene contains no titin surface offsets; refusing '
+        + 'to substitute an axial strand inside the thick filament.');
+    }
 
     const aBandStart = thick.transform.start_nm;
     const baseTitinRadius = opts.titinTubeRadiusNm ?? thin.transform.diameter_nm / 6;
@@ -722,7 +791,7 @@ export class SarcomereScene {
           const traces = new THREE.Group();
           traces.name = 'titin_continuity_traces';
           for (const segment of titinPath.segments) {
-            traces.add(this._titinContinuityTrace(segment));
+            traces.add(this._titinContinuityTrace(segment, off, aBandStart));
           }
           titinGroup.add(traces);
         }
@@ -824,6 +893,23 @@ export class SarcomereScene {
         overshoot_past_mline_nm: Math.max(0, thin.transform.end_nm - mlineX),
       },
       titin_strands_drawn: strandOffsets.length,
+      representative_titin: {
+        strand_index: strandOffsets[0].strand_index,
+        a_band_surface_bound: Boolean(lat),
+        a_band_start_nm: aBandStart,
+        a_band_transverse_offset_nm: {
+          y: strandOffsets[0].y || 0,
+          z: strandOffsets[0].z || 0,
+          radius: Math.hypot(strandOffsets[0].y || 0, strandOffsets[0].z || 0),
+        },
+        thick_filament_radius_nm: thick.transform.diameter_nm / 2,
+        azimuth_deg: strandOffsets[0].azimuth_deg,
+        azimuth_evidence: strandOffsets[0].evidence_class,
+        placement_policy: strandOffsets[0].policy,
+        i_band_transverse_path: lat
+          ? 'SCHEMATIC render-only linear taper from the A-band surface offset to the Z-disc axis'
+          : 'isolated axial presentation; no transverse filament relationship shown',
+      },
       titin_regions: scene.titin.map((region) => ({
         id: region.id,
         band: region.band,
@@ -837,7 +923,10 @@ export class SarcomereScene {
             X_start: segment.X_start,
             X_end: segment.X_end,
           })),
-          coordinate_basis: 'exact canonical Level-0 segment endpoints',
+          coordinate_basis: 'exact canonical Level-0 axial segment endpoints',
+          transverse_display_basis: lat
+            ? 'representative titin surface offset in A-band; schematic linear I-band taper'
+            : 'isolated axial presentation',
           render_only: true,
         } : null,
         region_radius_scale: {
@@ -881,11 +970,14 @@ export class SarcomereScene {
       render_only: [
         'titin tube radius (render width, not a molecular diameter)',
         lat
-          ? 'Z-disc / M-line transverse extent (drawn to span the lattice patch)'
+          ? latticeScope === 'local'
+            ? 'Z-disc / M-line transverse extent (drawn to span the immediate filament neighbourhood)'
+            : 'Z-disc / M-line transverse extent (drawn to span the lattice patch)'
           : 'Z-disc / M-line transverse extent (drawn to a nominal width)',
         'radial titin path through the I-band (no thick filament to follow there)',
         'smooth CatmullRom interpolation between domain positions',
-        'SC-2 continuity trace (exact Level-0 centreline; screen-readable overlay)',
+        'SC-2 continuity trace (exact Level-0 axial endpoints; representative '
+          + 'schematic transverse display offset)',
         'reduced N2A/PEVK tube radius (visual distinction, not molecular diameter)',
       ],
     };

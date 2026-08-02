@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
+import { TitinVisualization } from '../src/api/TitinVisualization.js';
 import {
   createShowcaseOverlay, EXTENSION_MECHANISM, isLongitudinalProjection,
 } from '../src/presentation/ShowcaseOverlay.js';
@@ -40,6 +41,102 @@ function buildScene(sl = 2200) {
   });
   return scene;
 }
+
+test('SC2: immediate context is one myosin filament with its six nearest actin filaments', () => {
+  const scene = new SarcomereScene();
+  const root = scene.build(
+    // A larger descriptor proves that local selection is geometric, not an
+    // accidental dependency on the one-ring array order.
+    model.contextSceneAt(2200, { rings: 2 }),
+    model.domainInstancesAt(2200),
+    {
+      latticeScope: 'local', mirror: true, titinStrands: false,
+      titinPath: model.backboneAt(2200), presentationMode: 'guided',
+    },
+  );
+  assert.equal(scene.manifest.lattice.scope, 'local');
+  assert.equal(scene.manifest.lattice.thick_drawn, 1);
+  assert.equal(scene.manifest.lattice.thin_drawn, 6);
+  assert.equal(scene.manifest.lattice.omitted_neighbour_thick, 18);
+  assert.equal(root.getObjectByName('thick_filament_lattice'), undefined,
+    'neighbouring thick-filament rings belong only to the extended lattice');
+  assert.equal(root.getObjectByName('thin_filament_lattice').count, 5,
+    'one nearest thin filament is the individual mesh and five share the instance batch');
+  assert.equal(scene.manifest.titin_strands_drawn, 1,
+    'local context must keep titin as the single legible subject');
+  const representative = scene.manifest.representative_titin;
+  const thickRadius = model.spec.sarcomere.components
+    .find((component) => component.id === 'thick_filament').dimensions_nm.diameter / 2;
+  assert.equal(representative.a_band_surface_bound, true);
+  assert.ok(Math.abs(representative.a_band_transverse_offset_nm.radius - thickRadius) < 1e-9,
+    'the one representative must retain the same surface radius as the six-strand model');
+  assert.match(representative.azimuth_evidence, /^SCHEMATIC/);
+  const aBandTrace = root.getObjectByName('titin_continuity_trace_Aband_super');
+  const tracePositions = aBandTrace.geometry.getAttribute('position');
+  for (const index of [0, 1]) {
+    assert.ok(Math.abs(Math.hypot(tracePositions.getY(index), tracePositions.getZ(index))
+      - thickRadius) < 1e-5, 'the bright continuity trace must not return to the myosin axis');
+  }
+  const nTerminusTrace = root.getObjectByName('titin_continuity_trace_Z1Z2')
+    .geometry.getAttribute('position');
+  assert.ok(Math.hypot(nTerminusTrace.getY(0), nTerminusTrace.getZ(0)) < 1e-9,
+    'the declared render-only I-band taper must still meet the Z-disc axis');
+  assert.match(scene.manifest.render_only.join(' '), /immediate filament neighbourhood/);
+  scene.clear();
+});
+
+test('SC2: immediate context detail zips one central crown array to one central site', () => {
+  const sl = 2200;
+  const contextDetail = model.contextDetailSceneAt(sl, { rings: 1 });
+  const expectedHeads = contextDetail.crowns[0].levels
+    .reduce((count, level) => count + level.heads.length, 0);
+  const scene = new SarcomereScene();
+  const root = scene.build(model.contextSceneAt(sl, { rings: 1 }), model.domainInstancesAt(sl), {
+    latticeScope: 'local', mirror: true, titinStrands: false,
+    titinPath: model.backboneAt(sl), contextDetail,
+    viewWidthNm: 120, viewportPx: 1200,
+  });
+  assert.equal(scene.manifest.context_detail.heads_drawn, true);
+  assert.equal(scene.manifest.context_detail.head_instances, expectedHeads,
+    'local mode must draw one crown array, not the seven-record patch payload');
+  assert.equal(scene.manifest.context_detail.thick_filaments_detailed, 1);
+  assert.equal(root.getObjectByName('myosin_heads_s2').count, expectedHeads);
+  assert.equal(root.getObjectByName('myosin_heads_motor').count, expectedHeads);
+  assert.equal(scene.manifest.context_detail.twist_drawn, true);
+  assert.equal(scene.manifest.context_detail.thin_filaments_detailed, 6);
+  assert.ok(root.getObjectByName('thin_filament_twist'));
+  assert.throws(() => scene._crownHeads(contextDetail.crowns, [{ y: 0, z: 0 }], 'bad'),
+    /crown\/site count mismatch/,
+    'future crown/site drift must fail descriptively before dereferencing an undefined site');
+  scene.clear();
+});
+
+test('SC2: filament-context and lattice-scope options are validated and persistent', () => {
+  const fake = {
+    _displayOptions: {}, scale: 'context', viewer: { buildOpts: null },
+    _optsForScale: TitinVisualization.prototype._optsForScale,
+  };
+  const options = TitinVisualization.prototype.setDisplayOptions.call(fake, {
+    showFilamentContext: false, latticeScope: 'local',
+  });
+  assert.equal(options.showFilamentContext, false);
+  assert.equal(options.latticeScope, 'local');
+  assert.throws(() => TitinVisualization.prototype.setDisplayOptions.call(fake, {
+    latticeScope: 'neighbours',
+  }), /latticeScope must be 'local' or 'patch'/);
+
+  const visibility = TitinVisualization.prototype._applyScaleVisibility.call({
+    scale: 'context',
+    _displayOptions: { showFilamentContext: false },
+    _presentationState: { audience_mode: 'evidence' },
+    _userVisibility: null,
+    viewer: { sarcomere: { setComponentVisibility: (value) => value } },
+  });
+  for (const component of [
+    'thick_filament', 'thin_filament', 'thin_filament_twist', 'myosin_heads',
+  ]) assert.equal(visibility[component], false, `${component} must follow the context toggle`);
+  assert.equal(visibility.titin, true, 'the promoted context toggle must never hide titin');
+});
 
 test('SC2: every presentation descriptor is a derivative of canonical geometry', () => {
   for (const sl of states) {
@@ -109,7 +206,8 @@ test('SC2: the x-ray trace is exact, continuous and independent of tube radius',
     const positions = trace.geometry.getAttribute('position');
     assert.ok(Math.abs(positions.getX(0) - segment.X_start) < 1e-5);
     assert.ok(Math.abs(positions.getX(1) - segment.X_end) < 1e-5);
-    assert.equal(trace.userData.coordinate_basis, 'exact canonical Level-0 segment endpoints');
+    assert.equal(trace.userData.coordinate_basis,
+      'exact canonical Level-0 axial segment endpoints; schematic representative-strand transverse offset');
   }
   for (const regionId of ['N2A', 'PEVK']) {
     const tube = scene.root.getObjectByName(`titin_region_${regionId}_strand_0`);
@@ -154,6 +252,16 @@ test('SC2: the opening and mechanics story are present in the accessible shell',
   assert.equal(model.spec.presentation.initial_state.camera_preset, 'view.titin_story');
   assert.equal(model.spec.presentation.initial_state.selected_component_or_region, 'titin');
   assert.match(page, /id="scienceOverlay"/);
+  assert.ok(page.indexOf('id="filamentContextToggle"') < page.indexOf('id="guidedCard"'),
+    'the immediate actin/myosin control must be in the stage header, not the Evidence drawer');
+  assert.match(page, /id="filamentContextToggle"[\s\S]*?>Actin \+ myosin<\/button>/);
+  assert.match(page, /const action = on \? 'Hide' : 'Show';[\s\S]*?aria-label/,
+    'the promoted toggle must announce the action its next click will perform');
+  assert.match(page, /latticeScope:\s*useExtendedLattice \? 'patch' : 'local'/);
+  assert.match(page, /activeShowcaseOverlay\.termini\.map\(renderedTitinAnchor\)/,
+    'terminus labels must project onto the rendered representative strand');
+  assert.match(page, /\['extendedLattice', 'extended lattice'\]/,
+    'additional lattice rings must remain an advanced Evidence control');
   assert.match(page, /id="extensionStory"[\s\S]*?id="extensionRows"/);
   assert.match(page, /visualization\.showcaseOverlay\(\)/);
   assert.match(page, /projectPresentationAnchors/);

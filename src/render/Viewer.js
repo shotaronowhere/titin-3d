@@ -204,8 +204,15 @@ export class Viewer {
     // revert to its on-axis axial idealization while the scene still claimed to
     // carry a lattice. The axial scene states that idealization honestly.
     const showLattice = merged.showLattice ?? true;
+    const latticeScope = merged.latticeScope ?? 'patch';
+    // Local context is intentionally one central thick filament plus its six
+    // nearest thin neighbours. Always request the one-ring descriptor for that
+    // view; the Evidence-only patch scope owns the larger ring count.
+    const latticeRings = latticeScope === 'local'
+      ? 1
+      : Math.max(1, merged.rings ?? 1);
     const scene = showLattice
-      ? this.model.contextSceneAt(sl, { rings: Math.max(1, merged.rings ?? 1) })
+      ? this.model.contextSceneAt(sl, { rings: latticeRings })
       : this.model.sceneAt(sl);
     // Verification runs on EVERY rebuild, not once at startup: a state the user
     // can reach interactively must be as checked as the ones in the test suite.
@@ -221,8 +228,9 @@ export class Viewer {
     // that here rather than guessing in the renderer is the point: a hardcoded view
     // width would let the gate pass or fail regardless of what the user is looking
     // at, which would make the gate decorative.
-    const contextDetail = (merged.showContextDetail && showLattice)
-      ? this.model.contextDetailSceneAt(sl, { rings: Math.max(1, merged.rings ?? 1) })
+    const contextDetail = (merged.showContextDetail && showLattice
+        && merged.showFilamentContext !== false)
+      ? this.model.contextDetailSceneAt(sl, { rings: latticeRings })
       : null;
 
     this.sarcomere.build(scene, this.model.domainInstancesAt(sl), {

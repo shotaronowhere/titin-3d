@@ -122,7 +122,8 @@ export class TitinVisualization {
    * Render options per scale.
    *
    * Only options the renderer actually reads appear here — `showLattice`,
-   * `showDomains`, `showContextDetail`, `rings`. Hiding the filaments for the
+   * `showDomains`, `showContextDetail`, `showFilamentContext`, `latticeScope`,
+   * `rings`. Hiding the filaments for the
    * detail view is NOT done with a build flag: it is done after the build with
    * {@link SarcomereScene#setComponentVisibility}, so the isolated titin keeps the
    * exact anchor positions it has in situ. Re-deriving titin from a scene with no
@@ -164,7 +165,8 @@ export class TitinVisualization {
   setDisplayOptions(options) {
     const allowed = new Set([
       'showLattice', 'rings', 'showDomains', 'showContextDetail', 'mirror',
-      'titinStrands', 'neighbourTitin', 'domainStrands', 'presentationMode',
+      'showFilamentContext', 'latticeScope', 'titinStrands', 'neighbourTitin',
+      'domainStrands', 'presentationMode',
     ]);
     const unknown = Object.keys(options).filter((key) => !allowed.has(key));
     if (unknown.length) {
@@ -174,7 +176,7 @@ export class TitinVisualization {
       );
     }
     for (const key of ['showLattice', 'showDomains', 'showContextDetail', 'mirror',
-      'titinStrands', 'neighbourTitin']) {
+      'showFilamentContext', 'titinStrands', 'neighbourTitin']) {
       if (Object.hasOwn(options, key) && typeof options[key] !== 'boolean') {
         throw new Error(`setDisplayOptions: ${key} must be boolean.`);
       }
@@ -186,6 +188,10 @@ export class TitinVisualization {
     if (Object.hasOwn(options, 'presentationMode')
         && !Object.hasOwn(AUDIENCE_MODES, options.presentationMode)) {
       throw new Error("setDisplayOptions: presentationMode must be 'guided' or 'evidence'.");
+    }
+    if (Object.hasOwn(options, 'latticeScope')
+        && !['local', 'patch'].includes(options.latticeScope)) {
+      throw new Error("setDisplayOptions: latticeScope must be 'local' or 'patch'.");
     }
     this._displayOptions = { ...this._displayOptions, ...options };
     this.viewer.buildOpts = this._optsForScale(this.scale);
@@ -211,6 +217,11 @@ export class TitinVisualization {
       : new Set();
     if (this._presentationState?.audience_mode === AUDIENCE_MODES.guided) {
       hidden.add('annotations');
+    }
+    if (this._displayOptions?.showFilamentContext === false) {
+      for (const component of [
+        'thick_filament', 'thin_filament', 'thin_filament_twist', 'myosin_heads',
+      ]) hidden.add(component);
     }
     /** @type {Record<string, boolean>} */
     const vis = {};
