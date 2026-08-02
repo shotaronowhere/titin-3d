@@ -1,5 +1,5 @@
 /**
- * SpecLoader — loads and validates the five scientific specification files.
+ * SpecLoader — loads and validates the required scientific and presentation records.
  *
  * The scientific geometric specification (data/*.json) is the SINGLE SOURCE OF TRUTH.
  * This loader consumes it; it contains NO biological constants of its own.
@@ -10,12 +10,16 @@
  * same code runs under Node (fs) and the browser (fetch).
  */
 
+import { checkPresentationSpec } from '../presentation/StoryController.js';
+
 export const SPEC_FILES = Object.freeze([
   'sarcomere.json',
   'titin.json',
   'structural_states.json',
   'geometry_sources.json',
   'references.json',
+  'showcase_claims.json',
+  'presentation.json',
 ]);
 
 // Phase-3 geometry strategy. Distinct from the five canonical source-of-truth
@@ -61,12 +65,14 @@ export class Spec {
     this.states = files['structural_states.json'];
     this.geometrySources = files['geometry_sources.json'];
     this.references = files['references.json'];
+    this.showcaseClaims = files['showcase_claims.json'];
+    this.presentation = files['presentation.json'];
     this.geometryStrategy = files[STRATEGY_FILE] || null;
     this.contextMeasurements = files[CONTEXT_FILE] || null;
     this._raw = files;
   }
 
-  /** Load the five spec files (+ optional derived layers), then validate. */
+  /** Load every required record (+ optional derived layers), then validate. */
   static async load(fetchJson, { validate = true, strategy = true, context = true } = {}) {
     const files = {};
     for (const name of SPEC_FILES) {
@@ -97,6 +103,7 @@ export class Spec {
     // 1. presence
     for (const [k, v] of Object.entries({
       sarcomere: S, titin: T, states: ST, geometrySources: this.geometrySources, references: R,
+      showcaseClaims: this.showcaseClaims, presentation: this.presentation,
     })) if (!v || typeof v !== 'object') p.push(`${k}.json missing or not an object`);
     if (p.length) return { ok: false, problems: p };
 
@@ -117,6 +124,17 @@ export class Spec {
     };
     [S, T, ST, this.geometrySources].forEach(walk);
     for (const c of cited) if (!refKeys.has(c)) p.push(`citation not in references.json: ${c}`);
+
+    // 2b. SC-1 presentation contract. It is a required presentation layer, not a
+    // source of geometry, and may only reference IDs admitted by the scientific
+    // records. Browser runtime therefore rejects the same cross-file drift as CI.
+    p.push(...checkPresentationSpec(this.presentation, {
+      claims: this.showcaseClaims,
+      references: R,
+      sarcomere: S,
+      titin: T,
+      states: ST,
+    }));
 
     // 3. titin domain reconciliation against declared UniProt totals
     const ig = T.regions.reduce((a, r) => a + (r.domain_composition?.Ig_like || 0), 0);

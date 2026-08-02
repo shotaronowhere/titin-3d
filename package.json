@@ -9,15 +9,16 @@
     "validate": "python3 scripts/validate_geometry.py",
     "validate:spec": "python3 scripts/validate_spec.py",
     "validate:showcase": "python3 scripts/validate_showcase_claims.py",
+    "validate:presentation": "python3 scripts/validate_presentation.py",
     "validate:python": ".venv/bin/python scripts/smoke_structure_pipeline.py",
-    "test:negative": "node scripts/neg_control_phase5.mjs && node scripts/neg_control_phase6.mjs && python3 scripts/neg_control_phase6_spec.py && python3 scripts/neg_control_phase6_review.py && python3 scripts/neg_control_showcase_claims.py",
+    "test:negative": "node scripts/neg_control_phase5.mjs && node scripts/neg_control_phase6.mjs && python3 scripts/neg_control_phase6_spec.py && python3 scripts/neg_control_phase6_review.py && python3 scripts/neg_control_showcase_claims.py && python3 scripts/neg_control_presentation.py",
     "fetch:structures": ".venv/bin/python scripts/fetch_structures.py",
     "check:structures": ".venv/bin/python scripts/fetch_structures.py --check",
     "typecheck": "tsc -p tsconfig.json",
     "build": "node scripts/build_standalone.mjs",
     "build:standalone": "npm run build",
     "check:build": "node scripts/build_standalone.mjs --check",
-    "verify": "npm run check:build && npm run typecheck && npm test && npm run test:negative && npm run validate && npm run validate:spec && npm run validate:showcase && npm run validate:python"
+    "verify": "npm run check:build && npm run typecheck && npm test && npm run test:negative && npm run validate && npm run validate:spec && npm run validate:showcase && npm run validate:presentation && npm run validate:python"
   },
   "license": "CC-BY-4.0",
   "dependencies": {

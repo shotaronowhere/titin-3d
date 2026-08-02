@@ -31,6 +31,22 @@ The same committed root file can be published directly with GitHub Pages using
 **Deploy from a branch → `main` → `/(root)`**. No Pages-specific build workflow is
 required.
 
+## Guided and Evidence modes
+
+The application opens in **Guided** mode: the 3D stage remains full width, the
+reference scope and current geometry stay visible above the fold, and a concise
+three-chapter card introduces titin without showing the raw evidence inventory.
+Choose **Evidence** (or **Evidence & controls**) to open every existing control,
+measurement, annotation, caveat, confidence group, and advanced close-up.
+
+The four named length buttons are explicitly geometry presets. Sarcomere length
+does not set calcium activation. The 1,900 nm and 3,000 nm reference states are
+visibly marked outside the declared 2,000–2,400 nm working range; the 3,000 nm
+state is illustrative. The URL hash records the supported presentation state, so
+copying the browser address preserves audience mode, chapter, length, scale,
+named camera, selected region/component, and evidence display. Invalid shared
+state is reported visibly and replaced with a documented safe default.
+
 ## Development requirements
 
 - Node.js 20.19 or newer
@@ -99,6 +115,8 @@ npm run build
 - `src/model/` — specification loading, provenance, and model state
 - `src/geometry/` — representation, lattice, and mechanical geometry
 - `src/render/` — Three.js scene and viewer
+- `src/presentation/StoryController.js` — validated narrative state and URL codec
+- `data/presentation.json` — sourced SC-1 presentation contract (no geometry)
 - `data/geometry_strategy.json` — current defect/completion register
 
 `placeDomainsAlongPath` accepts only canonical, already-computed paths. It rejects

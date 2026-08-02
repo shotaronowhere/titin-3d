@@ -13,7 +13,8 @@ def check(cond, msg):
     if not cond: fails.append(msg)
 
 print("== JSON validity ==")
-files=["sarcomere.json","titin.json","structural_states.json","geometry_sources.json","references.json"]
+files=["sarcomere.json","titin.json","structural_states.json","geometry_sources.json","references.json",
+       "showcase_claims.json","presentation.json"]
 L={}
 for f in files:
     try: L[f]=load(f); check(True, f)
@@ -32,6 +33,8 @@ def fr(o):
         for it in o: fr(it)
 for f in files[:4]: fr(L[f])
 check(cited<=refs, f"all cited DOIs present (missing: {sorted(cited-refs)})")
+check(L["presentation.json"].get("schema")=="titin-presentation/1",
+      "presentation.json has the SC-1 schema (full checks: validate_presentation.py)")
 
 print("== Titin domain reconciliation (UniProt Q8WZ42) ==")
 tr=L["titin.json"]["regions"]

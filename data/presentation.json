@@ -1,0 +1,250 @@
+{
+  "schema": "titin-presentation/1",
+  "version": 1,
+  "meta": {
+    "phase": "SC-1 — Presentation data and dual audience shell",
+    "status": "COMPLETE",
+    "purpose": "Presentation-only narrative and interface state. This record contains no authoritative biological coordinates and cannot replace the scientific geometry specifications.",
+    "governing_plan": "SHOWCASE_COMPLETION_PLAN.md",
+    "claim_authority": "data/showcase_claims.json"
+  },
+  "scope": {
+    "target_claim_id": "scope_badge",
+    "evidence_class": "INFERRED",
+    "source_ids": [
+      "10.1073/pnas.1516732113"
+    ],
+    "species": "Homo sapiens",
+    "accession": "UniProt Q8WZ42",
+    "isoform": "canonical skeletal N2A-containing titin",
+    "muscle_type": "skeletal reference model",
+    "working_range_nm": [
+      2000,
+      2400
+    ],
+    "activation_independent": true,
+    "activation_statement": "Sarcomere length controls passive geometry here; it does not set calcium activation or simulate an active-contraction trajectory. The 2,000–2,400 nm interval is this model's declared comparison range, not a universal range for every muscle."
+  },
+  "audience_modes": [
+    {
+      "id": "guided",
+      "label": "Guided",
+      "description": "A concise route through the model with one biological idea at a time."
+    },
+    {
+      "id": "evidence",
+      "label": "Evidence",
+      "description": "The complete existing controls, measurements, provenance inventory, caveats, and advanced views."
+    }
+  ],
+  "scope_badges": [
+    {
+      "id": "reference_scope",
+      "target_claim_id": "scope_badge",
+      "label": "Human skeletal N2A titin · Q8WZ42",
+      "state_template": "{state} · {length_nm} nm",
+      "evidence_class": "MEASURED",
+      "source_ids": [
+        "UniProt:Q8WZ42"
+      ],
+      "not_claimed": [
+        "cardiac titin",
+        "an isoform-neutral titin molecule",
+        "a universal physiological resting length"
+      ]
+    }
+  ],
+  "length_presets": [
+    {
+      "id": "short_geometry",
+      "target_claim_id": "regional_extension_story",
+      "evidence_class": "MODELED",
+      "source_ids": [
+        "10.1083/jcb.140.4.853"
+      ],
+      "structural_state_id": "contracted",
+      "sarcomere_length_nm": 1900,
+      "label": "Short geometry",
+      "status_label": "REFERENCE · OUTSIDE WORKING RANGE",
+      "outside_working_range": true,
+      "activation_independent": true,
+      "explanation": "A short structural keyframe. The source name is contracted, but selecting this length does not set biochemical activation."
+    },
+    {
+      "id": "reference_geometry",
+      "target_claim_id": "regional_extension_story",
+      "evidence_class": "MODELED",
+      "source_ids": [
+        "10.1083/jcb.140.4.853"
+      ],
+      "structural_state_id": "resting",
+      "sarcomere_length_nm": 2200,
+      "label": "Reference geometry",
+      "status_label": "WITHIN WORKING RANGE",
+      "outside_working_range": false,
+      "activation_independent": true,
+      "explanation": "The default passive reference geometry; it is not asserted as a universal resting length."
+    },
+    {
+      "id": "upper_working_geometry",
+      "target_claim_id": "regional_extension_story",
+      "evidence_class": "MODELED",
+      "source_ids": [
+        "10.1083/jcb.140.4.853"
+      ],
+      "structural_state_id": "stretched",
+      "sarcomere_length_nm": 2400,
+      "label": "Upper working-range geometry",
+      "status_label": "WORKING-RANGE LIMIT",
+      "outside_working_range": false,
+      "activation_independent": true,
+      "explanation": "The upper boundary of the declared physiological working range for this reference model."
+    },
+    {
+      "id": "illustrative_extension",
+      "target_claim_id": "regional_extension_story",
+      "evidence_class": "MODELED",
+      "source_ids": [
+        "10.1083/jcb.140.4.853"
+      ],
+      "structural_state_id": "extended_reference",
+      "sarcomere_length_nm": 3000,
+      "label": "Illustrative extension",
+      "status_label": "ILLUSTRATIVE · OUTSIDE WORKING RANGE",
+      "outside_working_range": true,
+      "activation_independent": true,
+      "explanation": "An illustrative over-stretch reference outside the normal working range, retained to make regional extension behavior legible."
+    }
+  ],
+  "guided_chapters": [
+    {
+      "id": "orientation",
+      "order": 1,
+      "title": "Meet titin in the sarcomere",
+      "target_claim_id": "titin_continuity_trace",
+      "target": {
+        "kind": "region",
+        "id": "Z1Z2"
+      },
+      "evidence_class": "STRONGLY INFERRED",
+      "source_ids": [
+        "10.1083/jcb.106.5.1563",
+        "UniProt:Q8WZ42"
+      ],
+      "lay_summary": "Titin is one continuous giant protein running from the Z-disc toward the sarcomere center. Here it is shown in red beside actin and myosin so its full half-sarcomere route stays visible.",
+      "expert_expansion": "The continuous axial topology and domain order are constrained, while the smooth three-dimensional backbone path remains a schematic presentation of unresolved transverse placement.",
+      "not_claimed": [
+        "a resolved atom-by-atom path",
+        "known transverse azimuth along the entire chain"
+      ],
+      "recommended_state": {
+        "sarcomere_length_nm": 2200,
+        "scale": "context",
+        "camera_preset": "view.longitudinal",
+        "selected_component_or_region": "Z1Z2",
+        "visibility": {
+          "show_lattice": true,
+          "show_domains": false,
+          "show_context_detail": false,
+          "mirror": true,
+          "rings": 1
+        }
+      }
+    },
+    {
+      "id": "elastic_regions",
+      "order": 2,
+      "title": "Different regions extend differently",
+      "target_claim_id": "regional_extension_story",
+      "target": {
+        "kind": "region",
+        "id": "PEVK"
+      },
+      "evidence_class": "MODELED",
+      "source_ids": [
+        "10.1083/jcb.140.4.853"
+      ],
+      "lay_summary": "Stretch does not scale every part of titin equally. Folded Ig chains mainly straighten, while disordered spring regions such as PEVK take a larger share of extension in the force-balanced model.",
+      "expert_expansion": "Regional nanometer partitions are modeled by a common-force series-chain solver using sourced force-extension laws; the interpolation is explanatory geometry, not a measured time trajectory.",
+      "not_claimed": [
+        "uniform scaling of titin regions",
+        "widespread physiological Ig-domain unfolding",
+        "a measured molecular trajectory"
+      ],
+      "recommended_state": {
+        "sarcomere_length_nm": 2400,
+        "scale": "detail",
+        "camera_preset": "view.longitudinal",
+        "selected_component_or_region": "PEVK",
+        "visibility": {
+          "show_lattice": false,
+          "show_domains": true,
+          "show_context_detail": false,
+          "mirror": false,
+          "rings": 1
+        }
+      }
+    },
+    {
+      "id": "anchored_scaffold",
+      "order": 3,
+      "title": "Elastic spring, anchored scaffold",
+      "target_claim_id": "titin_region_architecture",
+      "target": {
+        "kind": "region",
+        "id": "Aband_super"
+      },
+      "evidence_class": "MEASURED",
+      "source_ids": [
+        "10.1016/j.jmb.2020.06.025",
+        "UniProt:Q8WZ42"
+      ],
+      "lay_summary": "Titin changes role along its length. Its I-band regions form the extensible spring, while the long A-band segment remains integrated with the thick filament and leads toward the M-line.",
+      "expert_expansion": "Sequence architecture and axial organization support a heterogeneous molecule with elastic I-band elements in series with an A-band scaffold; exact unresolved linker conformations are not supplied.",
+      "not_claimed": [
+        "one elastic constant for the whole molecule",
+        "atom-level region surfaces",
+        "an exact universal A-band azimuth"
+      ],
+      "recommended_state": {
+        "sarcomere_length_nm": 2200,
+        "scale": "detail",
+        "camera_preset": "view.longitudinal",
+        "selected_component_or_region": "Aband_super",
+        "visibility": {
+          "show_lattice": false,
+          "show_domains": true,
+          "show_context_detail": false,
+          "mirror": false,
+          "rings": 1
+        }
+      }
+    }
+  ],
+  "initial_state": {
+    "audience_mode": "guided",
+    "story_step": "orientation",
+    "sarcomere_length_nm": 2200,
+    "scale": "context",
+    "camera_preset": "view.longitudinal",
+    "selected_component_or_region": "Z1Z2",
+    "evidence_display": false
+  },
+  "presenter_shortcuts": [
+    {
+      "id": "restart_guided",
+      "label": "Restart guided route",
+      "action": "story.orientation"
+    },
+    {
+      "id": "show_extension",
+      "label": "Show regional extension",
+      "action": "story.elastic_regions"
+    },
+    {
+      "id": "open_evidence",
+      "label": "Open evidence",
+      "action": "mode.evidence"
+    }
+  ]
+}

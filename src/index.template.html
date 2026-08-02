@@ -93,15 +93,23 @@ window.__titinBoot = { ready: false, problems: [] };
 <style>
   :root {
     --bg: #0e1116; --panel: #161b22; --edge: #2b3440;
-    --text: #d8dee6; --dim: #8b96a5; --accent: #7aa2d8;
+    --text: #e6ebf1; --dim: #98a4b3; --accent: #7aa2d8; --titin: #d94f4f;
+    --chrome: rgb(14 17 22 / 88%); --focus: #f2d06b;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
     font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif; }
-  #app { display: grid; grid-template-columns: 1fr 320px; height: 100%; }
+  body { overflow: hidden; }
+  #app { display: grid; grid-template-columns: minmax(0, 1fr); height: 100%; }
+  #app[data-mode="evidence"] { grid-template-columns: minmax(0, 1fr) minmax(320px, 370px); }
   #canvas { position: relative; min-width: 0; }
-  #panel { background: var(--panel); border-left: 1px solid var(--edge);
-    overflow-y: auto; padding: 16px; }
+  #canvas > canvas { display: block; }
+  #panel { display: none; background: var(--panel); border-left: 1px solid var(--edge);
+    overflow-y: auto; padding: 0 18px 24px; min-width: 0; }
+  #app[data-mode="evidence"] #panel { display: block; }
+  .drawer-head { position: sticky; top: 0; z-index: 4; margin: 0 -18px; padding: 14px 18px 12px;
+    background: rgb(22 27 34 / 96%); border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
+  .drawer-head-row { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
   h1 { font-size: 15px; margin: 0 0 4px; font-weight: 600; }
   h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
     color: var(--dim); margin: 20px 0 8px; font-weight: 600; }
@@ -113,10 +121,11 @@ window.__titinBoot = { ready: false, problems: [] };
     border-radius: 4px; padding: 5px 9px; font-size: 11px; cursor: pointer; }
   button:hover { border-color: var(--accent); }
   button:focus-visible, input:focus-visible, summary:focus-visible {
-    outline: 2px solid #f2d06b; outline-offset: 2px;
+    outline: 2px solid var(--focus); outline-offset: 2px;
   }
   button:disabled { cursor: not-allowed; opacity: .42; }
   button.on { background: var(--accent); color: #0e1116; border-color: var(--accent); }
+  #components button.selected-target { box-shadow: 0 0 0 2px var(--titin); }
   .sl { font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 600; }
   .sl small { font-size: 11px; font-weight: 400; color: var(--dim); }
   table { width: 100%; border-collapse: collapse; font-size: 11px; }
@@ -130,7 +139,7 @@ window.__titinBoot = { ready: false, problems: [] };
   .note { background: #1a2029; border-left: 2px solid #6b7a8f; padding: 7px 9px;
     font-size: 11px; color: var(--dim); margin-top: 8px; }
   .warn { border-left-color: #d0a24c; }
-  #err { display: none; position: absolute; inset: 16px; background: #2a1416;
+  #err { display: none; position: absolute; inset: 16px; z-index: 30; background: #2a1416;
     border: 1px solid #6b2a2a; border-radius: 6px; padding: 16px; overflow: auto;
     font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
   .ev { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
@@ -140,11 +149,60 @@ window.__titinBoot = { ready: false, problems: [] };
     border: 1px solid var(--edge); border-radius: 4px; padding: 4px 7px;
     font-size: 10px; }
   .region-chip.on { background: #f2d06b; border-color: #f2d06b; color: #17120a; }
-  @media (max-width: 760px) {
-    #app { grid-template-columns: 1fr; grid-template-rows: minmax(55vh, 1fr) auto; height: auto;
-      min-height: 100%; }
-    #canvas { min-height: 55vh; }
-    #panel { border-left: 0; border-top: 1px solid var(--edge); max-height: none; }
+  #stageChrome { position: absolute; inset: 0; z-index: 5; pointer-events: none; padding: 14px;
+    display: flex; flex-direction: column; align-items: flex-start; }
+  #stageHeader { width: 100%; display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; }
+  .brand-block, #scopeBadge, #guidedCard, #urlNotice { background: var(--chrome);
+    border: 1px solid rgb(116 133 154 / 38%); box-shadow: 0 10px 32px rgb(0 0 0 / 28%);
+    backdrop-filter: blur(10px); }
+  .brand-block { pointer-events: auto; display: flex; align-items: center; gap: 14px;
+    border-radius: 8px; padding: 8px 10px 8px 12px; min-width: min(420px, 55vw); }
+  .brand-title { font-size: 14px; font-weight: 650; letter-spacing: .01em; }
+  .brand-title::before { content: ""; display: inline-block; width: 18px; height: 3px;
+    margin-right: 8px; vertical-align: middle; border-radius: 2px; background: var(--titin); }
+  .brand-sub { color: var(--dim); font-size: 10px; }
+  .mode-switch { display: flex; gap: 4px; margin-left: auto; }
+  .mode-switch button { white-space: nowrap; }
+  #scopeBadge { max-width: 360px; border-radius: 8px; padding: 8px 11px; text-align: right; }
+  .scope-kicker { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .11em;
+    text-transform: uppercase; }
+  #scopeIdentity { font-size: 11px; font-weight: 650; }
+  #scopeState { color: #d9b869; font-size: 10px; }
+  #urlNotice { pointer-events: auto; margin-top: 9px; max-width: 660px; border-left: 3px solid #d0a24c;
+    border-radius: 5px; padding: 7px 10px; color: #e7cc91; font-size: 10px; }
+  #guidedCard { pointer-events: auto; margin-top: auto; margin-bottom: 30px; width: min(500px, calc(100vw - 28px));
+    border-radius: 10px; padding: 14px 15px 12px; border-top: 2px solid var(--titin); }
+  #app[data-mode="evidence"] #guidedCard { display: none; }
+  .chapter-meta { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; }
+  #chapterTitle { font-size: 19px; line-height: 1.2; margin: 4px 0 7px; }
+  #chapterSummary { margin: 0 0 10px; color: #d2d9e1; font-size: 12px; line-height: 1.55; }
+  .chapter-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  #chapterEvidenceLink { margin-left: auto; border-color: rgb(217 79 79 / 75%); }
+  .status-pill { display: inline-block; border: 1px solid #775b29; border-radius: 999px;
+    color: #e8c16d; padding: 1px 6px; font-size: 8px; font-weight: 700; letter-spacing: .05em; }
+  .preset-outside { border-color: #8b6530; color: #e7c27c; }
+  #chapterEvidence { border-left-color: var(--titin); }
+  #chapterSources { margin-top: 5px; color: var(--dim); font-size: 10px; }
+  .science-separator { height: 1px; background: var(--edge); margin: 16px 0 0; }
+  .activation-note { margin: 7px 0 0; color: #c9b989; font-size: 10px; }
+  @media (max-width: 900px) {
+    #app[data-mode="evidence"] { grid-template-columns: minmax(0, 1fr) 330px; }
+    .brand-block { min-width: 0; }
+    .brand-sub { display: none; }
+  }
+  @media (max-width: 700px) {
+    #stageChrome { padding: 9px; }
+    #stageHeader { display: grid; grid-template-columns: 1fr; gap: 7px; }
+    .brand-block { width: 100%; }
+    #scopeBadge { max-width: none; text-align: left; width: 100%; }
+    #interactionHelp { display: none; }
+    #guidedCard { margin-bottom: 8px; }
+    #app[data-mode="evidence"] { display: block; }
+    #app[data-mode="evidence"] #canvas { height: 100%; }
+    #panel { position: fixed; inset: auto 0 0; z-index: 20; max-height: 72vh; border-left: 0;
+      border-top: 1px solid var(--edge); border-radius: 12px 12px 0 0; box-shadow: 0 -16px 50px rgb(0 0 0 / 50%); }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; }
@@ -152,13 +210,63 @@ window.__titinBoot = { ready: false, problems: [] };
 </style>
 </head>
 <body>
-<div id="app">
+<div id="app" data-mode="guided">
   <div id="canvas" role="region" aria-label="Interactive 3D titin and sarcomere model">
     <div id="err" role="alert"></div>
+    <div id="stageChrome">
+      <div id="stageHeader">
+        <div class="brand-block">
+          <div>
+            <div class="brand-title">Titin across the sarcomere</div>
+            <div class="brand-sub">One model · two levels of explanation</div>
+          </div>
+          <div class="mode-switch" role="group" aria-label="Audience mode">
+            <button id="audienceGuided" class="on" aria-pressed="true">Guided</button>
+            <button id="audienceEvidence" aria-pressed="false">Evidence</button>
+          </div>
+        </div>
+        <div id="scopeBadge" aria-label="Reference scope and active structural state">
+          <div class="scope-kicker">Reference scope</div>
+          <div id="scopeIdentity">Human skeletal N2A titin · Q8WZ42</div>
+          <div id="scopeState">Loading structural state…</div>
+        </div>
+      </div>
+      <div id="urlNotice" role="status" hidden></div>
+      <section id="guidedCard" aria-labelledby="chapterTitle">
+        <div class="chapter-meta"><span id="chapterProgress">Chapter —</span> · <span id="chapterEvidenceClass">—</span></div>
+        <h1 id="chapterTitle">Loading guided route…</h1>
+        <p id="chapterSummary"></p>
+        <div class="chapter-actions">
+          <button id="chapterPrevious">Previous</button>
+          <button id="chapterNext">Next</button>
+          <button id="chapterRestart">Restart</button>
+          <button id="chapterEvidenceLink">Evidence &amp; controls</button>
+        </div>
+      </section>
+    </div>
     <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan</div>
   </div>
-  <aside id="panel" aria-label="Visualization controls and scientific readouts">
-    <h1 id="viewTitle">Sarcomere context view</h1>
+  <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
+    <div class="drawer-head">
+      <div class="drawer-head-row">
+        <div>
+          <h1>Evidence &amp; controls</h1>
+          <div class="sub" style="margin:0">Complete scientific readouts and advanced views</div>
+        </div>
+        <button id="closeEvidence">Close</button>
+      </div>
+    </div>
+
+    <h2>Current guided claim</h2>
+    <div class="note" id="chapterEvidence">
+      <b id="chapterEvidenceTitle">—</b>
+      <div id="chapterExpert"></div>
+      <div id="chapterSources"></div>
+      <ul id="chapterNotClaimed"></ul>
+    </div>
+    <div class="science-separator"></div>
+
+    <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
     <div class="sub" id="viewDescription">Titin positioned in situ relative to the Z-disc, thin and
       thick filaments, M-line, and the transverse filament lattice.</div>
 
@@ -169,6 +277,7 @@ window.__titinBoot = { ready: false, problems: [] };
     <div class="sl" id="slReadout">— <small>nm</small></div>
     <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres">
     <div class="row" id="presets"></div>
+    <div class="activation-note" id="activationStatement"></div>
     <div class="note warn" id="stateCaveat" hidden></div>
 
     <h2>View</h2>
@@ -188,6 +297,7 @@ window.__titinBoot = { ready: false, problems: [] };
     <div class="sub" style="margin:0 0 6px">Hiding a component changes only what is
       drawn — never where anything sits. Titin's anchoring is unchanged.</div>
     <div class="row" id="components"></div>
+    <div class="note" id="componentTargetReadout" hidden aria-live="polite"></div>
 
     <h2>Titin regions</h2>
     <div class="sub" style="margin:0 0 6px">Select a region to highlight and focus its
@@ -224,6 +334,7 @@ import { browserReader } from './src/model/readBrowser.js';
 import { TitinVisualization, SCALES } from './src/api/TitinVisualization.js';
 import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
 import { COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
+import { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -243,7 +354,9 @@ function fail(e) {
 let visualization; let model;
 const state = { showDomains: false, showLattice: true, showContextDetail: false,
                 rings: 1, mirror: true, view: 'longitudinal', closeup: null,
-                scale: SCALES.context, region: null, showEvidence: true };
+                scale: SCALES.context, region: null, showEvidence: false,
+                audienceMode: AUDIENCE_MODES.guided, storyStep: null,
+                selectedTarget: null, cameraPreset: 'view.longitudinal' };
 
 try {
   visualization = await TitinVisualization.create($('canvas'), {
@@ -253,8 +366,219 @@ try {
 } catch (e) { fail(e); }
 
 const { min, max } = model.slRange();
+const presentation = model.spec.presentation;
+const regionIds = new Set(model.titinRegions().map((region) => region.id));
+const story = new StoryController(presentation, {
+  views: Object.keys(VIEWS),
+  closeups: Object.keys(CLOSEUPS),
+  scales: Object.values(SCALES),
+  targets: [...regionIds, ...Object.keys(COMPONENTS)],
+  hiddenTargetsByScale: { [SCALES.detail]: TitinVisualization.DETAIL_HIDDEN },
+  minLength: min,
+  maxLength: max,
+});
+const restored = story.parse(window.location.hash);
+state.audienceMode = restored.state.audience_mode;
+state.storyStep = restored.state.story_step;
+state.scale = restored.state.scale;
+state.selectedTarget = restored.state.selected_component_or_region;
+state.region = regionIds.has(state.selectedTarget) ? state.selectedTarget : null;
+state.showEvidence = restored.state.evidence_display;
+state.cameraPreset = restored.state.camera_preset;
+{
+  const [kind, name] = state.cameraPreset.split('.');
+  state.view = kind === 'view' ? name : 'longitudinal';
+  state.closeup = kind === 'closeup' ? name : null;
+}
+applyChapterVisibility(state.storyStep);
 const slider = $('sl');
-slider.min = min; slider.max = max; slider.value = 2200;
+slider.min = min; slider.max = max; slider.value = restored.state.sarcomere_length_nm;
+$('activationStatement').textContent = presentation.scope.activation_statement;
+$('scopeIdentity').textContent = presentation.scope_badges[0].label;
+
+function publicPresentationState() {
+  return {
+    audience_mode: state.audienceMode,
+    story_step: state.storyStep,
+    sarcomere_length_nm: Number(slider.value),
+    scale: state.scale,
+    camera_preset: state.cameraPreset,
+    selected_component_or_region: state.selectedTarget,
+    evidence_display: state.showEvidence,
+  };
+}
+
+function syncPublicPresentation() {
+  visualization.setPresentationState({
+    audience_mode: state.audienceMode,
+    story_step: state.storyStep,
+    selected_component_or_region: state.selectedTarget,
+    regulatory_state: null,
+    camera_preset: state.cameraPreset,
+    evidence_display: state.showEvidence,
+  });
+}
+
+function syncUrl() {
+  const hash = story.serialize(publicPresentationState());
+  if (window.location.hash !== hash) {
+    // Hash-only replacement stays same-document under HTTP, GitHub Pages and
+    // file://, whose opaque origins can reject an unnecessarily rebuilt path.
+    window.history.replaceState(null, '', hash);
+  }
+}
+
+function announceUrlIssues(issues) {
+  const notice = $('urlNotice');
+  notice.hidden = !issues.length;
+  notice.textContent = issues.length
+    ? `Shared-state notice: ${issues.join(' ')}`
+    : '';
+}
+
+function syncAudienceMode() {
+  const evidence = state.audienceMode === AUDIENCE_MODES.evidence;
+  $('app').dataset.mode = state.audienceMode;
+  $('panel').setAttribute('aria-hidden', String(!evidence));
+  $('audienceGuided').classList.toggle('on', !evidence);
+  $('audienceGuided').setAttribute('aria-pressed', String(!evidence));
+  $('audienceEvidence').classList.toggle('on', evidence);
+  $('audienceEvidence').setAttribute('aria-pressed', String(evidence));
+  requestAnimationFrame(() => visualization.resize());
+}
+
+let evidenceReturnFocus = $('audienceEvidence');
+
+function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {}) {
+  state.audienceMode = mode;
+  // Opening Evidence is the explicit request that exposes the inventory. Closing
+  // it restores the Guided attention budget and removes raw evidence from the DOM flow.
+  state.showEvidence = mode === AUDIENCE_MODES.evidence;
+  $('evidence').hidden = !state.showEvidence;
+  $('evidenceToggle').classList.toggle('on', state.showEvidence);
+  $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
+  syncAudienceMode();
+  syncPublicPresentation();
+  syncUrl();
+  if (focusDrawer) requestAnimationFrame(() => $('closeEvidence').focus());
+  if (restoreFocus) {
+    const target = evidenceReturnFocus?.isConnected ? evidenceReturnFocus : $('audienceEvidence');
+    requestAnimationFrame(() => target.focus());
+  }
+}
+
+function openEvidence(trigger) {
+  evidenceReturnFocus = trigger;
+  setAudienceMode(AUDIENCE_MODES.evidence, { focusDrawer: true });
+}
+
+function closeEvidence() {
+  setAudienceMode(AUDIENCE_MODES.guided, { restoreFocus: true });
+}
+
+$('audienceGuided').onclick = () => setAudienceMode(AUDIENCE_MODES.guided);
+$('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'));
+$('closeEvidence').onclick = closeEvidence;
+$('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'));
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && state.audienceMode === AUDIENCE_MODES.evidence) {
+    event.preventDefault();
+    closeEvidence();
+  }
+});
+announceUrlIssues(restored.issues);
+
+function activeChapter() {
+  return story.chapter(state.storyStep) || story.chapters[0];
+}
+
+function renderChapter() {
+  const chapter = activeChapter();
+  const index = story.chapterIndex(chapter.id);
+  $('chapterProgress').textContent = `Chapter ${index + 1} of ${story.chapters.length}`;
+  $('chapterEvidenceClass').textContent = chapter.evidence_class;
+  $('chapterTitle').textContent = chapter.title;
+  $('chapterSummary').textContent = chapter.lay_summary;
+  $('chapterPrevious').disabled = index <= 0;
+  $('chapterNext').disabled = index >= story.chapters.length - 1;
+  $('chapterEvidenceTitle').textContent = `${chapter.title} · ${chapter.evidence_class}`;
+  $('chapterExpert').textContent = chapter.expert_expansion;
+  const sources = chapter.source_ids.map((sourceId) => {
+    const reference = model.spec.references[sourceId];
+    return reference
+      ? `${sourceId} — ${reference.authors}, ${reference.year}`
+      : sourceId;
+  });
+  $('chapterSources').textContent = `Sources: ${sources.join('; ')}`;
+  $('chapterNotClaimed').replaceChildren(...chapter.not_claimed.map((claim) => {
+    const item = document.createElement('li');
+    item.textContent = `Not claimed: ${claim}`;
+    return item;
+  }));
+}
+
+function applyChapterVisibility(chapterId) {
+  const visibility = story.chapter(chapterId)?.recommended_state?.visibility;
+  if (!visibility) return;
+  state.showLattice = visibility.show_lattice;
+  state.showDomains = visibility.show_domains;
+  state.showContextDetail = visibility.show_context_detail;
+  state.mirror = visibility.mirror;
+  state.rings = visibility.rings;
+  syncNeighbourControl();
+}
+
+function applyCameraPreset({ animate = false } = {}) {
+  const [kind, name] = state.cameraPreset.split('.');
+  if (kind === 'view') {
+    state.view = name; state.closeup = null;
+    visualization.frame(name, { animate });
+    syncViews(); syncCloseups(null);
+  } else if (kind === 'closeup') {
+    state.closeup = name;
+    syncCloseups(visualization.closeUp(name, { animate }));
+  } else if (kind === 'region') {
+    state.region = name; state.selectedTarget = name; state.closeup = null;
+    visualization.highlightTitinRegion(name);
+    visualization.focusTitinRegion(name, { animate });
+    syncRegions(); syncCloseups(null);
+  }
+}
+
+function applyChapter(chapterId) {
+  const chapter = story.chapter(chapterId);
+  if (!chapter) return;
+  const scene = chapter.recommended_state;
+  state.audienceMode = AUDIENCE_MODES.guided;
+  state.storyStep = chapter.id;
+  state.showEvidence = false;
+  state.scale = scene.scale;
+  state.cameraPreset = scene.camera_preset;
+  state.selectedTarget = scene.selected_component_or_region;
+  state.region = chapter.target.kind === 'region' ? chapter.target.id : null;
+  state.closeup = null;
+  applyChapterVisibility(chapter.id);
+  slider.value = scene.sarcomere_length_nm;
+  if (visualization.scale !== state.scale) visualization.setScale(state.scale);
+  syncAudienceMode();
+  rebuild(true);
+  visualization.highlightTitinRegion(state.region);
+  applyCameraPreset({ animate: true });
+  render(visualization.currentState());
+  renderChapter();
+  syncScales(); syncRegions(); syncDepictionToggles();
+  syncPublicPresentation(); syncUrl();
+}
+
+$('chapterPrevious').onclick = () => {
+  const index = story.chapterIndex(activeChapter().id);
+  if (index > 0) applyChapter(story.chapters[index - 1].id);
+};
+$('chapterNext').onclick = () => {
+  const index = story.chapterIndex(activeChapter().id);
+  if (index < story.chapters.length - 1) applyChapter(story.chapters[index + 1].id);
+};
+$('chapterRestart').onclick = () => applyChapter(story.chapters[0].id);
 
 // ---- controls -------------------------------------------------------------
 for (const scale of Object.values(SCALES)) {
@@ -265,14 +589,21 @@ for (const scale of Object.values(SCALES)) {
     // Close-ups describe sarcomere-context landmarks and context-only detail.
     // Carrying one into the isolated-titin scale leaves a highlighted control
     // and a biological readout for geometry that is no longer on screen.
-    state.scale = scale; state.closeup = null;
+    state.scale = scale; state.closeup = null; state.cameraPreset = `view.${state.view}`;
+    if (scale === SCALES.detail
+        && TitinVisualization.DETAIL_HIDDEN.includes(state.selectedTarget)) {
+      state.selectedTarget = null;
+    }
     const report = visualization.setScale(scale);
-    if (state.region) visualization.focusTitinRegion(state.region, { animate: true });
-    else visualization.frame(state.view, { animate: true });
+    if (state.region) {
+      state.cameraPreset = `region.${state.region}`;
+      visualization.focusTitinRegion(state.region, { animate: true });
+    } else visualization.frame(state.view, { animate: true });
     render(report);
     syncScales();
     syncCloseups(null);
     refreshRegionReadout();
+    syncPublicPresentation(); syncUrl();
   };
   $('scales').append(b);
 }
@@ -291,11 +622,18 @@ function syncScales() {
     ? 'Titin alone, retaining the same model-derived Z-disc and M-line anchor positions.'
     : 'Titin positioned in situ relative to the Z-disc, thin and thick filaments, M-line, and transverse lattice.';
 }
+const presentationPresets = new Map(
+  presentation.length_presets.map((preset) => [preset.structural_state_id, preset]),
+);
 for (const p of model.presets()) {
+  const display = presentationPresets.get(p.name);
   const b = document.createElement('button');
-  b.textContent = `${p.name} · ${p.sarcomere_length_nm}`;
-  b.title = p.biological_condition;
+  b.textContent = `${display.label} · ${p.sarcomere_length_nm.toLocaleString()} nm`
+    + (display.outside_working_range ? ' · OUTSIDE RANGE' : '');
+  b.title = `${display.status_label}. ${display.explanation}`;
   b.dataset.sl = p.sarcomere_length_nm;
+  b.dataset.state = p.name;
+  b.classList.toggle('preset-outside', display.outside_working_range);
   b.setAttribute('aria-pressed', 'false');
   b.onclick = () => { slider.value = p.sarcomere_length_nm; rebuild(); };
   $('presets').append(b);
@@ -312,8 +650,9 @@ for (const [k, v] of Object.entries(VIEWS)) {
   b.onclick = () => {
     // A wide framing invalidates the close-up selection; leaving it highlighted
     // would claim the camera is somewhere it is not.
-    state.view = k; state.closeup = null;
+    state.view = k; state.closeup = null; state.cameraPreset = `view.${k}`;
     visualization.frame(k, { animate: true }); syncViews(); syncCloseups(null);
+    syncPublicPresentation(); syncUrl();
   };
   $('views').append(b);
 }
@@ -337,10 +676,11 @@ for (const [k, v] of Object.entries(CLOSEUPS)) {
     // Close-ups and region focus are two distinct navigation modes. Clear the
     // biological selection so the active controls always describe the camera.
     state.region = null;
+    state.selectedTarget = null;
     visualization.highlightTitinRegion(null);
     syncRegions(); refreshRegionReadout();
     state.showContextDetail = true;
-    state.closeup = k;
+    state.closeup = k; state.cameraPreset = `closeup.${k}`;
     // Order matters. Move the camera first, then rebuild: the aliasing gate reads
     // the CURRENT view width, so rebuilding before the move would evaluate it
     // against the wide shot and leave the heads withdrawn. closeUp() is then called
@@ -349,6 +689,7 @@ for (const [k, v] of Object.entries(CLOSEUPS)) {
     visualization.closeUp(k);
     rebuild();
     syncCloseups(visualization.closeUp(k));
+    syncPublicPresentation(); syncUrl();
   };
   $('closeups').append(b);
 }
@@ -407,11 +748,18 @@ for (const region of regionMetadata.values()) {
   b.classList.add('region-chip');
   b.onclick = () => {
     state.region = state.region === region.id ? null : region.id;
+    state.selectedTarget = state.region;
     state.closeup = null;
     visualization.highlightTitinRegion(state.region);
-    if (state.region) visualization.focusTitinRegion(state.region, { animate: true });
-    else visualization.frame(state.view, { animate: true });
+    if (state.region) {
+      state.cameraPreset = `region.${state.region}`;
+      visualization.focusTitinRegion(state.region, { animate: true });
+    } else {
+      state.cameraPreset = `view.${state.view}`;
+      visualization.frame(state.view, { animate: true });
+    }
     syncRegions(); syncCloseups(null); refreshRegionReadout();
+    syncPublicPresentation(); syncUrl();
   };
   $('regions').append(b);
 }
@@ -439,6 +787,7 @@ $('evidenceToggle').onclick = () => {
   $('evidence').hidden = !state.showEvidence;
   $('evidenceToggle').classList.toggle('on', state.showEvidence);
   $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
+  syncPublicPresentation(); syncUrl();
 };
 {
   const b = document.createElement('button');
@@ -448,11 +797,13 @@ $('evidenceToggle').onclick = () => {
     syncNeighbourControl(); rebuild();
   };
   $('toggles').append(b);
-  function syncNeighbourControl() {
-    b.textContent = `lattice neighbours · ${state.rings} ring${state.rings === 1 ? '' : 's'}`;
-    b.setAttribute('aria-label', `Show ${state.rings} rings of lattice neighbours`);
-  }
   syncNeighbourControl();
+}
+function syncNeighbourControl() {
+  const button = $('toggles').querySelector('[data-rings="true"]');
+  if (!button) return;
+  button.textContent = `lattice neighbours · ${state.rings} ring${state.rings === 1 ? '' : 's'}`;
+  button.setAttribute('aria-label', `Show ${state.rings} rings of lattice neighbours`);
 }
 
 // ---- rebuild --------------------------------------------------------------
@@ -467,14 +818,22 @@ function rebuild(refit = false) {
       showContextDetail: state.showContextDetail,
       mirror: state.mirror,
     });
+    syncPublicPresentation();
     const report = visualization.setSarcomereLength(sl);
     if (refit) visualization.frame(state.view);
     // A selected region moves as the mechanical state changes. Keep the camera
     // attached to its new canonical span; doing this immediately avoids queuing
     // transitions while the slider emits continuous input.
-    if (!refit && state.region) visualization.focusTitinRegion(state.region);
+    if (!refit && state.region) state.cameraPreset = `region.${state.region}`;
+    if (!refit && state.region)
+      visualization.focusTitinRegion(state.region);
+    else if (!refit && state.closeup) {
+      state.cameraPreset = `closeup.${state.closeup}`;
+      visualization.closeUp(state.closeup);
+    }
     render(report);
     refreshRegionReadout();
+    syncPublicPresentation(); syncUrl();
   } catch (e) { fail(e); }
 }
 
@@ -484,6 +843,13 @@ function render(report) {
   const hiddenComponents = new Set(report.hidden_components || []);
   const hiddenSuffix = (component) => hiddenComponents.has(component) ? ' (hidden)' : '';
   $('slReadout').innerHTML = `${g.sarcomere_length_nm} <small>nm${report.clamped ? ' (clamped)' : ''}</small>`;
+  const statePreset = presentation.length_presets
+    .find((preset) => preset.sarcomere_length_nm === g.sarcomere_length_nm);
+  const scopeState = statePreset
+    ? `${statePreset.label} · ${g.sarcomere_length_nm.toLocaleString()} nm`
+      + (statePreset.outside_working_range ? ' · OUTSIDE WORKING RANGE' : '')
+    : `Computed intermediate geometry · ${g.sarcomere_length_nm.toLocaleString()} nm`;
+  $('scopeState').textContent = scopeState;
   // Phase 9's honesty requirement is user-facing, not merely an API field. Every
   // non-keyframe state visibly discloses that this is a computed intermediate
   // geometry and not directly measured molecular motion. Clamp disclosure takes
@@ -649,10 +1015,22 @@ function syncComponentButtons(report) {
     const unavailable = unavailableAtScale || absent.has(component);
     const on = !unavailable && !effectivelyHidden.has(component);
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    const selected = state.selectedTarget === component;
+    b.classList.toggle('selected-target', selected);
+    if (selected) b.setAttribute('aria-current', 'true');
+    else b.removeAttribute('aria-current');
     b.disabled = unavailable;
     b.title = unavailableAtScale ? 'Not part of the isolated-titin view'
       : (absent.has(component) ? 'This layer is not currently built at this zoom' : '');
   }
+  const selectedButton = [...$('components').children]
+    .find((button) => button.dataset.component === state.selectedTarget);
+  const targetReadout = $('componentTargetReadout');
+  targetReadout.hidden = !selectedButton;
+  targetReadout.textContent = selectedButton
+    ? `Selected presentation target: ${selectedButton.textContent}. `
+      + 'Its pressed state continues to report visibility.'
+    : '';
 }
 
 let pendingSliderFrame = null;
@@ -663,10 +1041,52 @@ slider.oninput = () => {
     rebuild();
   });
 };
+
+function restorePresentationFromHash() {
+  const decoded = story.parse(window.location.hash);
+  const incoming = decoded.state;
+  state.audienceMode = incoming.audience_mode;
+  state.storyStep = incoming.story_step;
+  state.scale = incoming.scale;
+  state.selectedTarget = incoming.selected_component_or_region;
+  state.region = regionIds.has(state.selectedTarget) ? state.selectedTarget : null;
+  state.showEvidence = incoming.evidence_display;
+  state.cameraPreset = incoming.camera_preset;
+  const [cameraKind, cameraName] = state.cameraPreset.split('.');
+  state.view = cameraKind === 'view' ? cameraName : 'longitudinal';
+  state.closeup = cameraKind === 'closeup' ? cameraName : null;
+  applyChapterVisibility(state.storyStep);
+  slider.value = incoming.sarcomere_length_nm;
+  if (visualization.scale !== state.scale) visualization.setScale(state.scale);
+  $('evidence').hidden = !state.showEvidence;
+  $('evidenceToggle').classList.toggle('on', state.showEvidence);
+  $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
+  syncAudienceMode(); renderChapter();
+  rebuild(true);
+  visualization.highlightTitinRegion(state.region);
+  applyCameraPreset();
+  render(visualization.currentState());
+  syncViews(); syncScales(); syncRegions(); syncDepictionToggles();
+  announceUrlIssues(decoded.issues);
+  syncPublicPresentation(); syncUrl();
+}
+
+window.addEventListener('hashchange', restorePresentationFromHash);
+if (visualization.scale !== state.scale) visualization.setScale(state.scale);
+syncAudienceMode();
+$('evidence').hidden = !state.showEvidence;
+$('evidenceToggle').classList.toggle('on', state.showEvidence);
+$('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
+renderChapter();
 rebuild(true);
+visualization.highlightTitinRegion(state.region);
+applyCameraPreset();
+render(visualization.currentState());
 syncViews();
 syncScales();
 syncRegions();
+syncDepictionToggles();
+syncPublicPresentation(); syncUrl();
 // The LOD callback fires ONLY when zooming crosses the aliasing threshold, so the
 // crown array appears and withdraws as the user zooms without a per-frame rebuild.
 visualization.start((report) => {

@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0 complete on 2026-08-02; SC-1 is next
+**Implementation status:** SC-0 and SC-1 complete on 2026-08-02; SC-2 is next
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -323,6 +323,14 @@ Hover previews, click pins, touch opens, Escape closes, and the DOM structure li
 - No Tier C work is required to make Tier A coherent.
 
 ### SC-1 — Presentation data and dual audience shell
+
+**Status: COMPLETE (2026-08-02).** The required, cross-file-validated
+`presentation.json`, Guided/Evidence shell, always-visible scope/state badge,
+geometry-versus-activation length language, out-of-working-range warnings, public
+presentation state, deterministic URL codec, responsive Evidence drawer, runtime
+fallback notices, standalone embedding, and destructive negative controls are in
+place. The original inspector controls and scientific readouts remain available in
+Evidence mode.
 
 #### Work
 

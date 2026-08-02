@@ -29,7 +29,7 @@ files=["sarcomere.json","titin.json","structural_states.json","geometry_sources.
        # geometry_strategy.json holds the evidence-class vocabulary itself and was
        # not loaded here before session 9 — the definitions every other check
        # relies on were themselves unvalidated.
-       "geometry_strategy.json","mechanical_model.json","showcase_claims.json"]
+       "geometry_strategy.json","mechanical_model.json","showcase_claims.json","presentation.json"]
 L={}
 for f in files:
     try: L[f]=load(f); check(True, f)
@@ -153,6 +153,19 @@ _sc_internal = [
 check(all(path and os.path.isfile(os.path.join(os.path.dirname(DATA_DIR), path))
           for path in _sc_internal),
       "showcase internal sources resolve to repository files")
+
+print("== SC-1 presentation registry ==")
+_PR = L["presentation.json"]
+check(_PR.get("schema") == "titin-presentation/1",
+      "presentation record has the reviewed SC-1 schema")
+_pr_ids = [row.get("id") for key in ("audience_modes", "scope_badges", "length_presets",
+                                     "guided_chapters", "presenter_shortcuts")
+           for row in (_PR.get(key) or [])]
+check(len(_pr_ids) == len(set(_pr_ids)), "presentation record IDs are globally unique")
+_pr_sources = {source for row in (_PR.get("scope_badges") or []) + (_PR.get("guided_chapters") or [])
+               for source in (row.get("source_ids") or [])}
+check(_pr_sources <= refs,
+      f"presentation source IDs resolve (missing: {sorted(_pr_sources-refs)})")
 
 print("== Titin domain reconciliation (UniProt Q8WZ42) ==")
 tr=L["titin.json"]["regions"]

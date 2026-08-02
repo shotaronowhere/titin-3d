@@ -24,10 +24,11 @@
  * @module api/TitinVisualization
  */
 
-import { Viewer, VIEWS } from '../render/Viewer.js';
+import { Viewer, VIEWS, CLOSEUPS } from '../render/Viewer.js';
 import { COMPONENTS } from '../render/SarcomereScene.js';
 import { TitinModel } from '../model/TitinModel.js';
 import { browserReader } from '../model/readBrowser.js';
+import { AUDIENCE_MODES } from '../presentation/StoryController.js';
 import { createAnnotations } from './TitinAnnotations.js';
 import {
   createSarcomere, createTitin, createTitinPath, createDomainChain,
@@ -45,6 +46,12 @@ import {
  * @property {string[]} hidden_components components not visible at this scale
  * @property {string|null} highlighted_titin_region active selection, if any
  * @property {object} region_highlight_applied selection counts in the built tree
+ * @property {'guided'|'evidence'} audience_mode current explanation depth
+ * @property {string|null} story_step validated guided-chapter ID
+ * @property {string|null} selected_component_or_region public biological selection
+ * @property {null} regulatory_state absent in Tier A; length never encodes activation
+ * @property {string} camera_preset named, reproducible camera state
+ * @property {boolean} evidence_display whether the raw inventory was requested
  */
 
 /** The two scales the MVP presents. */
@@ -54,6 +61,8 @@ export const SCALES = Object.freeze({
   /** titin alone: regions and domain architecture */
   detail: 'detail',
 });
+
+export { AUDIENCE_MODES };
 
 export class TitinVisualization {
   /**
@@ -79,6 +88,16 @@ export class TitinVisualization {
     this.viewer.buildOpts = this._optsForScale(this.scale, opts);
     this._state = null;
     this._highlightedRegion = null;
+    // SC-1 presentation state is descriptive state only. It may choose a camera
+    // or explanation but never replaces the mechanical solver or adds activation.
+    this._presentationState = {
+      audience_mode: AUDIENCE_MODES.guided,
+      story_step: null,
+      selected_component_or_region: null,
+      regulatory_state: null,
+      camera_preset: 'view.longitudinal',
+      evidence_display: false,
+    };
   }
 
   /**
@@ -312,6 +331,7 @@ export class TitinVisualization {
 
     this._state = {
       ...described,
+      ...this._presentationState,
       scale: this.scale,
       manifest,
       notes: this.viewer.lastNotes || [],
@@ -327,6 +347,86 @@ export class TitinVisualization {
 
   /** The last state applied, or null before the first setter call. */
   currentState() { return this._state; }
+
+  /**
+   * Update the public SC-1 biological/presentation state without exposing render
+   * objects. Unknown values throw; the application may then show an explicit URL
+   * fallback rather than silently changing the scientific state.
+   */
+  setPresentationState(update) {
+    if (!update || typeof update !== 'object' || Array.isArray(update)) {
+      throw new Error('setPresentationState: expected a state object.');
+    }
+    const allowed = new Set([
+      'audience_mode', 'story_step', 'selected_component_or_region',
+      'regulatory_state', 'camera_preset', 'evidence_display',
+    ]);
+    const unknown = Object.keys(update).filter((key) => !allowed.has(key));
+    if (unknown.length) {
+      throw new Error(`setPresentationState: unknown field(s) ${unknown.join(', ')}.`);
+    }
+    const next = { ...this._presentationState, ...update };
+    if (!Object.hasOwn(AUDIENCE_MODES, next.audience_mode)) {
+      throw new Error("setPresentationState: audience_mode must be 'guided' or 'evidence'.");
+    }
+    const chapters = this.model.spec.presentation?.guided_chapters || [];
+    if (next.story_step !== null && !chapters.some((chapter) => chapter.id === next.story_step)) {
+      throw new Error(`setPresentationState: unknown story_step '${next.story_step}'.`);
+    }
+    const targets = new Set([
+      ...this.model.titinRegions().map((region) => region.id),
+      ...Object.keys(COMPONENTS),
+    ]);
+    if (next.selected_component_or_region !== null
+        && !targets.has(next.selected_component_or_region)) {
+      throw new Error(
+        `setPresentationState: unknown selected_component_or_region `
+        + `'${next.selected_component_or_region}'.`,
+      );
+    }
+    if (this.scale === SCALES.detail
+        && TitinVisualization.DETAIL_HIDDEN.includes(next.selected_component_or_region)) {
+      throw new Error(
+        `setPresentationState: selected target '${next.selected_component_or_region}' `
+        + 'is not visible at the isolated-titin detail scale.',
+      );
+    }
+    if (next.regulatory_state !== null) {
+      throw new Error(
+        'setPresentationState: regulatory_state is not available in Tier A; '
+        + 'sarcomere length does not encode activation.',
+      );
+    }
+    if (typeof next.evidence_display !== 'boolean') {
+      throw new Error('setPresentationState: evidence_display must be boolean.');
+    }
+    const [cameraKind, cameraName, cameraExtra] = String(next.camera_preset).split('.');
+    const cameraKnown = !cameraExtra && (
+      (cameraKind === 'view' && Object.hasOwn(VIEWS, cameraName))
+      || (cameraKind === 'closeup' && Object.hasOwn(CLOSEUPS, cameraName))
+      || (cameraKind === 'region'
+        && this.model.titinRegions().some((region) => region.id === cameraName))
+    );
+    if (!cameraKnown) {
+      throw new Error(`setPresentationState: unknown camera_preset '${next.camera_preset}'.`);
+    }
+    if (next.audience_mode === AUDIENCE_MODES.guided && next.evidence_display) {
+      throw new Error('setPresentationState: Guided mode cannot expose the raw evidence inventory.');
+    }
+    this._presentationState = next;
+    if (this._state) this._state = { ...this._state, ...next };
+    return this.presentationState();
+  }
+
+  /** Public state snapshot with geometry and presentation kept in one vocabulary. */
+  presentationState() {
+    return {
+      ...this._presentationState,
+      sarcomere_length_nm: this._state?.sarcomere_length_nm ?? null,
+      structural_state: this._state?.structural_state ?? null,
+      scale: this.scale,
+    };
+  }
 
   /** Annotation records for the currently displayed scale and length. */
   annotations() {
@@ -367,7 +467,12 @@ export class TitinVisualization {
     this._state = {
       ...this._state,
       highlighted_titin_region: regionId,
+      selected_component_or_region: regionId,
       region_highlight_applied: applied,
+    };
+    this._presentationState = {
+      ...this._presentationState,
+      selected_component_or_region: regionId,
     };
     return applied;
   }
@@ -387,10 +492,16 @@ export class TitinVisualization {
       const known = this.model.titinRegions().map((region) => region.id);
       throw new Error(`focusTitinRegion: unknown region '${regionId}'. Known: ${known.join(', ')}`);
     }
-    return {
+    const result = {
       region_id: regionId,
       ...this.viewer.focusSpan(segment.X_start, segment.X_end, opts),
     };
+    this._presentationState = {
+      ...this._presentationState,
+      camera_preset: `region.${regionId}`,
+    };
+    if (this._state) this._state = { ...this._state, camera_preset: `region.${regionId}` };
+    return result;
   }
 
   // -------------------------------------------------------------------------
@@ -412,6 +523,15 @@ export class TitinVisualization {
       );
     }
     this.scale = /** @type {'context'|'detail'} */ (scale);
+    const selectedTarget = this._presentationState.selected_component_or_region;
+    if (scale === SCALES.detail
+        && selectedTarget !== null
+        && TitinVisualization.DETAIL_HIDDEN.includes(selectedTarget)) {
+      this._presentationState = {
+        ...this._presentationState,
+        selected_component_or_region: null,
+      };
+    }
     if (opts.buildOpts) this._displayOptions = { ...this._displayOptions, ...opts.buildOpts };
     this.viewer.buildOpts = this._optsForScale(scale, opts);
     const sl = this._state?.sarcomere_length_nm ?? this.model.presets()
@@ -480,7 +600,12 @@ export class TitinVisualization {
    * Frame the structure from a named anatomical direction.
    * @param {string} view e.g. 'longitudinal' | 'transverse'
    */
-  frame(view = 'longitudinal', opts = {}) { this.viewer.frame(view, opts); return this; }
+  frame(view = 'longitudinal', opts = {}) {
+    this.viewer.frame(view, opts);
+    this._presentationState = { ...this._presentationState, camera_preset: `view.${view}` };
+    if (this._state) this._state = { ...this._state, camera_preset: `view.${view}` };
+    return this;
+  }
 
   /** Move to a named biological close-up without exposing the camera. */
   closeUp(name, opts = {}) {
@@ -488,7 +613,10 @@ export class TitinVisualization {
     if (sl === undefined) {
       throw new Error('TitinVisualization: set a state before selecting a close-up.');
     }
-    return this.viewer.closeUp(name, sl, opts);
+    const result = this.viewer.closeUp(name, sl, opts);
+    this._presentationState = { ...this._presentationState, camera_preset: `closeup.${name}` };
+    if (this._state) this._state = { ...this._state, camera_preset: `closeup.${name}` };
+    return result;
   }
 
   /** Named camera directions available to {@link frame}. */
@@ -518,6 +646,9 @@ export class TitinVisualization {
 
   /** Stop rendering. */
   stop() { this.viewer.stop(); return this; }
+
+  /** Refit the renderer after an audience drawer changes the stage dimensions. */
+  resize() { this.viewer.resize(); return this; }
 
   /** Release GPU resources and detach from the DOM. */
   dispose() { this.viewer.dispose(); this._state = null; }
