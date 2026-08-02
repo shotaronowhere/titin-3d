@@ -4,9 +4,9 @@
 below are historical snapshots; this header and the latest completion record are
 authoritative when an old snapshot says work is still open.*
 
-**Last updated:** 2026-08-02 — scoped MVP release closure
-**Current phase:** Project complete — Phases 0–10 and Milestones 0–6 ✅ COMPLETE
-**Next phase:** None — Phases 11–12 are optional future extensions and intentionally out of scope
+**Last updated:** 2026-08-02 — showcase SC-0 scope and claim contract complete
+**Current phase:** MVP complete; showcase extension SC-0 ✅ COMPLETE
+**Next phase:** SC-1 — presentation data and Guided/Evidence audience shell
 
 ---
 
@@ -39,6 +39,30 @@ authoritative when an old snapshot says work is still open.*
 | M4 | Experimental structural proxies | ✅ **COMPLETE** |
 | M5 | Mechanical states | ✅ **COMPLETE** |
 | M6 | Educational interface & polish | ✅ **COMPLETE** |
+
+## Showcase extension status
+
+The showcase sequence is an addendum and does not reopen or renumber MVP Phases
+0–10. Optional MVP Phases 11–12 remain skipped.
+
+| Showcase package | Name | Status |
+|---|---|---|
+| SC-0 | Claim audit, scope lock, and design contract | ✅ **COMPLETE** — 20-object claim matrix and executable validation gate |
+| SC-1 | Presentation data and dual-audience shell | ▶ **NEXT** |
+| SC-2 | Titin hierarchy, continuity, and length story | ⏳ Pending |
+| SC-3 | Z-disc and M-band correction | ⏳ Pending |
+| SC-4 | Object-linked annotations and evidence access | ⏳ Pending |
+| SC-5 | Thick-filament context and optional MyBP-C | ⏳ Pending |
+| SC-6 | Orthographic lattice comparison | ⏳ Pending |
+| SC-7 | Guided narrative and expert depth | ⏳ Pending |
+| SC-8 | Integrated validation and audience evaluation | ⏳ Pending |
+| SC-9 | Release, rehearsal, and handoff | ⏳ Pending |
+
+SC-0 artifacts: `SHOWCASE_DESIGN_CONTRACT.md`,
+`data/showcase_claims.json`, and `scripts/validate_showcase_claims.py`. The
+reference remains human skeletal N2A-containing Q8WZ42; no cardiac titin mode or
+lab-specific narrative was admitted. MyBP-C is admitted only as optional
+schematic skeletal C-zone context, while thin-filament regulation is deferred.
 
 ---
 

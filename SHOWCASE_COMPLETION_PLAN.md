@@ -6,6 +6,8 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
+**Implementation status:** SC-0 complete on 2026-08-02; SC-1 is next
+
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
 ---

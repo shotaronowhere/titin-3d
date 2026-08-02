@@ -30,6 +30,42 @@ extensions and were intentionally excluded from the completion requirement on
 scientific, source-integrity, and browser checks already included in the Phase 10
 release gate.
 
+## Showcase Completion Addendum
+
+The completed MVP now has a separate, non-renumbering showcase sequence, SC-0
+through SC-9. It improves presentation quality and expert auditability without
+reopening Phases 0–10 or making optional Phases 11–12 part of the completion
+requirement.
+
+Governing records:
+
+```text
+SHOWCASE_COMPLETION_PLAN.md       reviewed work packages and release gates
+SHOWCASE_DESIGN_CONTRACT.md       scope, admission, visual, and attention rules
+data/showcase_claims.json         machine-readable claim and omission matrix
+scripts/validate_showcase_claims.py  executable SC-0 contract gate
+```
+
+SC-0 was completed on 2026-08-02. It locks the existing human skeletal
+N2A-containing Q8WZ42 reference while allowing a broad titin narrative. It does
+not admit a cardiac titin mode, another isoform model, or a laboratory-specific
+narrative. Cross-tissue context must retain its source scope and transfer limit.
+
+The showcase implementation must preserve these boundaries:
+
+- titin remains the primary visual and narrative subject;
+- bare zone, sarcomere midpoint, and M-band crosslink context remain distinct;
+- Z-disc detail is a scoped local topology, not a universal regular lattice;
+- MyBP-C is optional, subordinate, and schematic unless compatible coordinates
+  are independently established;
+- troponin/tropomyosin regulation remains post-core optional work;
+- presentation geometry cannot move biological anchors or strengthen evidence;
+- source figures are not copied merely because their scientific claims are cited.
+
+The next showcase package is SC-1: presentation data and the Guided/Evidence
+audience shell. The detailed completion definition remains in
+`SHOWCASE_COMPLETION_PLAN.md`.
+
 ---
 
 # Core Architecture

@@ -29,7 +29,7 @@ files=["sarcomere.json","titin.json","structural_states.json","geometry_sources.
        # geometry_strategy.json holds the evidence-class vocabulary itself and was
        # not loaded here before session 9 — the definitions every other check
        # relies on were themselves unvalidated.
-       "geometry_strategy.json","mechanical_model.json"]
+       "geometry_strategy.json","mechanical_model.json","showcase_claims.json"]
 L={}
 for f in files:
     try: L[f]=load(f); check(True, f)
@@ -123,6 +123,36 @@ def fr(o):
         for it in o: fr(it)
 for f in files[:4]: fr(L[f])
 check(cited<=refs, f"all cited DOIs present (missing: {sorted(cited-refs)})")
+
+# SC-0 presentation claims do not drive geometry yet, but they are a scientific
+# data record and therefore cannot escape the all-data registry above. The
+# dedicated validator performs the full contract audit; these checks keep the
+# geometry validator independently aware of its schema and source closure.
+print("== SC-0 showcase claim registry ==")
+_SC = L["showcase_claims.json"]
+check(_SC.get("schema") == "titin-showcase-claim-audit/1",
+      "showcase claim matrix has the reviewed schema")
+_sc_objects = _SC.get("objects") or []
+check(bool(_sc_objects), "showcase claim matrix is non-empty")
+_sc_ids = [x.get("id") for x in _sc_objects]
+check(len(_sc_ids) == len(set(_sc_ids)), "showcase claim object IDs are unique")
+_sc_external = {
+    src.get("id")
+    for obj in _sc_objects
+    for src in (obj.get("sources") or [])
+    if src.get("kind") == "REFERENCE"
+}
+check(_sc_external <= refs,
+      f"showcase external sources resolve (missing: {sorted(_sc_external-refs)})")
+_sc_internal = [
+    src.get("id")
+    for obj in _sc_objects
+    for src in (obj.get("sources") or [])
+    if src.get("kind") == "INTERNAL"
+]
+check(all(path and os.path.isfile(os.path.join(os.path.dirname(DATA_DIR), path))
+          for path in _sc_internal),
+      "showcase internal sources resolve to repository files")
 
 print("== Titin domain reconciliation (UniProt Q8WZ42) ==")
 tr=L["titin.json"]["regions"]

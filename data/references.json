@@ -333,11 +333,38 @@
   "identifier": "10.1007/s10974-023-09642-8",
   "used_for": "Inter-filament rotational disorder: two distinct mutual rotations distributed statistically under no-three-alike rules, modelled as a triangular Ising antiferromagnet. Basis for the PERMANENT exclusion of superlattice depiction (geometry_strategy.json:context_depiction_policy)."
  },
- "10.1038/s41586-023-06691-4": {
-  "doi": "10.1038/s41586-023-06691-4",
+ "10.1083/jcb.140.4.853": {
+  "doi": "10.1083/jcb.140.4.853",
+  "authors": "Trombitás et al.",
+  "year": 1998,
+  "title": "Titin extensibility in situ: entropic elasticity of permanently folded and permanently unfolded molecular segments",
+  "journal": "Journal of Cell Biology",
+  "identifier": "10.1083/jcb.140.4.853",
+  "used_for": "Physiological I-band extension: tandem-Ig domains remain folded while the PEVK segment behaves as an unfolded entropic chain over the studied range."
+ },
+ "10.1038/s41467-024-46957-7": {
+  "doi": "10.1038/s41467-024-46957-7",
+  "authors": "Hessel et al.",
+  "year": 2024,
+  "title": "Myosin-binding protein C regulates the sarcomere lattice and stabilizes the OFF states of myosin heads",
+  "journal": "Nature Communications",
+  "identifier": "10.1038/s41467-024-46957-7",
+  "used_for": "Fast skeletal MyBP-C context: C-zone association, approximately three molecules per approximately 43 nm repeat, flexible N-terminal/middle regions, and effects on lattice and myosin OFF-state regulation. Does not provide exact human N2A-compatible coordinates."
+ },
+ "10.1038/s41586-023-06690-5": {
+  "doi": "10.1038/s41586-023-06690-5",
   "authors": "Tamborrini et al.",
   "year": 2023,
   "title": "Structure of the native myosin filament in the relaxed cardiac sarcomere",
+  "journal": "Nature",
+  "identifier": "10.1038/s41586-023-06690-5",
+  "used_for": "Conditional cardiac M-band limitation context only: M1 was absent from the averaged reconstruction, M-band-associated protein density remained partly unresolved, and expected flexible crosslinks were averaged out. No exact coordinate is transferred into the skeletal N2A model."
+ },
+ "10.1038/s41586-023-06691-4": {
+  "doi": "10.1038/s41586-023-06691-4",
+  "authors": "Dutta et al.",
+  "year": 2023,
+  "title": "Cryo-EM structure of the human cardiac myosin filament",
   "journal": "Nature",
   "identifier": "10.1038/s41586-023-06691-4",
   "structures": [
@@ -350,7 +377,7 @@
  },
  "PDB:8G4L": {
   "identifier": "PDB:8G4L",
-  "authors": "Tamborrini et al.",
+  "authors": "Dutta et al.",
   "year": 2023,
   "title": "Human cardiac myosin filament C-zone (atomic model)",
   "journal": "Protein Data Bank",
