@@ -99,6 +99,7 @@ export { Viewer, VIEWS, CLOSEUPS } from './src/render/Viewer.js';
 export { COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
 export { EVIDENCE_CLASSES } from './src/model/SpecLoader.js';
 export { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
+export { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
 `);
 
 let bundle;
@@ -143,7 +144,7 @@ const safeJson = (v) => JSON.stringify(v)
 
 /**
  * The page module, rewritten minimally:
- *   - its four import statements collapse to one destructuring from the inlined bundle;
+ *   - its source import statements collapse to one destructuring from the inlined bundle;
  *   - browserReader('./data') becomes the embedded reader.
  * Both replacements use the FUNCTION form of String.replace. That is not stylistic:
  * in a string replacement `$&` means "insert the match", and minified Three.js
@@ -161,7 +162,7 @@ let page = pageModule
   .replace(IMPORT_RE, () => {
     if (!first) return '';
     first = false;
-    return 'const { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES } = __titinBundle;\n';
+    return 'const { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, isLongitudinalProjection } = __titinBundle;\n';
   })
   .replace(/browserReader\('\.\/data'\)/g, () => '__titinSpecReader');
 if (page.includes("from './src/")) {
@@ -191,7 +192,7 @@ const standalone = html
       '/* --- inlined dependency bundle (esbuild, format=esm) --- */',
       'const __titinBundle = await (async () => {',
       bundle.replace(/export\s*\{[^}]*\};?\s*$/, () => ''),
-      'return { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES };',
+      'return { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, isLongitudinalProjection };',
       '})();',
       '',
       `const __titinSpecs = Object.freeze(${safeJson(specs)});`,

@@ -73,6 +73,16 @@ structural-coordinate pipeline with an offline synthetic fixture. It also runs t
 destructive-in-memory/on-restored-copy negative controls that prove the scientific
 guards reject invalid geometry.
 
+For routine SC-2 work on a local laptop, use the bounded serial gate instead of the
+exhaustive destructive suite:
+
+```sh
+npm run build
+npm run verify:sc2
+```
+
+The exhaustive `npm run verify` command is intended for release/CI validation.
+
 To reproduce the coordinate-derived measurements from the pinned RCSB inputs, fetch
 the optional raw-structure cache and verify it before running the measurement scripts:
 
@@ -116,7 +126,8 @@ npm run build
 - `src/geometry/` — representation, lattice, and mechanical geometry
 - `src/render/` — Three.js scene and viewer
 - `src/presentation/StoryController.js` — validated narrative state and URL codec
-- `data/presentation.json` — sourced SC-1 presentation contract (no geometry)
+- `src/presentation/ShowcaseOverlay.js` — SC-2 continuity, landmark, and live extension descriptors derived from canonical geometry
+- `data/presentation.json` — sourced SC-1/SC-2 presentation contract (no authoritative geometry)
 - `data/geometry_strategy.json` — current defect/completion register
 
 `placeDomainsAlongPath` accepts only canonical, already-computed paths. It rejects

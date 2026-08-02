@@ -78,6 +78,15 @@ test('standalone: the $& splice corruption never recurs', () => {
   assert.equal(html.split(marker).length - 1, 1, 'the rewritten import must appear exactly once');
 });
 
+test('standalone: every page binding is exposed by the inlined bundle namespace', () => {
+  const destructured = body.match(/const \{ ([^}]+) \} = __titinBundle;/)?.[1];
+  const returned = body.match(/return \{ ([^}]+) \};\n\}\)\(\);/)?.[1];
+  assert.ok(destructured && returned, 'bundle destructuring and namespace return must exist');
+  const names = (text) => text.split(',').map((name) => name.trim()).filter(Boolean).sort();
+  assert.deepEqual(names(returned), names(destructured),
+    'a page import must never become undefined in the standalone namespace');
+});
+
 test('standalone: embedded spec matches data/ byte-for-byte', () => {
   // Drift guard. If a spec file changes and the standalone is not rebuilt, this fails.
   for (const [name, obj] of Object.entries(SPECS)) {

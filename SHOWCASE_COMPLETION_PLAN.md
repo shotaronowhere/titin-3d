@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0 and SC-1 complete on 2026-08-02; SC-2 is next
+**Implementation status:** SC-0, SC-1, and SC-2 complete on 2026-08-02; SC-3 is next
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -353,6 +353,16 @@ Evidence mode.
 
 ### SC-2 — Titin hierarchy, continuity, and length story
 
+**Status: COMPLETE (2026-08-02).** The delivered overlay is derived from the
+canonical Level-0 backbone and live mechanical partition. N2A/PEVK use a
+consistently reduced render-only radius, rather than changing thickness only on
+selection; this is necessary to satisfy the same phase's stronger invariant that
+selection changes no geometry. The M-band is a center marker only, while the
+separately derived bare-zone bracket carries the axial extent. Final review also
+made bracket visibility depend on the live projected camera axis, preserved source
+metadata under selection with an explicit regression gate, and added a bounded
+local verification command so exhaustive destructive controls can remain a CI job.
+
 #### Work
 
 - Establish the new accessible identity palette.
@@ -362,6 +372,7 @@ Evidence mode.
 - Add a render-only x-ray/continuity trace using the exact canonical backbone points.
 - Add N- and C-terminal direction labels.
 - Add live Z-disc, I-band, A-band, C-zone, bare-zone, and M-band brackets.
+- Suppress horizontal brackets when free orbit makes the live axis non-longitudinal.
 - Reframe the opening shot around one readable titin path with ghosted lattice context.
 - Build a synchronized region-extension chart derived from the same mechanical output as the 3D scene.
 - Visually distinguish folded-domain straightening from disordered-chain extension.

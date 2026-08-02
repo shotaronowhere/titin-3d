@@ -167,5 +167,5 @@ test('SC1: runtime validation rejects a presentation target that does not exist'
     }
     return value;
   };
-  await assert.rejects(() => TitinModel.create(reader), /targets unknown region 'ghost_region'/i);
+  await assert.rejects(() => TitinModel.create(reader), /targets unknown component 'ghost_region'/i);
 });

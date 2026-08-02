@@ -29,6 +29,7 @@ import { COMPONENTS } from '../render/SarcomereScene.js';
 import { TitinModel } from '../model/TitinModel.js';
 import { browserReader } from '../model/readBrowser.js';
 import { AUDIENCE_MODES } from '../presentation/StoryController.js';
+import { createShowcaseOverlay } from '../presentation/ShowcaseOverlay.js';
 import { createAnnotations } from './TitinAnnotations.js';
 import {
   createSarcomere, createTitin, createTitinPath, createDomainChain,
@@ -95,7 +96,7 @@ export class TitinVisualization {
       story_step: null,
       selected_component_or_region: null,
       regulatory_state: null,
-      camera_preset: 'view.longitudinal',
+      camera_preset: 'view.titin_story',
       evidence_display: false,
     };
   }
@@ -163,7 +164,7 @@ export class TitinVisualization {
   setDisplayOptions(options) {
     const allowed = new Set([
       'showLattice', 'rings', 'showDomains', 'showContextDetail', 'mirror',
-      'titinStrands', 'neighbourTitin', 'domainStrands',
+      'titinStrands', 'neighbourTitin', 'domainStrands', 'presentationMode',
     ]);
     const unknown = Object.keys(options).filter((key) => !allowed.has(key));
     if (unknown.length) {
@@ -181,6 +182,10 @@ export class TitinVisualization {
     if (Object.hasOwn(options, 'rings')
         && (!Number.isInteger(options.rings) || options.rings < 1)) {
       throw new Error('setDisplayOptions: rings must be a positive integer.');
+    }
+    if (Object.hasOwn(options, 'presentationMode')
+        && !Object.hasOwn(AUDIENCE_MODES, options.presentationMode)) {
+      throw new Error("setDisplayOptions: presentationMode must be 'guided' or 'evidence'.");
     }
     this._displayOptions = { ...this._displayOptions, ...options };
     this.viewer.buildOpts = this._optsForScale(this.scale);
@@ -204,6 +209,9 @@ export class TitinVisualization {
     const hidden = this.scale === SCALES.detail
       ? new Set(TitinVisualization.DETAIL_HIDDEN)
       : new Set();
+    if (this._presentationState?.audience_mode === AUDIENCE_MODES.guided) {
+      hidden.add('annotations');
+    }
     /** @type {Record<string, boolean>} */
     const vis = {};
     if (this._userVisibility) Object.assign(vis, this._userVisibility);
@@ -323,6 +331,8 @@ export class TitinVisualization {
     const annotations = createAnnotations(this.model, sl, { scale: this.scale });
     this.viewer.sarcomere.setAnnotations(annotations);
     const visibilityApplied = this._applyScaleVisibility();
+    const presentationEmphasisApplied = this.viewer.sarcomere
+      .setPresentationEmphasis(this._presentationState?.audience_mode ?? AUDIENCE_MODES.guided);
     const regionHighlightApplied = this.viewer.sarcomere
       .setTitinRegionHighlight(this._highlightedRegion);
     // The interpolation disclosure lives in the headless module so it can be
@@ -338,6 +348,7 @@ export class TitinVisualization {
       annotations,
       hidden_components: this.viewer.sarcomere.hiddenComponents(),
       visibility_applied: visibilityApplied,
+      presentation_emphasis_applied: presentationEmphasisApplied,
       highlighted_titin_region: this._highlightedRegion,
       region_highlight_applied: regionHighlightApplied,
       ...extra,
@@ -414,7 +425,21 @@ export class TitinVisualization {
       throw new Error('setPresentationState: Guided mode cannot expose the raw evidence inventory.');
     }
     this._presentationState = next;
-    if (this._state) this._state = { ...this._state, ...next };
+    if (this._state && this.viewer?.sarcomere?._built) {
+      const visibilityApplied = this._applyScaleVisibility();
+      const presentationEmphasisApplied = this.viewer.sarcomere
+        .setPresentationEmphasis(next.audience_mode);
+      const regionHighlightApplied = this.viewer.sarcomere
+        .setTitinRegionHighlight(this._highlightedRegion);
+      this._state = {
+        ...this._state,
+        ...next,
+        hidden_components: this.viewer.sarcomere.hiddenComponents(),
+        visibility_applied: visibilityApplied,
+        presentation_emphasis_applied: presentationEmphasisApplied,
+        region_highlight_applied: regionHighlightApplied,
+      };
+    } else if (this._state) this._state = { ...this._state, ...next };
     return this.presentationState();
   }
 
@@ -446,6 +471,18 @@ export class TitinVisualization {
 
   /** Titin-region metadata available to the Phase-10 region navigator. */
   titinRegions() { return this.model.titinRegions(); }
+
+  /** SC-2 descriptors derived from the same mechanical output as the 3D scene. */
+  showcaseOverlay() {
+    const sl = this._state?.sarcomere_length_nm;
+    if (sl === undefined) {
+      throw new Error('TitinVisualization: set a state before requesting the showcase overlay.');
+    }
+    return createShowcaseOverlay(this.model, sl);
+  }
+
+  /** Project model-coordinate anchors for accessible screen-space labels. */
+  projectPresentationAnchors(records) { return this.viewer.projectPoints(records); }
 
   /**
    * Highlight one named titin region, or pass null to clear the selection.
@@ -632,15 +669,21 @@ export class TitinVisualization {
    * automatic rebuild. The manifest it returns is intentionally discarded: the
    * gate's contract is void.
    */
-  /** @param {((report: StateReport) => void)|null} [onStateChange] */
-  start(onStateChange = null) {
+  /**
+   * @param {((report: StateReport) => void)|null} [onStateChange]
+   * @param {(()=>void)|null} [onFrame]
+   */
+  start(onStateChange = null, onFrame = null) {
     if (onStateChange !== null && typeof onStateChange !== 'function') {
       throw new Error('TitinVisualization.start: onStateChange must be a function or null.');
+    }
+    if (onFrame !== null && typeof onFrame !== 'function') {
+      throw new Error('TitinVisualization.start: onFrame must be a function or null.');
     }
     this.viewer.start((sl) => {
       const report = this.setSarcomereLength(sl);
       if (onStateChange) onStateChange(report);
-    });
+    }, onFrame);
     return this;
   }
 

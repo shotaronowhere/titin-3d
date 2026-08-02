@@ -19,6 +19,11 @@ import { SarcomereScene } from './SarcomereScene.js';
 /** Camera presets, expressed as directions so they work at any sarcomere length. */
 export const VIEWS = Object.freeze({
   longitudinal: { dir: [0.15, 0.35, 1], label: 'Longitudinal (default)' },
+  titin_story: {
+    dir: [0.12, 0.25, 1],
+    label: 'Titin route — Z-disc to M-band',
+    focus: 'titin_half',
+  },
   side: { dir: [0, 0, 1], label: 'Side — the sarcomere banding pattern' },
   transverse: { dir: [1, 0, 0], label: 'Transverse — down the filament axis' },
   oblique: { dir: [0.7, 0.5, 0.7], label: 'Oblique — 3-D lattice organization' },
@@ -260,7 +265,15 @@ export class Viewer {
 
   /** Frame the whole sarcomere from a named or explicit direction. */
   frame(view = 'longitudinal', opts = {}) {
-    const dir = Array.isArray(view) ? view : (VIEWS[view] || VIEWS.longitudinal).dir;
+    const preset = Array.isArray(view) ? null : (VIEWS[view] || VIEWS.longitudinal);
+    if (preset?.focus === 'titin_half') {
+      const path = this.model.backboneAt(this.currentSL);
+      const first = path.points[0];
+      const last = path.points[path.points.length - 1];
+      if (!first || !last) throw new Error('frame: canonical titin backbone is empty.');
+      return this.focusSpan(first.x, last.x, opts);
+    }
+    const dir = Array.isArray(view) ? view : preset.dir;
     const box = this._visibleBounds();
     const centre = box.getCenter(new THREE.Vector3());
     const radius = box.getBoundingSphere(new THREE.Sphere()).radius;
@@ -375,6 +388,33 @@ export class Viewer {
   }
 
   /**
+   * Project canonical model anchors into container-local CSS pixels. The return
+   * value contains no Three.js object and is safe for accessible DOM overlays.
+   */
+  projectPoints(records) {
+    if (!Array.isArray(records)) throw new Error('projectPoints: expected an array.');
+    const width = this.container.clientWidth;
+    const height = this.container.clientHeight;
+    this.camera.updateMatrixWorld();
+    return records.map((record) => {
+      const anchor = record.anchor_nm || record;
+      if (![anchor.x, anchor.y ?? 0, anchor.z ?? 0].every(Number.isFinite)) {
+        throw new Error(`projectPoints: '${record.id || 'anchor'}' has invalid coordinates.`);
+      }
+      const projected = new THREE.Vector3(anchor.x, anchor.y ?? 0, anchor.z ?? 0)
+        .project(this.camera);
+      return {
+        id: record.id ?? null,
+        x_px: (projected.x + 1) * width / 2,
+        y_px: (1 - projected.y) * height / 2,
+        visible: projected.z >= -1 && projected.z <= 1
+          && projected.x >= -1.15 && projected.x <= 1.15
+          && projected.y >= -1.15 && projected.y <= 1.15,
+      };
+    });
+  }
+
+  /**
    * Move immediately or start one interruptible camera interpolation.
    * `opts.animate` is opt-in so programmatic tests and first paint remain
    * deterministic; Phase-10 controls request it explicitly.
@@ -476,8 +516,11 @@ export class Viewer {
     return false;
   }
 
-  /** @param {((sl:number)=>void)|null} [onLODChange] called on an LOD threshold crossing */
-  start(onLODChange = null) {
+  /**
+   * @param {((sl:number)=>void)|null} [onLODChange] called on an LOD threshold crossing
+   * @param {(()=>void)|null} [onFrame] called after camera/controls update
+   */
+  start(onLODChange = null, onFrame = null) {
     const tick = () => {
       this._raf = requestAnimationFrame(tick);
       this._advanceCameraTransition();
@@ -487,6 +530,7 @@ export class Viewer {
       this._updateFrustum();
       // Checked once per frame but acts at most on a threshold crossing.
       if (onLODChange) this.checkDetailLOD(onLODChange);
+      if (onFrame) onFrame();
       this.renderer.render(this.scene, this.camera);
     };
     if (!this._raf) tick();

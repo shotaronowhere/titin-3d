@@ -2,7 +2,7 @@
   "schema": "titin-presentation/1",
   "version": 1,
   "meta": {
-    "phase": "SC-1 — Presentation data and dual audience shell",
+    "phase": "SC-2 — Visual language and titin-first story",
     "status": "COMPLETE",
     "purpose": "Presentation-only narrative and interface state. This record contains no authoritative biological coordinates and cannot replace the scientific geometry specifications.",
     "governing_plan": "SHOWCASE_COMPLETION_PLAN.md",
@@ -123,8 +123,8 @@
       "title": "Meet titin in the sarcomere",
       "target_claim_id": "titin_continuity_trace",
       "target": {
-        "kind": "region",
-        "id": "Z1Z2"
+        "kind": "component",
+        "id": "titin"
       },
       "evidence_class": "STRONGLY INFERRED",
       "source_ids": [
@@ -137,11 +137,16 @@
         "a resolved atom-by-atom path",
         "known transverse azimuth along the entire chain"
       ],
+      "presentation_features": [
+        "continuity_trace",
+        "band_brackets",
+        "termini"
+      ],
       "recommended_state": {
         "sarcomere_length_nm": 2200,
         "scale": "context",
-        "camera_preset": "view.longitudinal",
-        "selected_component_or_region": "Z1Z2",
+        "camera_preset": "view.titin_story",
+        "selected_component_or_region": "titin",
         "visibility": {
           "show_lattice": true,
           "show_domains": false,
@@ -171,10 +176,13 @@
         "widespread physiological Ig-domain unfolding",
         "a measured molecular trajectory"
       ],
+      "presentation_features": [
+        "region_extension_chart"
+      ],
       "recommended_state": {
         "sarcomere_length_nm": 2400,
         "scale": "detail",
-        "camera_preset": "view.longitudinal",
+        "camera_preset": "region.PEVK",
         "selected_component_or_region": "PEVK",
         "visibility": {
           "show_lattice": false,
@@ -206,10 +214,15 @@
         "atom-level region surfaces",
         "an exact universal A-band azimuth"
       ],
+      "presentation_features": [
+        "continuity_trace",
+        "band_brackets",
+        "termini"
+      ],
       "recommended_state": {
         "sarcomere_length_nm": 2200,
         "scale": "detail",
-        "camera_preset": "view.longitudinal",
+        "camera_preset": "view.titin_story",
         "selected_component_or_region": "Aband_super",
         "visibility": {
           "show_lattice": false,
@@ -226,8 +239,8 @@
     "story_step": "orientation",
     "sarcomere_length_nm": 2200,
     "scale": "context",
-    "camera_preset": "view.longitudinal",
-    "selected_component_or_region": "Z1Z2",
+    "camera_preset": "view.titin_story",
+    "selected_component_or_region": "titin",
     "evidence_display": false
   },
   "presenter_shortcuts": [

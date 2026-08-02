@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
+    "test:sc2": "node --test --test-concurrency=1 test/showcase_phase2.test.js test/presentation.test.js test/standalone.test.js",
     "serve": "python3 -m http.server 8000",
     "validate": "python3 scripts/validate_geometry.py",
     "validate:spec": "python3 scripts/validate_spec.py",
@@ -18,6 +19,7 @@
     "build": "node scripts/build_standalone.mjs",
     "build:standalone": "npm run build",
     "check:build": "node scripts/build_standalone.mjs --check",
+    "verify:sc2": "npm run check:build && npm run typecheck && npm run test:sc2 && npm run validate:presentation",
     "verify": "npm run check:build && npm run typecheck && npm test && npm run test:negative && npm run validate && npm run validate:spec && npm run validate:showcase && npm run validate:presentation && npm run validate:python"
   },
   "license": "CC-BY-4.0",

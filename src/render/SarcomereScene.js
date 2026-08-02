@@ -91,22 +91,42 @@ export const COMPONENTS = Object.freeze({
 });
 
 export const COMPONENT_COLOR = Object.freeze({
-  thick_filament: 0x4a6fa5,
+  thick_filament: 0x4e79a7,
   // Phase 7b: heads share the thick filament's hue family so they read as part of
   // the same structure, lightened so the crown array is distinguishable from the
   // backbone cylinder it projects from.
-  myosin_head: 0x7a9bc9,
-  thin_filament: 0xc9915c,
-  zdisc: 0x6b7a8f,
-  mline: 0x8f6b7a,
-  titin: 0xd94f4f,
-  titin_neighbour: 0x9c4a4a,
+  myosin_head: 0x79a9dc,
+  thin_filament: 0x4fb39f,
+  zdisc: 0x8794a3,
+  mline: 0xa27c95,
+  titin: 0xff5d7d,
+  titin_neighbour: 0xa43d5c,
   // Selection is an interaction channel, never an evidence channel. Opacity
   // continues to encode confidence while colour temporarily identifies one region.
-  titin_highlight: 0xffd166,
-  titin_dim: 0x4f2930,
+  titin_highlight: 0xffb0c0,
+  titin_dim: 0x6f2e40,
   lattice_guide: 0x556070,
-  annotation: 0xf2d06b,
+  annotation: 0xe6edf5,
+});
+
+/**
+ * SC-2 presentation hierarchy. These are colour-only alternatives for Guided
+ * mode: evidence opacity, geometry, metadata and visibility remain untouched.
+ */
+export const GUIDED_COMPONENT_COLOR = Object.freeze({
+  thick_filament: 0x26384b,
+  myosin_head: 0x3b5368,
+  thin_filament: 0x3b514b,
+  zdisc: 0x343b45,
+  mline: 0x2b2530,
+  lattice_guide: 0x3c4653,
+});
+
+/** Render-width decisions only; neither value is a molecular diameter. */
+export const TITIN_RENDER_STYLE = Object.freeze({
+  guided_radius_scale: 1.65,
+  disordered_radius_scale: 0.58,
+  continuity_opacity: 0.96,
 });
 
 /** Resolve an evidence string (which may carry a parenthetical) to a style. */
@@ -241,6 +261,33 @@ export class SarcomereScene {
     const mesh = new THREE.Mesh(geom, this._material(color, evidence));
     mesh.name = name;
     return mesh;
+  }
+
+  /**
+   * Exact Level-0 centreline for one canonical segment. This screen-readable
+   * trace is deliberately a Line rather than a biological mesh: it cannot move
+   * the tube, domains or any source-backed coordinate.
+   */
+  _titinContinuityTrace(segment) {
+    const geometry = this._track(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(segment.X_start, 0, 0),
+      new THREE.Vector3(segment.X_end, 0, 0),
+    ]));
+    const material = new THREE.LineBasicMaterial({
+      color: COMPONENT_COLOR.titin_highlight,
+      transparent: true,
+      opacity: TITIN_RENDER_STYLE.continuity_opacity,
+      depthTest: false,
+      depthWrite: false,
+    });
+    this.disposables.add(material);
+    const line = new THREE.Line(geometry, material);
+    line.name = `titin_continuity_trace_${segment.region_id}`;
+    line.renderOrder = 12;
+    line.userData.titin_trace_region = segment.region_id;
+    line.userData.base_color = COMPONENT_COLOR.titin_highlight;
+    line.userData.coordinate_basis = 'exact canonical Level-0 segment endpoints';
+    return line;
   }
 
   /**
@@ -440,6 +487,7 @@ export class SarcomereScene {
     this.clear();
     const {
       titinStrands = true, mirror = true, neighbourTitin = false,
+      presentationMode = 'evidence',
       // Phase 7b. `contextDetail` is the OPT-IN payload from
       // model.contextDetailSceneAt(); omitting it leaves every pre-7b caller
       // getting exactly the scene it was written against. viewWidthNm is what the
@@ -448,6 +496,9 @@ export class SarcomereScene {
       // resolves, rather than a silently-empty detail layer.
       contextDetail = null, viewWidthNm = 400, viewportPx = 1200,
     } = opts;
+    if (!['guided', 'evidence'].includes(presentationMode)) {
+      throw new Error(`build: unknown presentationMode '${presentationMode}'.`);
+    }
     /**
      * The Phase 7b report. Fields beyond the always-present ones are attached only
      * when the corresponding layer draws or is withheld, so the record is typed as
@@ -626,7 +677,9 @@ export class SarcomereScene {
       : [{ strand_index: 0, y: 0, z: 0, azimuth_deg: 0, evidence_class: 'SCHEMATIC' }];
 
     const aBandStart = thick.transform.start_nm;
-    const titinRadius = opts.titinTubeRadiusNm ?? thin.transform.diameter_nm / 6;
+    const baseTitinRadius = opts.titinTubeRadiusNm ?? thin.transform.diameter_nm / 6;
+    const titinRadius = baseTitinRadius
+      * (presentationMode === 'guided' ? TITIN_RENDER_STYLE.guided_radius_scale : 1);
     // Domain detail is opt-in per strand: 284 domains x 6 strands x 2 halves is
     // 3408 capsules, which is fine as InstancedMesh but visually unreadable in a
     // context view. Default: domains on the central strand only, tubes elsewhere.
@@ -647,9 +700,11 @@ export class SarcomereScene {
             off.evidence_class || 'SCHEMATIC',
             descriptor?.evidence?.backbone_path || 'SCHEMATIC',
           ]);
+          const renderRadiusScale = ['N2A', 'PEVK'].includes(segment.region_id)
+            ? TITIN_RENDER_STYLE.disordered_radius_scale : 1;
           const tube = this._titinTube(
             this._titinRegionPath(domains, segment, off, aBandStart),
-            titinRadius, COMPONENT_COLOR.titin, evidence,
+            titinRadius * renderRadiusScale, COMPONENT_COLOR.titin, evidence,
             `titin_region_${segment.region_id}_strand_${off.strand_index}`,
             undefined,
             [segment.X_start, segment.X_end],
@@ -657,7 +712,19 @@ export class SarcomereScene {
           tube.userData.titin_region = segment.region_id;
           tube.userData.base_color = COMPONENT_COLOR.titin;
           tube.userData.evidence_rendered = evidence;
+          tube.userData.render_radius_nm = titinRadius * renderRadiusScale;
+          tube.userData.render_radius_scale = renderRadiusScale;
           strand.add(tube);
+        }
+        // One x-ray trace is enough to make the molecule's continuity explicit.
+        // Drawing it on all lattice copies would turn a reading aid into clutter.
+        if (off.strand_index === 0) {
+          const traces = new THREE.Group();
+          traces.name = 'titin_continuity_traces';
+          for (const segment of titinPath.segments) {
+            traces.add(this._titinContinuityTrace(segment));
+          }
+          titinGroup.add(traces);
         }
         titinGroup.add(strand);
       } else {
@@ -763,6 +830,24 @@ export class SarcomereScene {
         mechanical_class: region.mechanical_class,
       })),
       highlighted_titin_region: /** @type {string|null} */ (null),
+      presentation_overlay: {
+        continuity_trace: titinPath?.segments?.length ? {
+          segments: titinPath.segments.map((segment) => ({
+            region_id: segment.region_id,
+            X_start: segment.X_start,
+            X_end: segment.X_end,
+          })),
+          coordinate_basis: 'exact canonical Level-0 segment endpoints',
+          render_only: true,
+        } : null,
+        region_radius_scale: {
+          guided_all_regions: presentationMode === 'guided'
+            ? TITIN_RENDER_STYLE.guided_radius_scale : 1,
+          N2A: TITIN_RENDER_STYLE.disordered_radius_scale,
+          PEVK: TITIN_RENDER_STYLE.disordered_radius_scale,
+          not_claimed: 'molecular diameter or polymer cross-section',
+        },
+      },
       mirrored: mirror,
       neighbour_titin: neighbourTitin,
       // Carried through from the descriptors so the render is self-documenting.
@@ -800,6 +885,8 @@ export class SarcomereScene {
           : 'Z-disc / M-line transverse extent (drawn to a nominal width)',
         'radial titin path through the I-band (no thick filament to follow there)',
         'smooth CatmullRom interpolation between domain positions',
+        'SC-2 continuity trace (exact Level-0 centreline; screen-readable overlay)',
+        'reduced N2A/PEVK tube radius (visual distinction, not molecular diameter)',
       ],
     };
     this._built = true;
@@ -1053,6 +1140,8 @@ export class SarcomereScene {
       dimmed_tubes: 0,
       highlighted_domains: 0,
       dimmed_domains: 0,
+      highlighted_trace_segments: 0,
+      dimmed_trace_segments: 0,
     };
 
     this.root.traverse((object) => {
@@ -1063,6 +1152,16 @@ export class SarcomereScene {
         if (active) {
           if (selected) result.highlighted_tubes += 1;
           else result.dimmed_tubes += 1;
+        }
+      }
+
+      const traceRegion = object.userData?.titin_trace_region;
+      if (traceRegion && object.material?.color) {
+        const selected = active && traceRegion === regionId;
+        object.material.color.copy(active ? (selected ? highlight : dim) : highlight);
+        if (active) {
+          if (selected) result.highlighted_trace_segments += 1;
+          else result.dimmed_trace_segments += 1;
         }
       }
 
@@ -1082,6 +1181,44 @@ export class SarcomereScene {
     this.highlightedTitinRegion = regionId;
     if (this.manifest) this.manifest.highlighted_titin_region = regionId;
     return result;
+  }
+
+  /**
+   * Emphasize titin for Guided mode using colour alone. Evidence opacity is
+   * intentionally never read or written here.
+   */
+  setPresentationEmphasis(mode) {
+    if (!this._built) throw new Error('setPresentationEmphasis: nothing built yet.');
+    if (!['guided', 'evidence'].includes(mode)) {
+      throw new Error(`setPresentationEmphasis: unknown mode '${mode}'.`);
+    }
+    const identity = {
+      thick_filament: COMPONENT_COLOR.thick_filament,
+      myosin_head: COMPONENT_COLOR.myosin_head,
+      thin_filament: COMPONENT_COLOR.thin_filament,
+      zdisc: COMPONENT_COLOR.zdisc,
+      mline: COMPONENT_COLOR.mline,
+      lattice_guide: COMPONENT_COLOR.lattice_guide,
+    };
+    const roleOf = (name) => {
+      if (name.startsWith('thick_filament')) return 'thick_filament';
+      if (name.startsWith('myosin_heads')) return 'myosin_head';
+      if (name.startsWith('thin_filament')) return 'thin_filament';
+      if (name === 'zdisc') return 'zdisc';
+      if (name === 'mline') return 'mline';
+      if (name.startsWith('lattice_guide')) return 'lattice_guide';
+      return null;
+    };
+    let recolored = 0;
+    this.root.traverse((object) => {
+      const role = roleOf(object.name || '');
+      if (!role || !object.material?.color) return;
+      object.material.color.set(mode === 'guided' ? GUIDED_COMPONENT_COLOR[role] : identity[role]);
+      recolored += 1;
+    });
+    this.presentationEmphasis = mode;
+    if (this.manifest) this.manifest.presentation_emphasis = mode;
+    return { mode, recolored_objects: recolored, preserves_evidence_opacity: true };
   }
 
   /**
@@ -1138,5 +1275,6 @@ export class SarcomereScene {
     this.manifest = null;
     this._built = false;
     this.highlightedTitinRegion = null;
+    this.presentationEmphasis = null;
   }
 }

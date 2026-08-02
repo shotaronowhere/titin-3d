@@ -17,6 +17,9 @@ RANK = {
     "SCHEMATIC": 4,
     "UNKNOWN": 5,
 }
+PRESENTATION_FEATURES = {
+    "continuity_trace", "band_brackets", "termini", "region_extension_chart",
+}
 
 
 def load(path):
@@ -71,7 +74,7 @@ def validate(presentation_path):
     require(modes == {"guided", "evidence"}, "audience modes must be exactly guided and evidence")
     claim_map = {row["id"]: row for row in claims.get("objects", [])}
     region_ids = {row["id"] for row in titin.get("regions", [])}
-    component_ids = {row["id"] for row in sarcomere.get("components", [])}
+    component_ids = {row["id"] for row in sarcomere.get("components", [])} | {"titin"}
     reference_ids = set(references)
 
     working = p.get("scope", {}).get("working_range_nm")
@@ -156,6 +159,10 @@ def validate(presentation_path):
                 f"guided chapter '{chapter.get('id')}' lay summary has {words} words; expected 25-45")
         require(bool(chapter.get("expert_expansion")) and bool(chapter.get("not_claimed")),
                 f"guided chapter '{chapter.get('id')}' lacks expert or not-claimed text")
+        features = chapter.get("presentation_features")
+        require(isinstance(features, list) and bool(features)
+                and all(feature in PRESENTATION_FEATURES for feature in features),
+                f"guided chapter '{chapter.get('id')}' has invalid presentation_features")
         scene = chapter.get("recommended_state") or {}
         length = scene.get("sarcomere_length_nm")
         require(isinstance(length, (int, float)) and model_min <= length <= model_max,

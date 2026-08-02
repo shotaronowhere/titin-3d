@@ -22,6 +22,10 @@ const URL_KEYS = Object.freeze([
   'mode', 'step', 'sl', 'scale', 'camera', 'target', 'evidence',
 ]);
 
+const PRESENTATION_FEATURES = new Set([
+  'continuity_trace', 'band_brackets', 'termini', 'region_extension_chart',
+]);
+
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
 function targetValue(value) {
@@ -87,6 +91,9 @@ export function checkPresentationSpec(presentation, context = {}) {
   const claimMap = new Map((claims?.objects || []).map((claim) => [claim.id, claim]));
   const referenceIds = new Set(Object.keys(references || {}));
   const componentIds = new Set((sarcomere?.components || []).map((component) => component.id));
+  // Titin is specified in titin.json rather than sarcomere.components, but it is
+  // a first-class selectable render component in the presentation vocabulary.
+  componentIds.add('titin');
   const regionIds = new Set((titin?.regions || []).map((region) => region.id));
   const stateMap = new Map(Object.entries(states?.states || {}));
   const scopeRange = presentation.scope?.working_range_nm;
@@ -177,6 +184,11 @@ export function checkPresentationSpec(presentation, context = {}) {
     }
     if (!chapter.expert_expansion || !(chapter.not_claimed || []).length) {
       problems.push(`guided chapter '${chapter.id}' needs expert expansion and not-claimed text`);
+    }
+    if (!Array.isArray(chapter.presentation_features)
+        || !chapter.presentation_features.length
+        || chapter.presentation_features.some((feature) => !PRESENTATION_FEATURES.has(feature))) {
+      problems.push(`guided chapter '${chapter.id}' has invalid presentation_features`);
     }
     const scene = chapter.recommended_state || {};
     if (!Number.isFinite(scene.sarcomere_length_nm)
