@@ -294,6 +294,7 @@ test('SC6: a guided chapter may legally request the comparison', () => {
     sarcomere: model.spec.sarcomere,
     titin: model.spec.titin,
     states: model.spec.states,
+    annotations: model.spec.annotations,
   };
   assert.deepEqual(model.spec.showcaseClaims.objects
     .find((object) => object.id === 'lattice_cross_section').audience, ['GUIDED', 'EVIDENCE']);

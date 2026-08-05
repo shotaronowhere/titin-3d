@@ -106,16 +106,26 @@ export function checkAnnotationCatalog(catalog, context = {}) {
   return problems;
 }
 
+/** A plain, directly linkable RCSB accession — not a derived multi-entry record. */
+const plainPdbId = (sourceId) => (
+  sourceId.startsWith('PDB:') && !/[+(]/.test(sourceId) ? sourceId.slice(4) : null
+);
+
 export function sourceHref(sourceId, reference) {
   if (reference?.doi) return `https://doi.org/${encodeURI(reference.doi)}`;
   if (sourceId.startsWith('UniProt:')) {
     return `https://www.uniprot.org/uniprotkb/${encodeURIComponent(sourceId.split(':')[1])}/entry`;
   }
-  if (sourceId.startsWith('PDB:') && !/[+(]/.test(sourceId)) {
-    return `https://www.rcsb.org/structure/${encodeURIComponent(sourceId.slice(4))}`;
-  }
-  const dependency = reference?.depends_on?.find((id) => id.startsWith('10.'));
-  if (dependency) return `https://doi.org/${encodeURI(dependency)}`;
+  const direct = plainPdbId(sourceId);
+  if (direct) return `https://www.rcsb.org/structure/${encodeURIComponent(direct)}`;
+  const doiDependency = reference?.depends_on?.find((id) => id.startsWith('10.'));
+  if (doiDependency) return `https://doi.org/${encodeURI(doiDependency)}`;
+  // A derived Phase-6 measurement depends on deposited entries rather than on a
+  // DOI. Following the first of those leaves keeps the citation inspectable; the
+  // record's title names every entry the measurement was taken from. Without this
+  // route these sources resolved to null and threw the moment any UI cited one.
+  const leaf = (reference?.depends_on || []).map(plainPdbId).find(Boolean);
+  if (leaf) return `https://www.rcsb.org/structure/${encodeURIComponent(leaf)}`;
   return null;
 }
 

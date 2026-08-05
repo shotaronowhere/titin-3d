@@ -7,7 +7,7 @@ API consume those records rather than restating biological constants.
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
 and are intentionally outside the completed release scope. The separate showcase
-completion sequence is complete through SC-6; SC-7 is the next enhancement phase.
+completion sequence is complete through SC-7; SC-8 is the next enhancement phase.
 
 ## Open the visualization
 
@@ -36,7 +36,8 @@ required.
 
 The application opens in **Guided** mode: the 3D stage remains full width, the
 reference scope and current geometry stay visible above the fold, and a concise
-three-chapter card introduces titin without showing the raw evidence inventory.
+seven-chapter card walks from locating titin to how the model was built, without
+showing the raw evidence inventory. The route is paced to about two minutes.
 Choose **Evidence** (or **Evidence & controls**) to open every existing control,
 measurement, annotation, caveat, confidence group, and advanced close-up.
 
@@ -90,6 +91,7 @@ npm run verify:sc3
 npm run verify:sc4
 npm run verify:sc5
 npm run verify:sc6
+npm run verify:sc7
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
@@ -146,6 +148,8 @@ npm run build
 - `src/render/` — Three.js scene and viewer
 - `src/presentation/StoryController.js` — validated narrative state and URL codec
 - `src/presentation/ShowcaseOverlay.js` — SC-2 continuity, landmark, and live extension descriptors derived from canonical geometry
+- `src/presentation/ProvenancePipeline.js` — SC-7 build pipeline whose every figure is
+  counted from the loaded records at render time rather than written into the copy
 - `src/presentation/AnnotationCatalog.js` — SC-4 annotation validation and citation/link resolution
 - `data/presentation.json` — sourced SC-1/SC-2 presentation contract and SC-5 Evidence-mode expert cards (no authoritative geometry)
 - `data/annotations.json` — validated SC-4 dual-audience object explanations and scientific bindings

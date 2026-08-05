@@ -19,8 +19,14 @@ RANK = {
 }
 PRESENTATION_FEATURES = {
     "continuity_trace", "band_brackets", "termini", "region_extension_chart",
-    "lattice_cross_section",
+    "lattice_cross_section", "provenance_pipeline",
 }
+FINDING_STATUSES = {"ESTABLISHED", "PROPOSED", "OPEN"}
+
+
+def sentences(text):
+    parts = re.split(r"[.!?](?=\s|$)", str(text or ""))
+    return [part.strip() for part in parts if part.strip()]
 
 
 def load(path):
@@ -40,6 +46,7 @@ def validate(presentation_path):
     sarcomere = load(DATA / "sarcomere.json")
     titin = load(DATA / "titin.json")
     states = load(DATA / "structural_states.json")["states"]
+    annotations = load(DATA / "annotations.json")
     errors = []
 
     def require(condition, message):
@@ -76,7 +83,10 @@ def validate(presentation_path):
     require(modes == {"guided", "evidence"}, "audience modes must be exactly guided and evidence")
     claim_map = {row["id"]: row for row in claims.get("objects", [])}
     region_ids = {row["id"] for row in titin.get("regions", [])}
-    component_ids = {row["id"] for row in sarcomere.get("components", [])} | {"titin"}
+    # annotations.json carries one record per pickable render component, so it is
+    # the data-resident form of the vocabulary the runtime actually offers.
+    component_ids = ({row["id"] for row in sarcomere.get("components", [])} | {"titin"}
+                     | {row["target_id"] for row in annotations.get("components", [])})
     reference_ids = set(references)
 
     working = p.get("scope", {}).get("working_range_nm")
@@ -159,6 +169,14 @@ def validate(presentation_path):
         words = len(re.findall(r"\S+", chapter.get("lay_summary", "")))
         require(25 <= words <= 45,
                 f"guided chapter '{chapter.get('id')}' lay summary has {words} words; expected 25-45")
+        # A word cap alone permits one 45-word sentence, which is exactly the
+        # density the "one main idea" gate is about.
+        parts = sentences(chapter.get("lay_summary"))
+        require(2 <= len(parts) <= 3,
+                f"guided chapter '{chapter.get('id')}' lay summary has {len(parts)} sentences; expected 2-3")
+        longest = max((len(re.findall(r"\S+", part)) for part in parts), default=0)
+        require(longest <= 30,
+                f"guided chapter '{chapter.get('id')}' has a {longest}-word sentence; expected at most 30")
         require(bool(chapter.get("expert_expansion")) and bool(chapter.get("not_claimed")),
                 f"guided chapter '{chapter.get('id')}' lacks expert or not-claimed text")
         features = chapter.get("presentation_features")
@@ -192,6 +210,44 @@ def validate(presentation_path):
         require(isinstance(not_claimed, list) and bool(not_claimed)
                 and all(str(entry).strip() for entry in not_claimed),
                 f"expert card '{card.get('id')}' needs explicit not-claimed text")
+        findings = card.get("findings")
+        if not isinstance(findings, list) or not findings:
+            require(False, f"expert card '{card.get('id')}' must separate its findings by status")
+        else:
+            for found in findings:
+                require(isinstance(found, dict) and found.get("status") in FINDING_STATUSES,
+                        f"expert card '{card.get('id')}' has invalid finding status "
+                        f"'{(found or {}).get('status')}'")
+                require(bool(str((found or {}).get("text", "")).strip()),
+                        f"expert card '{card.get('id')}' has a finding without text")
+            # A card resting on a claim the audit itself calls INFERRED is discussing
+            # a proposal and may not present every finding as established.
+            target = claim_map.get(card.get("target_claim_id")) or {}
+            if base_evidence(target.get("claim_evidence_class")) == "INFERRED":
+                require(any((found or {}).get("status") == "PROPOSED" for found in findings),
+                        f"expert card '{card.get('id')}' rests on an INFERRED claim but marks nothing PROPOSED")
+    # SC-7 guided-tour pacing: the plan's "approximately two to three minutes" gate,
+    # machine-checked against the copy that actually ships.
+    pacing = p.get("tour_pacing") or {}
+    rate = pacing.get("reading_words_per_minute")
+    transition = pacing.get("chapter_transition_seconds")
+    target_seconds = pacing.get("target_seconds")
+    pacing_ok = (isinstance(rate, (int, float)) and rate > 0
+                 and isinstance(transition, (int, float)) and transition >= 0
+                 and isinstance(target_seconds, list) and len(target_seconds) == 2
+                 and all(isinstance(x, (int, float)) for x in target_seconds)
+                 and target_seconds[0] < target_seconds[1]
+                 and bool(str(pacing.get("basis", "")).strip()))
+    require(pacing_ok, "presentation tour_pacing needs a positive reading model, an "
+                       "increasing target window, and a stated basis")
+    if pacing_ok:
+        chapter_list = p.get("guided_chapters", [])
+        tour_words = sum(len(re.findall(r"\S+", c.get("lay_summary", ""))) for c in chapter_list)
+        seconds = tour_words / rate * 60 + len(chapter_list) * transition
+        require(target_seconds[0] <= seconds <= target_seconds[1],
+                f"guided tour runs {seconds:.0f} s, outside the declared "
+                f"{target_seconds[0]}-{target_seconds[1]} s window")
+
     mybpc_claim = claim_map.get("mybpc_czone_context")
     if mybpc_claim and str(mybpc_claim.get("decision", "")).startswith("ADMIT"):
         require(any(card.get("target_claim_id") == "mybpc_czone_context"

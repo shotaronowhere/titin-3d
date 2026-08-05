@@ -138,6 +138,7 @@ export class Spec {
       sarcomere: S,
       titin: T,
       states: ST,
+      annotations: this.annotations,
     }));
     p.push(...checkAnnotationCatalog(this.annotations, {
       references: R,

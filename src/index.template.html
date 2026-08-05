@@ -259,6 +259,30 @@ window.__titinBoot = { ready: false, problems: [] };
     border-left: 2px solid #8b6530; padding-left: 7px; }
   .lattice-delta { margin-top: 6px; font-size: 9px; color: var(--dim); }
   @media (max-width: 460px) { .lattice-pair { grid-template-columns: 1fr; } }
+  /* SC-7. A vertical flow: one counted, inspectable stage per row. */
+  .pipeline { margin: 10px 0 2px; border-top: 1px solid var(--edge); padding-top: 9px; }
+  .pipeline-stage { border-left: 2px solid #3f5a7a; padding: 0 0 8px 9px; position: relative; }
+  .pipeline-stage:last-child { padding-bottom: 0; }
+  .pipeline-stage::before { content: ""; position: absolute; left: -5px; top: 4px;
+    width: 8px; height: 8px; border-radius: 50%; background: #3f5a7a; }
+  .pipeline-label { font-weight: 650; font-size: 10px; }
+  .pipeline-count { color: #ffe1e8; font-variant-numeric: tabular-nums; font-size: 10px; }
+  .pipeline-detail { color: var(--dim); font-size: 9px; line-height: 1.4; margin-top: 1px; }
+  .pipeline-records { color: #7f8b9c; font-size: 8px; margin-top: 2px; word-break: break-word; }
+  .pipeline-foot { color: #c9b989; font-size: 9px; line-height: 1.4; margin-top: 7px;
+    border-left: 2px solid #8b6530; padding-left: 7px; }
+  /* The guided card floats over the stage and has no height of its own, so the
+     two long chapter attachments are bounded here rather than being allowed to
+     push the card off the top of the viewport on a short screen. */
+  #guidedLattice, #guidedPipeline { max-height: 38vh; overflow-y: auto;
+    overscroll-behavior: contain; }
+  .card-findings { margin: 5px 0 0; padding: 0; list-style: none; }
+  .card-findings li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 6px;
+    margin-top: 3px; font-size: 9px; line-height: 1.4; }
+  .finding-status { font-weight: 700; letter-spacing: .05em; font-size: 8px; }
+  .finding-ESTABLISHED { color: #7fc4a2; }
+  .finding-PROPOSED { color: #e8c16d; }
+  .finding-OPEN { color: #9aa7b8; }
   .science-separator { height: 1px; background: var(--edge); margin: 16px 0 0; }
   .activation-note { margin: 7px 0 0; color: #c9b989; font-size: 10px; }
   @media (max-width: 900px) {
@@ -348,6 +372,7 @@ window.__titinBoot = { ready: false, problems: [] };
           <div class="mechanism-key">●—● folded domains straighten · ∿ disordered chain extends</div>
         </div>
         <div id="guidedLattice" hidden></div>
+        <div id="guidedPipeline" hidden></div>
         <div class="chapter-actions">
           <button id="chapterPrevious">Previous</button>
           <button id="chapterNext">Next</button>
@@ -427,6 +452,11 @@ window.__titinBoot = { ready: false, problems: [] };
       canonical span. A lighter titin-family pink carries selection only; opacity continues to encode evidence.</div>
     <div class="row" id="regions"></div>
     <div class="note" id="regionReadout" hidden aria-live="polite"></div>
+
+    <h2>How this model was built</h2>
+    <div class="sub" style="margin:0 0 6px">Every figure below is counted from the
+      loaded records when this page renders, not written into the copy.</div>
+    <div id="provenancePipeline"></div>
 
     <h2>Lattice cross-section</h2>
     <div class="sub" style="margin:0 0 6px">Looking down the filament axis, drawn
@@ -827,6 +857,49 @@ function syncExtensionRows() {
 }
 
 /**
+ * SC-7 build pipeline. The counts come from the descriptor, which counted them
+ * from the loaded records — a diagram asserting its own numbers would be exactly
+ * the unaudited illustration the chapter says this is not.
+ */
+function pipelineNode(pipeline) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'pipeline';
+  for (const stage of pipeline.stages) {
+    const row = document.createElement('div');
+    row.className = 'pipeline-stage';
+    row.dataset.stage = stage.id;
+    const head = document.createElement('div');
+    head.className = 'pipeline-label';
+    head.textContent = stage.label;
+    const count = document.createElement('div');
+    count.className = 'pipeline-count';
+    count.textContent = `${stage.count} ${stage.count_label}`;
+    const detail = document.createElement('div');
+    detail.className = 'pipeline-detail';
+    detail.textContent = stage.detail;
+    const records = document.createElement('div');
+    records.className = 'pipeline-records';
+    records.textContent = stage.records.join(' · ');
+    row.append(head, count, detail, records);
+    wrapper.append(row);
+  }
+  const foot = document.createElement('div');
+  foot.className = 'pipeline-foot';
+  foot.textContent = `Not claimed: ${pipeline.not_claimed.join('; ')}.`;
+  wrapper.append(foot);
+  return wrapper;
+}
+
+function renderProvenancePipeline() {
+  const pipeline = visualization.provenancePipeline();
+  $('provenancePipeline').replaceChildren(pipelineNode(pipeline));
+  const guided = $('guidedPipeline');
+  const show = activeFeatures().has('provenance_pipeline');
+  guided.hidden = !show;
+  guided.replaceChildren(...(show ? [pipelineNode(pipeline)] : []));
+}
+
+/**
  * SC-6 orthographic lattice comparison.
  *
  * One shared frame drives both panels, so `scale` is computed once and applied
@@ -964,6 +1037,7 @@ function renderChapter() {
   }));
   renderScienceOverlay();
   renderExtensionChart(activeShowcaseOverlay);
+  renderProvenancePipeline();
 }
 
 function applyChapterVisibility(chapterId) {
@@ -1324,6 +1398,21 @@ function renderExpertCards() {
     evidence.className = 'object-evidence';
     evidence.textContent = `Evidence ${card.evidence_class} · Evidence mode only`;
     const body = document.createElement('div'); body.textContent = card.body;
+    // The plan's gate is that a card DISTINGUISHES established findings from
+    // proposed mechanisms, so the split is rendered as labelled rows rather than
+    // left for a reader to infer from how carefully the prose hedges.
+    const findings = document.createElement('ul');
+    findings.className = 'card-findings';
+    findings.append(...card.findings.map((found) => {
+      const item = document.createElement('li');
+      const status = document.createElement('span');
+      status.className = `finding-status finding-${found.status}`;
+      status.textContent = found.status;
+      const text = document.createElement('span');
+      text.textContent = found.text;
+      item.append(status, text);
+      return item;
+    }));
     const sources = document.createElement('div');
     sources.className = 'object-sources';
     sources.append(...sourceLinks(card.sources));
@@ -1331,7 +1420,7 @@ function renderExpertCards() {
     const nonclaimLabel = document.createElement('b');
     nonclaimLabel.textContent = 'Not claimed: ';
     nonclaim.append(nonclaimLabel, document.createTextNode(card.not_claimed.join('; ')));
-    box.append(title, evidence, body, nonclaim, sources);
+    box.append(title, evidence, body, findings, nonclaim, sources);
     return box;
   }));
 }
@@ -1639,6 +1728,9 @@ function render(report) {
   const g = model.geometryAt(requestedSL);
   activeShowcaseOverlay = visualization.showcaseOverlay();
   renderExtensionChart(activeShowcaseOverlay);
+  // The lattice comparison follows sarcomere length; the build pipeline does not
+  // depend on it at all, so it is rendered on chapter change rather than rebuilt
+  // on every slider frame.
   renderLatticeCrossSection();
   renderScienceOverlay();
   const hiddenComponents = new Set(report.hidden_components || []);

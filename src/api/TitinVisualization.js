@@ -30,6 +30,7 @@ import { TitinModel } from '../model/TitinModel.js';
 import { browserReader } from '../model/readBrowser.js';
 import { AUDIENCE_MODES } from '../presentation/StoryController.js';
 import { createShowcaseOverlay } from '../presentation/ShowcaseOverlay.js';
+import { createProvenancePipeline } from '../presentation/ProvenancePipeline.js';
 import { createAnnotations } from './TitinAnnotations.js';
 import { resolveSources } from '../presentation/AnnotationCatalog.js';
 import {
@@ -576,12 +577,20 @@ export class TitinVisualization {
     return Object.freeze(cards.map((card) => Object.freeze({
       ...card,
       not_claimed: Object.freeze([...(card.not_claimed || [])]),
+      findings: Object.freeze((card.findings || [])
+        .map((found) => Object.freeze({ ...found }))),
       sources: Object.freeze(this.sources(card.source_ids || [])),
     })));
   }
 
   /** What the optional MyBP-C context layer claims, and what it deliberately omits. */
   mybpcProvenance() { return this.model.mybpcProvenance(); }
+
+  /**
+   * SC-7 build pipeline for the closing chapter. Every figure is counted from the
+   * loaded records, so the diagram cannot drift from the data layer it describes.
+   */
+  provenancePipeline() { return createProvenancePipeline(this.model); }
 
   /** Project model-coordinate anchors for accessible screen-space labels. */
   projectPresentationAnchors(records) { return this.viewer.projectPoints(records); }

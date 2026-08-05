@@ -89,10 +89,20 @@ def validate(path):
                 citation_ready = bool(reference.get("authors") and reference.get("year")
                                       and reference.get("title") and reference.get("journal"))
                 require(citation_ready, f"{rid}: source {source_id} has short-citation metadata")
-                linkable = bool(reference.get("doi")) or source_id.startswith(("UniProt:", "PDB:"))
-                if not linkable:
-                    linkable = any(str(dep).startswith("10.")
+                # Mirrors AnnotationCatalog.sourceHref exactly. The looser previous
+                # rule accepted any "PDB:"-prefixed id, including a derived
+                # multi-entry record that the JS resolver could not link at all.
+                def plain_pdb(value):
+                    return (value.startswith("PDB:") and "+" not in value
+                            and "(" not in value)
+
+                linkable = (bool(reference.get("doi"))
+                            or source_id.startswith("UniProt:")
+                            or plain_pdb(source_id)
+                            or any(str(dep).startswith("10.")
                                    for dep in reference.get("depends_on", []))
+                            or any(plain_pdb(str(dep))
+                                   for dep in reference.get("depends_on", [])))
                 require(linkable, f"{rid}: source {source_id} has a resolved link route")
         nonclaims = record.get("not_claimed") or []
         require(bool(nonclaims) and all(isinstance(item, str) and item.strip()

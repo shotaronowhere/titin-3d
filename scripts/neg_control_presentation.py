@@ -37,19 +37,40 @@ def rejected(label, mutate, expected):
         path.unlink(missing_ok=True)
 
 
+def chapter(payload, chapter_id):
+    """Look chapters up by ID: index-based controls silently stop testing what they
+    were written for as soon as the guided route is reordered."""
+    return next(row for row in payload["guided_chapters"] if row["id"] == chapter_id)
+
+
+def card(payload, card_id):
+    return next(row for row in payload["expert_cards"] if row["id"] == card_id)
+
+
 rejected("duplicate chapter ID",
-         lambda p: p["guided_chapters"].__setitem__(1, {
-             **p["guided_chapters"][1], "id": p["guided_chapters"][0]["id"]}),
+         lambda p: chapter(p, "architecture").__setitem__("id", "orientation"),
          "duplicate guided chapter")
 rejected("unknown narrative target",
-         lambda p: p["guided_chapters"][0]["target"].__setitem__("id", "not_a_region"),
+         lambda p: chapter(p, "orientation")["target"].__setitem__("id", "not_a_region"),
          "targets unknown")
 rejected("missing source closure",
-         lambda p: p["guided_chapters"][0].__setitem__("source_ids", ["10.invalid/missing"]),
+         lambda p: chapter(p, "orientation").__setitem__("source_ids", ["10.invalid/missing"]),
          "unknown source")
 rejected("overstated evidence",
-         lambda p: p["guided_chapters"][1].__setitem__("evidence_class", "MEASURED"),
+         lambda p: chapter(p, "elastic_regions").__setitem__("evidence_class", "MEASURED"),
          "stronger than target")
+rejected("chapter targeting a deferred claim",
+         lambda p: chapter(p, "orientation").__setitem__(
+             "target_claim_id", "thin_filament_regulation_layer"),
+         "targets non-admitted claim")
+rejected("dense single-sentence chapter summary",
+         lambda p: chapter(p, "orientation").__setitem__(
+             "lay_summary", " ".join(["titin"] * 40)),
+         "sentences; expected 2-3")
+rejected("chapter summary with an overlong sentence",
+         lambda p: chapter(p, "orientation").__setitem__(
+             "lay_summary", " ".join(["titin"] * 34) + ". And a short second one."),
+         "word sentence; expected at most 30")
 rejected("hidden out-of-range state",
          lambda p: p["length_presets"][3].__setitem__("outside_working_range", False),
          "wrong out-of-range flag")
@@ -68,14 +89,32 @@ rejected("MyBP-C scope card deleted",
              if card["target_claim_id"] != "mybpc_czone_context"]),
          "requires an Evidence-mode expert card")
 rejected("expert card promoted into Guided mode",
-         lambda p: p["expert_cards"][1].__setitem__("audience", "guided"),
+         lambda p: card(p, "mybpc_scope_card").__setitem__("audience", "guided"),
          "must be Evidence-mode only")
 rejected("expert card without a non-claim",
-         lambda p: p["expert_cards"][1].__setitem__("not_claimed", []),
+         lambda p: card(p, "mybpc_scope_card").__setitem__("not_claimed", []),
          "needs explicit not-claimed text")
 rejected("expert card citing a missing source",
-         lambda p: p["expert_cards"][0].__setitem__("source_ids", ["10.invalid/missing"]),
+         lambda p: card(p, "aband_scaffold_card").__setitem__("source_ids", ["10.invalid/missing"]),
          "unknown source")
+rejected("expert card with no established/proposed split",
+         lambda p: card(p, "kinase_signaling_card").__setitem__("findings", []),
+         "must separate its findings by status")
+rejected("expert card inventing a finding status",
+         lambda p: card(p, "kinase_signaling_card")["findings"][0].__setitem__(
+             "status", "SETTLED"),
+         "invalid finding status")
+rejected("proposed mechanism presented as established",
+         lambda p: card(p, "length_activation_card").__setitem__(
+             "findings", [row for row in card(p, "length_activation_card")["findings"]
+                          if row["status"] != "PROPOSED"]),
+         "marks nothing PROPOSED")
+rejected("guided tour stretched past its declared window",
+         lambda p: p["tour_pacing"].__setitem__("chapter_transition_seconds", 60),
+         "outside the declared")
+rejected("tour pacing without a stated basis",
+         lambda p: p["tour_pacing"].__setitem__("basis", ""),
+         "stated basis")
 
 assert json.loads(SOURCE.read_text(encoding="utf-8")) == BASE, "source presentation record changed"
 print("PRESENTATION NEGATIVE CONTROLS PASSED")

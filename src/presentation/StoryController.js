@@ -27,7 +27,21 @@ const PRESENTATION_FEATURES = new Set([
   // SC-6. Admitted for both audiences, so a guided chapter may request the
   // orthographic lattice comparison rather than it being Evidence-only.
   'lattice_cross_section',
+  // SC-7. The closing chapter's counted, inspectable build pipeline.
+  'provenance_pipeline',
 ]);
+
+/**
+ * SC-7. Expert cards must separate what is established from what is proposed and
+ * what is open, because the plan's gate is about that distinction rather than
+ * about how carefully the prose hedges.
+ */
+const FINDING_STATUSES = new Set(['ESTABLISHED', 'PROPOSED', 'OPEN']);
+
+/** Sentence count used by the "one main idea, not a dense paragraph" gate. */
+function sentences(text) {
+  return String(text || '').split(/[.!?](?=\s|$)/).map((part) => part.trim()).filter(Boolean);
+}
 
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
@@ -49,7 +63,9 @@ function baseEvidence(value) {
  * @param {any} context
  */
 export function checkPresentationSpec(presentation, context = {}) {
-  const { claims, references, sarcomere, titin, states } = context;
+  const {
+    claims, references, sarcomere, titin, states, annotations,
+  } = context;
   const problems = [];
   if (!presentation || typeof presentation !== 'object') {
     return ['presentation.json missing or not an object'];
@@ -101,6 +117,13 @@ export function checkPresentationSpec(presentation, context = {}) {
   // Titin is specified in titin.json rather than sarcomere.components, but it is
   // a first-class selectable render component in the presentation vocabulary.
   componentIds.add('titin');
+  // The selectable vocabulary the runtime actually offers is broader than
+  // sarcomere.components: myosin heads, folded domains, the Z-disc details and the
+  // C-zone context are each pickable and separately annotated. annotations.json
+  // carries exactly one record per pickable component (SC-4 pins that equality
+  // against the renderer), so it is the data-resident form of that vocabulary —
+  // without it, narrative could not target a structure a user can click.
+  for (const record of annotations?.components || []) componentIds.add(record.target_id);
   const regionIds = new Set((titin?.regions || []).map((region) => region.id));
   const stateMap = new Map(Object.entries(states?.states || {}));
   const scopeRange = presentation.scope?.working_range_nm;
@@ -189,6 +212,17 @@ export function checkPresentationSpec(presentation, context = {}) {
     if (words < 25 || words > 45) {
       problems.push(`guided chapter '${chapter.id}' lay summary has ${words} words; expected 25–45`);
     }
+    // "One main idea; no chapter depends on reading a dense paragraph." A word cap
+    // alone permits one 45-word sentence, which is exactly the density the gate is
+    // about, so sentence structure is checked too.
+    const parts = sentences(chapter.lay_summary);
+    if (parts.length < 2 || parts.length > 3) {
+      problems.push(`guided chapter '${chapter.id}' lay summary has ${parts.length} sentences; expected 2–3`);
+    }
+    const longest = Math.max(0, ...parts.map((part) => part.split(/\s+/).filter(Boolean).length));
+    if (longest > 30) {
+      problems.push(`guided chapter '${chapter.id}' has a ${longest}-word sentence; expected at most 30`);
+    }
     if (!chapter.expert_expansion || !(chapter.not_claimed || []).length) {
       problems.push(`guided chapter '${chapter.id}' needs expert expansion and not-claimed text`);
     }
@@ -234,6 +268,52 @@ export function checkPresentationSpec(presentation, context = {}) {
     if (!Array.isArray(card.not_claimed) || !card.not_claimed.length
         || card.not_claimed.some((entry) => !String(entry || '').trim())) {
       problems.push(`expert card '${card.id}' needs explicit not-claimed text`);
+    }
+    if (!Array.isArray(card.findings) || !card.findings.length) {
+      problems.push(`expert card '${card.id}' must separate its findings by status`);
+    } else {
+      for (const found of card.findings) {
+        if (!FINDING_STATUSES.has(found?.status)) {
+          problems.push(`expert card '${card.id}' has invalid finding status '${found?.status}'`);
+        }
+        if (!String(found?.text || '').trim()) {
+          problems.push(`expert card '${card.id}' has a finding without text`);
+        }
+      }
+      // A card built on a claim the audit itself classes as INFERRED is discussing a
+      // proposal; it may not present every finding as established.
+      const claimEvidence = baseEvidence(claimMap.get(card.target_claim_id)?.claim_evidence_class);
+      const statuses = new Set(card.findings.map((found) => found.status));
+      if (claimEvidence === 'INFERRED' && !statuses.has('PROPOSED')) {
+        problems.push(`expert card '${card.id}' rests on an INFERRED claim but marks nothing PROPOSED`);
+      }
+    }
+  }
+
+  // SC-7 guided-tour pacing. The plan's "approximately two to three minutes" gate
+  // is machine-checked here from the copy that is actually shipped, using an
+  // explicitly declared and reviewable reading model.
+  const pacing = presentation.tour_pacing;
+  const rate = pacing?.reading_words_per_minute;
+  const transition = pacing?.chapter_transition_seconds;
+  const target = pacing?.target_seconds;
+  if (!Number.isFinite(rate) || rate <= 0
+      || !Number.isFinite(transition) || transition < 0
+      || !Array.isArray(target) || target.length !== 2
+      || !target.every(Number.isFinite) || target[0] >= target[1]
+      || !String(pacing?.basis || '').trim()) {
+    problems.push('presentation tour_pacing needs a positive reading model, an increasing target window, and a stated basis');
+  } else {
+    const chapterList = presentation.guided_chapters || [];
+    const tourWords = chapterList.reduce((sum, chapter) => (
+      sum + String(chapter.lay_summary || '').trim().split(/\s+/).filter(Boolean).length
+    ), 0);
+    const seconds = (tourWords / rate) * 60 + chapterList.length * transition;
+    if (seconds < target[0] || seconds > target[1]) {
+      problems.push(
+        `guided tour runs ${seconds.toFixed(0)} s, outside the declared `
+        + `${target[0]}–${target[1]} s window`,
+      );
     }
   }
   // The MyBP-C layer is admitted only with a recorded reason for omitting the

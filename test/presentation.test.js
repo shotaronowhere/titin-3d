@@ -27,7 +27,8 @@ test('SC1: presentation.json is required and cross-file validated at runtime', (
   assert.equal(model.spec.presentation.schema, 'titin-presentation/1');
   assert.equal(model.spec.showcaseClaims.schema, 'titin-showcase-claim-audit/1');
   assert.deepEqual(controller.chapters.map((chapter) => chapter.id),
-    ['orientation', 'elastic_regions', 'anchored_scaffold']);
+    ['orientation', 'architecture', 'elastic_regions', 'anchors',
+      'anchored_scaffold', 'evidence_audit', 'provenance_pipeline']);
 });
 
 test('SC1: every supported public URL state round-trips exactly', () => {

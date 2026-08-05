@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 and SC-6 complete on 2026-08-05; SC-7 is next
+**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 through SC-7 complete on 2026-08-05; SC-8 is next
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -564,6 +564,35 @@ also rejects a stale standalone `index.html`.
 - The view never implies time-resolved active contraction.
 
 ### SC-7 — Guided narrative and expert depth
+
+**Completed 2026-08-05.** The guided route is now the seven chapters the plan
+specifies: locate titin, read its architecture, watch regional extension, inspect
+its anchors, see titin as a scaffold, audit the evidence, and close with the
+build pipeline. Each owns one takeaway, one deterministic camera, one visibility
+configuration, sourced copy, and its non-claims; the route uses four distinct
+cameras — including the SC-6 `czone` close-up and the Z-disc anchor close-up — so
+it moves rather than parking on one shot. Two of the plan's gates are now
+machine-checked rather than asserted: a declared `tour_pacing` reading model puts
+the shipped copy at 121 s against a 110–190 s window, and the "one main idea, not
+a dense paragraph" rule is enforced as 2–3 sentences with no sentence over 30
+words, because a word cap alone permits a single 45-word sentence. Five new
+expert cards cover N2A as an interaction hub, titin kinase, proposed
+length-dependent activation, isoform diversity, and the unresolved azimuthal,
+M-band, and active-mechanics questions. Every card now carries a
+`findings` list whose entries are ESTABLISHED, PROPOSED, or OPEN, so the
+established-versus-proposed distinction is structural and rendered as labelled
+rows; a card resting on an INFERRED claim that marks nothing PROPOSED is
+rejected. `src/presentation/ProvenancePipeline.js` counts each of the six
+pipeline stages from the loaded records at render time, so a diagram about
+auditability cannot itself carry hand-written numbers. Twelve focused positive
+and destructive tests are in `test/showcase_phase7.test.js` and eight new
+destructive presentation controls were added; the bounded gate is
+`npm run verify:sc7`. Two pre-existing defects were repaired on the way: chapter
+targets validated against `sarcomere.components` while the runtime offered the
+broader pickable set that `annotations.json` records, and derived Phase-6
+measurement sources (`PDB:1TKI+4JNW (…)`) had no link route at all, so any UI
+citing one threw — the Python validator had been calling them linkable while the
+JS resolver could not link them.
 
 #### Main guided route
 

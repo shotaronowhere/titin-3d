@@ -157,8 +157,47 @@
       }
     },
     {
-      "id": "elastic_regions",
+      "id": "architecture",
       "order": 2,
+      "title": "Read its architecture",
+      "target_claim_id": "titin_region_architecture",
+      "target": {
+        "kind": "component",
+        "id": "titin_domains"
+      },
+      "evidence_class": "MEASURED",
+      "source_ids": [
+        "UniProt:Q8WZ42",
+        "10.1016/j.jmb.2020.06.025"
+      ],
+      "lay_summary": "Titin is not one uniform coil. Folded Ig and Fn3 domains alternate with disordered segments, and the order of those regions is fixed by the sequence: elastic parts near the Z-disc, anchored scaffold further in.",
+      "expert_expansion": "Domain identity and order follow Q8WZ42; instanced archetypes encode class, position, and orientation rather than unique molecular surfaces. The smooth linkers between them are presentation proxies for unresolved conformations.",
+      "not_claimed": [
+        "atom-resolved surfaces for every domain",
+        "a known azimuth for every folded domain",
+        "that domain spacing is measured everywhere along the molecule"
+      ],
+      "presentation_features": [
+        "continuity_trace",
+        "termini"
+      ],
+      "recommended_state": {
+        "sarcomere_length_nm": 2200,
+        "scale": "detail",
+        "camera_preset": "view.titin_story",
+        "selected_component_or_region": "titin_domains",
+        "visibility": {
+          "show_lattice": false,
+          "show_domains": true,
+          "show_context_detail": false,
+          "mirror": false,
+          "rings": 1
+        }
+      }
+    },
+    {
+      "id": "elastic_regions",
+      "order": 3,
       "title": "Different regions extend differently",
       "target_claim_id": "regional_extension_story",
       "target": {
@@ -194,9 +233,48 @@
       }
     },
     {
+      "id": "anchors",
+      "order": 4,
+      "title": "Inspect its anchors",
+      "target_claim_id": "zdisc_telethonin_sandwich",
+      "target": {
+        "kind": "region",
+        "id": "Z1Z2"
+      },
+      "evidence_class": "MEASURED",
+      "source_ids": [
+        "10.1038/nature04343",
+        "10.1016/j.cell.2021.02.047"
+      ],
+      "lay_summary": "A spring only works if both ends are held. At the Z-disc, two titin N-termini from neighbouring half-sarcomeres clamp a telethonin molecule between them, which is how tension passes across the sarcomere boundary.",
+      "expert_expansion": "The antiparallel two-titin-to-one-telethonin topology is structure-supported; the displayed span and the surrounding network are schematic. At the far end titin's C-terminus integrates with the M-band, where the opposing half-sarcomere's titin arrives — reachable from the M-band close-up in Evidence mode.",
+      "not_claimed": [
+        "a resolved complete lateral route for titin through the Z-disc",
+        "single-ended telethonin binding",
+        "a measured display length for the sandwich glyph"
+      ],
+      "presentation_features": [
+        "band_brackets",
+        "termini"
+      ],
+      "recommended_state": {
+        "sarcomere_length_nm": 2200,
+        "scale": "context",
+        "camera_preset": "closeup.zdisc",
+        "selected_component_or_region": "Z1Z2",
+        "visibility": {
+          "show_lattice": true,
+          "show_domains": false,
+          "show_context_detail": false,
+          "mirror": true,
+          "rings": 1
+        }
+      }
+    },
+    {
       "id": "anchored_scaffold",
-      "order": 3,
-      "title": "Elastic spring, anchored scaffold",
+      "order": 5,
+      "title": "See titin as a scaffold",
       "target_claim_id": "titin_region_architecture",
       "target": {
         "kind": "region",
@@ -208,7 +286,7 @@
         "UniProt:Q8WZ42"
       ],
       "lay_summary": "Titin changes role along its length. Its I-band regions form the extensible spring, while an eleven-domain super-repeat binds the thick filament: that A-band segment keeps a constant span and organizes the filament rather than stretching.",
-      "expert_expansion": "Eleven Ig/Fn3 domains repeat every 45.5 nm along the bound segment, near-commensurate with the 43.1 nm myosin repeat; the 2.4 nm residual is not an exact register. The A-band span is invariant with sarcomere length here, which is what makes the scaffold role legible beside the I-band spring. Titin is widely discussed as a thick-filament ruler and regulator, but this model encodes the geometric scaffold only, never a causal mechanism.",
+      "expert_expansion": "Eleven Ig/Fn3 domains repeat every 45.5 nm along the bound segment, near-commensurate with the 43.1 nm myosin repeat; the 2.4 nm residual is not an exact register. The A-band span is invariant with sarcomere length here, which is what makes the scaffold role legible beside the I-band spring. Titin is widely discussed as a thick-filament ruler and regulator, but this model encodes the geometric scaffold only, never a causal mechanism. The same C-zone carries MyBP-C, an accessory thick-filament protein that is not part of titin; its optional schematic context layer can be switched on here in Evidence mode.",
       "not_claimed": [
         "one elastic constant for the whole molecule",
         "atom-level region surfaces",
@@ -223,14 +301,91 @@
       ],
       "recommended_state": {
         "sarcomere_length_nm": 2200,
-        "scale": "detail",
-        "camera_preset": "view.titin_story",
+        "scale": "context",
+        "camera_preset": "closeup.czone",
         "selected_component_or_region": "Aband_super",
         "visibility": {
-          "show_lattice": false,
+          "show_lattice": true,
           "show_domains": true,
           "show_context_detail": false,
-          "mirror": false,
+          "mirror": true,
+          "rings": 1
+        }
+      }
+    },
+    {
+      "id": "evidence_audit",
+      "order": 6,
+      "title": "Audit the evidence",
+      "target_claim_id": "band_and_zone_brackets",
+      "target": {
+        "kind": "component",
+        "id": "titin"
+      },
+      "evidence_class": "STRONGLY INFERRED",
+      "source_ids": [
+        "10.1016/j.cell.2021.02.047",
+        "10.1085/jgp.202012713"
+      ],
+      "lay_summary": "Not every line here is equally certain. Lengths and periodicities are measured, regional extension is solved from a model, and smooth three-dimensional paths are schematic. Every object on screen says which it is.",
+      "expert_expansion": "Six evidence classes run from MEASURED to UNKNOWN and are never silently promoted. Click any structure for its claim class, render class, scope, sources, and explicit non-claims; the Evidence drawer groups every claim in the current scene by class.",
+      "not_claimed": [
+        "that a schematic path is an experimental density",
+        "that passing validation proves a biological interpretation",
+        "one uniform confidence across the whole model"
+      ],
+      "presentation_features": [
+        "band_brackets",
+        "continuity_trace",
+        "termini"
+      ],
+      "recommended_state": {
+        "sarcomere_length_nm": 2200,
+        "scale": "context",
+        "camera_preset": "view.oblique",
+        "selected_component_or_region": "titin",
+        "visibility": {
+          "show_lattice": true,
+          "show_domains": false,
+          "show_context_detail": false,
+          "mirror": true,
+          "rings": 1
+        }
+      }
+    },
+    {
+      "id": "provenance_pipeline",
+      "order": 7,
+      "title": "How this model was built",
+      "target_claim_id": "ai_provenance_pipeline",
+      "target": {
+        "kind": "component",
+        "id": "titin"
+      },
+      "evidence_class": "SCHEMATIC",
+      "source_ids": [
+        "UniProt:Q8WZ42"
+      ],
+      "lay_summary": "This is not an illustration drawn to look convincing. Every shape traces back through counted, inspectable records: cited papers, sourced measurements, evidence-classified data, an executable model, and tests built to reject it.",
+      "expert_expansion": "The figures in the diagram are counted from the loaded records at render time rather than written into the copy, so they cannot drift from the data layer. AI helped build and audit a reproducible model; it is not the scientific authority for any claim, and passing validation does not settle a biological interpretation.",
+      "not_claimed": [
+        "that AI is a scientific authority",
+        "that passing tests proves every biological interpretation",
+        "that procedural geometry is experimental density"
+      ],
+      "presentation_features": [
+        "provenance_pipeline"
+      ],
+      "recommended_state": {
+        "sarcomere_length_nm": 2200,
+        "scale": "context",
+        "camera_preset": "view.titin_story",
+        "selected_component_or_region": "titin",
+        "visibility": {
+          "show_lattice": true,
+          "show_domains": false,
+          "show_context_detail": false,
+          "mirror": true,
           "rings": 1
         }
       }
@@ -254,6 +409,24 @@
         "a settled regulatory pathway from titin to myosin",
         "exact register between the 45.5 nm titin super-repeat and the 43.1 nm myosin repeat",
         "an exact universal A-band azimuth for the bound segment"
+      ],
+      "findings": [
+        {
+          "status": "ESTABLISHED",
+          "text": "An eleven-domain super-repeat of 45.5 nm axial periodicity binds the thick filament, with eleven copies in the C-zone."
+        },
+        {
+          "status": "ESTABLISHED",
+          "text": "In this model the bound segment's end-to-end span stays constant while sarcomere length changes."
+        },
+        {
+          "status": "PROPOSED",
+          "text": "That titin acts as a molecular ruler setting thick-filament length."
+        },
+        {
+          "status": "PROPOSED",
+          "text": "That titin participates causally in myosin regulation."
+        }
       ]
     },
     {
@@ -272,6 +445,188 @@
         "a direct titin–MyBP-C contact",
         "three exact molecules at every human titin super-repeat",
         "a resolved stripe register, azimuth, reach, or binding pose"
+      ],
+      "findings": [
+        {
+          "status": "ESTABLISHED",
+          "text": "Fast skeletal MyBP-C occupies the C-zone at the approximately 43 nm thick-filament repeat, at roughly three molecules per repeat."
+        },
+        {
+          "status": "OPEN",
+          "text": "The stripe register, azimuth, outward reach, and binding pose for this skeletal reference are unresolved, so the drawn path stays schematic."
+        },
+        {
+          "status": "OPEN",
+          "text": "Whether a direct titin–MyBP-C contact exists in this scope; none is depicted."
+        }
+      ]
+    },
+    {
+      "id": "n2a_hub_card",
+      "target_claim_id": "n2a_interaction_hub_card",
+      "audience": "evidence",
+      "title": "N2A as a mechanical and interaction hub",
+      "evidence_class": "MEASURED",
+      "source_ids": [
+        "10.1016/j.jmb.2021.166901",
+        "10.3389/fphys.2020.00173"
+      ],
+      "body": "The N2A element is more than a length of spring. It contains a structured UN2A core with flexible flanks, and it binds CARP, which makes it a plausible meeting point between mechanical state and signalling. The visualization keeps N2A as a region of titin and adds no partner molecules: naming a binding event is not the same as resolving where the partner sits in an intact sarcomere.",
+      "findings": [
+        {
+          "status": "ESTABLISHED",
+          "text": "N2A contains a structured UN2A core with flexible flanking sequence."
+        },
+        {
+          "status": "ESTABLISHED",
+          "text": "CARP binding to N2A is experimentally characterised."
+        },
+        {
+          "status": "PROPOSED",
+          "text": "That N2A acts as an in-situ signalling hub coupling strain to downstream pathways."
+        },
+        {
+          "status": "OPEN",
+          "text": "The complete composition and geometry of any N2A signalosome in an intact sarcomere."
+        }
+      ],
+      "not_claimed": [
+        "complete N2A signalosome composition",
+        "resolved partner coordinates",
+        "one universal downstream pathway",
+        "an added partner molecule in the 3-D scene"
+      ]
+    },
+    {
+      "id": "kinase_signaling_card",
+      "target_claim_id": "titin_kinase_card",
+      "audience": "evidence",
+      "title": "Titin kinase: an established domain, an unsettled mechanism",
+      "evidence_class": "MEASURED",
+      "source_ids": [
+        "UniProt:Q8WZ42",
+        "PDB:1TKI+4JNW (Phase 6 measurement, kinase)"
+      ],
+      "body": "Titin carries a kinase domain near the A-band/M-band junction. Its presence and its isolated structure are established, and the domain proxy you can see is measured from deposited coordinates. What is not settled is the mechanism: proposals that stretch opens the domain and switches on signalling remain under active debate, so the visualization shows the domain and refuses to animate an activation switch.",
+      "findings": [
+        {
+          "status": "ESTABLISHED",
+          "text": "A kinase domain sits near the A-band/M-band junction of titin."
+        },
+        {
+          "status": "ESTABLISHED",
+          "text": "Isolated kinase-domain structures give the measured proxy dimensions drawn here."
+        },
+        {
+          "status": "PROPOSED",
+          "text": "That mechanical strain opens the domain and triggers a specific signalling cascade."
+        },
+        {
+          "status": "OPEN",
+          "text": "The domain's orientation and conformation inside an intact sarcomere."
+        }
+      ],
+      "not_claimed": [
+        "a settled mechanosensor mechanism",
+        "in-situ kinase orientation",
+        "causal downstream signaling animation"
+      ]
+    },
+    {
+      "id": "length_activation_card",
+      "target_claim_id": "length_dependent_activation_card",
+      "audience": "evidence",
+      "title": "Length-dependent activation: a proposal, not a simulation",
+      "evidence_class": "INFERRED",
+      "source_ids": [
+        "10.1038/s41467-024-46957-7"
+      ],
+      "body": "Muscle produces more force at longer lengths for a given calcium level, and passive titin tension and MyBP-C are among the contributors proposed to explain it. That is a live hypothesis about how a passive spring might bias myosin's regulatory state. This model does not implement it: sarcomere length and biochemical activation remain independent axes here, and no state variable couples one to the other.",
+      "findings": [
+        {
+          "status": "ESTABLISHED",
+          "text": "Force at a given calcium level depends on sarcomere length."
+        },
+        {
+          "status": "PROPOSED",
+          "text": "That passive titin tension contributes causally to that length dependence."
+        },
+        {
+          "status": "PROPOSED",
+          "text": "That MyBP-C mediates part of the same thick-filament regulation."
+        },
+        {
+          "status": "OPEN",
+          "text": "Whether this model could distinguish those proposals; it contains no activation solver."
+        }
+      ],
+      "not_claimed": [
+        "settled causality",
+        "that titin is the actomyosin motor",
+        "automatic coupling between sarcomere length and activation"
+      ]
+    },
+    {
+      "id": "isoform_diversity_card",
+      "target_claim_id": "scope_badge",
+      "audience": "evidence",
+      "title": "One gene, many titins — and one of them is modelled here",
+      "evidence_class": "MEASURED",
+      "source_ids": [
+        "UniProt:Q8WZ42"
+      ],
+      "body": "A single TTN gene produces many titin isoforms through alternative splicing, and different muscles and tissues express different ones. Isoform choice changes the length and composition of the elastic I-band segment, and therefore passive stiffness. This visualization models the canonical human skeletal N2A-containing reference and deliberately adds no second isoform: naming the reference is what keeps a general titin story from becoming a claim about an isoform-neutral molecule.",
+      "findings": [
+        {
+          "status": "ESTABLISHED",
+          "text": "Alternative splicing of one TTN gene yields tissue- and muscle-specific titin isoforms."
+        },
+        {
+          "status": "ESTABLISHED",
+          "text": "This model is the canonical human skeletal N2A-containing reference, Q8WZ42."
+        },
+        {
+          "status": "OPEN",
+          "text": "How the geometry shown here would differ for another isoform; no second isoform is modelled."
+        }
+      ],
+      "not_claimed": [
+        "an isoform-neutral titin molecule",
+        "a cardiac titin model",
+        "a per-isoform comparison of passive stiffness"
+      ]
+    },
+    {
+      "id": "unresolved_questions_card",
+      "target_claim_id": "ai_provenance_pipeline",
+      "audience": "evidence",
+      "title": "What this model still cannot tell you",
+      "evidence_class": "UNKNOWN",
+      "source_ids": [
+        "PDB:8G4L",
+        "10.1038/s41586-023-06690-5",
+        "10.1016/j.bpj.2021.08.006"
+      ],
+      "body": "Three gaps are worth naming plainly. The azimuthal arrangement of titin strands around a thick filament is resolved in cardiac muscle but not adopted here, because this model's scope is skeletal. M-band organization is only partly resolved, so the centre is a coordinate reference with sparse schematic crosslinks rather than a structure. And active mechanics are absent entirely: the lattice comparison is a quasi-static length sweep, not a time-resolved contraction.",
+      "findings": [
+        {
+          "status": "OPEN",
+          "text": "The azimuthal placement of titin strands on a skeletal thick filament; the cardiac arrangement is measured but out of scope."
+        },
+        {
+          "status": "OPEN",
+          "text": "The molecular organization of the M-band; no M1 density is inferred from the retained averaged maps."
+        },
+        {
+          "status": "OPEN",
+          "text": "Time-resolved active mechanics, including the real time-varying Poisson ratio of the lattice."
+        }
+      ],
+      "not_claimed": [
+        "a resolved skeletal titin azimuth",
+        "a complete M-band molecular structure",
+        "time-resolved active contraction",
+        "that these gaps are the only ones"
       ]
     }
   ],
@@ -300,5 +655,14 @@
       "label": "Open evidence",
       "action": "mode.evidence"
     }
-  ]
+  ],
+  "tour_pacing": {
+    "reading_words_per_minute": 160,
+    "chapter_transition_seconds": 5,
+    "target_seconds": [
+      110,
+      190
+    ],
+    "basis": "Silent reading of the lay summary at a general-audience rate, plus one deterministic camera and visibility transition per chapter. This is the machine-checked form of the plan's 'approximately two to three minutes' guided-tour gate; it does not include time spent in the Evidence drawer."
+  }
 }
