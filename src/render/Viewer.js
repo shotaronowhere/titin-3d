@@ -33,6 +33,32 @@ export const VIEWS = Object.freeze({
 export const CAMERA_TRANSITION_MS = 650;
 
 /**
+ * Fallback used when the container has no layout yet. Any finite positive value
+ * works: `resize()` overwrites it as soon as the element has a real size.
+ */
+const FALLBACK_ASPECT = 16 / 9;
+
+/**
+ * The camera's aspect ratio, guarded against a container that has not been laid
+ * out yet.
+ *
+ * A hidden or not-yet-measured element reports 0 for both dimensions, and 0/0 is
+ * NaN. That NaN does not stay local: `focusSpan` and `closeUp` SOLVE their camera
+ * distance as `span / aspect / 2 / tan(fov/2)`, so a NaN aspect propagates into
+ * camera.position and then into the projection matrix, and the canvas renders
+ * nothing at all. The failure is silent from the inside — renderer.info still
+ * reports a full complement of draw calls and triangles against a blank frame —
+ * so the aspect is clamped here at the single point where it enters the camera.
+ *
+ * Exported so the guard can be tested without constructing WebGL.
+ */
+export function cameraAspect(width, height) {
+  return (Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0)
+    ? width / height
+    : FALLBACK_ASPECT;
+}
+
+/**
  * Symmetric cubic easing with zero velocity at both ends.
  * Exported so the motion contract can be tested without constructing WebGL.
  */
@@ -173,7 +199,7 @@ export class Viewer {
     // structure simply vanished — the myosin crowns and the thin-filament twist
     // were unreachable however far the user scrolled.
     this.camera = new THREE.PerspectiveCamera(
-      35, container.clientWidth / container.clientHeight, 1, 100000,
+      35, cameraAspect(container.clientWidth, container.clientHeight), 1, 100000,
     );
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
@@ -401,6 +427,31 @@ export class Viewer {
   }
 
   /**
+   * Distance at which `spanNm` fills the viewport WIDTH; height follows from the
+   * aspect ratio. Shared by every span-solving framing path.
+   *
+   * The aspect is asserted rather than defaulted here. `cameraAspect` already
+   * guarantees a sane value wherever the aspect enters the camera, so a non-finite
+   * one arriving at this point means something upstream is broken; quietly
+   * substituting a fallback would frame to the wrong span instead of surfacing the
+   * fault. The failure this prevents is silent — a NaN distance reaches
+   * camera.position and blanks the canvas without raising anything, while
+   * renderer.info still reports a full complement of draw calls and triangles.
+   *
+   * @param {number} spanNm physical span to fit across the viewport width
+   */
+  _distanceForSpan(spanNm) {
+    const { aspect } = this.camera;
+    if (!Number.isFinite(aspect) || aspect <= 0) {
+      throw new Error(
+        `camera aspect must be finite and positive to solve a framing distance, got ${aspect}`,
+      );
+    }
+    const fov = THREE.MathUtils.degToRad(this.camera.fov);
+    return (spanNm / aspect / 2) / Math.tan(fov / 2);
+  }
+
+  /**
    * Move the camera to a named close-up, filling the viewport with `spanNm`.
    *
    * The distance is SOLVED from the span and the field of view rather than tuned by
@@ -423,9 +474,7 @@ export class Viewer {
     }
     const g = closeUpLandmarks(this.model, sl);
     const target = new THREE.Vector3(...preset.at(g));
-    const fov = THREE.MathUtils.degToRad(this.camera.fov);
-    // Fit the span across the WIDTH; height follows from the aspect ratio.
-    const distance = (preset.spanNm / this.camera.aspect / 2) / Math.tan(fov / 2);
+    const distance = this._distanceForSpan(preset.spanNm);
     const v = new THREE.Vector3(...preset.dir).normalize().multiplyScalar(distance);
     const move = opts.move !== false;
     if (move) this._moveCamera(target.clone().add(v), target, opts);
@@ -475,8 +524,7 @@ export class Viewer {
     const physicalSpan = endNm - startNm;
     const viewSpan = Math.max(40, physicalSpan * 1.35);
     const target = new THREE.Vector3((startNm + endNm) / 2, 0, 0);
-    const fov = THREE.MathUtils.degToRad(this.camera.fov);
-    const distance = (viewSpan / this.camera.aspect / 2) / Math.tan(fov / 2);
+    const distance = this._distanceForSpan(viewSpan);
     const direction = new THREE.Vector3(0.12, 0.25, 1).normalize();
     this._moveCamera(target.clone().add(direction.multiplyScalar(distance)), target, opts);
     return {
@@ -626,11 +674,17 @@ export class Viewer {
   resize() {
     const { clientWidth: w, clientHeight: h } = this.container;
     if (!w || !h) return;
-    this.camera.aspect = w / h;
+    this.camera.aspect = cameraAspect(w, h);
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h);
     // Screen-space line widths are computed from this size.
     this.sarcomere?.setLineResolution(w, h);
+    // Repairing the aspect above does NOT repair a position that was solved from a
+    // broken one, and nothing else re-derives it, so a camera framed before the
+    // container had a size would stay at NaN for the life of the page. Re-frame once
+    // the element is real, so a late layout recovers instead of leaving a canvas that
+    // renders nothing while reporting a full complement of draw calls.
+    if (!Number.isFinite(this.camera.position.lengthSq())) this.frame();
   }
 
   /**

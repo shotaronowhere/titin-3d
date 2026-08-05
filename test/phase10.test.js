@@ -15,7 +15,7 @@ import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import { TitinVisualization } from '../src/api/TitinVisualization.js';
 import {
-  Viewer, CAMERA_TRANSITION_MS, easeCameraTransition,
+  Viewer, CAMERA_TRANSITION_MS, easeCameraTransition, cameraAspect,
 } from '../src/render/Viewer.js';
 import {
   COMPONENT_COLOR, SarcomereScene,
@@ -317,4 +317,62 @@ test('PHASE10: the page wires smooth scale/region navigation and accessible cont
     'component controls must reflect effective scene visibility');
   assert.match(PAGE_SOURCE, /visualization\.start\(\(report\)\s*=>[\s\S]*?render\(report\)/,
     'LOD rebuilds must refresh the visible report');
+});
+
+/**
+ * A container with no layout yet yields 0/0 = NaN for the aspect ratio, and the
+ * span-solving framing paths (focusSpan, closeUp) divide by it. A NaN aspect
+ * therefore reaches camera.position, the projection matrix fills with NaN, and
+ * the canvas renders nothing at all — while renderer.info still reports a full
+ * complement of draw calls and triangles, so the failure looks like a working
+ * scene. frame('titin_story') routes through focusSpan, so the titin deep link
+ * is the path that hits it.
+ */
+test('PHASE10: an unlaid-out container cannot poison the camera aspect', () => {
+  assert.equal(cameraAspect(1280, 720), 1280 / 720);
+  for (const [w, h] of [[0, 0], [0, 720], [1280, 0], [NaN, NaN], [-1280, 720]]) {
+    const aspect = cameraAspect(w, h);
+    assert.ok(Number.isFinite(aspect) && aspect > 0,
+      `cameraAspect(${w}, ${h}) must stay finite and positive, got ${aspect}`);
+  }
+});
+
+test('PHASE10: span framing refuses to write a non-finite camera position', () => {
+  const viewer = Object.create(Viewer.prototype);
+  viewer.camera = new THREE.PerspectiveCamera(35, 1.6, 1, 10000);
+  viewer.camera.position.set(0, 0, 100);
+  viewer.controls = { target: new THREE.Vector3(), update: () => {} };
+  viewer.prefersReducedMotion = false;
+  viewer._sceneRadius = 1000;
+  viewer.container = { clientWidth: 1280, clientHeight: 720 };
+
+  viewer.camera.aspect = 0 / 0;
+  assert.throws(() => viewer.focusSpan(0, 1100), /aspect/i,
+    'focusSpan must reject a non-finite aspect instead of silently framing to NaN');
+  assert.ok(Number.isFinite(viewer.camera.position.x),
+    'a rejected framing must leave the previous camera position intact');
+});
+
+test('PHASE10: a resize recovers a camera left non-finite by a zero-sized first layout', () => {
+  const root = new THREE.Group();
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 20, 20));
+  root.add(mesh);
+
+  const viewer = Object.create(Viewer.prototype);
+  viewer.camera = new THREE.PerspectiveCamera(35, 0 / 0, 1, 10000);
+  viewer.camera.position.set(0 / 0, 0 / 0, 0 / 0);
+  viewer.controls = { target: new THREE.Vector3(), update: () => {} };
+  viewer.prefersReducedMotion = false;
+  viewer.sarcomere = { root, setLineResolution: () => {} };
+  viewer.renderer = { setSize: () => {} };
+  viewer.container = { clientWidth: 1280, clientHeight: 720 };
+
+  viewer.resize();
+
+  assert.ok(Number.isFinite(viewer.camera.aspect), 'resize must repair the aspect');
+  assert.ok(['x', 'y', 'z'].every((axis) => Number.isFinite(viewer.camera.position[axis])),
+    'resize must re-derive a position the NaN aspect had destroyed');
+  assert.ok(viewer.camera.position.length() > 0,
+    'the recovered camera must sit off the target, not collapse onto it');
+  mesh.geometry.dispose();
 });
