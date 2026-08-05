@@ -28,6 +28,9 @@
  * chance of a scale factor silently corrupting a comparison between states.
  */
 import * as THREE from 'three';
+import { Line2 } from 'three/addons/lines/Line2.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { validateZDiscDetail } from '../geometry/ZDiscDetail.js';
 import { validateMBandDetail } from '../geometry/MBandDetail.js';
 import { validateMyBPCContext } from '../geometry/MyBPCContext.js';
@@ -161,11 +164,23 @@ export const GUIDED_COMPONENT_COLOR = Object.freeze({
   lattice_guide: 0x3c4653,
 });
 
-/** Render-width decisions only; neither value is a molecular diameter. */
+/**
+ * SC-10 subject-emphasis channel.
+ *
+ * `trace_px` is a SCREEN-SPACE width in CSS pixels. It is a reading aid, not a
+ * molecular dimension, and it is deliberately independent of the tube radius:
+ * inflating the tube would imply a diameter, while a constant-width ribbon
+ * makes no dimensional claim at all. Evidence opacity is untouched by every
+ * value here — emphasis and confidence stay on separate channels.
+ */
 export const TITIN_RENDER_STYLE = Object.freeze({
   guided_radius_scale: 1.65,
   disordered_radius_scale: 0.58,
   continuity_opacity: 0.96,
+  trace_px: 4.0,
+  trace_px_evidence: 3.0,
+  halo_radius_scale: 3.2,
+  halo_opacity: 0.16,
 });
 
 /** Resolve an evidence string (which may carry a parenthetical) to a style. */
@@ -192,6 +207,13 @@ export class SarcomereScene {
     this.root.name = 'sarcomere';
     this.scene.add(this.root);
     this.disposables = new Set();
+    /**
+     * Screen-space line materials need the renderer size to compute their width,
+     * and they early-out of raycasting while the resolution is still zero. The
+     * Viewer owns that size, so the scene exposes the set rather than guessing.
+     * @type {Set<import('three/addons/lines/LineMaterial.js').LineMaterial>}
+     */
+    this.screenSpaceLineMaterials = new Set();
     /** Populated by build(): a machine-readable audit of what was drawn. */
     this.manifest = null;
     this._built = false;
@@ -216,6 +238,24 @@ export class SarcomereScene {
     // resource, not once per user of it.
     this.disposables.add(geom);
     return geom;
+  }
+
+  /**
+   * Screen-space line width and Line2 raycasting are both computed from the
+   * renderer's pixel size. A material whose resolution is still (0,0) draws at
+   * the wrong width AND silently refuses to be picked, so the Viewer calls this
+   * after every build and every resize.
+   *
+   * @param {number} width
+   * @param {number} height
+   * @returns {{materials_updated: number}}
+   */
+  setLineResolution(width, height) {
+    if (!(width > 0) || !(height > 0)) {
+      throw new Error(`setLineResolution: expected a positive size, got ${width}x${height}`);
+    }
+    for (const material of this.screenSpaceLineMaterials) material.resolution.set(width, height);
+    return { materials_updated: this.screenSpaceLineMaterials.size };
   }
 
   /**
@@ -383,24 +423,29 @@ export class SarcomereScene {
    * filament surface would falsely depict a second titin through the myosin core.
    * The offset is schematic and changes no source-backed X coordinate.
    */
-  _titinContinuityTrace(segment, off, aBandStartNm) {
+  _titinContinuityTrace(segment, off, aBandStartNm, presentationMode = 'guided') {
     const at = (x) => {
       const f = x >= aBandStartNm ? 1 : x / aBandStartNm;
-      return new THREE.Vector3(x, (off.y || 0) * f, (off.z || 0) * f);
+      return [x, (off.y || 0) * f, (off.z || 0) * f];
     };
-    const geometry = this._track(new THREE.BufferGeometry().setFromPoints([
-      at(segment.X_start),
-      at(segment.X_end),
-    ]));
-    const material = new THREE.LineBasicMaterial({
+    const geometry = new LineGeometry();
+    geometry.setPositions([...at(segment.X_start), ...at(segment.X_end)]);
+    this.disposables.add(geometry);
+    const material = new LineMaterial({
       color: COMPONENT_COLOR.titin_highlight,
+      // CSS pixels: worldUnits stays false (the default) so the ribbon keeps a
+      // constant reading width at every camera distance.
+      linewidth: presentationMode === 'guided'
+        ? TITIN_RENDER_STYLE.trace_px
+        : TITIN_RENDER_STYLE.trace_px_evidence,
       transparent: true,
       opacity: TITIN_RENDER_STYLE.continuity_opacity,
       depthTest: false,
       depthWrite: false,
     });
     this.disposables.add(material);
-    const line = new THREE.Line(geometry, material);
+    this.screenSpaceLineMaterials.add(material);
+    const line = new Line2(geometry, material);
     line.name = `titin_continuity_trace_${segment.region_id}`;
     line.renderOrder = 12;
     line.userData.titin_trace_region = segment.region_id;
@@ -409,6 +454,8 @@ export class SarcomereScene {
       + 'schematic representative-strand transverse offset';
     line.userData.a_band_radial_offset_nm = Math.hypot(off.y || 0, off.z || 0);
     line.userData.azimuth_evidence = off.evidence_class || 'SCHEMATIC';
+    line.userData.render_width_px = material.linewidth;
+    line.userData.render_width_meaning = 'screen-space reading width; not a molecular dimension';
     return line;
   }
 
@@ -997,7 +1044,7 @@ export class SarcomereScene {
           const traces = new THREE.Group();
           traces.name = 'titin_continuity_traces';
           for (const segment of titinPath.segments) {
-            traces.add(this._titinContinuityTrace(segment, off, aBandStart));
+            traces.add(this._titinContinuityTrace(segment, off, aBandStart, presentationMode));
           }
           titinGroup.add(traces);
         }
@@ -1836,6 +1883,9 @@ export class SarcomereScene {
     this.root.clear();
     for (const d of this.disposables) d.dispose?.();
     this.disposables = new Set();
+    // Disposed above with everything else; this set only tracks WHICH of them
+    // need a renderer resolution, so it is emptied rather than disposed again.
+    this.screenSpaceLineMaterials.clear();
     this.manifest = null;
     this._built = false;
     this.highlightedTitinRegion = null;
