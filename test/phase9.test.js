@@ -472,7 +472,7 @@ test('PHASE9: a user visibility preference cannot leak filaments into detail sca
   assert.ok(scene.hiddenComponents().includes('thin_filament'));
 });
 
-test('PHASE9: annotations carry anchors, evidence, sources, and Three.js markers', () => {
+test('PHASE9: annotations carry anchors, evidence, and resolved sources without detached markers', () => {
   for (const scale of Object.values(SCALES)) {
     const annotations = createAnnotations(model, 2200, { scale });
     assert.ok(annotations.length >= 4, `${scale} annotations missing`);
@@ -481,6 +481,7 @@ test('PHASE9: annotations carry anchors, evidence, sources, and Three.js markers
       assert.ok(Number.isFinite(annotation.anchor_nm.x));
       assert.ok(EVIDENCE_CLASSES.includes(annotation.evidence_class));
       assert.ok(annotation.sources.length > 0, `${annotation.id} has no source`);
+      assert.ok(annotation.sources.every((source) => source.citation && source.href));
       assert.ok(Array.isArray(annotation.not_claimed));
     }
   }
@@ -488,10 +489,11 @@ test('PHASE9: annotations carry anchors, evidence, sources, and Three.js markers
   const scene = new SarcomereScene();
   scene.build(model.contextSceneAt(2200, { rings: 1 }), model.domainInstancesAt(2200), {});
   const annotations = createAnnotations(model, 2200, { scale: SCALES.context });
-  const group = scene.setAnnotations(annotations);
-  assert.equal(group.children.length, annotations.length);
+  const registered = scene.setAnnotations(annotations);
+  assert.equal(registered.size, annotations.length);
   assert.equal(scene.manifest.annotations.count, annotations.length);
-  for (const marker of group.children) assert.ok(marker.userData.annotation);
+  assert.match(scene.manifest.annotations.marker_geometry, /none.*direct raycasting/i);
+  assert.equal(scene.root.getObjectByName('annotations'), undefined);
 });
 
 test('PHASE9: the page source consumes the biological visualization facade', () => {

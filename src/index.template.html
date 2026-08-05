@@ -153,6 +153,38 @@ window.__titinBoot = { ready: false, problems: [] };
   .region-chip.on { background: var(--titin-hi); border-color: var(--titin-hi); color: #251016; }
   #scienceOverlay { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%;
     overflow: visible; pointer-events: none; }
+  #objectLeader { position: absolute; inset: 0; z-index: 6; width: 100%; height: 100%;
+    overflow: visible; pointer-events: none; }
+  .object-leader-line { stroke: var(--titin-hi); stroke-width: 1.25; }
+  .object-leader-dot { fill: var(--titin-hi); stroke: var(--bg); stroke-width: 2; }
+  #objectTooltip { position: absolute; z-index: 7; pointer-events: none; width: min(270px, calc(100% - 24px));
+    padding: 7px 9px; border-radius: 6px; color: var(--text); background: rgb(22 27 34 / 96%);
+    border: 1px solid rgb(255 176 192 / 58%); box-shadow: 0 8px 26px rgb(0 0 0 / 38%); }
+  #objectTooltipLabel { font-weight: 650; }
+  #objectTooltipText { color: #cbd4de; font-size: 10px; margin-top: 2px; }
+  #objectInspector { position: absolute; z-index: 8; pointer-events: auto; width: min(370px, calc(100% - 24px));
+    padding: 11px 12px; border-radius: 8px; color: var(--text); background: rgb(22 27 34 / 97%);
+    border: 1px solid rgb(255 176 192 / 65%); box-shadow: 0 12px 34px rgb(0 0 0 / 44%); }
+  .object-inspector-head { display: flex; align-items: flex-start; gap: 8px; }
+  .object-inspector-title { flex: 1; font-size: 14px; font-weight: 650; }
+  .object-evidence { display: inline-block; margin: 3px 0 6px; color: #f0cc7a;
+    font-size: 9px; font-weight: 700; letter-spacing: .035em; }
+  .object-lay { color: #d6dde5; font-size: 11px; }
+  .object-detail { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--edge);
+    color: var(--dim); font-size: 10px; }
+  .object-detail b { color: var(--text); font-weight: 600; }
+  .object-sources { display: flex; gap: 5px 9px; flex-wrap: wrap; margin-top: 7px; }
+  .object-sources a, #chapterSources a { color: #a9c9f2; text-decoration: underline; text-underline-offset: 2px; }
+  .object-instance { color: #ffd7e0; font-size: 9px; margin-top: 4px; }
+  #guidedSelection { margin: 0 0 9px; padding: 6px 8px; border-left: 2px solid var(--titin);
+    background: rgb(255 93 125 / 8%); color: #d8dfe7; font-size: 10px; }
+  #selectedEvidence[hidden] { display: none; }
+  #selectedEvidence .object-sources { margin-bottom: 2px; }
+  .annotation-index { text-align: left; }
+  .annotation-index[aria-current="true"] { box-shadow: 0 0 0 2px var(--titin); }
+  .sr-only { position: absolute !important; width: 1px !important; height: 1px !important;
+    padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
   .science-bracket { fill: none; stroke: rgb(230 237 245 / 78%); stroke-width: 1.2; }
   .science-bracket.minor { stroke: rgb(230 237 245 / 47%); }
   .science-label { fill: #dce4ed; font-size: 9px; font-weight: 650; letter-spacing: .035em;
@@ -234,6 +266,11 @@ window.__titinBoot = { ready: false, problems: [] };
     #app[data-mode="evidence"] #canvas { height: 100%; }
     #panel { position: fixed; inset: auto 0 0; z-index: 20; max-height: 72vh; border-left: 0;
       border-top: 1px solid var(--edge); border-radius: 12px 12px 0 0; box-shadow: 0 -16px 50px rgb(0 0 0 / 50%); }
+    /* The drawer already contains the synchronized selected-structure card. At
+       phone widths, suppress its canvas duplicate so two long explanations do
+       not overlap while preserving the pinned state in the drawer. */
+    #app[data-mode="evidence"] #objectInspector { display: none; }
+    #objectInspector { width: min(340px, calc(100% - 18px)); }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; }
@@ -242,9 +279,30 @@ window.__titinBoot = { ready: false, problems: [] };
 </head>
 <body>
   <div id="app" data-mode="guided">
-  <div id="canvas" role="region" aria-label="Interactive 3D titin and sarcomere model">
+  <div id="canvas" role="region" tabindex="0"
+    aria-label="Interactive 3D titin and sarcomere model. Use the pointer to inspect a structure, or Left and Right Arrow to move through structures and Enter to pin an explanation."
+    aria-describedby="interactionHelp objectAnnouncement">
     <div id="err" role="alert"></div>
     <svg id="scienceOverlay" aria-label="Projected sarcomere landmarks and titin termini"></svg>
+    <svg id="objectLeader" aria-hidden="true"></svg>
+    <div id="objectTooltip" role="tooltip" hidden>
+      <div id="objectTooltipLabel"></div>
+      <div id="objectTooltipText"></div>
+    </div>
+    <section id="objectInspector" aria-label="Pinned structure explanation" hidden>
+      <div class="object-inspector-head">
+        <div>
+          <div class="object-inspector-title" id="objectInspectorTitle"></div>
+          <div class="object-evidence" id="objectInspectorEvidence"></div>
+        </div>
+        <button id="objectInspectorClose" aria-label="Close pinned structure explanation">Close</button>
+      </div>
+      <div class="object-instance" id="objectInspectorInstance" hidden></div>
+      <div class="object-lay" id="objectInspectorLay"></div>
+      <div class="object-detail" id="objectInspectorDetail"></div>
+      <div class="object-sources" id="objectInspectorSources"></div>
+    </section>
+    <div id="objectAnnouncement" class="sr-only" aria-live="polite"></div>
     <div id="stageChrome">
       <div id="stageHeader">
         <div class="brand-block">
@@ -271,6 +329,7 @@ window.__titinBoot = { ready: false, problems: [] };
         <div class="chapter-meta"><span id="chapterProgress">Chapter —</span> · <span id="chapterEvidenceClass">—</span></div>
         <h1 id="chapterTitle">Loading guided route…</h1>
         <p id="chapterSummary"></p>
+        <div id="guidedSelection" hidden><b id="guidedSelectionLabel"></b><span id="guidedSelectionText"></span></div>
         <div id="extensionStory" hidden>
           <div class="extension-head"><span>Regional end-to-end span at this length</span><span id="extensionTotal">—</span></div>
           <div id="extensionRows"></div>
@@ -296,6 +355,9 @@ window.__titinBoot = { ready: false, problems: [] };
         <button id="closeEvidence">Close</button>
       </div>
     </div>
+
+    <h2>Selected structure</h2>
+    <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
 
     <h2>Current guided claim</h2>
     <div class="note" id="chapterEvidence">
@@ -360,10 +422,10 @@ window.__titinBoot = { ready: false, problems: [] };
     <button id="evidenceToggle" class="on" aria-pressed="true">confidence display</button>
     <div id="evidence" style="margin-top:8px"></div>
 
-    <h2>Structural annotations</h2>
+    <h2>Inspect structures</h2>
     <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
-      each carries its weakest evidence class and primary sources.</div>
-    <div id="annotations"></div>
+      choose a visible object here or directly in the 3D view. Every explanation resolves its bibliography from the canonical source registry.</div>
+    <div class="row" id="annotations"></div>
 
     <h2>Not claimed by this render</h2>
     <ul id="notClaimed"></ul>
@@ -550,7 +612,10 @@ function syncFilamentContextToggle() {
     : 'Actin and myosin context is unavailable in the isolated-titin view';
 }
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && state.audienceMode === AUDIENCE_MODES.evidence) {
+  if (event.key === 'Escape' && pinnedPick) {
+    event.preventDefault();
+    clearPinnedSelection();
+  } else if (event.key === 'Escape' && state.audienceMode === AUDIENCE_MODES.evidence) {
     event.preventDefault();
     closeEvidence();
   }
@@ -563,6 +628,11 @@ function activeChapter() {
 
 let activeShowcaseOverlay = null;
 let scienceOverlaySignature = null;
+let activeAnnotations = [];
+let hoverPick = null;
+let pinnedPick = null;
+let keyboardAnnotationIndex = -1;
+let objectOverlaySignature = null;
 const svgNS = 'http://www.w3.org/2000/svg';
 
 function activeFeatures() {
@@ -740,13 +810,16 @@ function renderChapter() {
   $('chapterNext').disabled = index >= story.chapters.length - 1;
   $('chapterEvidenceTitle').textContent = `${chapter.title} · ${chapter.evidence_class}`;
   $('chapterExpert').textContent = chapter.expert_expansion;
-  const sources = chapter.source_ids.map((sourceId) => {
-    const reference = model.spec.references[sourceId];
-    return reference
-      ? `${sourceId} — ${reference.authors}, ${reference.year}`
-      : sourceId;
+  const sources = visualization.sources(chapter.source_ids);
+  const sourceNodes = [document.createTextNode('Sources: ')];
+  sources.forEach((source, index) => {
+    if (index) sourceNodes.push(document.createTextNode('; '));
+    const link = document.createElement('a');
+    link.href = source.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.textContent = source.citation; link.title = source.title;
+    sourceNodes.push(link);
   });
-  $('chapterSources').textContent = `Sources: ${sources.join('; ')}`;
+  $('chapterSources').replaceChildren(...sourceNodes);
   $('chapterNotClaimed').replaceChildren(...chapter.not_claimed.map((claim) => {
     const item = document.createElement('li');
     item.textContent = `Not claimed: ${claim}`;
@@ -799,6 +872,7 @@ function applyChapter(chapterId) {
   state.selectedTarget = scene.selected_component_or_region;
   state.region = chapter.target.kind === 'region' ? chapter.target.id : null;
   state.closeup = null;
+  pinnedPick = null; hoverPick = null;
   applyChapterVisibility(chapter.id);
   slider.value = scene.sarcomere_length_nm;
   if (visualization.scale !== state.scale) visualization.setScale(state.scale);
@@ -808,6 +882,7 @@ function applyChapter(chapterId) {
   applyCameraPreset({ animate: true });
   render(visualization.currentState());
   renderChapter();
+  renderPinnedSelection();
   syncScales(); syncRegions(); syncDepictionToggles();
   syncPublicPresentation(); syncUrl();
 }
@@ -1036,6 +1111,15 @@ function selectRegion(regionId) {
   }
   if (hadAnchorDetail) rebuild();
   syncRegions(); syncExtensionRows(); syncCloseups(null); refreshRegionReadout();
+  if (regionId) {
+    setPinnedSelection({
+      target_type: 'titin_region', target_id: regionId,
+      sarcomere_length_nm: visualization.currentState().sarcomere_length_nm,
+      scale: state.scale,
+    }, { synchronizeBiology: false });
+  } else {
+    pinnedPick = null; hoverPick = null; renderPinnedSelection();
+  }
   syncPublicPresentation(); syncUrl();
 }
 function syncRegions() {
@@ -1044,6 +1128,243 @@ function syncRegions() {
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   }
   syncExtensionRows();
+}
+
+function evidenceSummary(annotation) {
+  return `Claim ${annotation.evidence.claim_class} · render ${annotation.evidence.render_class}`;
+}
+
+function sourceLinks(sources) {
+  return sources.map((source) => {
+    const link = document.createElement('a');
+    link.href = source.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.textContent = source.citation; link.title = source.title;
+    return link;
+  });
+}
+
+function detailBlock(annotation) {
+  const fragment = document.createDocumentFragment();
+  const expert = document.createElement('div');
+  const expertLabel = document.createElement('b'); expertLabel.textContent = 'Expert: ';
+  expert.append(expertLabel, document.createTextNode(annotation.expert_text));
+  const scope = document.createElement('div');
+  const scopeLabel = document.createElement('b'); scopeLabel.textContent = 'Scope: ';
+  scope.append(scopeLabel, document.createTextNode(annotation.scope));
+  const render = document.createElement('div');
+  const renderLabel = document.createElement('b'); renderLabel.textContent = 'Render means: ';
+  render.append(renderLabel, document.createTextNode(annotation.render_meaning));
+  const nonclaim = document.createElement('div');
+  const nonclaimLabel = document.createElement('b'); nonclaimLabel.textContent = 'Not claimed: ';
+  nonclaim.append(nonclaimLabel, document.createTextNode(annotation.not_claimed.join('; ')));
+  fragment.append(expert, scope, render, nonclaim);
+  return fragment;
+}
+
+function resolvedAnnotation(selection) {
+  return selection ? visualization.resolveAnnotation(selection) : null;
+}
+
+function renderSelectedEvidence(annotation) {
+  const box = $('selectedEvidence');
+  box.hidden = !annotation;
+  if (!annotation) { box.replaceChildren(); return; }
+  const title = document.createElement('b'); title.textContent = annotation.label;
+  const evidence = document.createElement('div'); evidence.className = 'object-evidence';
+  evidence.textContent = evidenceSummary(annotation);
+  const lay = document.createElement('div'); lay.textContent = annotation.lay_text;
+  const detail = document.createElement('div'); detail.className = 'object-detail';
+  detail.append(detailBlock(annotation));
+  const sources = document.createElement('div'); sources.className = 'object-sources';
+  sources.append(...sourceLinks(annotation.sources));
+  box.replaceChildren(title, evidence, lay, detail, sources);
+}
+
+function renderPinnedSelection() {
+  const annotation = resolvedAnnotation(pinnedPick);
+  const inspector = $('objectInspector');
+  inspector.hidden = !annotation;
+  if (!annotation) {
+    $('guidedSelection').hidden = true;
+    renderSelectedEvidence(null);
+    syncAnnotationIndex();
+    objectOverlaySignature = null;
+    return;
+  }
+  $('objectInspectorTitle').textContent = annotation.label;
+  $('objectInspectorEvidence').textContent = evidenceSummary(annotation);
+  $('objectInspectorLay').textContent = annotation.lay_text;
+  $('objectInspectorDetail').replaceChildren(detailBlock(annotation));
+  $('objectInspectorSources').replaceChildren(...sourceLinks(annotation.sources));
+  const instance = $('objectInspectorInstance');
+  instance.hidden = !annotation.picked_instance;
+  instance.textContent = annotation.picked_instance
+    ? `Picked folded domain ${annotation.picked_instance.domain_id}`
+      + (annotation.picked_instance.archetype ? ` · ${annotation.picked_instance.archetype}` : '')
+    : '';
+  $('guidedSelection').hidden = false;
+  $('guidedSelectionLabel').textContent = `Selected: ${annotation.label}. `;
+  $('guidedSelectionText').textContent = annotation.lay_text;
+  renderSelectedEvidence(annotation);
+  syncAnnotationIndex();
+  $('objectAnnouncement').textContent = `${annotation.label}. ${annotation.lay_text} `
+    + `${evidenceSummary(annotation)}. Sources are available in the pinned explanation.`;
+  objectOverlaySignature = null;
+}
+
+function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
+  const annotation = resolvedAnnotation(selection);
+  if (!annotation) return false;
+  pinnedPick = { ...selection };
+  hoverPick = null;
+  if (synchronizeBiology) {
+    state.selectedTarget = annotation.target_id;
+    state.region = annotation.target_type === 'titin_region' ? annotation.target_id : null;
+    visualization.highlightTitinRegion(state.region);
+    syncRegions(); syncExtensionRows(); refreshRegionReadout();
+    syncComponentButtons(visualization.currentState());
+    syncPublicPresentation(); syncUrl();
+  }
+  renderPinnedSelection();
+  return true;
+}
+
+function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
+  pinnedPick = null; hoverPick = null; keyboardAnnotationIndex = -1;
+  if (!preserveBiologicalSelection) {
+    state.selectedTarget = null; state.region = null;
+    visualization.highlightTitinRegion(null);
+    syncRegions(); syncExtensionRows(); refreshRegionReadout();
+    syncComponentButtons(visualization.currentState());
+    syncPublicPresentation(); syncUrl();
+  }
+  $('objectTooltip').hidden = true;
+  $('objectLeader').replaceChildren();
+  renderPinnedSelection();
+  $('canvas').focus();
+}
+
+$('objectInspectorClose').onclick = () => clearPinnedSelection();
+
+function componentAvailable(targetId, report) {
+  const hidden = new Set(report?.hidden_components || []);
+  if (hidden.has(targetId)) return false;
+  const manifest = report?.manifest || {};
+  if (targetId === 'titin_domains') return Boolean(manifest.domains) && !hidden.has('titin_domains');
+  if (targetId === 'myosin_heads') return Boolean(manifest.context_detail?.heads_drawn);
+  if (targetId === 'thin_filament_twist') return Boolean(manifest.context_detail?.twist_drawn);
+  if (['alpha_actinin', 'telethonin'].includes(targetId)) {
+    return manifest.anchor_detail?.target === 'zdisc' && manifest.anchor_detail.drawn;
+  }
+  if (targetId === 'mband_crosslinks') {
+    return manifest.anchor_detail?.target === 'mline' && manifest.anchor_detail.drawn;
+  }
+  return true;
+}
+
+function regionAvailable(targetId, hidden) {
+  if (!hidden.has('titin')) return true;
+  if (hidden.has('titin_domains')) return false;
+  const region = regionMetadata.get(targetId);
+  return targetId === 'kinase'
+    || Object.values(region?.domains || {}).some((count) => count > 0);
+}
+
+function availableAnnotations() {
+  const report = visualization.currentState();
+  const hidden = new Set(report?.hidden_components || []);
+  return activeAnnotations.filter((annotation) => (
+    annotation.target_type === 'component'
+      ? componentAvailable(annotation.target_id, report)
+      : regionAvailable(annotation.target_id, hidden)
+  ));
+}
+
+function syncAnnotationIndex() {
+  for (const button of $('annotations').children) {
+    const selected = pinnedPick?.target_type === button.dataset.targetType
+      && pinnedPick?.target_id === button.dataset.targetId;
+    if (selected) button.setAttribute('aria-current', 'true');
+    else button.removeAttribute('aria-current');
+  }
+}
+
+function renderAnnotationIndex() {
+  const annotations = availableAnnotations()
+    .filter((annotation) => annotation.target_type === 'component');
+  const buttons = annotations.map((annotation) => {
+    const button = document.createElement('button');
+    button.className = 'annotation-index';
+    button.textContent = annotation.label;
+    button.dataset.targetType = annotation.target_type;
+    button.dataset.targetId = annotation.target_id;
+    button.setAttribute('aria-label', `Inspect ${annotation.label}. ${evidenceSummary(annotation)}`);
+    button.onclick = () => setPinnedSelection({
+      target_type: annotation.target_type,
+      target_id: annotation.target_id,
+      sarcomere_length_nm: visualization.currentState().sarcomere_length_nm,
+      scale: state.scale,
+    });
+    return button;
+  });
+  $('annotations').replaceChildren(...buttons);
+  syncAnnotationIndex();
+}
+
+function showHoverPick(pick) {
+  hoverPick = pick;
+  const annotation = resolvedAnnotation(pick);
+  const tooltip = $('objectTooltip');
+  tooltip.hidden = !annotation || Boolean(pinnedPick);
+  if (!annotation || pinnedPick) return;
+  $('objectTooltipLabel').textContent = `${annotation.label} · ${annotation.evidence.render_class}`;
+  $('objectTooltipText').textContent = annotation.lay_text;
+  $('objectAnnouncement').textContent = `${annotation.label}. Press Enter to pin its explanation.`;
+  objectOverlaySignature = null;
+}
+
+function renderObjectOverlay() {
+  const selection = pinnedPick || hoverPick;
+  const annotation = resolvedAnnotation(selection);
+  const leader = $('objectLeader');
+  const tooltip = $('objectTooltip');
+  const inspector = $('objectInspector');
+  if (!annotation) {
+    if (!tooltip.hidden) tooltip.hidden = true;
+    if (leader.childNodes.length) leader.replaceChildren();
+    objectOverlaySignature = 'empty';
+    return;
+  }
+  const point = visualization.projectPresentationAnchors([annotation])[0];
+  const width = $('canvas').clientWidth; const height = $('canvas').clientHeight;
+  const card = pinnedPick ? inspector : tooltip;
+  if (!point?.visible || !width || !height || card.hidden
+      || getComputedStyle(card).display === 'none') {
+    if (leader.childNodes.length) leader.replaceChildren();
+    return;
+  }
+  card.style.left = '0px'; card.style.top = '0px';
+  const cardWidth = card.offsetWidth; const cardHeight = card.offsetHeight;
+  const headerBottom = $('stageHeader').getBoundingClientRect().bottom
+    - $('canvas').getBoundingClientRect().top + 8;
+  const gap = pinnedPick ? 24 : 14;
+  let left = point.x_px < width / 2 ? point.x_px + gap : point.x_px - cardWidth - gap;
+  let top = pinnedPick ? point.y_px - cardHeight / 2 : point.y_px + gap;
+  left = Math.max(8, Math.min(width - cardWidth - 8, left));
+  top = Math.max(headerBottom, Math.min(height - cardHeight - 8, top));
+  card.style.left = `${left}px`; card.style.top = `${top}px`;
+  const endX = Math.max(left, Math.min(left + cardWidth, point.x_px));
+  const endY = Math.max(top, Math.min(top + cardHeight, point.y_px));
+  const signature = [pinnedPick ? 'pinned' : 'hover', annotation.id,
+    point.x_px.toFixed(1), point.y_px.toFixed(1), left.toFixed(1), top.toFixed(1),
+    width, height].join(':');
+  if (signature === objectOverlaySignature) return;
+  objectOverlaySignature = signature;
+  leader.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  leader.replaceChildren(
+    svgElement('line', { x1: point.x_px, y1: point.y_px, x2: endX, y2: endY, class: 'object-leader-line' }),
+    svgElement('circle', { cx: point.x_px, cy: point.y_px, r: 4, class: 'object-leader-dot' }),
+  );
 }
 function refreshRegionReadout() {
   const out = $('regionReadout');
@@ -1133,6 +1454,7 @@ function rebuild(refit = false) {
 
 function render(report) {
   const { manifest: man, sarcomere_length_nm: requestedSL, annotations = [] } = report;
+  activeAnnotations = annotations;
   const g = model.geometryAt(requestedSL);
   activeShowcaseOverlay = visualization.showcaseOverlay();
   renderExtensionChart(activeShowcaseOverlay);
@@ -1287,11 +1609,8 @@ function render(report) {
         + `<div style="font-size:10px;color:var(--dim);margin:0 0 6px">${claims}</div>`;
     }).join('');
 
-  $('annotations').innerHTML = annotations.map((annotation) => {
-    const sources = annotation.sources.length ? annotation.sources.join(', ') : 'source recorded in spec';
-    return `<div class="note"><b>${annotation.label}</b> · ${annotation.evidence_class}`
-      + `<br><span style="color:var(--dim)">X=${annotation.anchor_nm.x.toFixed(1)} nm · ${sources}</span></div>`;
-  }).join('');
+  renderAnnotationIndex();
+  renderPinnedSelection();
 
   const allNotClaimed = [
     ...(man.not_claimed || []),
@@ -1398,6 +1717,7 @@ function restorePresentationFromHash() {
   state.region = regionIds.has(state.selectedTarget) ? state.selectedTarget : null;
   state.showEvidence = incoming.evidence_display;
   state.cameraPreset = incoming.camera_preset;
+  pinnedPick = null; hoverPick = null;
   const [cameraKind, cameraName] = state.cameraPreset.split('.');
   state.view = cameraKind === 'view' ? cameraName : 'titin_story';
   state.closeup = cameraKind === 'closeup' ? cameraName : null;
@@ -1416,6 +1736,65 @@ function restorePresentationFromHash() {
   announceUrlIssues(decoded.issues);
   syncPublicPresentation(); syncUrl();
 }
+
+// ---- direct object inspection: pointer, touch, and keyboard ----------------
+const renderSurface = $('canvas').querySelector('canvas');
+let pointerStart = null;
+let pendingHoverFrame = null;
+let pendingHoverEvent = null;
+
+function pickAt(clientX, clientY) {
+  try { return visualization.pickObject(clientX, clientY); }
+  catch (error) { fail(error); return null; }
+}
+
+renderSurface.addEventListener('pointerdown', (event) => {
+  pointerStart = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+  $('canvas').focus({ preventScroll: true });
+});
+renderSurface.addEventListener('pointermove', (event) => {
+  if (event.pointerType === 'touch' || event.buttons !== 0 || pinnedPick) return;
+  pendingHoverEvent = { x: event.clientX, y: event.clientY };
+  if (pendingHoverFrame !== null) return;
+  pendingHoverFrame = requestAnimationFrame(() => {
+    pendingHoverFrame = null;
+    const point = pendingHoverEvent; pendingHoverEvent = null;
+    showHoverPick(point ? pickAt(point.x, point.y) : null);
+  });
+});
+renderSurface.addEventListener('pointerleave', () => {
+  if (!pinnedPick) { hoverPick = null; $('objectTooltip').hidden = true; renderObjectOverlay(); }
+});
+renderSurface.addEventListener('pointerup', (event) => {
+  if (!pointerStart || pointerStart.pointerId !== event.pointerId) return;
+  const movement = Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y);
+  pointerStart = null;
+  const tolerance = event.pointerType === 'touch' ? 12 : 5;
+  if (movement > tolerance) return;
+  const picked = pickAt(event.clientX, event.clientY);
+  if (picked) setPinnedSelection(picked);
+  else if (pinnedPick) clearPinnedSelection();
+});
+renderSurface.addEventListener('pointercancel', () => { pointerStart = null; });
+
+$('canvas').addEventListener('keydown', (event) => {
+  if (!['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) return;
+  const annotations = availableAnnotations();
+  if (!annotations.length) return;
+  event.preventDefault();
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    const direction = event.key === 'ArrowRight' ? 1 : -1;
+    keyboardAnnotationIndex = (keyboardAnnotationIndex + direction + annotations.length)
+      % annotations.length;
+  } else if (keyboardAnnotationIndex < 0) keyboardAnnotationIndex = 0;
+  const annotation = annotations[keyboardAnnotationIndex];
+  setPinnedSelection({
+    target_type: annotation.target_type,
+    target_id: annotation.target_id,
+    sarcomere_length_nm: visualization.currentState().sarcomere_length_nm,
+    scale: state.scale,
+  });
+});
 
 window.addEventListener('hashchange', restorePresentationFromHash);
 if (visualization.scale !== state.scale) visualization.setScale(state.scale);
@@ -1442,7 +1821,7 @@ visualization.start((report) => {
   if (state.closeup) {
     syncCloseups(visualization.closeUp(state.closeup, { move: false }));
   }
-}, renderScienceOverlay);
+}, () => { renderScienceOverlay(); renderObjectOverlay(); });
 window.titinVisualization = visualization;   // biological facade for console inspection
 // Tell the boot diagnostic above that the module reached its end. Without this the
 // watchdog would fire on a perfectly healthy page, and a false alarm in an error

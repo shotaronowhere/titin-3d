@@ -31,6 +31,7 @@ import { browserReader } from '../model/readBrowser.js';
 import { AUDIENCE_MODES } from '../presentation/StoryController.js';
 import { createShowcaseOverlay } from '../presentation/ShowcaseOverlay.js';
 import { createAnnotations } from './TitinAnnotations.js';
+import { resolveSources } from '../presentation/AnnotationCatalog.js';
 import {
   createSarcomere, createTitin, createTitinPath, createDomainChain,
   placeDomainsAlongPath, regionOfDomain, describeLength, IBAND_REGIONS,
@@ -222,9 +223,6 @@ export class TitinVisualization {
     const hidden = this.scale === SCALES.detail
       ? new Set(TitinVisualization.DETAIL_HIDDEN)
       : new Set();
-    if (this._presentationState?.audience_mode === AUDIENCE_MODES.guided) {
-      hidden.add('annotations');
-    }
     if (this._displayOptions?.showFilamentContext === false) {
       for (const component of [
         'thick_filament', 'thin_filament', 'thin_filament_twist', 'myosin_heads',
@@ -479,6 +477,56 @@ export class TitinVisualization {
       throw new Error('TitinVisualization: set a state before requesting annotations.');
     }
     return createAnnotations(this.model, sl, { scale: this.scale });
+  }
+
+  /** Pick visible geometry at a browser client coordinate. */
+  pickObject(clientX, clientY) {
+    const picked = this.viewer.pick(clientX, clientY);
+    if (!picked) return null;
+    return Object.freeze({
+      ...picked,
+      anchor_nm: Object.freeze({ ...picked.anchor_nm }),
+      sarcomere_length_nm: this._state?.sarcomere_length_nm ?? null,
+      scale: this.scale,
+    });
+  }
+
+  /**
+   * Resolve a stable pick/selection to the current canonical annotation. Rebuilds
+   * may replace every mesh, so UI code retains biological IDs, never object refs.
+   */
+  resolveAnnotation(selection) {
+    if (!selection || typeof selection !== 'object') return null;
+    const annotations = this.annotations();
+    const base = annotations.find((annotation) => (
+      annotation.target_type === selection.target_type
+      && annotation.target_id === selection.target_id
+    ));
+    if (!base) return null;
+    const currentSL = this._state?.sarcomere_length_nm;
+    const sameRenderedState = selection.sarcomere_length_nm === currentSL
+      && selection.scale === this.scale;
+    let anchor = sameRenderedState && selection.anchor_nm
+      ? { ...selection.anchor_nm }
+      : { ...base.anchor_nm };
+    if (!sameRenderedState && selection.mirrored && this.scale === SCALES.context) {
+      anchor = { x: currentSL - anchor.x, y: anchor.y, z: -anchor.z };
+    }
+    return Object.freeze({
+      ...base,
+      anchor_nm: Object.freeze(anchor),
+      picked_instance: selection.domain_id ? Object.freeze({
+        domain_id: selection.domain_id,
+        archetype: selection.archetype || null,
+        instance_id: selection.instance_id ?? null,
+      }) : null,
+    });
+  }
+
+  /** Resolve reference IDs to human-readable citations and browser links. */
+  sources(sourceIds) {
+    if (!Array.isArray(sourceIds)) throw new Error('sources: expected an array of source IDs.');
+    return resolveSources(this.model.spec.references, sourceIds);
   }
 
   /** Names of the scientifically defined structural states. */

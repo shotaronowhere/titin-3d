@@ -56,9 +56,6 @@ export const EVIDENCE_STYLE = Object.freeze({
  */
 export const ALIAS_THRESHOLD_PX = 2.0;
 
-/** Fixed screen-space scale for annotation markers (presentation only). */
-export const ANNOTATION_SCREEN_SCALE = 0.018;
-
 /**
  * The biological components a caller may show or hide, each mapped to a predicate
  * over the object names `build()` assigns.
@@ -93,7 +90,6 @@ export const COMPONENTS = Object.freeze({
   titin_domains: (n) => n.startsWith('titin_domains') || n.startsWith('domains_'),
   // The backbone tube ('titin', 'titin_strand_N') but NOT the domain groups.
   titin: (n) => n.startsWith('titin') && !n.startsWith('titin_domains'),
-  annotations: (n) => n === 'annotations' || n.startsWith('annotation_'),
 });
 
 export const COMPONENT_COLOR = Object.freeze({
@@ -115,7 +111,6 @@ export const COMPONENT_COLOR = Object.freeze({
   titin_highlight: 0xffb0c0,
   titin_dim: 0x6f2e40,
   lattice_guide: 0x556070,
-  annotation: 0xe6edf5,
 });
 
 /**
@@ -1286,53 +1281,73 @@ export class SarcomereScene {
   }
 
   /**
-   * Add small Three.js anchor markers for biological annotations.
-   *
-   * Text remains in the accessible HTML panel; each world-space marker carries
-   * the complete descriptor in userData so a future picking layer can expose the
-   * same wording without inventing a second annotation record.
-   *
-   * @param {Array<{id:string,anchor_nm:{x:number,y:number,z:number}}>} annotations
+   * Register canonical annotation descriptors without drawing detached squares.
+   * SC-4 labels attach directly to raycast biological geometry through a DOM/SVG
+   * leader overlay; adding marker sprites would create pickable-looking objects
+   * that are not the structures they explain.
    */
   setAnnotations(annotations) {
     if (!this._built) throw new Error('setAnnotations: nothing built yet.');
-    const previous = this.root.getObjectByName('annotations');
-    if (previous) this.root.remove(previous);
-    const group = new THREE.Group();
-    group.name = 'annotations';
-    for (const annotation of annotations) {
-      const material = new THREE.SpriteMaterial({
-        color: COMPONENT_COLOR.annotation,
-        transparent: true,
-        opacity: 0.9,
-        depthTest: false,
-        // World-unit sizing made a harmless overview marker expand into an
-        // 80+ px square during region focus, obscuring the structure it labels.
-        // Anchors remain model coordinates; only marker footprint is screen-space.
-        sizeAttenuation: false,
-      });
-      this.disposables.add(material);
-      const marker = new THREE.Sprite(material);
-      marker.name = `annotation_${annotation.id}`;
-      marker.position.set(
-        annotation.anchor_nm.x,
-        annotation.anchor_nm.y,
-        annotation.anchor_nm.z,
-      );
-      marker.scale.setScalar(ANNOTATION_SCREEN_SCALE);
-      marker.renderOrder = 10;
-      marker.userData.annotation = annotation;
-      group.add(marker);
-    }
-    this.root.add(group);
+    this.annotationRecords = new Map(annotations.map((annotation) => [
+      `${annotation.target_type}:${annotation.target_id}`, annotation,
+    ]));
     if (this.manifest) {
       this.manifest.annotations = {
         count: annotations.length,
         ids: annotations.map((annotation) => annotation.id),
-        marker_geometry: 'fixed-size screen-space Three.js Sprite anchors; text in accessible HTML',
+        marker_geometry: 'none — direct raycasting plus DOM/SVG leader overlay',
       };
     }
-    return group;
+    return this.annotationRecords;
+  }
+
+  /** Resolve one raycast leaf/instance to stable biological vocabulary. */
+  pickTarget(object, instanceId = null) {
+    if (!object) return null;
+    const ancestors = [];
+    for (let cursor = object; cursor; cursor = cursor.parent) ancestors.push(cursor);
+    const mirrored = ancestors.some((candidate) => candidate.name === 'half_sarcomere_mirrored');
+
+    const instanceIndex = Number.isInteger(instanceId) ? Number(instanceId) : null;
+    for (const candidate of ancestors) {
+      const regions = candidate.userData?.instance_regions;
+      if (candidate.isInstancedMesh && instanceIndex !== null
+          && Array.isArray(regions) && regions[instanceIndex]) {
+        return {
+          target_type: 'titin_region',
+          target_id: regions[instanceIndex],
+          domain_id: candidate.userData.instance_domain_ids?.[instanceIndex] || null,
+          instance_id: instanceIndex,
+          archetype: candidate.userData.archetype || null,
+          mirrored,
+        };
+      }
+      const region = candidate.userData?.titin_region
+        || candidate.userData?.titin_trace_region;
+      if (region) return { target_type: 'titin_region', target_id: region, mirrored };
+    }
+
+    const names = ancestors.map((candidate) => candidate.name || '');
+    const has = (predicate) => names.some(predicate);
+    if (has((name) => name.startsWith('titin_zdisc_')
+      || name.startsWith('titin_zdisc_direction_'))) {
+      return { target_type: 'titin_region', target_id: 'Z1Z2', mirrored };
+    }
+    const mappings = [
+      ['myosin_heads', (name) => name.startsWith('myosin_heads')],
+      ['thin_filament_twist', (name) => name.startsWith('thin_filament_twist')],
+      ['alpha_actinin', (name) => name.startsWith('alpha_actinin')],
+      ['telethonin', (name) => name.startsWith('telethonin')],
+      ['mband_crosslinks', (name) => name.startsWith('mband_crosslink')],
+      ['thick_filament', (name) => name.startsWith('thick_filament')],
+      ['thin_filament', (name) => name.startsWith('thin_filament')],
+      ['zdisc', (name) => name === 'zdisc'],
+      ['mline', (name) => name === 'mline'],
+    ];
+    for (const [targetId, predicate] of mappings) {
+      if (has(predicate)) return { target_type: 'component', target_id: targetId, mirrored };
+    }
+    return null;
   }
 
   /**
@@ -1454,6 +1469,7 @@ export class SarcomereScene {
           representative_pdb_id: batch.representative_structure?.pdb_id,
           evidence_rendered: evidence,
           instance_regions: members.map((member) => member.region),
+          instance_domain_ids: members.map((member) => member.domain_id),
           base_color: COMPONENT_COLOR.titin,
         };
         group.add(mesh);
@@ -1674,5 +1690,6 @@ export class SarcomereScene {
     this._built = false;
     this.highlightedTitinRegion = null;
     this.presentationEmphasis = null;
+    this.annotationRecords = new Map();
   }
 }

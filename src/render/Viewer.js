@@ -188,6 +188,10 @@ export class Viewer {
      * @type {Record<string, any>}
      */
     this.buildOpts = {};
+    this.raycaster = new THREE.Raycaster();
+    // Lines (the zero-width M-band marker and continuity trace) need a small
+    // world-space tolerance to be reachable without creating fake marker geometry.
+    this.raycaster.params.Line.threshold = 3;
   }
 
   /** Rebuild the scene at a sarcomere length. Returns the render manifest. */
@@ -237,14 +241,25 @@ export class Viewer {
       ? this.model.anchorDetailAt(sl, merged.anchorDetail, { rings: latticeRings })
       : null;
 
+    // Before the very first frame(), camera and orbit target both sit at the
+    // origin, so the measured perspective span is exactly zero. Passing that
+    // transient initialization value into the scientific LOD gate aborts browser
+    // startup. Use the displayed sarcomere length as a conservative first-frame
+    // overview span; every later build uses the live camera measurement, and the
+    // first animation tick re-evaluates all LOD thresholds after framing.
+    const measuredViewWidth = this.visibleWidthNm();
+    const buildViewWidth = Number.isFinite(measuredViewWidth) && measuredViewWidth > 0
+      ? measuredViewWidth : scene.sarcomere_length_nm;
+    const buildViewportPx = Number.isFinite(this.container.clientWidth)
+      && this.container.clientWidth > 0 ? this.container.clientWidth : 1;
     this.sarcomere.build(scene, this.model.domainInstancesAt(sl), {
       ...merged,
       domainBatches,
       contextDetail,
       anchorDetail,
       titinPath: this.model.backboneAt(sl),
-      viewWidthNm: this.visibleWidthNm(),
-      viewportPx: this.container.clientWidth,
+      viewWidthNm: buildViewWidth,
+      viewportPx: buildViewportPx,
     });
     this.currentSL = scene.sarcomere_length_nm;
     this.lastNotes = notes;
@@ -438,6 +453,44 @@ export class Viewer {
           && projected.y >= -1.15 && projected.y <= 1.15,
       };
     });
+  }
+
+  /**
+   * Raycast a browser client coordinate and return biological metadata only.
+   * Three.js objects never cross the public facade boundary.
+   */
+  pick(clientX, clientY) {
+    if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) {
+      throw new Error('pick: clientX and clientY must be finite numbers.');
+    }
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0
+        || clientX < rect.left || clientX > rect.right
+        || clientY < rect.top || clientY > rect.bottom) return null;
+    const pointer = new THREE.Vector2(
+      ((clientX - rect.left) / rect.width) * 2 - 1,
+      -((clientY - rect.top) / rect.height) * 2 + 1,
+    );
+    this.camera.updateMatrixWorld();
+    this.sarcomere.root.updateWorldMatrix(true, true);
+    this.raycaster.setFromCamera(pointer, this.camera);
+    const visible = (object) => {
+      for (let cursor = object; cursor; cursor = cursor.parent) {
+        if (!cursor.visible) return false;
+      }
+      return true;
+    };
+    for (const hit of this.raycaster.intersectObject(this.sarcomere.root, true)) {
+      if (!visible(hit.object)) continue;
+      const target = this.sarcomere.pickTarget(hit.object, hit.instanceId ?? null);
+      if (!target) continue;
+      return {
+        ...target,
+        anchor_nm: { x: hit.point.x, y: hit.point.y, z: hit.point.z },
+        distance_nm: hit.distance,
+      };
+    }
+    return null;
   }
 
   /**

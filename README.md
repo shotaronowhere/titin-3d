@@ -6,7 +6,8 @@ API consume those records rather than restating biological constants.
 
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
-and are intentionally outside the completed release scope.
+and are intentionally outside the completed release scope. The separate showcase
+completion sequence is complete through SC-4; SC-5 is the next enhancement phase.
 
 ## Open the visualization
 
@@ -47,6 +48,12 @@ copying the browser address preserves audience mode, chapter, length, scale,
 named camera, selected region/component, and evidence display. Invalid shared
 state is reported visibly and replaced with a documented safe default.
 
+Hover a visible structure for a concise explanation, or click/tap it to pin the
+full evidence-linked annotation. A pinned card exposes claim and render evidence,
+lay and expert explanations, scope, render meaning, non-claims, and human-readable
+source links. Keyboard users can focus the 3D stage, move through currently visible
+structures with Left/Right Arrow, pin with Enter or Space, and close with Escape.
+
 ## Development requirements
 
 - Node.js 20.19 or newer
@@ -80,6 +87,7 @@ exhaustive destructive suite:
 npm run build
 npm run verify:sc2
 npm run verify:sc3
+npm run verify:sc4
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
@@ -130,7 +138,9 @@ npm run build
 - `src/render/` — Three.js scene and viewer
 - `src/presentation/StoryController.js` — validated narrative state and URL codec
 - `src/presentation/ShowcaseOverlay.js` — SC-2 continuity, landmark, and live extension descriptors derived from canonical geometry
+- `src/presentation/AnnotationCatalog.js` — SC-4 annotation validation and citation/link resolution
 - `data/presentation.json` — sourced SC-1/SC-2 presentation contract (no authoritative geometry)
+- `data/annotations.json` — validated SC-4 dual-audience object explanations and scientific bindings
 - `data/geometry_strategy.json` — current defect/completion register
 
 `placeDomainsAlongPath` accepts only canonical, already-computed paths. It rejects

@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0 through SC-3 complete on 2026-08-02; SC-4 is next
+**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 is next
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -428,6 +428,21 @@ also rejects a stale standalone `index.html`.
 - Negative tests reject restoration of the 160 nm M-line box or single-ended telethonin depiction.
 
 ### SC-4 — Object-linked annotations and evidence access
+
+**Completed 2026-08-02.** The retained implementation replaces detached marker
+sprites with direct biological raycasting and one DOM/SVG explanation overlay.
+Components, titin region tubes, individual instanced folded domains, Z-disc
+details, and M-band details resolve to stable biological IDs rather than Three.js
+objects. A validated `data/annotations.json` catalog supplies dual-audience copy,
+scope, claim/render evidence, render meaning, non-claims, and bibliography keys;
+all short citations and outbound links are resolved from `data/references.json`.
+Pointer hover previews, click/tap pinning, canvas arrow-key navigation, Enter/Space,
+Escape, screen-reader announcements, the Guided story card, component/region state,
+and the Evidence drawer share the same selection and annotation resolver. Logical
+selections re-resolve their model anchor after mode, camera, viewport, and mechanical
+rebuild changes. Ten focused tests and destructive catalog mutations are in
+`test/showcase_phase4.test.js`; the bounded gate is `npm run verify:sc4`, which also
+rejects a stale standalone `index.html`.
 
 #### Work
 

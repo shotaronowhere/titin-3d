@@ -11,6 +11,7 @@
  */
 
 import { checkPresentationSpec } from '../presentation/StoryController.js';
+import { checkAnnotationCatalog } from '../presentation/AnnotationCatalog.js';
 
 export const SPEC_FILES = Object.freeze([
   'sarcomere.json',
@@ -20,6 +21,7 @@ export const SPEC_FILES = Object.freeze([
   'references.json',
   'showcase_claims.json',
   'presentation.json',
+  'annotations.json',
 ]);
 
 // Phase-3 geometry strategy. Distinct from the five canonical source-of-truth
@@ -67,6 +69,7 @@ export class Spec {
     this.references = files['references.json'];
     this.showcaseClaims = files['showcase_claims.json'];
     this.presentation = files['presentation.json'];
+    this.annotations = files['annotations.json'];
     this.geometryStrategy = files[STRATEGY_FILE] || null;
     this.contextMeasurements = files[CONTEXT_FILE] || null;
     this._raw = files;
@@ -104,6 +107,7 @@ export class Spec {
     for (const [k, v] of Object.entries({
       sarcomere: S, titin: T, states: ST, geometrySources: this.geometrySources, references: R,
       showcaseClaims: this.showcaseClaims, presentation: this.presentation,
+      annotations: this.annotations,
     })) if (!v || typeof v !== 'object') p.push(`${k}.json missing or not an object`);
     if (p.length) return { ok: false, problems: p };
 
@@ -134,6 +138,12 @@ export class Spec {
       sarcomere: S,
       titin: T,
       states: ST,
+    }));
+    p.push(...checkAnnotationCatalog(this.annotations, {
+      references: R,
+      sarcomere: S,
+      titin: T,
+      claims: this.showcaseClaims,
     }));
 
     // 3. titin domain reconciliation against declared UniProt totals

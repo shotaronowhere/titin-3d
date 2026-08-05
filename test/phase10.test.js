@@ -18,7 +18,7 @@ import {
   Viewer, CAMERA_TRANSITION_MS, easeCameraTransition,
 } from '../src/render/Viewer.js';
 import {
-  ANNOTATION_SCREEN_SCALE, COMPONENT_COLOR, SarcomereScene,
+  COMPONENT_COLOR, SarcomereScene,
 } from '../src/render/SarcomereScene.js';
 
 const model = await TitinModel.create(nodeReader());
@@ -213,17 +213,15 @@ test('PHASE10: component visibility synchronizes the public state report', () =>
   scene.clear();
 });
 
-test('PHASE10: structural markers stay screen-sized during region focus', () => {
+test('PHASE10: structural annotations register without detached marker geometry', () => {
   const scene = buildRegionScene();
-  const markerGroup = scene.setAnnotations([{
-    id: 'test', anchor_nm: { x: 250, y: 0, z: 0 },
+  const records = scene.setAnnotations([{
+    id: 'test', target_type: 'component', target_id: 'titin',
+    anchor_nm: { x: 250, y: 0, z: 0 },
   }]);
-  const marker = markerGroup.children[0];
-  assert.equal(marker.material.sizeAttenuation, false);
-  assert.deepEqual(marker.scale.toArray(), [
-    ANNOTATION_SCREEN_SCALE, ANNOTATION_SCREEN_SCALE, ANNOTATION_SCREEN_SCALE,
-  ]);
-  assert.match(scene.manifest.annotations.marker_geometry, /fixed-size screen-space/);
+  assert.equal(records.size, 1);
+  assert.equal(scene.root.getObjectByName('annotations'), undefined);
+  assert.match(scene.manifest.annotations.marker_geometry, /none.*direct raycasting/i);
   scene.clear();
 });
 
