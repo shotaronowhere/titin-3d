@@ -1,0 +1,32 @@
+# GitHub Pages builds this repo with Jekyll (github-pages 232 / Jekyll 3.10).
+#
+# Jekyll runs Liquid over every markdown file BEFORE markdown rendering, so
+# fenced code blocks are NOT protected. The planning docs under docs/ are full of
+# JSDoc object types such as `@param {{minNm:number, maxNm:number}}`, which Liquid
+# reads as variable syntax. One of them spans a line break and aborts the whole
+# build; the rest parse as bogus variables and render as empty strings, silently
+# dropping the type from the published page.
+#
+# These are internal implementation plans, not part of the published site, so the
+# fix is to keep them out of the build entirely. That also stops the next plan
+# document — which will contain the same JSDoc — from breaking Pages again.
+#
+# NOTE: `exclude` REPLACES Jekyll's default list rather than adding to it, so the
+# defaults are restated below. Dropping them would start copying node_modules
+# into the published site.
+theme: jekyll-theme-primer
+
+exclude:
+  # Jekyll 3.10 defaults, restated (see NOTE above)
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby
+  # Internal planning docs: Liquid-hostile and not part of the site
+  - docs
