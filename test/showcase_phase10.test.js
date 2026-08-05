@@ -6,7 +6,7 @@ import { Line2 } from 'three/addons/lines/Line2.js';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
-import { SarcomereScene } from '../src/render/SarcomereScene.js';
+import { SarcomereScene, TITIN_RENDER_STYLE } from '../src/render/SarcomereScene.js';
 
 const model = await TitinModel.create(nodeReader());
 const SL = 2200;
@@ -56,6 +56,29 @@ test('SC10: the continuity trace is a screen-space wide line', () => {
   scene.clear();
 });
 
+test('SC10: both audiences get a ribbon, and Guided gets the wider one', () => {
+  for (const [mode, expected] of [
+    ['guided', TITIN_RENDER_STYLE.trace_px],
+    ['evidence', TITIN_RENDER_STYLE.trace_px_evidence],
+  ]) {
+    const scene = build({ presentationMode: mode });
+    const traces = [];
+    scene.root.traverse((object) => {
+      if (object.name?.startsWith('titin_continuity_trace_')) traces.push(object);
+    });
+    assert.ok(traces.length > 0, `${mode}: the ribbon is not a Guided-only affordance`);
+    for (const trace of traces) {
+      assert.equal(trace.material.linewidth, expected, `${mode}: wrong ribbon width`);
+      assert.equal(trace.userData.render_width_px, expected);
+    }
+    assert.equal(scene.manifest.titin_emphasis.trace_px, expected,
+      `${mode}: the manifest must report the width actually drawn`);
+    scene.clear();
+  }
+  assert.ok(TITIN_RENDER_STYLE.trace_px > TITIN_RENDER_STYLE.trace_px_evidence,
+    'Guided is the audience that needs the heavier reading aid');
+});
+
 test('SC10: every screen-space line material is registered and resolution-settable', () => {
   const scene = build();
   assert.ok(scene.screenSpaceLineMaterials.size > 0);
@@ -65,6 +88,12 @@ test('SC10: every screen-space line material is registered and resolution-settab
     assert.equal(material.resolution.x, 1440);
     assert.equal(material.resolution.y, 900);
   }
+  // A zero size is the state a Line2 silently misbehaves in — it draws at the
+  // wrong width and refuses to be picked — so it must be rejected, not stored.
+  for (const bad of [[0, 900], [1440, 0], [-1, -1], [NaN, 900]]) {
+    assert.throws(() => scene.setLineResolution(bad[0], bad[1]), /positive size/);
+  }
+  assert.equal(scene.screenSpaceLineMaterials.values().next().value.resolution.x, 1440);
   scene.clear();
 });
 
@@ -95,6 +124,14 @@ test('SC10: the halo is an emphasis channel, not an evidence claim', () => {
     return false;
   };
   assert.ok(halos.some(inMirroredHalf), 'the mirrored half must carry halos too');
+  // Exactly one halo per canonical region, per half.
+  const segments = model.backboneAt(SL).segments;
+  const perHalf = halos.filter((halo) => !inMirroredHalf(halo));
+  assert.equal(perHalf.length, segments.length);
+  assert.deepEqual(
+    perHalf.map((halo) => halo.name).sort(),
+    segments.map((segment) => `titin_halo_${segment.region_id}`).sort(),
+  );
   for (const halo of halos) {
     assert.equal(halo.material.blending, THREE.AdditiveBlending);
     assert.equal(halo.material.depthWrite, false);
@@ -104,6 +141,25 @@ test('SC10: the halo is an emphasis channel, not an evidence claim', () => {
   }
   assert.equal(scene.manifest.titin_emphasis.evidence_opacity_unchanged, true);
   scene.clear();
+});
+
+test('SC10: the halo stays on the representative strand', () => {
+  const count = (scene, prefix) => {
+    let n = 0;
+    scene.root.traverse((object) => { if (object.name?.startsWith(prefix)) n += 1; });
+    return n;
+  };
+  const one = build({ titinStrands: false });
+  const six = build({ titinStrands: true });
+  // The six-strand lattice really is drawing more titin...
+  assert.ok(count(six, 'titin_region_') > count(one, 'titin_region_'),
+    'the six-strand build must draw more region tubes than the one-strand build');
+  // ...and the reading aid still appears exactly once, not once per copy. Six
+  // stacked additive halos would be a glare, and would emphasise the schematic
+  // lattice copies as strongly as the strand the trace is drawn for.
+  assert.equal(count(six, 'titin_halo_'), count(one, 'titin_halo_'));
+  one.clear();
+  six.clear();
 });
 
 test('SC10: emphasis does not change any evidence opacity', () => {

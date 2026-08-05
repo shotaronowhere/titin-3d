@@ -1557,6 +1557,10 @@ export class SarcomereScene {
         'SC-2 continuity trace (exact Level-0 axial endpoints; representative '
           + 'schematic transverse display offset)',
         'reduced N2A/PEVK tube radius (visual distinction, not molecular diameter)',
+        'SC-10 continuity-trace ribbon width (screen-space width in CSS pixels, held '
+          + 'constant at every camera distance; a reading width, not a molecular dimension)',
+        'SC-10 titin emphasis halo (additive reading aid around the titin path; not a '
+          + 'molecular envelope, and it moves no opacity that encodes confidence)',
         ...(mybpcReport?.drawn ? [
           'SC-5 MyBP-C stripe register, azimuth, reach, and pose (schematic C-zone '
             + 'context on one representative thick filament; no titin contact and no '
