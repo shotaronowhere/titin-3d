@@ -417,6 +417,85 @@ export class SarcomereScene {
   }
 
   /**
+   * SC-10 emphasis halo: a wider, additively blended shell around the same path.
+   *
+   * It is a READING AID on the presentation channel. It writes no depth, is never
+   * raycast, carries no evidence class, and its radius is a multiple of a render
+   * width that is already declared not to be a molecular dimension. Emphasis is
+   * therefore expressible without moving a single opacity that encodes confidence.
+   *
+   * @param {Array<{x:number,y?:number,z?:number}>} points
+   * @param {number} radiusNm  the tube radius this halo surrounds
+   * @param {string} name
+   */
+  _titinHalo(points, radiusNm, name) {
+    const pts = points.map((p) => new THREE.Vector3(p.x, p.y ?? 0, p.z ?? 0));
+    const curve = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.4);
+    const geom = this._track(new THREE.TubeGeometry(
+      curve, Math.max(24, pts.length * 4),
+      radiusNm * TITIN_RENDER_STYLE.halo_radius_scale, 8, false,
+    ));
+    const material = new THREE.MeshBasicMaterial({
+      color: COMPONENT_COLOR.titin_highlight,
+      transparent: true,
+      opacity: TITIN_RENDER_STYLE.halo_opacity,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.BackSide,
+    });
+    this.disposables.add(material);
+    const mesh = new THREE.Mesh(geom, material);
+    mesh.name = name;
+    mesh.renderOrder = 11;
+    mesh.userData.emphasis_channel = 'presentation';
+    mesh.userData.render_meaning = 'reading aid around the titin path; not a molecular envelope';
+    // Never pickable: the halo is not the molecule.
+    return this._unpickable(mesh);
+  }
+
+  /**
+   * Take one object out of the raycast set without hiding it.
+   *
+   * `Object3D.prototype.raycast` is a no-op, so an object carrying it is drawn
+   * and never hit. The alternative — a layer or `visible = false` — would also
+   * stop it being drawn, which is the opposite of what an emphasis object is for.
+   *
+   * @template {THREE.Object3D} T
+   * @param {T} object
+   * @returns {T}
+   */
+  _unpickable(object) {
+    object.raycast = THREE.Object3D.prototype.raycast;
+    return object;
+  }
+
+  /**
+   * Re-apply the no-pick rule across a CLONED subtree.
+   *
+   * `Object3D.copy()` deep-copies userData but not own function properties, and
+   * `clone()` rebuilds each node from its class prototype — so the mirrored
+   * half's halos come back with `Mesh.prototype.raycast` and become pickable
+   * again. A 3.2x-radius shell in front of titin that answers a raycast resolves
+   * to no target at all (`pickTarget` has no mapping for it), so it would
+   * silently swallow clicks aimed at the molecule it exists to emphasise.
+   *
+   * userData survives the clone, which is why it is the marker read here rather
+   * than the override that did not.
+   *
+   * @param {THREE.Object3D} root
+   * @returns {number} how many objects were restored
+   */
+  _restoreEmphasisPicking(root) {
+    let restored = 0;
+    root.traverse((object) => {
+      if (object.userData?.emphasis_channel !== 'presentation') return;
+      this._unpickable(object);
+      restored += 1;
+    });
+    return restored;
+  }
+
+  /**
    * Exact Level-0 AXIAL endpoints for one canonical segment, carried on the
    * representative strand's declared transverse display offset. Keeping this
    * screen-readable trace at y=z=0 while the biological tube sits on the thick-
@@ -1045,6 +1124,11 @@ export class SarcomereScene {
           traces.name = 'titin_continuity_traces';
           for (const segment of titinPath.segments) {
             traces.add(this._titinContinuityTrace(segment, off, aBandStart, presentationMode));
+            traces.add(this._titinHalo(
+              this._titinRegionPath(domains, segment, off, aBandStart),
+              titinRadius,
+              `titin_halo_${segment.region_id}`,
+            ));
           }
           titinGroup.add(traces);
         }
@@ -1233,7 +1317,10 @@ export class SarcomereScene {
     if (mirror) {
       const mirrored = new THREE.Group();
       mirrored.name = 'half_sarcomere_mirrored';
-      mirrored.add(half.clone());
+      const mirroredHalf = half.clone();
+      // clone() drops own-property raycast overrides; see _restoreEmphasisPicking.
+      this._restoreEmphasisPicking(mirroredHalf);
+      mirrored.add(mirroredHalf);
       // A 2-fold ROTATION about the Y axis through the M-line, not a reflection.
       //   rotation: (x,y,z) -> (2*Xm - x,  y, -z)
       //   reflection: (x,y,z) -> (2*Xm - x, y,  z)
@@ -1389,6 +1476,16 @@ export class SarcomereScene {
         i_band_transverse_path: lat
           ? 'SCHEMATIC render-only linear taper from the A-band surface offset to the Z-disc axis'
           : 'isolated axial presentation; no transverse filament relationship shown',
+      },
+      titin_emphasis: {
+        channel: 'presentation',
+        trace_px: presentationMode === 'guided'
+          ? TITIN_RENDER_STYLE.trace_px
+          : TITIN_RENDER_STYLE.trace_px_evidence,
+        halo_radius_scale: TITIN_RENDER_STYLE.halo_radius_scale,
+        halo_opacity: TITIN_RENDER_STYLE.halo_opacity,
+        evidence_opacity_unchanged: true,
+        meaning: 'screen-space reading width and an additive halo; neither is a molecular dimension',
       },
       titin_regions: scene.titin.map((region) => ({
         id: region.id,

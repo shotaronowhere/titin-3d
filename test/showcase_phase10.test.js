@@ -75,3 +75,57 @@ test('SC10: clear() releases every tracked resource', () => {
   assert.equal(scene.disposables.size, 0);
   assert.equal(scene.screenSpaceLineMaterials.size, 0);
 });
+
+test('SC10: the halo is an emphasis channel, not an evidence claim', () => {
+  const scene = build();
+  const halos = [];
+  const tubes = [];
+  scene.root.traverse((object) => {
+    if (object.name?.startsWith('titin_halo_')) halos.push(object);
+    if (object.userData?.titin_region && !object.name?.startsWith('titin_halo_')) tubes.push(object);
+  });
+  assert.ok(halos.length > 0, 'titin needs a halo');
+  assert.ok(tubes.length > 0, 'the halo must surround real region tubes, not replace them');
+  // The mirrored half is a clone(), and clone() drops own-property raycast
+  // overrides. Named here so the no-pick assertion below cannot go vacuous.
+  const inMirroredHalf = (object) => {
+    for (let cursor = object; cursor; cursor = cursor.parent) {
+      if (cursor.name === 'half_sarcomere_mirrored') return true;
+    }
+    return false;
+  };
+  assert.ok(halos.some(inMirroredHalf), 'the mirrored half must carry halos too');
+  for (const halo of halos) {
+    assert.equal(halo.material.blending, THREE.AdditiveBlending);
+    assert.equal(halo.material.depthWrite, false);
+    assert.equal(halo.userData.emphasis_channel, 'presentation');
+    // A halo must never be pickable: it would answer for geometry it is not.
+    assert.equal(halo.raycast, THREE.Object3D.prototype.raycast);
+  }
+  assert.equal(scene.manifest.titin_emphasis.evidence_opacity_unchanged, true);
+  scene.clear();
+});
+
+test('SC10: emphasis does not change any evidence opacity', () => {
+  const scene = build();
+  const opacities = [];
+  scene.root.traverse((object) => {
+    if (object.userData?.titin_region && object.userData.evidence_rendered) {
+      opacities.push([object.name, object.material.opacity]);
+    }
+  });
+  // Every titin region tube keeps the opacity its evidence class dictates.
+  for (const [name, opacity] of opacities) {
+    assert.ok(opacity <= 1 && opacity > 0, `${name}: implausible opacity ${opacity}`);
+  }
+  const highlighted = scene.setTitinRegionHighlight('PEVK');
+  const after = [];
+  scene.root.traverse((object) => {
+    if (object.userData?.titin_region && object.userData.evidence_rendered) {
+      after.push([object.name, object.material.opacity]);
+    }
+  });
+  assert.deepEqual(after, opacities, 'selection must not touch evidence opacity');
+  assert.ok(highlighted.highlighted_tubes > 0);
+  scene.clear();
+});
