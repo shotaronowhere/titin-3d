@@ -28,6 +28,9 @@
  * chance of a scale factor silently corrupting a comparison between states.
  */
 import * as THREE from 'three';
+import { Line2 } from 'three/addons/lines/Line2.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { validateZDiscDetail } from '../geometry/ZDiscDetail.js';
 import { validateMBandDetail } from '../geometry/MBandDetail.js';
 import { validateMyBPCContext } from '../geometry/MyBPCContext.js';
@@ -161,11 +164,23 @@ export const GUIDED_COMPONENT_COLOR = Object.freeze({
   lattice_guide: 0x3c4653,
 });
 
-/** Render-width decisions only; neither value is a molecular diameter. */
+/**
+ * SC-10 subject-emphasis channel.
+ *
+ * `trace_px` is a SCREEN-SPACE width in CSS pixels. It is a reading aid, not a
+ * molecular dimension, and it is deliberately independent of the tube radius:
+ * inflating the tube would imply a diameter, while a constant-width ribbon
+ * makes no dimensional claim at all. Evidence opacity is untouched by every
+ * value here — emphasis and confidence stay on separate channels.
+ */
 export const TITIN_RENDER_STYLE = Object.freeze({
   guided_radius_scale: 1.65,
   disordered_radius_scale: 0.58,
   continuity_opacity: 0.96,
+  trace_px: 4.0,
+  trace_px_evidence: 3.0,
+  halo_radius_scale: 3.2,
+  halo_opacity: 0.16,
 });
 
 /** Resolve an evidence string (which may carry a parenthetical) to a style. */
@@ -192,6 +207,13 @@ export class SarcomereScene {
     this.root.name = 'sarcomere';
     this.scene.add(this.root);
     this.disposables = new Set();
+    /**
+     * Screen-space line materials need the renderer size to compute their width,
+     * and they early-out of raycasting while the resolution is still zero. The
+     * Viewer owns that size, so the scene exposes the set rather than guessing.
+     * @type {Set<import('three/addons/lines/LineMaterial.js').LineMaterial>}
+     */
+    this.screenSpaceLineMaterials = new Set();
     /** Populated by build(): a machine-readable audit of what was drawn. */
     this.manifest = null;
     this._built = false;
@@ -216,6 +238,24 @@ export class SarcomereScene {
     // resource, not once per user of it.
     this.disposables.add(geom);
     return geom;
+  }
+
+  /**
+   * Screen-space line width and Line2 raycasting are both computed from the
+   * renderer's pixel size. A material whose resolution is still (0,0) draws at
+   * the wrong width AND silently refuses to be picked, so the Viewer calls this
+   * after every build and every resize.
+   *
+   * @param {number} width
+   * @param {number} height
+   * @returns {{materials_updated: number}}
+   */
+  setLineResolution(width, height) {
+    if (!(width > 0) || !(height > 0)) {
+      throw new Error(`setLineResolution: expected a positive size, got ${width}x${height}`);
+    }
+    for (const material of this.screenSpaceLineMaterials) material.resolution.set(width, height);
+    return { materials_updated: this.screenSpaceLineMaterials.size };
   }
 
   /**
@@ -377,30 +417,114 @@ export class SarcomereScene {
   }
 
   /**
+   * SC-10 emphasis halo: a wider, additively blended shell around the same path.
+   *
+   * It is a READING AID on the presentation channel. It writes no depth, is never
+   * raycast, carries no evidence class, and its radius is a multiple of a render
+   * width that is already declared not to be a molecular dimension. Emphasis is
+   * therefore expressible without moving a single opacity that encodes confidence.
+   *
+   * @param {Array<{x:number,y?:number,z?:number}>} points
+   * @param {number} radiusNm  the tube radius this halo surrounds
+   * @param {string} name
+   */
+  _titinHalo(points, radiusNm, name) {
+    const pts = points.map((p) => new THREE.Vector3(p.x, p.y ?? 0, p.z ?? 0));
+    const curve = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.4);
+    const geom = this._track(new THREE.TubeGeometry(
+      curve, Math.max(24, pts.length * 4),
+      radiusNm * TITIN_RENDER_STYLE.halo_radius_scale, 8, false,
+    ));
+    const material = new THREE.MeshBasicMaterial({
+      color: COMPONENT_COLOR.titin_highlight,
+      transparent: true,
+      opacity: TITIN_RENDER_STYLE.halo_opacity,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.BackSide,
+    });
+    this.disposables.add(material);
+    const mesh = new THREE.Mesh(geom, material);
+    mesh.name = name;
+    mesh.renderOrder = 11;
+    mesh.userData.emphasis_channel = 'presentation';
+    mesh.userData.render_meaning = 'reading aid around the titin path; not a molecular envelope';
+    // Never pickable: the halo is not the molecule.
+    return this._unpickable(mesh);
+  }
+
+  /**
+   * Take one object out of the raycast set without hiding it.
+   *
+   * `Object3D.prototype.raycast` is a no-op, so an object carrying it is drawn
+   * and never hit. The alternative — a layer or `visible = false` — would also
+   * stop it being drawn, which is the opposite of what an emphasis object is for.
+   *
+   * @template {THREE.Object3D} T
+   * @param {T} object
+   * @returns {T}
+   */
+  _unpickable(object) {
+    object.raycast = THREE.Object3D.prototype.raycast;
+    return object;
+  }
+
+  /**
+   * Re-apply the no-pick rule across a CLONED subtree.
+   *
+   * `Object3D.copy()` deep-copies userData but not own function properties, and
+   * `clone()` rebuilds each node from its class prototype — so the mirrored
+   * half's halos come back with `Mesh.prototype.raycast` and become pickable
+   * again. A 3.2x-radius shell in front of titin that answers a raycast resolves
+   * to no target at all (`pickTarget` has no mapping for it), so it would
+   * silently swallow clicks aimed at the molecule it exists to emphasise.
+   *
+   * userData survives the clone, which is why it is the marker read here rather
+   * than the override that did not.
+   *
+   * @param {THREE.Object3D} root
+   * @returns {number} how many objects were restored
+   */
+  _restoreEmphasisPicking(root) {
+    let restored = 0;
+    root.traverse((object) => {
+      if (object.userData?.emphasis_channel !== 'presentation') return;
+      this._unpickable(object);
+      restored += 1;
+    });
+    return restored;
+  }
+
+  /**
    * Exact Level-0 AXIAL endpoints for one canonical segment, carried on the
    * representative strand's declared transverse display offset. Keeping this
    * screen-readable trace at y=z=0 while the biological tube sits on the thick-
    * filament surface would falsely depict a second titin through the myosin core.
    * The offset is schematic and changes no source-backed X coordinate.
    */
-  _titinContinuityTrace(segment, off, aBandStartNm) {
+  _titinContinuityTrace(segment, off, aBandStartNm, presentationMode = 'guided') {
     const at = (x) => {
       const f = x >= aBandStartNm ? 1 : x / aBandStartNm;
-      return new THREE.Vector3(x, (off.y || 0) * f, (off.z || 0) * f);
+      return [x, (off.y || 0) * f, (off.z || 0) * f];
     };
-    const geometry = this._track(new THREE.BufferGeometry().setFromPoints([
-      at(segment.X_start),
-      at(segment.X_end),
-    ]));
-    const material = new THREE.LineBasicMaterial({
+    const geometry = new LineGeometry();
+    geometry.setPositions([...at(segment.X_start), ...at(segment.X_end)]);
+    this.disposables.add(geometry);
+    const material = new LineMaterial({
       color: COMPONENT_COLOR.titin_highlight,
+      // CSS pixels: worldUnits stays false (the default) so the ribbon keeps a
+      // constant reading width at every camera distance.
+      linewidth: presentationMode === 'guided'
+        ? TITIN_RENDER_STYLE.trace_px
+        : TITIN_RENDER_STYLE.trace_px_evidence,
       transparent: true,
       opacity: TITIN_RENDER_STYLE.continuity_opacity,
       depthTest: false,
       depthWrite: false,
     });
     this.disposables.add(material);
-    const line = new THREE.Line(geometry, material);
+    this.screenSpaceLineMaterials.add(material);
+    const line = new Line2(geometry, material);
     line.name = `titin_continuity_trace_${segment.region_id}`;
     line.renderOrder = 12;
     line.userData.titin_trace_region = segment.region_id;
@@ -409,6 +533,8 @@ export class SarcomereScene {
       + 'schematic representative-strand transverse offset';
     line.userData.a_band_radial_offset_nm = Math.hypot(off.y || 0, off.z || 0);
     line.userData.azimuth_evidence = off.evidence_class || 'SCHEMATIC';
+    line.userData.render_width_px = material.linewidth;
+    line.userData.render_width_meaning = 'screen-space reading width; not a molecular dimension';
     return line;
   }
 
@@ -997,7 +1123,12 @@ export class SarcomereScene {
           const traces = new THREE.Group();
           traces.name = 'titin_continuity_traces';
           for (const segment of titinPath.segments) {
-            traces.add(this._titinContinuityTrace(segment, off, aBandStart));
+            traces.add(this._titinContinuityTrace(segment, off, aBandStart, presentationMode));
+            traces.add(this._titinHalo(
+              this._titinRegionPath(domains, segment, off, aBandStart),
+              titinRadius,
+              `titin_halo_${segment.region_id}`,
+            ));
           }
           titinGroup.add(traces);
         }
@@ -1186,7 +1317,10 @@ export class SarcomereScene {
     if (mirror) {
       const mirrored = new THREE.Group();
       mirrored.name = 'half_sarcomere_mirrored';
-      mirrored.add(half.clone());
+      const mirroredHalf = half.clone();
+      // clone() drops own-property raycast overrides; see _restoreEmphasisPicking.
+      this._restoreEmphasisPicking(mirroredHalf);
+      mirrored.add(mirroredHalf);
       // A 2-fold ROTATION about the Y axis through the M-line, not a reflection.
       //   rotation: (x,y,z) -> (2*Xm - x,  y, -z)
       //   reflection: (x,y,z) -> (2*Xm - x, y,  z)
@@ -1343,6 +1477,16 @@ export class SarcomereScene {
           ? 'SCHEMATIC render-only linear taper from the A-band surface offset to the Z-disc axis'
           : 'isolated axial presentation; no transverse filament relationship shown',
       },
+      titin_emphasis: {
+        channel: 'presentation',
+        trace_px: presentationMode === 'guided'
+          ? TITIN_RENDER_STYLE.trace_px
+          : TITIN_RENDER_STYLE.trace_px_evidence,
+        halo_radius_scale: TITIN_RENDER_STYLE.halo_radius_scale,
+        halo_opacity: TITIN_RENDER_STYLE.halo_opacity,
+        evidence_opacity_unchanged: true,
+        meaning: 'screen-space reading width and an additive halo; neither is a molecular dimension',
+      },
       titin_regions: scene.titin.map((region) => ({
         id: region.id,
         band: region.band,
@@ -1413,6 +1557,10 @@ export class SarcomereScene {
         'SC-2 continuity trace (exact Level-0 axial endpoints; representative '
           + 'schematic transverse display offset)',
         'reduced N2A/PEVK tube radius (visual distinction, not molecular diameter)',
+        'SC-10 continuity-trace ribbon width (screen-space width in CSS pixels, held '
+          + 'constant at every camera distance; a reading width, not a molecular dimension)',
+        'SC-10 titin emphasis halo (additive reading aid around the titin path; not a '
+          + 'molecular envelope, and it moves no opacity that encodes confidence)',
         ...(mybpcReport?.drawn ? [
           'SC-5 MyBP-C stripe register, azimuth, reach, and pose (schematic C-zone '
             + 'context on one representative thick filament; no titin contact and no '
@@ -1836,6 +1984,9 @@ export class SarcomereScene {
     this.root.clear();
     for (const d of this.disposables) d.dispose?.();
     this.disposables = new Set();
+    // Disposed above with everything else; this set only tracks WHICH of them
+    // need a renderer resolution, so it is emptied rather than disposed again.
+    this.screenSpaceLineMaterials.clear();
     this.manifest = null;
     this._built = false;
     this.highlightedTitinRegion = null;

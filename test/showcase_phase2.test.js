@@ -30,6 +30,23 @@ function sceneSourceMetadata(scene) {
   };
 }
 
+/**
+ * The two endpoints one continuity trace actually draws.
+ *
+ * SC-10 made the trace a Line2, whose `position` attribute is the unit quad every
+ * segment is expanded into — not the segment. The endpoints live in the instanced
+ * `instanceStart`/`instanceEnd` attributes, so these assertions read those and keep
+ * checking the drawn geometry rather than a metadata copy of it.
+ */
+function traceEndpoints(trace) {
+  const start = trace.geometry.getAttribute('instanceStart');
+  const end = trace.geometry.getAttribute('instanceEnd');
+  return [
+    { x: start.getX(0), y: start.getY(0), z: start.getZ(0) },
+    { x: end.getX(0), y: end.getY(0), z: end.getZ(0) },
+  ];
+}
+
 function buildScene(sl = 2200) {
   const scene = new SarcomereScene();
   scene.build(model.contextSceneAt(sl, { rings: 1 }), model.domainInstancesAt(sl), {
@@ -72,14 +89,12 @@ test('SC2: immediate context is one myosin filament with its six nearest actin f
     'the one representative must retain the same surface radius as the six-strand model');
   assert.match(representative.azimuth_evidence, /^SCHEMATIC/);
   const aBandTrace = root.getObjectByName('titin_continuity_trace_Aband_super');
-  const tracePositions = aBandTrace.geometry.getAttribute('position');
-  for (const index of [0, 1]) {
-    assert.ok(Math.abs(Math.hypot(tracePositions.getY(index), tracePositions.getZ(index))
-      - thickRadius) < 1e-5, 'the bright continuity trace must not return to the myosin axis');
+  for (const point of traceEndpoints(aBandTrace)) {
+    assert.ok(Math.abs(Math.hypot(point.y, point.z) - thickRadius) < 1e-5,
+      'the bright continuity trace must not return to the myosin axis');
   }
-  const nTerminusTrace = root.getObjectByName('titin_continuity_trace_Z1Z2')
-    .geometry.getAttribute('position');
-  assert.ok(Math.hypot(nTerminusTrace.getY(0), nTerminusTrace.getZ(0)) < 1e-9,
+  const [nTerminus] = traceEndpoints(root.getObjectByName('titin_continuity_trace_Z1Z2'));
+  assert.ok(Math.hypot(nTerminus.y, nTerminus.z) < 1e-9,
     'the declared render-only I-band taper must still meet the Z-disc axis');
   assert.match(scene.manifest.render_only.join(' '), /immediate filament neighbourhood/);
   scene.clear();
@@ -200,12 +215,16 @@ test('SC2: the x-ray trace is exact, continuous and independent of tube radius',
   const canonical = model.backboneAt(2200);
   const traces = scene.root.getObjectByName('titin_continuity_traces');
   assert.ok(traces);
-  assert.equal(traces.children.length, canonical.segments.length);
+  // SC-10 parks each region's emphasis halo in this same group, so the invariant
+  // is one TRACE per canonical segment, not one child per canonical segment.
+  const traceChildren = traces.children
+    .filter((child) => child.name.startsWith('titin_continuity_trace_'));
+  assert.equal(traceChildren.length, canonical.segments.length);
   for (const segment of canonical.segments) {
     const trace = traces.getObjectByName(`titin_continuity_trace_${segment.region_id}`);
-    const positions = trace.geometry.getAttribute('position');
-    assert.ok(Math.abs(positions.getX(0) - segment.X_start) < 1e-5);
-    assert.ok(Math.abs(positions.getX(1) - segment.X_end) < 1e-5);
+    const [start, end] = traceEndpoints(trace);
+    assert.ok(Math.abs(start.x - segment.X_start) < 1e-5);
+    assert.ok(Math.abs(end.x - segment.X_end) < 1e-5);
     assert.equal(trace.userData.coordinate_basis,
       'exact canonical Level-0 axial segment endpoints; schematic representative-strand transverse offset');
   }

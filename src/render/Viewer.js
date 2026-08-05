@@ -233,6 +233,10 @@ export class Viewer {
     // Lines (the zero-width M-band marker and continuity trace) need a small
     // world-space tolerance to be reachable without creating fake marker geometry.
     this.raycaster.params.Line.threshold = 3;
+    // Line2 has its own raycast path and reads its own params entry, which the
+    // stock Raycaster does not define. Without it the titin ribbon is drawn but
+    // unpickable at the edges.
+    this.raycaster.params.Line2 = { threshold: 6 };
   }
 
   /** Rebuild the scene at a sarcomere length. Returns the render manifest. */
@@ -312,6 +316,11 @@ export class Viewer {
       viewWidthNm: buildViewWidth,
       viewportPx: buildViewportPx,
     });
+    // A fresh build made fresh screen-space line materials, and one whose
+    // resolution is still (0,0) draws at the wrong width and refuses to be
+    // picked. resize() is not guaranteed to fire between here and the next frame.
+    const { clientWidth: lineW, clientHeight: lineH } = this.container;
+    if (lineW > 0 && lineH > 0) this.sarcomere.setLineResolution(lineW, lineH);
     this.currentSL = scene.sarcomere_length_nm;
     this.lastNotes = notes;
     // Remember what was actually built. buildOpts is the constructor's DEFAULTS;
@@ -620,6 +629,8 @@ export class Viewer {
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h);
+    // Screen-space line widths are computed from this size.
+    this.sarcomere?.setLineResolution(w, h);
   }
 
   /**
