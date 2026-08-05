@@ -19,6 +19,7 @@ RANK = {
 }
 PRESENTATION_FEATURES = {
     "continuity_trace", "band_brackets", "termini", "region_extension_chart",
+    "lattice_cross_section",
 }
 
 

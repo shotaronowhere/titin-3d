@@ -65,12 +65,13 @@ The showcase implementation must preserve these boundaries:
 - presentation geometry cannot move biological anchors or strengthen evidence;
 - source figures are not copied merely because their scientific claims are cited.
 
-SC-1 through SC-5 were completed on 2026-08-02 and 2026-08-05: the presentation
+SC-1 through SC-6 were completed on 2026-08-02 and 2026-08-05: the presentation
 record and Guided/Evidence shell, the titin hierarchy and length story, the Z-disc
-and M-band correction, object-linked annotations, and the A-band scaffold story
-with its optional schematic MyBP-C C-zone context. The next showcase package is
-SC-6: the orthographic lattice breathing comparison. The detailed completion
-definition remains in `SHOWCASE_COMPLETION_PLAN.md`.
+and M-band correction, object-linked annotations, the A-band scaffold story with
+its optional schematic MyBP-C C-zone context, and the orthographic lattice
+breathing comparison. The next showcase package is SC-7: guided narrative and
+expert depth. The detailed completion definition remains in
+`SHOWCASE_COMPLETION_PLAN.md`.
 
 ---
 

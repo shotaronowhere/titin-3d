@@ -24,6 +24,9 @@ const URL_KEYS = Object.freeze([
 
 const PRESENTATION_FEATURES = new Set([
   'continuity_trace', 'band_brackets', 'termini', 'region_extension_chart',
+  // SC-6. Admitted for both audiences, so a guided chapter may request the
+  // orthographic lattice comparison rather than it being Evidence-only.
+  'lattice_cross_section',
 ]);
 
 function clone(value) { return JSON.parse(JSON.stringify(value)); }

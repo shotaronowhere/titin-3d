@@ -7,7 +7,7 @@ API consume those records rather than restating biological constants.
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
 and are intentionally outside the completed release scope. The separate showcase
-completion sequence is complete through SC-5; SC-6 is the next enhancement phase.
+completion sequence is complete through SC-6; SC-7 is the next enhancement phase.
 
 ## Open the visualization
 
@@ -89,6 +89,7 @@ npm run verify:sc2
 npm run verify:sc3
 npm run verify:sc4
 npm run verify:sc5
+npm run verify:sc6
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
@@ -139,6 +140,9 @@ npm run build
 - `src/geometry/MyBPCContext.js` — SC-5 optional schematic MyBP-C C-zone context;
   Evidence-only, off by default, and structurally unable to reach a thin filament,
   depict a rigid thick-to-thin bridge, or claim a titin contact
+- `src/geometry/LatticeCrossSection.js` — SC-6 two-panel orthographic lattice comparison;
+  plane coordinates plus one shared scale, so the educational cross-section cannot
+  foreshorten and the two panels cannot be normalised independently
 - `src/render/` — Three.js scene and viewer
 - `src/presentation/StoryController.js` — validated narrative state and URL codec
 - `src/presentation/ShowcaseOverlay.js` — SC-2 continuity, landmark, and live extension descriptors derived from canonical geometry

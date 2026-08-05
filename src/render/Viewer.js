@@ -121,7 +121,12 @@ export const CLOSEUPS = Object.freeze({
     at: (g) => [g.overlap_zone_nm.start_nm + (g.overlap_zone_nm.length ?? 0) * 0.5, 0, 0],
     spanNm: 140,
     dir: [1, 0.06, 0.06],
-    shows: 'the thick/thin filament lattice in cross-section',
+    // Deliberately NOT called a cross-section any more. This is a perspective 3-D
+    // view down the filament axis: useful for grasping the packing, but its
+    // foreshortening makes it the wrong place to read spacing. SC-6's orthographic
+    // panels are where d10 is measured.
+    shows: 'the 3-D packing of thick and thin filaments seen down the filament axis; '
+      + 'spacing is measured in the orthographic lattice cross-section, not here',
   },
 });
 

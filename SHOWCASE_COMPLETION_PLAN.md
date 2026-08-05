@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 complete on 2026-08-05; SC-6 is next
+**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 and SC-6 complete on 2026-08-05; SC-7 is next
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -522,6 +522,28 @@ gate was failing and nothing validated the catalog there.
 - A negative test rejects a rigid universal bridge or unsourced direct titin–MyBP-C contact.
 
 ### SC-6 — Orthographic lattice breathing comparison
+
+**Completed 2026-08-05.** `src/geometry/LatticeCrossSection.js` emits two
+same-scale transverse panels as plane coordinates plus ONE shared linear scale,
+rather than adding an orthographic camera and then asserting nothing perspective
+leaked in: circles drawn from that record cannot foreshorten and cannot disagree
+about scale, so both projection gates hold by construction and are checkable
+without a GPU. Every site and every d10 comes back verbatim from
+`LatticeGeometry.latticePatch`, so no second lattice solver exists. The d10
+dimension line is built from two ring-1 neighbours, which makes its drawn length
+equal d10 by geometry rather than by label, and it meets the (1,0) row it
+measures to at a right angle; the validator rejects a line whose length and label
+disagree. The comparison panel is a named structural state inside the declared
+2,000–2,400 nm working band, chosen as whichever candidate lies furthest from the
+displayed length so the pair is never degenerate, and the band itself is parsed
+from the sourced literature parameter and cross-checked against the band
+`presentation.json` declares. Each panel ghosts the other's thick lattice, the
+constant-volume caveat and the four non-claims render beside the panels rather
+than only in the evidence inventory, and `time_resolved_contraction_implied` is
+validated false. The perspective down-axis close-up no longer calls itself a
+cross-section. Thirteen focused positive and destructive tests are in
+`test/showcase_phase6.test.js`; the bounded gate is `npm run verify:sc6`, which
+also rejects a stale standalone `index.html`.
 
 #### Work
 

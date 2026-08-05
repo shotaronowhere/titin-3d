@@ -545,6 +545,19 @@ export class TitinVisualization {
   /** Titin-region metadata available to the Phase-10 region navigator. */
   titinRegions() { return this.model.titinRegions(); }
 
+  /**
+   * SC-6 two-panel orthographic lattice comparison at the displayed length.
+   * Sites and d10 are the same lattice output the 3D scene draws, so the axial
+   * and transverse readouts cannot describe different states.
+   */
+  latticeCrossSection(opts = {}) {
+    const sl = this._state?.sarcomere_length_nm;
+    if (sl === undefined) {
+      throw new Error('TitinVisualization: set a state before requesting the lattice cross-section.');
+    }
+    return this.model.latticeCrossSectionAt(sl, opts);
+  }
+
   /** SC-2 descriptors derived from the same mechanical output as the 3D scene. */
   showcaseOverlay() {
     const sl = this._state?.sarcomere_length_nm;

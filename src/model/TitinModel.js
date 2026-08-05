@@ -21,6 +21,7 @@ import { ContextDetail } from '../geometry/ContextDetail.js';
 import { ZDiscDetail } from '../geometry/ZDiscDetail.js';
 import { MBandDetail } from '../geometry/MBandDetail.js';
 import { MyBPCContext } from '../geometry/MyBPCContext.js';
+import { LatticeCrossSection } from '../geometry/LatticeCrossSection.js';
 
 export class TitinModel {
   constructor(spec) {
@@ -202,6 +203,24 @@ export class TitinModel {
   cZoneAt(sl) { return this._rep().cZoneAt(sl); }
 
   mybpcProvenance() { return this._mybpcContext().provenance(); }
+
+  // --- SC-6: orthographic lattice cross-section comparison -----------------
+  _latticeCrossSection() {
+    if (!this.latticeCrossSection) {
+      this.latticeCrossSection = new LatticeCrossSection(
+        this.spec, this.geometry, this._lattice(),
+      );
+    }
+    return this.latticeCrossSection;
+  }
+
+  /**
+   * Two same-scale orthographic transverse panels. The sites and d10 are the
+   * existing lattice layer's output; this adds no second lattice solver.
+   */
+  latticeCrossSectionAt(sl, { rings = 2 } = {}) {
+    return this._latticeCrossSection().comparisonAt(sl, { rings });
+  }
 
   // --- Phase 4: hierarchical titin representation ---
   _rep() {
