@@ -207,12 +207,14 @@
         "10.1016/j.jmb.2020.06.025",
         "UniProt:Q8WZ42"
       ],
-      "lay_summary": "Titin changes role along its length. Its I-band regions form the extensible spring, while the long A-band segment remains integrated with the thick filament and leads toward the M-line.",
-      "expert_expansion": "Sequence architecture and axial organization support a heterogeneous molecule with elastic I-band elements in series with an A-band scaffold; exact unresolved linker conformations are not supplied.",
+      "lay_summary": "Titin changes role along its length. Its I-band regions form the extensible spring, while an eleven-domain super-repeat binds the thick filament: that A-band segment keeps a constant span and organizes the filament rather than stretching.",
+      "expert_expansion": "Eleven Ig/Fn3 domains repeat every 45.5 nm along the bound segment, near-commensurate with the 43.1 nm myosin repeat; the 2.4 nm residual is not an exact register. The A-band span is invariant with sarcomere length here, which is what makes the scaffold role legible beside the I-band spring. Titin is widely discussed as a thick-filament ruler and regulator, but this model encodes the geometric scaffold only, never a causal mechanism.",
       "not_claimed": [
         "one elastic constant for the whole molecule",
         "atom-level region surfaces",
-        "an exact universal A-band azimuth"
+        "an exact universal A-band azimuth",
+        "exact register between the titin super-repeat and the myosin repeat",
+        "a settled causal mechanism by which titin sets thick-filament length or regulates myosin"
       ],
       "presentation_features": [
         "continuity_trace",
@@ -232,6 +234,45 @@
           "rings": 1
         }
       }
+    }
+  ],
+  "expert_cards": [
+    {
+      "id": "aband_scaffold_card",
+      "target_claim_id": "titin_region_architecture",
+      "audience": "evidence",
+      "title": "Spring and scaffold: what the A-band super-repeat does and does not settle",
+      "evidence_class": "INFERRED",
+      "source_ids": [
+        "10.1016/j.jmb.2020.06.025",
+        "10.1085/jgp.202012713",
+        "10.1016/j.yjmcc.2019.05.026"
+      ],
+      "body": "The A-band segment binds the thick filament through an eleven-domain super-repeat of 45.5 nm axial periodicity, eleven of which lie in the C-zone. In this model its end-to-end span stays constant while sarcomere length changes, so the same molecule reads as an extensible I-band spring in series with a positionally anchored A-band scaffold. That organizing role is what supports describing titin as a molecular ruler for thick-filament assembly, and as a participant in myosin regulation. Both remain active proposals in the literature: the visualization shows the geometric scaffold that motivates them and encodes no causal mechanism, no length-setting rule, and no activation coupling.",
+      "not_claimed": [
+        "a settled ruler mechanism for thick-filament length",
+        "a settled regulatory pathway from titin to myosin",
+        "exact register between the 45.5 nm titin super-repeat and the 43.1 nm myosin repeat",
+        "an exact universal A-band azimuth for the bound segment"
+      ]
+    },
+    {
+      "id": "mybpc_scope_card",
+      "target_claim_id": "mybpc_czone_context",
+      "audience": "evidence",
+      "title": "Optional MyBP-C context, and why cardiac coordinates were not imported",
+      "evidence_class": "SCHEMATIC",
+      "source_ids": [
+        "10.1038/s41467-024-46957-7"
+      ],
+      "body": "MyBP-C is an accessory C-zone protein of the thick filament, not part of titin. Fast skeletal muscle evidence supports its presence in the C-zone at the approximately 43 nm repeat, with roughly three molecules per repeat, so the optional layer draws that many sparse markers and nothing more. High-resolution coordinates for MyBP-C exist, but they come from cardiac thick-filament reconstructions. This model's declared scope is human skeletal N2A-containing titin, and adopting a cardiac accessory protein's placement would silently mix isoforms — exactly the error this project's evidence classes exist to prevent. The stripe register, azimuth, reach, and pose therefore stay SCHEMATIC, no molecule is drawn reaching a thin filament, and no titin contact is depicted.",
+      "not_claimed": [
+        "cardiac cMyBP-C coordinates in the skeletal reference model",
+        "a universal rigid thick-to-thin bridge",
+        "a direct titin–MyBP-C contact",
+        "three exact molecules at every human titin super-repeat",
+        "a resolved stripe register, azimuth, reach, or binding pose"
+      ]
     }
   ],
   "initial_state": {

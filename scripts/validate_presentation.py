@@ -51,6 +51,7 @@ def validate(presentation_path):
         ("scope badge", p.get("scope_badges")),
         ("length preset", p.get("length_presets")),
         ("guided chapter", p.get("guided_chapters")),
+        ("expert card", p.get("expert_cards")),
         ("presenter shortcut", p.get("presenter_shortcuts")),
     ]
     global_ids = {}
@@ -180,6 +181,22 @@ def validate(presentation_path):
         require(type(visibility.get("rings")) is int and visibility["rings"] >= 1,
                 f"guided chapter '{chapter.get('id')}' visibility.rings must be positive integer")
 
+    for card in p.get("expert_cards", []):
+        validate_scientific(card, "expert card")
+        require(card.get("audience") == "evidence",
+                f"expert card '{card.get('id')}' must be Evidence-mode only")
+        require(bool(str(card.get("title", "")).strip()) and bool(str(card.get("body", "")).strip()),
+                f"expert card '{card.get('id')}' needs visible title and body")
+        not_claimed = card.get("not_claimed")
+        require(isinstance(not_claimed, list) and bool(not_claimed)
+                and all(str(entry).strip() for entry in not_claimed),
+                f"expert card '{card.get('id')}' needs explicit not-claimed text")
+    mybpc_claim = claim_map.get("mybpc_czone_context")
+    if mybpc_claim and str(mybpc_claim.get("decision", "")).startswith("ADMIT"):
+        require(any(card.get("target_claim_id") == "mybpc_czone_context"
+                    for card in p.get("expert_cards", [])),
+                "an admitted MyBP-C layer requires an Evidence-mode expert card explaining its scope limits")
+
     initial = p.get("initial_state") or {}
     require(initial.get("audience_mode") in modes, "initial_state has unknown audience mode")
     require(initial.get("story_step") in chapter_ids, "initial_state has unknown story step")
@@ -220,7 +237,7 @@ def main():
             print(f"  FAIL {error}")
         return 1
     print("PRESENTATION VALIDATION PASSED")
-    print("  PASS required IDs, targets, sources, evidence strength, scope, presets, chapters and shortcuts")
+    print("  PASS required IDs, targets, sources, evidence strength, scope, presets, chapters, expert cards and shortcuts")
     return 0
 
 

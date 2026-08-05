@@ -83,6 +83,10 @@ function componentAnchors(model, sl) {
   const geometry = model.geometryAt(sl);
   const backbone = model.backboneAt(sl);
   const middle = backbone.points[Math.floor(backbone.points.length / 2)] || { x: sl / 4 };
+  // SC-5. The MyBP-C label belongs at the middle of the canonical C-zone, on the
+  // thick-filament surface it decorates. Read from the same interval the geometry
+  // layer uses so the label cannot point somewhere the markers are not.
+  const cZone = model.cZoneAt(sl);
   const thick = descriptors.get('thick_filament')?.transform || {};
   const thin = descriptors.get('thin_filament')?.transform || {};
   const zdisc = descriptors.get('zdisc')?.transform || {};
@@ -99,6 +103,7 @@ function componentAnchors(model, sl) {
     alpha_actinin: { x: geometry.zdisc.width / 2, y: thinSite.y / 2, z: thinSite.z / 2 },
     telethonin: { x: geometry.zdisc.width / 2, y: 0, z: 0 },
     myosin_heads: { x: geometry.overlap_zone_nm.start_nm + geometry.overlap_zone_nm.length * 0.35, y: strand.y, z: strand.z },
+    mybpc: { x: (cZone.start_nm + cZone.end_nm) / 2, y: strand.y, z: strand.z },
   };
   return { anchors, strand, aBandStart: thick.start_nm };
 }

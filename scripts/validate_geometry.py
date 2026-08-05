@@ -29,7 +29,11 @@ files=["sarcomere.json","titin.json","structural_states.json","geometry_sources.
        # geometry_strategy.json holds the evidence-class vocabulary itself and was
        # not loaded here before session 9 — the definitions every other check
        # relies on were themselves unvalidated.
-       "geometry_strategy.json","mechanical_model.json","showcase_claims.json","presentation.json"]
+       "geometry_strategy.json","mechanical_model.json","showcase_claims.json","presentation.json",
+       # SC-4 added annotations.json as a REQUIRED spec file (SpecLoader.SPEC_FILES)
+       # but did not register it here, so the coverage guard below was failing and
+       # nothing in this validator looked at the catalog. Registered in SC-5.
+       "annotations.json"]
 L={}
 for f in files:
     try: L[f]=load(f); check(True, f)
@@ -159,13 +163,45 @@ _PR = L["presentation.json"]
 check(_PR.get("schema") == "titin-presentation/1",
       "presentation record has the reviewed SC-1 schema")
 _pr_ids = [row.get("id") for key in ("audience_modes", "scope_badges", "length_presets",
-                                     "guided_chapters", "presenter_shortcuts")
+                                     "guided_chapters", "expert_cards", "presenter_shortcuts")
            for row in (_PR.get(key) or [])]
 check(len(_pr_ids) == len(set(_pr_ids)), "presentation record IDs are globally unique")
-_pr_sources = {source for row in (_PR.get("scope_badges") or []) + (_PR.get("guided_chapters") or [])
+_pr_sources = {source for row in ((_PR.get("scope_badges") or [])
+                                  + (_PR.get("guided_chapters") or [])
+                                  + (_PR.get("expert_cards") or []))
                for source in (row.get("source_ids") or [])}
 check(_pr_sources <= refs,
       f"presentation source IDs resolve (missing: {sorted(_pr_sources-refs)})")
+
+print("== SC-4 annotation registry ==")
+_AN = L["annotations.json"]
+check(_AN.get("schema") == "titin-object-annotations/1",
+      "annotation catalog has the reviewed SC-4 schema")
+_an_records = _AN.get("components") or []
+_an_ids = [row.get("id") for row in _an_records]
+_an_targets = [row.get("target_id") for row in _an_records]
+check(len(_an_ids) == len(set(_an_ids)) and len(_an_targets) == len(set(_an_targets)),
+      "annotation IDs and biological targets are unique")
+_an_sources = {source for row in _an_records for source in (row.get("source_ids") or [])}
+check(_an_sources <= refs,
+      f"annotation source IDs resolve (missing: {sorted(_an_sources-refs)})")
+# The catalog may not strengthen a claim its SC-0 binding already bounded.
+_an_bad = []
+for _row in _an_records:
+    _bind = (_row.get("binding") or {})
+    if _bind.get("kind") != "showcase_claim":
+        continue
+    _obj = next((o for o in _sc_objects if o.get("id") == _bind.get("id")), None)
+    if not _obj:
+        _an_bad.append(f"{_row.get('id')} -> missing claim {_bind.get('id')}")
+        continue
+    _rank = {"UNKNOWN":0,"SCHEMATIC":1,"INFERRED":2,"MODELED":3,"STRONGLY INFERRED":4,"MEASURED":5}
+    for _field in ("claim_evidence_class", "render_evidence_class"):
+        _a = _rank.get(str(_row.get(_field, "")).split(" (")[0])
+        _b = _rank.get(str(_obj.get(_field, "")).split(" (")[0])
+        if _a is None or _b is None or _a > _b:
+            _an_bad.append(f"{_row.get('id')}.{_field} exceeds {_bind.get('id')}")
+check(not _an_bad, f"annotation evidence stays within its admitted claim ({_an_bad})")
 
 print("== Titin domain reconciliation (UniProt Q8WZ42) ==")
 tr=L["titin.json"]["regions"]

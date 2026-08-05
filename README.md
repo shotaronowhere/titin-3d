@@ -7,7 +7,7 @@ API consume those records rather than restating biological constants.
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
 and are intentionally outside the completed release scope. The separate showcase
-completion sequence is complete through SC-4; SC-5 is the next enhancement phase.
+completion sequence is complete through SC-5; SC-6 is the next enhancement phase.
 
 ## Open the visualization
 
@@ -88,6 +88,7 @@ npm run build
 npm run verify:sc2
 npm run verify:sc3
 npm run verify:sc4
+npm run verify:sc5
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
@@ -135,11 +136,14 @@ npm run build
 - `src/geometry/` — representation, lattice, and mechanical geometry
 - `src/geometry/ZDiscDetail.js` and `src/geometry/MBandDetail.js` — SC-3
   source-limited, target-gated terminal-anchor detail descriptors
+- `src/geometry/MyBPCContext.js` — SC-5 optional schematic MyBP-C C-zone context;
+  Evidence-only, off by default, and structurally unable to reach a thin filament,
+  depict a rigid thick-to-thin bridge, or claim a titin contact
 - `src/render/` — Three.js scene and viewer
 - `src/presentation/StoryController.js` — validated narrative state and URL codec
 - `src/presentation/ShowcaseOverlay.js` — SC-2 continuity, landmark, and live extension descriptors derived from canonical geometry
 - `src/presentation/AnnotationCatalog.js` — SC-4 annotation validation and citation/link resolution
-- `data/presentation.json` — sourced SC-1/SC-2 presentation contract (no authoritative geometry)
+- `data/presentation.json` — sourced SC-1/SC-2 presentation contract and SC-5 Evidence-mode expert cards (no authoritative geometry)
 - `data/annotations.json` — validated SC-4 dual-audience object explanations and scientific bindings
 - `data/geometry_strategy.json` — current defect/completion register
 

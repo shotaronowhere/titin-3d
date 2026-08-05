@@ -146,6 +146,9 @@ export class TitinVisualization {
         showDomains: true,
         showContextDetail: false,
         anchorDetail: null,
+        // MyBP-C is thick-filament context; an "isolated titin" view that drew an
+        // accessory filament protein would contradict its own label.
+        showMyBPC: false,
         // One titin molecule spans one half-sarcomere (Z-disc to M-line).
         // Mirroring would show the counterpart from the adjacent half and make
         // the singular "isolated titin" label false.
@@ -153,7 +156,10 @@ export class TitinVisualization {
       };
     }
     return {
+      // SC-5: the reviewed attention budget keeps MyBP-C off by default, so the
+      // default here is `false` and a caller must opt in explicitly.
       showLattice: true, rings, showDomains: true, showContextDetail: true,
+      showMyBPC: false,
       ...requested,
     };
   }
@@ -168,7 +174,7 @@ export class TitinVisualization {
     const allowed = new Set([
       'showLattice', 'rings', 'showDomains', 'showContextDetail', 'mirror',
       'showFilamentContext', 'latticeScope', 'titinStrands', 'neighbourTitin',
-      'domainStrands', 'presentationMode', 'anchorDetail',
+      'domainStrands', 'presentationMode', 'anchorDetail', 'showMyBPC',
     ]);
     const unknown = Object.keys(options).filter((key) => !allowed.has(key));
     if (unknown.length) {
@@ -178,7 +184,7 @@ export class TitinVisualization {
       );
     }
     for (const key of ['showLattice', 'showDomains', 'showContextDetail', 'mirror',
-      'showFilamentContext', 'titinStrands', 'neighbourTitin']) {
+      'showFilamentContext', 'titinStrands', 'neighbourTitin', 'showMyBPC']) {
       if (Object.hasOwn(options, key) && typeof options[key] !== 'boolean') {
         throw new Error(`setDisplayOptions: ${key} must be boolean.`);
       }
@@ -210,7 +216,7 @@ export class TitinVisualization {
     return Object.freeze([
       'thick_filament', 'thin_filament', 'thin_filament_twist',
       'myosin_heads', 'zdisc', 'mline', 'alpha_actinin', 'telethonin',
-      'mband_crosslinks',
+      'mband_crosslinks', 'mybpc',
     ]);
   }
 
@@ -226,7 +232,7 @@ export class TitinVisualization {
     if (this._displayOptions?.showFilamentContext === false) {
       for (const component of [
         'thick_filament', 'thin_filament', 'thin_filament_twist', 'myosin_heads',
-        'alpha_actinin', 'telethonin', 'mband_crosslinks',
+        'alpha_actinin', 'telethonin', 'mband_crosslinks', 'mybpc',
       ]) hidden.add(component);
     }
     /** @type {Record<string, boolean>} */
@@ -547,6 +553,22 @@ export class TitinVisualization {
     }
     return createShowcaseOverlay(this.model, sl);
   }
+
+  /**
+   * SC-5 Evidence-mode expert cards, with their sources already resolved to
+   * readable citations and links. Guided mode has no expert cards by contract.
+   */
+  expertCards() {
+    const cards = this.model.spec.presentation?.expert_cards || [];
+    return Object.freeze(cards.map((card) => Object.freeze({
+      ...card,
+      not_claimed: Object.freeze([...(card.not_claimed || [])]),
+      sources: Object.freeze(this.sources(card.source_ids || [])),
+    })));
+  }
+
+  /** What the optional MyBP-C context layer claims, and what it deliberately omits. */
+  mybpcProvenance() { return this.model.mybpcProvenance(); }
 
   /** Project model-coordinate anchors for accessible screen-space labels. */
   projectPresentationAnchors(records) { return this.viewer.projectPoints(records); }

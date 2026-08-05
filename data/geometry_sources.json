@@ -557,6 +557,40 @@
    "evidence_class": "MEASURED",
    "verified": "coordinates parsed directly; residue mapping verified by alignment to UniProt Q8WZ42",
    "notes": "Between-entry statistic over one maximum-coverage chain per entry; crystallographic copies are not independent."
+  },
+  {
+   "component": "MyBP-C",
+   "region": "A-band C-zone",
+   "parameter": "MyBP-C C-zone stripe axial periodicity",
+   "value": "43",
+   "unit": "nm",
+   "species": "mouse",
+   "isoform": "fast skeletal MyBP-C",
+   "muscle_type": "fast skeletal (permeabilized psoas)",
+   "biological_state": "relaxed permeabilized fibre",
+   "method": "small-angle X-ray diffraction with quantified fast MyBP-C content",
+   "uncertainty": "\u2248 (the reported ~43 nm C-zone repeat, not a fitted human value)",
+   "primary_source": "10.1038/s41467-024-46957-7",
+   "evidence_class": "MEASURED",
+   "verified": "primary-source record verified 2026-08-05",
+   "notes": "Hessel et al. place fast skeletal MyBP-C in the C-zone at the ~43 nm thick-filament repeat. CONTEXT_ONLY for this human skeletal N2A model (showcase_claims.json:mybpc_czone_context): it supports presence and periodic context, never an exact human coordinate, stripe register, azimuth, reach, or binding pose."
+  },
+  {
+   "component": "MyBP-C",
+   "region": "A-band C-zone",
+   "parameter": "MyBP-C molecules per C-zone stripe",
+   "value": "3",
+   "unit": "count",
+   "species": "mouse",
+   "isoform": "fast skeletal MyBP-C",
+   "muscle_type": "fast skeletal (permeabilized psoas)",
+   "biological_state": "relaxed permeabilized fibre",
+   "method": "stoichiometry of fast MyBP-C per thick-filament repeat",
+   "uncertainty": "\u2248 (approximately three molecules per repeat)",
+   "primary_source": "10.1038/s41467-024-46957-7",
+   "evidence_class": "MEASURED",
+   "verified": "primary-source record verified 2026-08-05",
+   "notes": "Approximately three fast-skeletal MyBP-C molecules per ~43 nm C-zone repeat. Used only as a sparse schematic azimuthal count. The cardiac PDB 8G4L chain count is deliberately NOT the source: importing cardiac cMyBP-C placement into the skeletal reference is forbidden by the SC-0 scope lock."
   }
  ]
 }

@@ -56,6 +56,11 @@ export function easeCameraTransition(t) {
  * both far above the 2 px aliasing threshold, so what the user sees at that
  * distance is a resolved periodicity rather than a moire pattern.
  *
+ * `at` receives the landmark record built by {@link closeUpLandmarks}: the
+ * interpolated geometry plus the canonical landmarks the geometry record does not
+ * itself carry. Keeping it to ONE argument means every preset reads the same
+ * vocabulary and no preset re-derives a landmark that already has one owner.
+ *
  * @type {Readonly<Record<string, {label: string, at: (g: any) => number[],
  *   spanNm: number, dir: number[], shows: string}>>}
  */
@@ -99,6 +104,18 @@ export const CLOSEUPS = Object.freeze({
     dir: [0.2, 0.3, 1],
     shows: 'the head-free bare zone, midpoint reference, sparse M-band context, and opposing titin C-terminal anchors',
   },
+  czone: {
+    label: 'A-band C-zone',
+    // The canonical C-zone midpoint, from the one derivation that also places the
+    // C-zone domain block and draws the SC-2 band bracket. This is the close-up the
+    // reviewed attention budget presupposes when it confines MyBP-C detail to "its
+    // relevant close-up"; at this span the 45.5 nm titin super-repeat and the 43 nm
+    // MyBP-C stripe spacing are both far above the aliasing threshold.
+    at: (g) => [(g.c_zone.start_nm + g.c_zone.end_nm) / 2, 0, 0],
+    spanNm: 280,
+    dir: [0.12, 0.28, 1],
+    shows: 'the thick-filament-bound A-band super-repeat inside the C-zone, with the optional schematic MyBP-C context',
+  },
   lattice: {
     label: 'Hexagonal lattice (down-axis)',
     at: (g) => [g.overlap_zone_nm.start_nm + (g.overlap_zone_nm.length ?? 0) * 0.5, 0, 0],
@@ -107,6 +124,25 @@ export const CLOSEUPS = Object.freeze({
     shows: 'the thick/thin filament lattice in cross-section',
   },
 });
+
+/**
+ * The landmark record every close-up preset reads.
+ *
+ * The interpolated geometry, plus the canonical landmarks that live outside
+ * `geometryAt` because they are defined by titin rather than by the filaments —
+ * currently the C-zone, which `TitinRepresentation.cZoneAt` owns. Exported so the
+ * camera tests exercise the same record the viewer feeds the presets, instead of a
+ * hand-built approximation of it.
+ *
+ * @param {TitinModel} model
+ * @param {number} sarcomereLengthNm
+ */
+export function closeUpLandmarks(model, sarcomereLengthNm) {
+  return {
+    ...model.geometryAt(sarcomereLengthNm),
+    c_zone: model.cZoneAt(sarcomereLengthNm),
+  };
+}
 
 export class Viewer {
   /**
@@ -241,6 +277,15 @@ export class Viewer {
       ? this.model.anchorDetailAt(sl, merged.anchorDetail, { rings: latticeRings })
       : null;
 
+    // SC-5. Accessory C-zone context: optional, off unless asked for, Evidence
+    // mode only, and dependent on the lattice because the stripes sit on a lattice
+    // thick filament. Its absence changes nothing else in the scene.
+    const mybpcContext = (merged.showMyBPC && showLattice
+        && merged.showFilamentContext !== false
+        && (merged.presentationMode ?? 'evidence') === 'evidence')
+      ? this.model.mybpcContextAt(sl, { rings: latticeRings })
+      : null;
+
     // Before the very first frame(), camera and orbit target both sit at the
     // origin, so the measured perspective span is exactly zero. Passing that
     // transient initialization value into the scientific LOD gate aborts browser
@@ -257,6 +302,7 @@ export class Viewer {
       domainBatches,
       contextDetail,
       anchorDetail,
+      mybpcContext,
       titinPath: this.model.backboneAt(sl),
       viewWidthNm: buildViewWidth,
       viewportPx: buildViewportPx,
@@ -361,7 +407,7 @@ export class Viewer {
         `unknown close-up '${name}'. Available: ${Object.keys(CLOSEUPS).join(', ')}`,
       );
     }
-    const g = this.model.geometryAt(sl);
+    const g = closeUpLandmarks(this.model, sl);
     const target = new THREE.Vector3(...preset.at(g));
     const fov = THREE.MathUtils.degToRad(this.camera.fov);
     // Fit the span across the WIDTH; height follows from the aspect ratio.
@@ -608,6 +654,15 @@ export class Viewer {
     const anchor = this.sarcomere.manifest?.anchor_detail;
     if (this.lastBuildOpts?.anchorDetail && anchor?.feature_nm != null) {
       gates.push(anchor.drawn === resolves(anchor.feature_nm, anchor.alias_threshold_px));
+    }
+    const mybpc = this.sarcomere.manifest?.mybpc_context;
+    if (this.lastBuildOpts?.showMyBPC && mybpc?.feature_nm != null) {
+      // Two conditions, recomputed from the manifest's own numbers rather than
+      // restated here: the stripe spacing must resolve, and the C-zone must still
+      // fill enough of the frame to count as its close-up.
+      const framed = (mybpc.c_zone_length_nm / viewWidthNm) >= mybpc.min_view_fraction;
+      gates.push(mybpc.drawn
+        === (resolves(mybpc.feature_nm, mybpc.alias_threshold_px) && framed));
     }
     if (gates.some((unchanged) => !unchanged)) {
       rebuild(this.currentSL);

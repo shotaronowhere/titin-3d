@@ -30,6 +30,7 @@
 import * as THREE from 'three';
 import { validateZDiscDetail } from '../geometry/ZDiscDetail.js';
 import { validateMBandDetail } from '../geometry/MBandDetail.js';
+import { validateMyBPCContext } from '../geometry/MyBPCContext.js';
 
 /** Visual encoding of evidence class. Presentation only — no geometry. */
 export const EVIDENCE_STYLE = Object.freeze({
@@ -55,6 +56,27 @@ export const EVIDENCE_STYLE = Object.freeze({
  * renderer enforces, rather than a magic number at each use.
  */
 export const ALIAS_THRESHOLD_PX = 2.0;
+
+/**
+ * SC-5 framing gate for the accessory MyBP-C layer.
+ *
+ * The reviewed attention budget requires that "Z-disc, M-band, MyBP-C, and
+ * molecular-repeat detail appear only in their relevant close-up or expert
+ * chapter". The 43 nm stripe spacing resolves even in a whole-sarcomere overview,
+ * so the aliasing threshold alone would let the layer decorate the entire A-band
+ * of both halves — which reads as "MyBP-C everywhere" rather than as C-zone
+ * context. The layer therefore also requires the C-zone to fill at least half the
+ * frame, which is true in every A-band-scale close-up and false in the overview
+ * and half-sarcomere framings.
+ */
+export const MYBPC_MIN_VIEW_FRACTION = 0.5;
+
+/**
+ * The most a schematic accessory marker may measure relative to the titin tube it
+ * sits beside. Subordination is a stated SC-5 gate, so it is clamped structurally
+ * rather than left to depend on the caller's default titin render width.
+ */
+export const MYBPC_MAX_RADIUS_FRACTION_OF_TITIN = 0.75;
 
 /**
  * The biological components a caller may show or hide, each mapped to a predicate
@@ -83,6 +105,9 @@ export const COMPONENTS = Object.freeze({
   telethonin: (n) => n.startsWith('telethonin'),
   mband_crosslinks: (n) => n.startsWith('mband_crosslink'),
   myosin_heads: (n) => n.startsWith('myosin_heads'),
+  // SC-5 accessory C-zone context. Its own component so hiding it can be shown to
+  // change no titin, filament, overlap, or lattice coordinate.
+  mybpc: (n) => n.startsWith('mybpc'),
   // Domain instances are grouped per strand as 'titin_domains_strand_N', but the
   // per-archetype InstancedMeshes inside are named 'domains_<archetype>__<evidence>'.
   // Matching only the group would leave the meshes visible in renderers that walk
@@ -104,6 +129,9 @@ export const COMPONENT_COLOR = Object.freeze({
   alpha_actinin: 0x38b8c8,
   telethonin: 0xe6edf5,
   mband_crosslink: 0x8d6bc3,
+  // SC-0 candidate identity palette. Yellow keeps MyBP-C distinct from both the
+  // blue thick-filament family it decorates and the titin family it is not part of.
+  mybpc: 0xe2bf45,
   titin: 0xff5d7d,
   titin_neighbour: 0xa43d5c,
   // Selection is an interaction channel, never an evidence channel. Opacity
@@ -126,6 +154,10 @@ export const GUIDED_COMPONENT_COLOR = Object.freeze({
   alpha_actinin: 0x2d6470,
   telethonin: 0x8a949f,
   mband_crosslink: 0x4d405a,
+  // Present for completeness only: the MyBP-C layer is admitted for Evidence mode,
+  // so a Guided build never draws it. A missing entry would set an undefined colour
+  // if that ever changed.
+  mybpc: 0x5c5230,
   lattice_guide: 0x3c4653,
 });
 
@@ -589,7 +621,8 @@ export class SarcomereScene {
       // camera actually shows, and it drives the aliasing gate — a caller that
       // does not supply it gets the A-band zoom width, at which the crown array
       // resolves, rather than a silently-empty detail layer.
-      contextDetail = null, anchorDetail = null, viewWidthNm = 400, viewportPx = 1200,
+      contextDetail = null, anchorDetail = null, mybpcContext = null,
+      viewWidthNm = 400, viewportPx = 1200,
     } = opts;
     if (!['guided', 'evidence'].includes(presentationMode)) {
       throw new Error(`build: unknown presentationMode '${presentationMode}'.`);
@@ -609,6 +642,17 @@ export class SarcomereScene {
         throw new Error('build: M-band detail requires mirrored titin from both half-sarcomeres.');
       }
     }
+    if (mybpcContext) {
+      validateMyBPCContext(mybpcContext);
+      // The layer is admitted for Evidence mode only. Refusing here rather than
+      // silently skipping keeps a Guided caller's request visible as an error.
+      if (!mybpcContext.audience.some((audience) => audience.toLowerCase() === presentationMode)) {
+        throw new Error(
+          `build: the MyBP-C context layer is admitted for `
+          + `${mybpcContext.audience.join('/')} audiences, not '${presentationMode}'.`,
+        );
+      }
+    }
     /**
      * The Phase 7b report. Fields beyond the always-present ones are attached only
      * when the corresponding layer draws or is withheld, so the record is typed as
@@ -618,7 +662,47 @@ export class SarcomereScene {
     let contextDetailReport = null;
     /** @type {Record<string, any>|null} */
     let anchorDetailReport = null;
+    /** @type {Record<string, any>|null} */
+    let mybpcReport = null;
+    let mybpcResolves = false;
     let anchorDetailResolves = false;
+    if (mybpcContext) {
+      const featurePx = (viewportPx * mybpcContext.resolvability.feature_nm) / viewWidthNm;
+      const cZoneLengthNm = mybpcContext.c_zone.length_nm;
+      const cZoneViewFraction = cZoneLengthNm / viewWidthNm;
+      const resolvable = featurePx >= ALIAS_THRESHOLD_PX;
+      const framed = cZoneViewFraction >= MYBPC_MIN_VIEW_FRACTION;
+      mybpcResolves = resolvable && framed;
+      mybpcReport = {
+        drawn: false,
+        c_zone_length_nm: cZoneLengthNm,
+        c_zone_view_fraction: Number(cZoneViewFraction.toFixed(3)),
+        min_view_fraction: MYBPC_MIN_VIEW_FRACTION,
+        claim_id: mybpcContext.claim_id,
+        evidence_class: mybpcContext.evidence_class,
+        placement_evidence_class: mybpcContext.placement_evidence_class,
+        audience: [...mybpcContext.audience],
+        default_visible: mybpcContext.default_visible,
+        part_of_titin: false,
+        titin_contact_rendered: false,
+        rigid_thick_to_thin_bridge_rendered: false,
+        reaches_thin_filament: false,
+        cardiac_coordinates_imported: false,
+        feature: mybpcContext.resolvability.feature,
+        feature_nm: mybpcContext.resolvability.feature_nm,
+        feature_px: Number(featurePx.toFixed(2)),
+        alias_threshold_px: ALIAS_THRESHOLD_PX,
+        // Both reasons are reported separately: "too small to resolve" and "you are
+        // not looking at the C-zone" are different facts about the same withdrawal.
+        ...(mybpcResolves ? {} : {
+          omitted_because: !resolvable
+            ? `${mybpcContext.resolvability.feature} resolves to ${featurePx.toFixed(2)} px, `
+              + `below the ${ALIAS_THRESHOLD_PX} px aliasing threshold`
+            : `the C-zone fills ${(cZoneViewFraction * 100).toFixed(0)}% of the view, below the `
+              + `${MYBPC_MIN_VIEW_FRACTION * 100}% needed for accessory C-zone detail`,
+        }),
+      };
+    }
     if (anchorDetail) {
       const anchorResolvability = anchorDetail.resolvability[presentationMode]
         ?? anchorDetail.resolvability;
@@ -1045,6 +1129,57 @@ export class SarcomereScene {
       }
     }
 
+    // ---- SC-5 optional MyBP-C C-zone context (Evidence + resolvability gated) ----
+    // Drawn into `half` because the C-zone belongs to a half thick filament: the
+    // mirror reproduces the opposite half's stripes from the same descriptor rather
+    // than from a second set of numbers.
+    if (mybpcContext) {
+      if (!mybpcReport) throw new Error('build: missing MyBP-C context report.');
+      if (mybpcResolves) {
+        const group = new THREE.Group();
+        group.name = 'mybpc_czone_context';
+        const molecules = mybpcContext.stripes.flatMap((stripe) => stripe.molecules);
+        // Subordination by construction: whatever the descriptor asks for, and
+        // whatever titin tube radius the caller chose, an accessory marker never
+        // renders as wide as the titin it sits beside.
+        const moleculeRadius = Math.min(
+          mybpcContext.render_dimensions_nm.molecule_radius_nm,
+          titinRadius * MYBPC_MAX_RADIUS_FRACTION_OF_TITIN,
+        );
+        group.add(this._segmentInstances(
+          molecules,
+          moleculeRadius,
+          COMPONENT_COLOR.mybpc,
+          // Placement evidence, not claim evidence: the depicted path is schematic
+          // even though presence and periodicity are measured in fast skeletal muscle.
+          mybpcContext.placement_evidence_class,
+          'mybpc_czone_molecules',
+        ));
+        group.userData.part_of_titin = false;
+        group.userData.titin_contact_rendered = false;
+        group.userData.rigid_thick_to_thin_bridge_rendered = false;
+        group.userData.render_only = mybpcContext.render_only;
+        half.add(group);
+        mybpcReport = {
+          ...mybpcReport,
+          drawn: true,
+          stripes_drawn: mybpcContext.stripes.length,
+          molecules_drawn: molecules.length,
+          molecules_per_stripe: mybpcContext.molecules_per_stripe,
+          molecule_render_radius_nm: moleculeRadius,
+          titin_render_radius_nm: titinRadius,
+          stripe_spacing_nm: mybpcContext.stripe_spacing_nm,
+          c_zone: { ...mybpcContext.c_zone },
+          thin_filament_clearance_nm:
+            mybpcContext.render_dimensions_nm.thin_filament_clearance_nm,
+          axial_register_policy: mybpcContext.axial_register_policy,
+          pose_policy: mybpcContext.pose_policy,
+          source_ids: [...mybpcContext.source_ids],
+          not_claimed: [...mybpcContext.not_claimed],
+        };
+      }
+    }
+
     this.root.add(half);
 
     // ---- the full repeating unit: the half, repeated through the M-line ----
@@ -1156,6 +1291,10 @@ export class SarcomereScene {
       // would be indistinguishable from a feature that failed to draw.
       context_detail: contextDetailReport,
       anchor_detail: anchorDetailReport,
+      // SC-5. `null` when the optional layer was not requested; a record with
+      // `omitted_because` when it was requested but would not resolve. Both states
+      // are auditable, and neither can be confused with a silent failure.
+      mybpc_context: mybpcReport,
       domains: domainBatches ? {
         strands_with_domain_detail: domainStrands,
         batches: domainBatches.batches.map((b) => ({
@@ -1274,6 +1413,11 @@ export class SarcomereScene {
         'SC-2 continuity trace (exact Level-0 axial endpoints; representative '
           + 'schematic transverse display offset)',
         'reduced N2A/PEVK tube radius (visual distinction, not molecular diameter)',
+        ...(mybpcReport?.drawn ? [
+          'SC-5 MyBP-C stripe register, azimuth, reach, and pose (schematic C-zone '
+            + 'context on one representative thick filament; no titin contact and no '
+            + 'thick-to-thin bridge is depicted)',
+        ] : []),
       ],
     };
     this._built = true;
@@ -1334,6 +1478,10 @@ export class SarcomereScene {
       return { target_type: 'titin_region', target_id: 'Z1Z2', mirrored };
     }
     const mappings = [
+      // Before the thick-filament rule: MyBP-C decorates that filament but is a
+      // separate accessory protein, and resolving it to 'thick_filament' would
+      // explain it with the wrong annotation.
+      ['mybpc', (name) => name.startsWith('mybpc')],
       ['myosin_heads', (name) => name.startsWith('myosin_heads')],
       ['thin_filament_twist', (name) => name.startsWith('thin_filament_twist')],
       ['alpha_actinin', (name) => name.startsWith('alpha_actinin')],
@@ -1609,6 +1757,7 @@ export class SarcomereScene {
       alpha_actinin: COMPONENT_COLOR.alpha_actinin,
       telethonin: COMPONENT_COLOR.telethonin,
       mband_crosslink: COMPONENT_COLOR.mband_crosslink,
+      mybpc: COMPONENT_COLOR.mybpc,
       lattice_guide: COMPONENT_COLOR.lattice_guide,
     };
     const roleOf = (name) => {
@@ -1620,6 +1769,7 @@ export class SarcomereScene {
       if (name.startsWith('alpha_actinin')) return 'alpha_actinin';
       if (name.startsWith('telethonin')) return 'telethonin';
       if (name.startsWith('mband_crosslink')) return 'mband_crosslink';
+      if (name.startsWith('mybpc')) return 'mybpc';
       if (name.startsWith('lattice_guide')) return 'lattice_guide';
       return null;
     };

@@ -20,7 +20,7 @@ EVIDENCE = {
 EXPECTED_TARGETS = {
     "titin", "thick_filament", "myosin_heads", "thin_filament",
     "thin_filament_twist", "zdisc", "alpha_actinin", "telethonin",
-    "mline", "mband_crosslinks", "titin_domains",
+    "mline", "mband_crosslinks", "mybpc", "titin_domains",
 }
 REQUIRED = {
     "id", "target_id", "label", "lay_text", "expert_text", "scope",

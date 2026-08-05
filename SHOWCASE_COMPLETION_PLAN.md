@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 is next
+**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 complete on 2026-08-05; SC-6 is next
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -463,6 +463,42 @@ rejects a stale standalone `index.html`.
 - Accessibility tests cover focus order, Escape, touch, and screen-reader labels.
 
 ### SC-5 — Thick-filament context and optional MyBP-C
+
+**Completed 2026-08-05.** The A-band story is now carried by an `aband_scaffold`
+descriptor derived from the same canonical records the band brackets already use:
+the eleven-domain 45.5 nm super-repeat, its eleven C-zone copies, the
+near-commensurate 43.1 nm myosin repeat with its 2.4 nm residual stated rather
+than elided, and the 620 nm anchored span measured off the live Level-0 segment
+so its invariance with sarcomere length is observed, not asserted. The SC-0
+admission gate passed, so `src/geometry/MyBPCContext.js` adds a sparse, Evidence-only,
+off-by-default C-zone layer: eleven stripes of three markers at the sourced
+fast-skeletal ~43 nm periodicity, keeping MyBP-C's own repeat rather than borrowing
+titin's 45.5 nm, which would have asserted an exact shared register. The completion
+audit also collapsed three separate `X_end - n x periodicity` derivations of the
+C-zone into one: `TitinRepresentation.cZoneAt` now owns it, and the C-zone domain
+block, the SC-2 band bracket, and the MyBP-C layer all consume that record.
+Two gates govern visibility — the stripe spacing must resolve, and the C-zone must
+fill at least half the frame, so the layer stays confined to its own close-up
+instead of decorating a whole-sarcomere overview — and the marker radius is clamped
+against the live titin tube radius so subordination holds for any caller. A `czone`
+close-up supplies the framing that the reviewed attention budget presupposes when
+it confines MyBP-C to "its relevant close-up", the same way the Z-disc and M-band
+layers each ship with theirs.
+Stripe register, azimuth, reach, and pose are SCHEMATIC and cannot be promoted;
+`validateMyBPCContext` rejects a promoted placement class, a Guided audience, an
+identical rigid pose across the layer, drift from the sourced periodicity, a
+molecule reaching the thin-filament surface, and any asserted titin contact. The
+periodicity and molecule count come from two new fast-skeletal `geometry_sources.json`
+records, never from the cardiac 8G4L chain placement, and two Evidence-mode
+`expert_cards` in `presentation.json` — required by both the JS and Python
+presentation validators whenever the MyBP-C claim is admitted — record the
+scaffold/ruler qualification and why the cardiac coordinates were not imported.
+Fourteen focused positive and destructive tests are in `test/showcase_phase5.test.js`;
+the bounded gate is `npm run verify:sc5`, which also rejects a stale standalone
+`index.html`. This phase additionally repaired a pre-existing gap: `annotations.json`
+had been a required spec file since SC-4 but was never registered in
+`validate_geometry.py`'s coverage guard, so the whole-project `npm run verify`
+gate was failing and nothing validated the catalog there.
 
 #### Work
 

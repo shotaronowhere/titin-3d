@@ -59,6 +59,10 @@ export function checkPresentationSpec(presentation, context = {}) {
     ['scope badge', presentation.scope_badges],
     ['length preset', presentation.length_presets],
     ['guided chapter', presentation.guided_chapters],
+    // SC-5. Expert cards are Evidence-mode explanatory records. They are required,
+    // not optional: the showcase must be able to say why an admitted layer is
+    // schematic and what was deliberately not imported.
+    ['expert card', presentation.expert_cards],
     ['presenter shortcut', presentation.presenter_shortcuts],
   ];
   const globallySeen = new Map();
@@ -214,6 +218,29 @@ export function checkPresentationSpec(presentation, context = {}) {
     if (!Number.isInteger(visibility.rings) || visibility.rings < 1) {
       problems.push(`guided chapter '${chapter.id}' visibility.rings must be a positive integer`);
     }
+  }
+
+  for (const card of presentation.expert_cards || []) {
+    validateScientificRecord(card, 'expert card');
+    if (card.audience !== AUDIENCE_MODES.evidence) {
+      problems.push(`expert card '${card.id}' must be Evidence-mode only`);
+    }
+    if (!String(card.title || '').trim() || !String(card.body || '').trim()) {
+      problems.push(`expert card '${card.id}' needs a visible title and body`);
+    }
+    if (!Array.isArray(card.not_claimed) || !card.not_claimed.length
+        || card.not_claimed.some((entry) => !String(entry || '').trim())) {
+      problems.push(`expert card '${card.id}' needs explicit not-claimed text`);
+    }
+  }
+  // The MyBP-C layer is admitted only with a recorded reason for omitting the
+  // cardiac coordinates. Without that card the layer would be schematic geometry
+  // whose scope limit is nowhere visible to a reader.
+  const mybpcClaim = claimMap.get('mybpc_czone_context');
+  if (mybpcClaim && String(mybpcClaim.decision || '').startsWith('ADMIT')
+      && !(presentation.expert_cards || [])
+        .some((card) => card.target_claim_id === 'mybpc_czone_context')) {
+    problems.push('an admitted MyBP-C layer requires an Evidence-mode expert card explaining its scope limits');
   }
 
   const initial = presentation.initial_state || {};

@@ -366,6 +366,11 @@ window.__titinBoot = { ready: false, problems: [] };
       <div id="chapterSources"></div>
       <ul id="chapterNotClaimed"></ul>
     </div>
+
+    <h2>Expert cards</h2>
+    <div class="sub" style="margin:0 0 6px">Scope and omission notes for the optional
+      context layers. These are Evidence-mode only.</div>
+    <div id="expertCards"></div>
     <div class="science-separator"></div>
 
     <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
@@ -460,6 +465,9 @@ function fail(e) {
 let visualization; let model;
 const state = { showDomains: false, showFilamentContext: true,
                 showContextDetail: false, extendedLattice: false,
+                // SC-5: the reviewed attention budget keeps the accessory MyBP-C
+                // layer off by default and admits it in Evidence mode only.
+                showMyBPC: false,
                 rings: 1, mirror: true, view: 'titin_story', closeup: null,
                 scale: SCALES.context, region: null, showEvidence: false,
                 audienceMode: AUDIENCE_MODES.guided, storyStep: null,
@@ -1050,6 +1058,9 @@ const TOGGLES = [
   // titin the subject. The user turns it on when they want to see why titin sits
   // where it does on the filament surface.
   ['showContextDetail', 'myosin heads + twist'],
+  // SC-5. Accessory C-zone context, not part of titin. Evidence-only and off by
+  // default, so the A-band titin story has to stand on its own before it appears.
+  ['showMyBPC', 'MyBP-C context (schematic)'],
   ['mirror', 'full sarcomere'],
 ];
 for (const [key, label] of TOGGLES) {
@@ -1062,21 +1073,29 @@ for (const [key, label] of TOGGLES) {
   $('toggles').append(b);
 }
 const DETAIL_DEPICTION = Object.freeze({
-  extendedLattice: false, showDomains: true, showContextDetail: false, mirror: false,
+  extendedLattice: false, showDomains: true, showContextDetail: false,
+  showMyBPC: false, mirror: false,
 });
 function syncDepictionToggles() {
   const detail = state.scale === SCALES.detail;
+  const guided = state.audienceMode === AUDIENCE_MODES.guided;
   for (const b of $('toggles').children) {
     if (b.dataset.key) {
-      const on = detail ? DETAIL_DEPICTION[b.dataset.key] : Boolean(state[b.dataset.key]);
-      const needsContext = ['extendedLattice', 'showContextDetail'].includes(b.dataset.key);
+      const evidenceOnly = b.dataset.key === 'showMyBPC';
+      const on = detail ? DETAIL_DEPICTION[b.dataset.key]
+        : (evidenceOnly && guided ? false : Boolean(state[b.dataset.key]));
+      const needsContext = ['extendedLattice', 'showContextDetail', 'showMyBPC']
+        .includes(b.dataset.key);
       const contextUnavailable = needsContext && !state.showFilamentContext;
       const requiredByMband = b.dataset.key === 'mirror' && state.closeup === 'mline';
+      const audienceUnavailable = evidenceOnly && guided;
       b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
-      b.disabled = detail || contextUnavailable || requiredByMband;
+      b.disabled = detail || contextUnavailable || requiredByMband || audienceUnavailable;
       b.title = detail ? 'Fixed by the isolated-titin view'
-        : requiredByMband ? 'M-band detail requires titin from both half-sarcomeres'
-          : (contextUnavailable ? 'Turn on Actin + myosin context first' : '');
+        : audienceUnavailable
+          ? 'Accessory C-zone context is admitted for Evidence mode only'
+          : requiredByMband ? 'M-band detail requires titin from both half-sarcomeres'
+            : (contextUnavailable ? 'Turn on Actin + myosin context first' : '');
     }
     if (b.dataset.rings) {
       b.disabled = detail || !state.showFilamentContext || !state.extendedLattice;
@@ -1159,6 +1178,33 @@ function detailBlock(annotation) {
   nonclaim.append(nonclaimLabel, document.createTextNode(annotation.not_claimed.join('; ')));
   fragment.append(expert, scope, render, nonclaim);
   return fragment;
+}
+
+// SC-5. Expert cards are static Evidence-mode records, so they are built once from
+// the validated presentation catalog. Text goes in through safe DOM APIs and every
+// citation is resolved through the canonical bibliography rather than restated here.
+function renderExpertCards() {
+  const container = $('expertCards');
+  const cards = visualization.expertCards();
+  container.replaceChildren(...cards.map((card) => {
+    const box = document.createElement('div');
+    box.className = 'note';
+    box.dataset.card = card.id;
+    const title = document.createElement('b'); title.textContent = card.title;
+    const evidence = document.createElement('div');
+    evidence.className = 'object-evidence';
+    evidence.textContent = `Evidence ${card.evidence_class} · Evidence mode only`;
+    const body = document.createElement('div'); body.textContent = card.body;
+    const sources = document.createElement('div');
+    sources.className = 'object-sources';
+    sources.append(...sourceLinks(card.sources));
+    const nonclaim = document.createElement('div');
+    const nonclaimLabel = document.createElement('b');
+    nonclaimLabel.textContent = 'Not claimed: ';
+    nonclaim.append(nonclaimLabel, document.createTextNode(card.not_claimed.join('; ')));
+    box.append(title, evidence, body, nonclaim, sources);
+    return box;
+  }));
 }
 
 function resolvedAnnotation(selection) {
@@ -1424,6 +1470,12 @@ function currentDisplayOptions() {
     presentationMode: state.audienceMode,
     showDomains: state.showDomains,
     showContextDetail: state.showContextDetail,
+    // Evidence-only by contract: the renderer rejects a Guided build that carries
+    // the layer, so the audience gate is applied here as well as there.
+    showMyBPC: contextScale
+      && state.audienceMode === AUDIENCE_MODES.evidence
+      && state.showFilamentContext
+      && state.showMyBPC,
     mirror: state.mirror,
     anchorDetail: ['zdisc', 'mline'].includes(state.closeup) ? state.closeup : null,
   };
@@ -1536,6 +1588,32 @@ function render(report) {
       );
     }
   }
+  // SC-5. The A-band scaffold story is reported whether or not the optional
+  // MyBP-C layer is enabled: the anchored span is the part that has to stand
+  // on its own.
+  const scaffold = activeShowcaseOverlay.aband_scaffold;
+  rows.push(
+    ['A-band anchored span', `${scaffold.anchored_span_nm.toFixed(1)} nm · invariant with sarcomere length`],
+    ['A-band super-repeat', `${scaffold.domains_per_super_repeat} domains / ${scaffold.super_repeat_nm} nm`
+      + ` · ${scaffold.c_zone_super_repeats} in the C-zone`],
+    ['Super-repeat vs myosin repeat', `${scaffold.super_repeat_nm} nm vs ${scaffold.myosin_repeat_nm} nm`
+      + ` · near-commensurate, ${scaffold.periodicity_offset_nm} nm residual, not an exact register`],
+  );
+  const mybpc = man.mybpc_context;
+  if (mybpc) {
+    rows.push(['MyBP-C C-zone context', hiddenComponents.has('mybpc')
+      ? 'hidden by component control'
+      : (mybpc.drawn
+        ? `${mybpc.stripes_drawn} schematic stripes × ${mybpc.molecules_per_stripe} markers`
+          + ` at ${mybpc.stripe_spacing_nm} nm · ${mybpc.thin_filament_clearance_nm.toFixed(1)} nm clear of actin`
+        // Two different withdrawals — unresolvable, or simply not framed on the
+        // C-zone — so the recorded reason is shown rather than one assumed cause.
+        : `withdrawn — ${mybpc.omitted_because}`)]);
+    if (mybpc.drawn) {
+      rows.push(['MyBP-C placement evidence',
+        `${mybpc.placement_evidence_class} · accessory protein, no titin contact and no thick-to-thin bridge`]);
+    }
+  }
   if (man.domains) {
     for (const b of man.domains.batches) {
       rows.push([`${b.archetype} domains built`, `${b.count}${hiddenSuffix('titin_domains')}`]);
@@ -1563,6 +1641,10 @@ function render(report) {
     legend.splice(-1, 0,
       ['mband_crosslink', 'M-band crosslink context (schematic)', 'mband_crosslinks']);
   }
+  // Listed before titin so the reading order matches the visual hierarchy: MyBP-C
+  // is thick-filament context, and titin remains the subject of the scene.
+  if (mybpc?.drawn) legend.splice(-1, 0,
+    ['mybpc', 'MyBP-C C-zone context (schematic, not titin)', 'mybpc']);
   $('legend').innerHTML = legend
     .filter(([, , component]) => component === 'titin'
       ? !(hiddenComponents.has('titin') && hiddenComponents.has('titin_domains'))
@@ -1612,11 +1694,16 @@ function render(report) {
   renderAnnotationIndex();
   renderPinnedSelection();
 
-  const allNotClaimed = [
+  // Deduplicated: the scaffold and MyBP-C records intentionally restate the
+  // boundaries of the claims they extend, and listing one twice would read as
+  // two separate disclosures.
+  const allNotClaimed = [...new Set([
     ...(man.not_claimed || []),
     ...(man.render_only || []),
     ...(anchorDetail?.not_claimed || []),
-  ];
+    ...(mybpc?.drawn ? mybpc.not_claimed : []),
+    ...(scaffold.not_claimed || []),
+  ])];
   const nc = state.scale === SCALES.detail
     ? allNotClaimed.filter((claim) => /titin|domain|catmullrom/i.test(claim))
     : allNotClaimed;
@@ -1803,6 +1890,7 @@ $('evidence').hidden = !state.showEvidence;
 $('evidenceToggle').classList.toggle('on', state.showEvidence);
 $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
 renderChapter();
+renderExpertCards();
 rebuild(true);
 visualization.highlightTitinRegion(state.region);
 applyCameraPreset();

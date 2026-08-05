@@ -325,15 +325,56 @@ export class TitinRepresentation {
    *   polypeptide joins the measured, untilted C-zone instead of breaking at the
    *   evidence boundary. None of that D-zone placement is a structural claim.
    */
-  _abandZones(region, seg, nTotal) {
+  /**
+   * The canonical C-zone interval — the ONE derivation in the project.
+   *
+   * `_abandZones` places the C-zone domain block from this, the SC-2 band bracket
+   * draws it, and the SC-5 MyBP-C layer sits inside it. Three copies of
+   * `X_end - n * periodicity` would be three chances to disagree about where the
+   * C-zone is, which is the same defect class as a renderer re-deriving geometry.
+   *
+   * @param {number} sarcomereLengthNm
+   */
+  cZoneAt(sarcomereLengthNm) {
+    const seg = this.backboneAt(sarcomereLengthNm).segments
+      .find((candidate) => candidate.region_id === 'Aband_super');
+    if (!seg) throw new Error('cZoneAt: the canonical A-band titin segment is unavailable.');
+    return this._cZoneOfSegment(seg);
+  }
+
+  /** @param {{X_start:number, X_end:number}} seg canonical Aband_super segment */
+  _cZoneOfSegment(seg) {
     const relEntry = this.strategy.geometric_relationships.titin_Aband_super_repeat;
     const rel = relEntry.values;
-    const nC = rel.n_C_zone_super_repeats * rel.domains_per_super_repeat;
-    const cZoneLen = rel.n_C_zone_super_repeats * rel.super_repeat_periodicity_nm;
-    const nD = nTotal - nC;
+    const lengthNm = rel.n_C_zone_super_repeats * rel.super_repeat_periodicity_nm;
     // C-zone occupies the M-line-proximal end of the bound segment; the D-zone
     // (filament-tip-proximal) takes the remainder.
-    const cStart = seg.X_end - cZoneLen;
+    const startNm = seg.X_end - lengthNm;
+    if (!(startNm > seg.X_start)) {
+      throw new Error(
+        `cZoneAt: the ${lengthNm} nm C-zone block does not fit the bound A-band span `
+        + `${seg.X_start}..${seg.X_end}.`,
+      );
+    }
+    return {
+      start_nm: startNm,
+      end_nm: seg.X_end,
+      length_nm: lengthNm,
+      n_super_repeats: rel.n_C_zone_super_repeats,
+      super_repeat_nm: rel.super_repeat_periodicity_nm,
+      domains_per_super_repeat: rel.domains_per_super_repeat,
+      domains: rel.n_C_zone_super_repeats * rel.domains_per_super_repeat,
+      evidence_class: relEntry.evidence_class,
+      source_ids: [...relEntry.sources],
+    };
+  }
+
+  _abandZones(region, seg, nTotal) {
+    const relEntry = this.strategy.geometric_relationships.titin_Aband_super_repeat;
+    const cZone = this._cZoneOfSegment(seg);
+    const nC = cZone.domains;
+    const nD = nTotal - nC;
+    const cStart = cZone.start_nm;
     const cSrc = (relEntry.sources && relEntry.sources[0]) || null;
     const dSpan = cStart - seg.X_start;
     const dArchetypeKey = this.strategy.titin_primitives[region.id].unit_archetype;

@@ -148,6 +148,20 @@
       "binding": { "kind": "showcase_claim", "id": "mband_midpoint_and_crosslinks" }
     },
     {
+      "id": "component-mybpc",
+      "target_id": "mybpc",
+      "label": "MyBP-C (C-zone context)",
+      "lay_text": "Myosin-binding protein C is an accessory protein of the thick filament, not part of titin. The sparse yellow markers show where it sits along the C-zone, the striped middle stretch of each half filament.",
+      "expert_text": "Presence in the C-zone and the approximately 43 nm repeat come from fast skeletal muscle evidence. Stripe register, azimuth, outward reach, and pose are schematic; the layer is optional, Evidence-only, and off by default.",
+      "scope": "Fast skeletal MyBP-C (permeabilized mouse psoas) shown as optional context for the human skeletal N2A titin reference; no cardiac coordinates are imported.",
+      "claim_evidence_class": "MEASURED",
+      "render_evidence_class": "SCHEMATIC",
+      "source_ids": ["10.1038/s41467-024-46957-7"],
+      "render_meaning": "Three short yellow proxies per stripe mark C-zone periodic context on one representative thick filament; none reaches a thin filament and none touches titin.",
+      "not_claimed": ["cardiac cMyBP-C coordinates", "a universal rigid thick-to-thin bridge", "a direct titin–MyBP-C contact", "a resolved stripe register, azimuth, reach, or binding pose"],
+      "binding": { "kind": "showcase_claim", "id": "mybpc_czone_context" }
+    },
+    {
       "id": "component-titin-domains",
       "target_id": "titin_domains",
       "label": "Folded titin domains",

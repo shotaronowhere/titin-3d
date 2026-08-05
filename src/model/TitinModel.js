@@ -20,6 +20,7 @@ import { LatticeGeometry } from '../geometry/LatticeGeometry.js';
 import { ContextDetail } from '../geometry/ContextDetail.js';
 import { ZDiscDetail } from '../geometry/ZDiscDetail.js';
 import { MBandDetail } from '../geometry/MBandDetail.js';
+import { MyBPCContext } from '../geometry/MyBPCContext.js';
 
 export class TitinModel {
   constructor(spec) {
@@ -171,6 +172,36 @@ export class TitinModel {
     if (target === 'mline') return this.mbandDetailAt(sl, { rings });
     throw new Error(`anchorDetailAt: unknown target '${target}'. Expected zdisc or mline.`);
   }
+
+  // --- SC-5: optional schematic MyBP-C C-zone context ---------------------
+  _mybpcContext() {
+    if (!this.mybpcContext) {
+      if (!this.representation) {
+        throw new Error('geometry_strategy.json not loaded — no MyBP-C context layer available');
+      }
+      this.mybpcContext = new MyBPCContext(this.spec, this.representation);
+    }
+    return this.mybpcContext;
+  }
+
+  /**
+   * Sparse, Evidence-only, off-by-default MyBP-C context on the central thick
+   * filament. Accessory context — it moves no titin, filament, or lattice
+   * coordinate, and it never reaches a thin filament.
+   */
+  mybpcContextAt(sl, { rings = 1 } = {}) {
+    const patch = this.latticePatchAt(sl, rings);
+    return this._mybpcContext().contextAt(sl, patch.thick, patch.thin);
+  }
+
+  /**
+   * The canonical C-zone interval. One derivation, in the representation layer
+   * that places the C-zone domain block; the SC-2 band bracket and the SC-5
+   * MyBP-C layer both consume it rather than recomputing it.
+   */
+  cZoneAt(sl) { return this._rep().cZoneAt(sl); }
+
+  mybpcProvenance() { return this._mybpcContext().provenance(); }
 
   // --- Phase 4: hierarchical titin representation ---
   _rep() {

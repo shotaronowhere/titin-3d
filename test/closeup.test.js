@@ -15,7 +15,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { CLOSEUPS, VIEWS } from '../src/render/Viewer.js';
+import { CLOSEUPS, VIEWS, closeUpLandmarks } from '../src/render/Viewer.js';
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import { ALIAS_THRESHOLD_PX } from '../src/render/SarcomereScene.js';
@@ -34,7 +34,7 @@ test('close-ups: every landmark lies inside the structure at every length', () =
   // I-band/A-band junction moves from X=150 nm to X=700 nm across the range, so a
   // hardcoded X would aim at empty space at other lengths.
   for (const sl of [1900, 2000, 2200, 2400, 2700, 3000]) {
-    const g = model.geometryAt(sl);
+    const g = closeUpLandmarks(model, sl);
     for (const [name, p] of Object.entries(CLOSEUPS)) {
       const [x] = p.at(g);
       assert.ok(Number.isFinite(x), `${name} at sl=${sl} must be finite`);
@@ -46,8 +46,8 @@ test('close-ups: every landmark lies inside the structure at every length', () =
 
 test('close-ups: landmarks track sarcomere length rather than staying put', () => {
   // Guards against a future refactor replacing a geometry lookup with a constant.
-  const a = model.geometryAt(1900);
-  const b = model.geometryAt(3000);
+  const a = closeUpLandmarks(model, 1900);
+  const b = closeUpLandmarks(model, 3000);
   const moved = (n) => Math.abs(CLOSEUPS[n].at(b)[0] - CLOSEUPS[n].at(a)[0]);
   for (const n of ['crowns', 'twist', 'junction', 'mline', 'lattice']) {
     assert.ok(moved(n) > 50, `${n} must follow the geometry (moved ${moved(n).toFixed(0)} nm)`);
@@ -60,7 +60,7 @@ test('close-ups: the crown view lands inside the overlap zone, not the bare zone
   // The scene centre is the M-line, which is precisely where myosin heads do NOT
   // exist. A crown close-up that inherited that centre would show a bare cylinder.
   for (const sl of [1900, 2200, 2400, 3000]) {
-    const g = model.geometryAt(sl);
+    const g = closeUpLandmarks(model, sl);
     const x = CLOSEUPS.crowns.at(g)[0];
     const { start_nm, end_nm } = g.overlap_zone_nm;
     assert.ok(x > start_nm && x < end_nm,
@@ -73,7 +73,7 @@ test('close-ups: the twist view avoids the crown array that would occlude it', (
   // The long-pitch twist is only legible where no thick filament sits in front of it,
   // i.e. on the I-band side of the junction.
   for (const sl of [1900, 2200, 3000]) {
-    const g = model.geometryAt(sl);
+    const g = closeUpLandmarks(model, sl);
     const x = CLOSEUPS.twist.at(g)[0];
     assert.ok(x < g.I_A_junction_X,
       `sl=${sl}: twist view X=${x.toFixed(0)} must be in the I-band (junction ${g.I_A_junction_X})`);
@@ -234,7 +234,7 @@ test('close-ups: the camera frustum actually contains drawn structure', async ()
   // intersects the frustum, which is the closest headless proxy for "the user sees
   // something" available without a GPU.
   const { SarcomereScene } = await import('../src/render/SarcomereScene.js');
-  const g = model.geometryAt(2200);
+  const g = closeUpLandmarks(model, 2200);
   const radius = 1125;
   for (const [name, p] of Object.entries(CLOSEUPS)) {
     const sc = new SarcomereScene(model);

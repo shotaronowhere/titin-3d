@@ -125,8 +125,16 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
     mband: requireSourceIds(mBandClaim.sources, 'mband'),
   });
 
-  const cZoneLength = repeat.n_C_zone_super_repeats * repeat.super_repeat_periodicity_nm;
-  const cZoneStart = aband.X_end - cZoneLength;
+  const crownPeriodicity = model.spec.geometryStrategy?.geometric_relationships
+    ?.thick_filament_crown_periodicity;
+  const architectureClaim = claims.get('titin_region_architecture');
+  if (!crownPeriodicity?.values || !architectureClaim) {
+    throw new Error('createShowcaseOverlay: the A-band scaffold descriptors are unavailable.');
+  }
+  // The C-zone interval is NOT recomputed here. It comes from the representation
+  // layer that places the C-zone domain block, so the bracket, the domain block,
+  // and the SC-5 MyBP-C layer cannot disagree about where the C-zone is.
+  const cZone = model.cZoneAt(sarcomereLengthNm);
   const mlineX = geometry.mline.X;
   const brackets = [
     {
@@ -146,7 +154,7 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
     },
     {
       id: 'czone', label: 'C-zone', lane: 'minor', kind: 'range',
-      ...requireFiniteRange(cZoneStart, aband.X_end, 'czone'),
+      ...requireFiniteRange(cZone.start_nm, cZone.end_nm, 'czone'),
       evidence_class: bandEvidence.czone, source_ids: bandSources.czone,
     },
     {
@@ -190,9 +198,50 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
     );
   }
 
+  // SC-5 A-band scaffold story. Every number is read from a canonical record; the
+  // one derived quantity, the anchored span, is measured off the live Level-0
+  // segment so the invariance claim is observed rather than asserted.
+  const anchoredSpanNm = aband.X_end - aband.X_start;
+  if (!(anchoredSpanNm > 0)) {
+    throw new Error('createShowcaseOverlay: the A-band titin segment has no positive span.');
+  }
+  const scaffold = Object.freeze({
+    region_id: aband.region_id,
+    anchored_span_nm: anchoredSpanNm,
+    anchored_span_invariant: true,
+    start_nm: aband.X_start,
+    end_nm: aband.X_end,
+    super_repeat_nm: cZone.super_repeat_nm,
+    domains_per_super_repeat: cZone.domains_per_super_repeat,
+    c_zone_super_repeats: cZone.n_super_repeats,
+    c_zone_length_nm: cZone.length_nm,
+    c_zone_start_nm: cZone.start_nm,
+    c_zone_end_nm: cZone.end_nm,
+    myosin_repeat_nm: crownPeriodicity.values.myosin_repeat_nm,
+    // Near-commensurate, not equal: stating the residual is what keeps "matching
+    // periodicity" from being read as an exact register claim.
+    periodicity_offset_nm: Number(
+      (cZone.super_repeat_nm - crownPeriodicity.values.myosin_repeat_nm).toFixed(3),
+    ),
+    evidence_class: requireEvidence(model.spec, superRepeat.evidence_class, 'aband_scaffold'),
+    source_ids: requireSourceIds(
+      [...superRepeat.sources, ...crownPeriodicity.sources], 'aband_scaffold',
+    ),
+    // The bound span translating without stretching is what makes the scaffold
+    // role legible beside the I-band spring; both are shown from the same solver.
+    render_meaning: 'The bound A-band segment translates with the thick filament and '
+      + 'keeps a constant end-to-end span while the I-band regions change length.',
+    not_claimed: Object.freeze([
+      ...architectureClaim.not_claimed,
+      'that the super-repeat is in exact register with the myosin repeat',
+      'a settled causal mechanism by which titin sets thick-filament length or regulates myosin',
+    ]),
+  });
+
   return Object.freeze({
     schema: 'titin-showcase-overlay/1',
     sarcomere_length_nm: geometry.sarcomere_length_nm,
+    aband_scaffold: scaffold,
     continuity: Object.freeze({
       points: backbone.points.map((point) => Object.freeze({ ...point })),
       segments: backbone.segments.map((segment) => Object.freeze({ ...segment })),

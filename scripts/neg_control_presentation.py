@@ -62,6 +62,20 @@ rejected("invalid chapter visibility",
 rejected("invalid initial target",
          lambda p: p["initial_state"].__setitem__("selected_component_or_region", "ghost_region"),
          "unknown target")
+rejected("MyBP-C scope card deleted",
+         lambda p: p.__setitem__("expert_cards", [
+             card for card in p["expert_cards"]
+             if card["target_claim_id"] != "mybpc_czone_context"]),
+         "requires an Evidence-mode expert card")
+rejected("expert card promoted into Guided mode",
+         lambda p: p["expert_cards"][1].__setitem__("audience", "guided"),
+         "must be Evidence-mode only")
+rejected("expert card without a non-claim",
+         lambda p: p["expert_cards"][1].__setitem__("not_claimed", []),
+         "needs explicit not-claimed text")
+rejected("expert card citing a missing source",
+         lambda p: p["expert_cards"][0].__setitem__("source_ids", ["10.invalid/missing"]),
+         "unknown source")
 
 assert json.loads(SOURCE.read_text(encoding="utf-8")) == BASE, "source presentation record changed"
 print("PRESENTATION NEGATIVE CONTROLS PASSED")
