@@ -52,6 +52,7 @@ import { createHash } from 'node:crypto';
 import { dirname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
+import { buildFingerprint } from './build_fingerprint.mjs';
 
 const ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -179,6 +180,11 @@ const bootPatch = `
    replaced. The watchdog itself is kept: a module can still fail for other reasons,
    and a scientific tool that fails silently is worse than one that fails loudly. */
 window.__titinStandalone = true;
+/* SC-9 preflight: the hosted page and the offline file must report the same build.
+   Stamped from scripts/build_fingerprint.mjs, the one definition both this builder
+   and the release pack use, so the comparison is meaningful rather than two
+   independently invented version strings. */
+window.__titinBuild = Object.freeze({ fingerprint: ${JSON.stringify(buildFingerprint())} });
 </script>`;
 
 const standalone = html

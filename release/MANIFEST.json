@@ -1,0 +1,42 @@
+{
+  "schema": "titin-release-manifest/1",
+  "build_fingerprint": "9774e0580508",
+  "fingerprint_inputs": [
+    "data/sarcomere.json",
+    "data/titin.json",
+    "data/structural_states.json",
+    "data/geometry_sources.json",
+    "data/references.json",
+    "data/showcase_claims.json",
+    "data/presentation.json",
+    "data/annotations.json",
+    "data/geometry_strategy.json",
+    "data/context_measurements.json",
+    "data/mechanical_model.json"
+  ],
+  "standalone_bytes": 1988978,
+  "artifacts": [
+    "CLAIM_MATRIX.md",
+    "LIMITATIONS.md",
+    "PREFLIGHT.md",
+    "PRESENTER_SCRIPT.md",
+    "SCREENSHOT_PACK.md",
+    "fallback/architecture.svg",
+    "fallback/extension.svg",
+    "fallback/lattice.svg",
+    "fallback/limitations.svg",
+    "fallback/provenance.svg",
+    "fallback/scope.svg"
+  ],
+  "fallback_slides": [
+    "scope",
+    "architecture",
+    "extension",
+    "lattice",
+    "provenance",
+    "limitations"
+  ],
+  "screenshot_cells": 52,
+  "presenter_seconds": 121.2,
+  "generated_by": "scripts/build_release_pack.mjs"
+}

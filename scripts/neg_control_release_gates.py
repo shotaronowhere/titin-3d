@@ -147,5 +147,43 @@ rejected("an outstanding gate hidden from the blocker list",
                                   if not b.startswith("expert_review")]),
          "named in the release blockers")
 
+
+def condition(payload, cid):
+    return next(c for c in payload["final_release_definition"]["conditions"] if c["id"] == cid)
+
+
+rejected("a release condition passed with no verifier",
+         lambda r: (condition(r, "novice_comprehension").__setitem__("status", "PASS"),
+                    condition(r, "novice_comprehension").pop("blocked_by", None)),
+         "names its verifier")
+
+rejected("a release condition waiting on a gate that already passed",
+         lambda r: condition(r, "novice_comprehension").__setitem__("blocked_by", "automated"),
+         "waits on")
+
+rejected("a release condition blocked by nothing",
+         lambda r: condition(r, "expert_clear").pop("blocked_by"),
+         "names the gate it waits on")
+
+rejected("the release definition passed with conditions outstanding",
+         lambda r: r["final_release_definition"].__setitem__("status", "PASS"),
+         "passes only when every condition does")
+
+rejected("a release condition deleted",
+         lambda r: r["final_release_definition"].__setitem__(
+             "conditions", r["final_release_definition"]["conditions"][:-1]),
+         "twelve release conditions")
+
+rejected("the rehearsal passed without being rehearsed",
+         lambda r: (r["demo_rehearsal"].__setitem__("status", "PASS"),
+                    [c.__setitem__("status", "PASS") for c in r["demo_rehearsal"]["checks"]]),
+         "records its evidence")
+
+rejected("a release artifact claimed without its generator",
+         lambda r: next(c for c in r["release_artifacts"]["checks"]
+                        if c["id"] == "fallback_pack").__setitem__(
+                            "verified_by", "scripts/does_not_exist.mjs"),
+         "names a real command or test file")
+
 assert json.loads(SOURCE.read_text(encoding="utf-8")) == BASE, "source record changed"
-print("RELEASE-GATE NEGATIVE CONTROLS PASSED (15 mutations)")
+print("RELEASE-GATE NEGATIVE CONTROLS PASSED (22 mutations)")

@@ -7,11 +7,13 @@ API consume those records rather than restating biological constants.
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
 and are intentionally outside the completed release scope. The separate showcase
-completion sequence is complete through SC-7. SC-8's automated validation is in
-place; its lay-comprehension, expert-review, and visual-capture gates are
-instrumented in `data/release_gates.json` and remain outstanding because they
-need people and a browser. The showcase is therefore not yet release-ready, and
-`npm run validate:gates` will not let that be claimed.
+completion sequence is complete through SC-9 in everything a machine can decide.
+The release pack in `release/` is generated and staleness-gated, and the twelve
+conditions of the final release definition are tracked in
+`data/release_gates.json`. Four of them — novice comprehension, expert review,
+the visual capture set, and the projector rehearsal — need people, a browser, and
+the presenting hardware, so they remain outstanding. The showcase is therefore
+not yet release-ready, and `npm run validate:gates` will not let that be claimed.
 
 ## Open the visualization
 
@@ -134,6 +136,32 @@ npm run build
 
 `npm run check:build` verifies that `index.html` exactly matches its current inputs.
 `npm run build:standalone` remains as a compatibility alias for `npm run build`.
+
+## Release and handoff pack
+
+`release/` is a generated package, not a written one. Regenerate it whenever the
+scientific data, the narrative, or the standalone build changes:
+
+```sh
+npm run pack
+```
+
+`npm run check:pack` fails if the committed pack is stale, so the leave-behind
+cannot drift away from the science it describes.
+
+| Artifact | What it is |
+|---|---|
+| `release/CLAIM_MATRIX.md` | every reviewed claim with its decision, evidence classes, sources, and non-claims |
+| `release/LIMITATIONS.md` | every recorded non-claim in the project, grouped by the record that holds it |
+| `release/PRESENTER_SCRIPT.md` | the guided route as a presenter reads it, with per-chapter timings |
+| `release/PREFLIGHT.md` | the demo-day checklist, including the build fingerprint to compare |
+| `release/SCREENSHOT_PACK.md` | the 52-cell deterministic capture set, each a viewport plus a URL hash |
+| `release/fallback/*.svg` | six static slides generated from this build; no GPU, browser engine, or network |
+| `release/MANIFEST.json` | the build fingerprint and artifact inventory |
+
+The Evidence drawer shows a build fingerprint. Before a demonstration, confirm the
+hosted page and the offline `index.html` show the same one; a page served from
+unpinned source says so instead.
 
 ## Public modules
 

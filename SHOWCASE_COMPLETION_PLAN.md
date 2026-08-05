@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 through SC-7 complete on 2026-08-05; SC-8's automated half is complete and its human and browser gates are instrumented but outstanding
+**Implementation status:** SC-0 through SC-7 complete (2026-08-02 and 2026-08-05). SC-8 and SC-9 are complete in everything a machine can decide; the audience, visual, and rehearsal gates are instrumented, tracked, and outstanding because they need people, a browser, and the presenting hardware
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -793,6 +793,42 @@ Release criterion: zero unresolved critical scientific findings. Lesser disagree
 - Automated, visual, accessibility, performance, lay, and expert gates all pass.
 
 ### SC-9 — Release, rehearsal, and handoff
+
+**Artifacts complete 2026-08-05; rehearsal OUTSTANDING.** All ten release
+artifacts exist and every one is GENERATED rather than written, because a handoff
+package that is typed by hand drifts away from the science the moment either
+changes. `scripts/build_release_pack.mjs` derives the claim/evidence matrix, the
+limitations sheet, the presenter script, the preflight checklist, the screenshot
+pack, and a six-slide static fallback deck from the canonical records, and
+`npm run check:pack` fails when the committed pack no longer matches — the same
+discipline the standalone page already has.
+
+The fallback deck answers a specific risk the register names: WebGL or the
+projector dies mid-demonstration. Its slides are plain SVG drawn from the same
+descriptors the 3-D scene consumes, so they are scientifically identical to it by
+construction, and they open with no GPU, no browser engine, and no network. A
+test asserts each slide carries its caveat and references nothing remote.
+
+Preflight step 2 asks a presenter to confirm the hosted page and the offline file
+are the same build, which is only meaningful if both derive their identity the
+same way. `scripts/build_fingerprint.mjs` is that one definition: the standalone
+builder stamps it into the page, the Evidence drawer shows it, and every artifact
+prints it. A page served from unpinned source says so rather than inventing an
+identifier the comparison could not use.
+
+The plan's twelve-line final release definition is now tracked line by line in
+`data/release_gates.json`. Eight conditions pass with a named verifier; four are
+outstanding and each must name the gate it waits on, which must genuinely still
+be outstanding — a condition cannot claim to be blocked by a gate that already
+passed. Seven further destructive controls were added, bringing that record to 22
+mutations it rejects. Twelve focused tests are in `test/showcase_phase9.test.js`;
+the bounded gate is `npm run verify:sc9`.
+
+Outstanding, and why: the demo rehearsal needs the presenting machine, display,
+and projector; `titin_continuity` and `lattice_legible` are visual judgements
+waiting on the SC-8 capture set; `novice_comprehension` and `expert_clear` wait
+on the SC-8 audience gates. `release_ready` is false and cannot be set while any
+of them stands.
 
 #### Release artifacts
 

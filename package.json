@@ -31,11 +31,15 @@
     "verify:sc6": "npm run check:build && npm run typecheck && npm run test:sc6 && npm run validate:spec && npm run validate:showcase && npm run validate:presentation && python3 scripts/neg_control_presentation.py",
     "test:sc7": "node --test --test-concurrency=1 test/showcase_phase7.test.js test/presentation.test.js test/standalone.test.js",
     "verify:sc7": "npm run check:build && npm run typecheck && npm run test:sc7 && npm run validate:spec && npm run validate:showcase && npm run validate:presentation && npm run validate:annotations && python3 scripts/neg_control_presentation.py",
-    "verify": "npm run check:build && npm run typecheck && npm test && npm run test:negative && npm run validate && npm run validate:spec && npm run validate:showcase && npm run validate:presentation && npm run validate:annotations && npm run validate:gates && npm run check:matrix && npm run validate:python",
+    "verify": "npm run check:build && npm run check:pack && npm run typecheck && npm test && npm run test:negative && npm run validate && npm run validate:spec && npm run validate:showcase && npm run validate:presentation && npm run validate:annotations && npm run validate:gates && npm run check:matrix && npm run validate:python",
     "validate:gates": "python3 scripts/validate_release_gates.py",
     "check:matrix": "node scripts/capture_visual_matrix.mjs --check",
     "test:sc8": "node --test --test-concurrency=1 test/showcase_phase8.test.js test/presentation.test.js test/standalone.test.js",
-    "verify:sc8": "npm run check:build && npm run typecheck && npm run test:sc8 && npm run check:matrix && npm run validate:spec && npm run validate:showcase && npm run validate:presentation && npm run validate:annotations && npm run validate:gates && node scripts/neg_control_showcase_release.mjs && python3 scripts/neg_control_release_gates.py"
+    "verify:sc8": "npm run check:build && npm run typecheck && npm run test:sc8 && npm run check:matrix && npm run validate:spec && npm run validate:showcase && npm run validate:presentation && npm run validate:annotations && npm run validate:gates && node scripts/neg_control_showcase_release.mjs && python3 scripts/neg_control_release_gates.py",
+    "pack": "node scripts/build_release_pack.mjs",
+    "check:pack": "node scripts/build_release_pack.mjs --check",
+    "test:sc9": "node --test --test-concurrency=1 test/showcase_phase9.test.js test/standalone.test.js",
+    "verify:sc9": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc9 && npm run validate:gates && python3 scripts/neg_control_release_gates.py"
   },
   "license": "CC-BY-4.0",
   "dependencies": {

@@ -23,8 +23,9 @@ DEFAULT_PATH = ROOT / "data" / "release_gates.json"
 STATUSES = {"PENDING", "PASS", "FAIL"}
 VERIFICATION_KINDS = {"automated", "browser", "human"}
 CHECK_SECTIONS = ("automated", "destructive_controls", "visual_matrix",
-                  "accessibility", "performance")
-ALL_SECTIONS = CHECK_SECTIONS + ("lay_comprehension", "expert_review")
+                  "accessibility", "performance", "release_artifacts", "demo_rehearsal")
+ALL_SECTIONS = CHECK_SECTIONS + ("lay_comprehension", "expert_review",
+                                 "final_release_definition")
 
 failures = []
 
@@ -171,6 +172,37 @@ def main():
     else:
         check(not reviewers or expert.get("status") == "FAIL",
               "a PENDING expert gate names no reviewers")
+
+    print("\n== Final release definition ==")
+    final = record["final_release_definition"]
+    conditions = final.get("conditions") or []
+    check(len(conditions) == 12, f"the plan's twelve release conditions are all present ({len(conditions)})")
+    for condition in conditions:
+        cid = condition.get("id", "(missing id)")
+        check(condition.get("status") in STATUSES, f"condition '{cid}': status is declared vocabulary")
+        check(bool(str(condition.get("statement", "")).strip()),
+              f"condition '{cid}': states the condition")
+        if condition.get("status") == "PASS":
+            # A satisfied condition must point at what satisfied it.
+            check(relative_exists(condition.get("verified_by", ""))
+                  or str(condition.get("verified_by", "")).startswith("npm run"),
+                  f"condition '{cid}': a passing condition names its verifier")
+        else:
+            # An outstanding condition must name the gate it is waiting on, and
+            # that gate must genuinely still be outstanding.
+            blocker = condition.get("blocked_by")
+            check(blocker in ALL_SECTIONS,
+                  f"condition '{cid}': names the gate it waits on")
+            if blocker in ALL_SECTIONS:
+                check(record[blocker].get("status") != "PASS",
+                      f"condition '{cid}': waits on '{blocker}', which has already passed")
+    outstanding_conditions = [c.get("id") for c in conditions if c.get("status") != "PASS"]
+    if final.get("status") == "PASS":
+        check(not outstanding_conditions,
+              f"the definition passes only when every condition does ({outstanding_conditions})")
+    else:
+        check(bool(outstanding_conditions),
+              "the definition is outstanding because conditions genuinely are")
 
     print("\n== Release readiness ==")
     outstanding = [name for name in ALL_SECTIONS if record[name].get("status") != "PASS"]

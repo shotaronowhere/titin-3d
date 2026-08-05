@@ -1,7 +1,7 @@
 {
   "schema": "titin-showcase-release-gates/1",
   "meta": {
-    "phase": "SC-8 — Integrated validation and audience evaluation",
+    "phase": "SC-8 integrated validation and SC-9 release, rehearsal, and handoff",
     "status": "IN_PROGRESS",
     "purpose": "Machine-readable record of every SC-8 release gate. Gates that a machine can decide are decided by a named command; gates that need people or a browser stay PENDING until their evidence is recorded here. scripts/validate_release_gates.py refuses to accept a PASS without that evidence, so this file cannot be used to declare readiness the project has not earned.",
     "governing_plan": "SHOWCASE_COMPLETION_PLAN.md",
@@ -451,12 +451,214 @@
       }
     ]
   },
+  "release_artifacts": {
+    "status": "PASS",
+    "build_command": "npm run pack",
+    "staleness_gate": "npm run check:pack",
+    "checks": [
+      {
+        "id": "standalone",
+        "requirement": "standalone index.html",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/build_standalone.mjs"
+      },
+      {
+        "id": "pages_deployment",
+        "requirement": "GitHub Pages deployment from main",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/build_standalone.mjs"
+      },
+      {
+        "id": "readme",
+        "requirement": "README with Guided/Evidence instructions and scope",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase9.test.js"
+      },
+      {
+        "id": "claim_matrix",
+        "requirement": "one-page claim and evidence matrix",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "release/CLAIM_MATRIX.md"
+      },
+      {
+        "id": "screenshot_pack",
+        "requirement": "standard screenshot review pack",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "release/SCREENSHOT_PACK.md"
+      },
+      {
+        "id": "limitations",
+        "requirement": "scientific limitations and not-claimed sheet",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "release/LIMITATIONS.md"
+      },
+      {
+        "id": "presenter_script",
+        "requirement": "short presenter script",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "release/PRESENTER_SCRIPT.md"
+      },
+      {
+        "id": "preflight_checklist",
+        "requirement": "demo-day preflight checklist",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "release/PREFLIGHT.md"
+      },
+      {
+        "id": "fallback_pack",
+        "requirement": "static fallback slides generated from the approved build",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/build_release_pack.mjs"
+      },
+      {
+        "id": "build_identity",
+        "requirement": "the page reports a build fingerprint a presenter can compare",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase9.test.js"
+      }
+    ]
+  },
+  "demo_rehearsal": {
+    "status": "PENDING",
+    "checklist": "release/PREFLIGHT.md",
+    "checks": [
+      {
+        "id": "open_both",
+        "requirement": "hosted page and offline file both open",
+        "verification": "browser",
+        "status": "PENDING"
+      },
+      {
+        "id": "same_build",
+        "requirement": "both report the same build fingerprint",
+        "verification": "browser",
+        "status": "PENDING"
+      },
+      {
+        "id": "guided_route_on_display",
+        "requirement": "the guided route runs once on the actual display",
+        "verification": "human",
+        "status": "PENDING"
+      },
+      {
+        "id": "rendering_check",
+        "requirement": "typography, colour, animation, WebGL, and pointer behaviour",
+        "verification": "browser",
+        "status": "PENDING"
+      },
+      {
+        "id": "reset_and_shortcuts",
+        "requirement": "Restart and chapter shortcuts confirmed",
+        "verification": "browser",
+        "status": "PENDING"
+      },
+      {
+        "id": "fallback_available",
+        "requirement": "the fallback pack is on the presenting machine",
+        "verification": "human",
+        "status": "PENDING"
+      }
+    ],
+    "rehearsed_by": null,
+    "rehearsed_on": null
+  },
+  "final_release_definition": {
+    "status": "PENDING",
+    "conditions": [
+      {
+        "id": "phase_gates",
+        "statement": "existing Phase 0-10 gates still pass",
+        "status": "PASS",
+        "verified_by": "npm run verify"
+      },
+      {
+        "id": "claim_metadata",
+        "statement": "every new claim has source, scope, state, evidence, and not-claimed metadata",
+        "status": "PASS",
+        "verified_by": "scripts/validate_showcase_claims.py"
+      },
+      {
+        "id": "no_cross_muscle",
+        "statement": "no unapproved cross-muscle coordinate can enter the retained mechanics",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "titin_continuity",
+        "statement": "no apparent titin discontinuity remains at supported presentation sizes",
+        "status": "PENDING",
+        "verified_by": "test/showcase_phase8.test.js",
+        "blocked_by": "visual_matrix"
+      },
+      {
+        "id": "bare_zone_distinct",
+        "statement": "bare zone and M-band are visually and terminologically distinct",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase3.test.js"
+      },
+      {
+        "id": "zdisc_topology",
+        "statement": "Z-disc topology cannot be read as alternating titin/actin ends",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase3.test.js"
+      },
+      {
+        "id": "mybpc_honest",
+        "statement": "MyBP-C is either honestly schematic or explicitly omitted",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase5.test.js"
+      },
+      {
+        "id": "lattice_legible",
+        "statement": "lattice breathing is legible and labeled as modeled",
+        "status": "PENDING",
+        "verified_by": "test/showcase_phase6.test.js",
+        "blocked_by": "visual_matrix"
+      },
+      {
+        "id": "novice_comprehension",
+        "statement": "novice comprehension threshold is met",
+        "status": "PENDING",
+        "blocked_by": "lay_comprehension"
+      },
+      {
+        "id": "expert_clear",
+        "statement": "expert review has no unresolved critical finding",
+        "status": "PENDING",
+        "blocked_by": "expert_review"
+      },
+      {
+        "id": "outputs_agree",
+        "statement": "standalone, local-server, and GitHub Pages outputs agree",
+        "status": "PASS",
+        "verified_by": "test/standalone.test.js"
+      },
+      {
+        "id": "rehearsal_and_fallback",
+        "statement": "projector rehearsal and fallback package are complete",
+        "status": "PENDING",
+        "blocked_by": "demo_rehearsal"
+      }
+    ]
+  },
   "release_ready": false,
   "release_blockers": [
     "visual_matrix: capture and human review require a browser with WebGL",
     "lay_comprehension: requires at least three independent non-specialists",
     "expert_review: requires at least one muscle or titin specialist",
     "accessibility.text_zoom: requires a real browser zoom check",
-    "performance.target_hardware: belongs to the SC-9 demo-day preflight"
+    "performance.target_hardware: belongs to the SC-9 demo-day preflight",
+    "demo_rehearsal: requires the presenting machine, display, and projector",
+    "final_release_definition: four conditions depend on the gates above"
   ]
 }

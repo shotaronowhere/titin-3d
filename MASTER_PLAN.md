@@ -70,11 +70,14 @@ record and Guided/Evidence shell, the titin hierarchy and length story, the Z-di
 and M-band correction, object-linked annotations, the A-band scaffold story with
 its optional schematic MyBP-C C-zone context, the orthographic lattice breathing
 comparison, and the seven-chapter guided route with its expert cards and counted
-build pipeline. SC-8's automated and destructive validation was completed on
-2026-08-05; its lay-comprehension, expert-review, and visual-capture gates are
-instrumented in `data/release_gates.json` but remain outstanding because they
-require people and a browser, so the showcase is not yet release-ready. The
-detailed completion definition remains in `SHOWCASE_COMPLETION_PLAN.md`.
+build pipeline. SC-8's validation and SC-9's release pack were completed on
+2026-08-05: `release/` holds the generated claim matrix, limitations sheet,
+presenter script, preflight checklist, screenshot pack, and static fallback deck,
+all staleness-gated. The twelve conditions of the final release definition are
+tracked in `data/release_gates.json`; four require people, a browser, and the
+presenting hardware and remain outstanding, so the showcase is not yet
+release-ready. The detailed completion definition remains in
+`SHOWCASE_COMPLETION_PLAN.md`.
 
 ---
 

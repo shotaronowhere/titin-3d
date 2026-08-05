@@ -276,6 +276,8 @@ window.__titinBoot = { ready: false, problems: [] };
      push the card off the top of the viewport on a short screen. */
   #guidedLattice, #guidedPipeline { max-height: 38vh; overflow-y: auto;
     overscroll-behavior: contain; }
+  .build-id { margin-top: 4px; color: var(--dim); font-size: 9px; letter-spacing: .06em;
+    font-variant-numeric: tabular-nums; }
   .card-findings { margin: 5px 0 0; padding: 0; list-style: none; }
   .card-findings li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 6px;
     margin-top: 3px; font-size: 9px; line-height: 1.4; }
@@ -399,6 +401,9 @@ window.__titinBoot = { ready: false, problems: [] };
         <div>
           <h1>Evidence &amp; controls</h1>
           <div class="sub" style="margin:0">Complete scientific readouts and advanced views</div>
+          <!-- SC-9 preflight step 2: the hosted page and the offline file must show
+               the same fingerprint before a demonstration. -->
+          <div class="build-id" id="buildFingerprint">Build —</div>
         </div>
         <button id="closeEvidence">Close</button>
       </div>
@@ -570,6 +575,12 @@ if (state.closeup === 'mline') state.mirror = true;
 const slider = $('sl');
 slider.min = min; slider.max = max; slider.value = restored.state.sarcomere_length_nm;
 $('activationStatement').textContent = presentation.scope.activation_statement;
+// SC-9. The standalone builder stamps the spec digest into the page; a page served
+// from source has none, and says so rather than inventing one, because a preflight
+// that compares two different kinds of identifier proves nothing.
+$('buildFingerprint').textContent = window.__titinBuild?.fingerprint
+  ? `Build ${window.__titinBuild.fingerprint}`
+  : 'Build — unpinned development source';
 $('scopeIdentity').textContent = presentation.scope_badges[0].label;
 
 function publicPresentationState() {
