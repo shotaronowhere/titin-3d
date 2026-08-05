@@ -10,6 +10,40 @@
 
 ---
 
+## Revision 2 — 2026-08-06, after driving the shipped build in a browser
+
+Revision 1 was written from a headless capture of URL states. SC-10 has since shipped, and this
+revision comes from **clicking the guided route end to end** at 1280×720 and 375×812 and measuring
+the live DOM. Six things were found that a URL-state capture cannot see, because three of them are
+caused by *the click path itself* and two only exist at a viewport the earlier pass could not
+render. Every claim below was verified against the running page; the source anchors are exact.
+
+| # | Finding | Lands in |
+|---|---|---|
+| 1 | Chapters 4 and 5 declare `closeup.zdisc` / `closeup.czone`, and **neither camera is ever reached from the tour**. `rebuild()` overwrites the close-up with region focus, and the close-up branch never enables the context-detail layer. The two frames the tour exists to deliver are a translucent slab and a featureless streak. | **New Task 11.0** |
+| 2 | Because of #1 the URL the page writes for those chapters (`camera=region.…`) **does not reproduce the frame the presenter saw**. That breaks an SC-1 gate and silently invalidates the chapter-4/5 cells of the SC-8 visual matrix. | **New Task 11.0** |
+| 3 | In Guided mode actin and myosin are **1.41 : 1** against each other and the myosin head array is **1.06 : 1** against actin — indistinguishable on a projector and in grayscale. Chapter 1's copy asks the viewer to see titin "beside actin and myosin". | **New Task 12.4** |
+| 4 | `data/showcase_claims.json` declares `guided_secondary_context_labels_desktop_max: 3` and `…_mobile_max: 2`. Guided mode draws **six** band brackets at every viewport. The budget is validated for immutability (`scripts/validate_showcase_claims.py:190`) and **never enforced against the render**. At 375 px the brackets overlap and clip, and the model runs off the right edge. | **New Task 12.5** |
+| 5 | Nothing on the stage states the scale. Every number in this project is in nanometres and the viewer is given no ruler, at any zoom, in either mode. | **New Task 11.6** |
+| 6 | Chapter 7 — the provenance pipeline, the project's whole answer to "did an AI just draw a convincing picture?" — renders as an **8 px scrolling box** inside the chapter card (`#guidedPipeline { max-height: 38vh; overflow-y: auto }`, `src/index.template.html:277`; `.pipeline-records { font-size: 8px }`, `:271`). | **New Task 13.5** |
+
+Two existing sprints are amended rather than replaced:
+
+- **SC-16** verifies its fix by hand-typing `camera=closeup.zdisc`. The guided route never sends
+  anyone there (finding #1), so as written the sprint would ghost an envelope in a frame no
+  visitor reaches. Its gate now runs through chapter 4. See the amendment at the head of SC-16.
+- **SC-11 Task 11.2**'s framing numbers are confirmed by the click-through and unchanged; the
+  region-focus standoff is if anything more urgent than Revision 1 stated — chapter 3 of the
+  shipped tour is a solid pink wall, not merely a tight crop.
+
+**Ordering change.** Task 11.0 runs **first, before Task 11.1**. It is roughly forty lines of
+wiring and it is the highest-leverage change in this document: it converts the two worst frames in
+the tour into the two best ones, using geometry that SC-3 and SC-5 already built and that nothing
+currently displays. Framing, brackets and control layout are all improvements to a stage; 11.0
+decides whether the right thing is on that stage at all.
+
+---
+
 ## Global Constraints
 
 Every task's requirements implicitly include this section. Read it once, completely, before Sprint SC-10.
@@ -27,7 +61,7 @@ Every task's requirements implicitly include this section. Read it once, complet
 7. **The evidence contract is inviolable.** Colour encodes identity; **opacity encodes confidence**; selection and emphasis are separate channels. Never make titin more visible by raising the opacity of an object whose evidence class says otherwise. `test/showcase_phase8.test.js` asserts that region highlighting leaves opacity untouched — keep it that way for every new channel.
 8. **Every new visible claim needs metadata:** evidence class, source IDs resolvable in `data/references.json`, and an explicit `not_claimed` list. Reuse existing claim records rather than inventing new ones where possible.
 9. **Accessibility gates:** no positive `tabindex`; every control is a real `<button>` or labelled `<input>`; `@media (pointer: coarse)` keeps a 44 px minimum. Any new colour that carries text must be added to `data/release_gates.json` → `accessibility.contrast_pairs` **and** appear literally (same lowercase hex) in `src/index.template.html`.
-10. **Do not change the URL hash schema.** `URL_KEYS` in `src/presentation/StoryController.js:22` is closed, and `test/presentation.test.js` asserts exact hash strings. No task in this plan adds a URL field.
+10. **Do not change the URL hash schema.** `URL_KEYS` in `src/presentation/StoryController.js:21` is closed, and `test/presentation.test.js` asserts exact hash strings. No task in this plan adds a URL field.
 11. **Do not add a guided chapter.** `test/presentation.test.js` and `test/showcase_phase7.test.js` both assert the exact list of seven chapter IDs, and `tour_pacing` is gated at 110–190 s. New content attaches to existing chapters.
 12. **Commit after every task**, with the regenerated `index.html` where applicable.
 13. **`npm run verify` is the full release gate** and is slow. Per-sprint you run `npm run verify:scNN`; run the full `npm run verify` once at the end of SC-17.
@@ -40,7 +74,7 @@ Every task's requirements implicitly include this section. Read it once, complet
 
 | File | Responsibility |
 |---|---|
-| `src/presentation/StageLayout.js` | Pure layout arithmetic: bracket lane placement, inspector card placement, framing constants. No DOM, no Three.js. |
+| `src/presentation/StageLayout.js` | Pure layout arithmetic: bracket lane placement, inspector card placement, framing constants, the scale-bar step (Task 11.6), the label budget (Task 12.5). No DOM, no Three.js. |
 | `src/presentation/StretchSweep.js` | Pure triangle-wave sarcomere-length sweep used by the ▶ play control. No timers inside. |
 | `src/presentation/ForceCurve.js` | Samples the existing geometry pipeline into a passive force–extension curve descriptor with evidence metadata. |
 | `src/presentation/Bibliography.js` | Groups the resolved reference registry into a displayable bibliography. |
@@ -59,7 +93,8 @@ Every task's requirements implicitly include this section. Read it once, complet
 | `scripts/build_standalone.mjs` | Bundle binding list (see Global Constraint 4). |
 | `src/presentation/StoryController.js` | Validates the new expert-card `related_target_ids` field (SC-13.4). |
 | `scripts/validate_presentation.py` | Mirrors that rule so CI and the browser fail closed together. |
-| `data/presentation.json` | `related_target_ids` per expert card (SC-13.4); `architecture` chapter camera (SC-15.2); one word of chapter-1 copy (SC-17.3). |
+| `data/presentation.json` | `show_context_detail` for the two close-up chapters (Task 11.0); `related_target_ids` per expert card (SC-13.4); `architecture` chapter camera (SC-15.2); one word of chapter-1 copy (SC-17.3). |
+| `data/showcase_claims.json` | Nothing. The attention budget is **read** by Task 12.5, never edited — `validate_showcase_claims.py:190` pins it byte-for-byte and a negative control proves the pin. |
 | `data/annotations.json` | Render-meaning and non-claim text for the disordered-chain depiction (SC-15.1). |
 | `data/release_gates.json` | New contrast pairs; performance baseline and check. |
 | `test/presentation.test.js` | One assertion split when controls move to the stage bar (SC-12, Task 12.1). |
@@ -535,7 +570,257 @@ npm run check:build && git add -A && git commit -m "SC-10: add the titin emphasi
 
 **Why:** Three defects compound into "this looks broken". (a) `focusSpan` pads the framing by 1.35 and centres vertically, so ~85 % of the canvas is empty. (b) The band-bracket lane is positioned from the page header (`src/index.template.html:791`), so brackets float ~330 px above the structure they label with nothing connecting them. (c) Switching Guided → Evidence removes 370 px of canvas and only calls `resize()` (`src/index.template.html:634`), so the Z-disc is cut off. Separately, `renderScienceOverlay()` and `renderObjectOverlay()` run **every animation frame** (`src/index.template.html:2155`), each forcing a synchronous layout.
 
-**Done when:** the structure fills the frame, brackets sit just above the model with drop ticks, mode switching reframes, and the overlay work happens on change rather than on every frame.
+**Done when:** the tour reaches the cameras it declares, the structure fills the frame, brackets sit just above the model with drop ticks, mode switching reframes, and the overlay work happens on change rather than on every frame.
+
+### Task 11.0: The guided route reaches the cameras it declares
+
+> Added in Revision 2. **Run this before Task 11.1.** It is the smallest change in this document
+> and the largest visible one.
+
+**Why.** `data/presentation.json` gives chapter 4 (`anchors`) the camera `closeup.zdisc` and
+chapter 5 (`anchored_scaffold`) the camera `closeup.czone`. Neither is ever applied. Three separate
+defects compound:
+
+**(a) Region focus silently overwrites the declared close-up.** `rebuild()` at
+`src/index.template.html:1733`:
+
+```js
+    if (!refit && state.region) state.cameraPreset = `region.${state.region}`;
+    if (!refit && state.region)
+      visualization.focusTitinRegion(state.region);
+    else if (!refit && state.closeup) {
+      state.cameraPreset = `closeup.${state.closeup}`;
+      visualization.closeUp(state.closeup);
+    }
+```
+
+Chapters 4 and 5 each declare **both** a region target (`Z1Z2`, `Aband_super`) and a close-up
+camera. `applyChapter` (`:1095`) sets `state.region` first, then calls `applyCameraPreset`, whose
+close-up branch (`:1081`) sets `state.closeup` and calls `rebuild()` — and that rebuild takes the
+region branch, yanks the camera back to region focus, and rewrites `state.cameraPreset` to
+`region.…`. Verified live by clicking `Next` through the tour and reading `location.hash` at each
+step: chapter 4 reports `camera=region.Z1Z2`, chapter 5 `camera=region.Aband_super`. The declared
+cameras never appear in the hash the page writes.
+
+**(b) A guided close-up does not turn on the layer that makes a close-up worth looking at.** The
+close-up *button* handler sets `state.showContextDetail = true` (`:1240`) under a comment that
+states the reason exactly:
+
+> *"Close-ups. Selecting one turns the context-detail layer ON, because a close-up on the crown
+> array with that layer off would show a bare cylinder and read as a rendering failure."*
+> — `src/index.template.html:1224`
+
+`applyCameraPreset`'s close-up branch does not do this, and both chapters declare
+`visibility.show_context_detail: false`. So the tour produces precisely the failure the comment
+predicts. Confirmed by hand: forcing the `czone` close-up **with** context detail turns chapter 5's
+flat streak into the myosin crown array with titin running along it — one of the best frames the
+renderer can produce, and one no visitor currently sees. The same is true at the Z-disc: with the
+layer on, the twisted antiparallel actin and the α-actinin context appear (they are then occluded
+by the envelope, which is exactly what SC-16 fixes — and SC-16 cannot be reached from the tour
+until this task lands).
+
+**(c) A hash that names a step but not a camera keeps the previous camera.**
+`restorePresentationFromHash` (`:2049–2053`) reads `camera` from the hash and never consults the
+chapter. `#mode=guided&step=anchors` therefore renders **chapter 1's frame under chapter 4's text**.
+
+**What this costs elsewhere.** SC-1's gate is *"URL reload reproduces the same supported biological
+state."* For chapters 4 and 5 it does not: reloading the URL the page itself wrote yields
+`_displayOptions.anchorDetail === null`, so the Z-disc detail geometry is not even built. The SC-8
+visual matrix is generated from URL hashes, so its chapter-4 and chapter-5 cells capture frames the
+presenter never sees. Both are fixed by this task, not papered over.
+
+**Files:**
+- Modify: `src/index.template.html` (`rebuild` `:1723-1744`, `applyCameraPreset` `:1075-1093`, `restorePresentationFromHash` `:2040-2068`)
+- Modify: `data/presentation.json` (`show_context_detail` for `anchors` and `anchored_scaffold`)
+- Modify: `src/presentation/StoryController.js` (camera fallback for a step-only hash)
+- Test: `test/showcase_phase11.test.js` (create)
+
+**Interfaces:**
+- Produces: `StoryController.parse()` adopts the chapter's declared `camera_preset` when the hash names a `step` and omits `camera`.
+- Produces: `applyCameraPreset` treats a close-up as authoritative over region focus for the rest of that chapter.
+
+- [ ] **Step 1: Write the failing test**
+
+The camera-adoption half is pure and belongs in Node. Create `test/showcase_phase11.test.js`:
+
+```js
+/** SC-11 gates: the tour reaches the cameras it declares. */
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+
+import { TitinModel } from '../src/model/TitinModel.js';
+import { nodeReader } from '../src/model/readNode.js';
+import { StoryController } from '../src/presentation/StoryController.js';
+
+const model = await TitinModel.create(nodeReader());
+const story = new StoryController(model.spec.presentation, model);
+
+// `story.chapters` is an array property, not a method — assigned at StoryController:383.
+test('SC11-0: a step-only hash adopts that chapter\'s declared camera', () => {
+  for (const chapter of story.chapters) {
+    const decoded = story.parse(`#mode=guided&step=${chapter.id}`);
+    assert.equal(decoded.state.camera_preset, chapter.recommended_state.camera_preset,
+      `step=${chapter.id} must frame ${chapter.id}, not whatever was on screen before`);
+  }
+});
+
+test('SC11-0: an explicit camera still wins over the chapter default', () => {
+  const decoded = story.parse('#mode=guided&step=anchors&camera=view.oblique');
+  assert.equal(decoded.state.camera_preset, 'view.oblique');
+});
+
+// A close-up chapter that leaves the context-detail layer off renders the bare
+// cylinder that src/index.template.html:1224 describes as "a rendering failure".
+test('SC11-0: every close-up chapter enables its detail layer', () => {
+  for (const chapter of story.chapters) {
+    const scene = chapter.recommended_state;
+    if (!scene.camera_preset.startsWith('closeup.')) continue;
+    assert.equal(scene.visibility.show_context_detail, true,
+      `chapter '${chapter.id}' frames a close-up; without context detail it shows a bare cylinder`);
+  }
+});
+
+// A close-up chapter must be describable by a URL that survives a reload.
+test('SC11-0: a close-up chapter round-trips through its own URL', () => {
+  for (const chapter of story.chapters) {
+    const scene = chapter.recommended_state;
+    if (!scene.camera_preset.startsWith('closeup.')) continue;
+    const hash = story.serialize(story.stateForChapter(chapter.id));
+    assert.equal(story.parse(hash).state.camera_preset, scene.camera_preset);
+  }
+});
+```
+
+- [ ] **Step 2: Run it and watch it fail**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase11.test.js
+```
+
+Expect the step-only-hash test and the context-detail test to fail. **The round-trip test will
+pass before the fix** — `stateForChapter` (`StoryController:453`) reads `camera_preset` straight
+off the chapter record, so the controller was never the broken half. Keep it as a regression guard
+and be clear about what it does not cover: the live URL is written by `syncUrl()` from
+`state.cameraPreset`, which `rebuild()` has already overwritten. **No Node test can catch that
+half** — it lives in `src/index.template.html`, which is deliberately not typechecked and not unit
+tested. Step 9's browser check is the gate for it, and it is not optional.
+
+- [ ] **Step 3: Turn on the detail layer for the two close-up chapters**
+
+In `data/presentation.json`, for the chapters `anchors` and `anchored_scaffold`, set
+`recommended_state.visibility.show_context_detail` to `true`.
+
+Nothing pins these values: `scripts/validate_presentation.py:197` and
+`src/presentation/StoryController.js:250` type-check the field and no test asserts a value.
+`test/showcase_phase7.test.js:85` asserts ≥ 4 distinct chapter cameras — this task changes no
+declared camera, so that gate is untouched (it is, in fact, the gate that was being satisfied on
+paper while two of the four cameras never rendered).
+
+- [ ] **Step 4: Let a declared close-up outrank region focus**
+
+In `src/index.template.html`, replace the branch at `:1733-1739`:
+
+```js
+    // A selected region moves as the mechanical state changes, so the camera has to
+    // follow it. But a chapter may declare a close-up AND a region target — chapter 4
+    // pairs closeup.zdisc with the Z1Z2 region so the anchor is both framed and
+    // highlighted. Region focus used to win unconditionally here, which discarded the
+    // close-up on the rebuild that immediately followed applyCameraPreset and left the
+    // chapter pointing at the wrong scene. The close-up is the more specific intent:
+    // it was named by the chapter, not inferred from the selection.
+    if (!refit && state.closeup) {
+      state.cameraPreset = `closeup.${state.closeup}`;
+      visualization.closeUp(state.closeup);
+    } else if (!refit && state.region) {
+      state.cameraPreset = `region.${state.region}`;
+      visualization.focusTitinRegion(state.region);
+    }
+```
+
+Highlighting is unaffected: `visualization.highlightTitinRegion(state.region)` is called from
+`applyChapter` and is independent of which camera moves. The region readout keeps working because
+`state.region` is still set.
+
+- [ ] **Step 5: Make a guided close-up behave like a clicked one**
+
+In `applyCameraPreset` (`:1075`), the close-up branch at `:1081` must match the button handler at `:1240`:
+
+```js
+  } else if (kind === 'closeup') {
+    state.closeup = name;
+    // Same reason as the close-up buttons at :1224 — a close-up with the
+    // context-detail layer off is a bare cylinder. The chapter's declared
+    // visibility supplies the rest; this is the one field a close-up implies.
+    state.showContextDetail = true;
+    state.showFilamentContext = true;
+    if (name === 'mline') state.mirror = true;
+    visualization.closeUp(name, { animate });
+    rebuild();
+    syncCloseups(visualization.closeUp(name, { move: false }));
+    syncDepictionToggles();
+  }
+```
+
+Note this makes Step 3's data edit belt-and-braces rather than load-bearing — keep both. The data
+edit states the intent where a reviewer reads it; the code guarantees it for any caller.
+
+- [ ] **Step 6: Adopt the chapter camera for a step-only hash**
+
+In `src/presentation/StoryController.js`, inside the hash decoder (around `:510`), after `step` is
+resolved and before `camera` is read: when the hash names a known `step` and carries no `camera`
+key, seed `state.camera_preset` from that chapter's `recommended_state.camera_preset`. An explicit
+`camera` still overrides it, and the existing unavailable-camera fallback at `:514-515` is
+unchanged.
+
+This adds **no URL field** — Global Constraint 10 holds. `URL_KEYS` is untouched; the change is
+what an *absent* key defaults to. Check `test/presentation.test.js`'s exact-hash assertions still
+pass: they all supply `camera` explicitly, so they should.
+
+- [ ] **Step 7: Run the tests**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase11.test.js test/presentation.test.js test/showcase_phase7.test.js test/showcase_phase8.test.js
+npm run validate:presentation && npm run typecheck && npm run build && npm run check:build
+```
+
+- [ ] **Step 8: Regenerate the artifacts that quote chapter URLs**
+
+The chapter-4 and chapter-5 hashes have changed, so the SC-8 capture set and the SC-9 pack are
+stale by construction:
+
+```sh
+node scripts/capture_visual_matrix.mjs && npm run check:matrix
+npm run pack && npm run check:pack
+```
+
+- [ ] **Step 9: Look at it — this is the payoff**
+
+```sh
+npm run serve
+```
+
+Walk the tour with `Next` and compare against the two frames this task exists to produce:
+
+- **Chapter 4** must show the Z-disc anchor at close range with the twisted antiparallel actin and
+  the α-actinin context visible. The envelope will still occlude the telethonin sandwich — that is
+  SC-16's job, and it is now reachable.
+- **Chapter 5** must show the myosin crown array along the thick filament with titin's A-band
+  segment running beside it. If it is still a flat streak, `showContextDetail` is not reaching
+  `currentDisplayOptions()` (`:1711`).
+
+Then confirm the URL honesty fix:
+
+```sh
+# each of these must render the chapter it names, from a cold load
+open "index.html#mode=guided&step=anchors"
+open "index.html#mode=guided&step=anchored_scaffold"
+```
+
+- [ ] **Step 10: Commit**
+
+```sh
+git add -A && git commit -m "SC-11: let the guided route reach the close-ups it declares"
+```
 
 ### Task 11.1: The StageLayout module
 
@@ -1134,6 +1419,94 @@ Then open the page, switch to Evidence mode, and confirm in DevTools ▸ Perform
 git add -A && git commit -m "SC-11: run stage overlays on change instead of every frame"
 ```
 
+### Task 11.4a: A scale bar, because every number here is in nanometres
+
+> Added in Revision 2. Runs after Task 11.4 and before the sprint wiring in Task 11.5.
+
+**Why.** Nothing on the stage says how big anything is, at any zoom, in either mode. This is a
+project whose entire vocabulary is nanometres — 45.5 nm super-repeat, 39.83 nm `d10`, 6.8 nm N2A,
+a 620 nm anchored span — and a viewer has no way to convert what they see into any of them. It
+also matters more than usual here because the renderer *withdraws* detail below a resolvability
+threshold (`anchor_detail.feature_px < alias_threshold_px`); a viewer who cannot see the scale
+cannot tell an honest LOD withdrawal from a missing feature.
+
+A scale bar is the cheapest credibility this page can buy. It is also pure arithmetic: the
+projection already gives px/nm, and choosing a nice round span for a given pixel budget is a
+textbook function that belongs in `StageLayout` with a Node test.
+
+**Files:**
+- Modify: `src/presentation/StageLayout.js` (add `scaleBar`)
+- Modify: `src/index.template.html` (draw it in the science overlay; update on the same dirty flag as Task 11.4)
+- Test: `test/showcase_phase11.test.js` (extend)
+
+**Interfaces:**
+- Produces: `scaleBar(pxPerNm, maxPx) -> { nm, px, label }` — pure, no DOM.
+
+- [ ] **Step 1: Write the failing test**
+
+Append to `test/showcase_phase11.test.js`:
+
+```js
+import { scaleBar } from '../src/presentation/StageLayout.js';
+
+test('SC11-4a: the bar picks a round span that fits the budget', () => {
+  for (const pxPerNm of [0.05, 0.3, 1.07, 4.2, 17, 120]) {
+    const bar = scaleBar(pxPerNm, 160);
+    assert.ok(bar.px > 0 && bar.px <= 160, 'the bar must fit its pixel budget');
+    assert.ok(bar.px >= 40, 'a bar under 40 px cannot be read');
+    // 1-2-5 sequence across decades: the span is always a number a viewer can hold.
+    const mantissa = bar.nm / 10 ** Math.floor(Math.log10(bar.nm));
+    assert.ok([1, 2, 5].includes(Math.round(mantissa * 1e6) / 1e6),
+      `${bar.nm} nm is not a 1-2-5 round number`);
+    assert.ok(Math.abs(bar.px - bar.nm * pxPerNm) < 1e-6,
+      'the drawn length must equal the labelled span, not approximate it');
+  }
+});
+
+test('SC11-4a: the label switches unit without changing the measurement', () => {
+  assert.match(scaleBar(0.02, 160).label, /µm$/);   // wide field
+  assert.match(scaleBar(20, 160).label, /nm$/);     // molecular close-up
+});
+```
+
+The `bar.px === bar.nm * pxPerNm` assertion is the one that matters: it is the same discipline
+SC-6 applied to the `d10` dimension line — the drawn length must *be* the measurement, not carry a
+label that claims it.
+
+- [ ] **Step 2: Run it, watch it fail, then write `scaleBar`**
+
+1-2-5 selection: take the largest `nm` from the 1-2-5 sequence whose `nm × pxPerNm ≤ maxPx`; if
+that falls below the 40 px readability floor, step up one place in the sequence and let the bar
+exceed nothing — `maxPx` should be generous enough (160 px on a 1280 px stage) that this cannot
+happen for any reachable zoom. Format as `µm` at or above 1,000 nm, otherwise `nm`.
+
+- [ ] **Step 3: Draw it**
+
+Bottom-left of the stage, above the existing `drag: orbit · wheel/pinch: zoom` hint, in the science
+overlay so it participates in the Task 11.4 dirty flag rather than running per frame. A plain
+bracketed rule and one label — no box, no fill. Derive `pxPerNm` from the same projection the
+brackets use; do **not** add a second camera query.
+
+It is presentation geometry, so it is declared as such: add it to the render-meaning text for the
+stage in `data/annotations.json` alongside the brackets and the continuity trace.
+
+- [ ] **Step 4: Verify, and check it survives a close-up**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase11.test.js
+npm run typecheck && npm run build && npm run check:build
+```
+
+In the browser, walk chapters 1 → 5 and confirm the bar re-scales — after Task 11.0 the tour spans
+roughly 1,100 nm at chapter 1 down to a ~200 nm close-up at chapter 4, so the bar should visibly
+change span and, at some point, unit.
+
+- [ ] **Step 5: Commit**
+
+```sh
+git add -A && git commit -m "SC-11: put a scale bar on the stage"
+```
+
 ### Task 11.5: Sprint wiring
 
 - [ ] **Step 1: Add the npm scripts**
@@ -1578,6 +1951,311 @@ Press **▶ Stretch** and confirm the regional bars move while titin extends, an
 
 ```sh
 git add -A && git commit -m "SC-12: add the user-initiated stretch sweep"
+```
+
+### Task 12.2a: Make actin and myosin tellable apart
+
+> Added in Revision 2. Runs with the legend from Task 12.1 — a legend that names two colours a
+> viewer cannot distinguish is worse than no legend, because it asserts a difference that is not
+> on screen.
+
+**Why.** Guided mode dims the context through `GUIDED_COMPONENT_COLOR`
+(`src/render/SarcomereScene.js:151-164`). Computed against the shipped tokens and the `#0e1116`
+stage:
+
+| Pair | Ratio |
+|---|---|
+| `thin_filament #3b514b` vs `thick_filament #26384b` | **1.41 : 1** |
+| `thin_filament #3b514b` vs `myosin_head #3b5368` | **1.06 : 1** |
+| `thick_filament #26384b` vs background | 1.58 : 1 |
+| `titin #ff5d7d` vs background | 6.41 : 1 |
+
+Actin and the myosin head array are separated by **six hundredths of a contrast ratio** — they
+differ in hue alone (green-grey against blue-grey), which is the worst available pair for
+deuteranopia and vanishes completely in grayscale. Chapter 1's copy is *"shown in red beside actin
+and myosin"*; the viewer is being asked to read a distinction the render does not make. The myosin
+filament itself is at 1.58 : 1 against the background — on a projector with any ambient light it
+is not there at all.
+
+This is not an argument for brightening the context. Titin's 6.41 : 1 dominance is correct and the
+whole point of SC-10. The fix is to spend the *available* dynamic range between the background and
+titin on two separable steps instead of one flat grey.
+
+**Files:**
+- Modify: `src/render/SarcomereScene.js` (`GUIDED_COMPONENT_COLOR`)
+- Modify: `data/release_gates.json` (new `accessibility.object_contrast_pairs`)
+- Modify: `scripts/validate_release_gates.py` (compute the new block the same way the text pairs are computed)
+- Test: `test/showcase_phase12.test.js` (extend)
+
+**Interfaces:**
+- Produces: `accessibility.object_contrast_pairs` — object-versus-object minimums, checked by the same luminance function as the text pairs.
+
+- [ ] **Step 1: Write the failing test**
+
+```js
+import { GUIDED_COMPONENT_COLOR, COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
+
+const relLum = (hex) => {
+  const c = [16, 8, 0].map((s) => ((hex >> s) & 255) / 255)
+    .map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+const ratio = (a, b) => {
+  const [hi, lo] = [relLum(a), relLum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+const BG = 0x0e1116;
+
+test('SC12-2a: the two filament families are separable by luminance alone', () => {
+  // Luminance, not hue: this then holds in grayscale and under every CVD simulation.
+  assert.ok(ratio(GUIDED_COMPONENT_COLOR.thin_filament, GUIDED_COMPONENT_COLOR.thick_filament) >= 1.7,
+    'actin and myosin must not be the same brightness');
+  assert.ok(ratio(GUIDED_COMPONENT_COLOR.thin_filament, GUIDED_COMPONENT_COLOR.myosin_head) >= 1.7,
+    'actin and the head array must not be the same brightness');
+});
+
+test('SC12-2a: context stays visible without competing with titin', () => {
+  for (const role of ['thick_filament', 'thin_filament', 'myosin_head']) {
+    assert.ok(ratio(GUIDED_COMPONENT_COLOR[role], BG) >= 1.9,
+      `${role} must separate from the stage on a projector`);
+    assert.ok(ratio(GUIDED_COMPONENT_COLOR[role], BG) <= ratio(COMPONENT_COLOR.titin, BG) / 1.8,
+      `${role} must stay well below titin — the subject keeps the top of the range`);
+  }
+});
+```
+
+- [ ] **Step 2: Retune the guided context tokens**
+
+Targets, not prescriptions — satisfy the test and keep the identity hues from the visual grammar
+(`data/showcase_claims.json` → `visual_grammar`): myosin family stays blue, actin family stays
+ochre/green per the grammar's own assignment. Roughly: put the myosin filament near 2.0 : 1 and
+actin near 3.5 : 1 against the background, and keep the head array within one step of its
+filament so it still reads as part of the same object.
+
+**Do not touch opacity.** Global Constraint 7: opacity encodes confidence. This task moves colour
+only, and `test/showcase_phase8.test.js`'s opacity invariance must still pass.
+
+- [ ] **Step 3: Add the gate to the release record**
+
+`data/release_gates.json` currently records `accessibility.contrast_pairs` for **text**. Add a
+sibling `object_contrast_pairs` with the same shape (`id`, `foreground`, `background`,
+`min_ratio`, `where`) for the three pairs above, and extend `scripts/validate_release_gates.py` to
+compute them with the function it already uses. Add one destructive control to
+`scripts/neg_control_release_gates.py`: flattening `thin_filament` onto `myosin_head` must fail.
+
+- [ ] **Step 4: Verify against the words**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase12.test.js test/showcase_phase8.test.js
+npm run validate:gates && npm run typecheck && npm run build && npm run check:build
+```
+
+In the browser at chapter 1, with the legend on: read chapter 1's sentence and point at each of the
+three things it names. If you cannot, the numbers passed and the task did not.
+
+Then check it in grayscale — a screenshot desaturated in any image tool is enough — and confirm all
+three are still distinct. That is the check the ratios were chosen to make redundant; run it once
+anyway.
+
+- [ ] **Step 5: Commit**
+
+```sh
+git add -A && git commit -m "SC-12: separate actin and myosin by luminance, not hue alone"
+```
+
+### Task 12.2b: Enforce the declared attention budget, and survive a phone
+
+> Added in Revision 2. Runs after the stage bar exists, because the bar competes for the same
+> space as everything below.
+
+**Why.** `data/showcase_claims.json` declares:
+
+```text
+guided_secondary_context_labels_desktop_max: 3
+guided_secondary_context_labels_mobile_max:  2
+label_priority: [selected titin region, current anchor or band, one essential context protein, secondary context]
+occlusion_rule: hide a lower-priority label before allowing overlap, detachment from its anchor,
+                or obstruction of the highlighted titin path
+```
+
+Guided mode draws **six** band brackets — *Z-disc, I-band, A-band · half, C-zone, bare zone, M-band
+center* — at every viewport, with no priority and no occlusion handling.
+`scripts/validate_showcase_claims.py:190` pins the budget record byte-for-byte and a negative
+control proves the pin, but **nothing checks the render against it**. A reviewed declaration that
+the product ignores is worse than no declaration; it is exactly the kind of thing the expert claim
+review is designed to catch.
+
+At 375 × 812 the consequence is visible rather than theoretical, and Revision 1 could not capture
+it. Measured on the shipped build: the six brackets stack into three overlapping rows, *"M-band
+center"* clips at the right edge, the model itself runs off the right edge, and the header, scope
+badge and bracket lane consume the top ~500 px while the chapter card takes the bottom ~450 px —
+leaving the sarcomere a ~60 px strip. Task 12.1's stage bar will claim more of that same space.
+
+**Files:**
+- Modify: `src/presentation/StageLayout.js` (add `labelBudget`)
+- Modify: `src/index.template.html` (consume it in `renderScienceOverlay`; narrow-viewport stage rules)
+- Test: `test/showcase_phase12.test.js` (extend)
+
+**Interfaces:**
+- Produces: `labelBudget(candidates, viewportClass, budgetRecord) -> candidates[]` — pure; **reads** the budget from `model.spec.showcaseClaims.attention_budget` and never restates it.
+
+- [ ] **Step 1: Write the failing test**
+
+```js
+import { labelBudget } from '../src/presentation/StageLayout.js';
+
+const budget = model.spec.showcaseClaims.attention_budget;
+
+// The numbers come from the reviewed record, so this test cannot drift from it —
+// and cannot be satisfied by hard-coding a number in the layout module either.
+test('SC12-2b: the drawn label set obeys the reviewed budget', () => {
+  const candidates = ['zdisc', 'iband', 'aband_half', 'czone', 'bare_zone', 'mband_center']
+    .map((id, i) => ({ id, priority: i, x: i * 40 }));
+  assert.ok(labelBudget(candidates, 'desktop', budget).length
+    <= budget.guided_secondary_context_labels_desktop_max);
+  assert.ok(labelBudget(candidates, 'mobile', budget).length
+    <= budget.guided_secondary_context_labels_mobile_max);
+});
+
+test('SC12-2b: it drops the lowest priority first, never the anchor in view', () => {
+  const candidates = [
+    { id: 'aband_half', priority: 1, x: 300 },
+    { id: 'bare_zone', priority: 3, x: 700 },
+    { id: 'iband', priority: 2, x: 120 },
+  ];
+  const kept = labelBudget(candidates, 'mobile', budget).map((c) => c.id);
+  assert.deepEqual(kept, ['aband_half', 'iband']);
+});
+
+test('SC12-2b: Evidence mode is not subject to the guided budget', () => {
+  const candidates = Array.from({ length: 6 }, (_, i) => ({ id: `b${i}`, priority: i, x: i * 40 }));
+  assert.equal(labelBudget(candidates, 'desktop', budget, { audience: 'evidence' }).length, 6);
+});
+```
+
+The third test states the boundary deliberately: the budget's own key is
+`guided_secondary_context_labels_*`. Evidence mode is where a specialist asks for everything at
+once, and clipping it there would be a regression, not a fix.
+
+- [ ] **Step 2: Write `labelBudget` and consume it**
+
+Sort by `priority`, take the first *n* for the viewport class, then apply the occlusion rule to
+what survives: drop any remaining label whose projected box overlaps a higher-priority one or the
+highlighted titin path. `viewportClass` is derived from the canvas width in the page, not from a
+media query, so the same rule applies to a narrow desktop window as to a phone.
+
+Which three survive on desktop is a presentation judgement — take *I-band*, *A-band · half* and
+whichever bracket the current chapter is about, so chapter 5 keeps *C-zone* and chapter 4 keeps
+*Z-disc*. That is `label_priority`'s "current anchor or band" clause, applied literally.
+
+- [ ] **Step 3: Fix the narrow-viewport stage**
+
+At `< 768 px`, three things must change and none of them is a font size:
+
+1. **The model must fit.** Task 11.2's framing margin is applied to a landscape stage; at 375 px
+   the half-sarcomere is clipped. Reframe on the narrow breakpoint using the same `focusSpan`
+   path, and confirm the Z-disc and the M-band centre are both inside the canvas.
+2. **The chapter card becomes a bottom sheet with a peek state** — title and chapter number
+   visible, body expanding on tap — so the stage keeps more than a 60 px strip. Existing
+   `#guidedLattice, #guidedPipeline { max-height: 38vh }` (`:277`) already anticipates this
+   problem; the sheet replaces the workaround.
+3. **The scope badge collapses into the header** as a single line at this width, rather than
+   holding its own 90 px block above the stage.
+
+- [ ] **Step 4: Verify at three widths**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase12.test.js test/showcase_phase2.test.js
+npm run validate:showcase && npm run typecheck && npm run build && npm run check:build
+```
+
+Then walk the tour at 1920×1080, 1280×720 and 375×812. At 375 px: no bracket may clip or overlap,
+no part of the model may leave the canvas, and both anchors must be reachable. Add the 375×812
+guided cells to the SC-8 capture set if they are not already there, and re-run
+`npm run check:matrix`.
+
+- [ ] **Step 5: Commit**
+
+```sh
+git add -A && git commit -m "SC-12: enforce the reviewed label budget and fix the narrow stage"
+```
+
+### Task 12.2c: A locator for close-ups, in the lane the brackets vacate
+
+> Added in Revision 2. Runs last in this sprint, after 12.2b decides what the bracket lane holds.
+
+**Why.** The band brackets are suppressed when the camera is too close for them to mean anything —
+correctly, and it is already observable: chapters 3, 4 and 5 of the shipped tour draw none. The
+result is that at exactly the moment a viewer most needs to know where they are, the page tells
+them least. Chapter 3 frames a 70 nm PEVK segment, chapter 4 a ~200 nm Z-disc, chapter 5 the
+C-zone; each arrives as an unlabelled field with no relationship to the molecule the previous
+chapter just introduced. After Task 11.0 makes those close-ups real, the disorientation gets
+worse, not better, because the frames actually change.
+
+**This adds no chrome.** The locator occupies the bracket lane and is drawn *only* when the
+brackets are not — the two are mutually exclusive by construction, which is also how the gate is
+written.
+
+**Files:**
+- Modify: `src/presentation/StageLayout.js` (add `locatorExtent`)
+- Modify: `src/index.template.html` (`renderScienceOverlay`)
+- Test: `test/showcase_phase12.test.js` (extend)
+
+**Interfaces:**
+- Produces: `locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm) -> { from01, to01, visible }` — pure.
+
+- [ ] **Step 1: Write the failing test**
+
+```js
+import { locatorExtent, bracketLaneVisible } from '../src/presentation/StageLayout.js';
+
+test('SC12-2c: the locator and the brackets are never both drawn', () => {
+  for (const span of [1100, 800, 400, 200, 70, 20]) {
+    const loc = locatorExtent(span, 550, 1100);
+    assert.notEqual(loc.visible, bracketLaneVisible(span, 1100),
+      `at a ${span} nm camera span exactly one of locator/brackets must hold the lane`);
+  }
+});
+
+test('SC12-2c: the shaded extent is the camera span, to scale', () => {
+  const loc = locatorExtent(220, 110, 1100);
+  assert.ok(Math.abs((loc.to01 - loc.from01) - 220 / 1100) < 1e-9);
+  assert.ok(Math.abs(loc.from01 - 0) < 1e-9);
+});
+
+test('SC12-2c: a view wider than the model clamps instead of overflowing', () => {
+  const loc = locatorExtent(4000, 550, 1100);
+  assert.equal(loc.from01, 0);
+  assert.equal(loc.to01, 1);
+});
+```
+
+- [ ] **Step 2: Draw it**
+
+A single flat strip the width of the model's projected extent: the half-sarcomere in miniature with
+its Z-disc, I-band/A-band boundary and M-band centre marked as ticks, and the current camera span
+shaded. One line of type: `viewing 220 nm of 1,100 nm · Z-disc`. Nothing interactive — it is an
+orientation aid, not a control, and making it draggable would put a second navigation model on the
+stage.
+
+Like the brackets, the scale bar and the continuity trace, it is presentation geometry: declare it
+in `data/annotations.json`'s render-meaning text with the others. It moves no coordinate; the tick
+positions come from the same canonical records the brackets use, not from new arithmetic.
+
+- [ ] **Step 3: Verify across the tour**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase12.test.js
+npm run typecheck && npm run build && npm run check:build
+```
+
+Walk chapters 1 → 5. Chapters 1, 2 and 6, 7 keep brackets and show no locator; chapters 3, 4 and 5
+show a locator and no brackets; the lane never holds both and never sits empty.
+
+- [ ] **Step 4: Commit**
+
+```sh
+git add -A && git commit -m "SC-12: show where a close-up is looking"
 ```
 
 ### Task 12.3: Sprint wiring and contrast records
@@ -2336,6 +3014,85 @@ Expected: PASS. `showcase_phase5` is the SC-5 expert-card gate; if it enumerates
 git add -A && git commit -m "SC-13: bind expert cards to the structures they explain"
 ```
 
+### Task 13.5: Give the provenance chapter the stage
+
+> Added in Revision 2.
+
+**Why.** Chapter 7 is the argument. Everything else on the page can be dismissed as a nice
+rendering; the counted pipeline — *46 cited records → 33 sourced parameters → 13 evidence-classified
+specifications → 4 structural states → procedural render → negative controls*, each figure counted
+from the loaded records at render time so the diagram cannot drift from the data — is the part that
+answers *"did an AI just draw something convincing?"* with *"no, and here is the audit trail."*
+The plan's own SC-7 section says the message is **"AI helped build and audit a reproducible model
+whose claims remain tied to evidence."**
+
+It is currently rendered as a scrolling box inside the chapter card:
+`#guidedLattice, #guidedPipeline { max-height: 38vh; overflow-y: auto }`
+(`src/index.template.html:277`), with `.pipeline-label` at 10 px, `.pipeline-detail` at 9 px and
+`.pipeline-records` at **8 px** (`:268-271`). Six stages in a ~300 px column means the viewer sees
+two and a half of them and has to scroll a card to reach the rest — during the part of a talk where
+the presenter is making the credibility claim. On a projector, 8 px is not readable at all, and
+`release/PREFLIGHT.md` includes a projector rehearsal.
+
+The content is finished and correct. This is a layout task.
+
+**Files:**
+- Modify: `src/index.template.html` (`renderProvenancePipeline` `:915`, `.pipeline-*` rules `:263-273`, chapter-7 layout)
+- Test: `test/showcase_phase13.test.js` (extend)
+
+- [ ] **Step 1: Lay the pipeline across the stage, not down the card**
+
+When the active chapter is `provenance_pipeline`, the six stages render as a **horizontal band
+across the full stage width** — six columns, each with its stage name, its counted figure at
+display size, and its one-line detail — with the 3-D scene dimmed behind it rather than competing.
+No inner scroll region at any supported width: six columns at 1280 px is ~200 px each, which is
+ample for a two-word label and a number. Below the narrow breakpoint (Task 12.2b) it becomes two
+rows of three.
+
+The chapter card keeps the chapter title, the takeaway sentence and the navigation, exactly as
+every other chapter does. It stops being a container for the diagram.
+
+- [ ] **Step 2: Set the type at presentation size**
+
+The counted figure is the payload — it carries at the size a headline would. Stage names one step
+down, details one step below that, and the `data/*.json` record names (`.pipeline-records`) at the
+smallest step but not below the presentation scale's floor from Task 17.1. Delete the 8 px rule;
+if a record list will not fit at the floor size, truncate the list and put the remainder in the
+Sources & build tab (Task 13.3), which is where a reader who wants file names is already going.
+
+- [ ] **Step 3: Keep the counting honest**
+
+`src/presentation/ProvenancePipeline.js` counts from the loaded records at render time. This task
+must not introduce a single hand-written figure into the new layout — every number still comes
+from that module. Extend `test/showcase_phase13.test.js`:
+
+```js
+test('SC13-5: no pipeline figure is written into the page', () => {
+  const template = readFileSync('src/index.template.html', 'utf8');
+  const stages = visualization.provenancePipeline().stages;
+  for (const stage of stages) {
+    assert.ok(!template.includes(`>${stage.count}<`),
+      `the count for '${stage.id}' appears literally in the template; it must be counted, not typed`);
+  }
+});
+```
+
+- [ ] **Step 4: Verify on a projector-shaped frame**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase13.test.js test/showcase_phase7.test.js
+npm run typecheck && npm run build && npm run check:build
+```
+
+At 1920×1080, all six stages must be visible at once with no scrolling, and every figure legible
+from across a room. Re-run `npm run check:matrix` — chapter 7's cells change.
+
+- [ ] **Step 5: Commit**
+
+```sh
+git add -A && git commit -m "SC-13: render the provenance pipeline across the stage"
+```
+
 ---
 
 # Sprint SC-14 — Passive force: the expert payload
@@ -3041,6 +3798,25 @@ npm run verify:sc15 && git add package.json && git commit -m "SC-15: add sprint 
 
 **Done when:** at the Z-disc and M-band close-ups the envelope is a ghost and telethonin, α-actinin and the two opposing titin directions are legible.
 
+> **Revision 2 amendment — this sprint depends on Task 11.0.**
+>
+> Two corrections from driving the shipped build:
+>
+> 1. **The guided route does not reach `closeup.zdisc`.** Chapter 4 declares that camera and the
+>    page discards it (Task 11.0(a)), so as written this sprint would ghost an envelope in a frame
+>    no visitor sees. **Do not start SC-16 before Task 11.0 lands.** Step 5's verification below is
+>    amended to walk the tour instead of typing a hash.
+> 2. **At the close-up the envelope is opaque, not translucent.** With the context-detail layer on
+>    it renders as a solid grey box that hides the twisted antiparallel actin and the α-actinin
+>    connectors completely — the topology is *drawn and invisible*, not merely dimmed. The
+>    prescribed `opacity 0.14` + `depthWrite: false` is therefore right and the test's
+>    `envelopeOpacity(scene) > 0.5` for the overview is correct; just do not read that overview
+>    assertion as evidence that the close-up starts from a translucent state.
+>
+> One addition to Step 3: also clear `depthWrite` on any lattice-guide geometry inside the
+> close-up span, for the same reason — an occluder is an occluder regardless of which record it
+> came from. Its evidence class is untouched.
+
 ### Task 16.1: Ghost the envelope when its own detail is drawn
 
 **Files:**
@@ -3152,10 +3928,14 @@ Confirm `anchorDetailReport` is the object assigned to `manifest.anchor_detail`;
 ```sh
 node --test --test-concurrency=1 test/showcase_phase16.test.js test/showcase_phase3.test.js test/showcase_phase8.test.js
 npm run typecheck && npm run build && npm run check:build
-open "index.html#mode=guided&step=anchors&sl=2200&scale=context&camera=closeup.zdisc&target=Z1Z2&evidence=0"
+npm run serve
 ```
 
-Confirm: telethonin and the α-actinin connectors are visible, and both titin directions read.
+Verify **through the tour**, not through a typed hash: open the page, press `Next` to chapter 4,
+and confirm telethonin and the α-actinin connectors are visible and both titin directions read.
+Then reload the URL the page wrote for that chapter and confirm you get the same frame — after
+Task 11.0 it must name `closeup.zdisc`, and if it still names `region.Z1Z2` then Task 11.0
+regressed and this sprint's result is invisible again.
 
 - [ ] **Step 6: Add the sprint script and commit**
 
@@ -3558,6 +4338,12 @@ npm run validate:presentation && npm run build && npm run check:build
 
 - [ ] **Step 7: Check a phone-sized viewport by hand**
 
+> **Revision 2:** the structural narrow-viewport work moved to **Task 12.2b**, which fixes the
+> clipped model, the overlapping bracket lane and the 60 px stage strip that a 375 × 812 capture of
+> the shipped build actually shows. What remains here is the final by-hand pass over the
+> *controls* after everything else has landed. Do not re-litigate the layout here; if something
+> structural is still wrong, it is a Task 12.2b regression.
+
 Open the built page at 390 × 844 (DevTools device emulation) and confirm:
 - the stage bar does not overlap the guided card (the `@media (max-width: 700px)` rule raises `#guidedCard { margin-bottom: 118px; }`),
 - the drawer still opens as a bottom sheet and its tabs are reachable,
@@ -3581,6 +4367,7 @@ Three failure modes will cost you the most time; check them first when something
 1. **The standalone page works from `npm run serve` but breaks when opened as a file.** You added an import to the page module and missed one of the three places in `scripts/build_standalone.mjs`. No gate catches it; the browser console says `X is not defined`.
 2. **Line2 draws nothing, or the ribbon is unpickable.** `material.resolution` is still `(0, 0)`. It must be set after every build and every resize (Task 10.1, Steps 7–8).
 3. **`showcase_phase8` resource-stability fails after a render change.** A new geometry or material was created without `this._track(...)` / `this.disposables.add(...)`, or `clear()` does not empty a new collection.
+4. **A chapter looks right when you click to it and wrong when you reload its URL.** `rebuild()` rewrites `state.cameraPreset` from live state, so a camera that is set and then overwritten still *looks* applied for one frame while the URL records something else (this is the Task 11.0 defect). Whenever you touch camera state, verify both paths: press `Next` to the chapter, then reload the hash the page wrote. If they differ, the URL is lying and the SC-8 matrix is capturing the lie.
 
 Add the last sprint script before starting SC-17:
 
@@ -3597,6 +4384,21 @@ Five changes in this plan deliberately touch an existing contract. Each is recor
 - **Task 15.2** retargets the `architecture` chapter camera, which changes the SC-8 capture matrix; the matrix is regenerated and re-checked in the same task.
 - **Task 17.3** edits one word of reviewed chapter copy (*red* → *pink*). The SC-7 prose gate counts words and sentences; both are unchanged.
 
+Revision 2 adds three more, each recorded in its own commit:
+
+- **Task 11.0** changes what an *absent* `camera` key in the URL defaults to, and sets
+  `show_context_detail: true` for the two close-up chapters in `data/presentation.json`. `URL_KEYS`
+  is untouched, so Global Constraint 10 holds; no chapter camera is redeclared, so
+  `test/showcase_phase7.test.js:85`'s four-distinct-cameras gate holds. It **does** change the
+  chapter-4 and chapter-5 URLs, which makes the SC-8 capture set and the SC-9 pack stale — both
+  are regenerated in the same task.
+- **Task 12.2a** retunes `GUIDED_COMPONENT_COLOR` and adds `accessibility.object_contrast_pairs`
+  to `data/release_gates.json`. Colour only: opacity is untouched and
+  `test/showcase_phase8.test.js`'s opacity invariance must still pass.
+- **Task 12.2b** makes `attention_budget` executable for the first time. It **reads**
+  `data/showcase_claims.json` and must not edit it — `validate_showcase_claims.py:190` pins that
+  record byte-for-byte and `neg_control_showcase_claims.py:162` proves the pin.
+
 ## What this plan does NOT do, and why
 
 - **No new guided chapter.** Two test files assert the exact seven chapter IDs and `tour_pacing` is gated at 110–190 seconds. New material attaches to existing chapters (SC-14 Task 14.2 Step 6) or to Evidence mode.
@@ -3604,3 +4406,16 @@ Five changes in this plan deliberately touch an existing contract. Each is recor
 - **No change to the geometry or the mechanics.** `MechanicalModel`, `GeometryEngine`, and every `data/*.json` coordinate stay exactly as they are. SC-14 samples the existing pipeline; SC-15 adds transverse display detail between endpoints it is forbidden to move, and proves it with the geometry fingerprint.
 - **No post-processing pipeline.** An `UnrealBloomPass` would look good and would cost an `EffectComposer`, a render target, MSAA rework, and a new failure mode on weak GPUs. The Line2 ribbon plus an additive halo (SC-10) buys most of the legibility for none of that. Revisit only if SC-10 proves insufficient on the presentation hardware.
 - **No human gates are marked passed.** `lay_comprehension`, `expert_review`, `visual_matrix` and `demo_rehearsal` in `data/release_gates.json` need people; this plan makes them *passable* and leaves them PENDING.
+
+Revision 2 declines three further things, on purpose:
+
+- **No new chapter for the anchors or the scaffold.** Task 11.0 makes chapters 4 and 5 show what
+  they already claim. If those frames still under-deliver afterwards, the answer is the close-up's
+  content, not an eighth chapter — the seven IDs and the 110–190 s pacing gate stand.
+- **No redesign of the guided narrative.** The prose is the strongest thing on the page and
+  Revision 1 was right to say so. Every Revision 2 task changes what the viewer *sees* while a
+  sentence is on screen; not one changes a sentence.
+- **No relaxation of the attention budget.** Task 12.2b reduces the drawn labels to the declared
+  maximum rather than raising the maximum to match the render. If three brackets on desktop turns
+  out to be too few once the stage bar and locator exist, that is a claim-audit change with a
+  reviewer's name on it, not a convenience edit made from inside an implementation sprint.
