@@ -6,7 +6,7 @@
 
 **Purpose:** turn the completed scientific MVP into a presentation-quality, broadly useful titin experience for both first-time viewers and domain specialists
 
-**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 through SC-7 complete on 2026-08-05; SC-8 is next
+**Implementation status:** SC-0 through SC-4 complete on 2026-08-02; SC-5 through SC-7 complete on 2026-08-05; SC-8's automated half is complete and its human and browser gates are instrumented but outstanding
 
 This plan is a showcase addendum. It does not reopen the completed MVP scope or relabel the optional Phase 11/12 material in `MASTER_PLAN.md`. Every showcase increment must preserve the existing scientific specification, continuous mechanics, provenance, standalone-HTML build, and GitHub Pages behavior.
 
@@ -654,6 +654,42 @@ The message is not “AI drew a convincing protein.” It is “AI helped build 
 - Reduced-motion mode replaces animation with immediate, scientifically equivalent state changes.
 
 ### SC-8 — Integrated validation and audience evaluation
+
+**Automated half complete 2026-08-05; audience gates instrumented and OUTSTANDING.**
+This phase cannot be declared complete from inside the repository, and the record
+says so. `data/release_gates.json` carries every SC-8 gate with its status, and
+`scripts/validate_release_gates.py` refuses a `PASS` that is not backed by the
+evidence which would have earned it: participant-level answers meeting the 80%
+criterion for the lay test, named reviewers with zero unresolved critical findings
+for the expert review, a full captured cell set with a human reviewer for the
+visual matrix. Fifteen destructive controls in
+`scripts/neg_control_release_gates.py` prove each of those shortcuts is rejected,
+and `release_ready` cannot be true while any gate is outstanding.
+
+What is done: thirteen integration tests in `test/showcase_phase8.test.js` cover
+the ten listed areas, including the three that had no home before — that no
+presentation combination changes the model or solver (swept over 32 option
+combinations at four lengths), that every combination keeps titin continuous, and
+that every supported URL state round-trips. All seven listed destructive controls
+run together in `scripts/neg_control_showcase_release.mjs`; the two that are
+invariance rather than rejection are each run twice, once against the real
+implementation and once against a saboteur, so the check is falsifiable.
+`src/presentation/VisualMatrix.js` generates the 52-cell capture set as viewport
+plus reproducible URL hash, each round-trip checked at construction, and
+`scripts/capture_visual_matrix.mjs` emits it as a checklist or manifest for
+whoever has a browser. Accessibility contrast is computed rather than asserted —
+all eleven declared pairs clear WCAG AA against the shipped stylesheet — and the
+lifecycle checks prove twelve rebuilds and mode changes leak no object or GPU
+resource and that an idle frame rebuilds nothing. The bounded gate is
+`npm run verify:sc8`.
+
+What is outstanding, and why: the visual matrix needs a browser with WebGL to
+capture and a person to review; the lay comprehension test needs at least three
+independent non-specialists; the expert claim review needs a muscle or titin
+specialist; the 200% text-zoom check needs a real browser; and the target
+browser/GPU/projector check belongs to the SC-9 preflight. One accessibility
+defect was found and fixed rather than recorded: controls were ~28 px tall, so
+coarse-pointer devices now get the 44 px minimum touch target.
 
 #### Automated science and data tests
 

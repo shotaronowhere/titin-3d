@@ -33,7 +33,12 @@ files=["sarcomere.json","titin.json","structural_states.json","geometry_sources.
        # SC-4 added annotations.json as a REQUIRED spec file (SpecLoader.SPEC_FILES)
        # but did not register it here, so the coverage guard below was failing and
        # nothing in this validator looked at the catalog. Registered in SC-5.
-       "annotations.json"]
+       "annotations.json",
+       # SC-8 release record. Not a spec: it carries no coordinate and the renderer
+       # never loads it. Registered here for the same reason presentation.json is —
+       # a registry check beside the deep validator, so a new data file cannot slip
+       # past the coverage guard by living outside the loader's manifest.
+       "release_gates.json"]
 L={}
 for f in files:
     try: L[f]=load(f); check(True, f)
@@ -202,6 +207,33 @@ for _row in _an_records:
         if _a is None or _b is None or _a > _b:
             _an_bad.append(f"{_row.get('id')}.{_field} exceeds {_bind.get('id')}")
 check(not _an_bad, f"annotation evidence stays within its admitted claim ({_an_bad})")
+
+print("== SC-8 release-gate registry ==")
+_RG = L["release_gates.json"]
+check(_RG.get("schema") == "titin-showcase-release-gates/1",
+      "release-gate record has the reviewed SC-8 schema")
+_rg_sections = ("automated", "destructive_controls", "visual_matrix",
+                "lay_comprehension", "expert_review", "accessibility", "performance")
+_rg_missing = [s for s in _rg_sections if not isinstance(_RG.get(s), dict)]
+check(not _rg_missing, f"every release-gate section is present (missing: {_rg_missing})")
+# Deep rules live in validate_release_gates.py; the one invariant worth repeating
+# here is the one that matters most, so a stale record cannot claim readiness even
+# if only this validator is run.
+_rg_outstanding = [s for s in _rg_sections if (_RG.get(s) or {}).get("status") != "PASS"]
+check(_RG.get("release_ready") is False or not _rg_outstanding,
+      f"release_ready is not claimed while gates are outstanding ({_rg_outstanding})")
+# Every automated verifier the record names must exist in the repository.
+_rg_bad = []
+for _section in _rg_sections:
+    for _row in (_RG.get(_section) or {}).get("checks", []):
+        if _row.get("verification") != "automated":
+            continue
+        _files = [p for p in str(_row.get("verified_by", "")).replace(";", " ").split()
+                  if "/" in p]
+        if not _files or not any(os.path.isfile(os.path.join(os.path.dirname(DATA_DIR), p))
+                                 for p in _files):
+            _rg_bad.append(f"{_section}.{_row.get('id')}")
+check(not _rg_bad, f"every automated release check names a real file ({_rg_bad})")
 
 print("== Titin domain reconciliation (UniProt Q8WZ42) ==")
 tr=L["titin.json"]["regions"]

@@ -7,7 +7,11 @@ API consume those records rather than restating biological constants.
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
 and are intentionally outside the completed release scope. The separate showcase
-completion sequence is complete through SC-7; SC-8 is the next enhancement phase.
+completion sequence is complete through SC-7. SC-8's automated validation is in
+place; its lay-comprehension, expert-review, and visual-capture gates are
+instrumented in `data/release_gates.json` and remain outstanding because they
+need people and a browser. The showcase is therefore not yet release-ready, and
+`npm run validate:gates` will not let that be claimed.
 
 ## Open the visualization
 
@@ -92,6 +96,7 @@ npm run verify:sc4
 npm run verify:sc5
 npm run verify:sc6
 npm run verify:sc7
+npm run verify:sc8
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
@@ -150,10 +155,14 @@ npm run build
 - `src/presentation/ShowcaseOverlay.js` — SC-2 continuity, landmark, and live extension descriptors derived from canonical geometry
 - `src/presentation/ProvenancePipeline.js` — SC-7 build pipeline whose every figure is
   counted from the loaded records at render time rather than written into the copy
+- `src/presentation/VisualMatrix.js` — SC-8 deterministic capture set; every cell is a
+  viewport plus a URL hash that is round-trip checked, so a screenshot can be returned to
 - `src/presentation/AnnotationCatalog.js` — SC-4 annotation validation and citation/link resolution
 - `data/presentation.json` — sourced SC-1/SC-2 presentation contract and SC-5 Evidence-mode expert cards (no authoritative geometry)
 - `data/annotations.json` — validated SC-4 dual-audience object explanations and scientific bindings
 - `data/geometry_strategy.json` — current defect/completion register
+- `data/release_gates.json` — SC-8 release-gate record; a gate cannot be marked passed
+  without the evidence that earned it (`npm run validate:gates`)
 
 `placeDomainsAlongPath` accepts only canonical, already-computed paths. It rejects
 partial, reordered, shifted, uniformly resampled, or otherwise caller-invented

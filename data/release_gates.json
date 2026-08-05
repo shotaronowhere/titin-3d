@@ -1,0 +1,462 @@
+{
+  "schema": "titin-showcase-release-gates/1",
+  "meta": {
+    "phase": "SC-8 — Integrated validation and audience evaluation",
+    "status": "IN_PROGRESS",
+    "purpose": "Machine-readable record of every SC-8 release gate. Gates that a machine can decide are decided by a named command; gates that need people or a browser stay PENDING until their evidence is recorded here. scripts/validate_release_gates.py refuses to accept a PASS without that evidence, so this file cannot be used to declare readiness the project has not earned.",
+    "governing_plan": "SHOWCASE_COMPLETION_PLAN.md",
+    "statuses": [
+      "PENDING",
+      "PASS",
+      "FAIL"
+    ],
+    "verification_kinds": [
+      "automated",
+      "browser",
+      "human"
+    ]
+  },
+  "automated": {
+    "status": "PASS",
+    "commands": [
+      {
+        "id": "verify",
+        "command": "npm run verify",
+        "covers": "the complete Phase 0-10 and showcase gate"
+      },
+      {
+        "id": "verify_sc8",
+        "command": "npm run verify:sc8",
+        "covers": "the bounded SC-8 integration gate"
+      }
+    ],
+    "checks": [
+      {
+        "id": "presentation_integrity",
+        "requirement": "presentation target and source integrity",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/validate_presentation.py; StoryController.checkPresentationSpec"
+      },
+      {
+        "id": "model_unchanged",
+        "requirement": "the presentation layer leaves the model and mechanical solver unchanged",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "cross_muscle_transfer",
+        "requirement": "unapproved cross-muscle coordinate transfer is rejected",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js; scripts/validate_geometry.py"
+      },
+      {
+        "id": "mybpc_schematic",
+        "requirement": "schematic MyBP-C placement stays schematic",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase5.test.js"
+      },
+      {
+        "id": "bare_zone_mband",
+        "requirement": "bare zone and M-band remain separate claims",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase3.test.js"
+      },
+      {
+        "id": "zdisc_topology",
+        "requirement": "the Z-disc keeps its opposing two-chain telethonin topology",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase3.test.js"
+      },
+      {
+        "id": "tooltip_evidence",
+        "requirement": "tooltip completeness and evidence monotonicity",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase4.test.js; test/showcase_phase8.test.js"
+      },
+      {
+        "id": "lattice_parity",
+        "requirement": "lattice cross-section parity with the evaluated lattice",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase6.test.js"
+      },
+      {
+        "id": "url_state",
+        "requirement": "URL-state compatibility across every supported state",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "titin_continuity",
+        "requirement": "every visibility and mode combination preserves titin continuity",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      }
+    ]
+  },
+  "destructive_controls": {
+    "status": "PASS",
+    "command": "node scripts/neg_control_showcase_release.mjs",
+    "checks": [
+      {
+        "id": "cardiac_mybpc_coordinate",
+        "requirement": "an unapproved cardiac MyBP-C coordinate adopted into the retained model",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/neg_control_showcase_release.mjs"
+      },
+      {
+        "id": "mybpc_promoted",
+        "requirement": "a schematic MyBP-C path promoted to measured",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/neg_control_showcase_release.mjs"
+      },
+      {
+        "id": "mline_box",
+        "requirement": "an M-line box assigned the bare-zone width",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/neg_control_showcase_release.mjs"
+      },
+      {
+        "id": "single_titin_sandwich",
+        "requirement": "a single titin chain inserted into the telethonin sandwich",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/neg_control_showcase_release.mjs"
+      },
+      {
+        "id": "unsourced_presentation_claim",
+        "requirement": "a presentation claim without a source or evidence status",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/neg_control_showcase_release.mjs"
+      },
+      {
+        "id": "length_activation_coupling",
+        "requirement": "automatic coupling of short sarcomere length to activation",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/neg_control_showcase_release.mjs"
+      },
+      {
+        "id": "selection_changes_geometry",
+        "requirement": "a selected region that changes geometry or evidence opacity",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/neg_control_showcase_release.mjs"
+      }
+    ]
+  },
+  "visual_matrix": {
+    "status": "PENDING",
+    "definition": "src/presentation/VisualMatrix.js",
+    "manifest_command": "node scripts/capture_visual_matrix.mjs",
+    "expected_cells": 52,
+    "checks": [
+      {
+        "id": "matrix_reproducible",
+        "requirement": "every capture cell decodes back to the state it names",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "captured",
+        "requirement": "every cell captured from the standalone build at its declared viewport",
+        "verification": "browser",
+        "status": "PENDING",
+        "note": "Requires a browser with WebGL; this environment has none."
+      },
+      {
+        "id": "human_review",
+        "requirement": "captured set reviewed by a person, including colour-vision and grayscale",
+        "verification": "human",
+        "status": "PENDING",
+        "note": "Pixel comparison supplements human review; it does not decide scientific correctness."
+      }
+    ],
+    "captured_cells": [],
+    "reviewed_by": null,
+    "reviewed_on": null
+  },
+  "lay_comprehension": {
+    "status": "PENDING",
+    "protocol": {
+      "min_participants": 3,
+      "preferred_participants": 5,
+      "coaching_allowed": false,
+      "questions": [
+        {
+          "id": "identify_titin",
+          "prompt": "Which structure is titin?",
+          "scored": true
+        },
+        {
+          "id": "identify_anchors",
+          "prompt": "Where are its two anchors?",
+          "scored": true
+        },
+        {
+          "id": "length_change",
+          "prompt": "What changes as the sarcomere lengthens?",
+          "scored": true
+        },
+        {
+          "id": "not_the_motor",
+          "prompt": "Is titin the motor that shortens muscle?",
+          "scored": true
+        },
+        {
+          "id": "measured_vs_schematic",
+          "prompt": "Which parts are source-backed and which are drawing aids?",
+          "scored": false
+        }
+      ],
+      "criterion": {
+        "scored_question_ids": [
+          "identify_titin",
+          "identify_anchors",
+          "length_change",
+          "not_the_motor"
+        ],
+        "min_correct_fraction": 0.8,
+        "no_recurring_interface_misconception": true
+      }
+    },
+    "results": [],
+    "recurring_misconceptions": []
+  },
+  "expert_review": {
+    "status": "PENDING",
+    "protocol": {
+      "min_reviewers": 1,
+      "preferred_reviewers": 2,
+      "materials": [
+        "data/showcase_claims.json",
+        "data/references.json",
+        "the standard screenshot set",
+        "the deployed page"
+      ],
+      "questions": [
+        "Is the actual N2A-containing reference visible to experts without burdening the general story?",
+        "Is titin continuous and correctly routed at the claimed scale?",
+        "Are spring mechanics described without normalizing domain unfolding?",
+        "Are Z-disc and M-band simplifications defensible?",
+        "Is MyBP-C represented without a false rigid-bridge or titin-contact claim?",
+        "Is any static evidence or schematic device presented as a measured trajectory?",
+        "Does any artistic device look like an experimental observation?"
+      ],
+      "criterion": {
+        "unresolved_critical_findings": 0,
+        "lesser_findings": "recorded as limitations or addressed"
+      }
+    },
+    "reviewers": [],
+    "findings": []
+  },
+  "accessibility": {
+    "status": "PENDING",
+    "checks": [
+      {
+        "id": "contrast",
+        "requirement": "WCAG AA text and control contrast",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "keyboard_route",
+        "requirement": "full keyboard route through guided steps, controls, and annotations",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js; test/showcase_phase4.test.js"
+      },
+      {
+        "id": "focus_order",
+        "requirement": "focus order matches visual order (no positive tabindex)",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "touch_targets",
+        "requirement": "touch targets suitable for tablets",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "reduced_motion",
+        "requirement": "prefers-reduced-motion honoured",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase7.test.js"
+      },
+      {
+        "id": "not_colour_only",
+        "requirement": "selection and evidence are never colour-only",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "text_zoom",
+        "requirement": "direct labels remain legible at 200% text zoom",
+        "verification": "browser",
+        "status": "PENDING",
+        "note": "Needs a real browser zoom; static analysis can only show that no label container has a fixed pixel height."
+      }
+    ],
+    "contrast_pairs": [
+      {
+        "id": "body_text",
+        "foreground": "#e6ebf1",
+        "background": "#0e1116",
+        "role": "stage and body text",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "drawer_text",
+        "foreground": "#e6ebf1",
+        "background": "#161b22",
+        "role": "Evidence drawer text",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "dim_text",
+        "foreground": "#98a4b3",
+        "background": "#161b22",
+        "role": "secondary drawer copy and headings",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "titin_identity",
+        "foreground": "#ff5d7d",
+        "background": "#161b22",
+        "role": "titin identity text",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "button_text",
+        "foreground": "#e6ebf1",
+        "background": "#1f2630",
+        "role": "control labels",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "focus_ring",
+        "foreground": "#f2d06b",
+        "background": "#161b22",
+        "role": "focus indicator",
+        "min_ratio": 3.0
+      },
+      {
+        "id": "caveat_text",
+        "foreground": "#c9b989",
+        "background": "#161b22",
+        "role": "model caveats",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "pipeline_records",
+        "foreground": "#7f8b9c",
+        "background": "#161b22",
+        "role": "pipeline record paths",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "finding_established",
+        "foreground": "#7fc4a2",
+        "background": "#161b22",
+        "role": "established finding label",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "finding_proposed",
+        "foreground": "#e8c16d",
+        "background": "#161b22",
+        "role": "proposed finding label",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "finding_open",
+        "foreground": "#9aa7b8",
+        "background": "#161b22",
+        "role": "open finding label",
+        "min_ratio": 4.5
+      }
+    ]
+  },
+  "performance": {
+    "status": "PENDING",
+    "baseline": {
+      "recorded_on": "2026-08-05",
+      "standalone_bytes": 1988206,
+      "standalone_regression_tolerance": 0.2,
+      "basis": "Byte size of the committed standalone index.html at the SC-7 release point, used as the SC-8 regression baseline."
+    },
+    "checks": [
+      {
+        "id": "no_per_frame_rebuild",
+        "requirement": "geometry is not rebuilt per animation frame",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "instancing_retained",
+        "requirement": "repeated structures stay instanced",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js; test/phase7.test.js"
+      },
+      {
+        "id": "resource_stability",
+        "requirement": "repeated rebuilds and mode changes do not grow object or resource counts",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "lod_gates",
+        "requirement": "molecular detail stays behind resolvability gates",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase5.test.js; test/closeup.test.js"
+      },
+      {
+        "id": "standalone_size",
+        "requirement": "standalone size stays inside its declared tolerance",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "target_hardware",
+        "requirement": "the exact browser, GPU, and projector configuration is exercised",
+        "verification": "browser",
+        "status": "PENDING",
+        "note": "Belongs to the SC-9 demo-day preflight on the real display."
+      }
+    ]
+  },
+  "release_ready": false,
+  "release_blockers": [
+    "visual_matrix: capture and human review require a browser with WebGL",
+    "lay_comprehension: requires at least three independent non-specialists",
+    "expert_review: requires at least one muscle or titin specialist",
+    "accessibility.text_zoom: requires a real browser zoom check",
+    "performance.target_hardware: belongs to the SC-9 demo-day preflight"
+  ]
+}

@@ -70,9 +70,11 @@ record and Guided/Evidence shell, the titin hierarchy and length story, the Z-di
 and M-band correction, object-linked annotations, the A-band scaffold story with
 its optional schematic MyBP-C C-zone context, the orthographic lattice breathing
 comparison, and the seven-chapter guided route with its expert cards and counted
-build pipeline. The next showcase package is SC-8: integrated validation and
-audience evaluation. The detailed completion definition remains in
-`SHOWCASE_COMPLETION_PLAN.md`.
+build pipeline. SC-8's automated and destructive validation was completed on
+2026-08-05; its lay-comprehension, expert-review, and visual-capture gates are
+instrumented in `data/release_gates.json` but remain outstanding because they
+require people and a browser, so the showcase is not yet release-ready. The
+detailed completion definition remains in `SHOWCASE_COMPLETION_PLAN.md`.
 
 ---
 

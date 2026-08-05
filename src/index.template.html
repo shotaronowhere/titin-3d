@@ -285,6 +285,16 @@ window.__titinBoot = { ready: false, problems: [] };
   .finding-OPEN { color: #9aa7b8; }
   .science-separator { height: 1px; background: var(--edge); margin: 16px 0 0; }
   .activation-note { margin: 7px 0 0; color: #c9b989; font-size: 10px; }
+  /* Tablet touch targets. The drawer's density is deliberate on a desktop, where a
+     mouse can hit a 28 px control comfortably; a finger cannot. Keyed on the
+     POINTER rather than on width so a small laptop keeps its compact controls and
+     a large tablet still gets the 44 px minimum. */
+  @media (pointer: coarse) {
+    button, .extension-row { min-height: 44px; }
+    input[type=range] { height: 44px; }
+    .row { gap: 8px; }
+    #closeEvidence, .mode-switch button { padding-left: 14px; padding-right: 14px; }
+  }
   @media (max-width: 900px) {
     #app[data-mode="evidence"] { grid-template-columns: minmax(0, 1fr) 330px; }
     .brand-block { min-width: 0; }
