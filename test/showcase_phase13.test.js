@@ -7,6 +7,7 @@ import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import { createBibliography } from '../src/presentation/Bibliography.js';
 import { checkPresentationSpec } from '../src/presentation/StoryController.js';
+import { createProvenancePipeline } from '../src/presentation/ProvenancePipeline.js';
 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 const model = await TitinModel.create(nodeReader());
@@ -137,4 +138,38 @@ test('SC13: selecting a structure surfaces its expert card', () => {
   assert.match(page, /function relatedExpertCards\(/);
   assert.match(page, /related_target_ids/);
   assert.match(page, /id="objectInspectorExpertLink"/);
+});
+
+test('SC13-5: no pipeline figure is written into the page', () => {
+  const { stages } = createProvenancePipeline(model);
+  for (const stage of stages) {
+    assert.ok(!page.includes(`>${stage.count}<`),
+      `the count for '${stage.id}' appears literally in the template; it must be counted, not typed`);
+  }
+});
+
+test('SC13-5: the pipeline lays across the stage instead of scrolling inside the card', () => {
+  const cardStart = page.indexOf('id="guidedCard"');
+  const cardEnd = page.indexOf('</section>', page.indexOf('id="guidedCardBody"'));
+  const pipeline = page.indexOf('id="guidedPipeline"');
+  assert.ok(pipeline > -1 && !(pipeline > cardStart && pipeline < cardEnd),
+    'the pipeline must not live inside the chapter card');
+  assert.match(page, /#guidedPipeline \.pipeline \{[^}]*grid-template-columns: repeat\(6/,
+    'the six counted stages must read as six columns across the stage');
+  assert.ok(!/#guidedLattice, #guidedPipeline \{[\s\S]{0,120}overflow-y: auto/.test(page),
+    'the band must not be an inner scroll region at any supported width');
+});
+
+// The projector floor for the whole page is SC-17.1's gate. This one holds the
+// band SC-13 built to it: the counted figure carries at headline size and no
+// part of the diagram is set below the floor SC-17 will apply everywhere.
+test('SC13-5: the pipeline is typeset for a room, not for a scrolling box', () => {
+  const rules = [...page.matchAll(/#guidedPipeline [^{]*\{[^}]*font-size:\s*(\d+(?:\.\d+)?)px/g)]
+    .map((hit) => Number(hit[1]));
+  assert.ok(rules.length >= 4, `expected the band to set its own type scale, found ${rules.length} rules`);
+  assert.ok(Math.min(...rules) >= 9, `the band sets ${Math.min(...rules)}px, below the 9px floor`);
+  assert.match(page, /#guidedPipeline \.pipeline-figure \{[^}]*font-size: (2[0-9]|[3-9][0-9])px/,
+    'the counted figure is the payload and must carry at display size');
+  assert.ok(!/\.pipeline-records \{[^}]*font-size: 8px/.test(page),
+    'the 8 px record list must be gone');
 });
