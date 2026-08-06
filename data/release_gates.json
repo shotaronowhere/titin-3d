@@ -423,6 +423,20 @@
         "background": "#ff5d7d",
         "min_ratio": 4.5,
         "where": "active stretch-sweep button"
+      },
+      {
+        "id": "stage_force_label",
+        "foreground": "#ffd7e0",
+        "background": "#0e1116",
+        "min_ratio": 4.5,
+        "where": "passive force caption on the stage bar"
+      },
+      {
+        "id": "stage_force_class",
+        "foreground": "#e8c16d",
+        "background": "#0e1116",
+        "min_ratio": 4.5,
+        "where": "MODELED evidence class beside the stage force readout"
       }
     ],
     "object_contrast_pairs": [

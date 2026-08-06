@@ -62,3 +62,32 @@ test('SC14: the curve carries evidence metadata it cannot silently drop', () => 
   assert.ok(model.spec.showcaseClaims.objects.some((claim) => claim.id === FORCE_CURVE.claim_id),
     'the curve must bind to an existing reviewed claim');
 });
+
+const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
+const builder = readFileSync(new URL('../scripts/build_standalone.mjs', import.meta.url), 'utf8');
+
+test('SC14: the stage shows live passive force with its evidence class', () => {
+  assert.match(page, /id="stageForce"/);
+  assert.match(page, /titin_chain_force_pN/);
+  assert.match(page, /MODELED/);
+});
+
+test('SC14: the Measure tab draws the curve with labelled axes and units', () => {
+  assert.match(page, /id="forceCurve"/);
+  assert.match(page, /function renderForceCurve/);
+  assert.match(page, /axes\.x\.label/);
+  assert.match(page, /axes\.y\.label/);
+});
+
+test('SC14: the curve panel states what it does not claim', () => {
+  assert.match(page, /curve\.not_claimed/);
+});
+
+test('SC14: new bundle bindings are re-exported by the standalone builder', () => {
+  for (const name of ['createForceCurve']) {
+    if (page.includes(name)) {
+      assert.ok(builder.includes(name) || page.includes('visualization.forceCurve'),
+        `${name} must reach the standalone bundle`);
+    }
+  }
+});

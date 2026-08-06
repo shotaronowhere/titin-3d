@@ -34,6 +34,7 @@ import { createProvenancePipeline } from '../presentation/ProvenancePipeline.js'
 import { createAnnotations } from './TitinAnnotations.js';
 import { resolveSources } from '../presentation/AnnotationCatalog.js';
 import { createBibliography } from '../presentation/Bibliography.js';
+import { createForceCurve } from '../presentation/ForceCurve.js';
 import {
   createSarcomere, createTitin, createTitinPath, createDomainChain,
   placeDomainsAlongPath, regionOfDomain, describeLength, IBAND_REGIONS,
@@ -574,6 +575,18 @@ export class TitinVisualization {
       throw new Error('TitinVisualization: set a state before requesting the lattice cross-section.');
     }
     return this.model.latticeCrossSectionAt(sl, opts);
+  }
+
+  /**
+   * SC-14 passive force–extension curve for the loaded model. Sampling is
+   * memoised inside the module, so calling this per length change is cheap.
+   * @param {{samples?: number, currentLengthNm?: number|null}} [opts]
+   */
+  forceCurve(opts = {}) {
+    return createForceCurve(this.model, {
+      currentLengthNm: this._state?.sarcomere_length_nm ?? null,
+      ...opts,
+    });
   }
 
   /** SC-2 descriptors derived from the same mechanical output as the 3D scene. */

@@ -177,6 +177,17 @@ window.__titinBoot = { ready: false, problems: [] };
     min-width: 84px; }
   .stage-presets { margin: 0; }
   #stagePlay.on { background: var(--titin); border-color: var(--titin); color: #2a0a13; }
+  /* SC-14. The one number a muscle-mechanics audience looks for first, on the
+     stage rather than behind the drawer, carrying its evidence class so it can
+     never be read as a measurement. flex: none + nowrap for the same reason
+     SC-12 gave the bar's buttons nowrap: below 768 px these rows are single-line
+     scrolling strips, and a shrinkable text node in one of them wraps to six
+     lines and doubles the bar's height. */
+  #stageForce { color: #ffd7e0; font-size: 10px; font-variant-numeric: tabular-nums;
+    flex: 0 0 auto; white-space: nowrap; }
+  #stageForce b { color: var(--text); font-size: 13px; font-weight: 650; }
+  #stageForce .force-class { color: #e8c16d; font-size: 8px; font-weight: 700;
+    letter-spacing: .05em; }
   #stageLegend { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto;
     color: var(--dim); font-size: 10px; }
   #stageLegend .key { margin: 0; }
@@ -327,6 +338,8 @@ window.__titinBoot = { ready: false, problems: [] };
   .lattice-caveat { margin-top: 7px; font-size: 9px; line-height: 1.4; color: #c9b989;
     border-left: 2px solid #8b6530; padding-left: 7px; }
   .lattice-delta { margin-top: 6px; font-size: 9px; color: var(--dim); }
+  #forceCurve svg { display: block; width: 100%; height: auto;
+    border: 1px solid var(--edge); border-radius: 5px; }
   @media (max-width: 460px) { .lattice-pair { grid-template-columns: 1fr; } }
   /* SC-7. A vertical flow: one counted, inspectable stage per row. */
   .pipeline { margin: 10px 0 2px; border-top: 1px solid var(--edge); padding-top: 9px; }
@@ -614,6 +627,7 @@ window.__titinBuild = Object.freeze({ fingerprint: "7cc1c8d0ad9c" });
           <button id="filamentContextToggle" class="on" aria-pressed="true"
             aria-label="Show actin and myosin filament context"
             title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
+          <div id="stageForce" title="Passive force carried by one titin molecule at this length"></div>
           <div id="stageLegend" aria-label="Colour key"></div>
           <button id="stageEvidenceLink">Evidence &amp; sources</button>
         </div>
@@ -695,6 +709,12 @@ window.__titinBuild = Object.freeze({ fingerprint: "7cc1c8d0ad9c" });
 
       <h2>Geometry at this length</h2>
       <table id="metrics"></table>
+
+      <h2>Passive force</h2>
+      <div class="sub" style="margin:0 0 6px">One force, shared by the four I-band
+        regions in series, solved from sourced force-extension laws with no fitted
+        parameters. The marker is the length on the stage bar.</div>
+      <div id="forceCurve"></div>
 
       <h2>Lattice cross-section</h2>
       <div class="sub" style="margin:0 0 6px">Looking down the filament axis, drawn
@@ -41070,6 +41090,71 @@ function createBibliography(references, { citedIds = [] } = {}) {
   return resolveSources(references, ids).map((source) => ({ ...source, cited: cited.has(source.id) })).sort((a, b) => a.citation.localeCompare(b.citation) || a.id.localeCompare(b.id));
 }
 
+// src/presentation/ForceCurve.js
+var FORCE_CURVE = Object.freeze({
+  samples: 33,
+  evidence_class: "MODELED",
+  claim_id: "regional_extension_story",
+  source_ids: Object.freeze([
+    "10.1083/jcb.140.4.853",
+    // in-situ folded-Ig / unfolded-PEVK extension behaviour
+    "10.3389/fphys.2020.00173"
+    // single-molecule force spectroscopy behind the N2A chain law
+  ]),
+  not_claimed: Object.freeze([
+    "a measured single-molecule force trace for this sarcomere",
+    "total passive muscle tension, which includes non-titin contributions",
+    "any active or calcium-dependent force"
+  ]),
+  basis: "series force balance over sourced force-extension laws; one common force across the four I-band regions; the laws and their primary sources are recorded in data/mechanical_model.json"
+});
+var memo = /* @__PURE__ */ new Map();
+function createForceCurve(model, { samples = FORCE_CURVE.samples, currentLengthNm = null } = {}) {
+  if (!Number.isInteger(samples) || samples < 5) {
+    throw new Error(`createForceCurve: samples must be an integer >= 5, got ${samples}`);
+  }
+  const { min, max } = model.slRange();
+  const key = `${min}:${max}:${samples}`;
+  let points = memo.get(key);
+  if (!points) {
+    points = [];
+    for (let i = 0; i < samples; i += 1) {
+      const sl = Math.round(min + (max - min) * i / (samples - 1));
+      const geometry = model.geometryAt(sl);
+      points.push(Object.freeze({
+        sarcomere_length_nm: geometry.sarcomere_length_nm,
+        force_pN: geometry.titin_chain_force_pN,
+        iband_total_nm: geometry.titin_iband_total_nm
+      }));
+    }
+    Object.freeze(points);
+    memo.set(key, points);
+  }
+  let current = null;
+  if (Number.isFinite(currentLengthNm)) {
+    const geometry = model.geometryAt(currentLengthNm);
+    const mechanical = new MechanicalModel(model.spec.titin);
+    current = Object.freeze({
+      sarcomere_length_nm: geometry.sarcomere_length_nm,
+      force_pN: geometry.titin_chain_force_pN,
+      shares: Object.freeze({ ...mechanical.complianceShares(geometry.titin_chain_force_pN).share })
+    });
+  }
+  return Object.freeze({
+    points,
+    current,
+    axes: Object.freeze({
+      x: Object.freeze({ label: "sarcomere length (nm)", min: points[0].sarcomere_length_nm, max: points.at(-1).sarcomere_length_nm }),
+      y: Object.freeze({ label: "passive force per titin (pN)", min: 0, max: points.at(-1).force_pN })
+    }),
+    evidence_class: FORCE_CURVE.evidence_class,
+    claim_id: FORCE_CURVE.claim_id,
+    source_ids: FORCE_CURVE.source_ids,
+    not_claimed: FORCE_CURVE.not_claimed,
+    basis: FORCE_CURVE.basis
+  });
+}
+
 // src/api/TitinVisualization.js
 var SCALES = Object.freeze({
   /** titin in situ: filaments, Z-disc, M-line, transverse lattice */
@@ -41555,6 +41640,17 @@ var TitinVisualization = class _TitinVisualization {
       throw new Error("TitinVisualization: set a state before requesting the lattice cross-section.");
     }
     return this.model.latticeCrossSectionAt(sl, opts);
+  }
+  /**
+   * SC-14 passive force–extension curve for the loaded model. Sampling is
+   * memoised inside the module, so calling this per length change is cheap.
+   * @param {{samples?: number, currentLengthNm?: number|null}} [opts]
+   */
+  forceCurve(opts = {}) {
+    return createForceCurve(this.model, {
+      currentLengthNm: this._state?.sarcomere_length_nm ?? null,
+      ...opts
+    });
   }
   /** SC-2 descriptors derived from the same mechanical output as the 3D scene. */
   showcaseOverlay() {
@@ -42546,7 +42642,12 @@ function renderExtensionChart(showcase) {
   card.hidden = !show;
   if (!show) { $('extensionRows').replaceChildren(); return; }
   const chart = showcase.extension_chart;
-  $('extensionTotal').textContent = `${chart.total_nm.toFixed(1)} nm total · ${chart.evidence_class}`;
+  // The chart says the regions share out one extension; naming the force they
+  // share makes "series force balance" a visible statement rather than a phrase
+  // in the evidence class.
+  const chainForce = model.geometryAt(Number(slider.value)).titin_chain_force_pN;
+  $('extensionTotal').textContent = `${chart.total_nm.toFixed(1)} nm total · ${chart.evidence_class}`
+    + (Number.isFinite(chainForce) ? ` · ${chainForce.toFixed(2)} pN common force` : '');
   const maxExtension = Math.max(...chart.regions.map((region) => region.extension_nm));
   const mechanismMark = { folded: '●—● straighten', composite: '● + ∿', disordered: '∿ extends' };
   const rows = chart.regions.map((region) => {
@@ -42753,6 +42854,64 @@ function renderLatticeCrossSection() {
   const show = activeFeatures().has('lattice_cross_section');
   guided.hidden = !show;
   guided.replaceChildren(...(show ? [build()] : []));
+}
+
+/**
+ * SC-14 force–extension curve.
+ *
+ * Plain SVG in data coordinates with one linear map, so the shape on screen is
+ * the shape in the numbers. The y axis starts at zero: a force plot with a
+ * suppressed origin exaggerates every difference on it.
+ */
+function renderForceCurve() {
+  const curve = visualization.forceCurve();
+  const W = 300; const H = 150; const PAD = { l: 38, r: 8, t: 8, b: 26 };
+  const x = (nm) => PAD.l + ((nm - curve.axes.x.min) / (curve.axes.x.max - curve.axes.x.min))
+    * (W - PAD.l - PAD.r);
+  const y = (pN) => H - PAD.b - (pN / curve.axes.y.max) * (H - PAD.t - PAD.b);
+  const svg = svgElement('svg', {
+    viewBox: `0 0 ${W} ${H}`, role: 'img',
+    'aria-label': `Passive force per titin molecule against sarcomere length. `
+      + `${curve.current ? `At ${curve.current.sarcomere_length_nm} nm the model force is `
+        + `${curve.current.force_pN.toFixed(2)} piconewtons.` : ''}`,
+  });
+  const nodes = [
+    svgElement('path', {
+      d: `M ${PAD.l} ${PAD.t} V ${H - PAD.b} H ${W - PAD.r}`,
+      fill: 'none', stroke: '#3f4b5a', 'stroke-width': 1,
+    }),
+    svgElement('path', {
+      d: curve.points.map((point, index) => `${index ? 'L' : 'M'} `
+        + `${x(point.sarcomere_length_nm).toFixed(2)} ${y(point.force_pN).toFixed(2)}`).join(' '),
+      fill: 'none', stroke: hex(COMPONENT_COLOR.titin), 'stroke-width': 1.8,
+    }),
+    svgElement('text', { x: W / 2, y: H - 4, 'text-anchor': 'middle', fill: '#98a4b3', 'font-size': 9 },
+      curve.axes.x.label),
+    svgElement('text', {
+      x: 10, y: H / 2, 'text-anchor': 'middle', fill: '#98a4b3', 'font-size': 9,
+      transform: `rotate(-90 10 ${H / 2})`,
+    }, curve.axes.y.label),
+  ];
+  if (curve.current) {
+    nodes.push(svgElement('circle', {
+      cx: x(curve.current.sarcomere_length_nm), cy: y(curve.current.force_pN), r: 3.5,
+      fill: hex(COMPONENT_COLOR.titin_highlight), stroke: '#0e1116', 'stroke-width': 1.5,
+    }));
+  }
+  svg.replaceChildren(...nodes);
+
+  const shares = document.createElement('div');
+  shares.className = 'sub';
+  if (curve.current) {
+    const ranked = Object.entries(curve.current.shares).sort((a, b) => b[1] - a[1]);
+    shares.textContent = 'Compliance share at this length: '
+      + ranked.map(([id, value]) => `${id} ${(value * 100).toFixed(0)}%`).join(' · ');
+  }
+  const caveat = document.createElement('div');
+  caveat.className = 'lattice-caveat';
+  caveat.textContent = `${curve.evidence_class} · ${curve.basis}. `
+    + `Not claimed: ${curve.not_claimed.join('; ')}.`;
+  $('forceCurve').replaceChildren(svg, shares, caveat);
 }
 
 function renderChapter() {
@@ -43619,6 +43778,7 @@ function render(report) {
   // depend on it at all, so it is rendered on chapter change rather than rebuilt
   // on every slider frame.
   renderLatticeCrossSection();
+  renderForceCurve();
   renderScienceOverlay();
   const hiddenComponents = new Set(report.hidden_components || []);
   const hiddenSuffix = (component) => hiddenComponents.has(component) ? ' (hidden)' : '';
@@ -43645,6 +43805,22 @@ function render(report) {
   syncPresets(g.sarcomere_length_nm);
   syncDepictionToggles();
   syncStageLegend(report);
+
+  // Titin's biomechanical role is force. The number is already computed at every
+  // length by the series force balance; showing it costs nothing and is the one
+  // quantity a muscle mechanics audience will look for first.
+  const forceEl = $('stageForce');
+  forceEl.replaceChildren();
+  if (Number.isFinite(g.titin_chain_force_pN)) {
+    const value = document.createElement('b');
+    value.textContent = `${g.titin_chain_force_pN.toFixed(2)} pN`;
+    const label = document.createElement('span');
+    label.textContent = ' passive force / titin ';
+    const cls = document.createElement('span');
+    cls.className = 'force-class';
+    cls.textContent = 'MODELED';
+    forceEl.append(value, label, cls);
+  }
 
   const rows = [
     ['Half-sarcomere', `${g.half_sarcomere_nm.toFixed(1)} nm`],
