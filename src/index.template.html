@@ -566,6 +566,7 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
 import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement } from './src/presentation/StageLayout.js';
+import { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -663,6 +664,12 @@ function syncPublicPresentation() {
 }
 
 function syncUrl() {
+  // The sweep rewrites the length on every frame it changes. history.replaceState
+  // is rate-limited by browsers — Safari throws a SecurityError after roughly a
+  // hundred calls in thirty seconds — so a six-second sweep would break the page
+  // it is demonstrating. The URL records the state the sweep is LEFT in, which is
+  // also the only state worth sharing.
+  if (sweepHandle !== null) return;
   const hash = story.serialize(publicPresentationState());
   if (window.location.hash !== hash) {
     // Hash-only replacement stays same-document under HTTP, GitHub Pages and
@@ -708,6 +715,7 @@ function syncAudienceMode() {
 let evidenceReturnFocus = $('audienceEvidence');
 
 function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {}) {
+  stopSweep();
   state.audienceMode = mode;
   // Opening Evidence is the explicit request that exposes the inventory. Closing
   // it restores the Guided attention budget and removes raw evidence from the DOM flow.
@@ -819,6 +827,11 @@ let objectOverlaySignature = null;
 // when something that can move them has actually changed.
 let stageDirty = true;
 function markStageDirty() { stageDirty = true; }
+// The stretch sweep's frame handle. Declared here, with the other module state,
+// because syncUrl() consults it and syncUrl runs during start-up — before the
+// controller further down has executed.
+let sweepHandle = null;
+let sweepStartedAt = 0;
 // SC-12. The stage bar wraps to more rows as the stage narrows — 114 px at
 // 1280 px wide, more on a phone — so everything that has to stay clear of it is
 // offset by its MEASURED height. A constant was wrong at the first viewport
@@ -1280,6 +1293,7 @@ function applyCameraPreset({ animate = false } = {}) {
 }
 
 function applyChapter(chapterId) {
+  stopSweep();
   const chapter = story.chapter(chapterId);
   if (!chapter) return;
   const scene = chapter.recommended_state;
@@ -2310,6 +2324,69 @@ renderSurface.addEventListener('pointerup', (event) => {
   else if (pinnedPick) clearPinnedSelection();
 });
 renderSurface.addEventListener('pointercancel', () => { pointerStart = null; });
+
+// ---- the stretch sweep ------------------------------------------------------
+// The sweep is the demo moment: it makes "different regions extend differently"
+// something you watch rather than something you are told. It is always
+// user-initiated, stops on any other interaction, and never runs at a speed the
+// operating system has been told the user does not want.
+//
+// Queried live rather than latched at load: a viewer who turns the setting on
+// mid-session is asking for it to apply now, not at the next reload.
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function stopSweep() {
+  if (sweepHandle === null) return;
+  cancelAnimationFrame(sweepHandle);
+  sweepHandle = null;
+  $('stagePlay').classList.remove('on');
+  $('stagePlay').setAttribute('aria-pressed', 'false');
+  // Suppressed while the sweep ran; the length it settled on is the one worth
+  // putting in the URL.
+  syncPublicPresentation(); syncUrl();
+}
+
+function stepSweep(now) {
+  const reduced = prefersReducedMotion();
+  const raw = sweepLength(now - sweepStartedAt, {
+    minNm: sweepRange.min,
+    maxNm: sweepRange.max,
+    periodMs: reduced ? SWEEP.reduced_motion_period_ms : SWEEP.period_ms,
+  });
+  // Reduced motion gets the two ENDPOINTS and not the travel between them, which
+  // is what data/showcase_claims.json's motion_rule requires: "reduced-motion
+  // mode jumps to the identical scientific state". Shortening the period alone
+  // would have made the animation faster, which is the opposite of the request.
+  const value = reduced
+    ? (raw - sweepRange.min < sweepRange.max - raw ? sweepRange.min : sweepRange.max)
+    : raw;
+  if (Number(slider.value) !== value) { slider.value = String(value); rebuild(); }
+  sweepHandle = requestAnimationFrame(stepSweep);
+}
+
+// The working range, not the slider's full range: the illustrative 3,000 nm
+// reference and the 1,900 nm short state are outside the declared comparison
+// interval and must not be swept through as if they were ordinary physiology.
+const workingPresets = presentation.length_presets
+  .filter((preset) => !preset.outside_working_range);
+const sweepRange = {
+  min: Math.min(...workingPresets.map((preset) => preset.sarcomere_length_nm)),
+  max: Math.max(...workingPresets.map((preset) => preset.sarcomere_length_nm)),
+};
+
+$('stagePlay').onclick = () => {
+  if (sweepHandle !== null) { stopSweep(); return; }
+  sweepStartedAt = performance.now();
+  $('stagePlay').classList.add('on');
+  $('stagePlay').setAttribute('aria-pressed', 'true');
+  sweepHandle = requestAnimationFrame(stepSweep);
+};
+slider.addEventListener('pointerdown', stopSweep);
+slider.addEventListener('keydown', stopSweep);
+// The 3-D surface, not the #canvas container: the container also holds the stage
+// bar, so a pointerdown on ▶ Stretch itself would stop the sweep a moment before
+// the click that was meant to stop it, and the button could only ever start one.
+renderSurface.addEventListener('pointerdown', stopSweep);
 
 $('canvas').addEventListener('keydown', (event) => {
   if (!['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) return;
