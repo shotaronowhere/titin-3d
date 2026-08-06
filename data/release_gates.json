@@ -402,6 +402,27 @@
         "background": "#161b22",
         "role": "open finding label",
         "min_ratio": 4.5
+      },
+      {
+        "id": "stage_bar_label",
+        "foreground": "#98a4b3",
+        "background": "#0e1116",
+        "min_ratio": 4.5,
+        "where": "stage bar control labels over the stage gradient"
+      },
+      {
+        "id": "stage_readout",
+        "foreground": "#e6ebf1",
+        "background": "#0e1116",
+        "min_ratio": 4.5,
+        "where": "sarcomere length readout on the stage bar"
+      },
+      {
+        "id": "stage_play_active",
+        "foreground": "#2a0a13",
+        "background": "#ff5d7d",
+        "min_ratio": 4.5,
+        "where": "active stretch-sweep button"
       }
     ],
     "object_contrast_pairs": [
