@@ -240,6 +240,26 @@ export class GeometryStrategy {
           };
         }
       }
+      // SC-15. The contour length, carried onto the descriptor so a renderer can
+      // express "how far is this region from being pulled straight" without
+      // reading titin.json itself — the architectural rule that keeps
+      // SarcomereScene free of biology.
+      //
+      // `max_end2end_nm` is copied, never recomputed: it is the exact field
+      // MechanicalModel resolves through `Lc_from_spec`, so a depiction of slack
+      // and the force model cannot disagree about what "straight" means. The
+      // spec's own caveat travels with the number, because this is a worm-like
+      // chain end-to-end estimate for the segment in isolation and not the
+      // schematic axial budget the layout is built from.
+      const extension = region.extension_model || {};
+      if (typeof extension.max_end2end_nm === 'number' && extension.max_end2end_nm > 0) {
+        desc.extension_model = {
+          resting_end2end_nm: extension.resting_end2end_nm,
+          max_end2end_nm: extension.max_end2end_nm,
+          evidence_class: extension.evidence_class,
+          note: extension.note,
+        };
+      }
       out.push(desc);
     }
     return out;

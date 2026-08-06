@@ -21,11 +21,12 @@
         "10.1083/jcb.106.5.1563",
         "UniProt:Q8WZ42"
       ],
-      "render_meaning": "Pink region-linked tubes and the thin continuity trace identify one continuous titin path; tube width and unresolved transverse routing are not molecular dimensions.",
+      "render_meaning": "Pink region-linked tubes and the thin continuity trace identify one continuous titin path; the coiled depiction of N2A and PEVK is a schematic statement of disorder and slack, not a measured conformation; tube width and unresolved transverse routing are not molecular dimensions.",
       "not_claimed": [
         "an atom-resolved continuous path",
         "a known universal transverse azimuth",
-        "uniform elasticity along the molecule"
+        "uniform elasticity along the molecule",
+        "a measured conformation for the disordered segments"
       ],
       "binding": {
         "kind": "showcase_claim",
@@ -281,11 +282,12 @@
         "UniProt:Q8WZ42",
         "10.1016/j.jmb.2020.06.025"
       ],
-      "render_meaning": "Instanced capsules and ellipsoids encode domain class, position, and orientation; primitive surfaces are archetypes rather than unique molecular meshes.",
+      "render_meaning": "Instanced capsules and ellipsoids encode domain class, position, and orientation; primitive surfaces are archetypes rather than unique molecular meshes. While these domains are shown, the backbone between them is drawn as a thin linker so it cannot hide them — a change of render width only, and no statement about titin's thickness.",
       "not_claimed": [
         "atom-resolved surfaces for every domain",
         "physiological unfolding during ordinary extension",
-        "known azimuth for every folded domain"
+        "known azimuth for every folded domain",
+        "that the backbone's drawn width is a molecular diameter, or that it changes with state"
       ],
       "binding": {
         "kind": "titin_architecture",

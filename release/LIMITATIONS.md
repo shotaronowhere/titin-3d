@@ -1,6 +1,6 @@
 # Scientific limitations and non-claims
 
-Generated — build `7cc1c8d0ad9c`. Run `npm run pack` to refresh.
+Generated — build `fb7814d6ff38`. Run `npm run pack` to refresh.
 
 Every statement below is recorded in the repository, not written for this sheet.
 
@@ -96,6 +96,7 @@ Source: `data/annotations.json`
 - a direct titin–MyBP-C contact
 - a known universal transverse azimuth
 - a measured M-band width
+- a measured conformation for the disordered segments
 - a measured display length for the glyph
 - a regulatory-state model
 - a resolved complete lateral route for titin
@@ -123,6 +124,7 @@ Source: `data/annotations.json`
 - resolved individual actin monomers
 - simultaneous actin binding
 - single-ended telethonin binding
+- that the backbone's drawn width is a molecular diameter, or that it changes with state
 - that the bare-zone width is the M-band width
 - that titin runs through the filament core
 - the complete in-situ Z-disc route

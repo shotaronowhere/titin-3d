@@ -1,6 +1,6 @@
 # Standard screenshot review pack
 
-Generated — build `7cc1c8d0ad9c`. 52 cells.
+Generated — build `fb7814d6ff38`. 52 cells.
 
 Deterministic capture set for the SC-8 visual review. Each cell is a viewport plus a reproducible URL state; pixel comparison supplements human review and does not determine scientific correctness.
 
@@ -22,13 +22,13 @@ Deterministic capture set for the SC-8 visual review. Each cell is a viewport pl
 - [ ] `chapter_orientation_mobile` — 390×844
       `#mode=guided&step=orientation&sl=2200&scale=context&camera=view.titin_story&target=titin&evidence=0`
 - [ ] `chapter_architecture_projector` — 1920×1080
-      `#mode=guided&step=architecture&sl=2200&scale=detail&camera=view.titin_story&target=titin_domains&evidence=0`
+      `#mode=guided&step=architecture&sl=2200&scale=detail&camera=region.prox_Ig&target=titin_domains&evidence=0`
 - [ ] `chapter_architecture_desktop` — 1440×900
-      `#mode=guided&step=architecture&sl=2200&scale=detail&camera=view.titin_story&target=titin_domains&evidence=0`
+      `#mode=guided&step=architecture&sl=2200&scale=detail&camera=region.prox_Ig&target=titin_domains&evidence=0`
 - [ ] `chapter_architecture_laptop` — 1280×720
-      `#mode=guided&step=architecture&sl=2200&scale=detail&camera=view.titin_story&target=titin_domains&evidence=0`
+      `#mode=guided&step=architecture&sl=2200&scale=detail&camera=region.prox_Ig&target=titin_domains&evidence=0`
 - [ ] `chapter_architecture_mobile` — 390×844
-      `#mode=guided&step=architecture&sl=2200&scale=detail&camera=view.titin_story&target=titin_domains&evidence=0`
+      `#mode=guided&step=architecture&sl=2200&scale=detail&camera=region.prox_Ig&target=titin_domains&evidence=0`
 - [ ] `chapter_elastic_regions_projector` — 1920×1080
       `#mode=guided&step=elastic_regions&sl=2400&scale=detail&camera=region.PEVK&target=PEVK&evidence=0`
 - [ ] `chapter_elastic_regions_desktop` — 1440×900
