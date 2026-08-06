@@ -165,7 +165,9 @@ window.__titinBoot = { ready: false, problems: [] };
     border-top: 1px solid var(--edge); backdrop-filter: blur(10px); }
   .stage-row { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; }
   .stage-row-primary #sl { flex: 1 1 220px; min-width: 160px; width: auto; }
-  .stage-label { color: var(--dim); font-size: 10px; text-transform: uppercase;
+  /* margin: 0 overrides the drawer's block-label rule, which would otherwise
+     push a label 4 px off the centre line of the control it names. */
+  .stage-label { margin: 0; color: var(--dim); font-size: 10px; text-transform: uppercase;
     letter-spacing: .08em; font-weight: 700; }
   .stage-readout { font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 650;
     min-width: 84px; }
@@ -399,7 +401,11 @@ window.__titinBoot = { ready: false, problems: [] };
     .extension-row { grid-template-columns: 72px 62px minmax(54px, 1fr) 46px; gap: 5px; }
     #app[data-mode="evidence"] { display: block; }
     #app[data-mode="evidence"] #canvas { height: 100%; }
-    #panel { position: fixed; inset: auto 0 0; z-index: 20; max-height: 72vh; border-left: 0;
+    /* The drawer stops at the stage bar rather than covering it. SC-12's rule is
+       that the primary controls are reachable in both audience modes, and a
+       phone-width drawer that buried them would only honour that on a desktop. */
+    #panel { position: fixed; inset: auto 0 var(--stage-bar-h, 114px); z-index: 20;
+      max-height: 64vh; border-left: 0;
       border-top: 1px solid var(--edge); border-radius: 12px 12px 0 0; box-shadow: 0 -16px 50px rgb(0 0 0 / 50%); }
     /* The drawer already contains the synchronized selected-structure card. At
        phone widths, suppress its canvas duplicate so two long explanations do
@@ -495,14 +501,22 @@ window.__titinBoot = { ready: false, problems: [] };
         <div class="stage-row stage-row-primary">
           <label class="stage-label" for="sl">Sarcomere length</label>
           <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres">
-          <output class="stage-readout" id="stageLengthReadout" for="sl">— nm</output>
-          <div class="row stage-presets" id="presets"></div>
+          <!-- aria-live is off deliberately. <output> is a live region by
+               default, the range input already announces its own value as it
+               moves, and the sweep changes that value on every frame — the two
+               together would talk over each other for six seconds straight. -->
+          <output class="stage-readout" id="stageLengthReadout" for="sl"
+            aria-live="off">— nm</output>
+          <div class="row stage-presets" id="presets" role="group"
+            aria-label="Reviewed sarcomere length presets"></div>
           <button id="stagePlay" aria-pressed="false"
             aria-label="Play a stretch sweep across the working range">&#9654; Stretch</button>
         </div>
         <div class="stage-row stage-row-secondary">
-          <span class="stage-label">View</span>
-          <div class="row" id="views"></div>
+          <!-- The drawer's <h2>View</h2> named this set for a screen reader;
+               moving the buttons to the stage bar has to keep that name. -->
+          <span class="stage-label" id="stageViewsLabel">View</span>
+          <div class="row" id="views" role="group" aria-labelledby="stageViewsLabel"></div>
           <button id="filamentContextToggle" class="on" aria-pressed="true"
             aria-label="Show actin and myosin filament context"
             title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
@@ -1066,10 +1080,17 @@ function renderScienceOverlay() {
   // Who holds the bracket lane. ONE decision, consulted by both the brackets and
   // the close-up locator, so the two are mutually exclusive by construction
   // rather than by two conditions that have to be kept in agreement.
+  //
+  // When either measurement is unavailable the lane falls back to the brackets:
+  // that is the behaviour this task inherited, and a stage that cannot state
+  // where the camera is must not also silently drop the labels it could draw.
   const modelSpanNm = locatorModelSpanNm();
+  const cameraSpanNm = visualization.viewSpanNm();
   const cameraCentreNm = visualization.viewCentreNm();
-  const laneHoldsBrackets = bracketLaneVisible(visualization.viewSpanNm(), modelSpanNm);
-  const locator = locatorExtent(visualization.viewSpanNm(), cameraCentreNm, modelSpanNm);
+  const measurableStage = cameraSpanNm !== null && modelSpanNm !== null;
+  const laneHoldsBrackets = !measurableStage
+    || bracketLaneVisible(cameraSpanNm, modelSpanNm);
+  const locator = locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm);
   // Every DOM measurement this pass needs, taken together. The branches below
   // used to re-read the same two rectangles; grouping the reads is a clarity
   // change rather than a performance one, since consecutive reads with no
@@ -1199,10 +1220,9 @@ function renderScienceOverlay() {
       x: from, y: laneTop - 6, width: extent, height: 12, class: 'locator-extent',
     }));
     const place = locatorPlaceLabel(cameraCentreNm);
-    const spanNm = visualization.viewSpanNm();
     nodes.push(svgElement('text', {
       x: left, y: laneTop + 20, 'text-anchor': 'start', class: 'science-label',
-    }, `viewing ${Math.round(spanNm).toLocaleString()} nm of `
+    }, `viewing ${Math.round(cameraSpanNm).toLocaleString()} nm of `
       + `${Math.round(modelSpanNm).toLocaleString()} nm${place ? ` · ${place}` : ''}`));
   }
   if (features.has('termini')) {
@@ -2054,13 +2074,17 @@ function renderObjectOverlay() {
   }
   card.style.left = '0px'; card.style.top = '0px';
   const cardWidth = card.offsetWidth; const cardHeight = card.offsetHeight;
-  const headerBottom = $('stageHeader').getBoundingClientRect().bottom
-    - $('canvas').getBoundingClientRect().top + 8;
+  const canvasTop = $('canvas').getBoundingClientRect().top;
+  const headerBottom = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 8;
+  // The stage bar is the floor now, not the bottom of the canvas: this card has
+  // pointer events, so letting it settle over the bar would put an explanation
+  // on top of the controls and swallow clicks meant for them.
+  const barTop = $('stageBar').getBoundingClientRect().top - canvasTop;
   const gap = pinnedPick ? 24 : 14;
   let left = point.x_px < width / 2 ? point.x_px + gap : point.x_px - cardWidth - gap;
   let top = pinnedPick ? point.y_px - cardHeight / 2 : point.y_px + gap;
   left = Math.max(8, Math.min(width - cardWidth - 8, left));
-  top = Math.max(headerBottom, Math.min(height - cardHeight - 8, top));
+  top = Math.max(headerBottom, Math.min(barTop - cardHeight - 8, top));
   card.style.left = `${left}px`; card.style.top = `${top}px`;
   const endX = Math.max(left, Math.min(left + cardWidth, point.x_px));
   const endY = Math.max(top, Math.min(top + cardHeight, point.y_px));
@@ -2592,6 +2616,13 @@ const sweepRange = {
   max: Math.max(...workingPresets.map((preset) => preset.sarcomere_length_nm)),
 };
 
+// A control that cannot do anything says so, rather than looking available and
+// then dying inside a frame callback where nothing surfaces the reason.
+if (!(sweepRange.min < sweepRange.max)) {
+  $('stagePlay').disabled = true;
+  $('stagePlay').title = 'The presentation record declares no working-range '
+    + 'interval for the sweep to travel';
+}
 $('stagePlay').onclick = () => {
   if (sweepHandle !== null) { stopSweep(); return; }
   sweepStartedAt = performance.now();
