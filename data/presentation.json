@@ -184,7 +184,7 @@
       "recommended_state": {
         "sarcomere_length_nm": 2200,
         "scale": "detail",
-        "camera_preset": "view.titin_story",
+        "camera_preset": "region.prox_Ig",
         "selected_component_or_region": "titin_domains",
         "visibility": {
           "show_lattice": false,

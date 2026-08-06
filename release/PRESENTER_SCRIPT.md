@@ -1,6 +1,6 @@
 # Presenter script
 
-Generated — build `103e1ca3269e`. Estimated 121.2 s (2 min 1 s), target 110–190 s.
+Generated — build `905fc379518d`. Estimated 121.2 s (2 min 1 s), target 110–190 s.
 
 Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in the Evidence drawer — you do not need to open it to finish the tour.
 
@@ -16,7 +16,7 @@ Read the **Say** line; it is the on-screen copy. The **If asked** line is the ex
 
 ## 2. Read its architecture  `~18.1s`
 
-**Do.** frame the titin story view; 2200 nm, detail scale
+**Do.** focus the prox_Ig region; 2200 nm, detail scale
 
 **Say.** Titin is not one uniform coil. Folded Ig and Fn3 domains alternate with disordered segments, and the order of those regions is fixed by the sequence: elastic parts near the Z-disc, anchored scaffold further in.
 

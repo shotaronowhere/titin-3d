@@ -211,6 +211,10 @@ export const TITIN_RENDER_STYLE = Object.freeze({
   coil_amplitude_scale: 2.6,
   coil_turns: 6,
   coil_min_amplitude_nm: 0.05,
+  // Half: a backbone at half a domain's rendered radius leaves the domain
+  // standing clearly proud of the chain that carries it, at any zoom, without
+  // becoming a hairline that disappears in the overview.
+  linker_radius_fraction: 0.5,
   // The two regions titin.json declares as having no folded structure. Named
   // here, once, because both the narrower tube radius and the coil are the same
   // statement about the same two regions — that they are intrinsically
@@ -1239,6 +1243,33 @@ export class SarcomereScene {
       coils.set(segment.region_id, coil);
       disorderedAmplitudeNm = Math.max(disorderedAmplitudeNm, coil.amplitudeNm);
     }
+    // SC-15. Where the folded domains are actually DRAWN, the backbone is a
+    // linker, not a pipe.
+    //
+    // The Guided titin tube is 1.65 x (thin diameter / 6) = 2.475 nm in radius,
+    // and an Ig archetype's rendered cross-section is 2.636 nm across — so the
+    // chapter that claims "folded Ig and Fn3 domains alternate" was drawing a
+    // smooth rod with all 77 of its domains sealed inside it, at every camera
+    // distance. No framing can fix that; the tube has to get out of the way.
+    //
+    // The cap is half the narrowest DRAWN archetype's rendered cross-section,
+    // and that number comes from the instancing plan — measured coordinates —
+    // rather than from a constant chosen here. It applies only to regions whose
+    // folded domains are on screen, so a disordered region keeps the width it
+    // needs to read as a chain, and only on strands that draw domains at all.
+    // Like the tube it narrows, it is a render width and claims no diameter.
+    const drawnArchetypeRadii = (domainBatches?.batches || [])
+      .map((batch) => batch.geometry?.lateral_diameter_nm)
+      .filter((diameter) => Number.isFinite(diameter) && diameter > 0)
+      .map((diameter) => diameter / 2);
+    const linkerRadiusNm = drawnArchetypeRadii.length
+      ? Math.min(...drawnArchetypeRadii) * TITIN_RENDER_STYLE.linker_radius_fraction
+      : null;
+    const foldedRegions = new Set(
+      (domains?.instances || [])
+        .filter((instance) => instance.folded_domains)
+        .map((instance) => instance.domain_id.split('.')[0]),
+    );
     /**
      * The path one region is DRAWN along: the canonical control points, coiled
      * between their own fixed endpoints when the region is a slack disordered
@@ -1254,7 +1285,9 @@ export class SarcomereScene {
       return this._coilPath(canonical, coil);
     };
     for (const off of strandOffsets) {
-      if (domainBatches && domainStrands.includes(off.strand_index)) {
+      const domainsOnThisStrand = Boolean(domainBatches)
+        && domainStrands.includes(off.strand_index);
+      if (domainsOnThisStrand) {
         titinGroup.add(this._domainInstances(domainBatches, off, aBandStart, off.strand_index));
       }
       if (titinPath?.segments?.length) {
@@ -1269,9 +1302,14 @@ export class SarcomereScene {
           const renderRadiusScale = disorderedRegions.includes(segment.region_id)
             ? TITIN_RENDER_STYLE.disordered_radius_scale : 1;
           const coil = coils.get(segment.region_id);
+          const styleRadiusNm = titinRadius * renderRadiusScale;
+          const linked = domainsOnThisStrand
+            && linkerRadiusNm !== null
+            && foldedRegions.has(segment.region_id);
+          const radiusNm = linked ? Math.min(styleRadiusNm, linkerRadiusNm) : styleRadiusNm;
           const tube = this._titinTube(
             displayPath(segment, off),
-            titinRadius * renderRadiusScale, COMPONENT_COLOR.titin, evidence,
+            radiusNm, COMPONENT_COLOR.titin, evidence,
             `titin_region_${segment.region_id}_strand_${off.strand_index}`,
             undefined,
             [segment.X_start, segment.X_end],
@@ -1279,8 +1317,11 @@ export class SarcomereScene {
           tube.userData.titin_region = segment.region_id;
           tube.userData.base_color = COMPONENT_COLOR.titin;
           tube.userData.evidence_rendered = evidence;
-          tube.userData.render_radius_nm = titinRadius * renderRadiusScale;
+          tube.userData.render_radius_nm = radiusNm;
+          // The region's own style scale, unchanged by the linker cap: one says
+          // which region this is, the other says whether its beads are on screen.
           tube.userData.render_radius_scale = renderRadiusScale;
+          tube.userData.render_radius_linked_to_domains = radiusNm < styleRadiusNm;
           // The interval the tube was built from, restated on the object so a
           // reader — or the SC-15 gate — can confirm the coil moved nothing.
           tube.userData.axial_range_nm = [segment.X_start, segment.X_end];
@@ -1689,6 +1730,18 @@ export class SarcomereScene {
           PEVK: TITIN_RENDER_STYLE.disordered_radius_scale,
           not_claimed: 'molecular diameter or polymer cross-section',
         },
+        // SC-15. Reported whenever domains are drawn, because a reader comparing
+        // two frames should be able to see that the backbone narrowed and why.
+        domain_linker: domainBatches ? {
+          regions_with_drawn_domains: [...foldedRegions].sort(),
+          strands: [...domainStrands],
+          radius_cap_nm: linkerRadiusNm === null ? null : Number(linkerRadiusNm.toFixed(4)),
+          uncapped_tube_radius_nm: Number(titinRadius.toFixed(4)),
+          basis: 'half the narrowest drawn archetype rendered cross-section, from '
+            + 'the instancing plan; a render width, not a molecular diameter',
+          reason: 'a backbone wider than the domains it carries hides them at every '
+            + 'camera distance',
+        } : null,
       },
       // SC-15. Reported as its own record, and always — an amplitude of zero is
       // the auditable statement "at this length the chain is drawn straight",

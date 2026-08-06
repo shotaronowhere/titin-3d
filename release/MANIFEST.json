@@ -1,6 +1,6 @@
 {
   "schema": "titin-release-manifest/1",
-  "build_fingerprint": "103e1ca3269e",
+  "build_fingerprint": "905fc379518d",
   "fingerprint_inputs": [
     "data/sarcomere.json",
     "data/titin.json",
@@ -14,7 +14,7 @@
     "data/context_measurements.json",
     "data/mechanical_model.json"
   ],
-  "standalone_bytes": 2131230,
+  "standalone_bytes": 2133102,
   "artifacts": [
     "CLAIM_MATRIX.md",
     "LIMITATIONS.md",
