@@ -14,7 +14,7 @@
     "data/context_measurements.json",
     "data/mechanical_model.json"
   ],
-  "standalone_bytes": 2067897,
+  "standalone_bytes": 2068344,
   "artifacts": [
     "CLAIM_MATRIX.md",
     "LIMITATIONS.md",

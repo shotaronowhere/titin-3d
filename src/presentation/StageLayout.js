@@ -15,6 +15,12 @@
  */
 export const STAGE_LAYOUT = Object.freeze({
   frame_margin_factor: 1.12,
+  // Declared by the SC-11 plan for a vertical framing bias and deliberately NOT
+  // consumed. Nothing reads it because a fixed bias is the wrong shape for the
+  // problem: how far the model should sit above centre depends on whether the
+  // guided chapter card is on the stage, and Evidence mode, which has no card,
+  // wants it centred. Kept as the declared value so a later task that solves
+  // that properly has the plan's number to start from.
   vertical_bias_fraction: 0.08,
   min_region_view_span_nm: 140,
   bracket_lane_gap_px: 18,

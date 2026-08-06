@@ -810,18 +810,17 @@ function renderScienceOverlay() {
   // change rather than a performance one, since consecutive reads with no
   // intervening write share one layout flush anyway. The saving that matters
   // came from not running this pass at all on a still frame.
-  const canvasTop = $('canvas').getBoundingClientRect().top;
-  const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 16;
+  const canvasRect = $('canvas').getBoundingClientRect();
+  const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasRect.top + 16;
   // The guided chapter card owns the bottom-left corner and its size depends on
   // the chapter's copy, so where the ruler can go is measured, not assumed.
   const guidedCard = $('guidedCard');
   const cardRect = guidedCard.offsetParent === null ? null
     : guidedCard.getBoundingClientRect();
-  const canvasLeft = cardRect ? $('canvas').getBoundingClientRect().left : 0;
   const cardBox = cardRect ? {
-    top: cardRect.top - canvasTop,
-    right: cardRect.right - canvasLeft,
-    bottom: cardRect.bottom - canvasTop,
+    top: cardRect.top - canvasRect.top,
+    right: cardRect.right - canvasRect.left,
+    bottom: cardRect.bottom - canvasRect.top,
   } : null;
   const projectionSignature = JSON.stringify({
     length: activeShowcaseOverlay.sarcomere_length_nm,
@@ -894,9 +893,9 @@ function renderScienceOverlay() {
   // stage said how big anything was, at any zoom, in either mode. It also
   // matters more here than usual: the renderer WITHDRAWS detail below a
   // resolvability threshold, and a viewer who cannot see the scale cannot tell
-  // an honest LOD withdrawal from a missing feature. Drawn only when the axis
-  // scale could actually be measured — a ruler stating a wrong number is worse
-  // than no ruler.
+  // an honest LOD withdrawal from a missing feature. Drawn only when the stage
+  // has a measurable span — a ruler stating a wrong number is worse than no
+  // ruler, and the camera sitting on its own target has no scale to state.
   if (pxPerNm !== null) {
     const bar = scaleBar(pxPerNm, Math.max(100, Math.min(180, width * 0.14)));
     const { left: barX, baseline: barY } = scaleBarPlacement({
