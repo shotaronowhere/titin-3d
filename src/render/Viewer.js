@@ -13,6 +13,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { SarcomereScene } from './SarcomereScene.js';
+import { STAGE_LAYOUT } from '../presentation/StageLayout.js';
 
 /** @typedef {import('../model/TitinModel.js').TitinModel} TitinModel */
 
@@ -392,8 +393,7 @@ export class Viewer {
     const centre = box.getCenter(new THREE.Vector3());
     const radius = box.getBoundingSphere(new THREE.Sphere()).radius;
     const fov = THREE.MathUtils.degToRad(this.camera.fov);
-    // 1.15 leaves a small margin so the structure does not touch the frame edge.
-    const distance = (radius / Math.sin(fov / 2)) * 1.15;
+    const distance = (radius / Math.sin(fov / 2)) * STAGE_LAYOUT.frame_margin_factor;
     const v = new THREE.Vector3(...dir).normalize().multiplyScalar(distance);
     this._sceneRadius = radius;
     this._moveCamera(centre.clone().add(v), centre, opts);
@@ -522,7 +522,12 @@ export class Viewer {
       throw new Error(`focusSpan: expected a positive finite range, got ${startNm}..${endNm}`);
     }
     const physicalSpan = endNm - startNm;
-    const viewSpan = Math.max(40, physicalSpan * 1.35);
+    const margined = physicalSpan * STAGE_LAYOUT.frame_margin_factor;
+    // A 6.8 nm region framed at 1.12x puts the camera INSIDE the tube and shows a
+    // featureless wall. A region is only meaningful in series with its
+    // neighbours, so a floor keeps that context in frame.
+    const viewSpan = Math.max(margined, STAGE_LAYOUT.min_region_view_span_nm);
+    const minSpanApplied = viewSpan > margined;
     const target = new THREE.Vector3((startNm + endNm) / 2, 0, 0);
     const distance = this._distanceForSpan(viewSpan);
     const direction = new THREE.Vector3(0.12, 0.25, 1).normalize();
@@ -532,6 +537,7 @@ export class Viewer {
       region_span_nm: Number(physicalSpan.toFixed(3)),
       view_span_nm: Number(this.visibleWidthAtDistance(distance).toFixed(1)),
       distance_nm: Number(distance.toFixed(1)),
+      min_span_applied: minSpanApplied,
       animated: Boolean(opts.animate && !this.prefersReducedMotion),
     };
   }

@@ -1,6 +1,7 @@
 /** SC-11 gates: the tour reaches the cameras it declares, and stage composition. */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import * as THREE from 'three';
 
 import {
   STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement,
@@ -10,7 +11,7 @@ import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import { TitinVisualization, SCALES } from '../src/api/TitinVisualization.js';
 import { COMPONENTS } from '../src/render/SarcomereScene.js';
-import { VIEWS, CLOSEUPS } from '../src/render/Viewer.js';
+import { Viewer, VIEWS, CLOSEUPS } from '../src/render/Viewer.js';
 import { StoryController } from '../src/presentation/StoryController.js';
 
 const model = await TitinModel.create(nodeReader());
@@ -112,4 +113,39 @@ test('SC11: the card prefers the side away from the anchor', () => {
   assert.equal(left.side, 'left');
   const right = inspectorPlacement({ anchor: { x_px: 300, y_px: 400 }, card, canvas, safeTopPx: 60 });
   assert.equal(right.side, 'right');
+});
+
+// ---------------------------------------------------------------------------
+// Task 11.2 — framing margin and the region-focus standoff
+// ---------------------------------------------------------------------------
+
+/** focusSpan is arithmetic on the camera; exercise it without a WebGL context. */
+function stubViewer(aspect = 1440 / 900) {
+  const viewer = Object.create(Viewer.prototype);
+  viewer.camera = new THREE.PerspectiveCamera(50, aspect, 1, 10000);
+  viewer.controls = { target: new THREE.Vector3(), update() {} };
+  viewer.prefersReducedMotion = true;
+  viewer._moveCamera = function moveCamera(position, target) {
+    this.camera.position.copy(position);
+    this.controls.target.copy(target);
+  };
+  viewer._updateFrustum = () => {};
+  return viewer;
+}
+
+test('SC11: a small region focus keeps a minimum readable span', () => {
+  const viewer = stubViewer();
+  const tiny = viewer.focusSpan(100, 106.8);          // N2A at ~6.8 nm
+  assert.equal(tiny.min_span_applied, true);
+  assert.ok(tiny.view_span_nm >= STAGE_LAYOUT.min_region_view_span_nm - 1,
+    `view span ${tiny.view_span_nm} nm is too tight to read a region in context`);
+});
+
+test('SC11: a large span uses the tighter margin', () => {
+  const viewer = stubViewer();
+  const wide = viewer.focusSpan(0, 1100);
+  assert.equal(wide.min_span_applied, false);
+  const ratio = wide.view_span_nm / 1100;
+  assert.ok(ratio > 1.05 && ratio < 1.2,
+    `margin ratio ${ratio.toFixed(3)} should be near ${STAGE_LAYOUT.frame_margin_factor}`);
 });
