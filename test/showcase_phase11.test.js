@@ -1,6 +1,10 @@
-/** SC-11 gates: the tour reaches the cameras it declares. */
+/** SC-11 gates: the tour reaches the cameras it declares, and stage composition. */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+
+import {
+  STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement,
+} from '../src/presentation/StageLayout.js';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
@@ -59,4 +63,53 @@ test('SC11-0: a close-up chapter round-trips through its own URL', () => {
     const hash = story.serialize(story.stateForChapter(chapter.id));
     assert.equal(story.parse(hash).state.camera_preset, scene.camera_preset);
   }
+});
+
+// ---------------------------------------------------------------------------
+// Task 11.1 — stage composition arithmetic
+// ---------------------------------------------------------------------------
+
+test('SC11: the bracket lane hugs the model instead of the page header', () => {
+  const projected = [
+    { y_px: 500, visible: true },
+    { y_px: 520, visible: true },
+    { y_px: 40, visible: false },   // ignored: not visible
+  ];
+  const lane = bracketLaneY(projected, { canvasHeight: 900, safeTopPx: 80 });
+  const lowestLane = lane + BRACKET_LANE_OFFSETS.marker;
+  assert.ok(lowestLane < 500, 'every lane must sit above the model');
+  assert.ok(lowestLane > 500 - 120, 'the lane must stay near the model, not at the top of the page');
+  assert.ok(lane >= 80, 'the lane must not slide under the page header');
+});
+
+test('SC11: an off-screen model falls back to a deterministic lane', () => {
+  const lane = bracketLaneY([], { canvasHeight: 900, safeTopPx: 80 });
+  assert.equal(lane, 80 + STAGE_LAYOUT.bracket_lane_gap_px);
+});
+
+test('SC11: a model near the top clamps to the safe area instead of overlapping the header', () => {
+  const lane = bracketLaneY([{ y_px: 90, visible: true }], { canvasHeight: 900, safeTopPx: 80 });
+  assert.equal(lane, 80);
+});
+
+test('SC11: the inspector card never covers the object it explains', () => {
+  const canvas = { width: 1440, height: 900 };
+  const card = { width: 370, height: 380 };
+  for (const x of [100, 400, 720, 1000, 1380]) {
+    const placed = inspectorPlacement({
+      anchor: { x_px: x, y_px: 450 }, card, canvas, safeTopPx: 80,
+    });
+    assert.equal(placed.overlaps_anchor, false, `card covers its anchor at x=${x}`);
+    assert.ok(placed.left >= 8 && placed.left + card.width <= canvas.width - 8);
+    assert.ok(placed.top >= 80 && placed.top + card.height <= canvas.height - 8);
+  }
+});
+
+test('SC11: the card prefers the side away from the anchor', () => {
+  const canvas = { width: 1440, height: 900 };
+  const card = { width: 370, height: 200 };
+  const left = inspectorPlacement({ anchor: { x_px: 1100, y_px: 400 }, card, canvas, safeTopPx: 60 });
+  assert.equal(left.side, 'left');
+  const right = inspectorPlacement({ anchor: { x_px: 300, y_px: 400 }, card, canvas, safeTopPx: 60 });
+  assert.equal(right.side, 'right');
 });
