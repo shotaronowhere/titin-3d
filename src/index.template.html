@@ -198,9 +198,23 @@ window.__titinBoot = { ready: false, problems: [] };
   .object-lay { color: #d6dde5; font-size: 11px; }
   .object-detail { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--edge);
     color: var(--dim); font-size: 10px; }
+  /* Inside the disclosure the summary already carries the rule that separates
+     the specialist text from the lay text; a second one would draw two. */
+  #objectInspectorDetails .object-detail { margin-top: 0; padding-top: 6px; border-top: 0; }
   .object-detail b { color: var(--text); font-weight: 600; }
-  .object-sources { display: flex; gap: 5px 9px; flex-wrap: wrap; margin-top: 7px; }
-  .object-sources a, #chapterSources a { color: #a9c9f2; text-decoration: underline; text-underline-offset: 2px; }
+  /* SC-13. Five stacked full-width links read as a bibliography the card was
+     never meant to be. One muted line at the foot cites the same records and
+     leaves the explanation as the thing the card is mostly made of. */
+  .object-sources { display: flex; gap: 4px 8px; flex-wrap: wrap; margin-top: 8px;
+    padding-top: 6px; border-top: 1px solid var(--edge); color: var(--dim); font-size: 9px;
+    line-height: 1.5; }
+  .object-sources a, #chapterSources a { color: #a9c9f2; text-decoration: underline;
+    text-underline-offset: 2px; }
+  .object-disclosure { cursor: pointer; color: var(--dim); font-size: 10px; font-weight: 600;
+    margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--edge); list-style: none; }
+  .object-disclosure::before { content: "▸ "; }
+  details[open] > .object-disclosure::before { content: "▾ "; }
+  .object-inspector-nav { display: flex; gap: 4px; }
   .object-instance { color: #ffd7e0; font-size: 9px; margin-top: 4px; }
   #guidedSelection { margin: 0 0 9px; padding: 6px 8px; border-left: 2px solid var(--titin);
     background: rgb(255 93 125 / 8%); color: #d8dfe7; font-size: 10px; }
@@ -430,17 +444,29 @@ window.__titinBoot = { ready: false, problems: [] };
       <div id="objectTooltipLabel"></div>
       <div id="objectTooltipText"></div>
     </div>
+    <!-- SC-13. Reading order is the contract here: name, evidence class, two
+         sentences of lay text — and then a disclosure a specialist opens for the
+         four labelled paragraphs that used to be dumped on everyone at once. The
+         citations are last, as one compact line, because a novice reads down to
+         them and a specialist goes looking for them. -->
     <section id="objectInspector" aria-label="Pinned structure explanation" hidden>
       <div class="object-inspector-head">
         <div>
           <div class="object-inspector-title" id="objectInspectorTitle"></div>
           <div class="object-evidence" id="objectInspectorEvidence"></div>
         </div>
-        <button id="objectInspectorClose" aria-label="Close pinned structure explanation">Close</button>
+        <div class="object-inspector-nav">
+          <button id="objectInspectorPrevious" aria-label="Previous structure">&#8249;</button>
+          <button id="objectInspectorNext" aria-label="Next structure">&#8250;</button>
+          <button id="objectInspectorClose" aria-label="Close pinned structure explanation">Close</button>
+        </div>
       </div>
       <div class="object-instance" id="objectInspectorInstance" hidden></div>
       <div class="object-lay" id="objectInspectorLay"></div>
-      <div class="object-detail" id="objectInspectorDetail"></div>
+      <details id="objectInspectorDetails">
+        <summary class="object-disclosure">For specialists</summary>
+        <div class="object-detail" id="objectInspectorDetail"></div>
+      </details>
       <div class="object-sources" id="objectInspectorSources"></div>
     </section>
     <div id="objectAnnouncement" class="sr-only" aria-live="polite"></div>
@@ -1827,6 +1853,24 @@ function sourceLinks(sources) {
   });
 }
 
+/**
+ * One muted line rather than a stack of full-width links. The full title stays
+ * available on hover and to assistive technology, so compactness costs nothing
+ * a reader actually needs.
+ */
+function sourceLine(sources) {
+  const fragment = document.createDocumentFragment();
+  fragment.append(document.createTextNode('Sources: '));
+  sources.forEach((source, index) => {
+    if (index) fragment.append(document.createTextNode(' · '));
+    const link = document.createElement('a');
+    link.href = source.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.textContent = source.citation; link.title = source.title;
+    fragment.append(link);
+  });
+  return fragment;
+}
+
 function detailBlock(annotation) {
   const fragment = document.createDocumentFragment();
   const expert = document.createElement('div');
@@ -1921,7 +1965,10 @@ function renderPinnedSelection() {
   $('objectInspectorEvidence').textContent = evidenceSummary(annotation);
   $('objectInspectorLay').textContent = annotation.lay_text;
   $('objectInspectorDetail').replaceChildren(detailBlock(annotation));
-  $('objectInspectorSources').replaceChildren(...sourceLinks(annotation.sources));
+  $('objectInspectorSources').replaceChildren(sourceLine(annotation.sources));
+  // The disclosure follows the audience the reader has already declared: a
+  // specialist in Evidence mode should not have to open it once per structure.
+  $('objectInspectorDetails').open = state.audienceMode === AUDIENCE_MODES.evidence;
   const instance = $('objectInspectorInstance');
   instance.hidden = !annotation.picked_instance;
   instance.textContent = annotation.picked_instance
@@ -1929,8 +1976,10 @@ function renderPinnedSelection() {
       + (annotation.picked_instance.archetype ? ` · ${annotation.picked_instance.archetype}` : '')
     : '';
   $('guidedSelection').hidden = false;
-  $('guidedSelectionLabel').textContent = `Selected: ${annotation.label}. `;
-  $('guidedSelectionText').textContent = annotation.lay_text;
+  $('guidedSelectionLabel').textContent = `Selected: ${annotation.label}`;
+  // The full explanation is in the pinned card; repeating it here made the
+  // reader parse the same paragraph twice.
+  $('guidedSelectionText').textContent = '';
   renderSelectedEvidence(annotation);
   syncAnnotationIndex();
   $('objectAnnouncement').textContent = `${annotation.label}. ${annotation.lay_text} `
@@ -1973,6 +2022,25 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
 }
 
 $('objectInspectorClose').onclick = () => clearPinnedSelection();
+
+// The keyboard could already walk the visible structures; the pointer could not.
+function stepPinnedSelection(direction) {
+  const available = availableAnnotations();
+  if (!available.length) return;
+  const current = available.findIndex((annotation) => (
+    annotation.target_type === pinnedPick?.target_type
+      && annotation.target_id === pinnedPick?.target_id
+  ));
+  const next = available[(current + direction + available.length) % available.length];
+  setPinnedSelection({
+    target_type: next.target_type,
+    target_id: next.target_id,
+    sarcomere_length_nm: visualization.currentState().sarcomere_length_nm,
+    scale: state.scale,
+  });
+}
+$('objectInspectorPrevious').onclick = () => stepPinnedSelection(-1);
+$('objectInspectorNext').onclick = () => stepPinnedSelection(1);
 
 function componentAvailable(targetId, report) {
   const hidden = new Set(report?.hidden_components || []);
@@ -2076,15 +2144,20 @@ function renderObjectOverlay() {
   const cardWidth = card.offsetWidth; const cardHeight = card.offsetHeight;
   const canvasTop = $('canvas').getBoundingClientRect().top;
   const headerBottom = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 8;
-  // The stage bar is the floor now, not the bottom of the canvas: this card has
+  // The stage bar is the floor, not the bottom of the canvas: this card has
   // pointer events, so letting it settle over the bar would put an explanation
-  // on top of the controls and swallow clicks meant for them.
+  // on top of the controls and swallow clicks meant for them. The placement
+  // rule itself is the tested one — this only tells it how much stage there is.
   const barTop = $('stageBar').getBoundingClientRect().top - canvasTop;
-  const gap = pinnedPick ? 24 : 14;
-  let left = point.x_px < width / 2 ? point.x_px + gap : point.x_px - cardWidth - gap;
-  let top = pinnedPick ? point.y_px - cardHeight / 2 : point.y_px + gap;
-  left = Math.max(8, Math.min(width - cardWidth - 8, left));
-  top = Math.max(headerBottom, Math.min(barTop - cardHeight - 8, top));
+  const placed = inspectorPlacement({
+    anchor: { x_px: point.x_px, y_px: point.y_px },
+    card: { width: cardWidth, height: cardHeight },
+    canvas: { width, height: barTop },
+    safeTopPx: headerBottom,
+    gapPx: pinnedPick ? STAGE_LAYOUT.card_gap_px : 14,
+  });
+  const left = placed.left;
+  const top = placed.top;
   card.style.left = `${left}px`; card.style.top = `${top}px`;
   const endX = Math.max(left, Math.min(left + cardWidth, point.x_px));
   const endY = Math.max(top, Math.min(top + cardHeight, point.y_px));
