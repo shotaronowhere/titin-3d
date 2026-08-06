@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import { SWEEP, sweepLength } from '../src/presentation/StretchSweep.js';
+import { GUIDED_COMPONENT_COLOR, COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 
@@ -94,4 +95,36 @@ test('SC12: the sweep stays inside the declared working range', () => {
   assert.match(page, /outside_working_range[\s\S]{0,220}sweepRange/,
     'the sweep bounds must be filtered by the reviewed working range');
   assert.equal(SWEEP.reduced_motion_period_ms < SWEEP.period_ms, true);
+});
+
+// ---------------------------------------------------------------------------
+// Task 12.2a — actin and myosin separable by luminance, not hue alone
+// ---------------------------------------------------------------------------
+
+const relLum = (hex) => {
+  const c = [16, 8, 0].map((s) => ((hex >> s) & 255) / 255)
+    .map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+const ratio = (a, b) => {
+  const [hi, lo] = [relLum(a), relLum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+const BG = 0x0e1116;
+
+test('SC12-2a: the two filament families are separable by luminance alone', () => {
+  // Luminance, not hue: this then holds in grayscale and under every CVD simulation.
+  assert.ok(ratio(GUIDED_COMPONENT_COLOR.thin_filament, GUIDED_COMPONENT_COLOR.thick_filament) >= 1.7,
+    'actin and myosin must not be the same brightness');
+  assert.ok(ratio(GUIDED_COMPONENT_COLOR.thin_filament, GUIDED_COMPONENT_COLOR.myosin_head) >= 1.7,
+    'actin and the head array must not be the same brightness');
+});
+
+test('SC12-2a: context stays visible without competing with titin', () => {
+  for (const role of ['thick_filament', 'thin_filament', 'myosin_head']) {
+    assert.ok(ratio(GUIDED_COMPONENT_COLOR[role], BG) >= 1.9,
+      `${role} must separate from the stage on a projector`);
+    assert.ok(ratio(GUIDED_COMPONENT_COLOR[role], BG) <= ratio(COMPONENT_COLOR.titin, BG) / 1.8,
+      `${role} must stay well below titin — the subject keeps the top of the range`);
+  }
 });

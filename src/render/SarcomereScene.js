@@ -147,11 +147,31 @@ export const COMPONENT_COLOR = Object.freeze({
 /**
  * SC-2 presentation hierarchy. These are colour-only alternatives for Guided
  * mode: evidence opacity, geometry, metadata and visibility remain untouched.
+ *
+ * SC-12 retuned the two filament families. As shipped they were 1.41 : 1 against
+ * each other and the head array was 1.06 : 1 against actin — a hue difference
+ * (green-grey against blue-grey) with almost no luminance difference, which is
+ * the worst available pair for deuteranopia and vanishes entirely in grayscale.
+ * The thick filament was also 1.58 : 1 against the stage, which on a projector
+ * with any ambient light is not there at all. Chapter 1 asks the viewer to see
+ * titin "beside actin and myosin"; the render was not making that distinction.
+ *
+ * The fix spends the range BETWEEN the background and titin on two separable
+ * steps rather than one flat grey, and it is a change of colour only — opacity
+ * still encodes confidence (Global Constraint 7). Against #0e1116: thick
+ * filament 1.95 : 1, head array 1.98 : 1, actin 3.45 : 1, with titin left at
+ * 6.41 : 1 so the subject keeps the top of the range by a factor of 1.8. Each
+ * value is a scaled version of the same identity hue the Evidence palette uses,
+ * so switching audience mode dims a colour without redefining it. The crowns
+ * cannot also be separated from their own filament by luminance inside that
+ * band — they stay distinguished by geometry, as one object with the filament.
+ * `data/release_gates.json` → accessibility.object_contrast_pairs records these
+ * three ratios and test/showcase_phase12.test.js enforces them.
  */
 export const GUIDED_COMPONENT_COLOR = Object.freeze({
-  thick_filament: 0x26384b,
-  myosin_head: 0x3b5368,
-  thin_filament: 0x3b514b,
+  thick_filament: 0x2d4661,
+  myosin_head: 0x33475d,
+  thin_filament: 0x337467,
   zdisc: 0x343b45,
   mline: 0x2b2530,
   alpha_actinin: 0x2d6470,
