@@ -510,6 +510,10 @@ import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
 import { COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
 import { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
 import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
+// Stage composition arithmetic. These rules decide whether the figure reads
+// correctly, so they live in a module a Node test asserts rather than inline
+// here, where nothing but a screenshot could check them.
+import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement } from './src/presentation/StageLayout.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -623,15 +627,29 @@ function announceUrlIssues(issues) {
     : '';
 }
 
+/**
+ * Evidence mode takes ~370 px of canvas. Resizing alone repairs the aspect but
+ * keeps the framing that was solved for the old one, which cropped the Z-disc,
+ * so the named camera preset is re-applied at the new aspect ratio.
+ *
+ * Only when the mode ACTUALLY changed. applyChapter also calls this, and it
+ * starts an animated camera transition a few lines later; an unconditional
+ * un-animated re-apply on the next frame would cut that transition short.
+ */
 function syncAudienceMode() {
   const evidence = state.audienceMode === AUDIENCE_MODES.evidence;
+  const reframe = $('app').dataset.mode !== state.audienceMode;
   $('app').dataset.mode = state.audienceMode;
   $('panel').setAttribute('aria-hidden', String(!evidence));
   $('audienceGuided').classList.toggle('on', !evidence);
   $('audienceGuided').setAttribute('aria-pressed', String(!evidence));
   $('audienceEvidence').classList.toggle('on', evidence);
   $('audienceEvidence').setAttribute('aria-pressed', String(evidence));
-  requestAnimationFrame(() => visualization.resize());
+  requestAnimationFrame(() => {
+    visualization.resize();
+    if (reframe) applyCameraPreset({ animate: false });
+    renderScienceOverlay();
+  });
 }
 
 let evidenceReturnFocus = $('audienceEvidence');
@@ -787,15 +805,15 @@ function renderScienceOverlay() {
   const nodes = [];
   if (showBands) {
     const canvasRect = $('canvas').getBoundingClientRect();
-    const headerBottom = $('stageHeader').getBoundingClientRect().bottom - canvasRect.top;
-    const laneY = Math.min(height * 0.32, headerBottom + 18);
+    const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasRect.top + 16;
+    const laneY = bracketLaneY([...projected.values()], { canvasHeight: height, safeTopPx });
     for (const bracket of activeShowcaseOverlay.brackets) {
       const start = projected.get(`${bracket.id}:start`);
       const end = projected.get(`${bracket.id}:end`);
       if (!start || !end || (!start.visible && !end.visible)) continue;
       const x1 = Math.max(12, Math.min(width - 12, start.x_px));
       const x2 = Math.max(12, Math.min(width - 12, end.x_px));
-      const y = laneY + (bracket.lane === 'minor' ? 24 : bracket.lane === 'marker' ? 45 : 0);
+      const y = laneY + (BRACKET_LANE_OFFSETS[bracket.lane] ?? BRACKET_LANE_OFFSETS.major);
       if (bracket.kind === 'marker') {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y - 5} V ${y + 7}`,
@@ -807,6 +825,16 @@ function renderScienceOverlay() {
           d: `M ${x1} ${y + 5} V ${y} H ${x2} V ${y + 5}`,
           class: `science-bracket${bracket.lane === 'minor' ? ' minor' : ''}`,
         }));
+        // Without a tick the label floats: the reader has to guess which
+        // boundary a bracket end refers to.
+        const tick = STAGE_LAYOUT.bracket_drop_tick_px;
+        for (const [x, point] of [[x1, start], [x2, end]]) {
+          if (!point.visible) continue;
+          nodes.push(svgElement('path', {
+            d: `M ${x} ${y + 5} V ${Math.min(point.y_px, y + 5 + tick)}`,
+            class: 'science-bracket minor',
+          }));
+        }
         nodes.push(svgElement('text', {
           x: (x1 + x2) / 2, y: y - 5, 'text-anchor': 'middle', class: 'science-label',
         }, bracket.label));

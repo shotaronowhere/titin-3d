@@ -1,6 +1,7 @@
 /** SC-11 gates: the tour reaches the cameras it declares, and stage composition. */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 
 import {
@@ -148,4 +149,38 @@ test('SC11: a large span uses the tighter margin', () => {
   const ratio = wide.view_span_nm / 1100;
   assert.ok(ratio > 1.05 && ratio < 1.2,
     `margin ratio ${ratio.toFixed(3)} should be near ${STAGE_LAYOUT.frame_margin_factor}`);
+});
+
+// ---------------------------------------------------------------------------
+// Task 11.3 — brackets attached to the model, and reframing on mode switch
+// ---------------------------------------------------------------------------
+
+const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
+const builder = readFileSync(new URL('../scripts/build_standalone.mjs', import.meta.url), 'utf8');
+
+test('SC11: the page derives the bracket lane from the model, not the header', () => {
+  assert.match(page, /import \{[^}]*bracketLaneY[^}]*\} from '\.\/src\/presentation\/StageLayout\.js'/);
+  assert.match(page, /bracketLaneY\(/);
+  assert.ok(!/const laneY = Math\.min\(height \* 0\.32/.test(page),
+    'the header-relative lane must be gone');
+  assert.match(page, /BRACKET_LANE_OFFSETS/,
+    'lane offsets must come from the module, not be restated in the page');
+});
+
+test('SC11: brackets drop a tick to the axis they measure', () => {
+  assert.match(page, /bracket_drop_tick_px/);
+});
+
+test('SC11: changing audience mode reframes the camera', () => {
+  assert.match(page, /function syncAudienceMode[\s\S]{0,600}applyCameraPreset\(/,
+    'the canvas changes width on mode switch, so the framing must be recomputed');
+});
+
+test('SC11: every StageLayout binding the page imports is re-exported by the bundle', () => {
+  const imported = page.match(/import \{([^}]*)\} from '\.\/src\/presentation\/StageLayout\.js'/);
+  assert.ok(imported, 'the page must import StageLayout');
+  for (const name of imported[1].split(',').map((part) => part.trim()).filter(Boolean)) {
+    assert.ok(builder.includes(name),
+      `scripts/build_standalone.mjs must re-export '${name}' or the standalone page breaks`);
+  }
 });
