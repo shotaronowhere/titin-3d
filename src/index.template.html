@@ -112,6 +112,14 @@ window.__titinBoot = { ready: false, problems: [] };
   .drawer-head { position: sticky; top: 0; z-index: 4; margin: 0 -18px; padding: 14px 18px 12px;
     background: rgb(22 27 34 / 96%); border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
   .drawer-head-row { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+  /* Sticky under the drawer head, so the section a reader is in stays named
+     however far down the panel they have scrolled. */
+  #drawerTabs { display: flex; gap: 4px; position: sticky; top: 74px; z-index: 3;
+    margin: 0 -18px 12px; padding: 8px 18px; background: rgb(22 27 34 / 96%);
+    border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
+  #drawerTabs button { flex: 1 1 auto; }
+  #drawerTabs button[aria-selected="true"] { background: var(--accent); color: #0e1116;
+    border-color: var(--accent); }
   h1 { font-size: 15px; margin: 0 0 4px; font-weight: 600; }
   h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
     color: var(--dim); margin: 20px 0 8px; font-weight: 600; }
@@ -340,7 +348,6 @@ window.__titinBoot = { ready: false, problems: [] };
   .finding-ESTABLISHED { color: #7fc4a2; }
   .finding-PROPOSED { color: #e8c16d; }
   .finding-OPEN { color: #9aa7b8; }
-  .science-separator { height: 1px; background: var(--edge); margin: 16px 0 0; }
   .activation-note { margin: 7px 0 0; color: #c9b989; font-size: 10px; }
   /* Tablet touch targets. The drawer's density is deliberate on a desktop, where a
      mouse can hit a 28 px control comfortably; a finger cannot. Keyed on the
@@ -565,94 +572,123 @@ window.__titinBoot = { ready: false, problems: [] };
         <button id="closeEvidence">Close</button>
       </div>
     </div>
-
-    <h2>Selected structure</h2>
-    <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
-
-    <h2>Current guided claim</h2>
-    <div class="note" id="chapterEvidence">
-      <b id="chapterEvidenceTitle">—</b>
-      <div id="chapterExpert"></div>
-      <div id="chapterSources"></div>
-      <ul id="chapterNotClaimed"></ul>
+    <!-- SC-13. The drawer used to open on two screens of prose with every
+         control below the fold and the citations near the top. Four tabs put
+         the controls first, the numbers second, the argument third and the
+         bibliography last — which is the order a reader asks for them in. -->
+    <div id="drawerTabs" role="tablist" aria-label="Evidence drawer sections">
+      <button id="tabInspect" role="tab" aria-selected="true" aria-controls="panelInspect">Inspect</button>
+      <button id="tabMeasure" role="tab" aria-selected="false" aria-controls="panelMeasure">Measure</button>
+      <button id="tabEvidence" role="tab" aria-selected="false" aria-controls="panelEvidence">Evidence</button>
+      <button id="tabSources" role="tab" aria-selected="false" aria-controls="panelSources">Sources &amp; build</button>
     </div>
 
-    <h2>Expert cards</h2>
-    <div class="sub" style="margin:0 0 6px">Scope and omission notes for the optional
-      context layers. These are Evidence-mode only.</div>
-    <div id="expertCards"></div>
-    <div class="science-separator"></div>
+    <div id="panelInspect" role="tabpanel" aria-labelledby="tabInspect">
+      <h2 id="selectedStructureHeading">Selected structure</h2>
+      <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
 
-    <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
-    <div class="sub" id="viewDescription">Titin positioned on the thick-filament periphery beside
-      one myosin thick filament and its six nearest actin thin filaments; the representative
-      azimuth is schematic and the extended lattice is optional.</div>
+      <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
+      <div class="sub" id="viewDescription">Titin positioned on the thick-filament periphery beside
+        one myosin thick filament and its six nearest actin thin filaments; the representative
+        azimuth is schematic and the extended lattice is optional.</div>
 
-    <h2>Scale</h2>
-    <div class="row" id="scales"></div>
+      <h2>Scale</h2>
+      <div class="row" id="scales"></div>
 
-    <h2>Sarcomere length</h2>
-    <div class="sl" id="slReadout">— <small>nm</small></div>
-    <div class="sub" style="margin:0 0 6px">Set it on the stage bar below the model.</div>
-    <div class="activation-note" id="activationStatement"></div>
-    <div class="note warn" id="stateCaveat" hidden></div>
+      <h2>Close-up</h2>
+      <div class="sub" style="margin:0 0 6px">Flies to a landmark and fills the view
+        with a span small enough to resolve it. Landmarks are read from the geometry at
+        the current length, so they follow the slider. Enables the detail layer.</div>
+      <div class="row" id="closeups"></div>
+      <div class="sub" id="closeupReadout" style="margin:6px 0 0"></div>
 
-    <h2>Close-up</h2>
-    <div class="sub" style="margin:0 0 6px">Flies to a landmark and fills the view
-      with a span small enough to resolve it. Landmarks are read from the geometry at
-      the current length, so they follow the slider. Enables the detail layer.</div>
-    <div class="row" id="closeups"></div>
-    <div class="sub" id="closeupReadout" style="margin:6px 0 0"></div>
+      <h2>Detail</h2>
+      <div class="sub" style="margin:0 0 6px">The top control covers the immediate filament
+        neighbourhood. Expand to additional lattice rings here only when transverse organization matters.</div>
+      <div class="row" id="toggles"></div>
 
-    <h2>Detail</h2>
-    <div class="sub" style="margin:0 0 6px">The top control covers the immediate filament
-      neighbourhood. Expand to additional lattice rings here only when transverse organization matters.</div>
-    <div class="row" id="toggles"></div>
+      <h2>Components</h2>
+      <div class="sub" style="margin:0 0 6px">Hiding a component changes only what is
+        drawn — never where anything sits. Titin's anchoring is unchanged.</div>
+      <div class="row" id="components"></div>
+      <div class="note" id="componentTargetReadout" hidden aria-live="polite"></div>
 
-    <h2>Components</h2>
-    <div class="sub" style="margin:0 0 6px">Hiding a component changes only what is
-      drawn — never where anything sits. Titin's anchoring is unchanged.</div>
-    <div class="row" id="components"></div>
-    <div class="note" id="componentTargetReadout" hidden aria-live="polite"></div>
+      <h2>Titin regions</h2>
+      <div class="sub" style="margin:0 0 6px">Select a region to highlight and focus its
+        canonical span. A lighter titin-family pink carries selection only; opacity continues to encode evidence.</div>
+      <div class="row" id="regions"></div>
+      <div class="note" id="regionReadout" hidden aria-live="polite"></div>
 
-    <h2>Titin regions</h2>
-    <div class="sub" style="margin:0 0 6px">Select a region to highlight and focus its
-      canonical span. A lighter titin-family pink carries selection only; opacity continues to encode evidence.</div>
-    <div class="row" id="regions"></div>
-    <div class="note" id="regionReadout" hidden aria-live="polite"></div>
+      <h2>Inspect structures</h2>
+      <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
+        choose a visible object here or directly in the 3D view. Every explanation resolves its bibliography from the canonical source registry.</div>
+      <div class="row" id="annotations"></div>
+    </div>
 
-    <h2>How this model was built</h2>
-    <div class="sub" style="margin:0 0 6px">Every figure below is counted from the
-      loaded records when this page renders, not written into the copy.</div>
-    <div id="provenancePipeline"></div>
+    <div id="panelMeasure" role="tabpanel" aria-labelledby="tabMeasure" hidden>
+      <h2>Sarcomere length</h2>
+      <div class="sl" id="slReadout">— <small>nm</small></div>
+      <div class="sub" style="margin:0 0 6px">Set it on the stage bar below the model.</div>
+      <div class="activation-note" id="activationStatement"></div>
+      <div class="note warn" id="stateCaveat" hidden></div>
 
-    <h2>Lattice cross-section</h2>
-    <div class="sub" style="margin:0 0 6px">Looking down the filament axis, drawn
-      flat at one shared scale. Both panels use the same centre and projection, so
-      the change in spacing is a real comparison rather than a change of zoom.</div>
-    <div id="latticeCrossSection"></div>
+      <h2>Geometry at this length</h2>
+      <table id="metrics"></table>
 
-    <h2>Geometry at this length</h2>
-    <table id="metrics"></table>
+      <h2>Lattice cross-section</h2>
+      <div class="sub" style="margin:0 0 6px">Looking down the filament axis, drawn
+        flat at one shared scale. Both panels use the same centre and projection, so
+        the change in spacing is a real comparison rather than a change of zoom.</div>
+      <div id="latticeCrossSection"></div>
 
-    <h2>Legend</h2>
-    <div id="legend"></div>
+      <h2>Legend</h2>
+      <div id="legend"></div>
+    </div>
 
-    <h2>Evidence</h2>
-    <div class="sub" style="margin:0 0 6px">Transparency encodes confidence;
-      colour encodes identity.</div>
-    <button id="evidenceToggle" class="on" aria-pressed="true">confidence display</button>
-    <div id="evidence" style="margin-top:8px"></div>
+    <div id="panelEvidence" role="tabpanel" aria-labelledby="tabEvidence" hidden>
+      <h2>Current guided claim</h2>
+      <div class="note" id="chapterEvidence">
+        <b id="chapterEvidenceTitle">—</b>
+        <div id="chapterExpert"></div>
+        <div id="chapterSources"></div>
+        <ul id="chapterNotClaimed"></ul>
+      </div>
 
-    <h2>Inspect structures</h2>
-    <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
-      choose a visible object here or directly in the 3D view. Every explanation resolves its bibliography from the canonical source registry.</div>
-    <div class="row" id="annotations"></div>
+      <h2>Expert cards</h2>
+      <div class="sub" style="margin:0 0 6px">Scope and omission notes for the optional
+        context layers. These are Evidence-mode only.</div>
+      <div id="expertCards"></div>
 
-    <h2>Not claimed by this render</h2>
-    <ul id="notClaimed"></ul>
+      <h2>Evidence</h2>
+      <div class="sub" style="margin:0 0 6px">Transparency encodes confidence;
+        colour encodes identity.</div>
+      <button id="evidenceToggle" class="on" aria-pressed="true">confidence display</button>
+      <div id="evidence" style="margin-top:8px"></div>
 
-    <div id="notes"></div>
+      <h2>Not claimed by this render</h2>
+      <ul id="notClaimed"></ul>
+
+      <div id="notes"></div>
+    </div>
+
+    <div id="panelSources" role="tabpanel" aria-labelledby="tabSources" hidden>
+      <h2>How this model was built</h2>
+      <div class="sub" style="margin:0 0 6px">Every figure below is counted from the
+        loaded records when this page renders, not written into the copy.</div>
+      <div id="provenancePipeline"></div>
+
+      <h2>Bibliography</h2>
+      <div class="sub" style="margin:0 0 6px">Every record in the canonical registry,
+        ordered by citation. A titin-coloured rule marks the records this build's
+        annotations and chapters actually cite.</div>
+      <div id="bibliography"></div>
+
+      <h2>Cite this view</h2>
+      <div class="sub" style="margin:0 0 6px">The link restores this exact state; the
+        build identifier says which page produced it.</div>
+      <button id="copyViewLink">Copy link to this view</button>
+      <div class="sub" id="copyViewStatus" aria-live="polite"></div>
+    </div>
   </aside>
 </div>
 
@@ -693,7 +729,12 @@ const state = { showDomains: false, showFilamentContext: true,
                 rings: 1, mirror: true, view: 'titin_story', closeup: null,
                 scale: SCALES.context, region: null, showEvidence: false,
                 audienceMode: AUDIENCE_MODES.guided, storyStep: null,
-                selectedTarget: null, cameraPreset: 'view.titin_story' };
+                selectedTarget: null, cameraPreset: 'view.titin_story',
+                // SC-13. Which drawer section is open. Deliberately NOT part of
+                // the shared URL state: it is a reading position, not a claim
+                // about the model, and story.serialize() is the contract for
+                // what a shared link reproduces.
+                drawerTab: 'inspect' };
 
 try {
   visualization = await TitinVisualization.create($('canvas'), {
@@ -839,6 +880,12 @@ function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {
 
 function openEvidence(trigger) {
   evidenceReturnFocus = trigger;
+  // The drawer opens on the controls. A reader who left it on the bibliography
+  // last time asked for a bibliography then, not now; the one caller that wants
+  // a particular section — the inspector's expert-card link — sets it after
+  // this returns.
+  state.drawerTab = 'inspect';
+  syncDrawerTabs();
   setAudienceMode(AUDIENCE_MODES.evidence, { focusDrawer: true });
 }
 
@@ -851,6 +898,26 @@ $('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'));
 $('closeEvidence').onclick = closeEvidence;
 $('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'));
 $('stageEvidenceLink').onclick = () => openEvidence($('stageEvidenceLink'));
+
+// SC-13 drawer sections, in the order a reader asks for them: what am I looking
+// at, what does it measure, what is the evidence, where did it come from.
+const DRAWER_TABS = [
+  ['inspect', 'tabInspect', 'panelInspect'],
+  ['measure', 'tabMeasure', 'panelMeasure'],
+  ['evidence', 'tabEvidence', 'panelEvidence'],
+  ['sources', 'tabSources', 'panelSources'],
+];
+function syncDrawerTabs() {
+  for (const [id, tabId, panelId] of DRAWER_TABS) {
+    const selected = state.drawerTab === id;
+    $(tabId).setAttribute('aria-selected', String(selected));
+    $(panelId).hidden = !selected;
+  }
+}
+for (const [id, tabId] of DRAWER_TABS) {
+  $(tabId).onclick = () => { state.drawerTab = id; syncDrawerTabs(); };
+}
+syncDrawerTabs();
 
 // A novice cannot act on "shown in red beside actin and myosin" without a key.
 // The swatches read the palette actually in use, so Guided's subdued context
@@ -1937,6 +2004,8 @@ function resolvedAnnotation(selection) {
 
 function renderSelectedEvidence(annotation) {
   const box = $('selectedEvidence');
+  // An empty heading over nothing reads as a section that failed to load.
+  $('selectedStructureHeading').hidden = !annotation;
   box.hidden = !annotation;
   if (!annotation) { box.replaceChildren(); return; }
   const title = document.createElement('b'); title.textContent = annotation.label;
