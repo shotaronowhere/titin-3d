@@ -41,7 +41,9 @@
     "test:sc9": "node --test --test-concurrency=1 test/showcase_phase9.test.js test/standalone.test.js",
     "verify:sc9": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc9 && npm run validate:gates && python3 scripts/neg_control_release_gates.py",
     "test:sc10": "node --test --test-concurrency=1 test/showcase_phase10.test.js test/showcase_phase8.test.js test/showcase_phase2.test.js test/standalone.test.js",
-    "verify:sc10": "npm run check:build && npm run typecheck && npm run test:sc10"
+    "verify:sc10": "npm run check:build && npm run typecheck && npm run test:sc10",
+    "test:sc11": "node --test --test-concurrency=1 test/showcase_phase11.test.js test/presentation.test.js test/phase10.test.js test/standalone.test.js",
+    "verify:sc11": "npm run check:build && npm run typecheck && npm run test:sc11 && npm run validate:presentation && npm run validate:annotations"
   },
   "license": "CC-BY-4.0",
   "dependencies": {
