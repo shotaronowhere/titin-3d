@@ -138,6 +138,61 @@ export function labelBudget(candidates, viewportClass, budget, { audience = 'gui
 }
 
 /**
+ * Fraction of the model that has to be in view for band brackets to mean
+ * anything. Below it a bracket is a line whose ends are both off-screen.
+ */
+const BRACKET_LANE_MIN_COVERAGE = 0.5;
+
+/**
+ * Whether the bracket lane should hold band brackets at this camera span.
+ *
+ * @param {number|null} cameraSpanNm width of the view, in nanometres
+ * @param {number} modelSpanNm axial extent of the model being labelled
+ * @returns {boolean}
+ */
+export function bracketLaneVisible(cameraSpanNm, modelSpanNm) {
+  const span = Number(cameraSpanNm);
+  const model = Number(modelSpanNm);
+  if (!Number.isFinite(span) || span <= 0 || !Number.isFinite(model) || model <= 0) return false;
+  return span >= model * BRACKET_LANE_MIN_COVERAGE;
+}
+
+/**
+ * Where the current close-up is looking, as a fraction of the whole model.
+ *
+ * The brackets are suppressed when the camera is too close for them to mean
+ * anything — correctly, and observably: chapters 3, 4 and 5 of the tour draw
+ * none. The result was that at exactly the moment a viewer most needs to know
+ * where they are, the page told them least: chapter 3 frames a 70 nm PEVK
+ * segment, chapter 4 a ~200 nm Z-disc, chapter 5 the C-zone, each arriving as an
+ * unlabelled field with no relationship to the molecule the previous chapter
+ * introduced.
+ *
+ * This adds no chrome. The locator occupies the lane the brackets vacate and is
+ * drawn only when they are not — {@link bracketLaneVisible} is the single
+ * decision both consult, which is why they cannot both appear or both vanish.
+ *
+ * @param {number|null} cameraSpanNm width of the view, in nanometres
+ * @param {number} cameraCentreNm axial position the camera is looking at
+ * @param {number} modelSpanNm axial extent of the model, from x = 0
+ * @returns {{from01:number, to01:number, visible:boolean}}
+ */
+export function locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm) {
+  const span = Number(cameraSpanNm);
+  const centre = Number(cameraCentreNm);
+  const model = Number(modelSpanNm);
+  const measurable = Number.isFinite(span) && span > 0
+    && Number.isFinite(centre) && Number.isFinite(model) && model > 0;
+  if (!measurable) return { from01: 0, to01: 1, visible: false };
+  const clamp01 = (value) => Math.max(0, Math.min(1, value));
+  return {
+    from01: clamp01((centre - span / 2) / model),
+    to01: clamp01((centre + span / 2) / model),
+    visible: !bracketLaneVisible(span, model),
+  };
+}
+
+/**
  * Screen scale of the stage, in CSS pixels per nanometre.
  *
  * `viewSpanNm` is the width of the scene at the depth the camera is looking at,

@@ -5,11 +5,14 @@ import { readFileSync } from 'node:fs';
 
 import { SWEEP, sweepLength } from '../src/presentation/StretchSweep.js';
 import { GUIDED_COMPONENT_COLOR, COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
-import { labelBudget } from '../src/presentation/StageLayout.js';
+import { labelBudget, locatorExtent, bracketLaneVisible } from '../src/presentation/StageLayout.js';
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 
 const model = await TitinModel.create(nodeReader());
+const annotations = JSON.parse(
+  readFileSync(new URL('../data/annotations.json', import.meta.url), 'utf8'),
+);
 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 
@@ -191,4 +194,61 @@ test('SC12-2b: the page enforces the budget it reads from the claims record', ()
     'the budget must be READ from the reviewed record, never restated in the page');
   assert.ok(!/guided_secondary_context_labels_desktop_max:\s*\d/.test(page),
     'the page must not restate the budget numbers');
+});
+
+// ---------------------------------------------------------------------------
+// Task 12.2c — a locator for close-ups, in the lane the brackets vacate
+// ---------------------------------------------------------------------------
+
+test('SC12-2c: the locator and the brackets are never both drawn', () => {
+  for (const span of [1100, 800, 400, 200, 70, 20]) {
+    const loc = locatorExtent(span, 550, 1100);
+    assert.notEqual(loc.visible, bracketLaneVisible(span, 1100),
+      `at a ${span} nm camera span exactly one of locator/brackets must hold the lane`);
+  }
+});
+
+test('SC12-2c: the shaded extent is the camera span, to scale', () => {
+  const loc = locatorExtent(220, 110, 1100);
+  assert.ok(Math.abs((loc.to01 - loc.from01) - 220 / 1100) < 1e-9);
+  assert.ok(Math.abs(loc.from01 - 0) < 1e-9);
+});
+
+test('SC12-2c: a view wider than the model clamps instead of overflowing', () => {
+  const loc = locatorExtent(4000, 550, 1100);
+  assert.equal(loc.from01, 0);
+  assert.equal(loc.to01, 1);
+});
+
+test('SC12-2c: a stage with no measurable span draws no locator', () => {
+  // Same discipline as the scale bar: a locator claiming a wrong extent is
+  // worse than no locator.
+  for (const bad of [null, 0, -1, NaN, Infinity]) {
+    assert.equal(locatorExtent(bad, 550, 1100).visible, false);
+    assert.equal(locatorExtent(220, 110, bad).visible, false);
+    assert.equal(bracketLaneVisible(bad, 1100), false);
+  }
+});
+
+test('SC12-2c: the locator follows the camera along the model', () => {
+  const near = locatorExtent(200, 100, 1100);
+  const far = locatorExtent(200, 1000, 1100);
+  assert.ok(far.from01 > near.from01 && far.to01 > near.to01);
+  // A camera at the far end cannot shade past the end of the model.
+  assert.ok(far.to01 <= 1 && near.from01 >= 0);
+});
+
+test('SC12-2c: the page draws the locator only in the lane the brackets vacate', () => {
+  assert.match(page, /locatorExtent\(/);
+  assert.match(page, /bracketLaneVisible\(/);
+  // One decision, used twice: the two cannot disagree about who holds the lane.
+  assert.match(page, /const laneHoldsBrackets = [\s\S]{0,200}bracketLaneVisible\(/);
+  assert.match(page, /if \(showBands && laneHoldsBrackets\)/);
+  assert.match(page, /if \(!laneHoldsBrackets/);
+});
+
+test('SC12-2c: the stage declares the locator as presentation geometry', () => {
+  const meaning = annotations.meta.stage_render_meaning;
+  assert.match(meaning, /locator/i);
+  assert.match(meaning, /camera/i);
 });

@@ -5,7 +5,7 @@
     "phase": "SC-4 — Object-linked annotations and evidence access",
     "purpose": "Canonical explanatory copy for directly pickable rendered components. Geometry, coordinates, evidence measurements, and bibliography remain authoritative in their existing scientific records; this file is the validated annotation presentation layer.",
     "scope": "Generic titin education through the retained human skeletal N2A-containing Q8WZ42 reference model.",
-    "stage_render_meaning": "Stage overlays are presentation geometry, not molecular structure. The band and zone brackets label projected axial positions and their drop ticks mark the boundary each label refers to; the continuity trace marks one titin path at a fixed screen width; the scale bar states the nanometre span of a drawn length, taken from the width of the camera's view at the depth it is focused on. Because the view is a perspective projection, that scale holds at the focused depth and objects nearer the camera read larger; the bar is withdrawn rather than approximated whenever the stage has no measurable span."
+    "stage_render_meaning": "Stage overlays are presentation geometry, not molecular structure. The band and zone brackets label projected axial positions and their drop ticks mark the boundary each label refers to; the continuity trace marks one titin path at a fixed screen width; the scale bar states the nanometre span of a drawn length, taken from the width of the camera's view at the depth it is focused on. Because the view is a perspective projection, that scale holds at the focused depth and objects nearer the camera read larger; the bar is withdrawn rather than approximated whenever the stage has no measurable span. When the camera is too close for the band brackets to mean anything they are withdrawn and a locator takes the same lane: a miniature of the half-sarcomere, with its Z-disc, I-band/A-band boundary and M-band centre ticked from the same canonical positions the brackets use, and the camera's own view span shaded on it to scale. The locator states where the camera is looking; it is not a control and moves no coordinate."
   },
   "components": [
     {
@@ -17,10 +17,20 @@
       "scope": "Human canonical skeletal N2A-containing titin (Q8WZ42); one representative half-sarcomere molecule.",
       "claim_evidence_class": "STRONGLY INFERRED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1083/jcb.106.5.1563", "UniProt:Q8WZ42"],
+      "source_ids": [
+        "10.1083/jcb.106.5.1563",
+        "UniProt:Q8WZ42"
+      ],
       "render_meaning": "Pink region-linked tubes and the thin continuity trace identify one continuous titin path; tube width and unresolved transverse routing are not molecular dimensions.",
-      "not_claimed": ["an atom-resolved continuous path", "a known universal transverse azimuth", "uniform elasticity along the molecule"],
-      "binding": { "kind": "showcase_claim", "id": "titin_continuity_trace" }
+      "not_claimed": [
+        "an atom-resolved continuous path",
+        "a known universal transverse azimuth",
+        "uniform elasticity along the molecule"
+      ],
+      "binding": {
+        "kind": "showcase_claim",
+        "id": "titin_continuity_trace"
+      }
     },
     {
       "id": "component-thick-filament",
@@ -31,10 +41,20 @@
       "scope": "Retained mammalian striated-muscle filament context in the human skeletal reference model.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1016/j.jmb.2020.06.025", "10.1085/jgp.202012713"],
+      "source_ids": [
+        "10.1016/j.jmb.2020.06.025",
+        "10.1085/jgp.202012713"
+      ],
       "render_meaning": "Blue cylinders locate the thick-filament backbone; the central head-free interval is the bare zone, not the width of the M-band.",
-      "not_claimed": ["an atom-resolved myosin filament surface", "a universal activation state", "that titin runs through the filament core"],
-      "binding": { "kind": "sarcomere_component", "id": "thick_filament" }
+      "not_claimed": [
+        "an atom-resolved myosin filament surface",
+        "a universal activation state",
+        "that titin runs through the filament core"
+      ],
+      "binding": {
+        "kind": "sarcomere_component",
+        "id": "thick_filament"
+      }
     },
     {
       "id": "component-myosin-heads",
@@ -45,10 +65,20 @@
       "scope": "Conserved mammalian thick-filament context; structural measurements include cardiac preparations and are not used to redefine skeletal titin coordinates.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1073/pnas.2311883121", "10.1085/jgp.202012713"],
+      "source_ids": [
+        "10.1073/pnas.2311883121",
+        "10.1085/jgp.202012713"
+      ],
       "render_meaning": "Light-blue paired capsules represent resolved head skeleton directions at crown levels; they appear only when the periodicity is screen-resolvable.",
-      "not_claimed": ["a biochemical activation state", "simultaneous actin binding", "exact mutual crown phase between neighbouring filaments"],
-      "binding": { "kind": "sarcomere_component", "id": "thick_filament" }
+      "not_claimed": [
+        "a biochemical activation state",
+        "simultaneous actin binding",
+        "exact mutual crown phase between neighbouring filaments"
+      ],
+      "binding": {
+        "kind": "sarcomere_component",
+        "id": "thick_filament"
+      }
     },
     {
       "id": "component-thin-filament",
@@ -59,10 +89,20 @@
       "scope": "Mammalian striated-muscle context in the retained skeletal reference model.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1016/j.cell.2021.02.047", "10.1016/j.yjmcc.2016.04.013"],
+      "source_ids": [
+        "10.1016/j.cell.2021.02.047",
+        "10.1016/j.yjmcc.2016.04.013"
+      ],
       "render_meaning": "Green cylinders mark thin-filament paths and their changing overlap with the thick filament; cylinder diameter is a rendering proxy.",
-      "not_claimed": ["a universal thin-filament length for every muscle", "resolved actin subunits in the overview", "troponin or tropomyosin regulatory state"],
-      "binding": { "kind": "sarcomere_component", "id": "thin_filament" }
+      "not_claimed": [
+        "a universal thin-filament length for every muscle",
+        "resolved actin subunits in the overview",
+        "troponin or tropomyosin regulatory state"
+      ],
+      "binding": {
+        "kind": "sarcomere_component",
+        "id": "thin_filament"
+      }
     },
     {
       "id": "component-thin-filament-twist",
@@ -73,10 +113,19 @@
       "scope": "Mammalian thin-filament structural context; used only as a local morphology cue in the skeletal reference model.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1016/j.cell.2021.02.047"],
+      "source_ids": [
+        "10.1016/j.cell.2021.02.047"
+      ],
       "render_meaning": "Two narrow helices 180° apart depict the measured long-pitch crossover only above the aliasing threshold.",
-      "not_claimed": ["resolved individual actin monomers", "a regulatory-state model", "an exact helical phase shared by every filament"],
-      "binding": { "kind": "sarcomere_component", "id": "thin_filament" }
+      "not_claimed": [
+        "resolved individual actin monomers",
+        "a regulatory-state model",
+        "an exact helical phase shared by every filament"
+      ],
+      "binding": {
+        "kind": "sarcomere_component",
+        "id": "thin_filament"
+      }
     },
     {
       "id": "component-zdisc",
@@ -87,10 +136,19 @@
       "scope": "Local vertebrate skeletal Z-disc context applied to the retained human skeletal titin reference without claiming an isoform-specific complete lattice.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1016/j.cell.2021.02.047"],
+      "source_ids": [
+        "10.1016/j.cell.2021.02.047"
+      ],
       "render_meaning": "The gray slab locates the boundary; close-up filament and crosslink proxies carry the supported local topology while the slab becomes visually subordinate.",
-      "not_claimed": ["a universal regular Z-disc lattice", "an alternating titin–actin end-to-end chain", "a resolved complete lateral route for titin"],
-      "binding": { "kind": "sarcomere_component", "id": "zdisc" }
+      "not_claimed": [
+        "a universal regular Z-disc lattice",
+        "an alternating titin–actin end-to-end chain",
+        "a resolved complete lateral route for titin"
+      ],
+      "binding": {
+        "kind": "sarcomere_component",
+        "id": "zdisc"
+      }
     },
     {
       "id": "component-alpha-actinin",
@@ -101,10 +159,19 @@
       "scope": "Fast skeletal thin-form Z-disc evidence used as local structural context, not a universal vertebrate Z-disc lattice.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1016/j.cell.2021.02.047"],
+      "source_ids": [
+        "10.1016/j.cell.2021.02.047"
+      ],
       "render_meaning": "Cyan connector proxies mark α-actinin crosslink relationships; exact doublets are restricted to Evidence mode and resolvable zoom.",
-      "not_claimed": ["a complete α-actinin network", "an isoform-specific human lattice register", "one universal activation-dependent Z-disc conformation"],
-      "binding": { "kind": "showcase_claim", "id": "zdisc_alpha_actinin_doublets" }
+      "not_claimed": [
+        "a complete α-actinin network",
+        "an isoform-specific human lattice register",
+        "one universal activation-dependent Z-disc conformation"
+      ],
+      "binding": {
+        "kind": "showcase_claim",
+        "id": "zdisc_alpha_actinin_doublets"
+      }
     },
     {
       "id": "component-telethonin",
@@ -115,10 +182,19 @@
       "scope": "Human isolated Z1Z2–telethonin complex topology shown within a schematic in-situ Z-disc context.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1038/nature04343"],
+      "source_ids": [
+        "10.1038/nature04343"
+      ],
       "render_meaning": "The pale connector sits within the finite overlap of two antiparallel titin Z1–Z2 proxies; both titin directions remain visible.",
-      "not_claimed": ["the complete in-situ Z-disc route", "a measured display length for the glyph", "single-ended telethonin binding"],
-      "binding": { "kind": "showcase_claim", "id": "zdisc_telethonin_sandwich" }
+      "not_claimed": [
+        "the complete in-situ Z-disc route",
+        "a measured display length for the glyph",
+        "single-ended telethonin binding"
+      ],
+      "binding": {
+        "kind": "showcase_claim",
+        "id": "zdisc_telethonin_sandwich"
+      }
     },
     {
       "id": "component-mline",
@@ -129,10 +205,20 @@
       "scope": "Mammalian striated-muscle midpoint and M-band integration relationships in the retained skeletal reference model.",
       "claim_evidence_class": "STRONGLY INFERRED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1083/jcb.134.6.1441", "10.1038/embor.2010.65"],
+      "source_ids": [
+        "10.1083/jcb.134.6.1441",
+        "10.1038/embor.2010.65"
+      ],
       "render_meaning": "A zero-width purple ring marks the midpoint; sparse close-up crosslinks provide relationship context without an opaque M-line slab.",
-      "not_claimed": ["a measured M-band width", "an M1 density", "that the bare-zone width is the M-band width"],
-      "binding": { "kind": "sarcomere_component", "id": "mline" }
+      "not_claimed": [
+        "a measured M-band width",
+        "an M1 density",
+        "that the bare-zone width is the M-band width"
+      ],
+      "binding": {
+        "kind": "sarcomere_component",
+        "id": "mline"
+      }
     },
     {
       "id": "component-mband-crosslinks",
@@ -143,10 +229,20 @@
       "scope": "Vertebrate skeletal M-band relationship context; exact human Q8WZ42 crosslink coordinates remain unresolved.",
       "claim_evidence_class": "STRONGLY INFERRED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1083/jcb.134.6.1441", "10.1038/embor.2010.65"],
+      "source_ids": [
+        "10.1083/jcb.134.6.1441",
+        "10.1038/embor.2010.65"
+      ],
       "render_meaning": "Sparse purple segment proxies connect neighboring thick-filament slices only in the resolved M-band close-up.",
-      "not_claimed": ["exact crosslink protein identity for each connector", "exact axial coordinates", "a rigid universal M-band plate"],
-      "binding": { "kind": "showcase_claim", "id": "mband_midpoint_and_crosslinks" }
+      "not_claimed": [
+        "exact crosslink protein identity for each connector",
+        "exact axial coordinates",
+        "a rigid universal M-band plate"
+      ],
+      "binding": {
+        "kind": "showcase_claim",
+        "id": "mband_midpoint_and_crosslinks"
+      }
     },
     {
       "id": "component-mybpc",
@@ -157,10 +253,20 @@
       "scope": "Fast skeletal MyBP-C (permeabilized mouse psoas) shown as optional context for the human skeletal N2A titin reference; no cardiac coordinates are imported.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["10.1038/s41467-024-46957-7"],
+      "source_ids": [
+        "10.1038/s41467-024-46957-7"
+      ],
       "render_meaning": "Three short yellow proxies per stripe mark C-zone periodic context on one representative thick filament; none reaches a thin filament and none touches titin.",
-      "not_claimed": ["cardiac cMyBP-C coordinates", "a universal rigid thick-to-thin bridge", "a direct titin–MyBP-C contact", "a resolved stripe register, azimuth, reach, or binding pose"],
-      "binding": { "kind": "showcase_claim", "id": "mybpc_czone_context" }
+      "not_claimed": [
+        "cardiac cMyBP-C coordinates",
+        "a universal rigid thick-to-thin bridge",
+        "a direct titin–MyBP-C contact",
+        "a resolved stripe register, azimuth, reach, or binding pose"
+      ],
+      "binding": {
+        "kind": "showcase_claim",
+        "id": "mybpc_czone_context"
+      }
     },
     {
       "id": "component-titin-domains",
@@ -171,10 +277,20 @@
       "scope": "Folded-domain architecture of human canonical Q8WZ42 in the retained skeletal N2A-containing model.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
-      "source_ids": ["UniProt:Q8WZ42", "10.1016/j.jmb.2020.06.025"],
+      "source_ids": [
+        "UniProt:Q8WZ42",
+        "10.1016/j.jmb.2020.06.025"
+      ],
       "render_meaning": "Instanced capsules and ellipsoids encode domain class, position, and orientation; primitive surfaces are archetypes rather than unique molecular meshes.",
-      "not_claimed": ["atom-resolved surfaces for every domain", "physiological unfolding during ordinary extension", "known azimuth for every folded domain"],
-      "binding": { "kind": "titin_architecture", "id": "Q8WZ42" }
+      "not_claimed": [
+        "atom-resolved surfaces for every domain",
+        "physiological unfolding during ordinary extension",
+        "known azimuth for every folded domain"
+      ],
+      "binding": {
+        "kind": "titin_architecture",
+        "id": "Q8WZ42"
+      }
     }
   ]
 }

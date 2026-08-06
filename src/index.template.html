@@ -213,6 +213,12 @@ window.__titinBoot = { ready: false, problems: [] };
   .science-bracket.minor { stroke: rgb(230 237 245 / 47%); }
   .science-label { fill: #dce4ed; font-size: 9px; font-weight: 650; letter-spacing: .035em;
     paint-order: stroke; stroke: rgb(14 17 22 / 92%); stroke-width: 3px; stroke-linejoin: round; }
+  /* SC-12 close-up locator. Neutral ink, like SC-6's dimension line and for the
+     same reason: hue is the protein-identity channel, and a camera extent is
+     presentation geometry, not a protein. */
+  .locator-rule { stroke: rgb(223 231 242 / 55%); }
+  .locator-tick { stroke: rgb(223 231 242 / 45%); }
+  .locator-extent { fill: rgb(223 231 242 / 20%); stroke: #dfe7f2; stroke-width: 1; }
   .terminus-line { stroke: var(--titin-hi); stroke-width: 1.5; }
   .terminus-dot { fill: var(--titin-hi); }
   .terminus-label { fill: #ffe1e8; font-size: 10px; font-weight: 750; letter-spacing: .03em;
@@ -620,7 +626,7 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // Stage composition arithmetic. These rules decide whether the figure reads
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
-import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget } from './src/presentation/StageLayout.js';
+import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible } from './src/presentation/StageLayout.js';
 import { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
@@ -959,6 +965,42 @@ function viewportClass(width) {
   return width < 768 ? 'mobile' : 'desktop';
 }
 
+// ---- close-up locator -------------------------------------------------------
+// Every position below comes from the same canonical bracket records the band
+// brackets use. The locator moves no coordinate and derives no new geometry; it
+// restates, in miniature, where the camera is inside the half-sarcomere.
+function bracketById(id) {
+  return activeShowcaseOverlay?.brackets.find((bracket) => bracket.id === id) || null;
+}
+/** Axial extent of the half-sarcomere: the M-band centre marker's own position. */
+function locatorModelSpanNm() {
+  const mband = bracketById('mband');
+  return Number.isFinite(mband?.start_nm) && mband.start_nm > 0 ? mband.start_nm : null;
+}
+/** The three landmarks the miniature marks, as fractions of the model span. */
+function locatorTicks(modelSpanNm) {
+  const zdisc = bracketById('zdisc');
+  const aband = bracketById('aband');
+  const mband = bracketById('mband');
+  return [
+    zdisc && (zdisc.start_nm + zdisc.end_nm) / 2,
+    aband && aband.start_nm,
+    mband && mband.start_nm,
+  ].filter((nm) => Number.isFinite(nm)).map((nm) => Math.max(0, Math.min(1, nm / modelSpanNm)));
+}
+/**
+ * What the camera is currently inside, named by the narrowest band that
+ * contains it. "Narrowest" is what makes the answer useful: every point in the
+ * C-zone is also in the A-band, and the A-band is not the thing you zoomed to.
+ */
+function locatorPlaceLabel(centreNm) {
+  const containing = (activeShowcaseOverlay?.brackets || [])
+    .filter((bracket) => bracket.kind === 'range'
+      && centreNm >= bracket.start_nm && centreNm <= bracket.end_nm)
+    .sort((a, b) => (a.end_nm - a.start_nm) - (b.end_nm - b.start_nm));
+  return containing[0]?.label || null;
+}
+
 function svgElement(name, attributes = {}, textContent = null) {
   const node = document.createElementNS(svgNS, name);
   for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, String(value));
@@ -1021,6 +1063,13 @@ function renderScienceOverlay() {
   const showBands = bandsRequested && isLongitudinalProjection(
     projected.get('n_terminus'), projected.get('c_terminus'),
   );
+  // Who holds the bracket lane. ONE decision, consulted by both the brackets and
+  // the close-up locator, so the two are mutually exclusive by construction
+  // rather than by two conditions that have to be kept in agreement.
+  const modelSpanNm = locatorModelSpanNm();
+  const cameraCentreNm = visualization.viewCentreNm();
+  const laneHoldsBrackets = bracketLaneVisible(visualization.viewSpanNm(), modelSpanNm);
+  const locator = locatorExtent(visualization.viewSpanNm(), cameraCentreNm, modelSpanNm);
   // Every DOM measurement this pass needs, taken together. The branches below
   // used to re-read the same two rectangles; grouping the reads is a clarity
   // change rather than a performance one, since consecutive reads with no
@@ -1053,6 +1102,10 @@ function renderScienceOverlay() {
     // single projected point: the chapter decides which band is the focus, and
     // the audience decides whether the budget applies at all.
     step: state.storyStep, audience: state.audienceMode,
+    // The locator moves with the camera along the model, which no projected
+    // anchor necessarily reports once the close-up has left them off-screen.
+    locator: [laneHoldsBrackets, Math.round(locator.from01 * 1e4),
+      Math.round(locator.to01 * 1e4), locator.visible],
     headerBottom: Math.round(safeTopPx * 4) / 4,
     card: cardBox && [cardBox.top, cardBox.right, cardBox.bottom]
       .map((edge) => Math.round(edge * 4) / 4),
@@ -1065,7 +1118,7 @@ function renderScienceOverlay() {
   if (projectionSignature === scienceOverlaySignature) return;
   scienceOverlaySignature = projectionSignature;
   const nodes = [];
-  if (showBands) {
+  if (showBands && laneHoldsBrackets) {
     const laneY = bracketLaneY([...projected.values()], { canvasHeight: height, safeTopPx });
     // Everything the frame COULD label, before the reviewed attention budget
     // decides how many of them it may. A bracket that is off-screen or too
@@ -1118,6 +1171,39 @@ function renderScienceOverlay() {
         }, bracket.label));
       }
     }
+  }
+  // The locator: the half-sarcomere in miniature, with the camera's own span
+  // shaded on it. It occupies the lane the brackets have vacated and is drawn
+  // only when they are not, so the lane never holds both. Nothing here is
+  // interactive — it is an orientation aid, and making it draggable would put a
+  // second navigation model on the stage.
+  if (!laneHoldsBrackets && locator.visible && modelSpanNm) {
+    const stripPx = Math.max(120, Math.min(300, width * 0.28));
+    const left = STAGE_LAYOUT.edge_padding_px + 8;
+    const laneTop = safeTopPx + STAGE_LAYOUT.bracket_lane_gap_px;
+    nodes.push(svgElement('path', {
+      d: `M ${left} ${laneTop} H ${left + stripPx}`, class: 'science-bracket locator-rule',
+    }));
+    for (const at of locatorTicks(modelSpanNm)) {
+      const x = left + stripPx * at;
+      nodes.push(svgElement('path', {
+        d: `M ${x} ${laneTop - 4} V ${laneTop + 4}`, class: 'science-bracket locator-tick',
+      }));
+    }
+    // A minimum drawn width, because a 20 nm view of an 1,100 nm model is half a
+    // pixel — the extent has to remain visible while staying to scale wherever
+    // scale is legible at all.
+    const from = left + stripPx * locator.from01;
+    const extent = Math.max(2, stripPx * (locator.to01 - locator.from01));
+    nodes.push(svgElement('rect', {
+      x: from, y: laneTop - 6, width: extent, height: 12, class: 'locator-extent',
+    }));
+    const place = locatorPlaceLabel(cameraCentreNm);
+    const spanNm = visualization.viewSpanNm();
+    nodes.push(svgElement('text', {
+      x: left, y: laneTop + 20, 'text-anchor': 'start', class: 'science-label',
+    }, `viewing ${Math.round(spanNm).toLocaleString()} nm of `
+      + `${Math.round(modelSpanNm).toLocaleString()} nm${place ? ` · ${place}` : ''}`));
   }
   if (features.has('termini')) {
     for (const terminus of activeShowcaseOverlay.termini) {
