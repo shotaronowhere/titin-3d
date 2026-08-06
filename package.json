@@ -51,7 +51,9 @@
     "test:sc14": "node --test --test-concurrency=1 test/showcase_phase14.test.js test/phase8.test.js test/standalone.test.js",
     "verify:sc14": "npm run check:build && npm run typecheck && npm run test:sc14 && npm run validate:spec && npm run validate:showcase && npm run validate:gates",
     "test:sc15": "node --test --test-concurrency=1 test/showcase_phase15.test.js test/showcase_phase7.test.js test/showcase_phase2.test.js test/phase7.test.js test/standalone.test.js",
-    "verify:sc15": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc15 && npm run validate && npm run validate:spec && npm run validate:presentation && npm run validate:annotations && npm run check:matrix"
+    "verify:sc15": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc15 && npm run validate && npm run validate:spec && npm run validate:presentation && npm run validate:annotations && npm run check:matrix",
+    "test:sc16": "node --test --test-concurrency=1 test/showcase_phase16.test.js test/showcase_phase3.test.js test/standalone.test.js",
+    "verify:sc16": "npm run check:build && npm run typecheck && npm run test:sc16 && npm run validate:showcase && npm run validate:annotations"
   },
   "license": "CC-BY-4.0",
   "dependencies": {

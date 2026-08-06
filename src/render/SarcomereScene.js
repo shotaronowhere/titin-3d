@@ -82,6 +82,22 @@ export const MYBPC_MIN_VIEW_FRACTION = 0.5;
 export const MYBPC_MAX_RADIUS_FRACTION_OF_TITIN = 0.75;
 
 /**
+ * SC-16. What a presentation envelope renders at once the anchor it encloses is
+ * drawn in its own right.
+ *
+ * The Z-disc slab is 50 nm across and lattice-wide, and its own close-up frames
+ * 200 nm. At that range it is not a boundary marker any more, it is a wall in
+ * front of the telethonin sandwich, the alpha-actinin connectors and the two
+ * opposing titin directions — the entire content of the chapter that camera
+ * exists to serve. This value is deliberately BELOW every entry in
+ * EVIDENCE_STYLE: opacity encodes confidence, so a subordinated envelope has to
+ * sit off the bottom of that scale rather than land on one of its rungs, where
+ * it would read as a weaker claim instead of a quieter one. The evidence class
+ * itself is never touched — see the ghosting site in build().
+ */
+export const ENVELOPE_GHOST_OPACITY = 0.14;
+
+/**
  * The biological components a caller may show or hide, each mapped to a predicate
  * over the object names `build()` assigns.
  *
@@ -339,6 +355,11 @@ export class SarcomereScene {
     const mesh = new THREE.Mesh(geom, this._material(color, evidence));
     mesh.position.set(centreXNm, 0, 0);
     mesh.name = name;
+    // Published so a later presentation pass can be checked against what the
+    // envelope was drawn from. SC-16 lowers this slab's opacity at the close-up,
+    // and "the evidence class did not move" is only assertable if the class the
+    // material came from is on the object rather than implied by it.
+    mesh.userData.evidence_rendered = evidence;
     return mesh;
   }
 
@@ -982,6 +1003,9 @@ export class SarcomereScene {
         // 1.996 px feature cannot be promoted to 2.00 px and admitted accidentally.
         feature_px: Number(anchorFeaturePx.toFixed(2)),
         alias_threshold_px: ALIAS_THRESHOLD_PX,
+        // SC-16. Always present, so the audit record distinguishes "nothing
+        // needed subordinating at this anchor" from "the step never ran".
+        envelope_ghosted: false,
       };
       anchorDetailResolves = anchorFeaturePx >= ALIAS_THRESHOLD_PX;
     }
@@ -1088,16 +1112,39 @@ export class SarcomereScene {
 
     // ---- Z-disc context and M-band midpoint reference ----
     // The Z-disc slab remains a presentation envelope. In its own close-up it is
-    // muted so the supported local topology stays readable instead of appearing
+    // ghosted so the supported local topology stays readable instead of appearing
     // buried inside an opaque universal plate.
+    //
+    // This changes the OPACITY OF A PRESENTATION ENVELOPE, not an evidence class:
+    // userData.evidence_rendered is deliberately left alone, the material's colour
+    // is untouched, and the manifest records that the change happened. It is
+    // applied here, where the mesh is in hand, rather than by traversing the tree
+    // from the anchor-detail branch below — at that point `half` has not been
+    // added to `this.root` yet, so a traversal would silently find nothing and
+    // report a ghosting that never occurred.
+    //
+    // The opacity is SET, not scaled. The previous form multiplied the evidence
+    // opacity by 0.35, which left a 0.82 envelope at 0.287 — and a 0.287 slab has
+    // a front face and a back face, so roughly half the light from the anchor
+    // still never arrives. That is a dimmed wall, not a ghost, which is what the
+    // shipped close-up showed. Scaling also tied the result to the evidence class:
+    // a spec edit that raised the envelope's confidence would have made the
+    // close-up more occluded, which is the evidence contract running backwards.
+    // `transparent` and `depthWrite` are set explicitly rather than inherited from
+    // _material(), so a future change to the base style cannot quietly restore an
+    // occluder underneath a ghosted opacity.
     const zdiscMesh = this._slab(
       zdisc.transform.position_nm, zdisc.transform.width_nm, patchExtent,
       COMPONENT_COLOR.zdisc, zdisc.evidence, 'zdisc',
     );
     if (anchorDetail?.target === 'zdisc' && anchorDetailResolves) {
-      zdiscMesh.material.opacity *= 0.35;
+      if (!anchorDetailReport) throw new Error('build: missing Z-disc detail report.');
+      zdiscMesh.material.transparent = true;
+      zdiscMesh.material.opacity = ENVELOPE_GHOST_OPACITY;
       zdiscMesh.material.depthWrite = false;
       zdiscMesh.userData.presentation_muted_for_detail = true;
+      zdiscMesh.userData.envelope_ghosted = true;
+      anchorDetailReport.envelope_ghosted = true;
     }
     half.add(zdiscMesh);
     // The midpoint marker is sarcomere-scoped and therefore drawn once below.
@@ -1567,6 +1614,12 @@ export class SarcomereScene {
     ));
 
     // ---- SC-3 M-band relationship context (close-up + resolvability gated) ----
+    // No envelope is ghosted here, and that is a finding rather than an omission.
+    // SC-16 subordinates a presentation envelope that occludes the anchor inside
+    // it; the M-band's only marker is the zero-width LineLoop added just above,
+    // which has no axial extent and already refuses to write depth, so it cannot
+    // stand in front of the crosslinks it labels. The report's `envelope_ghosted`
+    // therefore stays false, truthfully.
     if (anchorDetail?.target === 'mline') {
       if (!anchorDetailReport) throw new Error('build: missing M-band detail report.');
       if (anchorDetailResolves) {
