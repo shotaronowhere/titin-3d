@@ -311,7 +311,13 @@ test('PHASE10: the page wires smooth scale/region navigation and accessible cont
   assert.match(PAGE_SOURCE, /prefers-reduced-motion/);
   assert.match(PAGE_SOURCE, /drag: orbit[^<]*zoom[^<]*pan/);
   assert.match(PAGE_SOURCE, /DETAIL_DEPICTION[\s\S]*?mirror:\s*false/);
-  assert.match(PAGE_SOURCE, /state\.region\)\s*visualization\.focusTitinRegion\(state\.region\)/,
+  // Deliberately tolerant of statement shape. SC-11 gave a chapter-declared
+  // close-up priority over region focus in rebuild(), so the two consecutive
+  // `if (!refit && state.region)` statements this used to pin literally became
+  // one if/else-if chain. The behaviour being gated is unchanged: a rebuild that
+  // is not a refit still re-frames a selected region as the length changes.
+  assert.match(PAGE_SOURCE,
+    /!refit && state\.region\)[\s\S]{0,160}?visualization\.focusTitinRegion\(state\.region\)/,
     'length changes must keep a selected region in frame');
   assert.match(PAGE_SOURCE, /syncComponentButtons\(report\)/,
     'component controls must reflect effective scene visibility');

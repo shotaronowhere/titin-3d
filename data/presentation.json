@@ -265,7 +265,7 @@
         "visibility": {
           "show_lattice": true,
           "show_domains": false,
-          "show_context_detail": false,
+          "show_context_detail": true,
           "mirror": true,
           "rings": 1
         }
@@ -307,7 +307,7 @@
         "visibility": {
           "show_lattice": true,
           "show_domains": true,
-          "show_context_detail": false,
+          "show_context_detail": true,
           "mirror": true,
           "rings": 1
         }

@@ -509,6 +509,19 @@ export class StoryController {
       if (this.capabilities.scales.has(value)) state.scale = value;
       else fallback('scale', value, 'unavailable scale', state.scale);
     }
+    // A hash that named a step but no camera used to keep whatever camera the
+    // page was already showing, so '#mode=guided&step=anchors' rendered chapter
+    // 1's frame under chapter 4's text. A URL that names a chapter and nothing
+    // else can only mean that chapter's own declared frame.
+    //
+    // This adds NO URL field: URL_KEYS is closed and unchanged, and what moves is
+    // only what an ABSENT 'camera' key defaults to. An explicit camera below
+    // still wins, including its unavailable-camera fallback, which is why this
+    // runs before that block rather than inside it.
+    if (params.has('step') && !params.has('camera') && this.chapterMap.has(state.story_step)) {
+      state.camera_preset = this.chapterMap
+        .get(state.story_step).recommended_state.camera_preset;
+    }
     if (params.has('camera')) {
       const value = first('camera');
       if (this._cameraKnown(value)) state.camera_preset = value;

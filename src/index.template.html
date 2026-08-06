@@ -1080,10 +1080,17 @@ function applyCameraPreset({ animate = false } = {}) {
     syncViews(); syncCloseups(null);
   } else if (kind === 'closeup') {
     state.closeup = name;
+    // Same reason as the close-up buttons below — a close-up with the
+    // context-detail layer off is a bare cylinder and reads as a rendering
+    // failure. The chapter's declared visibility supplies the rest; these are
+    // the two fields a close-up implies whoever asked for it.
+    state.showContextDetail = true;
+    state.showFilamentContext = true;
     if (name === 'mline') state.mirror = true;
     visualization.closeUp(name, { animate });
     rebuild();
     syncCloseups(visualization.closeUp(name, { move: false }));
+    syncDepictionToggles();
   } else if (kind === 'region') {
     state.region = name; state.selectedTarget = name; state.closeup = null;
     visualization.highlightTitinRegion(name);
@@ -1727,15 +1734,21 @@ function rebuild(refit = false) {
     syncPublicPresentation();
     const report = visualization.setSarcomereLength(sl);
     if (refit) visualization.frame(state.view);
-    // A selected region moves as the mechanical state changes. Keep the camera
-    // attached to its new canonical span; doing this immediately avoids queuing
-    // transitions while the slider emits continuous input.
-    if (!refit && state.region) state.cameraPreset = `region.${state.region}`;
-    if (!refit && state.region)
-      visualization.focusTitinRegion(state.region);
-    else if (!refit && state.closeup) {
+    // A selected region moves as the mechanical state changes, so the camera has to
+    // follow it; doing that immediately avoids queuing transitions while the slider
+    // emits continuous input. But a chapter may declare a close-up AND a region
+    // target — chapter 4 pairs closeup.zdisc with the Z1Z2 region so the anchor is
+    // both framed and highlighted. Region focus used to win unconditionally here,
+    // which discarded the close-up on the rebuild that immediately followed
+    // applyCameraPreset and left the chapter pointing at the wrong scene. The
+    // close-up is the more specific intent: it was named by the chapter, not
+    // inferred from the selection.
+    if (!refit && state.closeup) {
       state.cameraPreset = `closeup.${state.closeup}`;
       visualization.closeUp(state.closeup);
+    } else if (!refit && state.region) {
+      state.cameraPreset = `region.${state.region}`;
+      visualization.focusTitinRegion(state.region);
     }
     render(report);
     refreshRegionReadout();
