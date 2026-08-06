@@ -106,8 +106,11 @@ window.__titinBoot = { ready: false, problems: [] };
     background: rgb(22 27 34 / 96%); border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
   .drawer-head-row { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
   /* Sticky under the drawer head, so the section a reader is in stays named
-     however far down the panel they have scrolled. */
-  #drawerTabs { display: flex; gap: 4px; position: sticky; top: 74px; z-index: 3;
+     however far down the panel they have scrolled. --drawer-head-h is the
+     head's MEASURED height, published by the page: a constant was tried first
+     and was 14 px short at 375 px, where the head's subtitle wraps and the tab
+     bar slid up underneath it. */
+  #drawerTabs { display: flex; gap: 4px; position: sticky; top: var(--drawer-head-h, 74px); z-index: 3;
     margin: 0 -18px 12px; padding: 8px 18px; background: rgb(22 27 34 / 96%);
     border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
   #drawerTabs button { flex: 1 1 auto; }
@@ -361,6 +364,9 @@ window.__titinBoot = { ready: false, problems: [] };
   #guidedLattice { max-height: 38vh; overflow-y: auto; overscroll-behavior: contain; }
   .build-id { margin-top: 4px; color: var(--dim); font-size: 9px; letter-spacing: .06em;
     font-variant-numeric: tabular-nums; }
+  /* The clipboard-denied fallback prints the link and its build on two lines,
+     and a URL has no spaces to break at. */
+  #copyViewStatus { white-space: pre-line; overflow-wrap: anywhere; }
   .bib-row { font-size: 10px; line-height: 1.5; margin-bottom: 5px; color: var(--dim); }
   .bib-row[data-cited="true"] { border-left: 2px solid var(--titin); padding-left: 7px; }
   .bib-title { color: var(--dim); }
@@ -611,7 +617,7 @@ window.__titinBuild = Object.freeze({ fingerprint: "7cc1c8d0ad9c" });
     <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan</div>
   </div>
   <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
-    <div class="drawer-head">
+    <div class="drawer-head" id="drawerHead">
       <div class="drawer-head-row">
         <div>
           <h1>Evidence &amp; controls</h1>
@@ -42073,7 +42079,13 @@ function syncDrawerTabs() {
   }
 }
 for (const [id, tabId] of DRAWER_TABS) {
-  $(tabId).onclick = () => { state.drawerTab = id; syncDrawerTabs(); };
+  $(tabId).onclick = () => {
+    state.drawerTab = id;
+    syncDrawerTabs();
+    // The drawer is one scroll container, so a section opened from halfway down
+    // another one would start halfway down itself.
+    $('panel').scrollTop = 0;
+  };
 }
 syncDrawerTabs();
 
@@ -42184,6 +42196,14 @@ function publishStageBarHeight() {
   markStageDirty();
 }
 new ResizeObserver(publishStageBarHeight).observe($('stageBar'));
+// The same measured-not-assumed rule for the drawer head, which the SC-13 tab
+// bar sticks to. The head is display: none in Guided mode and measures 0 there,
+// so the last real height is kept rather than published as a zero offset.
+function publishDrawerHeadHeight() {
+  const height = Math.round($('drawerHead').getBoundingClientRect().height);
+  if (height > 0) $('app').style.setProperty('--drawer-head-h', `${height}px`);
+}
+new ResizeObserver(publishDrawerHeadHeight).observe($('drawerHead'));
 $('guidedCardToggle').onclick = () => {
   guidedCardPeek = !guidedCardPeek;
   syncGuidedCardPeek();
