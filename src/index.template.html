@@ -112,6 +112,17 @@ window.__titinBoot = { ready: false, problems: [] };
   .drawer-head { position: sticky; top: 0; z-index: 4; margin: 0 -18px; padding: 14px 18px 12px;
     background: rgb(22 27 34 / 96%); border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
   .drawer-head-row { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+  /* Sticky under the drawer head, so the section a reader is in stays named
+     however far down the panel they have scrolled. --drawer-head-h is the
+     head's MEASURED height, published by the page: a constant was tried first
+     and was 14 px short at 375 px, where the head's subtitle wraps and the tab
+     bar slid up underneath it. */
+  #drawerTabs { display: flex; gap: 4px; position: sticky; top: var(--drawer-head-h, 74px); z-index: 3;
+    margin: 0 -18px 12px; padding: 8px 18px; background: rgb(22 27 34 / 96%);
+    border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
+  #drawerTabs button { flex: 1 1 auto; }
+  #drawerTabs button[aria-selected="true"] { background: var(--accent); color: #0e1116;
+    border-color: var(--accent); }
   h1 { font-size: 15px; margin: 0 0 4px; font-weight: 600; }
   h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
     color: var(--dim); margin: 20px 0 8px; font-weight: 600; }
@@ -192,16 +203,40 @@ window.__titinBoot = { ready: false, problems: [] };
     padding: 11px 12px; border-radius: 8px; color: var(--text); background: rgb(22 27 34 / 97%);
     border: 1px solid rgb(255 176 192 / 65%); box-shadow: 0 12px 34px rgb(0 0 0 / 44%); }
   .object-inspector-head { display: flex; align-items: flex-start; gap: 8px; }
+  /* The identity block takes the room and the nav group keeps the right edge,
+     rather than the head's shape depending on how long this structure's
+     evidence chip happens to be. */
+  .object-inspector-head > div:first-child { flex: 1; min-width: 0; }
   .object-inspector-title { flex: 1; font-size: 14px; font-weight: 650; }
   .object-evidence { display: inline-block; margin: 3px 0 6px; color: #f0cc7a;
     font-size: 9px; font-weight: 700; letter-spacing: .035em; }
   .object-lay { color: #d6dde5; font-size: 11px; }
   .object-detail { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--edge);
     color: var(--dim); font-size: 10px; }
+  /* Inside the disclosure the summary already carries the rule that separates
+     the specialist text from the lay text; a second one would draw two. */
+  #objectInspectorDetails .object-detail { margin-top: 0; padding-top: 6px; border-top: 0; }
   .object-detail b { color: var(--text); font-weight: 600; }
-  .object-sources { display: flex; gap: 5px 9px; flex-wrap: wrap; margin-top: 7px; }
-  .object-sources a, #chapterSources a { color: #a9c9f2; text-decoration: underline; text-underline-offset: 2px; }
+  /* SC-13. Five stacked full-width links read as a bibliography the card was
+     never meant to be. One muted line at the foot cites the same records and
+     leaves the explanation as the thing the card is mostly made of. */
+  .object-sources { display: flex; gap: 4px 8px; flex-wrap: wrap; margin-top: 8px;
+    padding-top: 6px; border-top: 1px solid var(--edge); color: var(--dim); font-size: 9px;
+    line-height: 1.5; }
+  .object-sources a, #chapterSources a { color: #a9c9f2; text-decoration: underline;
+    text-underline-offset: 2px; }
+  .object-disclosure { cursor: pointer; color: var(--dim); font-size: 10px; font-weight: 600;
+    margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--edge); list-style: none; }
+  .object-disclosure::before { content: "▸ "; }
+  details[open] > .object-disclosure::before { content: "▾ "; }
+  .object-inspector-nav { display: flex; gap: 4px; }
   .object-instance { color: #ffd7e0; font-size: 9px; margin-top: 4px; }
+  /* The route from a structure to the reviewed card that discusses it. Full
+     width and left-aligned: it is a link to a named card, not a chrome control,
+     and the card titles are sentences. */
+  .object-expert-link button { width: 100%; margin-top: 8px; text-align: left;
+    font-size: 10px; line-height: 1.35; border-color: rgb(255 176 192 / 45%); }
+  .object-expert-link button[hidden] { display: none; }
   #guidedSelection { margin: 0 0 9px; padding: 6px 8px; border-left: 2px solid var(--titin);
     background: rgb(255 93 125 / 8%); color: #d8dfe7; font-size: 10px; }
   #selectedEvidence[hidden] { display: none; }
@@ -229,7 +264,7 @@ window.__titinBoot = { ready: false, problems: [] };
     display: flex; flex-direction: column; align-items: flex-start; }
   #stageHeader { width: 100%; display: flex; align-items: flex-start; justify-content: space-between;
     gap: 12px; }
-  .brand-block, #scopeBadge, #guidedCard, #urlNotice { background: var(--chrome);
+  .brand-block, #scopeBadge, #guidedCard, #urlNotice, #guidedPipeline { background: var(--chrome);
     border: 1px solid rgb(116 133 154 / 38%); box-shadow: 0 10px 32px rgb(0 0 0 / 28%);
     backdrop-filter: blur(10px); }
   .brand-block { pointer-events: auto; display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap;
@@ -309,16 +344,43 @@ window.__titinBoot = { ready: false, problems: [] };
   .pipeline-label { font-weight: 650; font-size: 10px; }
   .pipeline-count { color: #ffe1e8; font-variant-numeric: tabular-nums; font-size: 10px; }
   .pipeline-detail { color: var(--dim); font-size: 9px; line-height: 1.4; margin-top: 1px; }
-  .pipeline-records { color: #7f8b9c; font-size: 8px; margin-top: 2px; word-break: break-word; }
+  .pipeline-records { color: #7f8b9c; font-size: 9px; margin-top: 2px; word-break: break-word; }
   .pipeline-foot { color: #c9b989; font-size: 9px; line-height: 1.4; margin-top: 7px;
     border-left: 2px solid #8b6530; padding-left: 7px; }
+  /* SC-13. On the stage the same six counted stages become a band: one column
+     each, the counted figure at headline size because the figure is the payload,
+     and no inner scroll region at any supported width. Nothing here is a number;
+     every figure still arrives from ProvenancePipeline at render time. */
+  #guidedPipeline { pointer-events: auto; width: 100%; margin-top: 10px;
+    border-radius: 10px; padding: 12px 14px 11px; border-top: 2px solid #3f5a7a; }
+  #app[data-mode="evidence"] #guidedPipeline { display: none; }
+  #guidedPipeline .pipeline { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 9px 14px; margin: 0; padding-top: 0; border-top: 0; }
+  #guidedPipeline .pipeline-stage { padding: 0 0 0 10px; }
+  #guidedPipeline .pipeline-stage::before { top: 6px; }
+  #guidedPipeline .pipeline-label { font-size: 12px; line-height: 1.25; }
+  #guidedPipeline .pipeline-figure { display: block; font-size: 30px; font-weight: 700;
+    line-height: 1.1; margin-top: 2px; }
+  #guidedPipeline .pipeline-unit { display: block; color: var(--dim); font-size: 11px;
+    line-height: 1.3; }
+  #guidedPipeline .pipeline-detail { font-size: 11px; margin-top: 4px; }
+  #guidedPipeline .pipeline-records { font-size: 9px; }
+  #guidedPipeline .pipeline-foot { grid-column: 1 / -1; font-size: 11px; margin-top: 0; }
+  /* The scene is the backdrop to the argument here, not its competitor. */
+  #app[data-mode="guided"] #stageChrome[data-pipeline="true"]::before { content: "";
+    position: absolute; inset: 0; z-index: -1; background: rgb(14 17 22 / 62%); }
   /* The guided card floats over the stage and has no height of its own, so the
-     two long chapter attachments are bounded here rather than being allowed to
-     push the card off the top of the viewport on a short screen. */
-  #guidedLattice, #guidedPipeline { max-height: 38vh; overflow-y: auto;
-    overscroll-behavior: contain; }
+     long chapter attachment is bounded here rather than being allowed to push
+     the card off the top of the viewport on a short screen. */
+  #guidedLattice { max-height: 38vh; overflow-y: auto; overscroll-behavior: contain; }
   .build-id { margin-top: 4px; color: var(--dim); font-size: 9px; letter-spacing: .06em;
     font-variant-numeric: tabular-nums; }
+  /* The clipboard-denied fallback prints the link and its build on two lines,
+     and a URL has no spaces to break at. */
+  #copyViewStatus { white-space: pre-line; overflow-wrap: anywhere; }
+  .bib-row { font-size: 10px; line-height: 1.5; margin-bottom: 5px; color: var(--dim); }
+  .bib-row[data-cited="true"] { border-left: 2px solid var(--titin); padding-left: 7px; }
+  .bib-title { color: var(--dim); }
   .card-findings { margin: 5px 0 0; padding: 0; list-style: none; }
   .card-findings li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 6px;
     margin-top: 3px; font-size: 9px; line-height: 1.4; }
@@ -326,7 +388,6 @@ window.__titinBoot = { ready: false, problems: [] };
   .finding-ESTABLISHED { color: #7fc4a2; }
   .finding-PROPOSED { color: #e8c16d; }
   .finding-OPEN { color: #9aa7b8; }
-  .science-separator { height: 1px; background: var(--edge); margin: 16px 0 0; }
   .activation-note { margin: 7px 0 0; color: #c9b989; font-size: 10px; }
   /* Tablet touch targets. The drawer's density is deliberate on a desktop, where a
      mouse can hit a 28 px control comfortably; a finger cannot. Keyed on the
@@ -388,6 +449,16 @@ window.__titinBoot = { ready: false, problems: [] };
     #guidedCard[data-peek="true"] #guidedCardBody { display: none; }
     #chapterTitle { font-size: 16px; margin: 2px 0 6px; }
     .card-peek-toggle { display: block; width: 100%; text-align: left; }
+    /* Two rows of three: six columns on a phone would be six words wide. The
+       stage keeps the flow and its counted figures; the sentence and the record
+       paths for each stage stay one tap away, in Sources & build. */
+    #guidedPipeline { padding: 8px 9px; margin-top: 8px; }
+    #guidedPipeline .pipeline { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px 9px; }
+    #guidedPipeline .pipeline-figure { font-size: 20px; margin-top: 0; }
+    #guidedPipeline .pipeline-label { font-size: 10px; line-height: 1.2; }
+    #guidedPipeline .pipeline-unit { font-size: 10px; line-height: 1.25; }
+    #guidedPipeline .pipeline-foot { font-size: 10px; }
+    #guidedPipeline .pipeline-detail, #guidedPipeline .pipeline-records { display: none; }
   }
   @media (max-width: 700px) {
     #stageChrome { padding: 9px; }
@@ -430,17 +501,30 @@ window.__titinBoot = { ready: false, problems: [] };
       <div id="objectTooltipLabel"></div>
       <div id="objectTooltipText"></div>
     </div>
+    <!-- SC-13. Reading order is the contract here: name, evidence class, two
+         sentences of lay text — and then a disclosure a specialist opens for the
+         four labelled paragraphs that used to be dumped on everyone at once. The
+         citations are last, as one compact line, because a novice reads down to
+         them and a specialist goes looking for them. -->
     <section id="objectInspector" aria-label="Pinned structure explanation" hidden>
       <div class="object-inspector-head">
         <div>
           <div class="object-inspector-title" id="objectInspectorTitle"></div>
           <div class="object-evidence" id="objectInspectorEvidence"></div>
         </div>
-        <button id="objectInspectorClose" aria-label="Close pinned structure explanation">Close</button>
+        <div class="object-inspector-nav">
+          <button id="objectInspectorPrevious" aria-label="Previous structure">&#8249;</button>
+          <button id="objectInspectorNext" aria-label="Next structure">&#8250;</button>
+          <button id="objectInspectorClose" aria-label="Close pinned structure explanation">Close</button>
+        </div>
       </div>
       <div class="object-instance" id="objectInspectorInstance" hidden></div>
       <div class="object-lay" id="objectInspectorLay"></div>
-      <div class="object-detail" id="objectInspectorDetail"></div>
+      <details id="objectInspectorDetails">
+        <summary class="object-disclosure">For specialists</summary>
+        <div class="object-detail" id="objectInspectorDetail"></div>
+      </details>
+      <div class="object-expert-link"><button id="objectInspectorExpertLink" hidden></button></div>
       <div class="object-sources" id="objectInspectorSources"></div>
     </section>
     <div id="objectAnnouncement" class="sr-only" aria-live="polite"></div>
@@ -463,6 +547,12 @@ window.__titinBoot = { ready: false, problems: [] };
         </div>
       </div>
       <div id="urlNotice" role="status" hidden></div>
+      <!-- SC-13. Chapter 7 is the credibility argument, so it gets the stage
+           rather than a scrolling box inside the chapter card. It stays a
+           chapter attachment — hidden unless the active chapter declares the
+           feature — but it is laid across the full width, at a size that
+           survives a projector. -->
+      <section id="guidedPipeline" aria-label="How this model was built" hidden></section>
       <section id="guidedCard" aria-labelledby="chapterTitle">
         <div class="chapter-meta"><span id="chapterProgress">Chapter —</span> · <span id="chapterEvidenceClass">—</span></div>
         <h1 id="chapterTitle">Loading guided route…</h1>
@@ -482,7 +572,6 @@ window.__titinBoot = { ready: false, problems: [] };
           <div class="mechanism-key">●—● folded domains straighten · ∿ disordered chain extends</div>
         </div>
         <div id="guidedLattice" hidden></div>
-        <div id="guidedPipeline" hidden></div>
         <div class="chapter-actions">
           <button id="chapterPrevious">Previous</button>
           <button id="chapterNext">Next</button>
@@ -527,7 +616,7 @@ window.__titinBoot = { ready: false, problems: [] };
     <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan</div>
   </div>
   <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
-    <div class="drawer-head">
+    <div class="drawer-head" id="drawerHead">
       <div class="drawer-head-row">
         <div>
           <h1>Evidence &amp; controls</h1>
@@ -539,94 +628,123 @@ window.__titinBoot = { ready: false, problems: [] };
         <button id="closeEvidence">Close</button>
       </div>
     </div>
-
-    <h2>Selected structure</h2>
-    <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
-
-    <h2>Current guided claim</h2>
-    <div class="note" id="chapterEvidence">
-      <b id="chapterEvidenceTitle">—</b>
-      <div id="chapterExpert"></div>
-      <div id="chapterSources"></div>
-      <ul id="chapterNotClaimed"></ul>
+    <!-- SC-13. The drawer used to open on two screens of prose with every
+         control below the fold and the citations near the top. Four tabs put
+         the controls first, the numbers second, the argument third and the
+         bibliography last — which is the order a reader asks for them in. -->
+    <div id="drawerTabs" role="tablist" aria-label="Evidence drawer sections">
+      <button id="tabInspect" role="tab" aria-selected="true" aria-controls="panelInspect">Inspect</button>
+      <button id="tabMeasure" role="tab" aria-selected="false" aria-controls="panelMeasure">Measure</button>
+      <button id="tabEvidence" role="tab" aria-selected="false" aria-controls="panelEvidence">Evidence</button>
+      <button id="tabSources" role="tab" aria-selected="false" aria-controls="panelSources">Sources &amp; build</button>
     </div>
 
-    <h2>Expert cards</h2>
-    <div class="sub" style="margin:0 0 6px">Scope and omission notes for the optional
-      context layers. These are Evidence-mode only.</div>
-    <div id="expertCards"></div>
-    <div class="science-separator"></div>
+    <div id="panelInspect" role="tabpanel" aria-labelledby="tabInspect">
+      <h2 id="selectedStructureHeading">Selected structure</h2>
+      <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
 
-    <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
-    <div class="sub" id="viewDescription">Titin positioned on the thick-filament periphery beside
-      one myosin thick filament and its six nearest actin thin filaments; the representative
-      azimuth is schematic and the extended lattice is optional.</div>
+      <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
+      <div class="sub" id="viewDescription">Titin positioned on the thick-filament periphery beside
+        one myosin thick filament and its six nearest actin thin filaments; the representative
+        azimuth is schematic and the extended lattice is optional.</div>
 
-    <h2>Scale</h2>
-    <div class="row" id="scales"></div>
+      <h2>Scale</h2>
+      <div class="row" id="scales"></div>
 
-    <h2>Sarcomere length</h2>
-    <div class="sl" id="slReadout">— <small>nm</small></div>
-    <div class="sub" style="margin:0 0 6px">Set it on the stage bar below the model.</div>
-    <div class="activation-note" id="activationStatement"></div>
-    <div class="note warn" id="stateCaveat" hidden></div>
+      <h2>Close-up</h2>
+      <div class="sub" style="margin:0 0 6px">Flies to a landmark and fills the view
+        with a span small enough to resolve it. Landmarks are read from the geometry at
+        the current length, so they follow the slider. Enables the detail layer.</div>
+      <div class="row" id="closeups"></div>
+      <div class="sub" id="closeupReadout" style="margin:6px 0 0"></div>
 
-    <h2>Close-up</h2>
-    <div class="sub" style="margin:0 0 6px">Flies to a landmark and fills the view
-      with a span small enough to resolve it. Landmarks are read from the geometry at
-      the current length, so they follow the slider. Enables the detail layer.</div>
-    <div class="row" id="closeups"></div>
-    <div class="sub" id="closeupReadout" style="margin:6px 0 0"></div>
+      <h2>Detail</h2>
+      <div class="sub" style="margin:0 0 6px">The top control covers the immediate filament
+        neighbourhood. Expand to additional lattice rings here only when transverse organization matters.</div>
+      <div class="row" id="toggles"></div>
 
-    <h2>Detail</h2>
-    <div class="sub" style="margin:0 0 6px">The top control covers the immediate filament
-      neighbourhood. Expand to additional lattice rings here only when transverse organization matters.</div>
-    <div class="row" id="toggles"></div>
+      <h2>Components</h2>
+      <div class="sub" style="margin:0 0 6px">Hiding a component changes only what is
+        drawn — never where anything sits. Titin's anchoring is unchanged.</div>
+      <div class="row" id="components"></div>
+      <div class="note" id="componentTargetReadout" hidden aria-live="polite"></div>
 
-    <h2>Components</h2>
-    <div class="sub" style="margin:0 0 6px">Hiding a component changes only what is
-      drawn — never where anything sits. Titin's anchoring is unchanged.</div>
-    <div class="row" id="components"></div>
-    <div class="note" id="componentTargetReadout" hidden aria-live="polite"></div>
+      <h2>Titin regions</h2>
+      <div class="sub" style="margin:0 0 6px">Select a region to highlight and focus its
+        canonical span. A lighter titin-family pink carries selection only; opacity continues to encode evidence.</div>
+      <div class="row" id="regions"></div>
+      <div class="note" id="regionReadout" hidden aria-live="polite"></div>
 
-    <h2>Titin regions</h2>
-    <div class="sub" style="margin:0 0 6px">Select a region to highlight and focus its
-      canonical span. A lighter titin-family pink carries selection only; opacity continues to encode evidence.</div>
-    <div class="row" id="regions"></div>
-    <div class="note" id="regionReadout" hidden aria-live="polite"></div>
+      <h2>Inspect structures</h2>
+      <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
+        choose a visible object here or directly in the 3D view. Every explanation resolves its bibliography from the canonical source registry.</div>
+      <div class="row" id="annotations"></div>
+    </div>
 
-    <h2>How this model was built</h2>
-    <div class="sub" style="margin:0 0 6px">Every figure below is counted from the
-      loaded records when this page renders, not written into the copy.</div>
-    <div id="provenancePipeline"></div>
+    <div id="panelMeasure" role="tabpanel" aria-labelledby="tabMeasure" hidden>
+      <h2>Sarcomere length</h2>
+      <div class="sl" id="slReadout">— <small>nm</small></div>
+      <div class="sub" style="margin:0 0 6px">Set it on the stage bar below the model.</div>
+      <div class="activation-note" id="activationStatement"></div>
+      <div class="note warn" id="stateCaveat" hidden></div>
 
-    <h2>Lattice cross-section</h2>
-    <div class="sub" style="margin:0 0 6px">Looking down the filament axis, drawn
-      flat at one shared scale. Both panels use the same centre and projection, so
-      the change in spacing is a real comparison rather than a change of zoom.</div>
-    <div id="latticeCrossSection"></div>
+      <h2>Geometry at this length</h2>
+      <table id="metrics"></table>
 
-    <h2>Geometry at this length</h2>
-    <table id="metrics"></table>
+      <h2>Lattice cross-section</h2>
+      <div class="sub" style="margin:0 0 6px">Looking down the filament axis, drawn
+        flat at one shared scale. Both panels use the same centre and projection, so
+        the change in spacing is a real comparison rather than a change of zoom.</div>
+      <div id="latticeCrossSection"></div>
 
-    <h2>Legend</h2>
-    <div id="legend"></div>
+      <h2>Legend</h2>
+      <div id="legend"></div>
+    </div>
 
-    <h2>Evidence</h2>
-    <div class="sub" style="margin:0 0 6px">Transparency encodes confidence;
-      colour encodes identity.</div>
-    <button id="evidenceToggle" class="on" aria-pressed="true">confidence display</button>
-    <div id="evidence" style="margin-top:8px"></div>
+    <div id="panelEvidence" role="tabpanel" aria-labelledby="tabEvidence" hidden>
+      <h2>Current guided claim</h2>
+      <div class="note" id="chapterEvidence">
+        <b id="chapterEvidenceTitle">—</b>
+        <div id="chapterExpert"></div>
+        <div id="chapterSources"></div>
+        <ul id="chapterNotClaimed"></ul>
+      </div>
 
-    <h2>Inspect structures</h2>
-    <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
-      choose a visible object here or directly in the 3D view. Every explanation resolves its bibliography from the canonical source registry.</div>
-    <div class="row" id="annotations"></div>
+      <h2>Expert cards</h2>
+      <div class="sub" style="margin:0 0 6px">Scope and omission notes for the optional
+        context layers. These are Evidence-mode only.</div>
+      <div id="expertCards"></div>
 
-    <h2>Not claimed by this render</h2>
-    <ul id="notClaimed"></ul>
+      <h2>Evidence</h2>
+      <div class="sub" style="margin:0 0 6px">Transparency encodes confidence;
+        colour encodes identity.</div>
+      <button id="evidenceToggle" class="on" aria-pressed="true">confidence display</button>
+      <div id="evidence" style="margin-top:8px"></div>
 
-    <div id="notes"></div>
+      <h2>Not claimed by this render</h2>
+      <ul id="notClaimed"></ul>
+
+      <div id="notes"></div>
+    </div>
+
+    <div id="panelSources" role="tabpanel" aria-labelledby="tabSources" hidden>
+      <h2>How this model was built</h2>
+      <div class="sub" style="margin:0 0 6px">Every figure below is counted from the
+        loaded records when this page renders, not written into the copy.</div>
+      <div id="provenancePipeline"></div>
+
+      <h2>Bibliography</h2>
+      <div class="sub" style="margin:0 0 6px">Every record in the canonical registry,
+        ordered by citation. A titin-coloured rule marks the records this build's
+        annotations and chapters actually cite.</div>
+      <div id="bibliography"></div>
+
+      <h2>Cite this view</h2>
+      <div class="sub" style="margin:0 0 6px">The link restores this exact state; the
+        build identifier says which page produced it.</div>
+      <button id="copyViewLink">Copy link to this view</button>
+      <div class="sub" id="copyViewStatus" aria-live="polite"></div>
+    </div>
   </aside>
 </div>
 
@@ -667,7 +785,12 @@ const state = { showDomains: false, showFilamentContext: true,
                 rings: 1, mirror: true, view: 'titin_story', closeup: null,
                 scale: SCALES.context, region: null, showEvidence: false,
                 audienceMode: AUDIENCE_MODES.guided, storyStep: null,
-                selectedTarget: null, cameraPreset: 'view.titin_story' };
+                selectedTarget: null, cameraPreset: 'view.titin_story',
+                // SC-13. Which drawer section is open. Deliberately NOT part of
+                // the shared URL state: it is a reading position, not a claim
+                // about the model, and story.serialize() is the contract for
+                // what a shared link reproduces.
+                drawerTab: 'inspect' };
 
 try {
   visualization = await TitinVisualization.create($('canvas'), {
@@ -813,6 +936,12 @@ function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {
 
 function openEvidence(trigger) {
   evidenceReturnFocus = trigger;
+  // The drawer opens on the controls. A reader who left it on the bibliography
+  // last time asked for a bibliography then, not now; the one caller that wants
+  // a particular section — the inspector's expert-card link — sets it after
+  // this returns.
+  state.drawerTab = 'inspect';
+  syncDrawerTabs();
   setAudienceMode(AUDIENCE_MODES.evidence, { focusDrawer: true });
 }
 
@@ -825,6 +954,32 @@ $('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'));
 $('closeEvidence').onclick = closeEvidence;
 $('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'));
 $('stageEvidenceLink').onclick = () => openEvidence($('stageEvidenceLink'));
+
+// SC-13 drawer sections, in the order a reader asks for them: what am I looking
+// at, what does it measure, what is the evidence, where did it come from.
+const DRAWER_TABS = [
+  ['inspect', 'tabInspect', 'panelInspect'],
+  ['measure', 'tabMeasure', 'panelMeasure'],
+  ['evidence', 'tabEvidence', 'panelEvidence'],
+  ['sources', 'tabSources', 'panelSources'],
+];
+function syncDrawerTabs() {
+  for (const [id, tabId, panelId] of DRAWER_TABS) {
+    const selected = state.drawerTab === id;
+    $(tabId).setAttribute('aria-selected', String(selected));
+    $(panelId).hidden = !selected;
+  }
+}
+for (const [id, tabId] of DRAWER_TABS) {
+  $(tabId).onclick = () => {
+    state.drawerTab = id;
+    syncDrawerTabs();
+    // The drawer is one scroll container, so a section opened from halfway down
+    // another one would start halfway down itself.
+    $('panel').scrollTop = 0;
+  };
+}
+syncDrawerTabs();
 
 // A novice cannot act on "shown in red beside actin and myosin" without a key.
 // The swatches read the palette actually in use, so Guided's subdued context
@@ -933,6 +1088,14 @@ function publishStageBarHeight() {
   markStageDirty();
 }
 new ResizeObserver(publishStageBarHeight).observe($('stageBar'));
+// The same measured-not-assumed rule for the drawer head, which the SC-13 tab
+// bar sticks to. The head is display: none in Guided mode and measures 0 there,
+// so the last real height is kept rather than published as a zero offset.
+function publishDrawerHeadHeight() {
+  const height = Math.round($('drawerHead').getBoundingClientRect().height);
+  if (height > 0) $('app').style.setProperty('--drawer-head-h', `${height}px`);
+}
+new ResizeObserver(publishDrawerHeadHeight).observe($('drawerHead'));
 $('guidedCardToggle').onclick = () => {
   guidedCardPeek = !guidedCardPeek;
   syncGuidedCardPeek();
@@ -1313,7 +1476,7 @@ function syncExtensionRows() {
  * from the loaded records — a diagram asserting its own numbers would be exactly
  * the unaudited illustration the chapter says this is not.
  */
-function pipelineNode(pipeline) {
+function pipelineNode(pipeline, { compact = false } = {}) {
   const wrapper = document.createElement('div');
   wrapper.className = 'pipeline';
   for (const stage of pipeline.stages) {
@@ -1323,15 +1486,31 @@ function pipelineNode(pipeline) {
     const head = document.createElement('div');
     head.className = 'pipeline-label';
     head.textContent = stage.label;
+    // The figure and its unit are separate elements so the stage band can set
+    // the figure at display size without stretching the sentence beside it.
     const count = document.createElement('div');
     count.className = 'pipeline-count';
-    count.textContent = `${stage.count} ${stage.count_label}`;
+    const figure = document.createElement('span');
+    figure.className = 'pipeline-figure';
+    figure.textContent = String(stage.count);
+    const unit = document.createElement('span');
+    unit.className = 'pipeline-unit';
+    unit.textContent = ` ${stage.count_label}`;
+    count.append(figure, unit);
     const detail = document.createElement('div');
     detail.className = 'pipeline-detail';
     detail.textContent = stage.detail;
+    // A column of the stage band has no room for three file paths at a legible
+    // size. It names the first and says how many more; the drawer's Sources &
+    // build tab carries the whole list, which is where a reader after file
+    // names is already going.
     const records = document.createElement('div');
     records.className = 'pipeline-records';
-    records.textContent = stage.records.join(' · ');
+    const remaining = stage.records.length - 1;
+    records.textContent = compact && remaining > 0
+      ? `${stage.records[0]} · +${remaining} more`
+      : stage.records.join(' · ');
+    records.title = stage.records.join(' · ');
     row.append(head, count, detail, records);
     wrapper.append(row);
   }
@@ -1348,7 +1527,10 @@ function renderProvenancePipeline() {
   const guided = $('guidedPipeline');
   const show = activeFeatures().has('provenance_pipeline');
   guided.hidden = !show;
-  guided.replaceChildren(...(show ? [pipelineNode(pipeline)] : []));
+  guided.replaceChildren(...(show ? [pipelineNode(pipeline, { compact: true })] : []));
+  // The scrim behind the band is a property of the chapter, so it is switched
+  // where the band is, not from a second place that could disagree with it.
+  $('stageChrome').dataset.pipeline = String(show);
 }
 
 /**
@@ -1827,6 +2009,24 @@ function sourceLinks(sources) {
   });
 }
 
+/**
+ * One muted line rather than a stack of full-width links. The full title stays
+ * available on hover and to assistive technology, so compactness costs nothing
+ * a reader actually needs.
+ */
+function sourceLine(sources) {
+  const fragment = document.createDocumentFragment();
+  fragment.append(document.createTextNode('Sources: '));
+  sources.forEach((source, index) => {
+    if (index) fragment.append(document.createTextNode(' · '));
+    const link = document.createElement('a');
+    link.href = source.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.textContent = source.citation; link.title = source.title;
+    fragment.append(link);
+  });
+  return fragment;
+}
+
 function detailBlock(annotation) {
   const fragment = document.createDocumentFragment();
   const expert = document.createElement('div');
@@ -1887,12 +2087,57 @@ function renderExpertCards() {
   }));
 }
 
+// SC-13. 46 reviewed records were reachable only one claim at a time. The full
+// registry is static for a build, so it is rendered once, in the tab a reader
+// goes to when they want the corpus rather than a single citation.
+function renderBibliography() {
+  const entries = visualization.bibliography();
+  $('bibliography').replaceChildren(...entries.map((entry) => {
+    const row = document.createElement('div');
+    row.className = 'bib-row';
+    const link = document.createElement('a');
+    link.href = entry.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.textContent = entry.citation;
+    const title = document.createElement('span');
+    title.className = 'bib-title';
+    title.textContent = ` — ${entry.title}`;
+    row.append(link, title);
+    if (entry.cited) row.dataset.cited = 'true';
+    return row;
+  }));
+}
+renderBibliography();
+
+// A screenshot in a talk is only reproducible if the reader can get back to the
+// exact state it came from, in the exact build it came from.
+$('copyViewLink').onclick = async () => {
+  const fingerprint = window.__titinBuild?.fingerprint || 'unpinned development source';
+  const text = `${window.location.href}\n(build ${fingerprint})`;
+  try {
+    await navigator.clipboard.writeText(text);
+    $('copyViewStatus').textContent = 'Link and build copied to the clipboard.';
+  } catch {
+    // A denied clipboard permission is not a failure the reader can act on, so
+    // the text they asked for is put on screen where they can select it.
+    $('copyViewStatus').textContent = text;
+  }
+};
+
+/** Expert cards whose declared biology matches a selected structure. */
+function relatedExpertCards(targetId) {
+  if (!targetId) return [];
+  return visualization.expertCards()
+    .filter((card) => (card.related_target_ids || []).includes(targetId));
+}
+
 function resolvedAnnotation(selection) {
   return selection ? visualization.resolveAnnotation(selection) : null;
 }
 
 function renderSelectedEvidence(annotation) {
   const box = $('selectedEvidence');
+  // An empty heading over nothing reads as a section that failed to load.
+  $('selectedStructureHeading').hidden = !annotation;
   box.hidden = !annotation;
   if (!annotation) { box.replaceChildren(); return; }
   const title = document.createElement('b'); title.textContent = annotation.label;
@@ -1921,7 +2166,30 @@ function renderPinnedSelection() {
   $('objectInspectorEvidence').textContent = evidenceSummary(annotation);
   $('objectInspectorLay').textContent = annotation.lay_text;
   $('objectInspectorDetail').replaceChildren(detailBlock(annotation));
-  $('objectInspectorSources').replaceChildren(...sourceLinks(annotation.sources));
+  $('objectInspectorSources').replaceChildren(sourceLine(annotation.sources));
+  // The disclosure follows the audience the reader has already declared: a
+  // specialist in Evidence mode should not have to open it once per structure.
+  $('objectInspectorDetails').open = state.audienceMode === AUDIENCE_MODES.evidence;
+  // Seven reviewed expert cards used to be reachable only by scrolling one
+  // column in Evidence mode. Selecting the kinase region now offers the kinase
+  // card, because the card itself declares the biology it is about.
+  const related = relatedExpertCards(annotation.target_id);
+  const expertLink = $('objectInspectorExpertLink');
+  expertLink.hidden = related.length === 0;
+  if (related.length) {
+    expertLink.textContent = `Expert card: ${related[0].title}`;
+    expertLink.onclick = () => {
+      openEvidence(expertLink);
+      state.drawerTab = 'evidence';
+      syncDrawerTabs();
+      const card = $('expertCards').querySelector(`[data-card="${related[0].id}"]`);
+      card?.scrollIntoView({ block: 'center' });
+      card?.animate?.(
+        [{ outline: '2px solid #ff5d7d' }, { outline: '2px solid transparent' }],
+        { duration: 1400 },
+      );
+    };
+  }
   const instance = $('objectInspectorInstance');
   instance.hidden = !annotation.picked_instance;
   instance.textContent = annotation.picked_instance
@@ -1929,8 +2197,10 @@ function renderPinnedSelection() {
       + (annotation.picked_instance.archetype ? ` · ${annotation.picked_instance.archetype}` : '')
     : '';
   $('guidedSelection').hidden = false;
-  $('guidedSelectionLabel').textContent = `Selected: ${annotation.label}. `;
-  $('guidedSelectionText').textContent = annotation.lay_text;
+  $('guidedSelectionLabel').textContent = `Selected: ${annotation.label}`;
+  // The full explanation is in the pinned card; repeating it here made the
+  // reader parse the same paragraph twice.
+  $('guidedSelectionText').textContent = '';
   renderSelectedEvidence(annotation);
   syncAnnotationIndex();
   $('objectAnnouncement').textContent = `${annotation.label}. ${annotation.lay_text} `
@@ -1973,6 +2243,30 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
 }
 
 $('objectInspectorClose').onclick = () => clearPinnedSelection();
+
+// The keyboard could already walk the visible structures; the pointer could not.
+function stepPinnedSelection(direction) {
+  const available = availableAnnotations();
+  if (!available.length) return;
+  const current = available.findIndex((annotation) => (
+    annotation.target_type === pinnedPick?.target_type
+      && annotation.target_id === pinnedPick?.target_id
+  ));
+  const nextIndex = (current + direction + available.length) % available.length;
+  const next = available[nextIndex];
+  // The pointer and the arrow keys walk one list, so they share one cursor:
+  // stepping with the buttons and then pressing Right must continue from here
+  // rather than resuming wherever the keyboard was left.
+  keyboardAnnotationIndex = nextIndex;
+  setPinnedSelection({
+    target_type: next.target_type,
+    target_id: next.target_id,
+    sarcomere_length_nm: visualization.currentState().sarcomere_length_nm,
+    scale: state.scale,
+  });
+}
+$('objectInspectorPrevious').onclick = () => stepPinnedSelection(-1);
+$('objectInspectorNext').onclick = () => stepPinnedSelection(1);
 
 function componentAvailable(targetId, report) {
   const hidden = new Set(report?.hidden_components || []);
@@ -2076,15 +2370,20 @@ function renderObjectOverlay() {
   const cardWidth = card.offsetWidth; const cardHeight = card.offsetHeight;
   const canvasTop = $('canvas').getBoundingClientRect().top;
   const headerBottom = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 8;
-  // The stage bar is the floor now, not the bottom of the canvas: this card has
+  // The stage bar is the floor, not the bottom of the canvas: this card has
   // pointer events, so letting it settle over the bar would put an explanation
-  // on top of the controls and swallow clicks meant for them.
+  // on top of the controls and swallow clicks meant for them. The placement
+  // rule itself is the tested one — this only tells it how much stage there is.
   const barTop = $('stageBar').getBoundingClientRect().top - canvasTop;
-  const gap = pinnedPick ? 24 : 14;
-  let left = point.x_px < width / 2 ? point.x_px + gap : point.x_px - cardWidth - gap;
-  let top = pinnedPick ? point.y_px - cardHeight / 2 : point.y_px + gap;
-  left = Math.max(8, Math.min(width - cardWidth - 8, left));
-  top = Math.max(headerBottom, Math.min(barTop - cardHeight - 8, top));
+  const placed = inspectorPlacement({
+    anchor: { x_px: point.x_px, y_px: point.y_px },
+    card: { width: cardWidth, height: cardHeight },
+    canvas: { width, height: barTop },
+    safeTopPx: headerBottom,
+    gapPx: pinnedPick ? STAGE_LAYOUT.card_gap_px : 14,
+  });
+  const left = placed.left;
+  const top = placed.top;
   card.style.left = `${left}px`; card.style.top = `${top}px`;
   const endX = Math.max(left, Math.min(left + cardWidth, point.x_px));
   const endY = Math.max(top, Math.min(top + cardHeight, point.y_px));

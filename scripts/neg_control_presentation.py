@@ -97,6 +97,13 @@ rejected("expert card without a non-claim",
 rejected("expert card citing a missing source",
          lambda p: card(p, "aband_scaffold_card").__setitem__("source_ids", ["10.invalid/missing"]),
          "unknown source")
+rejected("expert card bound to a structure the runtime cannot select",
+         lambda p: card(p, "n2a_hub_card").__setitem__(
+             "related_target_ids", ["not_a_structure"]),
+         "unknown related target")
+rejected("expert card unreachable from any structure",
+         lambda p: card(p, "n2a_hub_card").__setitem__("related_target_ids", []),
+         "must name at least one related target")
 rejected("expert card with no established/proposed split",
          lambda p: card(p, "kinase_signaling_card").__setitem__("findings", []),
          "must separate its findings by status")

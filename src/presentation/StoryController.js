@@ -269,6 +269,18 @@ export function checkPresentationSpec(presentation, context = {}) {
         || card.not_claimed.some((entry) => !String(entry || '').trim())) {
       problems.push(`expert card '${card.id}' needs explicit not-claimed text`);
     }
+    // A card the reader cannot reach from the structure it explains is content
+    // that ships but does not arrive. The binding is validated here so a card
+    // cannot name a structure the runtime has no way to select.
+    if (!Array.isArray(card.related_target_ids) || !card.related_target_ids.length) {
+      problems.push(`expert card '${card.id}' must name at least one related target`);
+    } else {
+      for (const target of card.related_target_ids) {
+        if (!componentIds.has(target) && !regionIds.has(target)) {
+          problems.push(`expert card '${card.id}' names unknown related target '${target}'`);
+        }
+      }
+    }
     if (!Array.isArray(card.findings) || !card.findings.length) {
       problems.push(`expert card '${card.id}' must separate its findings by status`);
     } else {

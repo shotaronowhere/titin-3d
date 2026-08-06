@@ -1,6 +1,6 @@
 # Presenter script
 
-Generated — build `898d67f5812b`. Estimated 121.2 s (2 min 1 s), target 110–190 s.
+Generated — build `7cc1c8d0ad9c`. Estimated 121.2 s (2 min 1 s), target 110–190 s.
 
 Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in the Evidence drawer — you do not need to open it to finish the tour.
 
