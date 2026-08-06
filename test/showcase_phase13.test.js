@@ -6,9 +6,19 @@ import { readFileSync } from 'node:fs';
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import { createBibliography } from '../src/presentation/Bibliography.js';
+import { checkPresentationSpec } from '../src/presentation/StoryController.js';
 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 const model = await TitinModel.create(nodeReader());
+
+const specContext = {
+  claims: model.spec.showcaseClaims,
+  references: model.spec.references,
+  sarcomere: model.spec.sarcomere,
+  titin: model.spec.titin,
+  states: model.spec.states,
+  annotations: model.spec.annotations,
+};
 
 test('SC13: specialist depth is disclosed, not dumped', () => {
   assert.match(page, /<details id="objectInspectorDetails"/);
@@ -98,4 +108,33 @@ test('SC13: the page can copy a citable link to the current view', () => {
   assert.match(page, /navigator\.clipboard\.writeText/);
   assert.match(page, /__titinBuild\?\.fingerprint/,
     'a citable link must name the build it came from');
+});
+
+test('SC13: every expert card names the biology it is about', () => {
+  const cards = model.spec.presentation.expert_cards;
+  const regionIds = new Set(model.spec.titin.regions.map((region) => region.id));
+  const componentIds = new Set(model.spec.annotations.components.map((entry) => entry.target_id));
+  for (const card of cards) {
+    assert.ok(Array.isArray(card.related_target_ids) && card.related_target_ids.length,
+      `expert card '${card.id}' must name at least one related target`);
+    for (const target of card.related_target_ids) {
+      assert.ok(regionIds.has(target) || componentIds.has(target),
+        `expert card '${card.id}' names unknown target '${target}'`);
+    }
+  }
+  assert.deepEqual(checkPresentationSpec(model.spec.presentation, specContext), []);
+});
+
+test('SC13: an unknown related target is rejected by the contract', () => {
+  const broken = JSON.parse(JSON.stringify(model.spec.presentation));
+  broken.expert_cards[0].related_target_ids = ['not_a_structure'];
+  const problems = checkPresentationSpec(broken, specContext);
+  assert.ok(problems.some((problem) => problem.includes('not_a_structure')),
+    `the validator must reject an unknown related target; got ${JSON.stringify(problems)}`);
+});
+
+test('SC13: selecting a structure surfaces its expert card', () => {
+  assert.match(page, /function relatedExpertCards\(/);
+  assert.match(page, /related_target_ids/);
+  assert.match(page, /id="objectInspectorExpertLink"/);
 });

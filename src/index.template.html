@@ -224,6 +224,12 @@ window.__titinBoot = { ready: false, problems: [] };
   details[open] > .object-disclosure::before { content: "▾ "; }
   .object-inspector-nav { display: flex; gap: 4px; }
   .object-instance { color: #ffd7e0; font-size: 9px; margin-top: 4px; }
+  /* The route from a structure to the reviewed card that discusses it. Full
+     width and left-aligned: it is a link to a named card, not a chrome control,
+     and the card titles are sentences. */
+  .object-expert-link button { width: 100%; margin-top: 8px; text-align: left;
+    font-size: 10px; line-height: 1.35; border-color: rgb(255 176 192 / 45%); }
+  .object-expert-link button[hidden] { display: none; }
   #guidedSelection { margin: 0 0 9px; padding: 6px 8px; border-left: 2px solid var(--titin);
     background: rgb(255 93 125 / 8%); color: #d8dfe7; font-size: 10px; }
   #selectedEvidence[hidden] { display: none; }
@@ -477,6 +483,7 @@ window.__titinBoot = { ready: false, problems: [] };
         <summary class="object-disclosure">For specialists</summary>
         <div class="object-detail" id="objectInspectorDetail"></div>
       </details>
+      <div class="object-expert-link"><button id="objectInspectorExpertLink" hidden></button></div>
       <div class="object-sources" id="objectInspectorSources"></div>
     </section>
     <div id="objectAnnouncement" class="sr-only" aria-live="polite"></div>
@@ -2037,6 +2044,13 @@ $('copyViewLink').onclick = async () => {
   }
 };
 
+/** Expert cards whose declared biology matches a selected structure. */
+function relatedExpertCards(targetId) {
+  if (!targetId) return [];
+  return visualization.expertCards()
+    .filter((card) => (card.related_target_ids || []).includes(targetId));
+}
+
 function resolvedAnnotation(selection) {
   return selection ? visualization.resolveAnnotation(selection) : null;
 }
@@ -2077,6 +2091,26 @@ function renderPinnedSelection() {
   // The disclosure follows the audience the reader has already declared: a
   // specialist in Evidence mode should not have to open it once per structure.
   $('objectInspectorDetails').open = state.audienceMode === AUDIENCE_MODES.evidence;
+  // Seven reviewed expert cards used to be reachable only by scrolling one
+  // column in Evidence mode. Selecting the kinase region now offers the kinase
+  // card, because the card itself declares the biology it is about.
+  const related = relatedExpertCards(annotation.target_id);
+  const expertLink = $('objectInspectorExpertLink');
+  expertLink.hidden = related.length === 0;
+  if (related.length) {
+    expertLink.textContent = `Expert card: ${related[0].title}`;
+    expertLink.onclick = () => {
+      openEvidence(expertLink);
+      state.drawerTab = 'evidence';
+      syncDrawerTabs();
+      const card = $('expertCards').querySelector(`[data-card="${related[0].id}"]`);
+      card?.scrollIntoView({ block: 'center' });
+      card?.animate?.(
+        [{ outline: '2px solid #ff5d7d' }, { outline: '2px solid transparent' }],
+        { duration: 1400 },
+      );
+    };
+  }
   const instance = $('objectInspectorInstance');
   instance.hidden = !annotation.picked_instance;
   instance.textContent = annotation.picked_instance

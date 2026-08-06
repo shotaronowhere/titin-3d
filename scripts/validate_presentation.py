@@ -210,6 +210,15 @@ def validate(presentation_path):
         require(isinstance(not_claimed, list) and bool(not_claimed)
                 and all(str(entry).strip() for entry in not_claimed),
                 f"expert card '{card.get('id')}' needs explicit not-claimed text")
+        # A card the reader cannot reach from the structure it explains is
+        # content that ships but does not arrive. CI and the browser fail closed
+        # together, so this mirrors the rule in StoryController.js.
+        targets = card.get("related_target_ids")
+        require(isinstance(targets, list) and len(targets) > 0,
+                f"expert card '{card.get('id')}' must name at least one related target")
+        for target in targets or []:
+            require(target in component_ids or target in region_ids,
+                    f"expert card '{card.get('id')}' names unknown related target '{target}'")
         findings = card.get("findings")
         if not isinstance(findings, list) or not findings:
             require(False, f"expert card '{card.get('id')}' must separate its findings by status")

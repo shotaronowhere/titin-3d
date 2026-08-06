@@ -396,6 +396,10 @@
       "id": "aband_scaffold_card",
       "target_claim_id": "titin_region_architecture",
       "audience": "evidence",
+      "related_target_ids": [
+        "Aband_super",
+        "thick_filament"
+      ],
       "title": "Spring and scaffold: what the A-band super-repeat does and does not settle",
       "evidence_class": "INFERRED",
       "source_ids": [
@@ -433,6 +437,10 @@
       "id": "mybpc_scope_card",
       "target_claim_id": "mybpc_czone_context",
       "audience": "evidence",
+      "related_target_ids": [
+        "mybpc",
+        "thick_filament"
+      ],
       "title": "Optional MyBP-C context, and why cardiac coordinates were not imported",
       "evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -465,6 +473,9 @@
       "id": "n2a_hub_card",
       "target_claim_id": "n2a_interaction_hub_card",
       "audience": "evidence",
+      "related_target_ids": [
+        "N2A"
+      ],
       "title": "N2A as a mechanical and interaction hub",
       "evidence_class": "MEASURED",
       "source_ids": [
@@ -501,6 +512,10 @@
       "id": "kinase_signaling_card",
       "target_claim_id": "titin_kinase_card",
       "audience": "evidence",
+      "related_target_ids": [
+        "kinase",
+        "mline"
+      ],
       "title": "Titin kinase: an established domain, an unsettled mechanism",
       "evidence_class": "MEASURED",
       "source_ids": [
@@ -536,6 +551,11 @@
       "id": "length_activation_card",
       "target_claim_id": "length_dependent_activation_card",
       "audience": "evidence",
+      "related_target_ids": [
+        "mybpc",
+        "thick_filament",
+        "titin"
+      ],
       "title": "Length-dependent activation: a proposal, not a simulation",
       "evidence_class": "INFERRED",
       "source_ids": [
@@ -570,6 +590,9 @@
       "id": "isoform_diversity_card",
       "target_claim_id": "scope_badge",
       "audience": "evidence",
+      "related_target_ids": [
+        "titin"
+      ],
       "title": "One gene, many titins — and one of them is modelled here",
       "evidence_class": "MEASURED",
       "source_ids": [
@@ -600,6 +623,9 @@
       "id": "unresolved_questions_card",
       "target_claim_id": "ai_provenance_pipeline",
       "audience": "evidence",
+      "related_target_ids": [
+        "titin"
+      ],
       "title": "What this model still cannot tell you",
       "evidence_class": "UNKNOWN",
       "source_ids": [
