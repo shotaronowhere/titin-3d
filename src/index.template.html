@@ -513,7 +513,7 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // Stage composition arithmetic. These rules decide whether the figure reads
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
-import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar } from './src/presentation/StageLayout.js';
+import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement } from './src/presentation/StageLayout.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -812,17 +812,24 @@ function renderScienceOverlay() {
   // came from not running this pass at all on a still frame.
   const canvasTop = $('canvas').getBoundingClientRect().top;
   const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 16;
-  // The guided chapter card owns the bottom-left corner and its height depends
-  // on the chapter's copy, so where the ruler can go is measured, not assumed.
+  // The guided chapter card owns the bottom-left corner and its size depends on
+  // the chapter's copy, so where the ruler can go is measured, not assumed.
   const guidedCard = $('guidedCard');
-  const cardTopPx = guidedCard.offsetParent === null ? Infinity
-    : guidedCard.getBoundingClientRect().top - canvasTop;
+  const cardRect = guidedCard.offsetParent === null ? null
+    : guidedCard.getBoundingClientRect();
+  const canvasLeft = cardRect ? $('canvas').getBoundingClientRect().left : 0;
+  const cardBox = cardRect ? {
+    top: cardRect.top - canvasTop,
+    right: cardRect.right - canvasLeft,
+    bottom: cardRect.bottom - canvasTop,
+  } : null;
   const projectionSignature = JSON.stringify({
     length: activeShowcaseOverlay.sarcomere_length_nm,
     width, height, showBands,
     features: [...features],
     headerBottom: Math.round(safeTopPx * 4) / 4,
-    cardTop: Number.isFinite(cardTopPx) ? Math.round(cardTopPx * 4) / 4 : null,
+    card: cardBox && [cardBox.top, cardBox.right, cardBox.bottom]
+      .map((edge) => Math.round(edge * 4) / 4),
     scale: pxPerNm === null ? null : Math.round(pxPerNm * 1e4),
     projected: [...projected.values()].map((point) => [
       point.id, Math.round(point.x_px * 4) / 4, Math.round(point.y_px * 4) / 4, point.visible,
@@ -892,10 +899,9 @@ function renderScienceOverlay() {
   // than no ruler.
   if (pxPerNm !== null) {
     const bar = scaleBar(pxPerNm, Math.max(100, Math.min(180, width * 0.14)));
-    // Bottom-left, aligned with the orbit/zoom hint and clear of the guided
-    // chapter card when that card is on the stage.
-    const barX = 12;
-    const barY = Math.max(safeTopPx + 20, Math.min(height - 42, cardTopPx - 12));
+    const { left: barX, baseline: barY } = scaleBarPlacement({
+      barPx: bar.px, canvas: { width, height }, card: cardBox, safeTopPx,
+    });
     nodes.push(svgElement('path', {
       d: `M ${barX} ${barY - 4} V ${barY} H ${barX + bar.px} V ${barY - 4}`,
       class: 'science-bracket scale-bar',

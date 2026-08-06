@@ -6,7 +6,7 @@ import * as THREE from 'three';
 
 import {
   STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement,
-  stagePxPerNm, scaleBar,
+  stagePxPerNm, scaleBar, scaleBarPlacement,
 } from '../src/presentation/StageLayout.js';
 
 import { TitinModel } from '../src/model/TitinModel.js';
@@ -300,6 +300,35 @@ test('SC11-4a: a scale the stage cannot state is reported as absent', () => {
     facade.viewer = { visibleWidthNm: () => bad };
     assert.equal(facade.viewSpanNm(), null, `visibleWidthNm ${bad} must not become a scale`);
   }
+});
+
+test('SC11-4a: the ruler holds the stage rule instead of following the card', () => {
+  const canvas = { width: 1280, height: 720 };
+  const baseline = canvas.height - STAGE_LAYOUT.scale_bar_baseline_px;
+  // Evidence mode: no chapter card, so the bottom-left corner is free.
+  assert.deepEqual(scaleBarPlacement({ barPx: 104, canvas, card: null, safeTopPx: 90 }),
+    { left: 12, baseline });
+  // Guided: the card owns the corner, so the bar sits beside it on the same rule.
+  const short = { top: 504, right: 514, bottom: 676 };
+  const tall = { top: 240, right: 514, bottom: 676 };   // chapter 7's pipeline card
+  const beside = scaleBarPlacement({ barPx: 104, canvas, card: short, safeTopPx: 90 });
+  assert.deepEqual(beside, { left: 526, baseline });
+  // The card's HEIGHT must not move the bar: that is what made it jump on Next.
+  assert.deepEqual(scaleBarPlacement({ barPx: 104, canvas, card: tall, safeTopPx: 90 }), beside);
+});
+
+test('SC11-4a: a phone-width card pushes the ruler above it rather than off-stage', () => {
+  const canvas = { width: 375, height: 812 };
+  const card = { top: 500, right: 356, bottom: 795 };
+  const placed = scaleBarPlacement({ barPx: 100, canvas, card, safeTopPx: 120 });
+  assert.equal(placed.left, 12);
+  assert.ok(placed.left + 100 <= canvas.width - 12, 'the bar must stay on the stage');
+  assert.equal(placed.baseline, card.top - 12);
+  // And a card tall enough to reach the header cannot push the bar underneath it.
+  const engulfing = { top: 100, right: 356, bottom: 795 };
+  assert.equal(
+    scaleBarPlacement({ barPx: 100, canvas, card: engulfing, safeTopPx: 120 }).baseline, 140,
+  );
 });
 
 test('SC11-4a: the page takes the bar\'s scale from the camera', () => {

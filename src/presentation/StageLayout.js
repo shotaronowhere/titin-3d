@@ -21,6 +21,8 @@ export const STAGE_LAYOUT = Object.freeze({
   bracket_drop_tick_px: 8,
   card_gap_px: 24,
   edge_padding_px: 8,
+  // Height of the stage's bottom rule, where the ruler and the orbit hint live.
+  scale_bar_baseline_px: 42,
 });
 
 /** Vertical offsets of the three bracket lanes, measured down from the lane origin. */
@@ -112,6 +114,37 @@ export function scaleBar(pxPerNm, maxPx) {
     }
   }
   return { nm, px: nm * pxPerNm, label: formatSpanNm(nm) };
+}
+
+/**
+ * Where the scale bar can sit without being covered or wandering.
+ *
+ * The stage's bottom rule is the conventional home for a ruler, but the guided
+ * chapter card owns the bottom-left corner and its height is set by the
+ * chapter's copy — chapter 7's pipeline card is several times the height of
+ * chapter 1's. Placing the bar simply above the card therefore made it jump
+ * vertically on every Next, which is exactly the wrong behaviour for the one
+ * thing on screen a viewer uses as a fixed reference.
+ *
+ * So: the bottom rule, beside the card when the bar fits there; only when it
+ * does not — a phone, where the card is nearly the full width — does the bar
+ * move above the card, and never under the page header.
+ *
+ * @param {{
+ *   barPx: number,
+ *   canvas: {width:number, height:number},
+ *   card: {top:number, right:number, bottom:number}|null,
+ *   safeTopPx: number,
+ * }} opts
+ * @returns {{left:number, baseline:number}} container-local CSS pixels
+ */
+export function scaleBarPlacement({ barPx, canvas, card, safeTopPx }) {
+  const pad = STAGE_LAYOUT.edge_padding_px + 4;
+  const baseline = canvas.height - STAGE_LAYOUT.scale_bar_baseline_px;
+  if (!card || card.bottom <= baseline - pad) return { left: pad, baseline };
+  const beside = card.right + pad;
+  if (beside + barPx <= canvas.width - pad) return { left: beside, baseline };
+  return { left: pad, baseline: Math.max(safeTopPx + 20, card.top - pad) };
 }
 
 /**
