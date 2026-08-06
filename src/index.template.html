@@ -331,7 +331,7 @@ window.__titinBoot = { ready: false, problems: [] };
     aria-label="Interactive 3D titin and sarcomere model. Use the pointer to inspect a structure, or Left and Right Arrow to move through structures and Enter to pin an explanation."
     aria-describedby="interactionHelp objectAnnouncement">
     <div id="err" role="alert"></div>
-    <svg id="scienceOverlay" aria-label="Projected sarcomere landmarks and titin termini"></svg>
+    <svg id="scienceOverlay" aria-label="Projected sarcomere landmarks, titin termini, and the stage scale bar"></svg>
     <svg id="objectLeader" aria-hidden="true"></svg>
     <div id="objectTooltip" role="tooltip" hidden>
       <div id="objectTooltipLabel"></div>
@@ -513,7 +513,7 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // Stage composition arithmetic. These rules decide whether the figure reads
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
-import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement } from './src/presentation/StageLayout.js';
+import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, axisPxPerNm, scaleBar } from './src/presentation/StageLayout.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -794,16 +794,42 @@ function renderScienceOverlay() {
   if (bandsRequested || features.has('termini')) {
     records.push(...activeShowcaseOverlay.termini.map(renderedTitinAnchor));
   }
-  const projected = new Map(visualization.projectPresentationAnchors(records)
+  // Scale-bar rungs: evenly spaced points on the sarcomere axis, appended to the
+  // SAME projection the brackets use. Perspective makes nm-per-pixel a function
+  // of depth, so the ruler is measured from the projection that is actually
+  // drawn rather than from a separate camera query that could disagree with it.
+  const rungs = STAGE_LAYOUT.scale_bar_rungs;
+  const rungStepNm = activeShowcaseOverlay.sarcomere_length_nm / rungs;
+  const firstRung = records.length;
+  for (let i = 0; i <= rungs; i += 1) records.push({ x: i * rungStepNm, y: 0, z: 0 });
+  const allProjected = visualization.projectPresentationAnchors(records);
+  const projected = new Map(allProjected.slice(0, firstRung)
     .map((point) => [point.id, point]));
+  const pxPerNm = axisPxPerNm(
+    allProjected.slice(firstRung).map((point, i) => ({
+      x_nm: i * rungStepNm, x_px: point.x_px, visible: point.visible,
+    })),
+    { centreXPx: width / 2 },
+  );
   const showBands = bandsRequested && isLongitudinalProjection(
     projected.get('n_terminus'), projected.get('c_terminus'),
   );
+  // Every DOM measurement this pass needs, taken once. Each one forces a
+  // synchronous layout, and the branches below used to repeat the same two.
+  const canvasTop = $('canvas').getBoundingClientRect().top;
+  const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 16;
+  // The guided chapter card owns the bottom-left corner and its height depends
+  // on the chapter's copy, so where the ruler can go is measured, not assumed.
+  const guidedCard = $('guidedCard');
+  const cardTopPx = guidedCard.offsetParent === null ? Infinity
+    : guidedCard.getBoundingClientRect().top - canvasTop;
   const projectionSignature = JSON.stringify({
     length: activeShowcaseOverlay.sarcomere_length_nm,
     width, height, showBands,
     features: [...features],
-    headerBottom: Math.round($('stageHeader').getBoundingClientRect().bottom * 4) / 4,
+    headerBottom: Math.round(safeTopPx * 4) / 4,
+    cardTop: Number.isFinite(cardTopPx) ? Math.round(cardTopPx * 4) / 4 : null,
+    scale: pxPerNm === null ? null : Math.round(pxPerNm * 1e4),
     projected: [...projected.values()].map((point) => [
       point.id, Math.round(point.x_px * 4) / 4, Math.round(point.y_px * 4) / 4, point.visible,
     ]),
@@ -812,8 +838,6 @@ function renderScienceOverlay() {
   scienceOverlaySignature = projectionSignature;
   const nodes = [];
   if (showBands) {
-    const canvasRect = $('canvas').getBoundingClientRect();
-    const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasRect.top + 16;
     const laneY = bracketLaneY([...projected.values()], { canvasHeight: height, safeTopPx });
     for (const bracket of activeShowcaseOverlay.brackets) {
       const start = projected.get(`${bracket.id}:start`);
@@ -850,13 +874,11 @@ function renderScienceOverlay() {
     }
   }
   if (features.has('termini')) {
-    const safeTop = $('stageHeader').getBoundingClientRect().bottom
-      - $('canvas').getBoundingClientRect().top + 16;
     for (const terminus of activeShowcaseOverlay.termini) {
       const point = projected.get(terminus.id);
       if (!point?.visible) continue;
       const x = Math.max(18, Math.min(width - 18, point.x_px));
-      const y = Math.max(safeTop, Math.min(height - 80, point.y_px));
+      const y = Math.max(safeTopPx, Math.min(height - 80, point.y_px));
       const left = terminus.id === 'n_terminus';
       const dx = left ? 16 : -16;
       nodes.push(svgElement('circle', { cx: x, cy: y, r: 3.2, class: 'terminus-dot' }));
@@ -866,6 +888,27 @@ function renderScienceOverlay() {
         'text-anchor': left ? 'start' : 'end', class: 'terminus-label',
       }, terminus.label));
     }
+  }
+  // The ruler. Every number in this project is in nanometres and nothing on the
+  // stage said how big anything was, at any zoom, in either mode. It also
+  // matters more here than usual: the renderer WITHDRAWS detail below a
+  // resolvability threshold, and a viewer who cannot see the scale cannot tell
+  // an honest LOD withdrawal from a missing feature. Drawn only when the axis
+  // scale could actually be measured — a ruler stating a wrong number is worse
+  // than no ruler.
+  if (pxPerNm !== null) {
+    const bar = scaleBar(pxPerNm, Math.max(100, Math.min(180, width * 0.14)));
+    // Bottom-left, aligned with the orbit/zoom hint and clear of the guided
+    // chapter card when that card is on the stage.
+    const barX = 12;
+    const barY = Math.max(safeTopPx + 20, Math.min(height - 42, cardTopPx - 12));
+    nodes.push(svgElement('path', {
+      d: `M ${barX} ${barY - 4} V ${barY} H ${barX + bar.px} V ${barY - 4}`,
+      class: 'science-bracket scale-bar',
+    }));
+    nodes.push(svgElement('text', {
+      x: barX + bar.px / 2, y: barY - 7, 'text-anchor': 'middle', class: 'science-label',
+    }, bar.label));
   }
   svg.replaceChildren(...nodes);
 }

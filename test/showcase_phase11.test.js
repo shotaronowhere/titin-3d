@@ -6,6 +6,7 @@ import * as THREE from 'three';
 
 import {
   STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement,
+  axisPxPerNm, scaleBar,
 } from '../src/presentation/StageLayout.js';
 
 import { TitinModel } from '../src/model/TitinModel.js';
@@ -228,4 +229,75 @@ test('SC11: the viewer reports camera motion so overlays keep up while it moves'
     'OrbitControls fires change for direct input and for damped settling');
   assert.match(viewerSource, /this\.controls\.removeEventListener\('change', this\._onControlChange\)/,
     'a listener added in the constructor must come off in dispose()');
+});
+
+// ---------------------------------------------------------------------------
+// Task 11.4a — a scale bar, because every number here is in nanometres
+// ---------------------------------------------------------------------------
+
+const annotations = JSON.parse(
+  readFileSync(new URL('../data/annotations.json', import.meta.url), 'utf8'),
+);
+
+test('SC11-4a: the bar picks a round span that fits the budget', () => {
+  for (const pxPerNm of [0.05, 0.3, 1.07, 4.2, 17, 120]) {
+    const bar = scaleBar(pxPerNm, 160);
+    assert.ok(bar.px > 0 && bar.px <= 160, 'the bar must fit its pixel budget');
+    assert.ok(bar.px >= 40, 'a bar under 40 px cannot be read');
+    // 1-2-5 sequence across decades: the span is always a number a viewer can hold.
+    const mantissa = bar.nm / 10 ** Math.floor(Math.log10(bar.nm));
+    assert.ok([1, 2, 5].includes(Math.round(mantissa * 1e6) / 1e6),
+      `${bar.nm} nm is not a 1-2-5 round number`);
+    assert.ok(Math.abs(bar.px - bar.nm * pxPerNm) < 1e-6,
+      'the drawn length must equal the labelled span, not approximate it');
+  }
+});
+
+test('SC11-4a: the label switches unit without changing the measurement', () => {
+  assert.match(scaleBar(0.02, 160).label, /µm$/);   // wide field
+  assert.match(scaleBar(20, 160).label, /nm$/);     // molecular close-up
+});
+
+test('SC11-4a: a scale that cannot be measured is refused, not drawn', () => {
+  // A ruler that states a wrong number is worse than no ruler, so bad inputs
+  // throw here rather than producing a plausible-looking bar.
+  for (const bad of [0, -1, NaN, Infinity]) {
+    assert.throws(() => scaleBar(bad, 160), /positive finite/);
+    assert.throws(() => scaleBar(1, bad), /positive finite/);
+  }
+});
+
+test('SC11-4a: the axis scale is read where the subject is, not globally', () => {
+  // Perspective makes px/nm a function of depth: at a 280 nm close-up the near
+  // and far ends of the sarcomere differ by tens of percent, so a global number
+  // would label the bar with a measurement that is not the one on screen.
+  const rungs = [
+    { x_nm: 0, x_px: -500, visible: false },
+    { x_nm: 100, x_px: 100, visible: true },
+    { x_nm: 200, x_px: 700, visible: true },    // 6 px/nm, centred at 400
+    { x_nm: 300, x_px: 1500, visible: true },   // 8 px/nm, centred at 1100
+  ];
+  assert.equal(axisPxPerNm(rungs, { centreXPx: 400 }), 6);
+  assert.equal(axisPxPerNm(rungs, { centreXPx: 1100 }), 8);
+  assert.equal(axisPxPerNm([], { centreXPx: 400 }), null,
+    'with nothing on screen there is no honest scale to state');
+  assert.equal(axisPxPerNm([{ x_nm: 0, x_px: 10, visible: false }], { centreXPx: 0 }), null);
+});
+
+test('SC11-4a: the page draws the bar from the same projection as the brackets', () => {
+  assert.match(page, /import \{[^}]*scaleBar[^}]*\} from '\.\/src\/presentation\/StageLayout\.js'/);
+  assert.match(page, /axisPxPerNm\(/, 'the scale must be measured, not assumed');
+  assert.match(page, /scaleBar\(/);
+  // One projection call feeds brackets, termini and the ruler alike.
+  assert.equal((page.match(/projectPresentationAnchors\(records\)/g) || []).length, 1,
+    'the ruler must not add a second projection that could disagree with the brackets');
+});
+
+test('SC11-4a: the stage declares the scale bar as presentation geometry', () => {
+  const meaning = annotations.meta.stage_render_meaning;
+  assert.ok(typeof meaning === 'string' && meaning.trim(),
+    'stage overlays need a render-meaning record like every other drawn claim');
+  assert.match(meaning, /scale bar/i);
+  assert.match(meaning, /bracket/i);
+  assert.match(meaning, /continuity trace/i);
 });

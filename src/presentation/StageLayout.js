@@ -21,6 +21,10 @@ export const STAGE_LAYOUT = Object.freeze({
   bracket_drop_tick_px: 8,
   card_gap_px: 24,
   edge_padding_px: 8,
+  // Rungs laid along the sarcomere axis to measure the projection's local scale.
+  // 64 puts them ~34 nm apart on a 2,200 nm sarcomere, so even the tightest
+  // declared close-up (200 nm) contains several adjacent pairs to choose from.
+  scale_bar_rungs: 64,
 });
 
 /** Vertical offsets of the three bracket lanes, measured down from the lane origin. */
@@ -48,6 +52,83 @@ export function bracketLaneY(projected, { canvasHeight, safeTopPx }) {
   const floor = Math.max(safeTopPx, 0);
   const ceiling = Math.max(floor, canvasHeight - LANE_STACK_PX - 24);
   return Math.max(floor, Math.min(lane, ceiling));
+}
+
+/**
+ * Screen scale of the sarcomere axis, in CSS pixels per nanometre.
+ *
+ * A perspective projection makes this a function of depth, so there is no single
+ * number for the whole scene: at a 280 nm close-up the near and far ends of the
+ * sarcomere differ by tens of percent. The rungs are axis points carried through
+ * the overlay's own projection, and the pair used is the one whose screen
+ * midpoint is nearest `centreXPx`, so the ruler describes the scale where the
+ * subject actually is rather than an average of the whole model.
+ *
+ * Returns null when no adjacent pair is on screen. A ruler stating a wrong
+ * number is worse than no ruler, so the caller draws nothing in that case.
+ *
+ * @param {Array<{x_nm:number, x_px:number, visible:boolean}>} rungs ascending in x_nm
+ * @param {{centreXPx:number}} opts
+ * @returns {number|null}
+ */
+export function axisPxPerNm(rungs, { centreXPx }) {
+  let best = null;
+  for (let i = 1; i < rungs.length; i += 1) {
+    const near = rungs[i - 1];
+    const far = rungs[i];
+    // Both ends on screen: a rung behind the camera projects to a mirrored x,
+    // and pairing with one would report a scale that is not merely imprecise.
+    if (!near?.visible || !far?.visible) continue;
+    const spanNm = far.x_nm - near.x_nm;
+    const spanPx = Math.abs(far.x_px - near.x_px);
+    if (!(spanNm > 0) || !Number.isFinite(spanPx) || spanPx <= 0) continue;
+    const offset = Math.abs((near.x_px + far.x_px) / 2 - centreXPx);
+    if (!best || offset < best.offset) best = { offset, px_per_nm: spanPx / spanNm };
+  }
+  return best ? best.px_per_nm : null;
+}
+
+/** The 1-2-5 sequence: spans a viewer can hold without doing arithmetic. */
+const SCALE_BAR_MANTISSAS = Object.freeze([1, 2, 5]);
+
+/** `1234 nm` reads worse than `1.234 µm`; the measurement is identical. */
+function formatSpanNm(nm) {
+  return nm >= 1000 ? `${Number((nm / 1000).toFixed(3))} µm` : `${Number(nm.toFixed(3))} nm`;
+}
+
+/**
+ * A round bar span for the current projection, and the length to draw it at.
+ *
+ * `px` is `nm * pxPerNm` exactly. That is the whole discipline of the thing, and
+ * the same one SC-6 applied to the d10 dimension line: the drawn length must BE
+ * the measurement, not a tidied pixel count carrying a label that claims it.
+ *
+ * The largest 1-2-5 span that fits the budget is used. Because that sequence
+ * never leaves a gap wider than 2.5x, the result is never shorter than 0.4 of
+ * the budget, so a budget of 100 px or more cannot produce a bar below the 40 px
+ * readability floor.
+ *
+ * @param {number} pxPerNm CSS pixels per nanometre where the bar is measured
+ * @param {number} maxPx pixel budget for the bar
+ * @returns {{nm:number, px:number, label:string}}
+ */
+export function scaleBar(pxPerNm, maxPx) {
+  if (!Number.isFinite(pxPerNm) || pxPerNm <= 0 || !Number.isFinite(maxPx) || maxPx <= 0) {
+    throw new Error(
+      `scaleBar: expected positive finite inputs, got ${pxPerNm} px/nm and a ${maxPx} px budget`,
+    );
+  }
+  const decade = Math.floor(Math.log10(maxPx / pxPerNm));
+  let nm = 10 ** (decade - 1);
+  for (let power = decade - 1; power <= decade + 1; power += 1) {
+    for (const mantissa of SCALE_BAR_MANTISSAS) {
+      const candidate = mantissa * 10 ** power;
+      // Compared in pixels, not nanometres, so the budget cannot be exceeded by
+      // a rounding error in the division that produced it.
+      if (candidate * pxPerNm <= maxPx) nm = candidate;
+    }
+  }
+  return { nm, px: nm * pxPerNm, label: formatSpanNm(nm) };
 }
 
 /**
