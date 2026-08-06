@@ -146,10 +146,34 @@ window.__titinBoot = { ready: false, problems: [] };
     font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
   .ev { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
   .ev b { font-weight: 500; color: var(--text); }
-  #interactionHelp { position: absolute; left: 12px; bottom: 10px; z-index: 2;
+  /* Right-hand end of the bottom rule: the left-hand end is the ruler's, and
+     with the stage bar in place both were landing in the same 25 px band. A
+     measurement wins that corner over a hint. */
+  #interactionHelp { position: absolute; right: 12px; z-index: 2;
+    bottom: calc(var(--stage-bar-h, 114px) + 10px);
     pointer-events: none; color: #aab4c2; background: rgb(14 17 22 / 78%);
     border: 1px solid var(--edge); border-radius: 4px; padding: 4px 7px;
     font-size: 10px; }
+  /* SC-12. The stage bar sits on the canvas, in BOTH modes, and is deliberately
+     not inside #stageChrome: that layer is pointer-events: none, and these are
+     controls. Everything else that occupies the bottom of the stage — the
+     chapter card, the orbit hint, the SC-11 ruler — is measured or offset
+     against it rather than being allowed to sit underneath it. */
+  #stageBar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
+    display: flex; flex-direction: column; gap: 6px; padding: 9px 12px 10px;
+    background: linear-gradient(to top, rgb(14 17 22 / 96%), rgb(14 17 22 / 74%));
+    border-top: 1px solid var(--edge); backdrop-filter: blur(10px); }
+  .stage-row { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; }
+  .stage-row-primary #sl { flex: 1 1 220px; min-width: 160px; width: auto; }
+  .stage-label { color: var(--dim); font-size: 10px; text-transform: uppercase;
+    letter-spacing: .08em; font-weight: 700; }
+  .stage-readout { font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 650;
+    min-width: 84px; }
+  .stage-presets { margin: 0; }
+  #stagePlay.on { background: var(--titin); border-color: var(--titin); color: #2a0a13; }
+  #stageLegend { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto;
+    color: var(--dim); font-size: 10px; }
+  #stageLegend .key { margin: 0; }
   .region-chip.on { background: var(--titin-hi); border-color: var(--titin-hi); color: #251016; }
   #scienceOverlay { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%;
     overflow: visible; pointer-events: none; }
@@ -219,7 +243,16 @@ window.__titinBoot = { ready: false, problems: [] };
   #scopeState { color: #d9b869; font-size: 10px; }
   #urlNotice { pointer-events: auto; margin-top: 9px; max-width: 660px; border-left: 3px solid #d0a24c;
     border-radius: 5px; padding: 7px 10px; color: #e7cc91; font-size: 10px; }
-  #guidedCard { pointer-events: auto; margin-top: auto; margin-bottom: 30px; width: min(500px, calc(100vw - 28px));
+  /* The clearance for the stage bar is carried entirely by the card's own
+     margin rather than being split with #stageChrome's bottom padding: the card
+     is the only bottom-anchored thing in that layer, and two stacked reserves
+     would silently add up to twice the gap the bar actually needs.
+     --stage-bar-h is the bar's MEASURED height, published by the page. A
+     constant was tried first and was wrong at the first viewport that wrapped
+     the bar to a third row: at 1280 px the bar is 114 px, not the 92 px a fixed
+     reserve assumed, and the card sat on top of it. */
+  #guidedCard { pointer-events: auto; margin-top: auto;
+    margin-bottom: calc(var(--stage-bar-h, 114px) + 14px); width: min(500px, calc(100vw - 28px));
     border-radius: 10px; padding: 14px 15px 12px; border-top: 2px solid var(--titin); }
   #app[data-mode="evidence"] #guidedCard { display: none; }
   .chapter-meta { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .1em;
@@ -308,7 +341,9 @@ window.__titinBoot = { ready: false, problems: [] };
     .brand-block { width: 100%; }
     #scopeBadge { max-width: none; text-align: left; width: 100%; }
     #interactionHelp { display: none; }
-    #guidedCard { margin-bottom: 8px; }
+    /* The card's clearance follows the measured bar height at every width, so
+       there is no narrow-viewport constant to keep in step with it here. */
+    .stage-row-secondary #stageLegend { display: none; }
     .extension-row { grid-template-columns: 72px 62px minmax(54px, 1fr) 46px; gap: 5px; }
     #app[data-mode="evidence"] { display: block; }
     #app[data-mode="evidence"] #canvas { height: 100%; }
@@ -358,9 +393,6 @@ window.__titinBoot = { ready: false, problems: [] };
             <div class="brand-title">Titin across the sarcomere</div>
             <div class="brand-sub">One model · two levels of explanation</div>
           </div>
-          <button id="filamentContextToggle" class="on" aria-pressed="true"
-            aria-label="Show actin and myosin filament context"
-            title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
           <div class="mode-switch" role="group" aria-label="Audience mode">
             <button id="audienceGuided" class="on" aria-pressed="true">Guided</button>
             <button id="audienceEvidence" aria-pressed="false">Evidence</button>
@@ -393,6 +425,30 @@ window.__titinBoot = { ready: false, problems: [] };
         </div>
       </section>
     </div>
+      <!-- The stage bar, not the drawer. A visitor in Guided mode could not reach
+           the sarcomere-length slider at all, which is the one interaction that
+           answers "what changes as the sarcomere lengthens?". Guided is a reduced
+           EXPLANATION set, not a reduced CONTROL set, so the bar is present in
+           both audience modes and only the surrounding prose differs. -->
+      <div id="stageBar">
+        <div class="stage-row stage-row-primary">
+          <label class="stage-label" for="sl">Sarcomere length</label>
+          <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres">
+          <output class="stage-readout" id="stageLengthReadout" for="sl">— nm</output>
+          <div class="row stage-presets" id="presets"></div>
+          <button id="stagePlay" aria-pressed="false"
+            aria-label="Play a stretch sweep across the working range">&#9654; Stretch</button>
+        </div>
+        <div class="stage-row stage-row-secondary">
+          <span class="stage-label">View</span>
+          <div class="row" id="views"></div>
+          <button id="filamentContextToggle" class="on" aria-pressed="true"
+            aria-label="Show actin and myosin filament context"
+            title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
+          <div id="stageLegend" aria-label="Colour key"></div>
+          <button id="stageEvidenceLink">Evidence &amp; sources</button>
+        </div>
+      </div><!-- /stageBar -->
     <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan</div>
   </div>
   <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
@@ -436,13 +492,9 @@ window.__titinBoot = { ready: false, problems: [] };
 
     <h2>Sarcomere length</h2>
     <div class="sl" id="slReadout">— <small>nm</small></div>
-    <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres">
-    <div class="row" id="presets"></div>
+    <div class="sub" style="margin:0 0 6px">Set it on the stage bar below the model.</div>
     <div class="activation-note" id="activationStatement"></div>
     <div class="note warn" id="stateCaveat" hidden></div>
-
-    <h2>View</h2>
-    <div class="row" id="views"></div>
 
     <h2>Close-up</h2>
     <div class="sub" style="margin:0 0 6px">Flies to a landmark and fills the view
@@ -507,7 +559,7 @@ window.__titinBoot = { ready: false, problems: [] };
 import { browserReader } from './src/model/readBrowser.js';
 import { TitinVisualization, SCALES } from './src/api/TitinVisualization.js';
 import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
-import { COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
+import { COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
 import { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
 import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
 // Stage composition arithmetic. These rules decide whether the figure reads
@@ -689,6 +741,36 @@ $('audienceGuided').onclick = () => setAudienceMode(AUDIENCE_MODES.guided);
 $('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'));
 $('closeEvidence').onclick = closeEvidence;
 $('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'));
+$('stageEvidenceLink').onclick = () => openEvidence($('stageEvidenceLink'));
+
+// A novice cannot act on "shown in red beside actin and myosin" without a key.
+// The swatches read the palette actually in use, so Guided's subdued context
+// colours and Evidence's identity palette are both described correctly.
+function syncStageLegend(report) {
+  const guided = state.audienceMode === AUDIENCE_MODES.guided;
+  const palette = guided ? GUIDED_COMPONENT_COLOR : COMPONENT_COLOR;
+  // `hidden_components` is the authority: it already carries both the isolated-
+  // titin scale's hidden set and the filament-context toggle, so the legend can
+  // never name a colour that is not currently on the stage.
+  const hidden = new Set(report?.hidden_components || []);
+  const entries = [['titin', 'Titin', COMPONENT_COLOR.titin]];
+  if (state.showFilamentContext && !hidden.has('thick_filament')) {
+    entries.push(['thick_filament', 'Myosin', palette.thick_filament]);
+  }
+  if (state.showFilamentContext && !hidden.has('thin_filament')) {
+    entries.push(['thin_filament', 'Actin', palette.thin_filament]);
+  }
+  $('stageLegend').replaceChildren(...entries.map(([id, label, colour]) => {
+    const row = document.createElement('div');
+    row.className = 'key';
+    row.dataset.component = id;
+    const swatch = document.createElement('div');
+    swatch.className = 'sw';
+    swatch.style.background = hex(colour);
+    row.append(swatch, document.createTextNode(label));
+    return row;
+  }));
+}
 $('filamentContextToggle').onclick = () => {
   state.showFilamentContext = !state.showFilamentContext;
   rebuild();
@@ -737,6 +819,17 @@ let objectOverlaySignature = null;
 // when something that can move them has actually changed.
 let stageDirty = true;
 function markStageDirty() { stageDirty = true; }
+// SC-12. The stage bar wraps to more rows as the stage narrows — 114 px at
+// 1280 px wide, more on a phone — so everything that has to stay clear of it is
+// offset by its MEASURED height. A constant was wrong at the first viewport
+// that wrapped differently, and it was wrong silently: the chapter card simply
+// sat on top of the controls.
+function publishStageBarHeight() {
+  const height = Math.round($('stageBar').getBoundingClientRect().height);
+  $('app').style.setProperty('--stage-bar-h', `${height}px`);
+  markStageDirty();
+}
+new ResizeObserver(publishStageBarHeight).observe($('stageBar'));
 const svgNS = 'http://www.w3.org/2000/svg';
 
 function activeFeatures() {
@@ -822,6 +915,13 @@ function renderScienceOverlay() {
     right: cardRect.right - canvasRect.left,
     bottom: cardRect.bottom - canvasRect.top,
   } : null;
+  // The stage bar owns the bottom rule the ruler used to sit on, and it grows a
+  // row as the stage narrows, so how much of the stage it takes is measured
+  // rather than assumed.
+  const barTop = $('stageBar').getBoundingClientRect().top - canvasRect.top;
+  const stageBarInsetPx = Math.max(
+    STAGE_LAYOUT.scale_bar_baseline_px, height - barTop + STAGE_LAYOUT.edge_padding_px + 4,
+  );
   const projectionSignature = JSON.stringify({
     length: activeShowcaseOverlay.sarcomere_length_nm,
     width, height, showBands,
@@ -829,6 +929,7 @@ function renderScienceOverlay() {
     headerBottom: Math.round(safeTopPx * 4) / 4,
     card: cardBox && [cardBox.top, cardBox.right, cardBox.bottom]
       .map((edge) => Math.round(edge * 4) / 4),
+    bar: Math.round(stageBarInsetPx * 4) / 4,
     scale: pxPerNm === null ? null : Math.round(pxPerNm * 1e4),
     projected: [...projected.values()].map((point) => [
       point.id, Math.round(point.x_px * 4) / 4, Math.round(point.y_px * 4) / 4, point.visible,
@@ -900,6 +1001,7 @@ function renderScienceOverlay() {
     const bar = scaleBar(pxPerNm, Math.max(100, Math.min(180, width * 0.14)));
     const { left: barX, baseline: barY } = scaleBarPlacement({
       barPx: bar.px, canvas: { width, height }, card: cardBox, safeTopPx,
+      bottomInsetPx: stageBarInsetPx,
     });
     nodes.push(svgElement('path', {
       d: `M ${barX} ${barY - 4} V ${barY} H ${barX + bar.px} V ${barY - 4}`,
@@ -1854,6 +1956,10 @@ function render(report) {
   const hiddenComponents = new Set(report.hidden_components || []);
   const hiddenSuffix = (component) => hiddenComponents.has(component) ? ' (hidden)' : '';
   $('slReadout').innerHTML = `${g.sarcomere_length_nm} <small>nm${report.clamped ? ' (clamped)' : ''}</small>`;
+  // The stage bar carries the slider now, so it carries the number the slider is
+  // reporting. Same value, same clamp disclosure, beside the control itself.
+  $('stageLengthReadout').textContent = `${g.sarcomere_length_nm.toLocaleString()} nm`
+    + (report.clamped ? ' (clamped)' : '');
   const statePreset = presentation.length_presets
     .find((preset) => preset.sarcomere_length_nm === g.sarcomere_length_nm);
   const scopeState = statePreset
@@ -1871,6 +1977,7 @@ function render(report) {
   caveat.textContent = disclosure || '';
   syncPresets(g.sarcomere_length_nm);
   syncDepictionToggles();
+  syncStageLegend(report);
 
   const rows = [
     ['Half-sarcomere', `${g.half_sarcomere_nm.toFixed(1)} nm`],

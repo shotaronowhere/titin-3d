@@ -136,17 +136,28 @@ export function scaleBar(pxPerNm, maxPx) {
  * does not — a phone, where the card is nearly the full width — does the bar
  * move above the card, and never under the page header.
  *
+ * SC-12 added the stage control bar along that same bottom rule, so the rule is
+ * no longer at a fixed height: `bottomInsetPx` is how much of the stage the bar
+ * occupies, measured in the page rather than assumed here, because the bar wraps
+ * to more rows as the viewport narrows. It defaults to the bare stage's own
+ * baseline, so a caller with no bar — and every existing test — is unaffected.
+ *
  * @param {{
  *   barPx: number,
  *   canvas: {width:number, height:number},
  *   card: {top:number, right:number, bottom:number}|null,
  *   safeTopPx: number,
+ *   bottomInsetPx?: number,
  * }} opts
  * @returns {{left:number, baseline:number}} container-local CSS pixels
  */
-export function scaleBarPlacement({ barPx, canvas, card, safeTopPx }) {
+export function scaleBarPlacement({
+  barPx, canvas, card, safeTopPx, bottomInsetPx = STAGE_LAYOUT.scale_bar_baseline_px,
+}) {
   const pad = STAGE_LAYOUT.edge_padding_px + 4;
-  const baseline = canvas.height - STAGE_LAYOUT.scale_bar_baseline_px;
+  const inset = Number.isFinite(bottomInsetPx) && bottomInsetPx > 0
+    ? bottomInsetPx : STAGE_LAYOUT.scale_bar_baseline_px;
+  const baseline = canvas.height - inset;
   if (!card || card.bottom <= baseline - pad) return { left: pad, baseline };
   const beside = card.right + pad;
   if (beside + barPx <= canvas.width - pad) return { left: beside, baseline };
