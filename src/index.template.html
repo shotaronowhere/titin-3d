@@ -1456,8 +1456,11 @@ function renderExtensionChart(showcase) {
   const chart = showcase.extension_chart;
   // The chart says the regions share out one extension; naming the force they
   // share makes "series force balance" a visible statement rather than a phrase
-  // in the evidence class.
-  const chainForce = model.geometryAt(Number(slider.value)).titin_chain_force_pN;
+  // in the evidence class. The length comes from the descriptor rather than from
+  // the slider so that the force and the totals beside it are always the same
+  // geometry: renderChapter() runs this once before render() has refreshed the
+  // overlay, and a slider read there would pair the new force with old totals.
+  const chainForce = model.geometryAt(showcase.sarcomere_length_nm).titin_chain_force_pN;
   $('extensionTotal').textContent = `${chart.total_nm.toFixed(1)} nm total · ${chart.evidence_class}`
     + (Number.isFinite(chainForce) ? ` · ${chainForce.toFixed(2)} pN common force` : '');
   const maxExtension = Math.max(...chart.regions.map((region) => region.extension_nm));

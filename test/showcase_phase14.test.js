@@ -79,6 +79,15 @@ test('SC14: the Measure tab draws the curve with labelled axes and units', () =>
   assert.match(page, /axes\.y\.label/);
 });
 
+test('SC14: the chart names the force of the length it is drawing', () => {
+  // renderChapter() renders the extension chart once BEFORE render() refreshes
+  // activeShowcaseOverlay. Reading the slider there would print the new length's
+  // force beside the previous length's totals, so the force has to come from the
+  // descriptor the chart itself was built from.
+  assert.match(page, /model\.geometryAt\(showcase\.sarcomere_length_nm\)\.titin_chain_force_pN/);
+  assert.match(page, /pN common force/);
+});
+
 test('SC14: the curve panel states what it does not claim', () => {
   assert.match(page, /curve\.not_claimed/);
 });
