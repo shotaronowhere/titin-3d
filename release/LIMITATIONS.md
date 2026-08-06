@@ -1,6 +1,6 @@
 # Scientific limitations and non-claims
 
-Generated — build `7cc1c8d0ad9c`. Run `npm run pack` to refresh.
+Generated — build `103e1ca3269e`. Run `npm run pack` to refresh.
 
 Every statement below is recorded in the repository, not written for this sheet.
 
@@ -96,6 +96,7 @@ Source: `data/annotations.json`
 - a direct titin–MyBP-C contact
 - a known universal transverse azimuth
 - a measured M-band width
+- a measured conformation for the disordered segments
 - a measured display length for the glyph
 - a regulatory-state model
 - a resolved complete lateral route for titin

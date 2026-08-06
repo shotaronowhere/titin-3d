@@ -21,11 +21,12 @@
         "10.1083/jcb.106.5.1563",
         "UniProt:Q8WZ42"
       ],
-      "render_meaning": "Pink region-linked tubes and the thin continuity trace identify one continuous titin path; tube width and unresolved transverse routing are not molecular dimensions.",
+      "render_meaning": "Pink region-linked tubes and the thin continuity trace identify one continuous titin path; the coiled depiction of N2A and PEVK is a schematic statement of disorder and slack, not a measured conformation; tube width and unresolved transverse routing are not molecular dimensions.",
       "not_claimed": [
         "an atom-resolved continuous path",
         "a known universal transverse azimuth",
-        "uniform elasticity along the molecule"
+        "uniform elasticity along the molecule",
+        "a measured conformation for the disordered segments"
       ],
       "binding": {
         "kind": "showcase_claim",
