@@ -5,6 +5,11 @@ import { readFileSync } from 'node:fs';
 
 import { SWEEP, sweepLength } from '../src/presentation/StretchSweep.js';
 import { GUIDED_COMPONENT_COLOR, COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
+import { labelBudget } from '../src/presentation/StageLayout.js';
+import { TitinModel } from '../src/model/TitinModel.js';
+import { nodeReader } from '../src/model/readNode.js';
+
+const model = await TitinModel.create(nodeReader());
 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 
@@ -127,4 +132,63 @@ test('SC12-2a: context stays visible without competing with titin', () => {
     assert.ok(ratio(GUIDED_COMPONENT_COLOR[role], BG) <= ratio(COMPONENT_COLOR.titin, BG) / 1.8,
       `${role} must stay well below titin — the subject keeps the top of the range`);
   }
+});
+
+// ---------------------------------------------------------------------------
+// Task 12.2b — the declared attention budget, enforced against the render
+// ---------------------------------------------------------------------------
+
+const budget = model.spec.showcaseClaims.attention_budget;
+
+// The numbers come from the reviewed record, so this test cannot drift from it —
+// and cannot be satisfied by hard-coding a number in the layout module either.
+test('SC12-2b: the drawn label set obeys the reviewed budget', () => {
+  const candidates = ['zdisc', 'iband', 'aband_half', 'czone', 'bare_zone', 'mband_center']
+    .map((id, i) => ({ id, priority: i, x: i * 40 }));
+  assert.ok(labelBudget(candidates, 'desktop', budget).length
+    <= budget.guided_secondary_context_labels_desktop_max);
+  assert.ok(labelBudget(candidates, 'mobile', budget).length
+    <= budget.guided_secondary_context_labels_mobile_max);
+});
+
+test('SC12-2b: it drops the lowest priority first, never the anchor in view', () => {
+  const candidates = [
+    { id: 'aband_half', priority: 1, x: 300 },
+    { id: 'bare_zone', priority: 3, x: 700 },
+    { id: 'iband', priority: 2, x: 120 },
+  ];
+  const kept = labelBudget(candidates, 'mobile', budget).map((c) => c.id);
+  assert.deepEqual(kept, ['aband_half', 'iband']);
+});
+
+test('SC12-2b: Evidence mode is not subject to the guided budget', () => {
+  const candidates = Array.from({ length: 6 }, (_, i) => ({ id: `b${i}`, priority: i, x: i * 40 }));
+  assert.equal(labelBudget(candidates, 'desktop', budget, { audience: 'evidence' }).length, 6);
+});
+
+test('SC12-2b: a label that would collide with a kept one is dropped, not overlapped', () => {
+  // The occlusion_rule the same record declares: "hide a lower-priority label
+  // before allowing overlap". Two labels 12 px apart cannot both be drawn.
+  const kept = labelBudget([
+    { id: 'iband', priority: 1, x: 400 },
+    { id: 'aband_half', priority: 2, x: 412 },
+  ], 'desktop', budget).map((c) => c.id);
+  assert.deepEqual(kept, ['iband']);
+});
+
+test('SC12-2b: a budget record without its declared keys is refused, not guessed', () => {
+  // Silently treating a missing budget as "unlimited" is how a reviewed
+  // declaration stops constraining anything.
+  assert.throws(() => labelBudget([{ id: 'a', priority: 0, x: 0 }], 'desktop', {}),
+    /attention budget/i);
+  assert.throws(() => labelBudget([{ id: 'a', priority: 0, x: 0 }], 'phablet', budget),
+    /viewport class/i);
+});
+
+test('SC12-2b: the page enforces the budget it reads from the claims record', () => {
+  assert.match(page, /labelBudget\(/, 'the overlay must run its candidates through the budget');
+  assert.match(page, /showcaseClaims\.attention_budget/,
+    'the budget must be READ from the reviewed record, never restated in the page');
+  assert.ok(!/guided_secondary_context_labels_desktop_max:\s*\d/.test(page),
+    'the page must not restate the budget numbers');
 });

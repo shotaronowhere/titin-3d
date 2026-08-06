@@ -335,6 +335,52 @@ window.__titinBoot = { ready: false, problems: [] };
     .brand-block { min-width: 0; }
     .brand-sub { display: none; }
   }
+  /* SC-12 narrow stage. At 375 x 812 the shipped build left the sarcomere a
+     ~60 px strip, and the new stage bar competes for the same space: wrapped
+     onto one control per line it took more than half the screen. Three changes,
+     none of them a font size — the bar's rows become single-line scrolling
+     strips, the scope badge collapses to one line, and the chapter card becomes
+     a bottom sheet that opens on tap. */
+  .card-peek-toggle { display: none; }
+  @media (max-width: 767px) {
+    /* Long control strips SCROLL rather than wrap. Wrapping is what turned a
+       two-row bar into a nine-row one. */
+    .stage-row { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+      scrollbar-width: none; }
+    .stage-row::-webkit-scrollbar { display: none; }
+    .stage-row .row { flex-wrap: nowrap; margin: 0; }
+    .stage-row button { white-space: nowrap; }
+    /* Explicit grid placement, in reading order: the focus order must still be
+       the visual order, so the play control sits at the end of the preset strip
+       rather than beside the slider it follows in the DOM. */
+    .stage-row-primary { display: grid; grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5px 8px; align-items: center; overflow: visible; }
+    .stage-row-primary .stage-label { grid-area: 1 / 1; }
+    .stage-row-primary .stage-readout { grid-area: 1 / 2; text-align: right;
+      min-width: 0; font-size: 13px; }
+    .stage-row-primary #sl { grid-area: 2 / 1 / 3 / 3; min-width: 0; }
+    .stage-row-primary .stage-presets { grid-area: 3 / 1; min-width: 0;
+      overflow-x: auto; scrollbar-width: none; }
+    .stage-row-primary .stage-presets::-webkit-scrollbar { display: none; }
+    .stage-row-primary #stagePlay { grid-area: 3 / 2; }
+    /* One line, not a 90 px block of its own above the stage. */
+    #scopeBadge { display: flex; align-items: baseline; gap: 8px; padding: 5px 9px; }
+    #scopeBadge .scope-kicker { display: none; }
+    #scopeIdentity, #scopeState { font-size: 10px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; }
+    .brand-title { font-size: 12px; }
+    .brand-block { padding: 6px 8px 6px 10px; }
+    /* The bottom sheet. It sits on the stage bar, spans the stage, and in its
+       peek state shows only what tells you where you are in the route. */
+    #guidedCard { position: absolute; left: 0; right: 0; width: auto; margin: 0;
+      bottom: var(--stage-bar-h, 114px); border-radius: 12px 12px 0 0;
+      max-height: 46vh; overflow-y: auto; overscroll-behavior: contain;
+      padding: 9px 12px 10px; }
+    #guidedCard[data-peek="true"] { max-height: none; overflow: visible; }
+    #guidedCard[data-peek="true"] #guidedCardBody { display: none; }
+    #chapterTitle { font-size: 16px; margin: 2px 0 6px; }
+    .card-peek-toggle { display: block; width: 100%; text-align: left; }
+  }
   @media (max-width: 700px) {
     #stageChrome { padding: 9px; }
     #stageHeader { display: grid; grid-template-columns: 1fr; gap: 7px; }
@@ -408,6 +454,14 @@ window.__titinBoot = { ready: false, problems: [] };
       <section id="guidedCard" aria-labelledby="chapterTitle">
         <div class="chapter-meta"><span id="chapterProgress">Chapter —</span> · <span id="chapterEvidenceClass">—</span></div>
         <h1 id="chapterTitle">Loading guided route…</h1>
+        <!-- On a phone the card is a bottom sheet: the chapter number and title
+             stay visible, the rest opens on tap. Without it the header, the
+             card and the stage bar left the sarcomere a ~60 px strip. The
+             toggle is display: none above the narrow breakpoint, where the card
+             is simply always open. -->
+        <button id="guidedCardToggle" class="card-peek-toggle" aria-expanded="true"
+          aria-controls="guidedCardBody">Read this chapter</button>
+        <div id="guidedCardBody">
         <p id="chapterSummary"></p>
         <div id="guidedSelection" hidden><b id="guidedSelectionLabel"></b><span id="guidedSelectionText"></span></div>
         <div id="extensionStory" hidden>
@@ -423,6 +477,7 @@ window.__titinBoot = { ready: false, problems: [] };
           <button id="chapterRestart">Restart</button>
           <button id="chapterEvidenceLink">Evidence &amp; controls</button>
         </div>
+        </div><!-- /guidedCardBody -->
       </section>
     </div>
       <!-- The stage bar, not the drawer. A visitor in Guided mode could not reach
@@ -565,7 +620,7 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // Stage composition arithmetic. These rules decide whether the figure reads
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
-import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement } from './src/presentation/StageLayout.js';
+import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget } from './src/presentation/StageLayout.js';
 import { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
@@ -837,16 +892,71 @@ let sweepStartedAt = 0;
 // offset by its MEASURED height. A constant was wrong at the first viewport
 // that wrapped differently, and it was wrong silently: the chapter card simply
 // sat on top of the controls.
+// The chapter card's peek state on a narrow stage. The card is the guided
+// route's whole content, so it opens on request rather than being cut down:
+// what the narrow layout changes is whether it is open by DEFAULT, which is the
+// only way the stage below it is more than a strip. Above the breakpoint there
+// is no peek state at all and the toggle is not rendered.
+let guidedCardPeek = true;
+function narrowStage() { return window.matchMedia('(max-width: 767px)').matches; }
+function syncGuidedCardPeek() {
+  const peek = narrowStage() && guidedCardPeek;
+  $('guidedCard').dataset.peek = String(peek);
+  $('guidedCardToggle').setAttribute('aria-expanded', String(!peek));
+  $('guidedCardToggle').textContent = peek ? 'Read this chapter' : 'Hide this chapter';
+  markStageDirty();
+}
+
 function publishStageBarHeight() {
   const height = Math.round($('stageBar').getBoundingClientRect().height);
   $('app').style.setProperty('--stage-bar-h', `${height}px`);
   markStageDirty();
 }
 new ResizeObserver(publishStageBarHeight).observe($('stageBar'));
+$('guidedCardToggle').onclick = () => {
+  guidedCardPeek = !guidedCardPeek;
+  syncGuidedCardPeek();
+};
+// A viewport that crosses the breakpoint changes whether a peek state exists.
+window.matchMedia('(max-width: 767px)').addEventListener('change', syncGuidedCardPeek);
+syncGuidedCardPeek();
 const svgNS = 'http://www.w3.org/2000/svg';
 
 function activeFeatures() {
   return new Set(activeChapter()?.presentation_features || []);
+}
+
+// SC-12. The label_priority list in data/showcase_claims.json reads: selected
+// titin region, current anchor or band, one essential context protein,
+// secondary context. Applied to the band brackets that means the band the
+// chapter is actually about first — derived from the target region's own
+// canonical `band` field, so the ranking follows the data rather than a
+// hand-kept list — then the two brackets that carry the spine of the figure,
+// then everything else in axial order.
+const BAND_BY_BRACKET = Object.freeze({
+  'Z-disc': 'zdisc', 'I-band': 'iband', 'A-band': 'aband',
+  'M-line junction': 'mband', 'M-line': 'mband',
+});
+const BRACKET_BASE_PRIORITY = Object.freeze({
+  iband: 1, aband: 2, zdisc: 3, czone: 4, bare_zone: 5, mband: 6,
+});
+/** Which bracket the current frame is about, or null when nothing names one. */
+function focusBracketId() {
+  const closeup = { zdisc: 'zdisc', czone: 'czone', mline: 'mband',
+    junction: 'iband', crowns: 'aband', twist: 'iband' }[state.closeup];
+  if (closeup) return closeup;
+  const target = activeChapter()?.target;
+  if (target?.kind === 'region') {
+    return BAND_BY_BRACKET[regionMetadata.get(target.id)?.band] || null;
+  }
+  return null;
+}
+function bracketPriority(bracketId, focusId) {
+  return bracketId === focusId ? 0 : (BRACKET_BASE_PRIORITY[bracketId] ?? 9);
+}
+/** Phone rules apply to a narrow desktop window too, so this reads the canvas. */
+function viewportClass(width) {
+  return width < 768 ? 'mobile' : 'desktop';
 }
 
 function svgElement(name, attributes = {}, textContent = null) {
@@ -939,6 +1049,10 @@ function renderScienceOverlay() {
     length: activeShowcaseOverlay.sarcomere_length_nm,
     width, height, showBands,
     features: [...features],
+    // Both change which labels the budget keeps without necessarily moving a
+    // single projected point: the chapter decides which band is the focus, and
+    // the audience decides whether the budget applies at all.
+    step: state.storyStep, audience: state.audienceMode,
     headerBottom: Math.round(safeTopPx * 4) / 4,
     card: cardBox && [cardBox.top, cardBox.right, cardBox.bottom]
       .map((edge) => Math.round(edge * 4) / 4),
@@ -953,12 +1067,30 @@ function renderScienceOverlay() {
   const nodes = [];
   if (showBands) {
     const laneY = bracketLaneY([...projected.values()], { canvasHeight: height, safeTopPx });
+    // Everything the frame COULD label, before the reviewed attention budget
+    // decides how many of them it may. A bracket that is off-screen or too
+    // foreshortened to draw is excluded here rather than being allowed to spend
+    // budget a visible bracket needs.
+    const focusId = focusBracketId();
+    const drawable = [];
     for (const bracket of activeShowcaseOverlay.brackets) {
       const start = projected.get(`${bracket.id}:start`);
       const end = projected.get(`${bracket.id}:end`);
       if (!start || !end || (!start.visible && !end.visible)) continue;
       const x1 = Math.max(12, Math.min(width - 12, start.x_px));
       const x2 = Math.max(12, Math.min(width - 12, end.x_px));
+      if (bracket.kind !== 'marker' && Math.abs(x2 - x1) <= 8) continue;
+      drawable.push({
+        id: bracket.id,
+        priority: bracketPriority(bracket.id, focusId),
+        x: bracket.kind === 'marker' ? x1 : (x1 + x2) / 2,
+        bracket, x1, x2, start, end,
+      });
+    }
+    for (const { bracket, x1, x2, start, end } of labelBudget(
+      drawable, viewportClass(width), model.spec.showcaseClaims.attention_budget,
+      { audience: state.audienceMode },
+    )) {
       const y = laneY + (BRACKET_LANE_OFFSETS[bracket.lane] ?? BRACKET_LANE_OFFSETS.major);
       if (bracket.kind === 'marker') {
         nodes.push(svgElement('path', {
@@ -966,7 +1098,7 @@ function renderScienceOverlay() {
           class: 'science-bracket minor',
         }));
         nodes.push(svgElement('text', { x: x1, y: y - 8, 'text-anchor': 'middle', class: 'science-label' }, bracket.label));
-      } else if (Math.abs(x2 - x1) > 8) {
+      } else {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y + 5} V ${y} H ${x2} V ${y + 5}`,
           class: `science-bracket${bracket.lane === 'minor' ? ' minor' : ''}`,
