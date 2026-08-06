@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
-import { SarcomereScene } from '../src/render/SarcomereScene.js';
+import { SarcomereScene, TITIN_RENDER_STYLE } from '../src/render/SarcomereScene.js';
 
 const model = await TitinModel.create(nodeReader());
 
@@ -115,6 +115,25 @@ test('SC15: the coil is driven by the same contour length the mechanics use', ()
   scene.clear();
 });
 
+test('SC15: the emphasis halo always contains the chain it emphasises', () => {
+  // Both are multiples of the same titin render radius, so the coil centreline
+  // can never leave the SC-10 halo — the reading aid keeps pointing at the
+  // subject at every sarcomere length, without either constant knowing the other
+  // at run time.
+  assert.ok(TITIN_RENDER_STYLE.coil_amplitude_scale < TITIN_RENDER_STYLE.halo_radius_scale,
+    'a coil wider than its own halo would read as escaping the molecule');
+  const scene = build(1900);
+  const halo = scene.root.getObjectByName('titin_halo_PEVK');
+  assert.ok(halo, 'the representative strand must still carry its halo');
+  const amplitude = scene.manifest.disordered_depiction.amplitude_by_region.PEVK;
+  const tube = scene.root.getObjectByName('titin_region_PEVK_strand_0');
+  assert.ok(amplitude > 0, 'the most slack state must be the coiled one');
+  assert.ok(amplitude
+    < tube.userData.render_radius_nm * TITIN_RENDER_STYLE.halo_radius_scale
+      / TITIN_RENDER_STYLE.disordered_radius_scale);
+  scene.clear();
+});
+
 test('SC15: the architecture chapter frames a span where domains resolve', () => {
   const chapter = model.spec.presentation.guided_chapters
     .find((entry) => entry.id === 'architecture');
@@ -165,7 +184,7 @@ test('SC15: narrowing the backbone is a width, not a change of region identity',
   }
   // PEVK has no folded domains, so nothing is hidden and nothing is narrowed:
   // it keeps the width its coil needs to read as a chain.
-  assert.equal(byName('titin_region_PEVK_strand_0').userData.render_radius_linked_to_domains,
+  assert.equal(byName('titin_region_PEVK_strand_0').userData.render_radius_narrowed_for_domains,
     false);
   scene.clear();
 });
@@ -184,7 +203,7 @@ test('SC15: a build without domain detail keeps the full-width backbone', () => 
   assert.equal(scene.manifest.presentation_overlay.domain_linker, null);
   assert.equal(
     scene.root.getObjectByName('titin_region_prox_Ig_strand_0')
-      .userData.render_radius_linked_to_domains,
+      .userData.render_radius_narrowed_for_domains,
     false,
   );
   scene.clear();

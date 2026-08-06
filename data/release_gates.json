@@ -100,6 +100,20 @@
         "verification": "automated",
         "status": "PASS",
         "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "disordered_coil_schematic",
+        "requirement": "the disordered-chain coil is declared SCHEMATIC and moves no canonical axial coordinate",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase15.test.js; scripts/geometry_fingerprint.mjs"
+      },
+      {
+        "id": "domains_not_occluded",
+        "requirement": "where folded domains are drawn, the backbone is narrower than the domains it carries",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase15.test.js"
       }
     ]
   },

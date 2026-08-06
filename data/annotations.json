@@ -282,11 +282,12 @@
         "UniProt:Q8WZ42",
         "10.1016/j.jmb.2020.06.025"
       ],
-      "render_meaning": "Instanced capsules and ellipsoids encode domain class, position, and orientation; primitive surfaces are archetypes rather than unique molecular meshes.",
+      "render_meaning": "Instanced capsules and ellipsoids encode domain class, position, and orientation; primitive surfaces are archetypes rather than unique molecular meshes. While these domains are shown, the backbone between them is drawn as a thin linker so it cannot hide them — a change of render width only, and no statement about titin's thickness.",
       "not_claimed": [
         "atom-resolved surfaces for every domain",
         "physiological unfolding during ordinary extension",
-        "known azimuth for every folded domain"
+        "known azimuth for every folded domain",
+        "that the backbone's drawn width is a molecular diameter, or that it changes with state"
       ],
       "binding": {
         "kind": "titin_architecture",

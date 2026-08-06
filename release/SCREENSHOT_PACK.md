@@ -1,6 +1,6 @@
 # Standard screenshot review pack
 
-Generated — build `905fc379518d`. 52 cells.
+Generated — build `fb7814d6ff38`. 52 cells.
 
 Deterministic capture set for the SC-8 visual review. Each cell is a viewport plus a reproducible URL state; pixel comparison supplements human review and does not determine scientific correctness.
 

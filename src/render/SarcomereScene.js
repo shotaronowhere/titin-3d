@@ -192,13 +192,14 @@ export const GUIDED_COMPONENT_COLOR = Object.freeze({
  * inflating the tube would imply a diameter, while a constant-width ribbon
  * makes no dimensional claim at all. Evidence opacity is untouched by every
  * value here — emphasis and confidence stay on separate channels.
- */
-/**
- * SC-15 disordered-chain depiction. `coil_amplitude_scale` is a multiple of the
- * titin render radius — itself already declared not to be a molecular dimension —
- * so the coil makes no dimensional claim either. `coil_turns` is a ceiling on
- * visual density, and `coil_min_amplitude_nm` is the width below which a wiggle
- * is smaller than the line that draws it and is therefore not drawn at all.
+ *
+ * SC-15 adds the disordered-chain depiction. `coil_amplitude_scale` is a
+ * multiple of the same titin render radius, which is already declared not to be
+ * a molecular dimension, so the coil makes no dimensional claim either — and it
+ * is deliberately below `halo_radius_scale`, so the emphasis envelope always
+ * contains the chain it emphasises. `coil_turns` is a ceiling on visual density,
+ * and `coil_min_amplitude_nm` is the width below which a wiggle is narrower than
+ * the line drawing it and is therefore not drawn at all.
  */
 export const TITIN_RENDER_STYLE = Object.freeze({
   guided_radius_scale: 1.65,
@@ -1236,6 +1237,9 @@ export class SarcomereScene {
       if (!disorderedRegions.includes(segment.region_id)) continue;
       const contourNm = regionDescriptors.get(segment.region_id)?.extension_model?.max_end2end_nm;
       contourLengths[segment.region_id] = contourNm ?? null;
+      // The pitch basis is the region's own style radius, not whatever width the
+      // strand about to be drawn ends up using: the coil is one shape belonging
+      // to one molecule, and six copies of it in a lattice must not disagree.
       const coil = this._disorderedCoil(segment, contourNm, {
         amplitudeBasisNm: titinRadius,
         tubeRadiusNm: titinRadius * TITIN_RENDER_STYLE.disordered_radius_scale,
@@ -1321,7 +1325,7 @@ export class SarcomereScene {
           // The region's own style scale, unchanged by the linker cap: one says
           // which region this is, the other says whether its beads are on screen.
           tube.userData.render_radius_scale = renderRadiusScale;
-          tube.userData.render_radius_linked_to_domains = radiusNm < styleRadiusNm;
+          tube.userData.render_radius_narrowed_for_domains = radiusNm < styleRadiusNm;
           // The interval the tube was built from, restated on the object so a
           // reader — or the SC-15 gate — can confirm the coil moved nothing.
           tube.userData.axial_range_nm = [segment.X_start, segment.X_end];
@@ -1726,8 +1730,10 @@ export class SarcomereScene {
         region_radius_scale: {
           guided_all_regions: presentationMode === 'guided'
             ? TITIN_RENDER_STYLE.guided_radius_scale : 1,
-          N2A: TITIN_RENDER_STYLE.disordered_radius_scale,
-          PEVK: TITIN_RENDER_STYLE.disordered_radius_scale,
+          // Built from the one declared list rather than restated, so this record
+          // cannot drift from the scale the renderer actually applied.
+          ...Object.fromEntries(disorderedRegions
+            .map((id) => [id, TITIN_RENDER_STYLE.disordered_radius_scale])),
           not_claimed: 'molecular diameter or polymer cross-section',
         },
         // SC-15. Reported whenever domains are drawn, because a reader comparing
@@ -1736,7 +1742,7 @@ export class SarcomereScene {
           regions_with_drawn_domains: [...foldedRegions].sort(),
           strands: [...domainStrands],
           radius_cap_nm: linkerRadiusNm === null ? null : Number(linkerRadiusNm.toFixed(4)),
-          uncapped_tube_radius_nm: Number(titinRadius.toFixed(4)),
+          uncapped_region_radius_nm: Number(titinRadius.toFixed(4)),
           basis: 'half the narrowest drawn archetype rendered cross-section, from '
             + 'the instancing plan; a render width, not a molecular diameter',
           reason: 'a backbone wider than the domains it carries hides them at every '
