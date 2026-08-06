@@ -513,7 +513,7 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // Stage composition arithmetic. These rules decide whether the figure reads
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
-import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, axisPxPerNm, scaleBar } from './src/presentation/StageLayout.js';
+import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar } from './src/presentation/StageLayout.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -794,28 +794,22 @@ function renderScienceOverlay() {
   if (bandsRequested || features.has('termini')) {
     records.push(...activeShowcaseOverlay.termini.map(renderedTitinAnchor));
   }
-  // Scale-bar rungs: evenly spaced points on the sarcomere axis, appended to the
-  // SAME projection the brackets use. Perspective makes nm-per-pixel a function
-  // of depth, so the ruler is measured from the projection that is actually
-  // drawn rather than from a separate camera query that could disagree with it.
-  const rungs = STAGE_LAYOUT.scale_bar_rungs;
-  const rungStepNm = activeShowcaseOverlay.sarcomere_length_nm / rungs;
-  const firstRung = records.length;
-  for (let i = 0; i <= rungs; i += 1) records.push({ x: i * rungStepNm, y: 0, z: 0 });
-  const allProjected = visualization.projectPresentationAnchors(records);
-  const projected = new Map(allProjected.slice(0, firstRung)
+  const projected = new Map(visualization.projectPresentationAnchors(records)
     .map((point) => [point.id, point]));
-  const pxPerNm = axisPxPerNm(
-    allProjected.slice(firstRung).map((point, i) => ({
-      x_nm: i * rungStepNm, x_px: point.x_px, visible: point.visible,
-    })),
-    { centreXPx: width / 2 },
-  );
+  // Scale of the stage, from the camera's own frustum rather than from how far
+  // apart two model points land on screen. The projection measures the length of
+  // an interval's IMAGE, which collapses as the interval turns toward the camera;
+  // the frustum width does not depend on the direction anything in the scene
+  // points, which is what a scale bar has to be true of in every view.
+  const pxPerNm = stagePxPerNm(visualization.viewSpanNm(), width);
   const showBands = bandsRequested && isLongitudinalProjection(
     projected.get('n_terminus'), projected.get('c_terminus'),
   );
-  // Every DOM measurement this pass needs, taken once. Each one forces a
-  // synchronous layout, and the branches below used to repeat the same two.
+  // Every DOM measurement this pass needs, taken together. The branches below
+  // used to re-read the same two rectangles; grouping the reads is a clarity
+  // change rather than a performance one, since consecutive reads with no
+  // intervening write share one layout flush anyway. The saving that matters
+  // came from not running this pass at all on a still frame.
   const canvasTop = $('canvas').getBoundingClientRect().top;
   const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 16;
   // The guided chapter card owns the bottom-left corner and its height depends

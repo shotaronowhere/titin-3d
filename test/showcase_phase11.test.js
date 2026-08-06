@@ -6,7 +6,7 @@ import * as THREE from 'three';
 
 import {
   STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement,
-  axisPxPerNm, scaleBar,
+  stagePxPerNm, scaleBar,
 } from '../src/presentation/StageLayout.js';
 
 import { TitinModel } from '../src/model/TitinModel.js';
@@ -267,30 +267,49 @@ test('SC11-4a: a scale that cannot be measured is refused, not drawn', () => {
   }
 });
 
-test('SC11-4a: the axis scale is read where the subject is, not globally', () => {
-  // Perspective makes px/nm a function of depth: at a 280 nm close-up the near
-  // and far ends of the sarcomere differ by tens of percent, so a global number
-  // would label the bar with a measurement that is not the one on screen.
-  const rungs = [
-    { x_nm: 0, x_px: -500, visible: false },
-    { x_nm: 100, x_px: 100, visible: true },
-    { x_nm: 200, x_px: 700, visible: true },    // 6 px/nm, centred at 400
-    { x_nm: 300, x_px: 1500, visible: true },   // 8 px/nm, centred at 1100
-  ];
-  assert.equal(axisPxPerNm(rungs, { centreXPx: 400 }), 6);
-  assert.equal(axisPxPerNm(rungs, { centreXPx: 1100 }), 8);
-  assert.equal(axisPxPerNm([], { centreXPx: 400 }), null,
-    'with nothing on screen there is no honest scale to state');
-  assert.equal(axisPxPerNm([{ x_nm: 0, x_px: 10, visible: false }], { centreXPx: 0 }), null);
+test('SC11-4a: the stage scale is a property of the camera, not of the scene', () => {
+  // The regression this pins. A first implementation measured how far apart two
+  // model points landed on screen. That measures the length of an interval's
+  // IMAGE, which collapses as the interval turns toward the camera: down the
+  // filament axis it labelled a 96 px rule '50000000000000 um', and even in the
+  // oblique view of chapter 6 it overstated distance by 42 %. Framing one target
+  // from any direction at one distance must report one scale.
+  const target = new THREE.Vector3(1100, 0, 0);
+  const spans = [[0.12, 0.25, 1], [0.7, 0.5, 0.7], [1, 0, 0], [0, 0, 1], [1, 0.06, 0.06]]
+    .map((dir) => {
+      const viewer = stubViewer();
+      const offset = new THREE.Vector3(...dir).normalize().multiplyScalar(400);
+      viewer._moveCamera(target.clone().add(offset), target);
+      return Number(viewer.visibleWidthNm().toFixed(6));
+    });
+  assert.equal(new Set(spans).size, 1,
+    `camera orientation changed the reported stage scale: ${spans.join(', ')}`);
 });
 
-test('SC11-4a: the page draws the bar from the same projection as the brackets', () => {
+test('SC11-4a: a scale the stage cannot state is reported as absent', () => {
+  assert.equal(stagePxPerNm(1000, 1280), 1.28);
+  for (const bad of [null, 0, -1, NaN, Infinity]) {
+    assert.equal(stagePxPerNm(bad, 1280), null, `span ${bad} must not produce a scale`);
+    assert.equal(stagePxPerNm(1000, bad), null, `viewport ${bad} must not produce a scale`);
+  }
+  // And the facade refuses at the source, so no caller has to know the rule.
+  const facade = Object.create(TitinVisualization.prototype);
+  facade.viewer = { visibleWidthNm: () => 1234.5 };
+  assert.equal(facade.viewSpanNm(), 1234.5);
+  for (const bad of [0, -1, NaN, Infinity]) {
+    facade.viewer = { visibleWidthNm: () => bad };
+    assert.equal(facade.viewSpanNm(), null, `visibleWidthNm ${bad} must not become a scale`);
+  }
+});
+
+test('SC11-4a: the page takes the bar\'s scale from the camera', () => {
   assert.match(page, /import \{[^}]*scaleBar[^}]*\} from '\.\/src\/presentation\/StageLayout\.js'/);
-  assert.match(page, /axisPxPerNm\(/, 'the scale must be measured, not assumed');
+  assert.match(page, /stagePxPerNm\(visualization\.viewSpanNm\(\), width\)/,
+    'the scale must come from the camera frustum, not from a projected interval');
   assert.match(page, /scaleBar\(/);
-  // One projection call feeds brackets, termini and the ruler alike.
+  // One projection pass still serves brackets and termini alike.
   assert.equal((page.match(/projectPresentationAnchors\(records\)/g) || []).length, 1,
-    'the ruler must not add a second projection that could disagree with the brackets');
+    'the overlay must measure the stage once per pass');
 });
 
 test('SC11-4a: the stage declares the scale bar as presentation geometry', () => {

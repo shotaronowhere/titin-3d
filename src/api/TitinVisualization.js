@@ -596,6 +596,28 @@ export class TitinVisualization {
   projectPresentationAnchors(records) { return this.viewer.projectPoints(records); }
 
   /**
+   * Width of the scene the stage currently shows, in nm, at the depth the camera
+   * is looking at. Divide the canvas pixel width by it to get the stage's scale.
+   *
+   * This is the ONLY defensible source for a scale bar. Measuring instead how far
+   * apart two model points land on screen sounds more direct and is wrong: it
+   * reports the length of the interval's projection, which collapses as the
+   * interval turns toward the camera. Down the filament axis that method labelled
+   * a 96 px rule "50000000000000 µm"; even in the oblique view it overstated
+   * distance by 42 %. The frustum width does not depend on the direction anything
+   * in the scene happens to point.
+   *
+   * Returns null rather than a wrong number when the camera sits on its own orbit
+   * target, which is the one state in which the stage has no measurable scale.
+   *
+   * @returns {number|null}
+   */
+  viewSpanNm() {
+    const span = this.viewer.visibleWidthNm();
+    return Number.isFinite(span) && span > 0 ? span : null;
+  }
+
+  /**
    * Highlight one named titin region, or pass null to clear the selection.
    * Geometry and evidence opacity remain unchanged; only the selection colour
    * channel changes.

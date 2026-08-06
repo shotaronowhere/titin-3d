@@ -21,10 +21,6 @@ export const STAGE_LAYOUT = Object.freeze({
   bracket_drop_tick_px: 8,
   card_gap_px: 24,
   edge_padding_px: 8,
-  // Rungs laid along the sarcomere axis to measure the projection's local scale.
-  // 64 puts them ~34 nm apart on a 2,200 nm sarcomere, so even the tightest
-  // declared close-up (200 nm) contains several adjacent pairs to choose from.
-  scale_bar_rungs: 64,
 });
 
 /** Vertical offsets of the three bracket lanes, measured down from the lane origin. */
@@ -55,37 +51,24 @@ export function bracketLaneY(projected, { canvasHeight, safeTopPx }) {
 }
 
 /**
- * Screen scale of the sarcomere axis, in CSS pixels per nanometre.
+ * Screen scale of the stage, in CSS pixels per nanometre.
  *
- * A perspective projection makes this a function of depth, so there is no single
- * number for the whole scene: at a 280 nm close-up the near and far ends of the
- * sarcomere differ by tens of percent. The rungs are axis points carried through
- * the overlay's own projection, and the pair used is the one whose screen
- * midpoint is nearest `centreXPx`, so the ruler describes the scale where the
- * subject actually is rather than an average of the whole model.
+ * `viewSpanNm` is the width of the scene at the depth the camera is looking at,
+ * so this number is a property of the CAMERA and not of anything in the scene.
+ * That is the whole point. Deriving it instead from how far apart two model
+ * points land on screen sounds more direct and is wrong: it measures the
+ * projection of that interval, which collapses as the interval turns toward the
+ * camera. Down the filament axis that method labelled a 96 px rule
+ * "50000000000000 µm".
  *
- * Returns null when no adjacent pair is on screen. A ruler stating a wrong
- * number is worse than no ruler, so the caller draws nothing in that case.
- *
- * @param {Array<{x_nm:number, x_px:number, visible:boolean}>} rungs ascending in x_nm
- * @param {{centreXPx:number}} opts
- * @returns {number|null}
+ * @param {number|null} viewSpanNm scene width at the orbit target, or null
+ * @param {number} viewportPx canvas width in CSS pixels
+ * @returns {number|null} null when the stage has no measurable scale
  */
-export function axisPxPerNm(rungs, { centreXPx }) {
-  let best = null;
-  for (let i = 1; i < rungs.length; i += 1) {
-    const near = rungs[i - 1];
-    const far = rungs[i];
-    // Both ends on screen: a rung behind the camera projects to a mirrored x,
-    // and pairing with one would report a scale that is not merely imprecise.
-    if (!near?.visible || !far?.visible) continue;
-    const spanNm = far.x_nm - near.x_nm;
-    const spanPx = Math.abs(far.x_px - near.x_px);
-    if (!(spanNm > 0) || !Number.isFinite(spanPx) || spanPx <= 0) continue;
-    const offset = Math.abs((near.x_px + far.x_px) / 2 - centreXPx);
-    if (!best || offset < best.offset) best = { offset, px_per_nm: spanPx / spanNm };
-  }
-  return best ? best.px_per_nm : null;
+export function stagePxPerNm(viewSpanNm, viewportPx) {
+  if (!Number.isFinite(viewSpanNm) || Number(viewSpanNm) <= 0) return null;
+  if (!Number.isFinite(viewportPx) || viewportPx <= 0) return null;
+  return viewportPx / Number(viewSpanNm);
 }
 
 /** The 1-2-5 sequence: spans a viewer can hold without doing arithmetic. */

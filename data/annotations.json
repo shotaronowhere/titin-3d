@@ -5,7 +5,7 @@
     "phase": "SC-4 — Object-linked annotations and evidence access",
     "purpose": "Canonical explanatory copy for directly pickable rendered components. Geometry, coordinates, evidence measurements, and bibliography remain authoritative in their existing scientific records; this file is the validated annotation presentation layer.",
     "scope": "Generic titin education through the retained human skeletal N2A-containing Q8WZ42 reference model.",
-    "stage_render_meaning": "Stage overlays are presentation geometry, not molecular structure. The band and zone brackets label projected axial positions and their drop ticks mark the boundary each label refers to; the continuity trace marks one titin path at a fixed screen width; the scale bar states the nanometre span of a drawn length, measured on the sarcomere axis at the centre of the current view. Because the view is a perspective projection that scale applies near the axis rather than uniformly across the frame, and the bar is withdrawn rather than approximated when no axis interval is on screen to measure."
+    "stage_render_meaning": "Stage overlays are presentation geometry, not molecular structure. The band and zone brackets label projected axial positions and their drop ticks mark the boundary each label refers to; the continuity trace marks one titin path at a fixed screen width; the scale bar states the nanometre span of a drawn length, taken from the width of the camera's view at the depth it is focused on. Because the view is a perspective projection, that scale holds at the focused depth and objects nearer the camera read larger; the bar is withdrawn rather than approximated whenever the stage has no measurable span."
   },
   "components": [
     {
