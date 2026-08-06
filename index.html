@@ -334,6 +334,9 @@ window.__titinBoot = { ready: false, problems: [] };
     overscroll-behavior: contain; }
   .build-id { margin-top: 4px; color: var(--dim); font-size: 9px; letter-spacing: .06em;
     font-variant-numeric: tabular-nums; }
+  .bib-row { font-size: 10px; line-height: 1.5; margin-bottom: 5px; color: var(--dim); }
+  .bib-row[data-cited="true"] { border-left: 2px solid var(--titin); padding-left: 7px; }
+  .bib-title { color: var(--dim); }
   .card-findings { margin: 5px 0 0; padding: 0; list-style: none; }
   .card-findings li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 6px;
     margin-top: 3px; font-size: 9px; line-height: 1.4; }
@@ -40998,6 +41001,13 @@ function createAnnotations(model, sarcomereLengthNm, opts = {}) {
   return Object.freeze([...componentRecords, ...regionRecords]);
 }
 
+// src/presentation/Bibliography.js
+function createBibliography(references, { citedIds = [] } = {}) {
+  const ids = Object.keys(references || {}).sort((a, b) => a.localeCompare(b));
+  const cited = new Set(citedIds);
+  return resolveSources(references, ids).map((source) => ({ ...source, cited: cited.has(source.id) })).sort((a, b) => a.citation.localeCompare(b.citation) || a.id.localeCompare(b.id));
+}
+
 // src/api/TitinVisualization.js
 var SCALES = Object.freeze({
   /** titin in situ: filaments, Z-disc, M-line, transverse lattice */
@@ -41445,6 +41455,21 @@ var TitinVisualization = class _TitinVisualization {
   sources(sourceIds4) {
     if (!Array.isArray(sourceIds4)) throw new Error("sources: expected an array of source IDs.");
     return resolveSources(this.model.spec.references, sourceIds4);
+  }
+  /**
+   * The whole reference registry, ordered for display. `cited` marks the records
+   * this build's annotations and chapters actually use, so a reader can tell the
+   * working bibliography from the full corpus.
+   */
+  bibliography() {
+    const citedIds = /* @__PURE__ */ new Set();
+    for (const component of this.model.spec.annotations?.components || []) {
+      for (const id of component.source_ids || []) citedIds.add(id);
+    }
+    for (const chapter of this.model.spec.presentation?.guided_chapters || []) {
+      for (const id of chapter.source_ids || []) citedIds.add(id);
+    }
+    return createBibliography(this.model.spec.references, { citedIds: [...citedIds] });
   }
   /** Names of the scientifically defined structural states. */
   structuralStates() {
@@ -43078,6 +43103,42 @@ function renderExpertCards() {
     return box;
   }));
 }
+
+// SC-13. 46 reviewed records were reachable only one claim at a time. The full
+// registry is static for a build, so it is rendered once, in the tab a reader
+// goes to when they want the corpus rather than a single citation.
+function renderBibliography() {
+  const entries = visualization.bibliography();
+  $('bibliography').replaceChildren(...entries.map((entry) => {
+    const row = document.createElement('div');
+    row.className = 'bib-row';
+    const link = document.createElement('a');
+    link.href = entry.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.textContent = entry.citation;
+    const title = document.createElement('span');
+    title.className = 'bib-title';
+    title.textContent = ` — ${entry.title}`;
+    row.append(link, title);
+    if (entry.cited) row.dataset.cited = 'true';
+    return row;
+  }));
+}
+renderBibliography();
+
+// A screenshot in a talk is only reproducible if the reader can get back to the
+// exact state it came from, in the exact build it came from.
+$('copyViewLink').onclick = async () => {
+  const fingerprint = window.__titinBuild?.fingerprint || 'unpinned development source';
+  const text = `${window.location.href}\n(build ${fingerprint})`;
+  try {
+    await navigator.clipboard.writeText(text);
+    $('copyViewStatus').textContent = 'Link and build copied to the clipboard.';
+  } catch {
+    // A denied clipboard permission is not a failure the reader can act on, so
+    // the text they asked for is put on screen where they can select it.
+    $('copyViewStatus').textContent = text;
+  }
+};
 
 function resolvedAnnotation(selection) {
   return selection ? visualization.resolveAnnotation(selection) : null;

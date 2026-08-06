@@ -33,6 +33,7 @@ import { createShowcaseOverlay } from '../presentation/ShowcaseOverlay.js';
 import { createProvenancePipeline } from '../presentation/ProvenancePipeline.js';
 import { createAnnotations } from './TitinAnnotations.js';
 import { resolveSources } from '../presentation/AnnotationCatalog.js';
+import { createBibliography } from '../presentation/Bibliography.js';
 import {
   createSarcomere, createTitin, createTitinPath, createDomainChain,
   placeDomainsAlongPath, regionOfDomain, describeLength, IBAND_REGIONS,
@@ -534,6 +535,22 @@ export class TitinVisualization {
   sources(sourceIds) {
     if (!Array.isArray(sourceIds)) throw new Error('sources: expected an array of source IDs.');
     return resolveSources(this.model.spec.references, sourceIds);
+  }
+
+  /**
+   * The whole reference registry, ordered for display. `cited` marks the records
+   * this build's annotations and chapters actually use, so a reader can tell the
+   * working bibliography from the full corpus.
+   */
+  bibliography() {
+    const citedIds = new Set();
+    for (const component of this.model.spec.annotations?.components || []) {
+      for (const id of component.source_ids || []) citedIds.add(id);
+    }
+    for (const chapter of this.model.spec.presentation?.guided_chapters || []) {
+      for (const id of chapter.source_ids || []) citedIds.add(id);
+    }
+    return createBibliography(this.model.spec.references, { citedIds: [...citedIds] });
   }
 
   /** Names of the scientifically defined structural states. */

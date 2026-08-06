@@ -3,7 +3,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
+import { TitinModel } from '../src/model/TitinModel.js';
+import { nodeReader } from '../src/model/readNode.js';
+import { createBibliography } from '../src/presentation/Bibliography.js';
+
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
+const model = await TitinModel.create(nodeReader());
 
 test('SC13: specialist depth is disclosed, not dumped', () => {
   assert.match(page, /<details id="objectInspectorDetails"/);
@@ -68,4 +73,29 @@ test('SC13: opening the drawer lands on controls, not on an essay', () => {
 
 test('SC13: an empty selection hides its heading instead of leaving it dangling', () => {
   assert.match(page, /selectedStructureHeading'\)\.hidden = !annotation/);
+});
+
+test('SC13: the bibliography resolves every record in the registry', () => {
+  const entries = createBibliography(model.spec.references, { citedIds: ['UniProt:Q8WZ42'] });
+  assert.equal(entries.length, Object.keys(model.spec.references).length);
+  for (const entry of entries) {
+    assert.ok(entry.citation.trim(), `${entry.id} has no citation`);
+    assert.ok(/^https?:\/\//.test(entry.href), `${entry.id} has no link`);
+    assert.ok(entry.title.trim(), `${entry.id} has no title`);
+  }
+  assert.equal(entries.find((entry) => entry.id === 'UniProt:Q8WZ42').cited, true);
+});
+
+test('SC13: the bibliography is stably ordered', () => {
+  const once = createBibliography(model.spec.references, {}).map((entry) => entry.id);
+  const twice = createBibliography(model.spec.references, {}).map((entry) => entry.id);
+  assert.deepEqual(once, twice);
+  assert.deepEqual([...once].sort((a, b) => a.localeCompare(b)).length, once.length);
+});
+
+test('SC13: the page can copy a citable link to the current view', () => {
+  assert.match(page, /id="copyViewLink"/);
+  assert.match(page, /navigator\.clipboard\.writeText/);
+  assert.match(page, /__titinBuild\?\.fingerprint/,
+    'a citable link must name the build it came from');
 });
