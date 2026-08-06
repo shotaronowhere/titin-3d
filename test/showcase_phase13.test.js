@@ -95,16 +95,24 @@ test('SC13: the bibliography resolves every record in the registry', () => {
     assert.ok(entry.title.trim(), `${entry.id} has no title`);
   }
   assert.equal(entries.find((entry) => entry.id === 'UniProt:Q8WZ42').cited, true);
+  // The working bibliography has to be distinguishable from the full corpus,
+  // which means the flag has to be false somewhere too.
+  assert.ok(entries.some((entry) => entry.cited === false),
+    'every record cannot be marked cited by a single-id citation set');
 });
 
 test('SC13: the bibliography is stably ordered', () => {
   const once = createBibliography(model.spec.references, {}).map((entry) => entry.id);
   const twice = createBibliography(model.spec.references, {}).map((entry) => entry.id);
   assert.deepEqual(once, twice);
-  assert.deepEqual([...once].sort((a, b) => a.localeCompare(b)).length, once.length);
+  const citations = createBibliography(model.spec.references, {}).map((entry) => entry.citation);
+  assert.deepEqual(citations, [...citations].sort((a, b) => a.localeCompare(b)),
+    'a reference list is ordered by citation, not by the registry’s insertion order');
 });
 
 test('SC13: the page can copy a citable link to the current view', () => {
+  assert.match(page, /visualization\.bibliography\(\)/,
+    'the reference list must be resolved by the facade, never restated in the page');
   assert.match(page, /id="copyViewLink"/);
   assert.match(page, /navigator\.clipboard\.writeText/);
   assert.match(page, /__titinBuild\?\.fingerprint/,

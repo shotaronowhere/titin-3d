@@ -203,6 +203,10 @@ window.__titinBoot = { ready: false, problems: [] };
     padding: 11px 12px; border-radius: 8px; color: var(--text); background: rgb(22 27 34 / 97%);
     border: 1px solid rgb(255 176 192 / 65%); box-shadow: 0 12px 34px rgb(0 0 0 / 44%); }
   .object-inspector-head { display: flex; align-items: flex-start; gap: 8px; }
+  /* The identity block takes the room and the nav group keeps the right edge,
+     rather than the head's shape depending on how long this structure's
+     evidence chip happens to be. */
+  .object-inspector-head > div:first-child { flex: 1; min-width: 0; }
   .object-inspector-title { flex: 1; font-size: 14px; font-weight: 650; }
   .object-evidence { display: inline-block; margin: 3px 0 6px; color: #f0cc7a;
     font-size: 9px; font-weight: 700; letter-spacing: .035em; }
@@ -2248,7 +2252,12 @@ function stepPinnedSelection(direction) {
     annotation.target_type === pinnedPick?.target_type
       && annotation.target_id === pinnedPick?.target_id
   ));
-  const next = available[(current + direction + available.length) % available.length];
+  const nextIndex = (current + direction + available.length) % available.length;
+  const next = available[nextIndex];
+  // The pointer and the arrow keys walk one list, so they share one cursor:
+  // stepping with the buttons and then pressing Right must continue from here
+  // rather than resuming wherever the keyboard was left.
+  keyboardAnnotationIndex = nextIndex;
   setPinnedSelection({
     target_type: next.target_type,
     target_id: next.target_id,
