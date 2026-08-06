@@ -184,3 +184,48 @@ test('SC11: every StageLayout binding the page imports is re-exported by the bun
       `scripts/build_standalone.mjs must re-export '${name}' or the standalone page breaks`);
   }
 });
+
+// ---------------------------------------------------------------------------
+// Task 11.4 — overlay work on change, not on every frame
+// ---------------------------------------------------------------------------
+
+const viewerSource = readFileSync(new URL('../src/render/Viewer.js', import.meta.url), 'utf8');
+
+/** Body of a top-level page function, from its declaration to its column-0 brace. */
+function pageFunction(name) {
+  const from = page.indexOf(`function ${name}(`);
+  assert.ok(from > 0, `the page must declare ${name}`);
+  const body = page.slice(from);
+  return body.slice(0, body.indexOf('\n}\n') + 3);
+}
+
+test('SC11: overlay work is dirty-flagged, not run on every frame', () => {
+  assert.match(page, /function markStageDirty\(\)/);
+  // The per-frame callback must consult the flag before doing DOM measurement.
+  assert.match(
+    page,
+    /\}, \(\{ camera_moving[\s\S]{0,200}if \(!stageDirty[\s\S]{0,200}renderScienceOverlay\(\); renderObjectOverlay\(\);/,
+    'the frame callback must early-out when nothing changed',
+  );
+  assert.match(page, /window\.addEventListener\('resize', markStageDirty\)/,
+    'a window resize moves every overlay and is not visible as camera motion');
+});
+
+test('SC11: every state change that can move an overlay marks the stage dirty', () => {
+  // A missed call is invisible until an overlay is silently stale against the
+  // frame it annotates, so the set is pinned here rather than left to review.
+  for (const name of ['rebuild', 'applyChapter', 'setAudienceMode', 'selectRegion',
+    'setPinnedSelection', 'clearPinnedSelection', 'showHoverPick']) {
+    assert.ok(pageFunction(name).includes('markStageDirty()'),
+      `${name} changes what the overlays draw and must mark the stage dirty`);
+  }
+});
+
+test('SC11: the viewer reports camera motion so overlays keep up while it moves', () => {
+  assert.match(viewerSource, /onFrame\(\{ camera_moving:/,
+    'the frame callback needs to know the camera moved, not guess');
+  assert.match(viewerSource, /this\.controls\.addEventListener\('change', this\._onControlChange\)/,
+    'OrbitControls fires change for direct input and for damped settling');
+  assert.match(viewerSource, /this\.controls\.removeEventListener\('change', this\._onControlChange\)/,
+    'a listener added in the constructor must come off in dispose()');
+});

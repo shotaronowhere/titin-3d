@@ -235,6 +235,12 @@ export class Viewer {
     // Direct manipulation always wins over an automated move. Otherwise a user
     // beginning to orbit mid-transition would fight the interpolation every frame.
     this.controls.addEventListener('start', this._onControlStart);
+    // Screen-space overlays must keep up while the camera moves, and must not run
+    // when it is still. OrbitControls fires 'change' for direct input and for
+    // damped settling, so this one flag covers every camera move it can cause.
+    this._controlsMoved = false;
+    this._onControlChange = () => { this._controlsMoved = true; };
+    this.controls.addEventListener('change', this._onControlChange);
 
     // Three lights, no shadows: shadows would imply an illumination geometry that
     // means nothing here, and they obscure the transparency that carries evidence.
@@ -749,7 +755,9 @@ export class Viewer {
 
   /**
    * @param {((sl:number)=>void)|null} [onLODChange] called on an LOD threshold crossing
-   * @param {(()=>void)|null} [onFrame] called after camera/controls update
+   * @param {((info:{camera_moving:boolean})=>void)|null} [onFrame] called after
+   *   camera/controls update. `camera_moving` lets a caller whose work is screen-space
+   *   skip it on a still frame without having to compare camera state itself.
    */
   start(onLODChange = null, onFrame = null) {
     const tick = () => {
@@ -761,7 +769,10 @@ export class Viewer {
       this._updateFrustum();
       // Checked once per frame but acts at most on a threshold crossing.
       if (onLODChange) this.checkDetailLOD(onLODChange);
-      if (onFrame) onFrame();
+      if (onFrame) {
+        onFrame({ camera_moving: Boolean(this._cameraTransition) || this._controlsMoved });
+        this._controlsMoved = false;
+      }
       this.renderer.render(this.scene, this.camera);
     };
     if (!this._raf) tick();
@@ -777,6 +788,7 @@ export class Viewer {
     window.removeEventListener('resize', this._onResize);
     this.sarcomere.clear();
     this.controls.removeEventListener('start', this._onControlStart);
+    this.controls.removeEventListener('change', this._onControlChange);
     this._motionQuery?.removeEventListener?.('change', this._onMotionPreferenceChange);
     this.controls.dispose();
     this.renderer.dispose();

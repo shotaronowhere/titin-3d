@@ -782,7 +782,9 @@ export class TitinVisualization {
    */
   /**
    * @param {((report: StateReport) => void)|null} [onStateChange]
-   * @param {(()=>void)|null} [onFrame]
+   * @param {((info:{camera_moving:boolean})=>void)|null} [onFrame] receives whether
+   *   the camera moved this frame, so screen-space overlay work can be skipped on a
+   *   still frame instead of forcing a synchronous layout sixty times a second.
    */
   start(onStateChange = null, onFrame = null) {
     if (onStateChange !== null && typeof onStateChange !== 'function') {

@@ -649,6 +649,7 @@ function syncAudienceMode() {
     visualization.resize();
     if (reframe) applyCameraPreset({ animate: false });
     renderScienceOverlay();
+    markStageDirty();
   });
 }
 
@@ -672,6 +673,7 @@ function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {
     const target = evidenceReturnFocus?.isConnected ? evidenceReturnFocus : $('audienceEvidence');
     requestAnimationFrame(() => target.focus());
   }
+  markStageDirty();
 }
 
 function openEvidence(trigger) {
@@ -729,6 +731,12 @@ let hoverPick = null;
 let pinnedPick = null;
 let keyboardAnnotationIndex = -1;
 let objectOverlaySignature = null;
+// The overlays measure DOM geometry and write inline styles, which forces a
+// synchronous layout. Doing that on every animation frame is why Evidence mode
+// — whose drawer holds a large DOM — became frame-bound. The overlays now run
+// when something that can move them has actually changed.
+let stageDirty = true;
+function markStageDirty() { stageDirty = true; }
 const svgNS = 'http://www.w3.org/2000/svg';
 
 function activeFeatures() {
@@ -1152,6 +1160,7 @@ function applyChapter(chapterId) {
   renderPinnedSelection();
   syncScales(); syncRegions(); syncDepictionToggles();
   syncPublicPresentation(); syncUrl();
+  markStageDirty();
 }
 
 $('chapterPrevious').onclick = () => {
@@ -1399,6 +1408,7 @@ function selectRegion(regionId) {
     pinnedPick = null; hoverPick = null; renderPinnedSelection();
   }
   syncPublicPresentation(); syncUrl();
+  markStageDirty();
 }
 function syncRegions() {
   for (const b of $('regions').children) {
@@ -1546,6 +1556,7 @@ function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
     syncPublicPresentation(); syncUrl();
   }
   renderPinnedSelection();
+  markStageDirty();
   return true;
 }
 
@@ -1561,6 +1572,7 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
   $('objectTooltip').hidden = true;
   $('objectLeader').replaceChildren();
   renderPinnedSelection();
+  markStageDirty();
   $('canvas').focus();
 }
 
@@ -1633,6 +1645,7 @@ function renderAnnotationIndex() {
 
 function showHoverPick(pick) {
   hoverPick = pick;
+  markStageDirty();
   const annotation = resolvedAnnotation(pick);
   const tooltip = $('objectTooltip');
   tooltip.hidden = !annotation || Boolean(pinnedPick);
@@ -1781,6 +1794,7 @@ function rebuild(refit = false) {
     render(report);
     refreshRegionReadout();
     syncPublicPresentation(); syncUrl();
+    markStageDirty();
   } catch (e) { fail(e); }
 }
 
@@ -2168,6 +2182,9 @@ $('canvas').addEventListener('keydown', (event) => {
 });
 
 window.addEventListener('hashchange', restorePresentationFromHash);
+// A viewport resize moves every projected anchor and is not visible to the frame
+// callback as camera motion, so it marks the stage explicitly.
+window.addEventListener('resize', markStageDirty);
 if (visualization.scale !== state.scale) visualization.setScale(state.scale);
 syncAudienceMode();
 $('evidence').hidden = !state.showEvidence;
@@ -2193,7 +2210,11 @@ visualization.start((report) => {
   if (state.closeup) {
     syncCloseups(visualization.closeUp(state.closeup, { move: false }));
   }
-}, () => { renderScienceOverlay(); renderObjectOverlay(); });
+}, ({ camera_moving: cameraMoving } = {}) => {
+  if (!stageDirty && !cameraMoving) return;
+  stageDirty = false;
+  renderScienceOverlay(); renderObjectOverlay();
+});
 window.titinVisualization = visualization;   // biological facade for console inspection
 // Tell the boot diagnostic above that the module reached its end. Without this the
 // watchdog would fire on a perfectly healthy page, and a false alarm in an error
