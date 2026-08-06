@@ -124,13 +124,24 @@ test('SC1: Guided has a full stage and Evidence owns the complete legacy inspect
   assert.ok(rawEvidence > guidedEnd, 'raw evidence inventory must not be inside the Guided card');
   const drawerStart = page.indexOf('id="panel"');
   const drawerEnd = page.indexOf('</aside>', drawerStart);
+  // SC-12 split this gate. Raw EVIDENCE must stay out of the Guided card — that
+  // was the original intent and it still holds. The primary didactic CONTROLS
+  // deliberately moved to the stage bar, because a length control a novice
+  // cannot reach cannot teach what changes with sarcomere length.
   for (const id of [
-    'scales', 'sl', 'presets', 'views', 'closeups', 'toggles', 'components', 'regions',
+    'scales', 'closeups', 'toggles', 'components', 'regions',
     'metrics', 'legend', 'evidence', 'annotations', 'notClaimed', 'notes',
   ]) {
     const location = page.indexOf(`id="${id}"`);
     assert.ok(location > drawerStart && location < drawerEnd,
       `existing readout/control '${id}' must remain in the Evidence drawer`);
+  }
+  const barStart = page.indexOf('id="stageBar"');
+  const barEnd = page.indexOf('</div><!-- /stageBar -->', barStart);
+  for (const id of ['sl', 'presets', 'views']) {
+    const location = page.indexOf(`id="${id}"`);
+    assert.ok(location > barStart && location < barEnd,
+      `primary control '${id}' must be on the stage bar`);
   }
   assert.match(page, /#app\[data-mode="evidence"\] #panel \{ display: block; \}/);
   assert.match(page, /@media \(max-width: 700px\)[\s\S]*?#panel \{ position: fixed;/);

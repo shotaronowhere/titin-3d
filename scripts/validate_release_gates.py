@@ -22,6 +22,14 @@ DEFAULT_PATH = ROOT / "data" / "release_gates.json"
 
 STATUSES = {"PENDING", "PASS", "FAIL"}
 VERIFICATION_KINDS = {"automated", "browser", "human"}
+# Where each declared colour has to exist for the record to describe the product
+# rather than an aspiration. Text pairs are stylesheet colours; object pairs are
+# renderer tokens, which is also why they are a separate block: an object-versus-
+# object minimum is not a WCAG text ratio and must not be read as one.
+CONTRAST_BLOCKS = (
+    ("contrast_pairs", "src/index.template.html"),
+    ("object_contrast_pairs", "src/render/SarcomereScene.js"),
+)
 CHECK_SECTIONS = ("automated", "destructive_controls", "visual_matrix",
                   "accessibility", "performance", "release_artifacts", "demo_rehearsal")
 ALL_SECTIONS = CHECK_SECTIONS + ("lay_comprehension", "expert_review",
@@ -34,6 +42,26 @@ def check(condition, message):
     print(("  PASS " if condition else "  FAIL ") + message)
     if not condition:
         failures.append(message)
+
+
+def relative_luminance(colour):
+    """WCAG relative luminance of an #rrggbb string.
+
+    The same definition test/showcase_phase8.test.js uses for the text pairs, so
+    the two gates cannot disagree about what a ratio is. It lives here as well
+    because SC-12's object pairs describe renderer tokens, and CI must be able to
+    reject a flattened palette without running the browser-facing suite.
+    """
+    channels = [int(colour[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+    linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+              for c in channels]
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+
+def contrast_ratio(foreground, background):
+    high, low = sorted((relative_luminance(foreground), relative_luminance(background)),
+                       reverse=True)
+    return (high + 0.05) / (low + 0.05)
 
 
 def relative_exists(value):
@@ -91,6 +119,32 @@ def main():
         if not every:
             check(record[section].get("status") != "PASS",
                   f"{section}: status reflects its outstanding checks")
+
+    print("\n== Declared colour pairs ==")
+    accessibility = record["accessibility"]
+    for block, source in CONTRAST_BLOCKS:
+        pairs = accessibility.get(block) or []
+        check(bool(pairs), f"{block}: the record declares its pairs")
+        text = (ROOT / source).read_text(encoding="utf-8").lower()
+        for pair in pairs:
+            pid = f"{block}.{pair.get('id', '(missing id)')}"
+            colours = [str(pair.get(field, "")) for field in ("foreground", "background")]
+            well_formed = all(len(c) == 7 and c.startswith("#") for c in colours)
+            check(well_formed, f"{pid}: names two #rrggbb colours")
+            check(bool(str(pair.get("min_ratio", "")).strip()), f"{pid}: declares a floor")
+            if not (well_formed and isinstance(pair.get("min_ratio"), (int, float))):
+                continue
+            ratio = contrast_ratio(*colours)
+            check(ratio >= pair["min_ratio"],
+                  f"{pid}: {ratio:.2f}:1 meets the {pair['min_ratio']}:1 floor")
+            # A pair nobody ships is a claim about nothing. Stylesheets write
+            # #rrggbb and the renderer writes 0xrrggbb; both spellings count,
+            # and requiring one of the two prefixes keeps this from matching an
+            # unrelated run of six hex digits.
+            for colour in colours:
+                digits = colour.lower().lstrip("#")
+                check(f"#{digits}" in text or f"0x{digits}" in text,
+                      f"{pid}: {colour} appears in {source}")
 
     print("\n== Visual matrix ==")
     matrix = record["visual_matrix"]

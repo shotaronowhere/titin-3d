@@ -618,6 +618,21 @@ export class TitinVisualization {
   }
 
   /**
+   * Axial position the camera is looking at, in nanometres.
+   *
+   * The companion to {@link viewSpanNm}: span says how much of the sarcomere is
+   * in view, this says which part. Together they are what the SC-12 close-up
+   * locator needs, and like the span it is a property of the CAMERA — the orbit
+   * target — rather than of anything in the scene.
+   *
+   * @returns {number|null} null when the camera has no usable target
+   */
+  viewCentreNm() {
+    const x = this.viewer?.controls?.target?.x;
+    return Number.isFinite(x) ? Number(x) : null;
+  }
+
+  /**
    * Highlight one named titin region, or pass null to clear the selection.
    * Geometry and evidence opacity remain unchanged; only the selection colour
    * channel changes.

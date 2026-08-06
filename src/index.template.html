@@ -146,10 +146,36 @@ window.__titinBoot = { ready: false, problems: [] };
     font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
   .ev { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
   .ev b { font-weight: 500; color: var(--text); }
-  #interactionHelp { position: absolute; left: 12px; bottom: 10px; z-index: 2;
+  /* Right-hand end of the bottom rule: the left-hand end is the ruler's, and
+     with the stage bar in place both were landing in the same 25 px band. A
+     measurement wins that corner over a hint. */
+  #interactionHelp { position: absolute; right: 12px; z-index: 2;
+    bottom: calc(var(--stage-bar-h, 114px) + 10px);
     pointer-events: none; color: #aab4c2; background: rgb(14 17 22 / 78%);
     border: 1px solid var(--edge); border-radius: 4px; padding: 4px 7px;
     font-size: 10px; }
+  /* SC-12. The stage bar sits on the canvas, in BOTH modes, and is deliberately
+     not inside #stageChrome: that layer is pointer-events: none, and these are
+     controls. Everything else that occupies the bottom of the stage — the
+     chapter card, the orbit hint, the SC-11 ruler — is measured or offset
+     against it rather than being allowed to sit underneath it. */
+  #stageBar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
+    display: flex; flex-direction: column; gap: 6px; padding: 9px 12px 10px;
+    background: linear-gradient(to top, rgb(14 17 22 / 96%), rgb(14 17 22 / 74%));
+    border-top: 1px solid var(--edge); backdrop-filter: blur(10px); }
+  .stage-row { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; }
+  .stage-row-primary #sl { flex: 1 1 220px; min-width: 160px; width: auto; }
+  /* margin: 0 overrides the drawer's block-label rule, which would otherwise
+     push a label 4 px off the centre line of the control it names. */
+  .stage-label { margin: 0; color: var(--dim); font-size: 10px; text-transform: uppercase;
+    letter-spacing: .08em; font-weight: 700; }
+  .stage-readout { font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 650;
+    min-width: 84px; }
+  .stage-presets { margin: 0; }
+  #stagePlay.on { background: var(--titin); border-color: var(--titin); color: #2a0a13; }
+  #stageLegend { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto;
+    color: var(--dim); font-size: 10px; }
+  #stageLegend .key { margin: 0; }
   .region-chip.on { background: var(--titin-hi); border-color: var(--titin-hi); color: #251016; }
   #scienceOverlay { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%;
     overflow: visible; pointer-events: none; }
@@ -189,6 +215,12 @@ window.__titinBoot = { ready: false, problems: [] };
   .science-bracket.minor { stroke: rgb(230 237 245 / 47%); }
   .science-label { fill: #dce4ed; font-size: 9px; font-weight: 650; letter-spacing: .035em;
     paint-order: stroke; stroke: rgb(14 17 22 / 92%); stroke-width: 3px; stroke-linejoin: round; }
+  /* SC-12 close-up locator. Neutral ink, like SC-6's dimension line and for the
+     same reason: hue is the protein-identity channel, and a camera extent is
+     presentation geometry, not a protein. */
+  .locator-rule { stroke: rgb(223 231 242 / 55%); }
+  .locator-tick { stroke: rgb(223 231 242 / 45%); }
+  .locator-extent { fill: rgb(223 231 242 / 20%); stroke: #dfe7f2; stroke-width: 1; }
   .terminus-line { stroke: var(--titin-hi); stroke-width: 1.5; }
   .terminus-dot { fill: var(--titin-hi); }
   .terminus-label { fill: #ffe1e8; font-size: 10px; font-weight: 750; letter-spacing: .03em;
@@ -219,7 +251,16 @@ window.__titinBoot = { ready: false, problems: [] };
   #scopeState { color: #d9b869; font-size: 10px; }
   #urlNotice { pointer-events: auto; margin-top: 9px; max-width: 660px; border-left: 3px solid #d0a24c;
     border-radius: 5px; padding: 7px 10px; color: #e7cc91; font-size: 10px; }
-  #guidedCard { pointer-events: auto; margin-top: auto; margin-bottom: 30px; width: min(500px, calc(100vw - 28px));
+  /* The clearance for the stage bar is carried entirely by the card's own
+     margin rather than being split with #stageChrome's bottom padding: the card
+     is the only bottom-anchored thing in that layer, and two stacked reserves
+     would silently add up to twice the gap the bar actually needs.
+     --stage-bar-h is the bar's MEASURED height, published by the page. A
+     constant was tried first and was wrong at the first viewport that wrapped
+     the bar to a third row: at 1280 px the bar is 114 px, not the 92 px a fixed
+     reserve assumed, and the card sat on top of it. */
+  #guidedCard { pointer-events: auto; margin-top: auto;
+    margin-bottom: calc(var(--stage-bar-h, 114px) + 14px); width: min(500px, calc(100vw - 28px));
     border-radius: 10px; padding: 14px 15px 12px; border-top: 2px solid var(--titin); }
   #app[data-mode="evidence"] #guidedCard { display: none; }
   .chapter-meta { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .1em;
@@ -302,17 +343,69 @@ window.__titinBoot = { ready: false, problems: [] };
     .brand-block { min-width: 0; }
     .brand-sub { display: none; }
   }
+  /* SC-12 narrow stage. At 375 x 812 the shipped build left the sarcomere a
+     ~60 px strip, and the new stage bar competes for the same space: wrapped
+     onto one control per line it took more than half the screen. Three changes,
+     none of them a font size — the bar's rows become single-line scrolling
+     strips, the scope badge collapses to one line, and the chapter card becomes
+     a bottom sheet that opens on tap. */
+  .card-peek-toggle { display: none; }
+  @media (max-width: 767px) {
+    /* Long control strips SCROLL rather than wrap. Wrapping is what turned a
+       two-row bar into a nine-row one. */
+    .stage-row { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+      scrollbar-width: none; }
+    .stage-row::-webkit-scrollbar { display: none; }
+    .stage-row .row { flex-wrap: nowrap; margin: 0; }
+    .stage-row button { white-space: nowrap; }
+    /* Explicit grid placement, in reading order: the focus order must still be
+       the visual order, so the play control sits at the end of the preset strip
+       rather than beside the slider it follows in the DOM. */
+    .stage-row-primary { display: grid; grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5px 8px; align-items: center; overflow: visible; }
+    .stage-row-primary .stage-label { grid-area: 1 / 1; }
+    .stage-row-primary .stage-readout { grid-area: 1 / 2; text-align: right;
+      min-width: 0; font-size: 13px; }
+    .stage-row-primary #sl { grid-area: 2 / 1 / 3 / 3; min-width: 0; }
+    .stage-row-primary .stage-presets { grid-area: 3 / 1; min-width: 0;
+      overflow-x: auto; scrollbar-width: none; }
+    .stage-row-primary .stage-presets::-webkit-scrollbar { display: none; }
+    .stage-row-primary #stagePlay { grid-area: 3 / 2; }
+    /* One line, not a 90 px block of its own above the stage. */
+    #scopeBadge { display: flex; align-items: baseline; gap: 8px; padding: 5px 9px; }
+    #scopeBadge .scope-kicker { display: none; }
+    #scopeIdentity, #scopeState { font-size: 10px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; }
+    .brand-title { font-size: 12px; }
+    .brand-block { padding: 6px 8px 6px 10px; }
+    /* The bottom sheet. It sits on the stage bar, spans the stage, and in its
+       peek state shows only what tells you where you are in the route. */
+    #guidedCard { position: absolute; left: 0; right: 0; width: auto; margin: 0;
+      bottom: var(--stage-bar-h, 114px); border-radius: 12px 12px 0 0;
+      max-height: 46vh; overflow-y: auto; overscroll-behavior: contain;
+      padding: 9px 12px 10px; }
+    #guidedCard[data-peek="true"] { max-height: none; overflow: visible; }
+    #guidedCard[data-peek="true"] #guidedCardBody { display: none; }
+    #chapterTitle { font-size: 16px; margin: 2px 0 6px; }
+    .card-peek-toggle { display: block; width: 100%; text-align: left; }
+  }
   @media (max-width: 700px) {
     #stageChrome { padding: 9px; }
     #stageHeader { display: grid; grid-template-columns: 1fr; gap: 7px; }
     .brand-block { width: 100%; }
     #scopeBadge { max-width: none; text-align: left; width: 100%; }
     #interactionHelp { display: none; }
-    #guidedCard { margin-bottom: 8px; }
+    /* The card's clearance follows the measured bar height at every width, so
+       there is no narrow-viewport constant to keep in step with it here. */
+    .stage-row-secondary #stageLegend { display: none; }
     .extension-row { grid-template-columns: 72px 62px minmax(54px, 1fr) 46px; gap: 5px; }
     #app[data-mode="evidence"] { display: block; }
     #app[data-mode="evidence"] #canvas { height: 100%; }
-    #panel { position: fixed; inset: auto 0 0; z-index: 20; max-height: 72vh; border-left: 0;
+    /* The drawer stops at the stage bar rather than covering it. SC-12's rule is
+       that the primary controls are reachable in both audience modes, and a
+       phone-width drawer that buried them would only honour that on a desktop. */
+    #panel { position: fixed; inset: auto 0 var(--stage-bar-h, 114px); z-index: 20;
+      max-height: 64vh; border-left: 0;
       border-top: 1px solid var(--edge); border-radius: 12px 12px 0 0; box-shadow: 0 -16px 50px rgb(0 0 0 / 50%); }
     /* The drawer already contains the synchronized selected-structure card. At
        phone widths, suppress its canvas duplicate so two long explanations do
@@ -358,9 +451,6 @@ window.__titinBoot = { ready: false, problems: [] };
             <div class="brand-title">Titin across the sarcomere</div>
             <div class="brand-sub">One model · two levels of explanation</div>
           </div>
-          <button id="filamentContextToggle" class="on" aria-pressed="true"
-            aria-label="Show actin and myosin filament context"
-            title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
           <div class="mode-switch" role="group" aria-label="Audience mode">
             <button id="audienceGuided" class="on" aria-pressed="true">Guided</button>
             <button id="audienceEvidence" aria-pressed="false">Evidence</button>
@@ -376,6 +466,14 @@ window.__titinBoot = { ready: false, problems: [] };
       <section id="guidedCard" aria-labelledby="chapterTitle">
         <div class="chapter-meta"><span id="chapterProgress">Chapter —</span> · <span id="chapterEvidenceClass">—</span></div>
         <h1 id="chapterTitle">Loading guided route…</h1>
+        <!-- On a phone the card is a bottom sheet: the chapter number and title
+             stay visible, the rest opens on tap. Without it the header, the
+             card and the stage bar left the sarcomere a ~60 px strip. The
+             toggle is display: none above the narrow breakpoint, where the card
+             is simply always open. -->
+        <button id="guidedCardToggle" class="card-peek-toggle" aria-expanded="true"
+          aria-controls="guidedCardBody">Read this chapter</button>
+        <div id="guidedCardBody">
         <p id="chapterSummary"></p>
         <div id="guidedSelection" hidden><b id="guidedSelectionLabel"></b><span id="guidedSelectionText"></span></div>
         <div id="extensionStory" hidden>
@@ -391,8 +489,41 @@ window.__titinBoot = { ready: false, problems: [] };
           <button id="chapterRestart">Restart</button>
           <button id="chapterEvidenceLink">Evidence &amp; controls</button>
         </div>
+        </div><!-- /guidedCardBody -->
       </section>
     </div>
+      <!-- The stage bar, not the drawer. A visitor in Guided mode could not reach
+           the sarcomere-length slider at all, which is the one interaction that
+           answers "what changes as the sarcomere lengthens?". Guided is a reduced
+           EXPLANATION set, not a reduced CONTROL set, so the bar is present in
+           both audience modes and only the surrounding prose differs. -->
+      <div id="stageBar">
+        <div class="stage-row stage-row-primary">
+          <label class="stage-label" for="sl">Sarcomere length</label>
+          <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres">
+          <!-- aria-live is off deliberately. <output> is a live region by
+               default, the range input already announces its own value as it
+               moves, and the sweep changes that value on every frame — the two
+               together would talk over each other for six seconds straight. -->
+          <output class="stage-readout" id="stageLengthReadout" for="sl"
+            aria-live="off">— nm</output>
+          <div class="row stage-presets" id="presets" role="group"
+            aria-label="Reviewed sarcomere length presets"></div>
+          <button id="stagePlay" aria-pressed="false"
+            aria-label="Play a stretch sweep across the working range">&#9654; Stretch</button>
+        </div>
+        <div class="stage-row stage-row-secondary">
+          <!-- The drawer's <h2>View</h2> named this set for a screen reader;
+               moving the buttons to the stage bar has to keep that name. -->
+          <span class="stage-label" id="stageViewsLabel">View</span>
+          <div class="row" id="views" role="group" aria-labelledby="stageViewsLabel"></div>
+          <button id="filamentContextToggle" class="on" aria-pressed="true"
+            aria-label="Show actin and myosin filament context"
+            title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
+          <div id="stageLegend" aria-label="Colour key"></div>
+          <button id="stageEvidenceLink">Evidence &amp; sources</button>
+        </div>
+      </div><!-- /stageBar -->
     <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan</div>
   </div>
   <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
@@ -436,13 +567,9 @@ window.__titinBoot = { ready: false, problems: [] };
 
     <h2>Sarcomere length</h2>
     <div class="sl" id="slReadout">— <small>nm</small></div>
-    <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres">
-    <div class="row" id="presets"></div>
+    <div class="sub" style="margin:0 0 6px">Set it on the stage bar below the model.</div>
     <div class="activation-note" id="activationStatement"></div>
     <div class="note warn" id="stateCaveat" hidden></div>
-
-    <h2>View</h2>
-    <div class="row" id="views"></div>
 
     <h2>Close-up</h2>
     <div class="sub" style="margin:0 0 6px">Flies to a landmark and fills the view
@@ -507,13 +634,14 @@ window.__titinBoot = { ready: false, problems: [] };
 import { browserReader } from './src/model/readBrowser.js';
 import { TitinVisualization, SCALES } from './src/api/TitinVisualization.js';
 import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
-import { COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
+import { COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
 import { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
 import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
 // Stage composition arithmetic. These rules decide whether the figure reads
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
-import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement } from './src/presentation/StageLayout.js';
+import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible } from './src/presentation/StageLayout.js';
+import { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -611,6 +739,12 @@ function syncPublicPresentation() {
 }
 
 function syncUrl() {
+  // The sweep rewrites the length on every frame it changes. history.replaceState
+  // is rate-limited by browsers — Safari throws a SecurityError after roughly a
+  // hundred calls in thirty seconds — so a six-second sweep would break the page
+  // it is demonstrating. The URL records the state the sweep is LEFT in, which is
+  // also the only state worth sharing.
+  if (sweepHandle !== null) return;
   const hash = story.serialize(publicPresentationState());
   if (window.location.hash !== hash) {
     // Hash-only replacement stays same-document under HTTP, GitHub Pages and
@@ -656,6 +790,7 @@ function syncAudienceMode() {
 let evidenceReturnFocus = $('audienceEvidence');
 
 function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {}) {
+  stopSweep();
   state.audienceMode = mode;
   // Opening Evidence is the explicit request that exposes the inventory. Closing
   // it restores the Guided attention budget and removes raw evidence from the DOM flow.
@@ -689,6 +824,36 @@ $('audienceGuided').onclick = () => setAudienceMode(AUDIENCE_MODES.guided);
 $('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'));
 $('closeEvidence').onclick = closeEvidence;
 $('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'));
+$('stageEvidenceLink').onclick = () => openEvidence($('stageEvidenceLink'));
+
+// A novice cannot act on "shown in red beside actin and myosin" without a key.
+// The swatches read the palette actually in use, so Guided's subdued context
+// colours and Evidence's identity palette are both described correctly.
+function syncStageLegend(report) {
+  const guided = state.audienceMode === AUDIENCE_MODES.guided;
+  const palette = guided ? GUIDED_COMPONENT_COLOR : COMPONENT_COLOR;
+  // `hidden_components` is the authority: it already carries both the isolated-
+  // titin scale's hidden set and the filament-context toggle, so the legend can
+  // never name a colour that is not currently on the stage.
+  const hidden = new Set(report?.hidden_components || []);
+  const entries = [['titin', 'Titin', COMPONENT_COLOR.titin]];
+  if (state.showFilamentContext && !hidden.has('thick_filament')) {
+    entries.push(['thick_filament', 'Myosin', palette.thick_filament]);
+  }
+  if (state.showFilamentContext && !hidden.has('thin_filament')) {
+    entries.push(['thin_filament', 'Actin', palette.thin_filament]);
+  }
+  $('stageLegend').replaceChildren(...entries.map(([id, label, colour]) => {
+    const row = document.createElement('div');
+    row.className = 'key';
+    row.dataset.component = id;
+    const swatch = document.createElement('div');
+    swatch.className = 'sw';
+    swatch.style.background = hex(colour);
+    row.append(swatch, document.createTextNode(label));
+    return row;
+  }));
+}
 $('filamentContextToggle').onclick = () => {
   state.showFilamentContext = !state.showFilamentContext;
   rebuild();
@@ -737,10 +902,117 @@ let objectOverlaySignature = null;
 // when something that can move them has actually changed.
 let stageDirty = true;
 function markStageDirty() { stageDirty = true; }
+// The stretch sweep's frame handle. Declared here, with the other module state,
+// because syncUrl() consults it and syncUrl runs during start-up — before the
+// controller further down has executed.
+let sweepHandle = null;
+let sweepStartedAt = 0;
+// SC-12. The stage bar wraps to more rows as the stage narrows — 114 px at
+// 1280 px wide, more on a phone — so everything that has to stay clear of it is
+// offset by its MEASURED height. A constant was wrong at the first viewport
+// that wrapped differently, and it was wrong silently: the chapter card simply
+// sat on top of the controls.
+// The chapter card's peek state on a narrow stage. The card is the guided
+// route's whole content, so it opens on request rather than being cut down:
+// what the narrow layout changes is whether it is open by DEFAULT, which is the
+// only way the stage below it is more than a strip. Above the breakpoint there
+// is no peek state at all and the toggle is not rendered.
+let guidedCardPeek = true;
+function narrowStage() { return window.matchMedia('(max-width: 767px)').matches; }
+function syncGuidedCardPeek() {
+  const peek = narrowStage() && guidedCardPeek;
+  $('guidedCard').dataset.peek = String(peek);
+  $('guidedCardToggle').setAttribute('aria-expanded', String(!peek));
+  $('guidedCardToggle').textContent = peek ? 'Read this chapter' : 'Hide this chapter';
+  markStageDirty();
+}
+
+function publishStageBarHeight() {
+  const height = Math.round($('stageBar').getBoundingClientRect().height);
+  $('app').style.setProperty('--stage-bar-h', `${height}px`);
+  markStageDirty();
+}
+new ResizeObserver(publishStageBarHeight).observe($('stageBar'));
+$('guidedCardToggle').onclick = () => {
+  guidedCardPeek = !guidedCardPeek;
+  syncGuidedCardPeek();
+};
+// A viewport that crosses the breakpoint changes whether a peek state exists.
+window.matchMedia('(max-width: 767px)').addEventListener('change', syncGuidedCardPeek);
+syncGuidedCardPeek();
 const svgNS = 'http://www.w3.org/2000/svg';
 
 function activeFeatures() {
   return new Set(activeChapter()?.presentation_features || []);
+}
+
+// SC-12. The label_priority list in data/showcase_claims.json reads: selected
+// titin region, current anchor or band, one essential context protein,
+// secondary context. Applied to the band brackets that means the band the
+// chapter is actually about first — derived from the target region's own
+// canonical `band` field, so the ranking follows the data rather than a
+// hand-kept list — then the two brackets that carry the spine of the figure,
+// then everything else in axial order.
+const BAND_BY_BRACKET = Object.freeze({
+  'Z-disc': 'zdisc', 'I-band': 'iband', 'A-band': 'aband',
+  'M-line junction': 'mband', 'M-line': 'mband',
+});
+const BRACKET_BASE_PRIORITY = Object.freeze({
+  iband: 1, aband: 2, zdisc: 3, czone: 4, bare_zone: 5, mband: 6,
+});
+/** Which bracket the current frame is about, or null when nothing names one. */
+function focusBracketId() {
+  const closeup = { zdisc: 'zdisc', czone: 'czone', mline: 'mband',
+    junction: 'iband', crowns: 'aband', twist: 'iband' }[state.closeup];
+  if (closeup) return closeup;
+  const target = activeChapter()?.target;
+  if (target?.kind === 'region') {
+    return BAND_BY_BRACKET[regionMetadata.get(target.id)?.band] || null;
+  }
+  return null;
+}
+function bracketPriority(bracketId, focusId) {
+  return bracketId === focusId ? 0 : (BRACKET_BASE_PRIORITY[bracketId] ?? 9);
+}
+/** Phone rules apply to a narrow desktop window too, so this reads the canvas. */
+function viewportClass(width) {
+  return width < 768 ? 'mobile' : 'desktop';
+}
+
+// ---- close-up locator -------------------------------------------------------
+// Every position below comes from the same canonical bracket records the band
+// brackets use. The locator moves no coordinate and derives no new geometry; it
+// restates, in miniature, where the camera is inside the half-sarcomere.
+function bracketById(id) {
+  return activeShowcaseOverlay?.brackets.find((bracket) => bracket.id === id) || null;
+}
+/** Axial extent of the half-sarcomere: the M-band centre marker's own position. */
+function locatorModelSpanNm() {
+  const mband = bracketById('mband');
+  return Number.isFinite(mband?.start_nm) && mband.start_nm > 0 ? mband.start_nm : null;
+}
+/** The three landmarks the miniature marks, as fractions of the model span. */
+function locatorTicks(modelSpanNm) {
+  const zdisc = bracketById('zdisc');
+  const aband = bracketById('aband');
+  const mband = bracketById('mband');
+  return [
+    zdisc && (zdisc.start_nm + zdisc.end_nm) / 2,
+    aband && aband.start_nm,
+    mband && mband.start_nm,
+  ].filter((nm) => Number.isFinite(nm)).map((nm) => Math.max(0, Math.min(1, nm / modelSpanNm)));
+}
+/**
+ * What the camera is currently inside, named by the narrowest band that
+ * contains it. "Narrowest" is what makes the answer useful: every point in the
+ * C-zone is also in the A-band, and the A-band is not the thing you zoomed to.
+ */
+function locatorPlaceLabel(centreNm) {
+  const containing = (activeShowcaseOverlay?.brackets || [])
+    .filter((bracket) => bracket.kind === 'range'
+      && centreNm >= bracket.start_nm && centreNm <= bracket.end_nm)
+    .sort((a, b) => (a.end_nm - a.start_nm) - (b.end_nm - b.start_nm));
+  return containing[0]?.label || null;
 }
 
 function svgElement(name, attributes = {}, textContent = null) {
@@ -805,6 +1077,20 @@ function renderScienceOverlay() {
   const showBands = bandsRequested && isLongitudinalProjection(
     projected.get('n_terminus'), projected.get('c_terminus'),
   );
+  // Who holds the bracket lane. ONE decision, consulted by both the brackets and
+  // the close-up locator, so the two are mutually exclusive by construction
+  // rather than by two conditions that have to be kept in agreement.
+  //
+  // When either measurement is unavailable the lane falls back to the brackets:
+  // that is the behaviour this task inherited, and a stage that cannot state
+  // where the camera is must not also silently drop the labels it could draw.
+  const modelSpanNm = locatorModelSpanNm();
+  const cameraSpanNm = visualization.viewSpanNm();
+  const cameraCentreNm = visualization.viewCentreNm();
+  const measurableStage = cameraSpanNm !== null && modelSpanNm !== null;
+  const laneHoldsBrackets = !measurableStage
+    || bracketLaneVisible(cameraSpanNm, modelSpanNm);
+  const locator = locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm);
   // Every DOM measurement this pass needs, taken together. The branches below
   // used to re-read the same two rectangles; grouping the reads is a clarity
   // change rather than a performance one, since consecutive reads with no
@@ -822,13 +1108,29 @@ function renderScienceOverlay() {
     right: cardRect.right - canvasRect.left,
     bottom: cardRect.bottom - canvasRect.top,
   } : null;
+  // The stage bar owns the bottom rule the ruler used to sit on, and it grows a
+  // row as the stage narrows, so how much of the stage it takes is measured
+  // rather than assumed.
+  const barTop = $('stageBar').getBoundingClientRect().top - canvasRect.top;
+  const stageBarInsetPx = Math.max(
+    STAGE_LAYOUT.scale_bar_baseline_px, height - barTop + STAGE_LAYOUT.edge_padding_px + 4,
+  );
   const projectionSignature = JSON.stringify({
     length: activeShowcaseOverlay.sarcomere_length_nm,
     width, height, showBands,
     features: [...features],
+    // Both change which labels the budget keeps without necessarily moving a
+    // single projected point: the chapter decides which band is the focus, and
+    // the audience decides whether the budget applies at all.
+    step: state.storyStep, audience: state.audienceMode,
+    // The locator moves with the camera along the model, which no projected
+    // anchor necessarily reports once the close-up has left them off-screen.
+    locator: [laneHoldsBrackets, Math.round(locator.from01 * 1e4),
+      Math.round(locator.to01 * 1e4), locator.visible],
     headerBottom: Math.round(safeTopPx * 4) / 4,
     card: cardBox && [cardBox.top, cardBox.right, cardBox.bottom]
       .map((edge) => Math.round(edge * 4) / 4),
+    bar: Math.round(stageBarInsetPx * 4) / 4,
     scale: pxPerNm === null ? null : Math.round(pxPerNm * 1e4),
     projected: [...projected.values()].map((point) => [
       point.id, Math.round(point.x_px * 4) / 4, Math.round(point.y_px * 4) / 4, point.visible,
@@ -837,14 +1139,32 @@ function renderScienceOverlay() {
   if (projectionSignature === scienceOverlaySignature) return;
   scienceOverlaySignature = projectionSignature;
   const nodes = [];
-  if (showBands) {
+  if (showBands && laneHoldsBrackets) {
     const laneY = bracketLaneY([...projected.values()], { canvasHeight: height, safeTopPx });
+    // Everything the frame COULD label, before the reviewed attention budget
+    // decides how many of them it may. A bracket that is off-screen or too
+    // foreshortened to draw is excluded here rather than being allowed to spend
+    // budget a visible bracket needs.
+    const focusId = focusBracketId();
+    const drawable = [];
     for (const bracket of activeShowcaseOverlay.brackets) {
       const start = projected.get(`${bracket.id}:start`);
       const end = projected.get(`${bracket.id}:end`);
       if (!start || !end || (!start.visible && !end.visible)) continue;
       const x1 = Math.max(12, Math.min(width - 12, start.x_px));
       const x2 = Math.max(12, Math.min(width - 12, end.x_px));
+      if (bracket.kind !== 'marker' && Math.abs(x2 - x1) <= 8) continue;
+      drawable.push({
+        id: bracket.id,
+        priority: bracketPriority(bracket.id, focusId),
+        x: bracket.kind === 'marker' ? x1 : (x1 + x2) / 2,
+        bracket, x1, x2, start, end,
+      });
+    }
+    for (const { bracket, x1, x2, start, end } of labelBudget(
+      drawable, viewportClass(width), model.spec.showcaseClaims.attention_budget,
+      { audience: state.audienceMode },
+    )) {
       const y = laneY + (BRACKET_LANE_OFFSETS[bracket.lane] ?? BRACKET_LANE_OFFSETS.major);
       if (bracket.kind === 'marker') {
         nodes.push(svgElement('path', {
@@ -852,7 +1172,7 @@ function renderScienceOverlay() {
           class: 'science-bracket minor',
         }));
         nodes.push(svgElement('text', { x: x1, y: y - 8, 'text-anchor': 'middle', class: 'science-label' }, bracket.label));
-      } else if (Math.abs(x2 - x1) > 8) {
+      } else {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y + 5} V ${y} H ${x2} V ${y + 5}`,
           class: `science-bracket${bracket.lane === 'minor' ? ' minor' : ''}`,
@@ -872,6 +1192,38 @@ function renderScienceOverlay() {
         }, bracket.label));
       }
     }
+  }
+  // The locator: the half-sarcomere in miniature, with the camera's own span
+  // shaded on it. It occupies the lane the brackets have vacated and is drawn
+  // only when they are not, so the lane never holds both. Nothing here is
+  // interactive — it is an orientation aid, and making it draggable would put a
+  // second navigation model on the stage.
+  if (!laneHoldsBrackets && locator.visible && modelSpanNm) {
+    const stripPx = Math.max(120, Math.min(300, width * 0.28));
+    const left = STAGE_LAYOUT.edge_padding_px + 8;
+    const laneTop = safeTopPx + STAGE_LAYOUT.bracket_lane_gap_px;
+    nodes.push(svgElement('path', {
+      d: `M ${left} ${laneTop} H ${left + stripPx}`, class: 'science-bracket locator-rule',
+    }));
+    for (const at of locatorTicks(modelSpanNm)) {
+      const x = left + stripPx * at;
+      nodes.push(svgElement('path', {
+        d: `M ${x} ${laneTop - 4} V ${laneTop + 4}`, class: 'science-bracket locator-tick',
+      }));
+    }
+    // A minimum drawn width, because a 20 nm view of an 1,100 nm model is half a
+    // pixel — the extent has to remain visible while staying to scale wherever
+    // scale is legible at all.
+    const from = left + stripPx * locator.from01;
+    const extent = Math.max(2, stripPx * (locator.to01 - locator.from01));
+    nodes.push(svgElement('rect', {
+      x: from, y: laneTop - 6, width: extent, height: 12, class: 'locator-extent',
+    }));
+    const place = locatorPlaceLabel(cameraCentreNm);
+    nodes.push(svgElement('text', {
+      x: left, y: laneTop + 20, 'text-anchor': 'start', class: 'science-label',
+    }, `viewing ${Math.round(cameraSpanNm).toLocaleString()} nm of `
+      + `${Math.round(modelSpanNm).toLocaleString()} nm${place ? ` · ${place}` : ''}`));
   }
   if (features.has('termini')) {
     for (const terminus of activeShowcaseOverlay.termini) {
@@ -900,6 +1252,7 @@ function renderScienceOverlay() {
     const bar = scaleBar(pxPerNm, Math.max(100, Math.min(180, width * 0.14)));
     const { left: barX, baseline: barY } = scaleBarPlacement({
       barPx: bar.px, canvas: { width, height }, card: cardBox, safeTopPx,
+      bottomInsetPx: stageBarInsetPx,
     });
     nodes.push(svgElement('path', {
       d: `M ${barX} ${barY - 4} V ${barY} H ${barX + bar.px} V ${barY - 4}`,
@@ -1178,6 +1531,7 @@ function applyCameraPreset({ animate = false } = {}) {
 }
 
 function applyChapter(chapterId) {
+  stopSweep();
   const chapter = story.chapter(chapterId);
   if (!chapter) return;
   const scene = chapter.recommended_state;
@@ -1720,13 +2074,17 @@ function renderObjectOverlay() {
   }
   card.style.left = '0px'; card.style.top = '0px';
   const cardWidth = card.offsetWidth; const cardHeight = card.offsetHeight;
-  const headerBottom = $('stageHeader').getBoundingClientRect().bottom
-    - $('canvas').getBoundingClientRect().top + 8;
+  const canvasTop = $('canvas').getBoundingClientRect().top;
+  const headerBottom = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 8;
+  // The stage bar is the floor now, not the bottom of the canvas: this card has
+  // pointer events, so letting it settle over the bar would put an explanation
+  // on top of the controls and swallow clicks meant for them.
+  const barTop = $('stageBar').getBoundingClientRect().top - canvasTop;
   const gap = pinnedPick ? 24 : 14;
   let left = point.x_px < width / 2 ? point.x_px + gap : point.x_px - cardWidth - gap;
   let top = pinnedPick ? point.y_px - cardHeight / 2 : point.y_px + gap;
   left = Math.max(8, Math.min(width - cardWidth - 8, left));
-  top = Math.max(headerBottom, Math.min(height - cardHeight - 8, top));
+  top = Math.max(headerBottom, Math.min(barTop - cardHeight - 8, top));
   card.style.left = `${left}px`; card.style.top = `${top}px`;
   const endX = Math.max(left, Math.min(left + cardWidth, point.x_px));
   const endY = Math.max(top, Math.min(top + cardHeight, point.y_px));
@@ -1854,6 +2212,10 @@ function render(report) {
   const hiddenComponents = new Set(report.hidden_components || []);
   const hiddenSuffix = (component) => hiddenComponents.has(component) ? ' (hidden)' : '';
   $('slReadout').innerHTML = `${g.sarcomere_length_nm} <small>nm${report.clamped ? ' (clamped)' : ''}</small>`;
+  // The stage bar carries the slider now, so it carries the number the slider is
+  // reporting. Same value, same clamp disclosure, beside the control itself.
+  $('stageLengthReadout').textContent = `${g.sarcomere_length_nm.toLocaleString()} nm`
+    + (report.clamped ? ' (clamped)' : '');
   const statePreset = presentation.length_presets
     .find((preset) => preset.sarcomere_length_nm === g.sarcomere_length_nm);
   const scopeState = statePreset
@@ -1871,6 +2233,7 @@ function render(report) {
   caveat.textContent = disclosure || '';
   syncPresets(g.sarcomere_length_nm);
   syncDepictionToggles();
+  syncStageLegend(report);
 
   const rows = [
     ['Half-sarcomere', `${g.half_sarcomere_nm.toFixed(1)} nm`],
@@ -2203,6 +2566,76 @@ renderSurface.addEventListener('pointerup', (event) => {
   else if (pinnedPick) clearPinnedSelection();
 });
 renderSurface.addEventListener('pointercancel', () => { pointerStart = null; });
+
+// ---- the stretch sweep ------------------------------------------------------
+// The sweep is the demo moment: it makes "different regions extend differently"
+// something you watch rather than something you are told. It is always
+// user-initiated, stops on any other interaction, and never runs at a speed the
+// operating system has been told the user does not want.
+//
+// Queried live rather than latched at load: a viewer who turns the setting on
+// mid-session is asking for it to apply now, not at the next reload.
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function stopSweep() {
+  if (sweepHandle === null) return;
+  cancelAnimationFrame(sweepHandle);
+  sweepHandle = null;
+  $('stagePlay').classList.remove('on');
+  $('stagePlay').setAttribute('aria-pressed', 'false');
+  // Suppressed while the sweep ran; the length it settled on is the one worth
+  // putting in the URL.
+  syncPublicPresentation(); syncUrl();
+}
+
+function stepSweep(now) {
+  const reduced = prefersReducedMotion();
+  const raw = sweepLength(now - sweepStartedAt, {
+    minNm: sweepRange.min,
+    maxNm: sweepRange.max,
+    periodMs: reduced ? SWEEP.reduced_motion_period_ms : SWEEP.period_ms,
+  });
+  // Reduced motion gets the two ENDPOINTS and not the travel between them, which
+  // is what data/showcase_claims.json's motion_rule requires: "reduced-motion
+  // mode jumps to the identical scientific state". Shortening the period alone
+  // would have made the animation faster, which is the opposite of the request.
+  const value = reduced
+    ? (raw - sweepRange.min < sweepRange.max - raw ? sweepRange.min : sweepRange.max)
+    : raw;
+  if (Number(slider.value) !== value) { slider.value = String(value); rebuild(); }
+  sweepHandle = requestAnimationFrame(stepSweep);
+}
+
+// The working range, not the slider's full range: the illustrative 3,000 nm
+// reference and the 1,900 nm short state are outside the declared comparison
+// interval and must not be swept through as if they were ordinary physiology.
+const workingPresets = presentation.length_presets
+  .filter((preset) => !preset.outside_working_range);
+const sweepRange = {
+  min: Math.min(...workingPresets.map((preset) => preset.sarcomere_length_nm)),
+  max: Math.max(...workingPresets.map((preset) => preset.sarcomere_length_nm)),
+};
+
+// A control that cannot do anything says so, rather than looking available and
+// then dying inside a frame callback where nothing surfaces the reason.
+if (!(sweepRange.min < sweepRange.max)) {
+  $('stagePlay').disabled = true;
+  $('stagePlay').title = 'The presentation record declares no working-range '
+    + 'interval for the sweep to travel';
+}
+$('stagePlay').onclick = () => {
+  if (sweepHandle !== null) { stopSweep(); return; }
+  sweepStartedAt = performance.now();
+  $('stagePlay').classList.add('on');
+  $('stagePlay').setAttribute('aria-pressed', 'true');
+  sweepHandle = requestAnimationFrame(stepSweep);
+};
+slider.addEventListener('pointerdown', stopSweep);
+slider.addEventListener('keydown', stopSweep);
+// The 3-D surface, not the #canvas container: the container also holds the stage
+// bar, so a pointerdown on ▶ Stretch itself would stop the sweep a moment before
+// the click that was meant to stop it, and the button could only ever start one.
+renderSurface.addEventListener('pointerdown', stopSweep);
 
 $('canvas').addEventListener('keydown', (event) => {
   if (!['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) return;

@@ -271,8 +271,14 @@ test('SC2: the opening and mechanics story are present in the accessible shell',
   assert.equal(model.spec.presentation.initial_state.camera_preset, 'view.titin_story');
   assert.equal(model.spec.presentation.initial_state.selected_component_or_region, 'titin');
   assert.match(page, /id="scienceOverlay"/);
-  assert.ok(page.indexOf('id="filamentContextToggle"') < page.indexOf('id="guidedCard"'),
-    'the immediate actin/myosin control must be in the stage header, not the Evidence drawer');
+  // SC-12 moved this control to the stage bar, which is inserted after
+  // #stageChrome — so the positional proxy this line used would now fail while
+  // its stated intent still holds. The intent is asserted directly instead.
+  const drawerOpen = page.indexOf('id="panel"');
+  const drawerClose = page.indexOf('</aside>', drawerOpen);
+  const toggleAt = page.indexOf('id="filamentContextToggle"');
+  assert.ok(toggleAt > -1 && !(toggleAt > drawerOpen && toggleAt < drawerClose),
+    'the immediate actin/myosin control must be on the stage, not in the Evidence drawer');
   assert.match(page, /id="filamentContextToggle"[\s\S]*?>Actin \+ myosin<\/button>/);
   assert.match(page, /const action = on \? 'Hide' : 'Show';[\s\S]*?aria-label/,
     'the promoted toggle must announce the action its next click will perform');

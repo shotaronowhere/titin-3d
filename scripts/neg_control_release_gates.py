@@ -179,6 +179,24 @@ rejected("the rehearsal passed without being rehearsed",
                     [c.__setitem__("status", "PASS") for c in r["demo_rehearsal"]["checks"]]),
          "records its evidence")
 
+def object_pair(payload, pid):
+    return next(p for p in payload["accessibility"]["object_contrast_pairs"] if p["id"] == pid)
+
+
+# SC-12. The two filament families were 1.06 : 1 apart and nothing rejected it,
+# because nothing checked the render against the record. These two prove the
+# check is real in both directions: a flattened pair fails on its ratio, and a
+# pair the renderer does not actually use fails on its existence.
+rejected("actin flattened onto the myosin head array",
+         lambda r: object_pair(r, "actin_vs_crowns_guided").__setitem__(
+             "foreground", object_pair(r, "actin_vs_crowns_guided")["background"]),
+         "meets the 1.7:1 floor")
+
+rejected("a declared object colour the renderer never uses",
+         lambda r: object_pair(r, "actin_vs_myosin_guided").__setitem__(
+             "foreground", "#3b514b"),
+         "appears in src/render/SarcomereScene.js")
+
 rejected("a release artifact claimed without its generator",
          lambda r: next(c for c in r["release_artifacts"]["checks"]
                         if c["id"] == "fallback_pack").__setitem__(
@@ -186,4 +204,4 @@ rejected("a release artifact claimed without its generator",
          "names a real command or test file")
 
 assert json.loads(SOURCE.read_text(encoding="utf-8")) == BASE, "source record changed"
-print("RELEASE-GATE NEGATIVE CONTROLS PASSED (22 mutations)")
+print("RELEASE-GATE NEGATIVE CONTROLS PASSED (24 mutations)")

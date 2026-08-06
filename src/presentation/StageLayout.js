@@ -29,6 +29,17 @@ export const STAGE_LAYOUT = Object.freeze({
   edge_padding_px: 8,
   // Height of the stage's bottom rule, where the ruler and the orbit hint live.
   scale_bar_baseline_px: 42,
+  // Horizontal room one band label needs to itself. Measured from the shipped
+  // .science-label style: 9 px semibold, and the longest bracket label,
+  // "M-band center", is ~78 px wide with its halo stroke. Two labels closer
+  // together than this collide, which is the case the occlusion rule exists for.
+  label_box_px: 88,
+});
+
+/** Viewport classes the reviewed attention budget distinguishes. */
+const BUDGET_KEY = Object.freeze({
+  desktop: 'guided_secondary_context_labels_desktop_max',
+  mobile: 'guided_secondary_context_labels_mobile_max',
 });
 
 /** Vertical offsets of the three bracket lanes, measured down from the lane origin. */
@@ -56,6 +67,129 @@ export function bracketLaneY(projected, { canvasHeight, safeTopPx }) {
   const floor = Math.max(safeTopPx, 0);
   const ceiling = Math.max(floor, canvasHeight - LANE_STACK_PX - 24);
   return Math.max(floor, Math.min(lane, ceiling));
+}
+
+/**
+ * The labels a guided frame is allowed to draw, in priority order.
+ *
+ * `data/showcase_claims.json` has declared an attention budget since SC-0 and
+ * `scripts/validate_showcase_claims.py` pins it byte-for-byte — but nothing ever
+ * checked the RENDER against it, and Guided mode drew all six band brackets at
+ * every viewport. At 375 px they stacked into three overlapping rows and the
+ * last one clipped off the right edge. A reviewed declaration the product
+ * ignores is worse than no declaration.
+ *
+ * The budget is READ from that record and never restated here, so this function
+ * cannot drift from the reviewed numbers and cannot be satisfied by editing a
+ * constant in the layout module.
+ *
+ * Two rules, in the record's own order:
+ *   1. `label_priority` — keep the highest-priority `n` for the viewport class;
+ *   2. `occlusion_rule` — "hide a lower-priority label before allowing overlap",
+ *      so a survivor whose box would collide with an already-kept, higher-
+ *      priority box is dropped rather than drawn on top of it.
+ *
+ * Obstruction of the highlighted titin path, the rule's third clause, is
+ * prevented by construction rather than here: {@link bracketLaneY} puts the
+ * whole lane above the projected model.
+ *
+ * Evidence mode is deliberately exempt. The budget's own key is
+ * `guided_secondary_context_labels_*`; Evidence is where a specialist asks for
+ * everything at once, and clipping it there would be a regression, not a fix.
+ *
+ * @template {{id:string, priority:number, x:number, widthPx?:number}} T
+ * @param {T[]} candidates
+ * @param {'desktop'|'mobile'} viewportClass derived from the canvas width, not
+ *   from a media query, so a narrow desktop window is governed like a phone
+ * @param {Record<string, unknown>} budget `showcaseClaims.attention_budget`
+ * @param {{audience?: string}} [opts]
+ * @returns {T[]} the labels to draw, highest priority first
+ */
+export function labelBudget(candidates, viewportClass, budget, { audience = 'guided' } = {}) {
+  const ordered = [...(candidates || [])].sort((a, b) => a.priority - b.priority);
+  if (audience === 'evidence') return ordered;
+  const key = BUDGET_KEY[viewportClass];
+  if (!key) {
+    throw new Error(
+      `labelBudget: unknown viewport class '${viewportClass}'; expected `
+      + `${Object.keys(BUDGET_KEY).join(' or ')}`,
+    );
+  }
+  // Deliberately not Number(): Number(null) is 0, which would turn a missing
+  // record into a silent "draw nothing" instead of a visible failure.
+  const declared = budget?.[key];
+  const max = typeof declared === 'number' ? declared : NaN;
+  if (!Number.isInteger(max) || max < 0) {
+    throw new Error(
+      `labelBudget: the attention budget record has no integer '${key}'; `
+      + 'refusing to draw an unbounded label set',
+    );
+  }
+  const kept = [];
+  for (const candidate of ordered) {
+    if (kept.length >= max) break;
+    const half = ((candidate.widthPx ?? STAGE_LAYOUT.label_box_px)) / 2;
+    const collides = kept.some((other) => (
+      Math.abs(other.x - candidate.x) < half + (other.widthPx ?? STAGE_LAYOUT.label_box_px) / 2
+    ));
+    if (!collides) kept.push(candidate);
+  }
+  return kept;
+}
+
+/**
+ * Fraction of the model that has to be in view for band brackets to mean
+ * anything. Below it a bracket is a line whose ends are both off-screen.
+ */
+const BRACKET_LANE_MIN_COVERAGE = 0.5;
+
+/**
+ * Whether the bracket lane should hold band brackets at this camera span.
+ *
+ * @param {number|null} cameraSpanNm width of the view, in nanometres
+ * @param {number} modelSpanNm axial extent of the model being labelled
+ * @returns {boolean}
+ */
+export function bracketLaneVisible(cameraSpanNm, modelSpanNm) {
+  const span = Number(cameraSpanNm);
+  const model = Number(modelSpanNm);
+  if (!Number.isFinite(span) || span <= 0 || !Number.isFinite(model) || model <= 0) return false;
+  return span >= model * BRACKET_LANE_MIN_COVERAGE;
+}
+
+/**
+ * Where the current close-up is looking, as a fraction of the whole model.
+ *
+ * The brackets are suppressed when the camera is too close for them to mean
+ * anything — correctly, and observably: chapters 3, 4 and 5 of the tour draw
+ * none. The result was that at exactly the moment a viewer most needs to know
+ * where they are, the page told them least: chapter 3 frames a 70 nm PEVK
+ * segment, chapter 4 a ~200 nm Z-disc, chapter 5 the C-zone, each arriving as an
+ * unlabelled field with no relationship to the molecule the previous chapter
+ * introduced.
+ *
+ * This adds no chrome. The locator occupies the lane the brackets vacate and is
+ * drawn only when they are not — {@link bracketLaneVisible} is the single
+ * decision both consult, which is why they cannot both appear or both vanish.
+ *
+ * @param {number|null} cameraSpanNm width of the view, in nanometres
+ * @param {number} cameraCentreNm axial position the camera is looking at
+ * @param {number} modelSpanNm axial extent of the model, from x = 0
+ * @returns {{from01:number, to01:number, visible:boolean}}
+ */
+export function locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm) {
+  const span = Number(cameraSpanNm);
+  const centre = Number(cameraCentreNm);
+  const model = Number(modelSpanNm);
+  const measurable = Number.isFinite(span) && span > 0
+    && Number.isFinite(centre) && Number.isFinite(model) && model > 0;
+  if (!measurable) return { from01: 0, to01: 1, visible: false };
+  const clamp01 = (value) => Math.max(0, Math.min(1, value));
+  return {
+    from01: clamp01((centre - span / 2) / model),
+    to01: clamp01((centre + span / 2) / model),
+    visible: !bracketLaneVisible(span, model),
+  };
 }
 
 /**
@@ -136,17 +270,28 @@ export function scaleBar(pxPerNm, maxPx) {
  * does not — a phone, where the card is nearly the full width — does the bar
  * move above the card, and never under the page header.
  *
+ * SC-12 added the stage control bar along that same bottom rule, so the rule is
+ * no longer at a fixed height: `bottomInsetPx` is how much of the stage the bar
+ * occupies, measured in the page rather than assumed here, because the bar wraps
+ * to more rows as the viewport narrows. It defaults to the bare stage's own
+ * baseline, so a caller with no bar — and every existing test — is unaffected.
+ *
  * @param {{
  *   barPx: number,
  *   canvas: {width:number, height:number},
  *   card: {top:number, right:number, bottom:number}|null,
  *   safeTopPx: number,
+ *   bottomInsetPx?: number,
  * }} opts
  * @returns {{left:number, baseline:number}} container-local CSS pixels
  */
-export function scaleBarPlacement({ barPx, canvas, card, safeTopPx }) {
+export function scaleBarPlacement({
+  barPx, canvas, card, safeTopPx, bottomInsetPx = STAGE_LAYOUT.scale_bar_baseline_px,
+}) {
   const pad = STAGE_LAYOUT.edge_padding_px + 4;
-  const baseline = canvas.height - STAGE_LAYOUT.scale_bar_baseline_px;
+  const inset = Number.isFinite(bottomInsetPx) && bottomInsetPx > 0
+    ? bottomInsetPx : STAGE_LAYOUT.scale_bar_baseline_px;
+  const baseline = canvas.height - inset;
   if (!card || card.bottom <= baseline - pad) return { left: pad, baseline };
   const beside = card.right + pad;
   if (beside + barPx <= canvas.width - pad) return { left: beside, baseline };

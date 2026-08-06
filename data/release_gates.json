@@ -276,6 +276,13 @@
         "verified_by": "test/showcase_phase8.test.js"
       },
       {
+        "id": "object_contrast",
+        "requirement": "rendered objects a caption names are separable by luminance, not hue alone",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase12.test.js; scripts/validate_release_gates.py"
+      },
+      {
         "id": "keyboard_route",
         "requirement": "full keyboard route through guided steps, controls, and annotations",
         "verification": "automated",
@@ -395,6 +402,50 @@
         "background": "#161b22",
         "role": "open finding label",
         "min_ratio": 4.5
+      },
+      {
+        "id": "stage_bar_label",
+        "foreground": "#98a4b3",
+        "background": "#0e1116",
+        "min_ratio": 4.5,
+        "where": "stage bar control labels over the stage gradient"
+      },
+      {
+        "id": "stage_readout",
+        "foreground": "#e6ebf1",
+        "background": "#0e1116",
+        "min_ratio": 4.5,
+        "where": "sarcomere length readout on the stage bar"
+      },
+      {
+        "id": "stage_play_active",
+        "foreground": "#2a0a13",
+        "background": "#ff5d7d",
+        "min_ratio": 4.5,
+        "where": "active stretch-sweep button"
+      }
+    ],
+    "object_contrast_pairs": [
+      {
+        "id": "actin_vs_myosin_guided",
+        "foreground": "#337467",
+        "background": "#2d4661",
+        "min_ratio": 1.7,
+        "where": "guided actin thin filament against the myosin thick filament"
+      },
+      {
+        "id": "actin_vs_crowns_guided",
+        "foreground": "#337467",
+        "background": "#33475d",
+        "min_ratio": 1.7,
+        "where": "guided actin thin filament against the myosin head array"
+      },
+      {
+        "id": "myosin_vs_stage_guided",
+        "foreground": "#2d4661",
+        "background": "#0e1116",
+        "min_ratio": 1.9,
+        "where": "guided myosin thick filament against the stage, on a projector"
       }
     ]
   },
