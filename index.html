@@ -105,6 +105,7 @@ window.__titinBoot = { ready: false, problems: [] };
   .drawer-head { position: sticky; top: 0; z-index: 4; margin: 0 -18px; padding: 14px 18px 12px;
     background: rgb(22 27 34 / 96%); border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
   .drawer-head-row { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+  .drawer-head-actions { display: flex; flex: none; gap: 6px; }
   /* Sticky under the drawer head, so the section a reader is in stays named
      however far down the panel they have scrolled. --drawer-head-h is the
      head's MEASURED height, published by the page: a constant was tried first
@@ -186,7 +187,7 @@ window.__titinBoot = { ready: false, problems: [] };
   #stageForce { color: #ffd7e0; font-size: 10px; font-variant-numeric: tabular-nums;
     flex: 0 0 auto; white-space: nowrap; }
   #stageForce b { color: var(--text); font-size: 13px; font-weight: 650; }
-  #stageForce .force-class { color: #e8c16d; font-size: 8px; font-weight: 700;
+  #stageForce .force-class { color: #e8c16d; font-size: 9px; font-weight: 700;
     letter-spacing: .05em; }
   #stageLegend { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto;
     color: var(--dim); font-size: 10px; }
@@ -309,7 +310,7 @@ window.__titinBoot = { ready: false, problems: [] };
   .chapter-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   #chapterEvidenceLink { margin-left: auto; border-color: rgb(217 79 79 / 75%); }
   .status-pill { display: inline-block; border: 1px solid #775b29; border-radius: 999px;
-    color: #e8c16d; padding: 1px 6px; font-size: 8px; font-weight: 700; letter-spacing: .05em; }
+    color: #e8c16d; padding: 1px 6px; font-size: 9px; font-weight: 700; letter-spacing: .05em; }
   .preset-outside { border-color: #8b6530; color: #e7c27c; }
   #chapterEvidence { border-left-color: var(--titin); }
   #chapterSources { margin-top: 5px; color: var(--dim); font-size: 10px; }
@@ -390,11 +391,27 @@ window.__titinBoot = { ready: false, problems: [] };
   .card-findings { margin: 5px 0 0; padding: 0; list-style: none; }
   .card-findings li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 6px;
     margin-top: 3px; font-size: 9px; line-height: 1.4; }
-  .finding-status { font-weight: 700; letter-spacing: .05em; font-size: 8px; }
+  .finding-status { font-weight: 700; letter-spacing: .05em; font-size: 9px; }
   .finding-ESTABLISHED { color: #7fc4a2; }
   .finding-PROPOSED { color: #e8c16d; }
   .finding-OPEN { color: #9aa7b8; }
   .activation-note { margin: 7px 0 0; color: #c9b989; font-size: 10px; }
+  /* SC-17. A projector text scale, and a 9 px floor under everything else.
+     The shipped density is right for a laptop at arm's length and wrong for a
+     room: the drawer's dominant size is 9–10 px. This raises what a reader
+     READS — copy, lists, tables, the pinned card, the chapter summary — and
+     leaves chrome labels, counted figures and the stage bar where the earlier
+     sprints measured them, so turning it on does not re-solve the layout.
+     A control rather than a media query, because what changes is the room. */
+  #app[data-text-scale="large"] { font-size: 15px; }
+  #app[data-text-scale="large"] .sub,
+  #app[data-text-scale="large"] .note,
+  #app[data-text-scale="large"] li,
+  #app[data-text-scale="large"] td { font-size: 13px; }
+  #app[data-text-scale="large"] .object-lay { font-size: 14px; }
+  #app[data-text-scale="large"] .object-detail,
+  #app[data-text-scale="large"] .object-sources { font-size: 12px; }
+  #app[data-text-scale="large"] #chapterSummary { font-size: 16px; }
   /* Tablet touch targets. The drawer's density is deliberate on a desktop, where a
      mouse can hit a 28 px control comfortably; a finger cannot. Keyed on the
      POINTER rather than on width so a small laptop keeps its compact controls and
@@ -644,7 +661,16 @@ window.__titinBuild = Object.freeze({ fingerprint: "a0d2c0480dce" });
                the same fingerprint before a demonstration. -->
           <div class="build-id" id="buildFingerprint">Build —</div>
         </div>
-        <button id="closeEvidence">Close</button>
+        <!-- SC-17. The projector control. It sits in the drawer head because
+             that is where the type it mostly affects is, and because the drawer
+             is the one surface a presenter opens before an audience arrives —
+             but it scales the guided card on the stage too, so setting it here
+             is not a decision about Evidence mode. -->
+        <div class="drawer-head-actions">
+          <button id="textScale" aria-pressed="false"
+            title="Larger type for a projector or the back of a room">Large type</button>
+          <button id="closeEvidence">Close</button>
+        </div>
       </div>
     </div>
     <!-- SC-13. The drawer used to open on two screens of prose with every
@@ -42623,6 +42649,20 @@ for (const [id, tabId] of DRAWER_TABS) {
   };
 }
 syncDrawerTabs();
+
+// SC-17. The projector type scale. It is a page-level data attribute rather
+// than a per-element restyle so one stylesheet block owns every size it moves,
+// and it is remembered nowhere: a shared link records the state of the MODEL,
+// and how large the type was in the room it was shown in is not that.
+$('textScale').onclick = () => {
+  const large = $('app').dataset.textScale === 'large';
+  if (large) delete $('app').dataset.textScale;
+  else $('app').dataset.textScale = 'large';
+  $('textScale').setAttribute('aria-pressed', String(!large));
+  $('textScale').classList.toggle('on', !large);
+  // Every overlay anchor is measured against DOM the type scale just resized.
+  markStageDirty();
+};
 
 // A novice cannot act on "shown in red beside actin and myosin" without a key.
 // The swatches read the palette actually in use, so Guided's subdued context
