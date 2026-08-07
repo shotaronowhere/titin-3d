@@ -1579,6 +1579,13 @@ every one needs a person, a WebGL browser, or the presenting hardware:
 | `accessibility.text_zoom` | labels legible at 200% browser zoom | the accessibility section |
 | `performance.target_hardware` | the real browser, GPU and projector | the performance section |
 
+Before spending a reviewer's time, two LLM personas were driven through the
+deployed build against those same two protocols. Their findings — one critical
+data error, five major, and three shipping presentation defects, each marked
+verified or unverified — are in `SHOWCASE_PREREVIEW_FINDINGS.md`. That document
+is **not** either gate and nothing from it has been recorded here; both gates
+still require the people the record names.
+
 Eight of the twelve final release conditions already pass. `release_ready` stays
 `false` until all six rows above are recorded, and
 `scripts/validate_release_gates.py` refuses a PASS that is not backed by
