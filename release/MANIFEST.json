@@ -15,7 +15,7 @@
     "data/mechanical_model.json",
     "data/domain_backbones.json"
   ],
-  "standalone_bytes": 2153907,
+  "standalone_bytes": 2158914,
   "artifacts": [
     "CLAIM_MATRIX.md",
     "LIMITATIONS.md",

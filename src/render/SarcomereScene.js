@@ -127,6 +127,30 @@ export const DOMAIN_BACKBONE_RESOLVE_PX = 40;
 export const DOMAIN_BACKBONE_RADIUS_FRACTION = 0.09;
 
 /**
+ * SC-16. How much of the gap inside a clamp belongs to the molecule being
+ * clamped, the rest going to each of the two chains that clamp it.
+ *
+ * Chapter 4's whole claim is a stoichiometry: two titin N-termini hold one
+ * telethonin between them. The descriptor states it by putting the two Z1Z2
+ * chains 1.4 nm either side of the telethonin proxy — and the renderer was
+ * drawing those chains at a 2.475 nm titin radius and the proxy at 1.5 nm, so
+ * all three bodies occupied the same space and the frame showed one rod. The
+ * clamped molecule was invisible: measured in the shipped build, none of
+ * telethonin's own pixels survived, and hiding titin — not the Z-disc envelope
+ * — was what brought it back.
+ *
+ * This is the SC-15 rule applied to a complex instead of to a chain: a drawn
+ * body is never sealed inside the body it is drawn against. Half splits a tight
+ * clamp evenly, leaving the three surfaces tangent — what a clamp should look
+ * like: they touch, and their identity colours make the boundaries read. It is
+ * a ceiling, not a target: where the descriptor already leaves more room than
+ * the general render widths need, both bodies keep those widths and nothing is
+ * fitted. Render widths only — no coordinate, evidence class or stoichiometry
+ * moves.
+ */
+export const SANDWICH_CLAMPED_RADIUS_FRACTION = 0.5;
+
+/**
  * The biological components a caller may show or hide, each mapped to a predicate
  * over the object names `build()` assigns.
  *
@@ -267,6 +291,9 @@ export const TITIN_RENDER_STYLE = Object.freeze({
   // disordered — and a second copy of the list could disagree with the first.
   disordered_regions: Object.freeze(['N2A', 'PEVK']),
 });
+
+/** Nanometres floored to a picometre, for report values that must not round up. */
+const floorPm = (nm) => Math.floor(nm * 1000) / 1000;
 
 /** Resolve an evidence string (which may carry a parenthetical) to a style. */
 export function evidenceStyle(evidence) {
@@ -467,6 +494,24 @@ export class SarcomereScene {
   }
 
   /**
+   * The curve a titin path is drawn along.
+   *
+   * Defined once because it is not the polyline through the descriptor's points:
+   * a Catmull-Rom through a corner OVERSHOOTS between the points either side of
+   * it. Measuring the polyline instead of this curve is how the Z-disc sandwich
+   * came out 0.49 nm from its own axis while the arithmetic said 1.4 nm — the
+   * drawn tube and the number describing it have to come from the same object.
+   *
+   * @param {Array<{x:number,y?:number,z?:number}>} points
+   */
+  _titinCurve(points) {
+    return new THREE.CatmullRomCurve3(
+      points.map((p) => new THREE.Vector3(p.x, p.y ?? 0, p.z ?? 0)),
+      false, 'catmullrom', 0.4,
+    );
+  }
+
+  /**
    * A titin path as a tube through the points the descriptor supplies.
    *
    * A CatmullRom curve is used rather than straight segments because titin's
@@ -483,9 +528,8 @@ export class SarcomereScene {
    * @param {[number, number]|null} [axialRange]
    */
   _titinTube(points, radiusNm, color, evidence, name, tubularSegments, axialRange = null) {
-    const pts = points.map((p) => new THREE.Vector3(p.x, p.y ?? 0, p.z ?? 0));
-    const curve = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.4);
-    const segs = tubularSegments ?? Math.max(24, pts.length * 6);
+    const curve = this._titinCurve(points);
+    const segs = tubularSegments ?? Math.max(24, points.length * 6);
     const geom = this._track(new THREE.TubeGeometry(curve, segs, radiusNm, 8, false));
     if (axialRange) {
       // A tube's end ring is perpendicular to the curve tangent. If that tangent
@@ -1495,11 +1539,33 @@ export class SarcomereScene {
         // an interval around telethonin, then diverge toward opposing sarcomeres.
         // This communicates the measured 2:1 sandwich without claiming an atomic
         // fit or a resolved complete in-situ route.
+        //
+        // The glyph is drawn to fit the room the descriptor gives it. At the
+        // general titin and actin render widths the two chains and the proxy all
+        // occupy the same 1.4 nm, so the three bodies merge into one rod and the
+        // 2:1 stoichiometry — the chapter's entire claim — becomes undrawable.
+        // Widths only: every coordinate, evidence class and colour is untouched.
+        const clearanceNm = this._sandwichClearanceNm(anchorDetail.telethonin_complex);
+        if (clearanceNm === null) {
+          // Unreachable through a valid descriptor: validateZDiscDetail already
+          // requires telethonin to lie between the two Z1Z2 proxies. Refused
+          // rather than defaulted, because the default would be the general
+          // widths — the exact state in which the clamp swallows what it clamps.
+          throw new Error('build: the Z1Z2 chains leave the telethonin proxy no '
+            + 'transverse clearance, so the 2:1 sandwich cannot be drawn as one.');
+        }
+        const clampedRadius = Math.min(
+          actinRadius / 3, clearanceNm * SANDWICH_CLAMPED_RADIUS_FRACTION,
+        );
+        const clampRadius = Math.min(titinRadius, clearanceNm - clampedRadius);
+        // One definition, so the object and the manifest cannot disagree about
+        // whether this frame narrowed anything.
+        const fittedToClamp = clampedRadius < actinRadius / 3 || clampRadius < titinRadius;
         for (const chain of anchorDetail.telethonin_complex.titin_chains) {
           const canonical = chain.uses_existing_titin;
           const tube = this._titinTube(
             chain.complex_points_nm,
-            titinRadius,
+            clampRadius,
             canonical ? COMPONENT_COLOR.titin : COMPONENT_COLOR.titin_neighbour,
             anchorDetail.telethonin_complex.evidence_class,
             canonical
@@ -1510,11 +1576,13 @@ export class SarcomereScene {
             ? 'canonical Z1Z2 fragment in finite 2:1 sandwich proxy'
             : 'second, antiparallel Z1Z2 fragment in finite 2:1 sandwich proxy';
           tube.userData.render_only = 'local binding-topology overlay; full lateral route unresolved';
+          tube.userData.render_radius_nm = clampRadius;
+          tube.userData.render_radius_fitted_to_clamp = fittedToClamp;
           detailGroup.add(tube);
         }
         detailGroup.add(this._segmentInstances(
           [anchorDetail.telethonin_complex.telethonin_proxy],
-          actinRadius / 3,
+          clampedRadius,
           COMPONENT_COLOR.telethonin,
           anchorDetail.telethonin_complex.evidence_class,
           'telethonin_zdisc_sandwich',
@@ -1540,6 +1608,25 @@ export class SarcomereScene {
             alpha_actinin_doublet_spacing_nm: exactDoublets.spacing_nm,
           } : {}),
           telethonin_stoichiometry: anchorDetail.telethonin_complex.stoichiometry,
+          // SC-16. The widths the glyph was drawn at, and the descriptor number
+          // they were derived from. Render-only: the clearance is read off the
+          // spec's own chain offsets, so this records a fit, not a measurement.
+          // Floored to a picometre, not rounded to nearest. These three stand in
+          // an exact relation — the two radii sum to at most the clearance — and
+          // rounding each to nearest can break it by one step, leaving an audit
+          // record that contradicts the invariant it exists to document. A sum of
+          // floors is a multiple of the same step and still at most the clearance,
+          // so flooring cannot.
+          sandwich_render_fit: {
+            clamp_clearance_nm: floorPm(clearanceNm),
+            clamped_render_radius_nm: floorPm(clampedRadius),
+            clamp_render_radius_nm: floorPm(clampRadius),
+            // False where the descriptor already leaves more room than the
+            // general widths need, so nothing had to be narrowed.
+            fitted_to_clamp: fittedToClamp,
+            render_only: 'reading widths fitted to the descriptor\'s own chain separation; '
+              + 'not molecular dimensions',
+          },
           titin_chain_directions: anchorDetail.telethonin_complex.titin_chains
             .map((chain) => chain.direction),
           // Topology is supported; the proxy's 21 nm display span is not a measured
@@ -2040,7 +2127,8 @@ export class SarcomereScene {
    * @param {object} strandOffset  the strand's transverse offset (see _titinPath)
    * @param {number} aBandStartNm  taper reference for the I-band radial path
    * @param {number} strandIndex
-   * @param {Map<string, {points: Array<{x:number,y:number,z:number}>}>} [backboneSwap]
+   * @param {Map<string, {points: Array<{x:number,y:number,z:number}>,
+   *   evidenceClass: string, notClaimed: string[]}>} [backboneSwap]
    *   archetypes whose measured Cα backbone resolves at this framing (SC-16.2).
    */
   _domainInstances(batchesResult, strandOffset, aBandStartNm, strandIndex, backboneSwap) {
@@ -2126,15 +2214,16 @@ export class SarcomereScene {
           // what this frame drew.
           primitive: g.primitive,
           surface: swap ? 'measured_calpha_backbone' : g.primitive,
-          surface_evidence_class: swap ? 'MEASURED' : null,
+          surface_evidence_class: swap ? swap.evidenceClass : null,
           preserves: g.preserves,
-          // A drawn backbone stops disclaiming the fold's chain path — it is that
-          // deposition's measured path — but it still claims nothing about any
-          // individual domain in situ, which is why the file's own not_claimed
-          // list rides along in the manifest.
-          not_claimed: swap
-            ? g.not_claimed.filter((claim) => !/surface shape/i.test(claim))
-            : g.not_claimed,
+          // Reported exactly as the archetype declares it, including "surface
+          // shape". Drawing a backbone does not retire that disclaimer: the path
+          // is ONE deposition's, repeated across every instance of the archetype,
+          // so this domain's own surface is still not being claimed. What the
+          // swap adds is a second, narrower list — the backbone file's — which
+          // says precisely that.
+          not_claimed: g.not_claimed,
+          surface_not_claimed: swap ? swap.notClaimed : null,
           representative_pdb_id: batch.representative_structure?.pdb_id,
           evidence_rendered: evidence,
           instance_regions: members.map((member) => member.region),
@@ -2145,6 +2234,41 @@ export class SarcomereScene {
       }
     }
     return group;
+  }
+
+  /**
+   * SC-16. The transverse room the descriptor leaves between the clamped
+   * molecule and the chains clamping it, over the interval where they overlap.
+   *
+   * Derived from the descriptor rather than restated, so a spec that moved the
+   * chains moves the drawn widths with it and the sandwich cannot silently close
+   * up again. Measured on `_titinCurve` — the curve the tube is actually built
+   * from, not the polyline through the points, which is a different shape. The
+   * sampling is twenty times denser than the stations TubeGeometry itself uses
+   * and converges by ~128 steps; the residual against an 8192-step reference is
+   * under 1e-5 nm, four orders below the picometre the report resolves.
+   *
+   * @param {object} complex anchorDetail.telethonin_complex
+   * @returns {number|null} nanometres, or null if the chains never overlap it
+   */
+  _sandwichClearanceNm(complex) {
+    const proxy = complex.telethonin_proxy;
+    const axisY = ((proxy.start_nm.y ?? 0) + (proxy.end_nm.y ?? 0)) / 2;
+    const axisZ = ((proxy.start_nm.z ?? 0) + (proxy.end_nm.z ?? 0)) / 2;
+    const lo = Math.min(proxy.start_nm.x, proxy.end_nm.x);
+    const hi = Math.max(proxy.start_nm.x, proxy.end_nm.x);
+    const STEPS = 512;
+    const point = new THREE.Vector3();
+    let clearance = Infinity;
+    for (const chain of complex.titin_chains) {
+      const curve = this._titinCurve(chain.complex_points_nm);
+      for (let step = 0; step <= STEPS; step += 1) {
+        curve.getPoint(step / STEPS, point);
+        if (point.x < lo || point.x > hi) continue;
+        clearance = Math.min(clearance, Math.hypot(point.y - axisY, point.z - axisZ));
+      }
+    }
+    return Number.isFinite(clearance) && clearance > 0 ? clearance : null;
   }
 
   /**
@@ -2166,7 +2290,10 @@ export class SarcomereScene {
    * @param {number} viewportPx
    */
   _resolveDomainBackbones(domainBatches, backbones, viewWidthNm, viewportPx) {
-    /** @type {Map<string, {points: Array<{x:number,y:number,z:number}>, record: Record<string, any>}>} */
+    /**
+     * @type {Map<string, {points: Array<{x:number,y:number,z:number}>,
+     *   evidenceClass: string, notClaimed: string[], record: Record<string, any>}>}
+     */
     const byArchetype = new Map();
     if (!domainBatches) return { byArchetype, report: null };
     /** @type {Record<string, any>} */
@@ -2206,6 +2333,8 @@ export class SarcomereScene {
         record.swappable = true;
         byArchetype.set(batch.archetype, {
           points: available.ca_nm.map(([x, y, z]) => ({ x, y, z })),
+          evidenceClass: available.evidence_class,
+          notClaimed: backbones?.meta?.not_claimed ? [...backbones.meta.not_claimed] : [],
           record,
         });
         swapped += 1;
@@ -2242,6 +2371,11 @@ export class SarcomereScene {
    * The points arrive centred on their centroid with the principal axis on +Y,
    * which is how the capsule is built, so this is a drop-in replacement for it:
    * the caller's instance matrix is untouched.
+   *
+   * The Cα positions are measured; the curve BETWEEN them is a smooth render, as
+   * every backbone cartoon is, and the tube radius is a reading width. Neither
+   * is a claim — the curve passes exactly through each measured position, which
+   * is the only part of this surface the data supports.
    */
   _backboneGeometry(points, g) {
     const curve = new THREE.CatmullRomCurve3(

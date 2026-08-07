@@ -6,7 +6,7 @@ import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import {
   ALIAS_THRESHOLD_PX, DOMAIN_BACKBONE_RESOLVE_PX, ENVELOPE_GHOST_OPACITY, EVIDENCE_STYLE,
-  SarcomereScene,
+  SarcomereScene, TITIN_RENDER_STYLE,
 } from '../src/render/SarcomereScene.js';
 import { Viewer } from '../src/render/Viewer.js';
 
@@ -272,24 +272,30 @@ test('SC16.2: without the optional file the capsules simply stay', () => {
   scene.clear();
 });
 
-test('SC16.2: a drawn backbone stops disclaiming only the surface it now shows', () => {
+test('SC16.2: drawing a backbone retires no disclaimer, and adds its own', () => {
+  // One deposition's path is drawn for EVERY instance of the archetype, so
+  // "surface shape" is still not claimed for any individual domain — the swap
+  // does not earn the right to drop it. What it adds is the backbone file's own,
+  // narrower list, saying exactly what a repeated representative does not assert.
   const traces = domains(120);
   const capsules = domains(400);
-  const notClaimed = (scene) => {
+  const meshUserData = (scene) => {
     let found = null;
     scene.root.traverse((object) => {
-      if ((object.name || '').startsWith('domains_Ig_like')) found = object.userData.not_claimed;
+      if ((object.name || '').startsWith('domains_Ig_like')) found = object.userData;
     });
     return found;
   };
-  const before = notClaimed(capsules);
-  const after = notClaimed(traces);
-  assert.ok(before.some((claim) => /surface shape/i.test(claim)));
-  assert.ok(!after.some((claim) => /surface shape/i.test(claim)),
-    'a drawn Cα path is a surface claim; continuing to disclaim it would be false');
-  for (const claim of ['β-strand topology', 'side-chain detail']) {
-    assert.ok(after.includes(claim), `${claim} is still not claimed by a Cα trace`);
-  }
+  const before = meshUserData(capsules);
+  const after = meshUserData(traces);
+  assert.deepEqual(after.not_claimed, before.not_claimed,
+    'the archetype\'s own declaration is the spec\'s, and the renderer does not edit it');
+  assert.ok(after.not_claimed.some((claim) => /surface shape/i.test(claim)));
+  assert.equal(before.surface_not_claimed, null);
+  assert.deepEqual(after.surface_not_claimed, backbones.meta.not_claimed);
+  assert.equal(after.surface, 'measured_calpha_backbone');
+  assert.equal(after.surface_evidence_class, backbones.archetypes.Ig_like.evidence_class);
+  assert.equal(before.surface, before.primitive);
   traces.clear(); capsules.clear();
 });
 
@@ -336,5 +342,183 @@ test('SC16.2: an archetype that can never swap never asks for a rebuild', () => 
   }, () => { rebuilds += 1; });
   assert.equal(rebuilds, 0,
     'a missing backbone would otherwise rebuild the whole scene on every frame');
+  scene.clear();
+});
+
+// ---- the clamped molecule is not sealed inside the clamp ----
+
+const thinDiameterNm = model.contextSceneAt(sl, { rings: 1 })
+  .sarcomere.find((component) => component.id === 'thin_filament').transform.diameter_nm;
+
+/** The manifest floors its fitted widths to a picometre; mirror that to compare. */
+const floorPmTest = (nm) => Math.floor(nm * 1000) / 1000;
+
+/** Build the Z-disc close-up from a possibly-edited anchor descriptor. */
+function anchored(detail, presentationMode = 'guided') {
+  const scene = new SarcomereScene();
+  scene.build(model.contextSceneAt(sl, { rings: 1 }), model.domainInstancesAt(sl), {
+    latticeScope: 'local',
+    mirror: false,
+    titinStrands: false,
+    titinPath: model.backboneAt(sl),
+    presentationMode,
+    anchorDetail: detail,
+    viewWidthNm: 200,
+    viewportPx: 1372,
+  });
+  return scene;
+}
+
+test('SC16: the sandwich glyph fits the room its own descriptor gives it', () => {
+  for (const mode of ['guided', 'evidence']) {
+    const scene = anchored(model.anchorDetailAt(sl, 'zdisc', { rings: 1 }), mode);
+    const fit = scene.manifest.anchor_detail.sandwich_render_fit;
+    assert.equal(fit.fitted_to_clamp, true);
+    assert.ok(fit.clamp_clearance_nm > 0);
+    // THE invariant. Each chain runs `clearance` from the telethonin axis, so if
+    // the two radii together exceeded it, one body's surface would cross the
+    // other's centreline and the 2:1 stoichiometry could not be drawn at all.
+    assert.ok(fit.clamped_render_radius_nm + fit.clamp_render_radius_nm
+      <= fit.clamp_clearance_nm + 1e-9,
+    `${mode}: the clamp and the clamped overlap — the glyph renders as one rod`);
+    assert.ok(fit.clamped_render_radius_nm > 0 && fit.clamp_render_radius_nm > 0);
+    scene.clear();
+  }
+});
+
+test('SC16: fitting the glyph only ever narrows it', () => {
+  // The general widths are the ceiling: this is a fix for a complex that is too
+  // tight to draw at them, never a licence to draw anything bigger than the
+  // renderer's own titin and accessory widths.
+  const guidedTitinRadius = (thinDiameterNm / 6) * TITIN_RENDER_STYLE.guided_radius_scale;
+  const accessoryRadius = (thinDiameterNm / 2) / 3;
+  const fit = anchored(model.anchorDetailAt(sl, 'zdisc', { rings: 1 })).manifest
+    .anchor_detail.sandwich_render_fit;
+  assert.ok(fit.clamp_render_radius_nm <= guidedTitinRadius);
+  assert.ok(fit.clamped_render_radius_nm <= accessoryRadius);
+});
+
+test('SC16: the fitted widths follow the descriptor, not a constant', () => {
+  // Move the two chains further from the telethonin axis and the glyph must open
+  // up with them. A hardcoded width would not notice.
+  const wider = structuredClone(model.anchorDetailAt(sl, 'zdisc', { rings: 1 }));
+  for (const chain of wider.telethonin_complex.titin_chains) {
+    for (const point of chain.complex_points_nm) point.y *= 2;
+  }
+  const base = anchored(model.anchorDetailAt(sl, 'zdisc', { rings: 1 }));
+  const opened = anchored(wider);
+  const a = base.manifest.anchor_detail.sandwich_render_fit;
+  const b = opened.manifest.anchor_detail.sandwich_render_fit;
+  assert.ok(b.clamp_clearance_nm > a.clamp_clearance_nm);
+  assert.ok(b.clamped_render_radius_nm > a.clamped_render_radius_nm,
+    'a roomier descriptor must draw a bigger telethonin, not the same one');
+  assert.ok(b.clamped_render_radius_nm + b.clamp_render_radius_nm
+    <= b.clamp_clearance_nm + 1e-9);
+  base.clear(); opened.clear();
+});
+
+/**
+ * The telethonin proxy's DRAWN radius, read off the geometry rather than off a
+ * label. `_segmentInstances` bakes the radius into its cylinder and the instance
+ * matrix scales length only, so the base geometry's X half-extent is the radius
+ * that reached the screen.
+ */
+function drawnClampedRadius(scene) {
+  const mesh = scene.root.getObjectByName('telethonin_zdisc_sandwich');
+  mesh.geometry.computeBoundingBox();
+  return mesh.geometry.boundingBox.max.x;
+}
+
+/**
+ * How close a chain tube's own SURFACE comes to the telethonin axis, over the
+ * interval where it clamps. Measured from the tube's vertices, so a mesh drawn
+ * at one width while its userData claims another cannot pass.
+ */
+function chainSurfaceClearance(scene, name, span) {
+  const tube = scene.root.getObjectByName(name);
+  const position = tube.geometry.getAttribute('position');
+  let closest = Infinity;
+  for (let i = 0; i < position.count; i += 1) {
+    const x = position.getX(i);
+    if (x < span[0] || x > span[1]) continue;
+    closest = Math.min(closest, Math.hypot(position.getY(i), position.getZ(i)));
+  }
+  return closest;
+}
+
+test('SC16: neither chain\'s drawn surface swallows the molecule it clamps', () => {
+  // The gate the manifest cannot give: measured from the vertices that were
+  // actually built. A chain whose surface reaches inside the telethonin proxy
+  // hides it completely, which is exactly what the shipped build did.
+  const detail = model.anchorDetailAt(sl, 'zdisc', { rings: 1 });
+  const proxy = detail.telethonin_complex.telethonin_proxy;
+  const span = [proxy.start_nm.x, proxy.end_nm.x].sort((a, b) => a - b);
+  for (const mode of ['guided', 'evidence']) {
+    const scene = anchored(detail, mode);
+    const clamped = drawnClampedRadius(scene);
+    // The manifest floors to a picometre and geometry positions are float32, so
+    // agreement is asserted to one picometre — the report's own resolution.
+    assert.ok(Math.abs(clamped - scene.manifest.anchor_detail
+      .sandwich_render_fit.clamped_render_radius_nm) <= 1e-3,
+    `${mode}: the drawn proxy is not the width the manifest reports`);
+    for (const name of [
+      'titin_zdisc_canonical_z1z2_sandwich_proxy',
+      'titin_zdisc_opposing_z1z2',
+    ]) {
+      const clearance = chainSurfaceClearance(scene, name, span);
+      assert.ok(clearance >= clamped - 1e-6,
+        `${mode}: ${name} reaches ${clearance.toFixed(3)} nm from the axis, inside the `
+        + `${clamped.toFixed(3)} nm proxy it is supposed to clamp`);
+    }
+    scene.clear();
+  }
+});
+
+test('SC16: fitting the glyph moves no coordinate and no evidence class', () => {
+  const detail = model.anchorDetailAt(sl, 'zdisc', { rings: 1 });
+  const scene = anchored(detail);
+  const report = scene.manifest.anchor_detail;
+  // The claim the widths exist to make is still exactly the descriptor's.
+  assert.deepEqual(report.telethonin_stoichiometry, detail.telethonin_complex.stoichiometry);
+  assert.equal(report.evidence_class, detail.evidence_class);
+  assert.equal(report.telethonin_finite_overlap_rendered, true);
+  const proxy = detail.telethonin_complex.telethonin_proxy;
+  assert.deepEqual([proxy.start_nm.x, proxy.end_nm.x], [-8.61, 8.61],
+    'the proxy interval is a descriptor value and must not have moved');
+  assert.match(report.sandwich_render_fit.render_only, /not molecular dimensions/);
+  scene.clear();
+});
+
+test('SC16: a clamp with no clearance is refused, not defaulted', () => {
+  // Two guards for one state, and they have to agree: the descriptor validator
+  // rejects chains that do not straddle the proxy, and the renderer refuses to
+  // fall back to the general widths — which is exactly the state in which the
+  // clamp swallows what it clamps.
+  const flat = structuredClone(model.anchorDetailAt(sl, 'zdisc', { rings: 1 }));
+  for (const chain of flat.telethonin_complex.titin_chains) {
+    for (const point of chain.complex_points_nm) { point.y = 0; point.z = 0; }
+  }
+  assert.throws(() => anchored(flat), /must lie between both Z1Z2 sandwich proxies/);
+  // The renderer's own half of the pair, reachable only in isolation because the
+  // validator above stops this descriptor ever arriving at it.
+  const scene = new SarcomereScene();
+  assert.equal(scene._sandwichClearanceNm(flat.telethonin_complex), null);
+  assert.ok(scene._sandwichClearanceNm(
+    model.anchorDetailAt(sl, 'zdisc', { rings: 1 }).telethonin_complex,
+  ) > 0);
+});
+
+test('SC16: the fit reports itself only when it actually narrowed something', () => {
+  const roomy = structuredClone(model.anchorDetailAt(sl, 'zdisc', { rings: 1 }));
+  for (const chain of roomy.telethonin_complex.titin_chains) {
+    for (const point of chain.complex_points_nm) point.y *= 20;
+  }
+  const scene = anchored(roomy);
+  const fit = scene.manifest.anchor_detail.sandwich_render_fit;
+  assert.equal(fit.fitted_to_clamp, false,
+    'a descriptor with room to spare needs no narrowing and must not claim one');
+  assert.equal(fit.clamped_render_radius_nm, floorPmTest((thinDiameterNm / 2) / 3));
+  assert.equal(fit.clamp_render_radius_nm,
+    floorPmTest((thinDiameterNm / 6) * TITIN_RENDER_STYLE.guided_radius_scale));
   scene.clear();
 });
