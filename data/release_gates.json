@@ -501,10 +501,10 @@
   "performance": {
     "status": "PENDING",
     "baseline": {
-      "recorded_on": "2026-08-05",
-      "standalone_bytes": 1988206,
+      "recorded_on": "2026-08-07",
+      "standalone_bytes": 2166361,
       "standalone_regression_tolerance": 0.2,
-      "basis": "Byte size of the committed standalone index.html at the SC-7 release point, used as the SC-8 regression baseline."
+      "basis": "Byte size of the committed standalone index.html at the SC-17 release point, after the SC-10..SC-16 presentation work."
     },
     "checks": [
       {
@@ -541,6 +541,13 @@
         "verification": "automated",
         "status": "PASS",
         "verified_by": "test/showcase_phase8.test.js"
+      },
+      {
+        "id": "overlay_on_change",
+        "requirement": "stage overlays run on state change, not on every animation frame",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase11.test.js"
       },
       {
         "id": "target_hardware",
