@@ -1160,7 +1160,7 @@ document.addEventListener('keydown', (event) => {
   // it in Guided mode is not a scene rebuild that changes nothing.
   else if (action === 'mode.guided') {
     if (state.audienceMode === AUDIENCE_MODES.evidence) closeEvidence();
-  } else if (action === 'sweep.toggle') $('stagePlay').click();
+  } else if (action === 'sweep.toggle') toggleSweep();
 });
 announceUrlIssues(restored.issues);
 
@@ -3129,13 +3129,21 @@ if (!(sweepRange.min < sweepRange.max)) {
   $('stagePlay').title = 'The presentation record declares no working-range '
     + 'interval for the sweep to travel';
 }
-$('stagePlay').onclick = () => {
+// One place the sweep is toggled from. SC-17's space key calls this rather than
+// synthesizing a click on the button, because a page that clicks its own play
+// control is indistinguishable from a page that autoplays — which is what
+// test/showcase_phase12.test.js reads the source for, and it is right to.
+function toggleSweep() {
   if (sweepHandle !== null) { stopSweep(); return; }
+  // The keyboard route arrives here directly, so the disabled state has to be
+  // enforced here too and not only by the control that displays it.
+  if ($('stagePlay').disabled) return;
   sweepStartedAt = performance.now();
   $('stagePlay').classList.add('on');
   $('stagePlay').setAttribute('aria-pressed', 'true');
   sweepHandle = requestAnimationFrame(stepSweep);
-};
+}
+$('stagePlay').onclick = toggleSweep;
 slider.addEventListener('pointerdown', stopSweep);
 slider.addEventListener('keydown', stopSweep);
 // The 3-D surface, not the #canvas container: the container also holds the stage
