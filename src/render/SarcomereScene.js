@@ -98,6 +98,35 @@ export const MYBPC_MAX_RADIUS_FRACTION_OF_TITIN = 0.75;
 export const ENVELOPE_GHOST_OPACITY = 0.14;
 
 /**
+ * SC-16.2. How large one domain must render before its measured Cα backbone is
+ * drawn instead of the archetype capsule.
+ *
+ * The capsule is the honest primitive almost everywhere: it preserves axial
+ * length and aspect ratio and explicitly claims no surface shape. A backbone is
+ * only more informative once a viewer can actually resolve a fold — below that
+ * it is a few pixels of noise that costs a hundred-fold more geometry and
+ * implies detail the frame cannot show. Twenty times the 2 px aliasing
+ * threshold is where a 4 nm domain first spans enough screen for the chain to
+ * read as a chain rather than as a smudge; at 1200 px that is a view about
+ * 120 nm wide, which the close-up cameras reach and the overview never does.
+ *
+ * The swap changes the SURFACE only. The backbone is pre-aligned to +Y by
+ * scripts/extract_domain_backbones.py, exactly like the capsule, so the
+ * instance transform already computed still applies and no position, tilt,
+ * azimuth or evidence class moves with it.
+ */
+export const DOMAIN_BACKBONE_RESOLVE_PX = 40;
+
+/**
+ * The Cα trace's rendered radius, as a fraction of the archetype's own measured
+ * lateral diameter. A backbone has no thickness of its own — this is a reading
+ * width, like TITIN_RENDER_STYLE.trace_px, and taking it from the archetype's
+ * measured cross-section means it scales with the fold rather than being a
+ * constant the renderer invented.
+ */
+export const DOMAIN_BACKBONE_RADIUS_FRACTION = 0.09;
+
+/**
  * The biological components a caller may show or hide, each mapped to a predicate
  * over the object names `build()` assigns.
  *
@@ -1268,6 +1297,12 @@ export class SarcomereScene {
     const domainBatches = opts.domainBatches ?? null;
     const domainStrands = opts.domainStrands ?? (domainBatches ? [0] : []);
     const titinPath = opts.titinPath ?? null;
+    // SC-16.2. Decide ONCE, here, whether each archetype draws its measured
+    // backbone or its capsule — the decision is a property of the frame, not of
+    // the strand, so every copy of the molecule must resolve identically.
+    const backboneSwap = this._resolveDomainBackbones(
+      domainBatches, opts.domainBackbones ?? null, viewWidthNm, viewportPx,
+    );
     const regionDescriptors = new Map(scene.titin.map((region) => [region.id, region]));
     // SC-15. Which regions get the coil, and how wide. Resolved once, before the
     // strand loop: the coil is a function of the canonical interval and the
@@ -1339,7 +1374,9 @@ export class SarcomereScene {
       const domainsOnThisStrand = Boolean(domainBatches)
         && domainStrands.includes(off.strand_index);
       if (domainsOnThisStrand) {
-        titinGroup.add(this._domainInstances(domainBatches, off, aBandStart, off.strand_index));
+        titinGroup.add(this._domainInstances(
+          domainBatches, off, aBandStart, off.strand_index, backboneSwap.byArchetype,
+        ));
       }
       if (titinPath?.segments?.length) {
         const strand = new THREE.Group();
@@ -1705,6 +1742,9 @@ export class SarcomereScene {
       mybpc_context: mybpcReport,
       domains: domainBatches ? {
         strands_with_domain_detail: domainStrands,
+        // SC-16.2. Which archetypes drew their measured Cα backbone at this
+        // framing, and for the rest, exactly why the capsule stayed.
+        backbones: backboneSwap.report,
         batches: domainBatches.batches.map((b) => ({
           archetype: b.archetype,
           count: b.count,
@@ -1999,15 +2039,21 @@ export class SarcomereScene {
    * @param {object} batchesResult model.instancing.batchesAt(sl)
    * @param {object} strandOffset  the strand's transverse offset (see _titinPath)
    * @param {number} aBandStartNm  taper reference for the I-band radial path
+   * @param {number} strandIndex
+   * @param {Map<string, {points: Array<{x:number,y:number,z:number}>}>} [backboneSwap]
+   *   archetypes whose measured Cα backbone resolves at this framing (SC-16.2).
    */
-  _domainInstances(batchesResult, strandOffset, aBandStartNm, strandIndex) {
+  _domainInstances(batchesResult, strandOffset, aBandStartNm, strandIndex, backboneSwap) {
     const group = new THREE.Group();
     group.name = `titin_domains_strand_${strandIndex}`;
     for (const batch of batchesResult.batches) {
       const g = batch.geometry;
       // ONE geometry per archetype, shared by every sub-batch below: the shape
       // claim is per-archetype, and the plan guarantees it is never deformed.
-      const geom = this._track(this._archetypeGeometry(g));
+      const swap = backboneSwap?.get(batch.archetype) ?? null;
+      const geom = this._track(swap
+        ? this._backboneGeometry(swap.points, g)
+        : this._archetypeGeometry(g));
 
       // A single mesh renders one opacity, so it can carry only one evidence
       // class. Rather than collapse the batch to its WEAKEST member — which would
@@ -2075,9 +2121,20 @@ export class SarcomereScene {
           archetype: batch.archetype,
           count: members.length,
           archetype_total: batch.count,
+          // What the surface actually is. `primitive` keeps naming the descriptor's
+          // assignment either way, so a reader can see both what was specified and
+          // what this frame drew.
           primitive: g.primitive,
+          surface: swap ? 'measured_calpha_backbone' : g.primitive,
+          surface_evidence_class: swap ? 'MEASURED' : null,
           preserves: g.preserves,
-          not_claimed: g.not_claimed,
+          // A drawn backbone stops disclaiming the fold's chain path — it is that
+          // deposition's measured path — but it still claims nothing about any
+          // individual domain in situ, which is why the file's own not_claimed
+          // list rides along in the manifest.
+          not_claimed: swap
+            ? g.not_claimed.filter((claim) => !/surface shape/i.test(claim))
+            : g.not_claimed,
           representative_pdb_id: batch.representative_structure?.pdb_id,
           evidence_rendered: evidence,
           instance_regions: members.map((member) => member.region),
@@ -2088,6 +2145,112 @@ export class SarcomereScene {
       }
     }
     return group;
+  }
+
+  /**
+   * SC-16.2. Which archetypes draw a measured Cα backbone at this framing.
+   *
+   * The gate is the same shape as every other detail gate in this file: a
+   * feature size in nanometres, divided into the pixels the camera actually
+   * gives it, compared against a declared threshold. What differs is the
+   * threshold — a backbone is not withheld because it would alias, it is
+   * withheld because below this size it says less than the capsule while
+   * implying more.
+   *
+   * Returns `{ byArchetype, report }` where `report` is the manifest record and
+   * names, per archetype, what was drawn and why.
+   *
+   * @param {object|null} domainBatches model.instancingPlanAt(sl), or null
+   * @param {object|null} backbones     data/domain_backbones.json, or null
+   * @param {number} viewWidthNm
+   * @param {number} viewportPx
+   */
+  _resolveDomainBackbones(domainBatches, backbones, viewWidthNm, viewportPx) {
+    /** @type {Map<string, {points: Array<{x:number,y:number,z:number}>, record: Record<string, any>}>} */
+    const byArchetype = new Map();
+    if (!domainBatches) return { byArchetype, report: null };
+    /** @type {Record<string, any>} */
+    const archetypes = {};
+    let swapped = 0;
+    for (const batch of domainBatches.batches) {
+      const axialNm = batch.geometry?.axial_length_nm;
+      const domainPx = (viewportPx * axialNm) / viewWidthNm;
+      const available = backbones?.archetypes?.[batch.archetype] ?? null;
+      /** @type {Record<string, any>} */
+      const record = {
+        archetype: batch.archetype,
+        drawn: 'capsule',
+        domain_axial_length_nm: axialNm,
+        domain_px: Number(domainPx.toFixed(2)),
+        resolve_threshold_px: DOMAIN_BACKBONE_RESOLVE_PX,
+        // Whether the ONLY thing standing between this archetype and its backbone
+        // is the camera. Viewer.checkDetailLOD rebuilds on a threshold crossing and
+        // must gate on this rather than on the px comparison alone: an archetype
+        // with no usable backbone would otherwise read as permanently "should have
+        // swapped" and rebuild the scene on every frame.
+        swappable: false,
+      };
+      if (!available) {
+        record.omitted_because = 'no measured backbone is available for this archetype';
+      } else if (available.pdb_id !== batch.representative_structure?.pdb_id) {
+        // The mesh stamps representative_pdb_id from the instancing plan. Drawing
+        // coordinates from a different deposition under that label would put two
+        // provenances on one object, so refuse rather than reconcile silently.
+        record.omitted_because = `the backbone is from ${available.pdb_id} but this archetype's `
+          + `representative structure is ${batch.representative_structure?.pdb_id}`;
+      } else if (domainPx < DOMAIN_BACKBONE_RESOLVE_PX) {
+        record.swappable = true;
+        record.omitted_because = `one domain renders ${domainPx.toFixed(2)} px, below the `
+          + `${DOMAIN_BACKBONE_RESOLVE_PX} px at which a fold reads as a chain`;
+      } else {
+        record.swappable = true;
+        byArchetype.set(batch.archetype, {
+          points: available.ca_nm.map(([x, y, z]) => ({ x, y, z })),
+          record,
+        });
+        swapped += 1;
+        Object.assign(record, {
+          drawn: 'measured_calpha_backbone',
+          pdb_id: available.pdb_id,
+          source_id: available.source_id,
+          // The SURFACE is measured. Each instance keeps the evidence class its
+          // own placement earned; this never promotes one.
+          surface_evidence_class: available.evidence_class,
+          residue_count: available.residue_count,
+          sha256_pinned_in_manifest: available.sha256_pinned_in_manifest,
+        });
+      }
+      archetypes[batch.archetype] = record;
+    }
+    return {
+      byArchetype,
+      report: {
+        archetypes_swapped: swapped,
+        resolve_threshold_px: DOMAIN_BACKBONE_RESOLVE_PX,
+        radius_fraction_of_lateral_diameter: DOMAIN_BACKBONE_RADIUS_FRACTION,
+        radius_meaning: 'screen-reading width for a Cα trace; not a molecular dimension',
+        source_available: Boolean(backbones),
+        not_claimed: backbones?.meta?.not_claimed ? [...backbones.meta.not_claimed] : [],
+        archetypes,
+      },
+    };
+  }
+
+  /**
+   * A measured Cα trace as a tube, in the archetype capsule's own frame.
+   *
+   * The points arrive centred on their centroid with the principal axis on +Y,
+   * which is how the capsule is built, so this is a drop-in replacement for it:
+   * the caller's instance matrix is untouched.
+   */
+  _backboneGeometry(points, g) {
+    const curve = new THREE.CatmullRomCurve3(
+      points.map((p) => new THREE.Vector3(p.x, p.y, p.z)),
+    );
+    const radius = (g.lateral_diameter_nm / 2) * DOMAIN_BACKBONE_RADIUS_FRACTION;
+    // One tube segment per residue step: fewer would cut corners off the fold,
+    // more would spend geometry on a curve the screen cannot resolve.
+    return new THREE.TubeGeometry(curve, Math.max(16, points.length), radius, 5, false);
   }
 
   /** Build the archetype primitive named by the descriptor. Vocabulary only. */

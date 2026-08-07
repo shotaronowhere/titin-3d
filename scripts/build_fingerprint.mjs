@@ -32,6 +32,11 @@ export const FINGERPRINT_INPUTS = Object.freeze([
   'data/geometry_strategy.json',
   'data/context_measurements.json',
   'data/mechanical_model.json',
+  // SC-16.2. These are drawn, not just consulted: at the deepest zoom the domain
+  // surface IS these coordinates. Two builds whose fingerprints matched while
+  // their backbones differed would make the preflight's same-build comparison say
+  // the wrong thing about the science on screen.
+  'data/domain_backbones.json',
 ]);
 
 export function buildFingerprint() {

@@ -342,6 +342,12 @@ export class Viewer {
     this.sarcomere.build(scene, this.model.domainInstancesAt(sl), {
       ...merged,
       domainBatches,
+      // SC-16.2. Always handed over; the renderer decides from the framing
+      // whether a backbone resolves, and reports what it decided. Null when the
+      // optional file is absent, which simply leaves the capsules in place.
+      // Optional at every step: absent file, absent spec, absent layer all mean
+      // the same thing here — draw the archetype capsules, as before.
+      domainBackbones: this.model.spec?.domainBackbones ?? null,
       contextDetail,
       anchorDetail,
       mybpcContext,
@@ -736,6 +742,18 @@ export class Viewer {
     const anchor = this.sarcomere.manifest?.anchor_detail;
     if (this.lastBuildOpts?.anchorDetail && anchor?.feature_nm != null) {
       gates.push(anchor.drawn === resolves(anchor.feature_nm, anchor.alias_threshold_px));
+    }
+    // SC-16.2. The domain surface is chosen at build time from the framed span, so
+    // crossing the threshold has to rebuild exactly like every other detail gate.
+    // Only archetypes whose sole obstacle is the camera are gated: one with no
+    // usable backbone can never satisfy the comparison, and gating it would ask
+    // for a rebuild on every frame forever.
+    for (const record of Object.values(
+      this.sarcomere.manifest?.domains?.backbones?.archetypes ?? {},
+    )) {
+      if (!record.swappable) continue;
+      gates.push((record.drawn === 'measured_calpha_backbone')
+        === resolves(record.domain_axial_length_nm, record.resolve_threshold_px));
     }
     const mybpc = this.sarcomere.manifest?.mybpc_context;
     if (this.lastBuildOpts?.showMyBPC && mybpc?.feature_nm != null) {
