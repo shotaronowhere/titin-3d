@@ -7,7 +7,7 @@ API consume those records rather than restating biological constants.
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
 and are intentionally outside the completed release scope. The separate showcase
-completion sequence is complete through SC-9 in everything a machine can decide.
+completion sequence is complete through SC-17 in everything a machine can decide.
 The release pack in `release/` is generated and staleness-gated, and the twelve
 conditions of the final release definition are tracked in
 `data/release_gates.json`. Four of them — novice comprehension, expert review,
@@ -60,6 +60,34 @@ full evidence-linked annotation. A pinned card exposes claim and render evidence
 lay and expert explanations, scope, render meaning, non-claims, and human-readable
 source links. Keyboard users can focus the 3D stage, move through currently visible
 structures with Left/Right Arrow, pin with Enter or Space, and close with Escape.
+
+## The stage and its controls
+
+The primary controls sit on a **stage bar** below the model in both audience
+modes, because Guided is a reduced set of explanations and not a reduced set of
+controls: sarcomere length, the reviewed length presets, the named views, the
+actin/myosin context toggle, and **▶ Stretch**, which sweeps the sarcomere across
+the declared working range so the difference between regions that straighten and
+regions that extend is something to watch rather than something to read. The
+sweep stops on any other interaction and, under `prefers-reduced-motion`, moves
+between the two endpoint states instead of animating between them. Beside it the
+bar carries the **passive force** one titin molecule bears at the current length,
+solved from sourced force–extension laws and labelled with its evidence class;
+the Measure tab plots the same curve with the current length marked and the
+compliance share of each I-band region.
+
+A presenter can drive the whole route from the keyboard: digits 1–7 step the
+chapters, `r` restarts, `x` shows regional extension, `e` opens Evidence, `g`
+returns to Guided, and the space bar runs the stretch sweep. The keys are listed
+on the stage, and the three the presenter script depends on are resolved from
+`data/presentation.json` rather than written into the page.
+
+The Evidence drawer is **tabbed** — Inspect, Measure, Evidence, and *Sources &
+build* last — so the controls are reachable without scrolling past two screens of
+prose, and the bibliography, which lists every record in the canonical registry
+and marks the ones this build actually cites, is where a reader looks for it
+rather than where they first trip over it. The drawer head also carries a **Large
+type** toggle for a projector or the back of a room.
 
 ## Development requirements
 

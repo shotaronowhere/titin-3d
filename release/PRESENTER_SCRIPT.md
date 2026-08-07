@@ -1,6 +1,6 @@
 # Presenter script
 
-Generated — build `a0d2c0480dce`. Estimated 121.2 s (2 min 1 s), target 110–190 s.
+Generated — build `c079c03d56c4`. Estimated 121.2 s (2 min 1 s), target 110–190 s.
 
 Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in the Evidence drawer — you do not need to open it to finish the tour.
 
@@ -8,7 +8,7 @@ Read the **Say** line; it is the on-screen copy. The **If asked** line is the ex
 
 **Do.** frame the titin story view; 2200 nm, context scale
 
-**Say.** Titin is one continuous giant protein running from the Z-disc toward the sarcomere center. Here it is shown in red beside actin and myosin so its full half-sarcomere route stays visible.
+**Say.** Titin is one continuous giant protein running from the Z-disc toward the sarcomere center. Here it is shown in pink beside actin and myosin so its full half-sarcomere route stays visible.
 
 **If asked.** The continuous axial topology and domain order are constrained, while the smooth three-dimensional backbone path remains a schematic presentation of unresolved transverse placement.
 
