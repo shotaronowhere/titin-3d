@@ -57,7 +57,7 @@ Every task's requirements implicitly include this section. Read it once, complet
    - the returned object literal (~line 201).
    Miss one and the standalone page throws `X is not defined` **at runtime with no gate catching it**. This is the single most likely way to break the deliverable.
 5. **Rebuild and commit the artifact.** After any change to `src/`, `data/`, `src/index.template.html`, or dependencies: `npm run build`, then confirm `npm run check:build` prints `index.html is current`, and commit the regenerated `index.html` in the same commit.
-6. **Size ceiling: 2,385,847 bytes for `index.html`** (baseline 1,988,206 × 1.20), enforced by `test/showcase_phase8.test.js`. Current size ≈ 1,989,841 bytes, so there is ≈ 396 KB of headroom. Check with `ls -l index.html` after each sprint.
+6. **Size ceiling: 2,385,847 bytes for `index.html`** (baseline 1,988,206 × 1.20), enforced by `test/showcase_phase8.test.js`. The ceiling is derived, not written down: the test reads both factors from `data/release_gates.json` → `performance.baseline`, so SC-17 Task 17.2 Step 1 moves it. As of the SC-16 merge the artifact is 2,159,899 bytes, leaving ≈ 226 KB of headroom. Check with `ls -l index.html` after each sprint.
 7. **The evidence contract is inviolable.** Colour encodes identity; **opacity encodes confidence**; selection and emphasis are separate channels. Never make titin more visible by raising the opacity of an object whose evidence class says otherwise. `test/showcase_phase8.test.js` asserts that region highlighting leaves opacity untouched — keep it that way for every new channel.
 8. **Every new visible claim needs metadata:** evidence class, source IDs resolvable in `data/references.json`, and an explicit `not_claimed` list. Reuse existing claim records rather than inventing new ones where possible.
 9. **Accessibility gates:** no positive `tabindex`; every control is a real `<button>` or labelled `<input>`; `@media (pointer: coarse)` keeps a 44 px minimum. Any new colour that carries text must be added to `data/release_gates.json` → `accessibility.contrast_pairs` **and** appear literally (same lowercase hex) in `src/index.template.html`.
@@ -4176,6 +4176,16 @@ git add -A && git commit -m "SC-17: add a projector text scale and raise the typ
 
 - [ ] **Step 1: Record the new performance baseline**
 
+> **This step moves Global Constraint 6's ceiling.** The 2,385,847 bytes quoted there is not
+> written down anywhere — `test/showcase_phase8.test.js:399-404` derives it from
+> `performance.baseline.standalone_bytes` × `standalone_regression_tolerance`, both read out of
+> the record this step rewrites. Rebaselining from the SC-7 figure (1,988,206) to the post-SC-16
+> figure raises the ceiling by roughly 200 KB. That is the intended effect — the sprints since
+> SC-7 legitimately added weight — but make it a decision rather than a side effect, and restate
+> the new number in Global Constraint 6 so the two do not drift. At the end of SC-16 the artifact
+> was **2,159,899 bytes**, leaving ~226 KB against the *existing* ceiling, so SC-17's CSS work
+> does not need the headroom to proceed.
+
 Run `ls -l index.html`, then update `data/release_gates.json` → `performance.baseline`:
 
 ```json
@@ -4186,6 +4196,10 @@ Run `ls -l index.html`, then update `data/release_gates.json` → `performance.b
 ```
 
 - [ ] **Step 2: Add a check for the new capability**
+
+SC-16 already appended three checks to `automated.checks` — `anchor_envelope_ghost_is_not_evidence`,
+`clamped_body_not_occluded` and `domain_backbone_provenance` — so this step adds the performance one
+only. Do not restate the SC-15 or SC-16 invariants here.
 
 Append to `performance.checks`:
 
@@ -4212,6 +4226,29 @@ npm run verify
 ```
 
 `npm run verify` is the slow, exhaustive gate — expect several minutes. Every step must pass.
+
+> **The order above is load-bearing, and SC-16 hit this twice.** `npm run verify` chains
+> `check:pack`, which fails closed on a stale pack, so `npm run pack` must run *after* the build
+> and *before* the gate. The pack goes stale on two independent triggers, and only the first is
+> obvious:
+>
+> 1. **`MANIFEST.json` records `standalone_bytes` from the built `index.html`.** Any change that
+>    alters the artifact's size — including Task 17.1's CSS, which is the whole of that task —
+>    makes the pack stale even though no specification record moved.
+> 2. **The build fingerprint changes when any `FINGERPRINT_INPUTS` file changes.** SC-16 added
+>    `data/domain_backbones.json` to that list (`scripts/build_fingerprint.mjs`), because at the
+>    deepest zoom the domain surface *is* those coordinates and a preflight comparing two builds
+>    by fingerprint has to notice. The list is twelve files as of SC-16; read it there, not here.
+>
+> Neither `data/release_gates.json` (Steps 1–2) nor `README.md` (Step 3) is a fingerprint input or
+> a pack input, so this task's own edits leave the pack current. Task 17.1 is what will have made
+> it stale, via trigger 1.
+>
+> **Starting position:** at the SC-16 merge (`a3e0461`), every command `npm run verify` chains
+> passes on `main` — `npm test` 466/466, `typecheck`, `check:build`, `check:pack`, `check:matrix`,
+> `validate`, `validate:spec`, `validate:showcase`, `validate:presentation`, `validate:annotations`,
+> `validate:gates`, `test:negative`, `validate:python`. A failure here is therefore something SC-17
+> introduced, not inherited debt — read it that way rather than reaching for a regeneration.
 
 - [ ] **Step 5: Re-run the visual capture set**
 
