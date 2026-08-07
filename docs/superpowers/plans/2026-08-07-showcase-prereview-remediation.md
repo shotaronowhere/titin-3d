@@ -6,6 +6,11 @@
 
 **Architecture:** Four sprints, ordered by what blocks them rather than by severity. SC-18 fixes what a visitor sees and repairs an accessibility gate that currently records a PASS the artifact does not earn. SC-19 makes the scientific record corroborate itself and makes the force model auditable *from the page*, which is what turns the critical finding from a thing an expert had to reverse-engineer into a thing a reader can check. SC-20 closes the two comprehension holes in the guided copy. SC-21 changes the science itself and is **blocked on a named specialist's ruling** — it is written so that it can be executed the day that ruling arrives, and so that SC-19's gates make it impossible to execute halfway.
 
+**Dependencies between sprints:** SC-18, SC-19 and SC-20 are **mutually independent** and may be run in any order, or by different people. They touch disjoint parts of the template — CSS and the control loops; the Measure tab; the guided copy and the Inspect tab — and disjoint records. Only two orderings are load-bearing:
+
+- **Task 19.1 before Task 19.2**, because 19.2's gate is written against a record 19.1 makes self-consistent.
+- **SC-19 before SC-21**, because 19.2's contour gate is what stops SC-21's domain-count change from landing half-applied.
+
 **Tech Stack:** Vanilla ES modules, Three.js r0.185.1, esbuild (standalone bundling), `node --test`, TypeScript in `checkJs` mode, Python 3.12 validators.
 
 ## Global Constraints
@@ -52,6 +57,18 @@ Every finding in `SHOWCASE_PREREVIEW_FINDINGS.md` maps to exactly one task.
 | Comprehension: "sarcomere" undefined | — | 20.1 |
 | Comprehension: "titin is not the motor" buried | — | 20.2 |
 | Vocabulary never expanded | — | 20.3 |
+| Interaction: the stretch sweep teaches nothing from a chapter camera | — | 20.5 |
+
+Finding 12 carries five copy defects and they are split: the Fn3-over-an-I-band-frame
+error is Task 20.3 (it is fixed by the same rewrite that expands the vocabulary); the
+anchors chapter, its evidence tag and the silent length override are Task 20.4; and the
+PEVK card's unreconcilable "31 repeats" is Task 19.4 Step 6, because what makes it
+unreconcilable is that the contour it must be read against is not on the card.
+
+The lay review's four remaining **interaction observations** — dead component toggles,
+three names for one drawer, the pinned card covering its own subject, and chapters 6 and 7
+framing the model as a hairline — are declined here with reasons. See *What this plan does
+NOT do*.
 
 ---
 
@@ -312,13 +329,21 @@ Then add a `short` to every `CLOSEUPS` entry in the same file. Read the existing
 
 - [ ] **Step 4: Render the short label**
 
-In `src/index.template.html`, in the view loop (~`:2006`) and the close-up loop (~`:2033`), replace `b.textContent = k;` with:
+In `src/index.template.html`, in the view loop (`:2007`) and the close-up loop (`:2033`), replace `b.textContent = k;` with:
 
 ```js
   b.textContent = v.short;
 ```
 
-Both loops already destructure `[k, v]` and already set `b.title` from the long label, so the tooltip is unchanged.
+Both loops already destructure `[k, v]` and already set `b.title` from the long label, so the tooltip is unchanged. Those two are the **only** occurrences of `b.textContent = k;` in the file — the scale, component and region loops use different patterns, and the region buttons are deliberately left alone because `PEVK` and `N2A` are the domain's own vocabulary, not internal identifiers.
+
+**Be surgical on the view loop.** Line 2007 is three statements on one line:
+
+```js
+  b.textContent = k; b.title = v.label; b.dataset.view = k;
+```
+
+`b.dataset.view` must keep the **key** — it is the state value the camera preset and the URL are built from. Replacing every `k` on that line breaks the view controls silently.
 
 - [ ] **Step 5: Run the tests**
 
@@ -327,7 +352,7 @@ node --test --test-concurrency=1 test/showcase_phase18.test.js test/presentation
 npm run typecheck
 ```
 
-If a test asserts a button's text by key, it is asserting the defect; update it to the short label and note the change in the commit message.
+No test currently asserts a view or close-up button's *text* — `test/showcase_phase2.test.js:270` asserts `VIEWS.titin_story.focus` and `test/presentation.test.js:18` uses `Object.keys(CLOSEUPS)`, neither of which this task touches. If one does fail on a label, it is asserting the defect; update it and note the change in the commit message.
 
 - [ ] **Step 6: Build and commit**
 
@@ -729,7 +754,9 @@ test('SC19: every DOI the data cites resolves in the registry', () => {
   for (const file of readdirSync(dataDir).filter((name) => name.endsWith('.json'))) {
     if (file === 'references.json') continue;
     const text = readFileSync(new URL(file, dataDir), 'utf8');
-    for (const doi of text.match(/10\.\d{4,9}\/[^\s"'),;]+/g) || []) {
+    for (const raw of text.match(/10\.\d{4,9}\/[^\s"'),;]+/g) || []) {
+      // A DOI at the end of a sentence carries the full stop into the match.
+      const doi = raw.replace(/[.,;]+$/, '');
       if (!known.has(doi)) missing.set(doi, file);
     }
   }
@@ -745,7 +772,7 @@ test('SC19: every DOI the data cites resolves in the registry', () => {
 node --test --test-concurrency=1 test/showcase_phase19.test.js
 ```
 
-Expected: FAIL naming `10.1073/pnas.95.14.8052`, cited by `mechanical_model.json` and `structural_states.json`. Record the full list the test prints — there may be more than the one the review found.
+Expected: FAIL naming exactly one DOI — `10.1073/pnas.95.14.8052`, cited nine times in `data/mechanical_model.json` and nine times in `data/structural_states.json`. That count was measured against the current data while writing this plan: the registry holds 33 distinct DOIs (the other 13 of its 46 records are PDB, UniProt and similar identifiers), and this is the only cited DOI absent from it. **If the test names more than one, the data has moved since this plan was written — record the full list and add every one of them.**
 
 - [ ] **Step 3: Add the missing record or records**
 
@@ -932,13 +959,34 @@ In `src/index.template.html`, in the Measure tab after the `#forceCurve` block:
 
 and a render function called from the same place `renderForceCurve()` is called, building one row per entry of `visualization.chainParameters()` with columns: region, law, contour, persistence length, stretch modulus, units × unit length, residues, residues per unit, source. Render the source through the existing `sourceLine` helper where the string is a resolvable DOI.
 
-- [ ] **Step 6: Add the bundle bindings — all three places**
+- [ ] **Step 6: Put the contour on the region card that contradicts it**
+
+Finding 12's fifth item: the PEVK region card says "31 PEVK repeats", and a reader
+who multiplies 31 repeats × ~28 residues × 0.38 nm gets ≈ 330 nm and concludes
+PEVK is near contour at long sarcomere lengths. The engine uses 542.1 nm. Neither
+number is wrong; they are simply never shown together, so the card invites an
+arithmetic a reader cannot complete.
+
+In the region card's specialist disclosure, render the region's own
+`extension_model.max_end2end_nm` beside the repeat count, from the record. Add to
+`test/showcase_phase19.test.js`:
+
+```js
+test('SC19: a region that states a repeat count also states its contour', () => {
+  // "31 PEVK repeats" against a 542.1 nm contour is unreconcilable by a reader
+  // unless both are on the card.
+  assert.match(page, /max_end2end_nm/,
+    'the region card must show the contour the force law actually integrates');
+});
+```
+
+- [ ] **Step 7: Add the bundle bindings — all three places**
 
 In `scripts/build_standalone.mjs` add `chainParameterRows` to the `ENTRY` re-export block, the destructuring string, and the returned object literal. **Miss one and the standalone throws at runtime with no gate catching it.**
 
 If the page module reaches the rows only through `visualization.chainParameters()` and never imports `chainParameterRows` directly, no binding is needed — confirm which is true before editing, and prefer the accessor.
 
-- [ ] **Step 7: Run the tests and typecheck**
+- [ ] **Step 8: Run the tests and typecheck**
 
 ```sh
 node --test --test-concurrency=1 test/showcase_phase19.test.js test/standalone.test.js
@@ -946,11 +994,11 @@ npm run typecheck
 npm run build && npm run check:build
 ```
 
-- [ ] **Step 8: Verify in the browser, over `file://`**
+- [ ] **Step 9: Verify in the browser, over `file://`**
 
 Open the built page, Evidence → Measure, and confirm the table renders four rows with non-empty sources. This also proves the bundle binding list is complete, which no gate does.
 
-- [ ] **Step 9: Commit**
+- [ ] **Step 10: Commit**
 
 ```sh
 git add -A && git commit -m "SC-19: show the force model's parameters, with their sources"
@@ -1387,11 +1435,136 @@ To `data/release_gates.json` → `automated.checks`:
 }
 ```
 
-- [ ] **Step 6: Build, pack, verify, commit**
+- [ ] **Step 6: Build and commit**
+
+```sh
+npm run build && npm run check:build
+git add -A && git commit -m "SC-20: cover both anchors and state the chapter's length"
+```
+
+### Task 20.5: Frame the sweep so it can teach
+
+**Files:**
+- Modify: `src/index.template.html` (`toggleSweep`, the stage bar)
+- Test: `test/showcase_phase20.test.js` (extend)
+
+**Why:** the lay review's single strongest positive was also its most wasted. *"The Stretch sweep is the best teaching moment on the site and is nearly wasted."* Run from chapter 3's region-focus camera — which frames tens of nanometres of an 1,100 nm model — the numbers tick and the picture does not move. Run at a framing that fits the half-sarcomere, it delivers the whole of comprehension question 3 visually: the I-band bracket widens, the A-band bracket does not, the force climbs. The sweep does not need new content. It needs to be pointed at something.
+
+- [ ] **Step 1: Write the failing test**
+
+Append to `test/showcase_phase20.test.js`:
+
+```js
+test('SC20: the sweep frames what it is about to change', () => {
+  const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
+  // A sweep run at a close-up framing changes only numbers. The half-sarcomere
+  // is half the current sarcomere length, so the test is on the arithmetic, not
+  // on a magic constant.
+  assert.match(page, /function frameForSweep/);
+  assert.match(page, /Number\(slider\.value\) \/ 2/,
+    'the required span is half the sarcomere, read from the control that sets it');
+  assert.match(page, /frameForSweep\(\);?\n?[\s\S]{0,200}requestAnimationFrame\(stepSweep\)/,
+    'the reframe must happen before the sweep starts, not during it');
+});
+
+test('SC20: the sweep says what to watch', () => {
+  const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
+  assert.match(page, /id="sweepHint"/,
+    'nothing told a viewer that the brackets are the thing that moves');
+});
+```
+
+- [ ] **Step 2: Run it and watch it fail**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase20.test.js
+```
+
+- [ ] **Step 3: Frame before sweeping**
+
+In `src/index.template.html`, above `toggleSweep`:
+
+```js
+/**
+ * A sweep is a comparison between two lengths, and a comparison you cannot see
+ * is not one. Chapter cameras legitimately frame tens of nanometres; starting
+ * the sweep there ticks the readouts and moves nothing on screen, which is the
+ * one outcome that teaches a viewer the control does not work.
+ *
+ * Only when the titin path does not already fit: a presenter who has framed the
+ * model deliberately keeps their framing.
+ */
+function frameForSweep() {
+  const requiredNm = Number(slider.value) / 2;
+  if (visualization.viewer.visibleWidthNm() >= requiredNm) return false;
+  state.cameraPreset = 'view.titin_story';
+  applyCameraPreset({ animate: true });
+  syncViews(); syncCloseups(null);
+  return true;
+}
+```
+
+and call it as the first line of `toggleSweep`'s start branch, before
+`sweepStartedAt` is set:
+
+```js
+function toggleSweep() {
+  if (sweepHandle !== null) { stopSweep(); return; }
+  if ($('stagePlay').disabled) return;
+  frameForSweep();
+  sweepStartedAt = performance.now();
+  ...
+```
+
+- [ ] **Step 4: Say what to watch**
+
+Add a `#sweepHint` element to the stage bar, hidden by default, shown while
+`sweepHandle !== null` and cleared by `stopSweep()`. One line, no new colour —
+reuse `.stage-label`'s token so Global Constraint 9 is not engaged:
+
+```html
+          <span id="sweepHint" class="stage-label" hidden>watch the I-band bracket</span>
+```
+
+- [ ] **Step 5: Verify it teaches, in the browser**
+
+Build, open over `file://`, press `3` to reach the region-focus chapter, note
+`visualization.viewer.visibleWidthNm()`, then start the sweep and confirm the
+camera pulls back once and the brackets visibly move. Then frame the whole
+half-sarcomere by hand and confirm the sweep does **not** reframe — a presenter's
+deliberate framing must survive.
+
+- [ ] **Step 6: Run the gates**
+
+```sh
+node --test --test-concurrency=1 test/showcase_phase20.test.js test/showcase_phase12.test.js test/presentation.test.js
+```
+
+`test/showcase_phase12.test.js` asserts the sweep never starts itself; this task
+adds a camera move *inside* a user-initiated start, which does not change that.
+If it fails, read the failure before changing the gate — SC-17 hit this and the
+gate was right.
+
+- [ ] **Step 7: Record this task's invariant**
+
+Task 20.4 Step 5 already appended the sprint's other two. Append one more to
+`data/release_gates.json` → `automated.checks`:
+
+```json
+{
+  "id": "sweep_frames_what_it_changes",
+  "requirement": "the stretch sweep reframes to the half-sarcomere when the current camera cannot show the change it is about to make, and leaves a deliberate framing alone",
+  "verification": "automated",
+  "status": "PASS",
+  "verified_by": "test/showcase_phase20.test.js"
+}
+```
+
+- [ ] **Step 8: Build, pack, verify, commit**
 
 ```sh
 npm run build && npm run pack && npm run verify
-git add -A && git commit -m "SC-20: cover both anchors, state the chapter's length, record the invariants"
+git add -A && git commit -m "SC-20: frame the sweep so the demonstration is visible, and record the invariants"
 ```
 
 ---
@@ -1533,6 +1706,9 @@ Append to `test/showcase_phase21.test.js`:
 import { readFileSync as read } from 'node:fs';
 const sarcomere = JSON.parse(read(new URL('../data/sarcomere.json', import.meta.url), 'utf8'));
 
+// As in Task 21.1, this test encodes the RULING, not the reviewer's proposal.
+// The assertion below is the pre-review's recommendation; if Task 21.0 ruled
+// otherwise, rewrite the assertion to the ruled budget before touching the data.
 test('SC21: the super-repeats end where the cross-bridge zone does', () => {
   // The record declares half_thick 800 nm and a 160 nm bare zone, so the
   // head-bearing region ends one bare-zone half short of the M-line centre.
@@ -1728,3 +1904,10 @@ Three changes in this plan deliberately touch an existing contract. Each is reco
 - **No science changed on an agent's authority.** Findings 1, 2, 6 and 13 are all in SC-21, behind Task 21.0. The corroborating arithmetic is strong enough to make the question sharp and not strong enough to answer it.
 - **No human gate marked passed.** `lay_comprehension`, `expert_review`, `visual_matrix` and `demo_rehearsal` still need people. SC-20 makes the lay protocol answerable; it does not answer it. SC-21 begins to populate `expert_review.findings`, which is the first real content that gate has ever had — but its status stays where the reviewer puts it.
 - **No relaxation of a gate to make a fix land.** Every gate this plan touches gets stricter. If one blocks a change, the change is wrong or the gate needs a reviewer's decision, and both of those are recorded rather than worked around.
+
+**Four of the lay review's interaction observations are declined**, each for a stated reason rather than by omission. They are real observations; they are not defects this plan is the right vehicle for.
+
+- **Six of twelve component toggles are disabled on arrival, explained only by a tooltip.** This is the SC-5 attention budget behaving as designed: those layers are not built at the opening zoom, and `syncDepictionToggles` disables rather than hides them so the inventory stays honest. The fix a visitor actually wants — reaching telethonin without first discovering the `zdisc` close-up — is a navigation design question, not a bug, and it would touch the reviewed attention budget in `data/showcase_claims.json`, which is byte-pinned. It needs a claim-audit decision with a reviewer's name, exactly like SC-21's findings.
+- **Three differently-labelled controls open the same drawer.** "Evidence", "Evidence & controls" and "Evidence & sources" are three deliberate SC-12/SC-13 entry points, each labelled for what the reader was looking at when they reached it. Renaming them to one string is a plausible improvement and an untested hypothesis; it belongs to a comprehension study, not to a remediation plan.
+- **The pinned object card can cover the structure it describes.** Real, and already half-solved: SC-13 added `inspectorPlacement` in `src/presentation/StageLayout.js` for precisely this. Fixing the remaining case means changing placement arithmetic that the SC-8 capture matrix pins, so it would invalidate capture cells this plan is otherwise careful not to disturb. Defer to a sprint that owns the matrix.
+- **Chapters 6 and 7 frame the model as a hairline on black.** Both are argument chapters — the evidence audit and the provenance pipeline — where the stage is deliberately backdrop and the payload is the overlay. SC-13 made that explicit by dimming the scene behind the pipeline band. Reframing them is a narrative decision about what chapters 6 and 7 are *for*, and the honest place to settle it is the `lay_comprehension` gate, whose participants can say whether the frames read as empty or as background.
