@@ -1542,9 +1542,10 @@ export class SarcomereScene {
         //
         // The glyph is drawn to fit the room the descriptor gives it. At the
         // general titin and actin render widths the two chains and the proxy all
-        // occupy the same 1.4 nm, so the three bodies merge into one rod and the
-        // 2:1 stoichiometry — the chapter's entire claim — becomes undrawable.
-        // Widths only: every coordinate, evidence class and colour is untouched.
+        // occupy that room several times over, so the three bodies merge into one
+        // rod and the 2:1 stoichiometry — the chapter's entire claim — becomes
+        // undrawable. Widths only: every coordinate, evidence class and colour is
+        // untouched, and the manifest records both the room and what was drawn.
         const clearanceNm = this._sandwichClearanceNm(anchorDetail.telethonin_complex);
         if (clearanceNm === null) {
           // Unreachable through a valid descriptor: validateZDiscDetail already
