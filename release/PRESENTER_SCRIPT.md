@@ -4,6 +4,19 @@ Generated — build `c079c03d56c4`. Estimated 121.2 s (2 min 1 s), target 110–
 
 Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in the Evidence drawer — you do not need to open it to finish the tour.
 
+## Keys
+
+Resolved from the build, not typed here. Nothing needs the mouse.
+
+| Key | Does |
+|---|---|
+| `1–7` | Jump to a chapter by number |
+| `r` | Restart guided route |
+| `x` | Show regional extension |
+| `e` | Open evidence |
+| `g` | Return to Guided |
+| `space` | Run the stretch sweep |
+
 ## 1. Meet titin in the sarcomere  `~16.6s`
 
 **Do.** frame the titin story view; 2200 nm, context scale

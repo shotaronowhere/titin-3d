@@ -16,8 +16,8 @@ Run this on the presenting machine, on the presenting display.
 4. **Check typography, colour, animation, WebGL, and pointer behaviour.**
    - Expect: No clipping, no missing geometry, no dropped frames on orbit.
 
-5. **Use Restart and the chapter shortcuts.**
-   - Expect: Restart returns to chapter one; each shortcut lands on its own deterministic state.
+5. **Use Restart and the presenter keys listed at the head of the presenter script.**
+   - Expect: Restart returns to chapter one; each key lands on its own deterministic state.
 
 6. **Confirm the static fallback deck is on the presenting machine.**
    - Expect: release/fallback/*.svg open without a browser engine or a network.

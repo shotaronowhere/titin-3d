@@ -288,6 +288,14 @@ function presenterDoc(pack) {
     + 'expert expansion and lives in the Evidence drawer — you do not need to open it '
     + 'to finish the tour.',
     '',
+    '## Keys',
+    '',
+    'Resolved from the build, not typed here. Nothing needs the mouse.',
+    '',
+    '| Key | Does |',
+    '|---|---|',
+    ...script.keys.map((row) => `| \`${row.keys}\` | ${row.label} |`),
+    '',
   ];
   for (const chapter of script.chapters) {
     lines.push(`## ${chapter.order}. ${chapter.title}  \`~${chapter.estimated_seconds}s\``, '',

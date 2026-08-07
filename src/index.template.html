@@ -811,6 +811,9 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // here, where nothing but a screenshot could check them.
 import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible } from './src/presentation/StageLayout.js';
 import { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
+// The presenter key map. In a module, not here, so release/PRESENTER_SCRIPT.md
+// can print the keys this page actually binds rather than restating them.
+import { presenterKeys, unboundShortcutIds } from './src/presentation/PresenterKeys.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -1097,28 +1100,16 @@ function syncFilamentContextToggle() {
 // SC-17. The presenter shortcuts. data/presentation.json has declared three of
 // them since SC-2, StoryController validates them, and no key in the page was
 // bound to any of them: driving this from a lectern meant finding a small
-// button with a mouse.
-//
-// Keyed by the ACTION, not by the shortcut id. The record decides which actions
-// exist — validate_presentation.py and StoryController both reject one that
-// names no chapter — and this map decides which letter reaches them. Keying by
-// id would keep 'r' bound through a record change that retargeted it, which is
-// the one failure a presenter cannot recover from mid-demonstration; keying by
-// action leaves a visible hole instead, and the SC-17 gate is that hole.
-const PRESENTER_KEY_BY_ACTION = Object.freeze({
-  'story.orientation': 'r',       // restart_guided
-  'story.elastic_regions': 'x',   // show_extension
-  'mode.evidence': 'e',           // open_evidence
-});
-const PRESENTER_KEYS = Object.fromEntries(
-  presentation.presenter_shortcuts
-    .filter((shortcut) => PRESENTER_KEY_BY_ACTION[shortcut.action])
-    .map((shortcut) => [PRESENTER_KEY_BY_ACTION[shortcut.action], shortcut.action]),
-);
-// The two stage verbs no shortcut declares: the way back out of Evidence, and
-// the sweep, which IS the demonstration.
-PRESENTER_KEYS.g = 'mode.guided';
-PRESENTER_KEYS[' '] = 'sweep.toggle';
+// button with a mouse. The map itself is in src/presentation/PresenterKeys.js,
+// which the release pack also reads — see the note there for why it is keyed by
+// action rather than by shortcut id.
+const PRESENTER_KEYS = presenterKeys(presentation);
+// A declared shortcut nothing binds is a dead key on the printed script. CI
+// catches it, but a development source loaded from a hand-edited record has no
+// CI, so it says so where a developer will see it.
+for (const id of unboundShortcutIds(presentation)) {
+  console.warn(`presenter shortcut '${id}' is declared but no key reaches it`);
+}
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && pinnedPick) {

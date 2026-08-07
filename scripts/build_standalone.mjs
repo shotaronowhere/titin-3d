@@ -103,6 +103,7 @@ export { StoryController, AUDIENCE_MODES } from './src/presentation/StoryControl
 export { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
 export { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible } from './src/presentation/StageLayout.js';
 export { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
+export { presenterKeys, unboundShortcutIds } from './src/presentation/PresenterKeys.js';
 `);
 
 let bundle;
@@ -165,7 +166,7 @@ let page = pageModule
   .replace(IMPORT_RE, () => {
     if (!first) return '';
     first = false;
-    return 'const { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, isLongitudinalProjection, STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible, SWEEP, sweepLength } = __titinBundle;\n';
+    return 'const { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, isLongitudinalProjection, STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible, SWEEP, sweepLength, presenterKeys, unboundShortcutIds } = __titinBundle;\n';
   })
   .replace(/browserReader\('\.\/data'\)/g, () => '__titinSpecReader');
 if (page.includes("from './src/")) {
@@ -200,7 +201,7 @@ const standalone = html
       '/* --- inlined dependency bundle (esbuild, format=esm) --- */',
       'const __titinBundle = await (async () => {',
       bundle.replace(/export\s*\{[^}]*\};?\s*$/, () => ''),
-      'return { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, isLongitudinalProjection, STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible, SWEEP, sweepLength };',
+      'return { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, isLongitudinalProjection, STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible, SWEEP, sweepLength, presenterKeys, unboundShortcutIds };',
       '})();',
       '',
       `const __titinSpecs = Object.freeze(${safeJson(specs)});`,

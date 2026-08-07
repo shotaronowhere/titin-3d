@@ -4,9 +4,11 @@
 below are historical snapshots; this header and the latest completion record are
 authoritative when an old snapshot says work is still open.*
 
-**Last updated:** 2026-08-02 — showcase SC-0 scope and claim contract complete
-**Current phase:** MVP complete; showcase extension SC-0 ✅ COMPLETE
-**Next phase:** SC-1 — presentation data and Guided/Evidence audience shell
+**Last updated:** 2026-08-07 — showcase sequence SC-0 … SC-17 complete
+**Current phase:** MVP complete; the showcase sequence is complete in everything
+a machine can decide
+**Next phase:** none coded. What remains needs people, a WebGL browser, or the
+presenting hardware — see “Outstanding work” below.
 
 ---
 
@@ -48,15 +50,31 @@ The showcase sequence is an addendum and does not reopen or renumber MVP Phases
 | Showcase package | Name | Status |
 |---|---|---|
 | SC-0 | Claim audit, scope lock, and design contract | ✅ **COMPLETE** — reviewer-pinned 20-object matrix, complete source records, and 18-mutation destructive gate |
-| SC-1 | Presentation data and dual-audience shell | ▶ **NEXT** |
-| SC-2 | Titin hierarchy, continuity, and length story | ⏳ Pending |
-| SC-3 | Z-disc and M-band correction | ⏳ Pending |
-| SC-4 | Object-linked annotations and evidence access | ⏳ Pending |
-| SC-5 | Thick-filament context and optional MyBP-C | ⏳ Pending |
-| SC-6 | Orthographic lattice comparison | ⏳ Pending |
-| SC-7 | Guided narrative and expert depth | ⏳ Pending |
-| SC-8 | Integrated validation and audience evaluation | ⏳ Pending |
-| SC-9 | Release, rehearsal, and handoff | ⏳ Pending |
+| SC-1 | Presentation data and dual-audience shell | ✅ **COMPLETE** |
+| SC-2 | Titin hierarchy, continuity, and length story | ✅ **COMPLETE** |
+| SC-3 | Z-disc and M-band correction | ✅ **COMPLETE** |
+| SC-4 | Object-linked annotations and evidence access | ✅ **COMPLETE** |
+| SC-5 | Thick-filament context and optional MyBP-C | ✅ **COMPLETE** |
+| SC-6 | Orthographic lattice comparison | ✅ **COMPLETE** |
+| SC-7 | Guided narrative and expert depth | ✅ **COMPLETE** |
+| SC-8 | Integrated validation and audience evaluation | ✅ **COMPLETE** — automated portion; the audience gates themselves need people |
+| SC-9 | Release, rehearsal, and handoff | ✅ **COMPLETE** — pack generated and staleness-gated; the rehearsal needs the presenting hardware |
+
+A second sequence followed, planned in
+`docs/superpowers/plans/2026-08-05-titin-showcase-dual-audience.md` (Revision 2,
+written after driving the shipped build in a browser). Each sprint has its own
+gate file `test/showcase_phaseNN.test.js` and a `verify:scNN` script.
+
+| Showcase package | Name | Status |
+|---|---|---|
+| SC-10 | Titin becomes the subject | ✅ **COMPLETE** — screen-space continuity ribbon and halo, without touching evidence opacity |
+| SC-11 | Framing, overlay composition, and frame cost | ✅ **COMPLETE** — close-up chapters reach their declared cameras; overlays run on change, not per frame; scale bar |
+| SC-12 | The stage control bar | ✅ **COMPLETE** — length, presets, views and the stretch sweep on the stage in both modes; narrow-viewport layout |
+| SC-13 | The inspector card, the drawer, and sources | ✅ **COMPLETE** — tabbed drawer, bibliography, citable view link, provenance across the stage |
+| SC-14 | Passive force: the expert payload | ✅ **COMPLETE** — force readout and force–extension curve sampled from the existing pipeline |
+| SC-15 | Make the mechanism visible | ✅ **COMPLETE** — disordered-chain slack, declared schematic |
+| SC-16 | The anchor close-up | ✅ **COMPLETE** — envelope ghosting, fitted Z-disc glyph, measured Cα backbones at resolvable zoom |
+| SC-17 | Presentation readiness | ✅ **COMPLETE** — projector type scale with a 9 px floor, presenter keys bound, release record rebaselined |
 
 SC-0 artifacts: `SHOWCASE_DESIGN_CONTRACT.md`,
 `data/showcase_claims.json`, and `scripts/validate_showcase_claims.py`. The
@@ -1520,3 +1538,55 @@ This record supersedes all earlier chronological notes that describe Phase 10 as
 open or partially complete. Phases 0–10 and Milestones 0–6 are complete. Under the
 final project scope recorded in `MASTER_PLAN.md`, Phases 11–12 are optional future
 extensions and intentionally excluded; there is no remaining required phase.
+
+---
+
+# Showcase sequence complete (session 2026-08-07, SC-17)
+
+This record supersedes every earlier note that describes any showcase package as
+open. **SC-0 … SC-17 are complete**: the ten packages of
+`SHOWCASE_COMPLETION_PLAN.md` §7 and the eight sprints of
+`docs/superpowers/plans/2026-08-05-titin-showcase-dual-audience.md`. Nothing
+beyond SC-17 is planned anywhere in the repository; a further sprint would have
+to be newly authored.
+
+## Automated gate
+
+`npm run verify` exits 0: **471/471** Node tests (serially — the `test` script
+now carries `--test-concurrency=1`, which SC-17 fixed because `verify` chains
+it), zero TypeScript diagnostics under `strict` + `checkJs`, `index.html` and
+`release/` both current against their inputs, four negative-control suites (18
+SC-0 mutations, presentation, showcase release, 24 release-gate mutations), all
+five scientific validators, the 52-cell capture matrix well formed, and the
+Gemmi/NumPy structural smoke pipeline.
+
+The committed artifact is 2,166,361 bytes. SC-17 rebaselined
+`data/release_gates.json` → `performance.baseline` from the SC-7 figure to that
+number, which moves the derived size ceiling from 2,385,847 to 2,599,633; the
+ceiling is computed from that record and written down nowhere else.
+
+## Outstanding work
+
+None of it is code. Ten of the 56 recorded gate checks are outstanding, and
+every one needs a person, a WebGL browser, or the presenting hardware:
+
+| Gate | What it needs | Blocks |
+|---|---|---|
+| `visual_matrix` | 52 cells captured from the standalone build at four viewports, then reviewed by a person including colour-vision and grayscale | conditions `titin_continuity`, `lattice_legible` |
+| `lay_comprehension` | ≥3 independent non-specialists, 5 questions, 4 scored, ≥80% correct, no coaching | condition `novice_comprehension` |
+| `expert_review` | ≥1 muscle or titin specialist, 7 questions, no unresolved CRITICAL finding | condition `expert_clear` |
+| `demo_rehearsal` | 6 checks on the presenting machine and display; `release/PREFLIGHT.md` is the script | condition `rehearsal_and_fallback` |
+| `accessibility.text_zoom` | labels legible at 200% browser zoom | the accessibility section |
+| `performance.target_hardware` | the real browser, GPU and projector | the performance section |
+
+Eight of the twelve final release conditions already pass. `release_ready` stays
+`false` until all six rows above are recorded, and
+`scripts/validate_release_gates.py` refuses a PASS that is not backed by
+recorded evidence — participant answers, named reviewers, captured cells — so
+none of this can be claimed rather than done.
+
+Optional and deliberately not scheduled: `SHOWCASE_COMPLETION_PLAN.md` Tier C,
+the unshipped Tier B explainers (N2A interaction hub, titin-kinase/M-region,
+mechanotransduction, length-dependent thick-filament activation), the §8
+thin-filament regulation extension — never admitted — and `MASTER_PLAN.md`
+Phases 11–12.

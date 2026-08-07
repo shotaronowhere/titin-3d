@@ -23,6 +23,7 @@
 import { createShowcaseOverlay } from './ShowcaseOverlay.js';
 import { createProvenancePipeline } from './ProvenancePipeline.js';
 import { resolveSources } from './AnnotationCatalog.js';
+import { presenterKeyGuide } from './PresenterKeys.js';
 
 /** Slide canvas, matching the declared projector viewport. */
 export const SLIDE = Object.freeze({ width: 1920, height: 1080 });
@@ -37,8 +38,8 @@ const PREFLIGHT_STEPS = Object.freeze([
     'Every chapter reaches its camera and reads legibly from the back of the room.'],
   ['rendering', 'Check typography, colour, animation, WebGL, and pointer behaviour.',
     'No clipping, no missing geometry, no dropped frames on orbit.'],
-  ['reset', 'Use Restart and the chapter shortcuts.',
-    'Restart returns to chapter one; each shortcut lands on its own deterministic state.'],
+  ['reset', 'Use Restart and the presenter keys listed at the head of the presenter script.',
+    'Restart returns to chapter one; each key lands on its own deterministic state.'],
   ['fallback', 'Confirm the static fallback deck is on the presenting machine.',
     'release/fallback/*.svg open without a browser engine or a network.'],
   ['no_live_citations', 'Do not plan to open external citations during the narrative.',
@@ -144,6 +145,9 @@ function presenterScript(model) {
       rows.reduce((sum, row) => sum + row.estimated_seconds, 0).toFixed(1),
     ),
     chapters: rows,
+    // Resolved from the same module the page binds, so a presenter holding this
+    // page cannot be holding a key the build does not answer to.
+    keys: presenterKeyGuide(presentation),
   };
 }
 
