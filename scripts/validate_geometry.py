@@ -54,6 +54,10 @@ _DEFERRED = {
     "context_measurements.json":     "== Phase 11: context_measurements.json ==",
     "interdomain_measurements.json": "_ID_PATH block (Phase 6 interdomain geometry)",
     "structure_measurements.json":   "Phase 6 structure-measurement provenance checks",
+    # SC-16.2. Derived from the pinned structure cache, and validated against it:
+    # it asserts MEASURED coordinates and a deposition per archetype, so both the
+    # provenance and the frame it claims have to be checked, not just its shape.
+    "domain_backbones.json":         "== SC-16.2: domain_backbones.json ==",
 }
 _on_disk = sorted(f for f in os.listdir(DATA_DIR) if f.endswith(".json"))
 _covered = set(files) | set(_DEFERRED)
@@ -838,6 +842,73 @@ try:
     check(len(_CM.get("not_claimed") or []) > 0, "declares what it does not claim")
 except Exception as _e:
     check(False, f"context_measurements check: {_e}")
+
+# --------------------------------------- SC-16.2: measured domain backbones
+# The renderer swaps an archetype capsule for these coordinates at the deepest
+# zoom, which turns them into a visible MEASURED claim. Three things therefore
+# have to hold and none of them is checkable from the file alone: the coordinates
+# came from the deposition the archetype already names, that file is the pinned
+# one, and the frame is still the capsule's frame — otherwise the swap would move
+# domains rather than only re-skin them.
+print("\n== SC-16.2: domain_backbones.json ==")
+try:
+    _DB = load("domain_backbones.json")
+    _arch = (load("geometry_strategy.json").get("domain_archetypes") or {})
+    _refs = set(L["references.json"].keys())
+    check(_DB.get("schema") == "titin-domain-backbones/1",
+          f"schema follows the established convention (got {_DB.get('schema')!r})")
+    check(len(_DB.get("meta", {}).get("not_claimed") or []) > 0,
+          "declares what it does not claim")
+    _entries = _DB.get("archetypes") or {}
+    check(len(_entries) > 0, f"has archetype backbones ({len(_entries)})")
+    _bad_repr, _bad_hash, _bad_src, _bad_ev, _bad_count, _bad_frame = [], [], [], [], [], []
+    for _name, _rec in _entries.items():
+        _declared = (_arch.get(_name) or {}).get("representative_structure", {}).get("pdb_id")
+        if _rec.get("pdb_id") != _declared:
+            _bad_repr.append(f"{_name}: {_rec.get('pdb_id')} != {_declared}")
+        if _rec.get("evidence_class") != "MEASURED":
+            _bad_ev.append(_name)
+        if _rec.get("source_id") not in _refs:
+            _bad_src.append(f"{_name}: {_rec.get('source_id')}")
+        _pts = _rec.get("ca_nm") or []
+        if _rec.get("residue_count") != len(_pts):
+            _bad_count.append(_name)
+        # Recompute the digest rather than trust the recorded one, and require the
+        # cache manifest to pin it: a re-extraction from an unpinned file must fail
+        # here rather than reach the screen as MEASURED.
+        _cif = os.path.join(_RAW_DIR, f"{_rec.get('pdb_id')}.cif")
+        _digest = None
+        if os.path.exists(_cif):
+            with open(_cif, "rb") as _fh:
+                _digest = hashlib.sha256(_fh.read()).hexdigest()
+        _pinned = {_f.get("sha256") for _f in (_RM.get("files") or [])}
+        if _digest != _rec.get("sha256") or _digest not in _pinned or \
+                not _rec.get("sha256_pinned_in_manifest"):
+            _bad_hash.append(_name)
+        # The capsule is built Y-long about its own centre, so a drop-in surface
+        # must be centred with its principal axis on +Y. If it is not, swapping it
+        # in silently displaces or re-orients every domain that uses it.
+        if _pts:
+            _cols = list(zip(*_pts))
+            _means = [sum(_c) / len(_c) for _c in _cols]
+            _extents = [max(_c) - min(_c) for _c in _cols]
+            if max(abs(_m) for _m in _means) > 0.01 or \
+                    _extents[1] <= max(_extents[0], _extents[2]):
+                _bad_frame.append(_name)
+    check(not _bad_repr,
+          f"each backbone comes from the archetype's own representative structure "
+          f"(mismatched: {_bad_repr[:3]})")
+    check(not _bad_ev, f"every backbone is declared MEASURED (bad: {_bad_ev[:3]})")
+    check(not _bad_src, f"every source_id resolves in references.json (bad: {_bad_src[:3]})")
+    check(not _bad_count, f"residue_count matches the coordinates (bad: {_bad_count[:3]})")
+    check(not _bad_hash,
+          f"every backbone was extracted from the SHA-256-pinned cached file "
+          f"(bad: {_bad_hash[:3]})")
+    check(not _bad_frame,
+          f"every backbone is centred with its principal axis on +Y, matching the "
+          f"capsule it replaces (bad: {_bad_frame[:3]})")
+except Exception as _e:
+    check(False, f"domain_backbones check: {_e}")
 
 # --------------------------------------- PHASE 1: crown spacing agreement (PH1-2)
 # The spec's STRONGLY INFERRED 14.3 nm and the 8G4L-measured 14.44 nm must stay

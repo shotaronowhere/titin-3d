@@ -114,6 +114,27 @@
         "verification": "automated",
         "status": "PASS",
         "verified_by": "test/showcase_phase15.test.js"
+      },
+      {
+        "id": "anchor_envelope_ghost_is_not_evidence",
+        "requirement": "subordinating an anchor's presentation envelope at its own close-up changes rendered opacity only: the evidence class is unchanged, and the ghost is fainter than every evidence class so it cannot be read as one",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase16.test.js"
+      },
+      {
+        "id": "clamped_body_not_occluded",
+        "requirement": "a drawn body is never sealed inside the body it is drawn against: the Z-disc sandwich glyph's rendered widths sum to at most the transverse clearance its own descriptor leaves",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase16.test.js"
+      },
+      {
+        "id": "domain_backbone_provenance",
+        "requirement": "a drawn C-alpha backbone comes from the archetype's own declared representative structure and from the SHA-256-pinned cached file, and never promotes an instance's placement evidence class",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase16.test.js; scripts/validate_geometry.py"
       }
     ]
   },

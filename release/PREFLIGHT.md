@@ -1,6 +1,6 @@
 # Demo-day preflight
 
-Generated — build `fb7814d6ff38`.
+Generated — build `a0d2c0480dce`.
 
 Run this on the presenting machine, on the presenting display.
 
@@ -32,6 +32,6 @@ Run this on the presenting machine, on the presenting display.
 
 ## Build identity
 
-The Evidence drawer of both the hosted page and the offline file must read `fb7814d6ff38`.
+The Evidence drawer of both the hosted page and the offline file must read `a0d2c0480dce`.
 A mismatch means one of them is stale; prefer the offline file and re-deploy afterwards.
 

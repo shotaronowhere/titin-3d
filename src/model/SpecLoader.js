@@ -36,6 +36,13 @@ export const STRATEGY_FILE = 'geometry_strategy.json';
 // was previously read by no code at all.
 export const CONTEXT_FILE = 'context_measurements.json';
 
+// SC-16.2 measured Cα backbones for the domain archetypes, produced by
+// scripts/extract_domain_backbones.py from the SHA-256-pinned structure cache.
+// DERIVED like the two files above, and optional in the same way: it changes the
+// SURFACE drawn for a domain at the deepest zoom and nothing else, so a build
+// without it renders exactly the archetype capsules it always did.
+export const BACKBONE_FILE = 'domain_backbones.json';
+
 export const EVIDENCE_CLASSES = Object.freeze([
   'MEASURED',
   'STRONGLY INFERRED',
@@ -72,11 +79,14 @@ export class Spec {
     this.annotations = files['annotations.json'];
     this.geometryStrategy = files[STRATEGY_FILE] || null;
     this.contextMeasurements = files[CONTEXT_FILE] || null;
+    this.domainBackbones = files[BACKBONE_FILE] || null;
     this._raw = files;
   }
 
   /** Load every required record (+ optional derived layers), then validate. */
-  static async load(fetchJson, { validate = true, strategy = true, context = true } = {}) {
+  static async load(fetchJson, {
+    validate = true, strategy = true, context = true, backbones = true,
+  } = {}) {
     const files = {};
     for (const name of SPEC_FILES) {
       files[name] = await fetchJson(name);
@@ -88,6 +98,10 @@ export class Spec {
     if (context) {
       try { files[CONTEXT_FILE] = await fetchJson(CONTEXT_FILE); }
       catch { /* context measurements optional — absence is not a spec failure */ }
+    }
+    if (backbones) {
+      try { files[BACKBONE_FILE] = await fetchJson(BACKBONE_FILE); }
+      catch { /* backbones optional — the archetype capsules are the fallback */ }
     }
     const spec = new Spec(files);
     if (validate) spec.validate(); // throws SpecValidationError on any problem

@@ -1,6 +1,6 @@
 # Claim and evidence matrix
 
-Generated from `data/showcase_claims.json` — build `fb7814d6ff38`.
+Generated from `data/showcase_claims.json` — build `a0d2c0480dce`.
 Do not edit by hand: run `npm run pack`.
 
 | Object | Decision | Tier | Claim evidence | Render evidence | Sources |
