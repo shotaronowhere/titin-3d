@@ -165,7 +165,11 @@ window.__titinBoot = { ready: false, problems: [] };
     bottom: calc(var(--stage-bar-h, 114px) + 10px);
     pointer-events: none; color: #aab4c2; background: rgb(14 17 22 / 78%);
     border: 1px solid var(--edge); border-radius: 4px; padding: 4px 7px;
-    font-size: 10px; }
+    font-size: 10px; max-width: min(420px, calc(100% - 24px)); }
+  /* SC-17. The presenter keys get their own line rather than extending the
+     mouse hints: as one run it was wide enough to reach across the stage and
+     under the chapter card, which paints over it. */
+  #shortcutHelp { display: block; }
   /* SC-12. The stage bar sits on the canvas, in BOTH modes, and is deliberately
      not inside #stageChrome: that layer is pointer-events: none, and these are
      controls. Everything else that occupies the bottom of the stage — the
@@ -644,7 +648,8 @@ window.__titinBoot = { ready: false, problems: [] };
           <button id="stageEvidenceLink">Evidence &amp; sources</button>
         </div>
       </div><!-- /stageBar -->
-    <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan</div>
+    <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
+      id="shortcutHelp">1–7 chapters · space stretch · x extension · e evidence · g guided · r restart</span></div>
   </div>
   <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
     <div class="drawer-head" id="drawerHead">
@@ -1041,7 +1046,7 @@ $('textScale').onclick = () => {
   markStageDirty();
 };
 
-// A novice cannot act on "shown in red beside actin and myosin" without a key.
+// A novice cannot act on "shown in pink beside actin and myosin" without a key.
 // The swatches read the palette actually in use, so Guided's subdued context
 // colours and Evidence's identity palette are both described correctly.
 function syncStageLegend(report) {
@@ -1089,14 +1094,73 @@ function syncFilamentContextToggle() {
       ? `${action} one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin`
     : 'Actin and myosin context is unavailable in the isolated-titin view';
 }
+// SC-17. The presenter shortcuts. data/presentation.json has declared three of
+// them since SC-2, StoryController validates them, and no key in the page was
+// bound to any of them: driving this from a lectern meant finding a small
+// button with a mouse.
+//
+// Keyed by the ACTION, not by the shortcut id. The record decides which actions
+// exist — validate_presentation.py and StoryController both reject one that
+// names no chapter — and this map decides which letter reaches them. Keying by
+// id would keep 'r' bound through a record change that retargeted it, which is
+// the one failure a presenter cannot recover from mid-demonstration; keying by
+// action leaves a visible hole instead, and the SC-17 gate is that hole.
+const PRESENTER_KEY_BY_ACTION = Object.freeze({
+  'story.orientation': 'r',       // restart_guided
+  'story.elastic_regions': 'x',   // show_extension
+  'mode.evidence': 'e',           // open_evidence
+});
+const PRESENTER_KEYS = Object.fromEntries(
+  presentation.presenter_shortcuts
+    .filter((shortcut) => PRESENTER_KEY_BY_ACTION[shortcut.action])
+    .map((shortcut) => [PRESENTER_KEY_BY_ACTION[shortcut.action], shortcut.action]),
+);
+// The two stage verbs no shortcut declares: the way back out of Evidence, and
+// the sweep, which IS the demonstration.
+PRESENTER_KEYS.g = 'mode.guided';
+PRESENTER_KEYS[' '] = 'sweep.toggle';
+
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && pinnedPick) {
     event.preventDefault();
     clearPinnedSelection();
-  } else if (event.key === 'Escape' && state.audienceMode === AUDIENCE_MODES.evidence) {
+    return;
+  }
+  if (event.key === 'Escape' && state.audienceMode === AUDIENCE_MODES.evidence) {
     event.preventDefault();
     closeEvidence();
+    return;
   }
+  // Presenter shortcuts. The actions come from the validated presentation
+  // record, so a shortcut cannot name a chapter or mode that does not exist.
+  // Guarded three ways: a system chord belongs to the browser, a key another
+  // handler has already consumed belongs to that handler — the stage's own
+  // Arrow/Enter/Space route runs first, on #canvas, and marks the event
+  // handled — and a bare letter must never fire while someone is typing.
+  if (event.defaultPrevented) return;
+  if (event.metaKey || event.ctrlKey || event.altKey) return;
+  if (event.target instanceof HTMLInputElement
+      || event.target instanceof HTMLTextAreaElement) return;
+  const chapterKey = Number(event.key);
+  if (Number.isInteger(chapterKey) && chapterKey >= 1 && chapterKey <= story.chapters.length) {
+    event.preventDefault();
+    applyChapter(story.chapters[chapterKey - 1].id);
+    return;
+  }
+  // Space activates whatever has focus — a button, or the stage's own pin — so
+  // the sweep claims it only when nothing else has.
+  if (event.key === ' ' && event.target !== document.body) return;
+  const action = PRESENTER_KEYS[event.key.toLowerCase()];
+  if (!action) return;
+  event.preventDefault();
+  if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
+  else if (action === 'mode.evidence') openEvidence($('audienceEvidence'));
+  // Through closeEvidence rather than setAudienceMode, so the key that leaves
+  // the drawer also returns focus the way Escape and Close do — and so pressing
+  // it in Guided mode is not a scene rebuild that changes nothing.
+  else if (action === 'mode.guided') {
+    if (state.audienceMode === AUDIENCE_MODES.evidence) closeEvidence();
+  } else if (action === 'sweep.toggle') $('stagePlay').click();
 });
 announceUrlIssues(restored.issues);
 
