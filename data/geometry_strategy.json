@@ -749,7 +749,7 @@
   "date_utc": "2026-07-25",
   "source_of_candidates": "UniProt Q8WZ42 (TITIN_HUMAN) PDB cross-references: 64 entries. Canonical sequence length 34350 matches titin.json exactly, so cross-reference residue ranges are directly comparable to spec region spans without renumbering.",
   "criteria_fixed_in_advance": [
-   "Source organism Homo sapiens only (the reference model is human skeletal N2A titin).",
+   "Source organism Homo sapiens only (the sequence model is the Q8WZ42-1 reference; tissue construct review is pending).",
    "Fold class established from Pfam annotation (PF07679/PF07654/PF07686 -> Ig_like; PF00041 -> Fn3; PF00069 -> kinase), never from the entry title.",
    "Titin must be the subject, not an incidental component: entries with >1 polymer entity AND a genuine non-titin partner are excluded.",
    "X-ray with a reported resolution, preferring a single domain over a tandem so the exemplar matches one archetype instance.",
@@ -1179,7 +1179,7 @@
      "3_standard": "increasingly",
      "4_cost": "3 per repeat"
     },
-    "reasoning": "The closest call in this table. cMyBP-C shares titin's 45.54 nm super-repeat and binds in the same C-zone, so it is arguably part of titin's story rather than context. Deferred for a scope reason, not a geometric one: our declared scope is the skeletal N2A isoform, and 8G4L is CARDIAC. Adopting a cardiac accessory protein's placement into a skeletal model would silently mix isoforms \u2014 the exact class of error this project's evidence classes exist to prevent.",
+    "reasoning": "The closest call in this table. cMyBP-C shares titin's 45.54 nm super-repeat and binds in the same C-zone, so it is arguably part of titin's story rather than context. Deferred for a scope reason, not a geometric one: construct identity comes from scientific_scope.json, and 8G4L is CARDIAC. Adopting a cardiac accessory protein's placement into that reference-sequence model would silently mix preparations \u2014 the exact class of error this project's evidence classes exist to prevent.",
     "illustration_convention": "Common in modern thick-filament figures, rare in classic sarcomere schematics.",
     "depiction_cost": "Very low \u2014 3 instances per repeat.",
     "what_a_maximal_pass_would_add": "Resolve the isoform question first (skeletal MyBP-C placement), then admit. Do not port the cardiac coordinates across."
@@ -1250,7 +1250,7 @@
     "owning_phase": "Phase 1 \u2014 Scientific Geometric Specification",
     "severity": "FIXED IN THIS SESSION",
     "finding": "Phase 1 requires species/isoform/biological condition per component, and sarcomere.json:meta.isoform_reconciliation permits cross-muscle values ONLY when each value carries its own muscle_type. All 15 new context measurements initially omitted it \u2014 a policy violation I introduced.",
-    "action_taken": "muscle_type added to all 15 (all cardiac), plus an explicit skeletal_transfer field: 4 marked conserved (actin helical parameters), 11 marked NOT established for skeletal N2A.",
+    "action_taken": "muscle_type added to all 15 (all cardiac), plus an explicit skeletal_transfer field: 4 marked conserved (actin helical parameters), 11 marked NOT established for the model's separately declared skeletal context.",
     "residual": "The 11 non-conserved cardiac values must not be adopted into skeletal geometry without skeletal evidence. This is why cMyBP-C and the measured titin azimuths are deferred.",
     "status": "RESOLVED \u2014 muscle_type and skeletal_transfer added to all 15 entries; residual is a standing CONSTRAINT, not open work"
    },
@@ -1505,7 +1505,7 @@
     "The context remeasurement fitted the thin-filament axis to every polymer in 6KN7 and used median local helix steps. It now fits only actin chains and uses the global mean consecutive-step advance; the regenerated values are rise 2.755 nm, twist -166.628 deg, crossover 37.091 nm."
    ],
    "standing_constraints_carried_forward": {
-    "cardiac_to_skeletal": "11 of the 15 context measurements are CARDIAC and marked NOT established for skeletal N2A. They may not be adopted into skeletal geometry without skeletal evidence. This is why cMyBP-C and the measured titin azimuths stay deferred. (PH1-1)",
+    "cardiac_to_skeletal": "11 of the 15 context measurements are CARDIAC and marked NOT established for the model's separately declared skeletal context. They may not be adopted into skeletal geometry without skeletal evidence. This is why cMyBP-C and the measured titin azimuths stay deferred. (PH1-1)",
     "crown_spacing": "crown_axial_spacing_nm stays at the spec's 14.3 nm. Substituting the measured 14.44 nm would make 3x disagree with the separately-sourced 43.1 nm repeat and diverge by 7.7 nm over 55 crown levels; if it is ever moved, the sources list must cite 8G4L. (PH1-2)",
     "milestone_4_pipeline": "fit_geometry.py and generate_proxy.py are implemented and reproducible. Runtime rendering remains procedural, while the generated proxy artifact provides an auditable pipeline product. (PH6-1 closure)",
     "relaxed_state_tilt": "The crossbridge axial tilt SIGN is a property of the relaxed interacting-heads state and does not transfer to active cross-bridges. Bears directly on Phase 8, which animates states. (PH7B-1)"

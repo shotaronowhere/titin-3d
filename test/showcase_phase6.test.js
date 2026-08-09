@@ -181,7 +181,7 @@ test('SC6: the constant-volume caveat travels with the comparison', () => {
   assert.match(view.evidence_by_claim.instantaneous_behavior_during_contraction, /^UNKNOWN/);
   assert.equal(view.time_resolved_contraction_implied, false);
   for (const expected of ['time-resolved active contraction', 'strict biological isovolumetry',
-    'directly measured human skeletal d10', 'a second lattice solver']) {
+    'directly measured d10 for the scope-ledger construct', 'a second lattice solver']) {
     assert.ok(view.not_claimed.includes(expected), `missing non-claim: ${expected}`);
   }
   // The caveat is rendered next to the panels, not only in the evidence inventory.

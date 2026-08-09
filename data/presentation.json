@@ -14,16 +14,13 @@
     "source_ids": [
       "10.1073/pnas.1516732113"
     ],
-    "species": "Homo sapiens",
-    "accession": "UniProt Q8WZ42",
-    "isoform": "canonical skeletal N2A-containing titin",
-    "muscle_type": "skeletal reference model",
     "working_range_nm": [
       2000,
       2400
     ],
     "activation_independent": true,
-    "activation_statement": "Sarcomere length controls passive geometry here; it does not set calcium activation or simulate an active-contraction trajectory. The 2,000–2,400 nm interval is this model's declared comparison range, not a universal range for every muscle."
+    "activation_statement": "Sarcomere length controls passive geometry here; it does not set calcium activation or simulate an active-contraction trajectory. The 2,000–2,400 nm interval is this model's declared comparison range, not a universal range for every muscle.",
+    "scientific_scope_ref": "scientific_scope.json"
   },
   "audience_modes": [
     {
@@ -41,7 +38,6 @@
     {
       "id": "reference_scope",
       "target_claim_id": "scope_badge",
-      "label": "Human skeletal N2A titin · Q8WZ42",
       "state_template": "{state} · {length_nm} nm",
       "evidence_class": "MEASURED",
       "source_ids": [
@@ -51,7 +47,8 @@
         "cardiac titin",
         "an isoform-neutral titin molecule",
         "a universal physiological resting length"
-      ]
+      ],
+      "label_ref": "scientific_scope.json#/public_badge"
     }
   ],
   "length_presets": [
@@ -446,9 +443,9 @@
       "source_ids": [
         "10.1038/s41467-024-46957-7"
       ],
-      "body": "MyBP-C is an accessory C-zone protein of the thick filament, not part of titin. Fast skeletal muscle evidence supports its presence in the C-zone at the approximately 43 nm repeat, with roughly three molecules per repeat, so the optional layer draws that many sparse markers and nothing more. High-resolution coordinates for MyBP-C exist, but they come from cardiac thick-filament reconstructions. This model's declared scope is human skeletal N2A-containing titin, and adopting a cardiac accessory protein's placement would silently mix isoforms — exactly the error this project's evidence classes exist to prevent. The stripe register, azimuth, reach, and pose therefore stay SCHEMATIC, no molecule is drawn reaching a thin filament, and no titin contact is depicted.",
+      "body": "MyBP-C is an accessory C-zone protein of the thick filament, not part of titin. Fast skeletal muscle evidence supports its presence in the C-zone at the approximately 43 nm repeat, with roughly three molecules per repeat, so the optional layer draws that many sparse markers and nothing more. High-resolution coordinates for MyBP-C exist, but they come from cardiac thick-filament reconstructions. The sequence construct and tissue-review status are supplied by the scientific-scope ledger, so adopting a cardiac accessory protein's placement would silently mix preparations. The stripe register, azimuth, reach, and pose therefore stay SCHEMATIC, no molecule is drawn reaching a thin filament, and no titin contact is depicted.",
       "not_claimed": [
-        "cardiac cMyBP-C coordinates in the skeletal reference model",
+        "cardiac cMyBP-C coordinates transferred into the reference-sequence model",
         "a universal rigid thick-to-thin bridge",
         "a direct titin–MyBP-C contact",
         "three exact molecules at every human titin super-repeat",
@@ -461,7 +458,7 @@
         },
         {
           "status": "OPEN",
-          "text": "The stripe register, azimuth, outward reach, and binding pose for this skeletal reference are unresolved, so the drawn path stays schematic."
+          "text": "The stripe register, azimuth, outward reach, and binding pose for this reference-sequence render are unresolved, so the drawn path stays schematic."
         },
         {
           "status": "OPEN",
@@ -598,7 +595,7 @@
       "source_ids": [
         "UniProt:Q8WZ42"
       ],
-      "body": "A single TTN gene produces many titin isoforms through alternative splicing, and different muscles and tissues express different ones. Isoform choice changes the length and composition of the elastic I-band segment, and therefore passive stiffness. This visualization models the canonical human skeletal N2A-containing reference and deliberately adds no second isoform: naming the reference is what keeps a general titin story from becoming a claim about an isoform-neutral molecule.",
+      "body": "A single TTN gene produces many titin isoforms through alternative splicing, and different muscles and tissues express different ones. Isoform choice changes the length and composition of the elastic I-band segment, and therefore passive stiffness. This visualization uses the reference sequence named by the scientific-scope ledger and deliberately adds no second isoform: naming the reference is what keeps a general titin story from becoming a claim about an isoform-neutral molecule.",
       "findings": [
         {
           "status": "ESTABLISHED",
@@ -606,7 +603,7 @@
         },
         {
           "status": "ESTABLISHED",
-          "text": "This model is the canonical human skeletal N2A-containing reference, Q8WZ42."
+          "text": "The model identity is the reference sequence supplied by the scientific-scope ledger."
         },
         {
           "status": "OPEN",
@@ -633,7 +630,7 @@
         "10.1038/s41586-023-06690-5",
         "10.1016/j.bpj.2021.08.006"
       ],
-      "body": "Three gaps are worth naming plainly. The azimuthal arrangement of titin strands around a thick filament is resolved in cardiac muscle but not adopted here, because this model's scope is skeletal. M-band organization is only partly resolved, so the centre is a coordinate reference with sparse schematic crosslinks rather than a structure. And active mechanics are absent entirely: the lattice comparison is a quasi-static length sweep, not a time-resolved contraction.",
+      "body": "Three gaps are worth naming plainly. The azimuthal arrangement of titin strands around a thick filament is resolved in cardiac muscle but not adopted here because that coordinate transfer is outside the admitted structural context. M-band organization is only partly resolved, so the centre is a coordinate reference with sparse schematic crosslinks rather than a structure. And active mechanics are absent entirely: the lattice comparison is a quasi-static length sweep, not a time-resolved contraction.",
       "findings": [
         {
           "status": "OPEN",

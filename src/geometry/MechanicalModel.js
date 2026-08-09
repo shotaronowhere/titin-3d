@@ -68,7 +68,7 @@ export const CHAIN_PARAMETERS = {
     // NB still no unfolding TRANSITION: the spec records no N2A unfolding force
     // (the 6-8 pN in geometry_sources[19] is the Ig domain's, not N2A's).
     law: 'folded_plus_wlc', A_nm: 0.35, Lc_nm: 39.0, rigid_nm: 4.0,
-    source: '10.3389/fphys.2020.00173 (geometry_sources[11],[12], both skeletal N2A); '
+    source: '10.3389/fphys.2020.00173 (recombinant human N2A constructs; geometry_sources[11],[12]); '
           + 'rigid folded-domain length from geometry_sources[10] '
           + '(10.1016/j.jmb.2020.06.025)',
   },

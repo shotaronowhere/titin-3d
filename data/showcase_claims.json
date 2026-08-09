@@ -1,5 +1,5 @@
 {
-  "schema": "titin-showcase-claim-audit/1",
+  "schema": "titin-showcase-claim-audit/2",
   "meta": {
     "phase": "SC-0 — Claim audit, scope lock, and design contract",
     "status": "COMPLETE",
@@ -8,14 +8,17 @@
     "purpose": "Machine-readable admission record for every biological or explanatory object proposed by the showcase plan. This file authorizes claims and presentation scope; it contains no authoritative biological coordinates.",
     "governing_plan": "SHOWCASE_COMPLETION_PLAN.md",
     "human_readable_contract": "SHOWCASE_DESIGN_CONTRACT.md",
-    "contract_sha256": "e43c9fc807d19ee9eba40b3cb7dceedc6c8e804cb87c5e8ad4e1cafe211dd0b6"
+    "schema_migration": {
+      "from": "titin-showcase-claim-audit/1",
+      "on": "2026-08-09",
+      "prior_reviewed_payload_sha256": "e43c9fc807d19ee9eba40b3cb7dceedc6c8e804cb87c5e8ad4e1cafe211dd0b6",
+      "reason": "SC-19 replaces a whole-file byte pin with stable per-claim support bindings and semantic invariants.",
+      "review_status": "PENDING"
+    }
   },
   "scope_lock": {
-    "educational_narrative": "Broadly applicable titin concepts explained through the existing reference model.",
-    "reference_species": "Homo sapiens",
-    "reference_accession": "UniProt Q8WZ42",
-    "reference_isoform": "canonical skeletal N2A-containing titin",
-    "reference_muscle_type": "skeletal",
+    "scientific_scope_ref": "scientific_scope.json",
+    "educational_narrative": "Broadly applicable titin concepts explained through an explicitly scoped reference-sequence model.",
     "default_structural_context": "resting reference unless the sarcomere-length state is explicitly shown",
     "cardiac_titin_mode": false,
     "alternative_isoform_mode": false,
@@ -81,9 +84,12 @@
       "object_kind": "PRESENTATION",
       "release_tier": "A",
       "decision": "ADMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
-      "claim": "The active visualization uses canonical human Q8WZ42, a skeletal N2A-containing titin reference, at the explicitly named structural state.",
-      "scope": "Homo sapiens; skeletal N2A-containing Q8WZ42; active state shown live",
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
+      "claim": "The active visualization uses the human TTN reference sequence Q8WZ42-1 at the explicitly named structural state; its tissue construct is under review.",
+      "scope": "Homo sapiens Q8WZ42-1 reference sequence; tissue construct review pending; active state shown live",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "sources": [
@@ -103,8 +109,13 @@
         }
       ],
       "render_encoding": "Persistent DOM badge above the stage; abbreviated in Guided mode and expandable in Evidence mode.",
-      "not_claimed": ["an isoform-neutral titin molecule", "a cardiac titin model", "a universal physiological resting length"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "an isoform-neutral titin molecule",
+        "a cardiac titin model",
+        "a universal physiological resting length"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "scope_badge"
     },
     {
       "id": "titin_continuity_trace",
@@ -112,7 +123,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "ADMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "One titin polypeptide runs continuously through a half-sarcomere from its Z-disc N terminus to its M-band C terminus.",
       "scope": "Human Q8WZ42 topology in the retained half-sarcomere model",
       "claim_evidence_class": "STRONGLY INFERRED",
@@ -134,8 +148,13 @@
         }
       ],
       "render_encoding": "A render-only continuity trace follows the exact existing backbone points and is visually subordinate to the domain geometry.",
-      "not_claimed": ["a resolved smooth molecular trajectory", "known transverse azimuth along the entire chain", "uniform spring behavior along the chain"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "a resolved smooth molecular trajectory",
+        "known transverse azimuth along the entire chain",
+        "uniform spring behavior along the chain"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "titin_continuity_trace"
     },
     {
       "id": "titin_region_architecture",
@@ -143,7 +162,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "ADMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "Titin is regionally heterogeneous: elastic I-band segments lie in series with an A-band segment integrated with the thick filament and a terminal M-region.",
       "scope": "Human Q8WZ42 region order; current N2A-containing model",
       "claim_evidence_class": "MEASURED",
@@ -165,8 +187,13 @@
         }
       ],
       "render_encoding": "Titin-family colors distinguish regions; the A-band remains positionally bound while the I-band changes length.",
-      "not_claimed": ["atom-level region surfaces", "a single elastic constant for all regions", "exact unresolved linker conformations"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "atom-level region surfaces",
+        "a single elastic constant for all regions",
+        "exact unresolved linker conformations"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "titin_region_architecture"
     },
     {
       "id": "regional_extension_story",
@@ -174,7 +201,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "ADMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "Across the modeled range, tandem-Ig chains primarily straighten while disordered spring regions extend; ordinary length change does not require widespread folded-domain unfolding.",
       "scope": "Current modeled Q8WZ42 length states; passive geometry, not activation",
       "claim_evidence_class": "MODELED",
@@ -196,8 +226,13 @@
         }
       ],
       "render_encoding": "Synchronized 3D state and region-extension chart; folded proxies remain rigid while spacing/linkers and disordered paths change.",
-      "not_claimed": ["normalization of AFM-scale Ig unfolding", "a measured time trajectory", "activation-dependent titin stiffening"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "normalization of AFM-scale Ig unfolding",
+        "a measured time trajectory",
+        "activation-dependent titin stiffening"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "regional_extension_story"
     },
     {
       "id": "band_and_zone_brackets",
@@ -205,7 +240,10 @@
       "object_kind": "OVERLAY",
       "release_tier": "A",
       "decision": "ADMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "The named sarcomere regions occupy distinct axial intervals, and their live boundaries must follow the same geometry used by the scene.",
       "scope": "Current half-sarcomere geometry at the selected sarcomere length",
       "claim_evidence_class": "STRONGLY INFERRED",
@@ -227,8 +265,13 @@
         }
       ],
       "render_encoding": "Screen-space brackets computed from live scene landmarks; the bare-zone and M-band labels remain separate.",
-      "not_claimed": ["that a bracket is a molecular structure", "that the bare zone and M-band are synonyms", "that all band boundaries are sharp molecular interfaces"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "that a bracket is a molecular structure",
+        "that the bare zone and M-band are synonyms",
+        "that all band boundaries are sharp molecular interfaces"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "band_and_zone_brackets"
     },
     {
       "id": "zdisc_local_network",
@@ -236,7 +279,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "ADMIT_SCHEMATIC",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "Antiparallel actin filaments from adjacent sarcomeres interdigitate in the Z-disc and are crosslinked by α-actinin in a heterogeneous local network.",
       "scope": "Fast mouse psoas thin-form Z-disc, interpreted as a lower-strain isolated-myofibril state; topology-only context for the human reference",
       "claim_evidence_class": "MEASURED",
@@ -251,8 +297,14 @@
         }
       ],
       "render_encoding": "Zoom-gated, slightly irregular local network with opposing actin polarity; no infinite regular lattice tile.",
-      "not_claimed": ["a universal small-square lattice", "a universal basketweave state", "exact human Q8WZ42 lateral routing", "alternating end-to-end titin and actin"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "a universal small-square lattice",
+        "a universal basketweave state",
+        "exact human Q8WZ42 lateral routing",
+        "alternating end-to-end titin and actin"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "zdisc_local_network"
     },
     {
       "id": "zdisc_alpha_actinin_doublets",
@@ -260,7 +312,9 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "ADMIT_SCHEMATIC",
-      "audience": ["EVIDENCE"],
+      "audience": [
+        "EVIDENCE"
+      ],
       "claim": "The selected fast-psoas thin-form reconstruction contains α-actinin crosslink doublets separated by approximately 6 nm, with heterogeneous larger spacings.",
       "scope": "Fast mouse psoas thin-form Z-disc only",
       "claim_evidence_class": "MEASURED",
@@ -275,8 +329,13 @@
         }
       ],
       "render_encoding": "A few explicitly scoped doublets appear only at a resolvable Z-disc close-up; spacing is generated from the admitted record, not by eye.",
-      "not_claimed": ["regular repetition across the entire Z-disc", "presence in every muscle type or state", "a titin-actin end-to-end zigzag"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "regular repetition across the entire Z-disc",
+        "presence in every muscle type or state",
+        "a titin-actin end-to-end zigzag"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "zdisc_alpha_actinin_doublets"
     },
     {
       "id": "zdisc_telethonin_sandwich",
@@ -284,7 +343,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "ADMIT_SCHEMATIC",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "Telethonin forms a palindromic 2:1 sandwich with two antiparallel titin Z1Z2 N-terminal fragments.",
       "scope": "Experimentally resolved human titin fragment complex; mapped topologically into the retained Z-disc close-up",
       "claim_evidence_class": "MEASURED",
@@ -299,8 +361,13 @@
         }
       ],
       "render_encoding": "Two opposing Z1Z2 proxy chains meet one labeled telethonin proxy; the topology is visually distinct from actin crosslinks.",
-      "not_claimed": ["a decorative cap on one titin chain", "a resolved full in-situ titin route", "that telethonin crosslinks actin"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "a decorative cap on one titin chain",
+        "a resolved full in-situ titin route",
+        "that telethonin crosslinks actin"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "zdisc_telethonin_sandwich"
     },
     {
       "id": "universal_zdisc_lattice_icon",
@@ -308,7 +375,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "OMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "No single regular small-square, basketweave, or zigzag icon is admitted as the universal Z-disc arrangement.",
       "scope": "All muscle types and structural states",
       "claim_evidence_class": "UNKNOWN",
@@ -326,12 +396,16 @@
           "id": "10.1016/j.jmb.2015.08.018",
           "role": "specific rat-cardiac small-square context",
           "scope_compatibility": "CONTEXT_ONLY",
-          "transfer_limit": "A rat-cardiac small-square structure cannot be promoted to a generic human skeletal icon."
+          "transfer_limit": "A rat-cardiac small-square structure cannot be promoted to a generic reference-sequence icon."
         }
       ],
       "render_encoding": "No geometry; Evidence mode states why the universal icon is omitted.",
-      "not_claimed": ["that the omitted motif is biologically absent", "that Z-disc topology is completely unknown"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "that the omitted motif is biologically absent",
+        "that Z-disc topology is completely unknown"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "universal_zdisc_lattice_icon"
     },
     {
       "id": "bare_zone_head_absence",
@@ -339,7 +413,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "REPLACE_CURRENT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "The bare zone is a central region of the bipolar thick filament characterized by absence of myosin heads, not a solid protein slab.",
       "scope": "Relaxed mammalian skeletal thick-filament context; current modeled bare-zone interval",
       "claim_evidence_class": "STRONGLY INFERRED",
@@ -361,8 +438,13 @@
         }
       ],
       "render_encoding": "Communicate the region through myosin-head absence, a subtle bracket, and optional low-opacity presentation tint.",
-      "not_claimed": ["a 160 nm-wide M-line protein", "an impermeable central wall", "a complete molecular description of the bare zone"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "a 160 nm-wide M-line protein",
+        "an impermeable central wall",
+        "a complete molecular description of the bare zone"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "bare_zone_head_absence"
     },
     {
       "id": "mband_midpoint_and_crosslinks",
@@ -370,7 +452,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "REPLACE_CURRENT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "The M-band is protein crosslinking and integration architecture near the sarcomere center, where thick filaments and titin from opposing half-sarcomeres meet.",
       "scope": "Generic skeletal sarcomere relationship; exact crosslink positions unresolved in the retained model",
       "claim_evidence_class": "STRONGLY INFERRED",
@@ -399,8 +484,14 @@
         }
       ],
       "render_encoding": "A narrow midpoint reference plus sparse, individually labeled schematic crosslinks; mirrored titin paths remain visible through the center.",
-      "not_claimed": ["complete M-band molecular structure", "exact myomesin/OBSL1 coordinates", "an opaque M-line wall", "identity of unresolved density"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "complete M-band molecular structure",
+        "exact myomesin/OBSL1 coordinates",
+        "an opaque M-line wall",
+        "identity of unresolved density"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "mband_midpoint_and_crosslinks"
     },
     {
       "id": "mband_m1_density",
@@ -408,7 +499,9 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "OMIT",
-      "audience": ["EVIDENCE"],
+      "audience": [
+        "EVIDENCE"
+      ],
       "claim": "The sarcomere midpoint may be labeled as a coordinate reference, but no density in this showcase is identified as M1 from the 2023 averaged reconstruction.",
       "scope": "Limitation from relaxed mouse cardiac M-band reconstruction; no coordinate transfer",
       "claim_evidence_class": "UNKNOWN",
@@ -423,8 +516,13 @@
         }
       ],
       "render_encoding": "No M1 density; Evidence mode exposes the limitation beside the midpoint label.",
-      "not_claimed": ["that M1 is biologically absent", "that the midpoint marker is an observed density", "that cardiac M-band coordinates apply to the current reference"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "that M1 is biologically absent",
+        "that the midpoint marker is an observed density",
+        "that cardiac M-band coordinates apply to the current reference"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "mband_m1_density"
     },
     {
       "id": "mybpc_czone_context",
@@ -432,9 +530,11 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "B",
       "decision": "ADMIT_SCHEMATIC",
-      "audience": ["EVIDENCE"],
+      "audience": [
+        "EVIDENCE"
+      ],
       "claim": "Skeletal MyBP-C is an accessory C-zone protein associated with the thick filament in an approximately 43 nm periodic context and can influence lattice and myosin-head regulation.",
-      "scope": "Fast MyBP-C in permeabilized mouse psoas; optional context for the human skeletal N2A model",
+      "scope": "Fast MyBP-C in permeabilized mouse psoas; optional context for the human Q8WZ42-1 reference-sequence model",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "sources": [
@@ -447,8 +547,14 @@
         }
       ],
       "render_encoding": "Sparse yellow schematic markers or flexible paths in the C-zone, off by default and subordinate to titin; exact path carries a SCHEMATIC badge.",
-      "not_claimed": ["cardiac cMyBP-C coordinates", "a universal rigid thick-to-thin bridge", "a direct titin–MyBP-C contact", "three exact molecules at every human titin superrepeat"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "cardiac cMyBP-C coordinates",
+        "a universal rigid thick-to-thin bridge",
+        "a direct titin–MyBP-C contact",
+        "three exact molecules at every human titin superrepeat"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "mybpc_czone_context"
     },
     {
       "id": "lattice_cross_section",
@@ -456,7 +562,10 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "A",
       "decision": "ADMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "The current model places thick and thin filaments in a hexagonal lattice and predicts decreasing d10 as sarcomere length increases under its declared constant-volume idealization.",
       "scope": "Current modeled lattice; primary comparison restricted to the declared 2000–2400 nm working band",
       "claim_evidence_class": "MODELED",
@@ -467,7 +576,7 @@
           "id": "10.1152/ajpheart.2000.279.5.h2568",
           "role": "measured d10 response with sarcomere length",
           "scope_compatibility": "CONTEXT_ONLY",
-          "transfer_limit": "Rat myocardium calibrates context; it is not direct human skeletal geometry."
+          "transfer_limit": "Rat myocardium calibrates context; it is not direct geometry for the scope-ledger construct."
         },
         {
           "kind": "INTERNAL",
@@ -478,8 +587,14 @@
         }
       ],
       "render_encoding": "Same-scale orthographic cross-sections derived from existing lattice sites, with a live d10 dimension line and visible MODELED caveat.",
-      "not_claimed": ["time-resolved active contraction", "strict biological isovolumetry", "directly measured human skeletal d10", "a second lattice solver"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "time-resolved active contraction",
+        "strict biological isovolumetry",
+        "directly measured d10 for the scope-ledger construct",
+        "a second lattice solver"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "lattice_cross_section"
     },
     {
       "id": "object_linked_tooltips",
@@ -487,7 +602,10 @@
       "object_kind": "PRESENTATION",
       "release_tier": "A",
       "decision": "ADMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "Every visible biological component must expose its role, active scope, evidence, shape encoding, source, and explicit non-claims without changing the underlying geometry.",
       "scope": "Application presentation layer",
       "claim_evidence_class": "SCHEMATIC",
@@ -509,8 +627,13 @@
         }
       ],
       "render_encoding": "Safe DOM/SVG overlay synchronized with raycasting and keyboard/touch structure lists.",
-      "not_claimed": ["that the leader line is a molecular bond", "that selection changes evidence", "that a citation validates an unsourced artistic detail"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "that the leader line is a molecular bond",
+        "that selection changes evidence",
+        "that a citation validates an unsourced artistic detail"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "object_linked_tooltips"
     },
     {
       "id": "n2a_interaction_hub_card",
@@ -518,7 +641,9 @@
       "object_kind": "PRESENTATION",
       "release_tier": "B",
       "decision": "ADMIT",
-      "audience": ["EVIDENCE"],
+      "audience": [
+        "EVIDENCE"
+      ],
       "claim": "The N2A element contains a structured UN2A core with flexible flanks and experimentally characterized CARP binding; it can be discussed as an interaction hub without adding partner coordinates.",
       "scope": "Human N2A-region structural and binding evidence; current Q8WZ42 region",
       "claim_evidence_class": "MEASURED",
@@ -540,8 +665,13 @@
         }
       ],
       "render_encoding": "Text/diagram card linked to the existing N2A region; partner names remain annotations, not 3D molecules.",
-      "not_claimed": ["complete N2A signalosome composition", "resolved partner coordinates", "one universal downstream pathway"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "complete N2A signalosome composition",
+        "resolved partner coordinates",
+        "one universal downstream pathway"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "n2a_interaction_hub_card"
     },
     {
       "id": "titin_kinase_card",
@@ -549,7 +679,9 @@
       "object_kind": "PRESENTATION",
       "release_tier": "B",
       "decision": "ADMIT",
-      "audience": ["EVIDENCE"],
+      "audience": [
+        "EVIDENCE"
+      ],
       "claim": "Titin contains a kinase domain near the A/M junction; its structural presence is established, while a single mechanical activation and signaling mechanism is not treated as settled.",
       "scope": "Human Q8WZ42 kinase region; mechanism deliberately limited",
       "claim_evidence_class": "MEASURED",
@@ -571,8 +703,13 @@
         }
       ],
       "render_encoding": "Existing kinase proxy plus a qualified expert card; no animated activation switch.",
-      "not_claimed": ["a settled mechanosensor mechanism", "in-situ kinase orientation", "causal downstream signaling animation"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "a settled mechanosensor mechanism",
+        "in-situ kinase orientation",
+        "causal downstream signaling animation"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "titin_kinase_card"
     },
     {
       "id": "length_dependent_activation_card",
@@ -580,7 +717,9 @@
       "object_kind": "PRESENTATION",
       "release_tier": "B",
       "decision": "ADMIT",
-      "audience": ["EVIDENCE"],
+      "audience": [
+        "EVIDENCE"
+      ],
       "claim": "Passive titin tension and MyBP-C are among proposed contributors to length-dependent thick-filament regulation, but the current visualization does not simulate that mechanism.",
       "scope": "Qualified expert context; no cardiac mode and no active-mechanics implementation",
       "claim_evidence_class": "INFERRED",
@@ -595,8 +734,13 @@
         }
       ],
       "render_encoding": "Text-only Evidence card marked PROPOSED; no state variable or geometric deformation is added.",
-      "not_claimed": ["settled causality", "that titin is the actomyosin motor", "automatic coupling between sarcomere length and activation"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "settled causality",
+        "that titin is the actomyosin motor",
+        "automatic coupling between sarcomere length and activation"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "length_dependent_activation_card"
     },
     {
       "id": "thin_filament_regulation_layer",
@@ -604,7 +748,9 @@
       "object_kind": "BIOLOGICAL",
       "release_tier": "C",
       "decision": "DEFER",
-      "audience": ["EVIDENCE"],
+      "audience": [
+        "EVIDENCE"
+      ],
       "claim": "Thin-filament calcium regulation is valid context but is outside the release-critical titin story and remains absent unless the separate post-core admission test passes.",
       "scope": "Optional future structural reference with actual isoform composition disclosed",
       "claim_evidence_class": "MEASURED",
@@ -619,8 +765,13 @@
         }
       ],
       "render_encoding": "No release-critical geometry. Any future layer must use an independent regulatory state and explicit isoform labels.",
-      "not_claimed": ["troponin binding-site dots as a complete regulatory mechanism", "calcium state inferred from sarcomere length", "generic isoform-free thin-filament geometry"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "troponin binding-site dots as a complete regulatory mechanism",
+        "calcium state inferred from sarcomere length",
+        "generic isoform-free thin-filament geometry"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "thin_filament_regulation_layer"
     },
     {
       "id": "ai_provenance_pipeline",
@@ -628,7 +779,10 @@
       "object_kind": "PRESENTATION",
       "release_tier": "A",
       "decision": "ADMIT",
-      "audience": ["GUIDED", "EVIDENCE"],
+      "audience": [
+        "GUIDED",
+        "EVIDENCE"
+      ],
       "claim": "The application is generated from cited scientific records, measured or modeled data, explicit evidence classes, procedural geometry, and executable validation rather than from an unaudited AI illustration.",
       "scope": "This repository's implementation and validation workflow",
       "claim_evidence_class": "MEASURED",
@@ -650,13 +804,18 @@
         }
       ],
       "render_encoding": "Compact flow diagram with links to representative source, measurement, specification, renderer, and negative-test records.",
-      "not_claimed": ["that AI is a scientific authority", "that passing tests proves every biological interpretation", "that procedural geometry is experimental density"],
-      "asset_policy": "NO_SOURCE_FIGURE_COPIED"
+      "not_claimed": [
+        "that AI is a scientific authority",
+        "that passing tests proves every biological interpretation",
+        "that procedural geometry is experimental density"
+      ],
+      "asset_policy": "NO_SOURCE_FIGURE_COPIED",
+      "claim_support_id": "ai_provenance_pipeline"
     }
   ],
   "global_negative_controls": [
     "Reject any cardiac titin or alternative-isoform scene mode.",
-    "Reject any exact cardiac cMyBP-C coordinate in the retained skeletal model.",
+    "Reject any exact cardiac cMyBP-C coordinate in the reference-sequence model.",
     "Reject any MyBP-C path promoted above SCHEMATIC placement evidence.",
     "Reject any M1 density sourced only from the 2023 averaged M-band reconstruction.",
     "Reject any 160 nm M-line protein slab or synonymization of M-band and bare zone.",

@@ -159,8 +159,9 @@ export function checkPresentationSpec(presentation, context = {}) {
   validateScientificRecord(presentation.scope || {}, 'scope');
   for (const badge of presentation.scope_badges || []) {
     validateScientificRecord(badge, 'scope badge');
-    if (!badge.label || !badge.state_template) {
-      problems.push(`scope badge '${badge.id}' needs a visible label and state_template`);
+    if (!badge.label_ref || badge.label_ref !== 'scientific_scope.json#/public_badge'
+        || !badge.state_template) {
+      problems.push(`scope badge '${badge.id}' needs the canonical label_ref and state_template`);
     }
   }
 

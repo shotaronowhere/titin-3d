@@ -262,6 +262,36 @@ function claimMatrixDoc(pack) {
   return `${lines.join('\n')}\n`;
 }
 
+function scientificAuthorityDoc(pack) {
+  const authority = pack.scientific_authority;
+  const lines = [
+    '# Scientific authority status',
+    '',
+    `Generated — ${identitySummary(pack)}.`,
+    '',
+    `**Sprint status:** ${authority.status}`,
+    '',
+    `**Public scope:** ${authority.public_badge}`,
+    '',
+    '| Sequence authority | Value |',
+    '|---|---|',
+    `| Accession / isoform | ${authority.sequence.accession} / ${authority.sequence.isoform_id} |`,
+    `| Coordinate frame | ${authority.sequence.coordinate_frame} |`,
+    `| UniProt entry / sequence version | ${authority.sequence.entry_version} / ${authority.sequence.sequence_version} |`,
+    `| Domain features | ${authority.sequence.feature_count} |`,
+    `| Full upstream SHA-256 | \`${authority.sequence.upstream_sha256}\` |`,
+    '',
+    `Claim-support inventory: ${authority.claim_count} records.`,
+    '',
+    '| Decision | Status |',
+    '|---|---|',
+    ...Object.entries(authority.decision_statuses).map(([id, status]) => `| ${id} | ${status} |`),
+    '',
+    'Offline registry closure verifies that cited identifiers have canonical metadata. It does not establish semantic entailment; only a named, independently locator-verifying reviewer may approve a claim.',
+  ];
+  return `${lines.join('\n')}\n`;
+}
+
 function limitationsDoc(pack) {
   const lines = [
     '# Scientific limitations and non-claims',
@@ -383,6 +413,7 @@ const matrix = createVisualMatrix(model, {
 
 const files = new Map([
   ['CLAIM_MATRIX.md', claimMatrixDoc(pack)],
+  ['SCIENTIFIC_AUTHORITY.md', scientificAuthorityDoc(pack)],
   ['LIMITATIONS.md', limitationsDoc(pack)],
   ['PRESENTER_SCRIPT.md', presenterDoc(pack)],
   ['PREFLIGHT.md', preflightDoc(pack, matrix)],

@@ -13,7 +13,9 @@
       "sarcomere.json",
       "structural_states.json",
       "geometry_sources.json"
-    ]
+    ],
+    "coordinate_frame": "canonical",
+    "scientific_scope_ref": "scientific_scope.json#/sequence"
   },
   "domain_totals": {
     "Ig_like": 152,
@@ -50,9 +52,7 @@
       },
       "biological_role": "Z1Z2 binds telethonin/T-cap; Z-repeats bind alpha-actinin",
       "state_dependence": "Bound/anchored; axial position translates with SL but internal length is invariant.",
-      "species": "human",
-      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
-      "muscle_type": "skeletal (reference)",
+      "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
       "primary_references": [
         "10.1016/j.cell.2021.02.047",
@@ -140,9 +140,7 @@
       },
       "biological_role": "Serially-linked Ig; straighten at low force (first recruited)",
       "state_dependence": "Extends within I-band as SL increases; ALL titin length change occurs in I-band elastic elements.",
-      "species": "human",
-      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
-      "muscle_type": "skeletal (reference)",
+      "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
       "primary_references": [
         "10.1085/jgp.202012713",
@@ -236,9 +234,7 @@
       },
       "biological_role": "Unique sequence + Ig; CARP-binding; contour ~39 nm, Lp 0.35 nm",
       "state_dependence": "Extends within I-band as SL increases; ALL titin length change occurs in I-band elastic elements.",
-      "species": "human",
-      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
-      "muscle_type": "skeletal (reference)",
+      "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
       "primary_references": [
         "10.3389/fphys.2020.00173",
@@ -330,9 +326,7 @@
       },
       "biological_role": "31 PEVK repeats; entropic spring; extends at higher force; PKCa phospho-tuned",
       "state_dependence": "Extends within I-band as SL increases; ALL titin length change occurs in I-band elastic elements.",
-      "species": "human",
-      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
-      "muscle_type": "skeletal (reference)",
+      "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
       "primary_references": [
         "10.1161/hh1001.090876",
@@ -424,9 +418,7 @@
       },
       "biological_role": "Distal Ig tandem before A-band junction",
       "state_dependence": "Extends within I-band as SL increases; ALL titin length change occurs in I-band elastic elements.",
-      "species": "human",
-      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
-      "muscle_type": "skeletal (reference)",
+      "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
       "primary_references": [
         "10.1085/jgp.202012713",
@@ -514,9 +506,7 @@
       },
       "biological_role": "Bound to thick filament; D-zone + C-zone (11x11-domain super-repeats, 45.5 nm period); does NOT extend",
       "state_dependence": "Bound/anchored; axial position translates with SL but internal length is invariant.",
-      "species": "human",
-      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
-      "muscle_type": "skeletal (reference)",
+      "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
       "primary_references": [
         "10.1085/jgp.202012713",
@@ -595,9 +585,7 @@
       },
       "biological_role": "Mechanosensory kinase at A/M junction; strain-activated (contested mechanism)",
       "state_dependence": "Bound/anchored; axial position translates with SL but internal length is invariant.",
-      "species": "human",
-      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
-      "muscle_type": "skeletal (reference)",
+      "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
       "primary_references": [
         "10.1016/j.jmb.2021.166901",
@@ -673,9 +661,7 @@
       },
       "biological_role": "M-line integration; M10 binds obscurin/myomesin; anchors titin C-terminus",
       "state_dependence": "Bound/anchored; axial position translates with SL but internal length is invariant.",
-      "species": "human",
-      "isoform": "canonical (Q8WZ42; skeletal N2A-containing)",
-      "muscle_type": "skeletal (reference)",
+      "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence/domains); see evidence_by_claim for geometry",
       "primary_references": [
         "10.1016/j.jmb.2015.08.018",

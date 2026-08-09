@@ -43,16 +43,14 @@ REQUIRED_OBJECT_FIELDS = {
     "render_encoding",
     "not_claimed",
     "asset_policy",
+    "claim_support_id",
 }
 REQUIRED_SOURCE_FIELDS = {"kind", "id", "role", "scope_compatibility", "transfer_limit"}
 REQUIRED_REFERENCE_FIELDS = {"identifier", "authors", "year", "title", "journal"}
 
 EXPECTED_SCOPE = {
-    "educational_narrative": "Broadly applicable titin concepts explained through the existing reference model.",
-    "reference_species": "Homo sapiens",
-    "reference_accession": "UniProt Q8WZ42",
-    "reference_isoform": "canonical skeletal N2A-containing titin",
-    "reference_muscle_type": "skeletal",
+    "scientific_scope_ref": "scientific_scope.json",
+    "educational_narrative": "Broadly applicable titin concepts explained through an explicitly scoped reference-sequence model.",
     "default_structural_context": "resting reference unless the sarcomere-length state is explicitly shown",
     "cardiac_titin_mode": False,
     "alternative_isoform_mode": False,
@@ -178,13 +176,15 @@ claims = load(args.claims.resolve())
 references = load(args.references.resolve())
 objects = claims.get("objects", [])
 
-print("== SC-0 immutable contract and scope lock ==")
-recorded_digest = claims.get("meta", {}).get("contract_sha256")
-computed_digest = contract_digest(claims)
-check(claims.get("schema") == "titin-showcase-claim-audit/1", "schema is the reviewed SC-0 version")
+print("== SC-0 admission history migrated into the SC-19 claim authority ==")
+migration = claims.get("meta", {}).get("schema_migration") or {}
+check(claims.get("schema") == "titin-showcase-claim-audit/2", "schema is the SC-19 version")
 check(claims.get("meta", {}).get("status") == "COMPLETE", "SC-0 record declares completion")
-check(recorded_digest == EXPECTED_CONTRACT_SHA256, "recorded contract digest is reviewer-pinned")
-check(computed_digest == EXPECTED_CONTRACT_SHA256, "claim payload matches the reviewed contract digest")
+check(migration.get("from") == "titin-showcase-claim-audit/1", "schema migration names its source version")
+check(migration.get("prior_reviewed_payload_sha256") == EXPECTED_CONTRACT_SHA256,
+      "schema migration retains the historical reviewed payload digest")
+check(migration.get("review_status") == "PENDING",
+      "the migrated live claim/source bindings do not inherit the old whole-file approval")
 check(claims.get("scope_lock") == EXPECTED_SCOPE, "species, isoform, tissue, state, and mode scope are exact")
 check(claims.get("visual_grammar") == EXPECTED_VISUAL_GRAMMAR, "visual grammar is complete and unchanged")
 check(claims.get("attention_budget") == EXPECTED_ATTENTION_BUDGET, "attention budget is complete and unchanged")
@@ -223,6 +223,8 @@ for obj in objects:
     check(bool(obj["not_claimed"]) and all(str(item).strip() for item in obj["not_claimed"]), f"{object_id}: non-claims are explicit")
     check(obj["asset_policy"] == "NO_SOURCE_FIGURE_COPIED", f"{object_id}: source figures are not copied")
     check(bool(obj["sources"]), f"{object_id}: at least one source is present")
+    check(obj["claim_support_id"] == object_id,
+          f"{object_id}: stable claim-support binding matches the object ID")
 
     expected_summary = EXPECTED_OBJECT_SUMMARIES.get(object_id)
     actual_summary = (
@@ -328,4 +330,4 @@ print("\n" + "=" * 44)
 if failures:
     print(f"{len(failures)} SHOWCASE CLAIM FAILURE(S)")
     sys.exit(1)
-print(f"ALL SHOWCASE CLAIM CHECKS PASSED ({len(objects)} objects, digest {computed_digest[:12]})")
+print(f"ALL SHOWCASE CLAIM CHECKS PASSED ({len(objects)} objects, migrated from {EXPECTED_CONTRACT_SHA256[:12]})")

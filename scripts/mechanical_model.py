@@ -56,10 +56,10 @@ circular reasoning.
       artefact of the switch, not physics. See test suite.
 
   N2A
-      pure-entropic WLC, A = 0.35 nm, Lc = 39 nm
-      geometry_sources parameters[11] and [12], both skeletal N2A isoform,
-      both "primary-source confirmed" against 10.3389/fphys.2020.00173, and
-      titin.json declares geometry_proxy = "worm_like_chain" for this region.
+      one 4 nm folded-domain floor in series with a pure-entropic WLC,
+      A = 0.35 nm and total Lc = 39 nm. The AFM and phosphorylation source
+      (10.3389/fphys.2020.00173) used recombinant human N2A constructs; it did
+      not establish a tissue-specific Q8WZ42-1 construct.
       DELIBERATELY NOT MODELLED as a folded bundle with an unfolding
       transition: an earlier draft did that using 7 pN as the transition
       midpoint, but the 6-8 pN in geometry_sources parameters[19] is the *Ig

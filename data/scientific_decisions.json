@@ -1,0 +1,159 @@
+{
+  "schema": "titin-scientific-decisions/1",
+  "sprint_status": "CODE_COMPLETE_BLOCKED_SCIENCE",
+  "blocker": "No qualified SD-01–SD-05 reviewer candidate is recorded as confirmed; no ruling is fabricated.",
+  "decisions": {
+    "SD-01": {
+      "status": "PENDING",
+      "question": "Exact Q8WZ42-1 coordinate frame, N2A definition, and proximal/PEVK/distal residue-domain partition",
+      "required_reviewer_role": "Titin sequence annotation and isoform/domain-boundary specialist",
+      "evidence_packet": [
+        {
+          "path": "docs/scientific-decisions/SC-19/SD-01.md",
+          "sha256": "f8f48de862ac3f8786b1622398cff467dbbe2d22c3a9d49b1030902a34a31396"
+        },
+        {
+          "path": "docs/scientific-decisions/SC-19/region-feature-report.json",
+          "sha256": "31a293737079b5244d8f81eabcd5c1914b568ed1e338fe287bc8f8c6061031a5"
+        }
+      ],
+      "reviewer": null,
+      "reviewed_on": null,
+      "reviewed_model_fingerprint": null,
+      "reviewed_payload_sha256": null,
+      "ruling": null,
+      "public_caveat": null,
+      "dissent_or_uncertainty": [],
+      "downstream_claim_ids": [
+        "scope_badge",
+        "titin_region_architecture",
+        "sequence_region_partition"
+      ],
+      "implementation_verification": {
+        "status": "PENDING",
+        "reviewer": null,
+        "reviewed_on": null,
+        "implemented_model_fingerprint": null,
+        "implementation_evidence": []
+      }
+    },
+    "SD-02": {
+      "status": "PENDING",
+      "question": "A-band super-repeat, kinase, bare-zone, and M-line axial budget",
+      "required_reviewer_role": "Titin A-band/M-band ultrastructure specialist",
+      "evidence_packet": [
+        {
+          "path": "docs/scientific-decisions/SC-19/SD-02.md",
+          "sha256": "671a547bd3fceeeafd6f7a1002fba795220e6352a593d5d1deec23bfa85d7745"
+        }
+      ],
+      "reviewer": null,
+      "reviewed_on": null,
+      "reviewed_model_fingerprint": null,
+      "reviewed_payload_sha256": null,
+      "ruling": null,
+      "public_caveat": null,
+      "dissent_or_uncertainty": [],
+      "downstream_claim_ids": [
+        "band_and_zone_brackets",
+        "mband_midpoint_and_crosslinks"
+      ],
+      "implementation_verification": {
+        "status": "PENDING",
+        "reviewer": null,
+        "reviewed_on": null,
+        "implemented_model_fingerprint": null,
+        "implementation_evidence": []
+      }
+    },
+    "SD-03": {
+      "status": "PENDING",
+      "question": "Names and relationships among sequence repeats, reported axial quantities, myosin periodicity, and register hypotheses",
+      "required_reviewer_role": "Striated-muscle filament periodicity and structural-biology specialist",
+      "evidence_packet": [
+        {
+          "path": "docs/scientific-decisions/SC-19/SD-03.md",
+          "sha256": "e7c671b981a0386926d3e1e5f2799ebe78608451b751e677317dd77f42e61012"
+        }
+      ],
+      "reviewer": null,
+      "reviewed_on": null,
+      "reviewed_model_fingerprint": null,
+      "reviewed_payload_sha256": null,
+      "ruling": null,
+      "public_caveat": null,
+      "dissent_or_uncertainty": [],
+      "downstream_claim_ids": [
+        "titin_region_architecture",
+        "aband_periodicity_relation"
+      ],
+      "implementation_verification": {
+        "status": "PENDING",
+        "reviewer": null,
+        "reviewed_on": null,
+        "implemented_model_fingerprint": null,
+        "implementation_evidence": []
+      }
+    },
+    "SD-04": {
+      "status": "PENDING",
+      "question": "Force-law parameters, transfers, validity, sensitivity, slack/unfolding omissions, and uncertainty",
+      "required_reviewer_role": "Titin passive-mechanics and single-molecule force-law specialist",
+      "evidence_packet": [
+        {
+          "path": "docs/scientific-decisions/SC-19/SD-04.md",
+          "sha256": "af2d78b23bd26531cd0363b76b0e5e7dc51b759b07635c8985aba9afdcdfd42b"
+        }
+      ],
+      "reviewer": null,
+      "reviewed_on": null,
+      "reviewed_model_fingerprint": null,
+      "reviewed_payload_sha256": null,
+      "ruling": null,
+      "public_caveat": null,
+      "dissent_or_uncertainty": [],
+      "downstream_claim_ids": [
+        "regional_extension_story",
+        "force_law_parameter_set"
+      ],
+      "implementation_verification": {
+        "status": "PENDING",
+        "reviewer": null,
+        "reviewed_on": null,
+        "implemented_model_fingerprint": null,
+        "implementation_evidence": []
+      }
+    },
+    "SD-05": {
+      "status": "PENDING",
+      "question": "Z-disc/M-line anchoring language, telethonin/alpha-actinin emphasis, stoichiometry, and depiction semantics",
+      "required_reviewer_role": "Sarcomere terminal anchoring and titin-binding structural-biology specialist",
+      "evidence_packet": [
+        {
+          "path": "docs/scientific-decisions/SC-19/SD-05.md",
+          "sha256": "a868b383592da89af486bee713dc84f40e851e65b25545ca346a77ae8ebb984c"
+        }
+      ],
+      "reviewer": null,
+      "reviewed_on": null,
+      "reviewed_model_fingerprint": null,
+      "reviewed_payload_sha256": null,
+      "ruling": null,
+      "public_caveat": null,
+      "dissent_or_uncertainty": [],
+      "downstream_claim_ids": [
+        "zdisc_local_network",
+        "zdisc_alpha_actinin_doublets",
+        "zdisc_telethonin_sandwich",
+        "mband_midpoint_and_crosslinks"
+      ],
+      "implementation_verification": {
+        "status": "PENDING",
+        "reviewer": null,
+        "reviewed_on": null,
+        "implemented_model_fingerprint": null,
+        "implementation_evidence": []
+      }
+    }
+  }
+}

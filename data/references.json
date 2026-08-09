@@ -1,6 +1,6 @@
 {
  "10.1073/pnas.1516732113": {
- "doi": "10.1073/pnas.1516732113",
+  "doi": "10.1073/pnas.1516732113",
   "authors": "Ait-Mou et al.",
   "year": 2016,
   "title": "Titin strain contributes to the Frank-Starling law of the heart by structural rearrangements of both thin- and thick-filament proteins",
@@ -153,7 +153,7 @@
  },
  "10.1083/jcb.106.5.1563": {
   "doi": "10.1083/jcb.106.5.1563",
-  "authors": "Fürst, Osborn, Nave, and Weber",
+  "authors": "F\u00fcrst, Osborn, Nave, and Weber",
   "year": 1988,
   "title": "The organization of titin filaments in the half-sarcomere revealed by monoclonal antibodies in immunoelectron microscopy: a map of ten nonrepetitive epitopes starting at the Z line extends close to the M line",
   "journal": "Journal of Cell Biology",
@@ -237,7 +237,7 @@
   ],
   "method": "X-ray crystallography",
   "relevance": "Titin M-line C-terminus : obscurin-like 1 (OBSL1) complex \u2014 C-terminal M-line anchoring.",
-  "used_for": "Measured human titin M10–OBSL1 Ig1 binding topology. The isolated binary complex does not resolve the complete in-situ M-band network or crosslink coordinates."
+  "used_for": "Measured human titin M10\u2013OBSL1 Ig1 binding topology. The isolated binary complex does not resolve the complete in-situ M-band network or crosslink coordinates."
  },
  "10.1083/jcb.134.6.1441": {
   "doi": "10.1083/jcb.134.6.1441",
@@ -246,7 +246,7 @@
   "title": "The structure of the sarcomeric M band: localization of defined domains of myomesin, M-protein, and the 250-kD carboxy-terminal region of titin by immunoelectron microscopy",
   "journal": "Journal of Cell Biology",
   "identifier": "10.1083/jcb.134.6.1441",
-  "used_for": "Primary immunoelectron localization of titin, myomesin, and M-protein across the vertebrate skeletal M-band. Supports component relationships and the distinction between the M-band and a single opaque central plate; no exact coordinates are transferred into the retained human model."
+  "used_for": "Primary immunoelectron localization of titin, myomesin, and M-protein in rat-psoas and bovine-sternomandibularis skeletal-muscle fibers. Supports component relationships and the distinction between the M-band and a single opaque central plate; no exact coordinates are transferred into the retained human reference-sequence model."
  },
  "PDB:3PUC": {
   "doi": null,
@@ -352,7 +352,7 @@
  },
  "10.1083/jcb.140.4.853": {
   "doi": "10.1083/jcb.140.4.853",
-  "authors": "Trombitás et al.",
+  "authors": "Trombit\u00e1s et al.",
   "year": 1998,
   "title": "Titin extensibility in situ: entropic elasticity of permanently folded and permanently unfolded molecular segments",
   "journal": "Journal of Cell Biology",
@@ -375,7 +375,7 @@
   "title": "Structure of the native myosin filament in the relaxed cardiac sarcomere",
   "journal": "Nature",
   "identifier": "10.1038/s41586-023-06690-5",
-  "used_for": "Conditional cardiac M-band limitation context only: M1 was absent from the averaged reconstruction, M-band-associated protein density remained partly unresolved, and expected flexible crosslinks were averaged out. No exact coordinate is transferred into the skeletal N2A model."
+  "used_for": "Conditional cardiac M-band limitation context only: M1 was absent from the averaged reconstruction, M-band-associated protein density remained partly unresolved, and expected flexible crosslinks were averaged out. No exact coordinate is transferred into the Q8WZ42-1 reference-sequence model."
  },
  "10.1038/s41586-023-06691-4": {
   "doi": "10.1038/s41586-023-06691-4",
@@ -400,7 +400,7 @@
   "journal": "Protein Data Bank",
   "primary_citation": "10.1038/s41586-023-06691-4",
   "used_for": "Coordinates measured directly for context_measurements.json. Composition confirmed: 78 myosin heavy chains, 18 ELC, 18 RLC, 6 titin, 3 cMyBP-C.",
-  "caveat": "3-fold symmetry was IMPOSED during reconstruction; CARDIAC, while this project's declared scope is the skeletal N2A isoform."
+  "caveat": "3-fold symmetry was IMPOSED during reconstruction; CARDIAC, while this project's declared scope is the Q8WZ42-1 reference-sequence construct."
  },
  "PDB:6KN7": {
   "identifier": "PDB:6KN7",
@@ -412,6 +412,57 @@
   "journal": "Protein Data Bank",
   "resolution_A": 6.6,
   "used_for": "Coordinates measured for actin helical parameters: rise 2.755 nm, twist -166.628 deg, crossover repeat 37.091 nm, CA envelope 8.235 nm. Basis for admitting the thin-filament long-pitch twist while deferring subunit-level depiction.",
-  "caveat": "The complex carries cardiac troponin subunits, but the measured actin entity is explicitly alpha-skeletal actin; the geometry transfer is direct for this project's skeletal scope."
+  "caveat": "The complex carries cardiac troponin subunits, but the measured actin entity is explicitly alpha-skeletal actin; only the actin rise/twist is admitted as structural context, without transferring cardiac troponin identity or state."
+ },
+ "10.1073/pnas.95.14.8052": {
+  "doi": "10.1073/pnas.95.14.8052",
+  "authors": "Linke, Ivemeyer, Mundel, Stockmeier, and Kolmerer",
+  "year": 1998,
+  "title": "Nature of PEVK-titin elasticity in skeletal muscle",
+  "journal": "Proceedings of the National Academy of Sciences",
+  "identifier": "10.1073/pnas.95.14.8052",
+  "used_for": "Rat-psoas PEVK and tandem-Ig force-law parameter evidence. Registry closure does not approve transfer of those parameters to Q8WZ42-1; SD-04 adjudicates that transfer."
+ },
+ "10.1021/bi00801a004": {
+  "doi": "10.1021/bi00801a004",
+  "authors": "Lymn and Taylor",
+  "year": 1971,
+  "title": "Mechanism of adenosine triphosphate hydrolysis by actomyosin",
+  "journal": "Biochemistry",
+  "identifier": "10.1021/bi00801a004",
+  "used_for": "Foundational actomyosin ATPase cycle support for the positive motor explanation required by SC-23; independent locator and wording review remain pending."
+ },
+ "PDB:1YA5": {
+  "doi": "10.1038/nature04343",
+  "authors": "Zou et al.",
+  "year": 2006,
+  "title": "Crystal structure of titin Z1Z2 in complex with telethonin",
+  "journal": "RCSB Protein Data Bank",
+  "identifier": "PDB:1YA5",
+  "pdb_id": "1YA5",
+  "resolution_A": 2.445,
+  "primary_citation": "10.1038/nature04343"
+ },
+ "PDB:3KNB": {
+  "doi": "10.1038/embor.2010.65",
+  "authors": "Sauer, Vahokoski, Song, and Wilmanns",
+  "year": 2010,
+  "title": "Crystal structure of the titin C-terminus in complex with obscurin-like 1",
+  "journal": "RCSB Protein Data Bank",
+  "identifier": "PDB:3KNB",
+  "pdb_id": "3KNB",
+  "resolution_A": 1.4,
+  "primary_citation": "10.1038/embor.2010.65"
+ },
+ "PDB:7NIP": {
+  "doi": "10.1016/j.jmb.2021.166901",
+  "authors": "Zhou et al.",
+  "year": 2021,
+  "title": "Titin N2A unique-sequence (UN2A) core",
+  "journal": "RCSB Protein Data Bank",
+  "identifier": "PDB:7NIP",
+  "pdb_id": "7NIP",
+  "primary_citation": "10.1016/j.jmb.2021.166901",
+  "caveat": "The deposited construct maps to canonical Q8WZ42 residues 9504\u20139544 and is evidence for SD-01; it does not by itself select this model's N2A region boundary."
  }
 }

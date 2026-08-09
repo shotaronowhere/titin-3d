@@ -31,6 +31,24 @@ test('committed standalone opens from file:// and reaches its ready marker', asy
   await cleanBoot(page, pathToFileURL(resolve('index.html')).href);
 });
 
+test('SC19 desktop authority: pending scope and a claim source are visibly inspectable', async ({ page }) => {
+  await setReviewViewport(page, 'desktop');
+  await cleanBoot(page, '/index.html');
+  await expect(page.locator('#scopeIdentity'))
+    .toHaveText(/Human TTN reference sequence.*Q8WZ42-1.*review pending/i);
+  await expect(page.locator('#scopeDecisions')).toHaveText(/5 pending.*0 approved.*0 deferred/i);
+
+  await page.locator('#audienceEvidence').click();
+  await expect(page.locator('#scientificDecisionStatus'))
+    .toHaveText(/SD-01 pending.*SD-02 pending.*SD-03 pending.*SD-04 pending.*SD-05 pending/i);
+  await expect(page.locator('#chapterEvidenceTitle')).not.toHaveText('—');
+  await expect(page.locator('#chapterSources a').first()).toBeVisible();
+
+  await page.locator('#tabMeasure').click();
+  await expect(page.locator('#mechanicsScope'))
+    .toHaveText(/rat psoas.*SD-04 pending/i);
+});
+
 for (const viewport of Object.keys(VIEWPORTS)) {
   test(`${viewport}: Evidence, Measure, and Sources open their named tab and return focus`, async ({ page }) => {
     await setReviewViewport(page, viewport);

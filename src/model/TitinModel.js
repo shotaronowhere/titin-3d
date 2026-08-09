@@ -22,12 +22,20 @@ import { ZDiscDetail } from '../geometry/ZDiscDetail.js';
 import { MBandDetail } from '../geometry/MBandDetail.js';
 import { MyBPCContext } from '../geometry/MyBPCContext.js';
 import { LatticeCrossSection } from '../geometry/LatticeCrossSection.js';
+import { scopeLedger } from './ScientificScope.js';
+import { decisionLedger } from './ScientificDecisions.js';
+import { mapFeaturesToRegions } from './SequenceFeatures.js';
 
 export class TitinModel {
   constructor(spec) {
     this.spec = spec;
     this.provenance = new Provenance(spec);
     this.geometry = new GeometryEngine(spec);
+    this.scientificScope = scopeLedger(spec);
+    this.scientificDecisions = decisionLedger(spec);
+    this.sequenceFeatures = mapFeaturesToRegions(spec.sequenceFeatures, spec.titin.regions, {
+      expectedCoordinateFrame: spec.titin.meta.coordinate_frame,
+    });
     // Phase-3 strategy layer (present only if geometry_strategy.json loaded).
     this.strategy = spec.geometryStrategy
       ? new GeometryStrategy(spec, this.geometry, spec.geometryStrategy)

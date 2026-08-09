@@ -1,6 +1,6 @@
 # Scientific limitations and non-claims
 
-Generated — model `8234f36bad39a916b1428dc082c72dff0f7762d2b8404f50dbccc97eefe01cbe`; app `53a071e85d0df4d1d57af41617ec6f0a9f0d14e3`; build inputs `b2baf9914e9ca458864ad1f360f57c0c80f51235a64966ce4450f60f10d40605`. Run `npm run pack` to refresh.
+Generated — model `7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c`; app `3eb7dc54d1246aca59e9980ca7f65bd0d2f4b99a`; build inputs `dd3ee440b4a393a537b5686122815d890b9772b093042ee4e76ac3df23a000b3`. Run `npm run pack` to refresh.
 
 Every statement below is recorded in the repository, not written for this sheet.
 
@@ -36,7 +36,7 @@ Source: `data/showcase_claims.json`
 - causal downstream signaling animation
 - complete M-band molecular structure
 - complete N2A signalosome composition
-- directly measured human skeletal d10
+- directly measured d10 for the scope-ledger construct
 - exact human Q8WZ42 lateral routing
 - exact myomesin/OBSL1 coordinates
 - exact unresolved linker conformations
@@ -82,7 +82,7 @@ Source: `data/showcase_claims.json`
 - Reject any Z-disc depiction with one titin chain in the 2:1 telethonin sandwich.
 - Reject any automatic coupling of short sarcomere length to biochemical activation.
 - Reject any cardiac titin or alternative-isoform scene mode.
-- Reject any exact cardiac cMyBP-C coordinate in the retained skeletal model.
+- Reject any exact cardiac cMyBP-C coordinate in the reference-sequence model.
 - Reject any presentation layer that moves a biological anchor or strengthens evidence.
 - Reject any source figure copied without a separately recorded compatible license.
 - Reject any universal regular Z-disc lattice claim.
@@ -159,7 +159,7 @@ Source: `data/presentation.json`
 - atom-level region surfaces
 - atom-resolved surfaces for every domain
 - automatic coupling between sarcomere length and activation
-- cardiac cMyBP-C coordinates in the skeletal reference model
+- cardiac cMyBP-C coordinates transferred into the reference-sequence model
 - cardiac titin
 - causal downstream signaling animation
 - complete N2A signalosome composition
@@ -195,7 +195,7 @@ Source: `data/sarcomere.json; data/titin.json`
 - Exact 3D path/trajectory of I-band titin between Z-disc and thick-filament tip
 - Exact register of A-band titin super-repeats against specific myosin crowns in 3D
 - Exact thin-filament pointed-end position (nebulin-capped) per muscle type
-- Precise Z-disc internal lattice register for the skeletal N2A isoform
+- Precise Z-disc internal lattice register for the reference-sequence construct named by scientific_scope.json
 - Tertiary conformation of PEVK and N2A unique sequence
 
 ## Forbidden depictions

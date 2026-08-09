@@ -151,21 +151,19 @@ test('SC8: no annotation renders stronger evidence than it claims', () => {
 });
 
 test('SC8: cross-muscle measurements are declared and never silently adopted', () => {
-  const scope = model.spec.sarcomere.meta.scope_muscle_type || 'skeletal';
   const measurements = model.spec.contextMeasurements.measurements;
-  const outOfScope = measurements.filter((entry) => (
-    !String(entry.muscle_type).toLowerCase().includes(scope)
-  ));
-  assert.ok(outOfScope.length, 'the model does retain out-of-scope context measurements');
-  for (const entry of outOfScope) {
+  assert.ok(measurements.some((entry) => entry.muscle_type === 'cardiac'),
+    'the model retains explicitly labelled cardiac context measurements');
+  for (const entry of measurements) {
     assert.ok(String(entry.skeletal_transfer || '').trim(),
-      `${entry.quantity}: an out-of-scope value must state its transferability`);
+      `${entry.quantity}: every value must state its transfer/admission status`);
   }
   // The measured cardiac titin azimuth is the concrete case: it exists, it is
   // better than the drawn schematic, and it is deliberately NOT adopted.
   const divergence = RADIAL_TITIN_POLICY.known_divergence_from_measurement;
   assert.match(divergence.status, /renderer intentionally lags/i);
-  assert.match(divergence.why_not_yet_adopted, /skeletal/i);
+  assert.match(divergence.why_not_yet_adopted, /current construct tissue status remains pending/i);
+  assert.doesNotMatch(divergence.why_not_yet_adopted, /human skeletal/i);
   assert.equal(RADIAL_TITIN_POLICY.id, 'six_fold_symmetric');
   const offsets = model.contextSceneAt(SL, { rings: 1 }).lattice.titin_strands.offsets;
   const azimuths = offsets.map((offset) => Number(offset.azimuth_deg.toFixed(6)));

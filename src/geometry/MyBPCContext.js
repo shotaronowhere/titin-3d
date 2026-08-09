@@ -366,7 +366,7 @@ export class MyBPCContext {
       },
       cardiac_omission: {
         omitted: 'exact cMyBP-C coordinates from the cardiac thick-filament reconstruction',
-        why: 'the retained model scope is human skeletal N2A-containing titin; adopting a cardiac accessory protein placement would silently mix isoforms',
+        why: 'the construct tissue status is pending; adopting a cardiac accessory-protein placement would silently mix preparations',
         recorded_in: 'geometry_strategy.json:context_depiction_policy (cMyBP-C DEFER) and showcase_claims.json:mybpc_czone_context',
       },
       not_claimed: [...this.claim.not_claimed],

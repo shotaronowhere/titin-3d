@@ -302,6 +302,7 @@ window.__titinBoot = { ready: false, problems: [] };
   .scope-kicker { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .11em;
     text-transform: uppercase; }
   #scopeIdentity { font-size: 11px; font-weight: 650; }
+  #scopeDecisions { color: var(--warn); font-size: 10px; margin-top: 2px; }
   #scopeState { color: #d9b869; font-size: 10px; }
   #urlNotice { pointer-events: auto; margin-top: 9px; max-width: 660px; border-left: 3px solid #d0a24c;
     border-radius: 5px; padding: 7px 10px; color: #e7cc91; font-size: 10px; }
@@ -583,8 +584,9 @@ window.__titinBoot = { ready: false, problems: [] };
         </div>
         <div id="scopeBadge" aria-label="Reference scope and active structural state">
           <div class="scope-kicker">Reference scope</div>
-          <div id="scopeIdentity">Human skeletal N2A titin · Q8WZ42</div>
+          <div id="scopeIdentity">Reference construct loading…</div>
           <div id="scopeState">Loading structural state…</div>
+          <div id="scopeDecisions">Scientific decisions loading…</div>
         </div>
       </div>
       <div id="urlNotice" role="status" hidden></div>
@@ -752,6 +754,7 @@ window.__titinBoot = { ready: false, problems: [] };
       <div class="sub" style="margin:0 0 6px">One force, shared by the four I-band
         regions in series, solved from sourced force-extension laws with no fitted
         parameters. The marker is the length on the stage bar.</div>
+      <div class="sub" id="mechanicsScope"></div>
       <div id="forceCurve"></div>
 
       <h2>Lattice cross-section</h2>
@@ -765,6 +768,8 @@ window.__titinBoot = { ready: false, problems: [] };
     </div>
 
     <div id="panelEvidence" role="tabpanel" aria-labelledby="tabEvidence" hidden>
+      <h2>Scientific decisions</h2>
+      <div class="note warn" id="scientificDecisionStatus"></div>
       <h2>Current guided claim</h2>
       <div class="note" id="chapterEvidence">
         <b id="chapterEvidenceTitle">—</b>
@@ -908,7 +913,10 @@ const candidateIdentity = model.spec.identity;
 $('modelFingerprint').textContent = candidateIdentity.model_fingerprint;
 $('appRevision').textContent = candidateIdentity.app_revision;
 $('buildInputsFingerprint').textContent = candidateIdentity.build_inputs_fingerprint;
-$('scopeIdentity').textContent = presentation.scope_badges[0].label;
+$('scopeIdentity').textContent = model.scientificScope.publicBadge;
+$('mechanicsScope').textContent = model.scientificScope.mechanics.display_label;
+$('scopeDecisions').textContent = model.scientificDecisions.summaryText;
+$('scientificDecisionStatus').textContent = model.scientificDecisions.badgeText;
 
 function publicPresentationState() {
   return {
