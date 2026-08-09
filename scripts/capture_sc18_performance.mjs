@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /** Print a reproducible SC-18 Chromium performance sample; does not edit evidence. */
 import { spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { chromium } from '@playwright/test';
 
 const port = 4174;
@@ -34,15 +36,18 @@ try {
   await page.waitForFunction(() => window.__titinBoot?.ready === true);
   const startupMs = performance.now() - start;
 
-  const frameTimes = await page.evaluate(() => new Promise((resolve) => {
-    const samples = [];
+  const trace = await page.evaluate(() => new Promise((resolve) => {
+    const frameTimes = [];
+    const heapSamples = [];
     const frame = (time) => {
-      samples.push(time);
-      if (samples.length >= 121) resolve(samples);
+      frameTimes.push(time);
+      if (performance.memory) heapSamples.push(performance.memory.usedJSHeapSize);
+      if (frameTimes.length >= 121) resolve({ frameTimes, heapSamples });
       else requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
   }));
+  const { frameTimes, heapSamples } = trace;
   const intervals = frameTimes.slice(1).map((time, index) => time - frameTimes[index]);
   const sorted = [...intervals].sort((a, b) => a - b);
   const percentile = (fraction) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * fraction))];
@@ -62,6 +67,12 @@ try {
       js_heap_limit_bytes: value.jsHeapSizeLimit,
     } : null;
   });
+  if (memory) {
+    memory.observed_samples = heapSamples.length + 1;
+    memory.peak_observed_used_js_heap_bytes = Math.max(
+      memory.used_js_heap_bytes, ...heapSamples,
+    );
+  }
   const navigation = await page.evaluate(() => {
     const row = performance.getEntriesByType('navigation')[0];
     return row ? {
@@ -76,12 +87,21 @@ try {
     schema: 'titin-sc18-performance-sample/1',
     captured_on: new Date().toISOString(),
     browser: { engine: 'Chromium', version: browser.version(), headless: true },
+    candidate: await page.evaluate(() => window.__titinBuild),
+    artifact: (() => {
+      const bytes = readFileSync('index.html');
+      return {
+        path: 'index.html',
+        bytes: bytes.byteLength,
+        sha256: createHash('sha256').update(bytes).digest('hex'),
+      };
+    })(),
     viewport: { width: 1280, height: 720, device_scale_factor: 1 },
     method: {
       startup: 'wall time from page.goto to window.__titinBoot.ready=true',
       frame_trace: '120 consecutive requestAnimationFrame intervals after ready',
       interaction: 'Measure click through two animation frames and selected-tab confirmation',
-      memory: 'Chromium performance.memory after the interaction',
+      memory: 'Chromium performance.memory sampled on each trace frame and after the interaction; peak is the maximum observed sample, not an OS process high-water mark',
     },
     startup_ms: Number(startupMs.toFixed(3)),
     frame_trace_ms: intervals.map((value) => Number(value.toFixed(3))),

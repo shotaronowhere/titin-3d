@@ -5,7 +5,7 @@
   "description": "Scientifically-defensible interactive 3D titin/sarcomere visualization. The scientific geometric specification (data/*.json) is the source of truth; the renderer consumes it.",
   "type": "module",
   "scripts": {
-    "test": "node --test --test-concurrency=1",
+    "test": "node --test --test-concurrency=1 test/*.test.js",
     "test:sc2": "node --test --test-concurrency=1 test/showcase_phase2.test.js test/presentation.test.js test/standalone.test.js",
     "test:sc3": "node --test --test-concurrency=1 test/showcase_phase3.test.js",
     "serve": "python3 -m http.server 8000",
