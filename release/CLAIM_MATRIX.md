@@ -1,6 +1,6 @@
 # Claim and evidence matrix
 
-Generated from `data/showcase_claims.json` — model `8234f36bad39a916b1428dc082c72dff0f7762d2b8404f50dbccc97eefe01cbe`; app `53a071e85d0df4d1d57af41617ec6f0a9f0d14e3`; build inputs `b2baf9914e9ca458864ad1f360f57c0c80f51235a64966ce4450f60f10d40605`.
+Generated from `data/showcase_claims.json` — model `7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c`; app `3eb7dc54d1246aca59e9980ca7f65bd0d2f4b99a`; build inputs `dd3ee440b4a393a537b5686122815d890b9772b093042ee4e76ac3df23a000b3`.
 Do not edit by hand: run `npm run pack`.
 
 | Object | Decision | Tier | Claim evidence | Render evidence | Sources |
@@ -30,9 +30,9 @@ Do not edit by hand: run `npm run pack`.
 
 ### Reference scope and state badge
 
-**Claim.** The active visualization uses canonical human Q8WZ42, a skeletal N2A-containing titin reference, at the explicitly named structural state.
+**Claim.** The active visualization uses the human TTN reference sequence Q8WZ42-1 at the explicitly named structural state; its tissue construct is under review.
 
-**Scope.** Homo sapiens; skeletal N2A-containing Q8WZ42; active state shown live
+**Scope.** Homo sapiens Q8WZ42-1 reference sequence; tissue construct review pending; active state shown live
 
 **Not claimed.**
 
@@ -177,7 +177,7 @@ Do not edit by hand: run `npm run pack`.
 
 **Claim.** Skeletal MyBP-C is an accessory C-zone protein associated with the thick filament in an approximately 43 nm periodic context and can influence lattice and myosin-head regulation.
 
-**Scope.** Fast MyBP-C in permeabilized mouse psoas; optional context for the human skeletal N2A model
+**Scope.** Fast MyBP-C in permeabilized mouse psoas; optional context for the human Q8WZ42-1 reference-sequence model
 
 **Not claimed.**
 
@@ -196,7 +196,7 @@ Do not edit by hand: run `npm run pack`.
 
 - time-resolved active contraction
 - strict biological isovolumetry
-- directly measured human skeletal d10
+- directly measured d10 for the scope-ledger construct
 - a second lattice solver
 
 ### Object-linked explanations and sources
