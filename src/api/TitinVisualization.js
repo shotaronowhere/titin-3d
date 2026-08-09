@@ -114,11 +114,15 @@ export class TitinVisualization {
    * @param {(path:string)=>Promise<object>} [opts.reader] override the spec reader
    * @param {string} [opts.scale] 'context' | 'detail'
    * @param {number} [opts.rings] transverse lattice rings
-   * @param {object} [opts.buildOpts] renderer options passed through
+  * @param {object} [opts.buildOpts] renderer options passed through
+   * @param {{model_fingerprint:string, app_revision:string,
+   *   build_inputs_fingerprint:string}} [opts.identity] injected candidate identity
    * @returns {Promise<TitinVisualization>}
    */
   static async create(container, opts = {}) {
-    const model = await TitinModel.create(opts.reader || browserReader());
+    const model = await TitinModel.create(opts.reader || browserReader(), {
+      identity: opts.identity,
+    });
     return new TitinVisualization(container, model, opts);
   }
 

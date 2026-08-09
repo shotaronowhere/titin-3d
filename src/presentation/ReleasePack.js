@@ -32,8 +32,8 @@ export const SLIDE = Object.freeze({ width: 1920, height: 1080 });
 const PREFLIGHT_STEPS = Object.freeze([
   ['open_both', 'Open the deployed GitHub Pages URL and the offline standalone index.html.',
     'Both load without a network request after first paint.'],
-  ['same_build', 'Compare the build fingerprint shown in the Evidence drawer of each.',
-    'The two fingerprints are identical.'],
+  ['same_build', 'Compare the model, application, and build-input identities shown in the Evidence drawer of each.',
+    'All three identities are identical.'],
   ['guided_route', 'Run the guided route once, end to end, on the actual display.',
     'Every chapter reaches its camera and reads legibly from the back of the room.'],
   ['rendering', 'Check typography, colour, animation, WebGL, and pointer behaviour.',
@@ -264,19 +264,20 @@ function fallbackSlides(model, referenceLengthNm, comparisonLengthNm) {
 
 /**
  * @param {import('../model/TitinModel.js').TitinModel} model
- * @param {{buildFingerprint?: string, referenceLengthNm?: number,
+ * @param {{identity?: {model_fingerprint:string, app_revision:string,
+ *   build_inputs_fingerprint:string}, referenceLengthNm?: number,
  *   comparisonLengthNm?: number}} [opts]
  */
 export function createReleasePack(model, opts = {}) {
   const {
-    buildFingerprint = null,
+    identity = model.spec.identity,
     referenceLengthNm = model.spec.presentation.initial_state.sarcomere_length_nm,
     comparisonLengthNm = model.spec.presentation.scope.working_range_nm[1],
   } = opts;
 
   const pack = {
     schema: 'titin-release-pack/1',
-    build_fingerprint: buildFingerprint,
+    identity: { ...identity },
     generated_from: [
       'data/showcase_claims.json', 'data/references.json', 'data/presentation.json',
       'data/annotations.json', 'data/sarcomere.json', 'data/titin.json',
@@ -301,6 +302,11 @@ export function validateReleasePack(pack) {
     throw new Error('validateReleasePack: unsupported record.');
   }
   if (!pack.claim_matrix.length) throw new Error('validateReleasePack: the claim matrix is empty.');
+  for (const field of ['model_fingerprint', 'app_revision', 'build_inputs_fingerprint']) {
+    if (!pack.identity || typeof pack.identity[field] !== 'string' || !pack.identity[field]) {
+      throw new Error(`validateReleasePack: identity is missing '${field}'.`);
+    }
+  }
   for (const row of pack.claim_matrix) {
     if (!row.claim?.trim() || !row.scope?.trim() || !row.not_claimed.length) {
       throw new Error(`validateReleasePack: claim '${row.id}' is missing claim, scope, or non-claims.`);

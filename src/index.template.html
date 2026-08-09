@@ -95,7 +95,7 @@ window.__titinBoot = { ready: false, problems: [] };
     --bg: #0e1116; --panel: #161b22; --edge: #2b3440;
     --text: #e6ebf1; --dim: #98a4b3; --accent: #7aa2d8; --titin: #ff5d7d;
     --titin-hi: #ffb0c0;
-    --chrome: rgb(14 17 22 / 88%); --focus: #f2d06b;
+    --chrome: rgb(14 17 22 / 88%); --focus: #f2d06b; --source-link: #a9c9f2;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
@@ -239,7 +239,10 @@ window.__titinBoot = { ready: false, problems: [] };
   .object-sources { display: flex; gap: 4px 8px; flex-wrap: wrap; margin-top: 8px;
     padding-top: 6px; border-top: 1px solid var(--edge); color: var(--dim); font-size: 9px;
     line-height: 1.5; }
-  .object-sources a, #chapterSources a { color: #a9c9f2; text-decoration: underline;
+  /* SC-18. Every container that creates a link is named here; no visible anchor
+     can fall through to a low-contrast user-agent default. */
+  .object-sources a, #chapterSources a, #expertCards a, #selectedEvidence a, #bibliography a {
+    color: var(--source-link); text-decoration: underline;
     text-underline-offset: 2px; }
   .object-disclosure { cursor: pointer; color: var(--dim); font-size: 10px; font-weight: 600;
     margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--edge); list-style: none; }
@@ -330,9 +333,12 @@ window.__titinBoot = { ready: false, problems: [] };
     color: var(--dim); font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }
   .extension-row { width: 100%; display: grid; grid-template-columns: 86px 70px minmax(70px, 1fr) 52px;
     align-items: center; gap: 7px; padding: 4px 5px; border: 0; border-radius: 4px;
-    background: transparent; text-align: left; }
-  .extension-row:hover { background: rgb(255 255 255 / 5%); }
-  .extension-row.on { background: rgb(255 93 125 / 13%); box-shadow: inset 2px 0 var(--titin); }
+    background: transparent; color: var(--text); text-align: left; }
+  .extension-row:hover:not(:disabled) { background: rgb(255 255 255 / 5%); color: #ffe1e8; }
+  .extension-row:focus-visible { color: #ffe1e8; }
+  .extension-row.on { background: rgb(255 93 125 / 13%); color: #ffe1e8;
+    box-shadow: inset 2px 0 var(--titin); }
+  .extension-row:disabled { color: #98a4b3; }
   .extension-name { font-weight: 650; }
   .extension-mechanism { color: var(--dim); font-size: 9px; line-height: 1.15; }
   .extension-track { height: 5px; background: rgb(255 255 255 / 8%); border-radius: 999px; overflow: hidden; }
@@ -392,7 +398,8 @@ window.__titinBoot = { ready: false, problems: [] };
      the card off the top of the viewport on a short screen. */
   #guidedLattice { max-height: 38vh; overflow-y: auto; overscroll-behavior: contain; }
   .build-id { margin-top: 4px; color: var(--dim); font-size: 9px; letter-spacing: .06em;
-    font-variant-numeric: tabular-nums; }
+    font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .build-id code { color: var(--text); font: inherit; letter-spacing: 0; }
   /* The clipboard-denied fallback prints the link and its build on two lines,
      and a URL has no spaces to break at. */
   #copyViewStatus { white-space: pre-line; overflow-wrap: anywhere; }
@@ -610,7 +617,7 @@ window.__titinBoot = { ready: false, problems: [] };
           <button id="chapterPrevious">Previous</button>
           <button id="chapterNext">Next</button>
           <button id="chapterRestart">Restart</button>
-          <button id="chapterEvidenceLink">Evidence &amp; controls</button>
+          <button id="chapterEvidenceLink">Evidence</button>
         </div>
         </div><!-- /guidedCardBody -->
       </section>
@@ -645,7 +652,8 @@ window.__titinBoot = { ready: false, problems: [] };
             title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
           <div id="stageForce" title="Passive force carried by one titin molecule at this length"></div>
           <div id="stageLegend" aria-label="Colour key"></div>
-          <button id="stageEvidenceLink">Evidence &amp; sources</button>
+          <button id="stageMeasureLink">Measure</button>
+          <button id="stageSourcesLink">Sources</button>
         </div>
       </div><!-- /stageBar -->
     <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
@@ -657,9 +665,13 @@ window.__titinBoot = { ready: false, problems: [] };
         <div>
           <h1>Evidence &amp; controls</h1>
           <div class="sub" style="margin:0">Complete scientific readouts and advanced views</div>
-          <!-- SC-9 preflight step 2: the hosted page and the offline file must show
-               the same fingerprint before a demonstration. -->
-          <div class="build-id" id="buildFingerprint">Build —</div>
+          <!-- SC-18: these identities answer different questions. The raw HTML
+               checksum stays external because a file cannot contain its own hash. -->
+          <div class="build-id" id="buildFingerprint" aria-label="Candidate identity">
+            <div>Model <code id="modelFingerprint">—</code></div>
+            <div>App <code id="appRevision">—</code></div>
+            <div>Build inputs <code id="buildInputsFingerprint">—</code></div>
+          </div>
         </div>
         <!-- SC-17. The projector control. It sits in the drawer head because
              that is where the type it mostly affects is, and because the drawer
@@ -826,7 +838,12 @@ const hex = (n) => `#${n.toString(16).padStart(6, '0')}`;
 function fail(e) {
   const box = $('err');
   box.style.display = 'block';
-  box.textContent = `${e.message}\n\n${e.stack || ''}`;
+  const message = `${e.message || e}`;
+  const fallback = /webgl|graphics context|gpu/i.test(`${message}\n${e.stack || ''}`)
+    ? '\n\nWebGL is unavailable. Use the generated static fallback in release/fallback/; '
+      + 'it carries the same reviewed descriptors without requiring a GPU.'
+    : '';
+  box.textContent = `${message}${fallback}\n\n${e.stack || ''}`;
   throw e;
 }
 
@@ -849,6 +866,7 @@ const state = { showDomains: false, showFilamentContext: true,
 try {
   visualization = await TitinVisualization.create($('canvas'), {
     reader: browserReader('./data'), scale: state.scale,
+    identity: window.__titinBuild,
   });
   model = visualization.model;
 } catch (e) { fail(e); }
@@ -884,12 +902,12 @@ if (state.closeup === 'mline') state.mirror = true;
 const slider = $('sl');
 slider.min = min; slider.max = max; slider.value = restored.state.sarcomere_length_nm;
 $('activationStatement').textContent = presentation.scope.activation_statement;
-// SC-9. The standalone builder stamps the spec digest into the page; a page served
-// from source has none, and says so rather than inventing one, because a preflight
-// that compares two different kinds of identifier proves nothing.
-$('buildFingerprint').textContent = window.__titinBuild?.fingerprint
-  ? `Build ${window.__titinBuild.fingerprint}`
-  : 'Build — unpinned development source';
+// SC-18. The builder injects identity; source-mode receives the explicit unpinned
+// identity from SpecLoader. Raw artifact and manifest digests remain external.
+const candidateIdentity = model.spec.identity;
+$('modelFingerprint').textContent = candidateIdentity.model_fingerprint;
+$('appRevision').textContent = candidateIdentity.app_revision;
+$('buildInputsFingerprint').textContent = candidateIdentity.build_inputs_fingerprint;
 $('scopeIdentity').textContent = presentation.scope_badges[0].label;
 
 function publicPresentationState() {
@@ -988,13 +1006,12 @@ function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {
   markStageDirty();
 }
 
-function openEvidence(trigger) {
+function openEvidence(trigger, targetTab) {
   evidenceReturnFocus = trigger;
-  // The drawer opens on the controls. A reader who left it on the bibliography
-  // last time asked for a bibliography then, not now; the one caller that wants
-  // a particular section — the inspector's expert-card link — sets it after
-  // this returns.
-  state.drawerTab = 'inspect';
+  if (!DRAWER_TABS.some(([id]) => id === targetTab)) {
+    throw new Error(`Unknown evidence drawer tab '${targetTab}'`);
+  }
+  state.drawerTab = targetTab;
   syncDrawerTabs();
   setAudienceMode(AUDIENCE_MODES.evidence, { focusDrawer: true });
 }
@@ -1004,10 +1021,11 @@ function closeEvidence() {
 }
 
 $('audienceGuided').onclick = () => setAudienceMode(AUDIENCE_MODES.guided);
-$('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'));
+$('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'), 'evidence');
 $('closeEvidence').onclick = closeEvidence;
-$('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'));
-$('stageEvidenceLink').onclick = () => openEvidence($('stageEvidenceLink'));
+$('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'), 'evidence');
+$('stageMeasureLink').onclick = () => openEvidence($('stageMeasureLink'), 'measure');
+$('stageSourcesLink').onclick = () => openEvidence($('stageSourcesLink'), 'sources');
 
 // SC-13 drawer sections, in the order a reader asks for them: what am I looking
 // at, what does it measure, what is the evidence, where did it come from.
@@ -1145,7 +1163,7 @@ document.addEventListener('keydown', (event) => {
   if (!action) return;
   event.preventDefault();
   if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
-  else if (action === 'mode.evidence') openEvidence($('audienceEvidence'));
+  else if (action === 'mode.evidence') openEvidence($('audienceEvidence'), 'evidence');
   // Through closeEvidence rather than setAudienceMode, so the key that leaves
   // the drawer also returns focus the way Escape and Close do — and so pressing
   // it in Guided mode is not a scene rebuild that changes nothing.
@@ -1891,6 +1909,7 @@ function applyCameraPreset({ animate = false } = {}) {
     visualization.focusTitinRegion(name, { animate });
     syncRegions(); syncCloseups(null);
   }
+  syncViews();
 }
 
 function applyChapter(chapterId) {
@@ -2019,7 +2038,8 @@ for (const [k, v] of Object.entries(VIEWS)) {
 }
 function syncViews() {
   for (const b of $('views').children) {
-    const on = b.dataset.view === state.view;
+    const on = !state.closeup && !state.region
+      && b.dataset.view === state.view;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   }
 }
@@ -2051,6 +2071,7 @@ for (const [k, v] of Object.entries(CLOSEUPS)) {
     visualization.closeUp(k);
     rebuild();
     syncCloseups(visualization.closeUp(k, { move: false }));
+    syncViews();
     syncPublicPresentation(); syncUrl();
   };
   $('closeups').append(b);
@@ -2156,7 +2177,7 @@ function selectRegion(regionId) {
     visualization.frame(state.view, { animate: true });
   }
   if (hadAnchorDetail) rebuild();
-  syncRegions(); syncExtensionRows(); syncCloseups(null); refreshRegionReadout();
+  syncRegions(); syncExtensionRows(); syncCloseups(null); syncViews(); refreshRegionReadout();
   if (regionId) {
     setPinnedSelection({
       target_type: 'titin_region', target_id: regionId,
@@ -2292,11 +2313,12 @@ renderBibliography();
 // A screenshot in a talk is only reproducible if the reader can get back to the
 // exact state it came from, in the exact build it came from.
 $('copyViewLink').onclick = async () => {
-  const fingerprint = window.__titinBuild?.fingerprint || 'unpinned development source';
-  const text = `${window.location.href}\n(build ${fingerprint})`;
+  const identity = model.spec.identity;
+  const text = `${window.location.href}\n(model ${identity.model_fingerprint})`
+    + `\n(app ${identity.app_revision})\n(build inputs ${identity.build_inputs_fingerprint})`;
   try {
     await navigator.clipboard.writeText(text);
-    $('copyViewStatus').textContent = 'Link and build copied to the clipboard.';
+    $('copyViewStatus').textContent = 'Link and candidate identities copied to the clipboard.';
   } catch {
     // A denied clipboard permission is not a failure the reader can act on, so
     // the text they asked for is put on screen where they can select it.
@@ -2360,9 +2382,7 @@ function renderPinnedSelection() {
   if (related.length) {
     expertLink.textContent = `Expert card: ${related[0].title}`;
     expertLink.onclick = () => {
-      openEvidence(expertLink);
-      state.drawerTab = 'evidence';
-      syncDrawerTabs();
+      openEvidence(expertLink, 'evidence');
       const card = $('expertCards').querySelector(`[data-card="${related[0].id}"]`);
       card?.scrollIntoView({ block: 'center' });
       card?.animate?.(

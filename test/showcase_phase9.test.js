@@ -6,11 +6,15 @@ import { readFileSync, existsSync } from 'node:fs';
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import { createReleasePack, validateReleasePack, SLIDE } from '../src/presentation/ReleasePack.js';
-import { buildFingerprint, FINGERPRINT_INPUTS } from '../scripts/build_fingerprint.mjs';
+import {
+  MODEL_INPUTS, modelFingerprint, readEmbeddedBuildIdentity,
+} from '../scripts/build_identity.mjs';
 
-const model = await TitinModel.create(nodeReader());
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
-const standalone = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const standaloneBytes = readFileSync(new URL('../index.html', import.meta.url));
+const standalone = standaloneBytes.toString('utf8');
+const identity = readEmbeddedBuildIdentity(standaloneBytes);
+const model = await TitinModel.create(nodeReader(), { identity });
 const gates = JSON.parse(
   readFileSync(new URL('../data/release_gates.json', import.meta.url), 'utf8'),
 );
@@ -18,7 +22,7 @@ const manifest = JSON.parse(
   readFileSync(new URL('../release/MANIFEST.json', import.meta.url), 'utf8'),
 );
 const releaseFile = (name) => readFileSync(new URL(`../release/${name}`, import.meta.url), 'utf8');
-const pack = createReleasePack(model, { buildFingerprint: buildFingerprint() });
+const pack = createReleasePack(model, { identity });
 
 // ---------------------------------------------------------------------------
 // The artifacts the plan names
@@ -26,7 +30,7 @@ const pack = createReleasePack(model, { buildFingerprint: buildFingerprint() });
 
 test('SC9: every named release artifact exists and is generated, not written', () => {
   for (const name of ['CLAIM_MATRIX.md', 'LIMITATIONS.md', 'PRESENTER_SCRIPT.md',
-    'PREFLIGHT.md', 'SCREENSHOT_PACK.md', 'MANIFEST.json']) {
+    'PREFLIGHT.md', 'SCREENSHOT_PACK.md', 'MANIFEST.json', 'MANIFEST.sha256']) {
     assert.ok(existsSync(new URL(`../release/${name}`, import.meta.url)), `${name} is missing`);
   }
   for (const slide of ['scope', 'architecture', 'extension', 'lattice', 'provenance', 'limitations']) {
@@ -113,27 +117,27 @@ test('SC9: the preflight keeps its seven steps and points at a real fallback', (
   }
   // The plan is explicit that the live narrative must not depend on external links.
   assert.match(doc, /Do not plan to open external citations/);
-  assert.ok(doc.includes(manifest.build_fingerprint),
-    'the preflight must name the fingerprint to compare');
+  for (const value of Object.values(identity)) {
+    assert.ok(doc.includes(value), 'the preflight must name all candidate identities');
+  }
 });
 
 // ---------------------------------------------------------------------------
 // Build identity — the comparison the preflight turns on
 // ---------------------------------------------------------------------------
 
-test('SC9: the standalone reports a build fingerprint the preflight can compare', () => {
-  const fingerprint = buildFingerprint();
-  assert.match(fingerprint, /^[0-9a-f]{12}$/);
-  // One definition, stamped into the page and printed on every artifact.
-  assert.ok(standalone.includes(`window.__titinBuild = Object.freeze({ fingerprint: "${fingerprint}" })`),
-    'the standalone must carry the current fingerprint');
-  assert.equal(manifest.build_fingerprint, fingerprint);
-  assert.deepEqual(manifest.fingerprint_inputs, [...FINGERPRINT_INPUTS]);
-  // The page surfaces it, and says so plainly when built from unpinned source
-  // rather than inventing an identifier that would make the comparison useless.
+test('SC9/18: the standalone reports three non-self-referential candidate identities', () => {
+  assert.match(identity.model_fingerprint, /^[0-9a-f]{64}$/);
+  assert.match(identity.build_inputs_fingerprint, /^[0-9a-f]{64}$/);
+  assert.match(identity.app_revision, /^[0-9a-f]{40}(?:-dirty)?$/);
+  assert.equal(manifest.model_fingerprint, identity.model_fingerprint);
+  assert.equal(manifest.app_revision, identity.app_revision);
+  assert.equal(manifest.build_inputs_fingerprint, identity.build_inputs_fingerprint);
   assert.match(page, /id="buildFingerprint"/);
-  assert.match(page, /window\.__titinBuild\?\.fingerprint/);
-  assert.match(page, /unpinned development source/);
+  assert.match(page, /id="modelFingerprint"/);
+  assert.match(page, /id="appRevision"/);
+  assert.match(page, /id="buildInputsFingerprint"/);
+  assert.match(page, /model\.spec\.identity/);
   const drawerStart = page.indexOf('id="panel"');
   const drawerEnd = page.indexOf('</aside>', drawerStart);
   const location = page.indexOf('id="buildFingerprint"');
@@ -141,15 +145,15 @@ test('SC9: the standalone reports a build fingerprint the preflight can compare'
     'the fingerprint must be in the Evidence drawer, where the preflight looks');
 });
 
-test('SC9: the fingerprint tracks the science and nothing else', () => {
-  const before = buildFingerprint();
-  // Every input is a specification record; none is a presentation source file, so
-  // a copy edit cannot masquerade as a change to the data being shown.
-  for (const input of FINGERPRINT_INPUTS) {
+test('SC9/18: the model fingerprint tracks only explicit primary model inputs', () => {
+  const before = modelFingerprint();
+  for (const input of MODEL_INPUTS) {
     assert.match(input, /^data\/.*\.json$/, `${input} is not a specification record`);
     assert.ok(existsSync(new URL(`../${input}`, import.meta.url)), `${input} is missing`);
   }
-  assert.equal(buildFingerprint(), before, 'the fingerprint must be deterministic');
+  assert.ok(!MODEL_INPUTS.includes('data/mechanical_model.json'));
+  assert.ok(!MODEL_INPUTS.includes('data/release_gates.json'));
+  assert.equal(modelFingerprint(), before, 'the fingerprint must be deterministic');
 });
 
 // ---------------------------------------------------------------------------
@@ -237,7 +241,7 @@ test('SC9: the twelve release conditions are tracked and none is over-claimed', 
     .filter((condition) => condition.status !== 'PASS').map((condition) => condition.id);
   assert.deepEqual(outstanding.sort(), [
     'expert_clear', 'lattice_legible', 'novice_comprehension',
-    'rehearsal_and_fallback', 'titin_continuity',
+    'outputs_agree', 'rehearsal_and_fallback', 'titin_continuity',
   ]);
 });
 
@@ -258,8 +262,12 @@ test('SC9: the rehearsal record claims nothing that has not been rehearsed', () 
   for (const check of gates.release_artifacts.checks) {
     assert.equal(check.verification, 'automated');
     assert.equal(check.status, 'PASS');
-    assert.ok(existsSync(new URL(`../${check.verified_by}`, import.meta.url)),
-      `${check.id}: '${check.verified_by}' does not exist`);
+    const files = check.verified_by.split(/[;\s]+/).filter((value) => value.includes('/'));
+    assert.ok(files.length, `${check.id}: names no verifier file`);
+    for (const file of files) {
+      assert.ok(existsSync(new URL(`../${file}`, import.meta.url)),
+        `${check.id}: '${file}' does not exist`);
+    }
   }
   for (const section of ['demo_rehearsal', 'final_release_definition']) {
     assert.ok(gates.release_blockers.some((entry) => entry.startsWith(section)),

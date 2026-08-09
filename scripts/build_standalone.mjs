@@ -52,10 +52,20 @@ import { createHash } from 'node:crypto';
 import { dirname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
-import { buildFingerprint } from './build_fingerprint.mjs';
+import {
+  buildIdentity,
+  inputManifestFromMetafile,
+} from './build_identity.mjs';
 
 const ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
+const args = process.argv.slice(2);
+const check = args.includes('--check');
+const release = args.includes('--release');
+const paths = args.filter((arg) => !['--check', '--release'].includes(arg));
+if (paths.length > 1) {
+  throw new Error('usage: node scripts/build_standalone.mjs [output.html] [--check] [--release]');
+}
 
 const SOURCE = 'src/index.template.html';
 const html = read(SOURCE);
@@ -107,6 +117,7 @@ export { presenterKeys, unboundShortcutIds } from './src/presentation/PresenterK
 `);
 
 let bundle;
+let metafile;
 try {
   const out = await build({
     entryPoints: [join(ROOT, ENTRY)],
@@ -115,6 +126,7 @@ try {
     platform: 'browser',
     target: 'es2022',
     write: false,
+    metafile: true,
     legalComments: 'inline',
     logLevel: 'warning',
   });
@@ -124,9 +136,17 @@ try {
   bundle = out.outputFiles[0].text
     .replace(/^[ ]+\t/gm, '\t')
     .replace(/[ \t]+$/gm, '');
+  metafile = out.metafile;
 } finally {
   rmSync(join(ROOT, ENTRY), { force: true });
 }
+
+const inputManifest = inputManifestFromMetafile(metafile, {
+  root: ROOT,
+  entryPath: ENTRY,
+  specFiles: specNames,
+});
+const identity = buildIdentity(inputManifest, { root: ROOT, release });
 
 for (const p of ['src/model/TitinModel.js', 'src/render/Viewer.js',
   'src/render/SarcomereScene.js', 'src/model/SpecLoader.js']) {
@@ -183,11 +203,11 @@ const bootPatch = `
    replaced. The watchdog itself is kept: a module can still fail for other reasons,
    and a scientific tool that fails silently is worse than one that fails loudly. */
 window.__titinStandalone = true;
-/* SC-9 preflight: the hosted page and the offline file must report the same build.
-   Stamped from scripts/build_fingerprint.mjs, the one definition both this builder
-   and the release pack use, so the comparison is meaningful rather than two
-   independently invented version strings. */
-window.__titinBuild = Object.freeze({ fingerprint: ${JSON.stringify(buildFingerprint())} });
+/* SC-18: model, application, and build-input identities are deliberately distinct.
+   The raw HTML checksum cannot be embedded without self-reference and therefore
+   lives only in release/MANIFEST.json. */
+window.__titinBuild = Object.freeze(${safeJson(identity)});
+window.__titinInputManifest = Object.freeze(${safeJson(inputManifest)});
 </script>`;
 
 const standalone = html
@@ -242,12 +262,6 @@ if (problems.length) {
   throw new Error('build_standalone refused to emit a corrupt bundle:\n  - ' + problems.join('\n  - '));
 }
 
-const args = process.argv.slice(2);
-const check = args.includes('--check');
-const paths = args.filter((arg) => arg !== '--check');
-if (paths.length > 1) {
-  throw new Error('usage: node scripts/build_standalone.mjs [output.html] [--check]');
-}
 const outPath = paths[0] || 'index.html';
 const absoluteOut = join(ROOT, outPath);
 
@@ -266,3 +280,6 @@ if (check) {
 console.log(`  bundle: ${(bundle.length / 1024).toFixed(0)} KB (three r${checksums['node_modules/three']} inlined)`);
 console.log(`  spec files embedded: ${specNames.length}`);
 console.log(`  page-module imports collapsed: ${importCount}`);
+console.log(`  model: ${identity.model_fingerprint.slice(0, 12)}`);
+console.log(`  app: ${identity.app_revision}`);
+console.log(`  build inputs: ${identity.build_inputs_fingerprint.slice(0, 12)}`);

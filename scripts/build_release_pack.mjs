@@ -15,6 +15,7 @@
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,11 +26,12 @@ import { COMPONENTS } from '../src/render/SarcomereScene.js';
 import { VIEWS, CLOSEUPS } from '../src/render/Viewer.js';
 import { createReleasePack, SLIDE } from '../src/presentation/ReleasePack.js';
 import { createVisualMatrix } from '../src/presentation/VisualMatrix.js';
-import { buildFingerprint, FINGERPRINT_INPUTS } from './build_fingerprint.mjs';
+import { readEmbeddedBuildIdentity } from './build_identity.mjs';
 
 const ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const OUT = join(ROOT, 'release');
-const read = (path) => readFileSync(join(ROOT, path), 'utf8');
+const readBytes = (path) => readFileSync(join(ROOT, path));
+const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 // --- tiny deterministic SVG helpers ----------------------------------------
 const escapeText = (value) => String(value)
@@ -230,12 +232,14 @@ const DRAW = { text: drawText, axial: drawAxial, bars: drawBars, lattice: drawLa
 
 // --- markdown artifacts -----------------------------------------------------
 const row = (cells) => `| ${cells.join(' | ')} |`;
+const identitySummary = (pack) => `model \`${pack.identity.model_fingerprint}\`; app `
+  + `\`${pack.identity.app_revision}\`; build inputs \`${pack.identity.build_inputs_fingerprint}\``;
 
 function claimMatrixDoc(pack) {
   const lines = [
     '# Claim and evidence matrix',
     '',
-    `Generated from \`data/showcase_claims.json\` — build \`${pack.build_fingerprint}\`.`,
+    `Generated from \`data/showcase_claims.json\` — ${identitySummary(pack)}.`,
     'Do not edit by hand: run `npm run pack`.',
     '',
     row(['Object', 'Decision', 'Tier', 'Claim evidence', 'Render evidence', 'Sources']),
@@ -262,7 +266,7 @@ function limitationsDoc(pack) {
   const lines = [
     '# Scientific limitations and non-claims',
     '',
-    `Generated — build \`${pack.build_fingerprint}\`. Run \`npm run pack\` to refresh.`,
+    `Generated — ${identitySummary(pack)}. Run \`npm run pack\` to refresh.`,
     '',
     'Every statement below is recorded in the repository, not written for this sheet.',
     '',
@@ -280,7 +284,7 @@ function presenterDoc(pack) {
   const lines = [
     '# Presenter script',
     '',
-    `Generated — build \`${pack.build_fingerprint}\`. Estimated ${script.estimated_seconds} s `
+    `Generated — ${identitySummary(pack)}. Estimated ${script.estimated_seconds} s `
     + `(${Math.floor(script.estimated_seconds / 60)} min ${Math.round(script.estimated_seconds % 60)} s), `
     + `target ${script.target_seconds[0]}–${script.target_seconds[1]} s.`,
     '',
@@ -312,7 +316,7 @@ function preflightDoc(pack, matrix) {
   const lines = [
     '# Demo-day preflight',
     '',
-    `Generated — build \`${pack.build_fingerprint}\`.`,
+    `Generated — ${identitySummary(pack)}.`,
     '',
     'Run this on the presenting machine, on the presenting display.',
     '',
@@ -325,9 +329,9 @@ function preflightDoc(pack, matrix) {
     + 'this build. They need no GPU, no browser engine, and no network.',
     `- \`release/SCREENSHOT_PACK.md\` — the ${matrix.cells.length}-cell review set, if you `
     + 'need to show a specific state you cannot reach live.', '',
-    '## Build identity', '',
-    `The Evidence drawer of both the hosted page and the offline file must read \`${pack.build_fingerprint}\`.`,
-    'A mismatch means one of them is stale; prefer the offline file and re-deploy afterwards.', '');
+    '## Candidate identity', '',
+    `The Evidence drawer of both the hosted page and the offline file must report ${identitySummary(pack)}.`,
+    'A mismatch in any field means the candidates differ. Prefer the manifest-verified offline file; production parity is proved only at final release.', '');
   return `${lines.join('\n')}\n`;
 }
 
@@ -336,7 +340,7 @@ function screenshotDoc(pack, matrix) {
   const lines = [
     '# Standard screenshot review pack',
     '',
-    `Generated — build \`${pack.build_fingerprint}\`. ${matrix.cells.length} cells.`,
+    `Generated — ${identitySummary(pack)}. ${matrix.cells.length} cells.`,
     '',
     matrix.purpose,
     '',
@@ -362,9 +366,10 @@ function screenshotDoc(pack, matrix) {
 }
 
 // --- assemble ---------------------------------------------------------------
-const model = await TitinModel.create(nodeReader());
-const fingerprint = buildFingerprint();
-const pack = createReleasePack(model, { buildFingerprint: fingerprint });
+const standaloneBytes = readBytes('index.html');
+const identity = readEmbeddedBuildIdentity(standaloneBytes);
+const model = await TitinModel.create(nodeReader(), { identity });
+const pack = createReleasePack(model, { identity });
 const { min, max } = model.slRange();
 const matrix = createVisualMatrix(model, {
   views: Object.keys(VIEWS),
@@ -388,17 +393,28 @@ for (const slide of pack.fallback_slides) {
   if (!draw) throw new Error(`build_release_pack: no renderer for slide kind '${slide.kind}'`);
   files.set(`fallback/${slide.id}.svg`, draw(slide));
 }
-files.set('MANIFEST.json', `${JSON.stringify({
-  schema: 'titin-release-manifest/1',
-  build_fingerprint: fingerprint,
-  fingerprint_inputs: FINGERPRINT_INPUTS,
-  standalone_bytes: read('index.html').length,
-  artifacts: [...files.keys()].sort(),
+const artifacts = [...files.entries()]
+  .map(([name, content]) => {
+    const bytes = Buffer.from(content);
+    return { path: `release/${name}`, bytes: bytes.byteLength, sha256: sha256(bytes) };
+  })
+  .sort((a, b) => a.path.localeCompare(b.path));
+const manifestText = `${JSON.stringify({
+  schema: 'titin-release-manifest/2',
+  ...identity,
+  standalone: {
+    path: 'index.html',
+    bytes: standaloneBytes.byteLength,
+    sha256: sha256(standaloneBytes),
+  },
+  artifacts,
   fallback_slides: pack.fallback_slides.map((slide) => slide.id),
   screenshot_cells: matrix.cells.length,
   presenter_seconds: pack.presenter_script.estimated_seconds,
   generated_by: 'scripts/build_release_pack.mjs',
-}, null, 2)}\n`);
+}, null, 2)}\n`;
+files.set('MANIFEST.json', manifestText);
+files.set('MANIFEST.sha256', `${sha256(Buffer.from(manifestText))}  MANIFEST.json\n`);
 
 const check = process.argv.includes('--check');
 if (check) {
@@ -420,12 +436,12 @@ if (check) {
       + problems.join('\n  - '));
     process.exit(1);
   }
-  console.log(`release pack is current (${files.size} artifacts, build ${fingerprint})`);
+  console.log(`release pack is current (${files.size} generated outputs, build inputs ${identity.build_inputs_fingerprint.slice(0, 12)})`);
 } else {
   if (existsSync(OUT)) rmSync(OUT, { recursive: true });
   mkdirSync(join(OUT, 'fallback'), { recursive: true });
   for (const [name, content] of files) writeFileSync(join(OUT, name), content);
-  console.log(`wrote release/  ${files.size} artifacts, build ${fingerprint}`);
+  console.log(`wrote release/  ${files.size} generated outputs, build inputs ${identity.build_inputs_fingerprint.slice(0, 12)}`);
   console.log(`  ${pack.claim_matrix.length} claims, `
     + `${pack.limitations.reduce((sum, group) => sum + group.entries.length, 0)} non-claims, `
     + `${pack.fallback_slides.length} fallback slides, ${matrix.cells.length} screenshot cells`);

@@ -1,6 +1,7 @@
 {
   "name": "titin-visualization",
   "version": "0.3.0",
+  "packageManager": "npm@11.5.2",
   "description": "Scientifically-defensible interactive 3D titin/sarcomere visualization. The scientific geometric specification (data/*.json) is the source of truth; the renderer consumes it.",
   "type": "module",
   "scripts": {
@@ -19,6 +20,7 @@
     "check:structures": ".venv/bin/python scripts/fetch_structures.py --check",
     "typecheck": "tsc -p tsconfig.json",
     "build": "node scripts/build_standalone.mjs",
+    "build:release": "node scripts/build_standalone.mjs --release",
     "build:standalone": "npm run build",
     "check:build": "node scripts/build_standalone.mjs --check",
     "verify:sc2": "npm run check:build && npm run typecheck && npm run test:sc2 && npm run validate:presentation",
@@ -55,13 +57,21 @@
     "test:sc16": "node --test --test-concurrency=1 test/showcase_phase16.test.js test/showcase_phase3.test.js test/standalone.test.js",
     "verify:sc16": "npm run check:build && npm run typecheck && npm run test:sc16 && npm run validate:showcase && npm run validate:annotations",
     "test:sc17": "node --test --test-concurrency=1 test/showcase_phase17.test.js test/showcase_phase7.test.js test/showcase_phase8.test.js test/standalone.test.js",
-    "verify:sc17": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc17 && npm run validate:gates && npm run validate:presentation"
+    "verify:sc17": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc17 && npm run validate:gates && npm run validate:presentation",
+    "browser:install": "playwright install chromium firefox webkit",
+    "test:browser": "playwright test --project=chromium",
+    "test:browser:matrix": "playwright test",
+    "verify:identity": "node scripts/verify_artifact_identity.mjs --file index.html --manifest release/MANIFEST.json && node scripts/validate_artifact_boundary.mjs",
+    "test:sc18": "node --test --test-concurrency=1 test/showcase_phase18.test.js test/showcase_phase9.test.js test/standalone.test.js test/showcase_phase8.test.js",
+    "verify:sc18": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc18 && npm run validate && npm run validate:gates && npm run verify:identity && node scripts/neg_control_artifact_boundary.mjs && node scripts/neg_control_showcase_release.mjs && python3 scripts/neg_control_release_gates.py"
   },
   "license": "CC-BY-4.0",
   "dependencies": {
     "three": "0.185.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
+    "@playwright/test": "1.62.1",
     "@types/node": "26.1.2",
     "esbuild": "0.28.1",
     "typescript": "5.9.3"

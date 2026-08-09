@@ -1,288 +1,367 @@
 #!/usr/bin/env python3
-"""Validate the SC-8 release-gate record, and refuse a PASS without its evidence.
-
-The plan's own review verdict is that "'impressive' needs audience evidence, not
-internal confidence". A release record that could be flipped to PASS by editing a
-string would be exactly the internal confidence it warns about, so every rule here
-is written so that claiming a gate requires recording the thing that earned it:
-participant-level answers for the lay test, named reviewers and resolved findings
-for the expert review, captured cells and a reviewer for the visual matrix.
-
-Nothing here fabricates a result. A gate nobody has run stays PENDING, and
-`release_ready` cannot be true while one is.
-"""
+"""Validate release-gates v2 without turning automated evidence into human PASS."""
+from __future__ import annotations
 
 import argparse
+import hashlib
 import json
-import sys
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_PATH = ROOT / "data" / "release_gates.json"
-
 STATUSES = {"PENDING", "PASS", "FAIL"}
 VERIFICATION_KINDS = {"automated", "browser", "human"}
-# Where each declared colour has to exist for the record to describe the product
-# rather than an aspiration. Text pairs are stylesheet colours; object pairs are
-# renderer tokens, which is also why they are a separate block: an object-versus-
-# object minimum is not a WCAG text ratio and must not be read as one.
+
+REQUIRED_SECTIONS = {
+    "artifact_identity", "scientific_decisions", "claim_entailment",
+    "mechanical_validity", "browser_qa", "deployment_parity", "automated",
+    "destructive_controls", "visual_matrix", "accessibility", "performance",
+    "release_artifacts", "lay_comprehension", "expert_review",
+    "demo_rehearsal", "final_release_definition",
+}
+IDENTITY_CHECKS = {
+    "model_fingerprint", "app_revision", "build_inputs_fingerprint",
+    "raw_artifact", "detached_manifest", "candidate_evidence_boundary",
+}
+DECISION_IDS = {f"SD-0{index}" for index in range(1, 6)}
+LAY_IDS = [
+    "define_sarcomere", "identify_titin_route", "distinguish_motor",
+    "explain_stretch", "identify_anchors", "explain_roles", "find_evidence",
+    "distinguish_claim_kinds",
+]
+EXPERT_ROLES = {"sequence/structure", "mechanics"}
+EXPERT_ASSIGNMENTS = {
+    "scope_and_coordinate_frame": {"sequence/structure"},
+    "sequence_region_architecture": {"sequence/structure"},
+    "a_band_periodicity_register": {"sequence/structure"},
+    "anchors_stoichiometry_depiction": {"sequence/structure"},
+    "mechanics_reproduction": {"mechanics"},
+    "mechanics_regimes_sensitivity": {"mechanics"},
+    "claim_entailment_and_transfers": EXPERT_ROLES,
+    "artifact_depiction_and_nonclaims": EXPERT_ROLES,
+}
+FINAL_IDS = {
+    "phase_gates", "claim_metadata", "no_cross_muscle", "titin_continuity",
+    "bare_zone_distinct", "zdisc_topology", "mybpc_honest", "lattice_legible",
+    "novice_comprehension", "expert_clear", "outputs_agree",
+    "rehearsal_and_fallback",
+}
 CONTRAST_BLOCKS = (
     ("contrast_pairs", "src/index.template.html"),
     ("object_contrast_pairs", "src/render/SarcomereScene.js"),
 )
-CHECK_SECTIONS = ("automated", "destructive_controls", "visual_matrix",
-                  "accessibility", "performance", "release_artifacts", "demo_rehearsal")
-ALL_SECTIONS = CHECK_SECTIONS + ("lay_comprehension", "expert_review",
-                                 "final_release_definition")
-
-failures = []
 
 
-def check(condition, message):
-    print(("  PASS " if condition else "  FAIL ") + message)
-    if not condition:
-        failures.append(message)
+class GateValidator:
+    def __init__(self, record: dict):
+        self.record = record
+        self.failures: list[str] = []
+
+    def check(self, condition: bool, message: str) -> None:
+        print(("  PASS " if condition else "  FAIL ") + message)
+        if not condition:
+            self.failures.append(message)
+
+    @staticmethod
+    def relative_exists(value: object) -> bool:
+        for candidate in str(value or "").replace(";", " ").split():
+            path = candidate.strip().strip(",")
+            if "/" in path and (ROOT / path).is_file():
+                return True
+        return False
+
+    def shape(self) -> None:
+        print("== Record shape ==")
+        self.check(self.record.get("schema") == "titin-showcase-release-gates/2",
+                   "release-gate schema is titin-showcase-release-gates/2")
+        self.check(set(self.record.get("meta", {}).get("statuses", [])) == STATUSES,
+                   "status vocabulary is exactly PENDING/PASS/FAIL")
+        missing = REQUIRED_SECTIONS - self.record.keys()
+        self.check(not missing, f"all required v2 sections exist (missing: {sorted(missing)})")
+        self.check(isinstance(self.record.get("release_ready"), bool),
+                   "release_ready is a boolean")
+
+    def checks(self) -> None:
+        print("\n== Check records and section rollups ==")
+        for section_id in sorted(REQUIRED_SECTIONS):
+            section = self.record.get(section_id, {})
+            rows = section.get("checks", [])
+            ids = [row.get("id") for row in rows]
+            self.check(len(ids) == len(set(ids)), f"{section_id}: check IDs are unique")
+            for row in rows:
+                rid = f"{section_id}.{row.get('id', '(missing)')}"
+                self.check(bool(row.get("id")), f"{rid}: has an ID")
+                self.check(row.get("status") in STATUSES, f"{rid}: status is valid")
+                self.check(row.get("verification") in VERIFICATION_KINDS,
+                           f"{rid}: verification kind is valid")
+                self.check(bool(str(row.get("requirement", "")).strip()),
+                           f"{rid}: requirement is stated")
+                if row.get("status") == "PASS" and row.get("verification") == "automated":
+                    self.check(self.relative_exists(row.get("verified_by")),
+                               f"{rid}: automated PASS names a real verifier")
+                if row.get("status") == "PASS" and row.get("verification") in {"browser", "human"}:
+                    self.check(bool(section.get("evidence_refs")),
+                               f"{rid}: non-automated PASS has append-only evidence_refs")
+            if rows:
+                all_pass = all(row.get("status") == "PASS" for row in rows)
+                if section.get("status") == "PASS":
+                    self.check(all_pass, f"{section_id}: section PASS reflects every check")
+                if not all_pass:
+                    self.check(section.get("status") != "PASS",
+                               f"{section_id}: outstanding checks prevent section PASS")
+
+        identity_ids = {row.get("id") for row in self.record["artifact_identity"].get("checks", [])}
+        self.check(IDENTITY_CHECKS <= identity_ids,
+                   f"artifact identity uses required IDs (missing: {sorted(IDENTITY_CHECKS - identity_ids)})")
+
+    def evidence_refs(self) -> None:
+        print("\n== Append-only evidence references ==")
+        evidence_sections = {
+            "scientific_decisions", "claim_entailment", "mechanical_validity",
+            "deployment_parity", "visual_matrix", "accessibility", "performance",
+            "lay_comprehension", "expert_review", "demo_rehearsal",
+        }
+        seen: set[str] = set()
+        candidate_fields = {
+            "model_fingerprint", "app_revision", "build_inputs_fingerprint",
+            "export_contract_fingerprint", "index_html_sha256", "manifest_sha256",
+        }
+        for section_id in sorted(evidence_sections):
+            section = self.record[section_id]
+            refs = section.get("evidence_refs")
+            self.check(isinstance(refs, list), f"{section_id}: evidence_refs is an append-only list")
+            for row in refs or []:
+                path = row.get("path", "")
+                self.check(path not in seen, f"{section_id}: evidence path '{path}' is unique")
+                seen.add(path)
+                self.check(path.startswith("evidence/") and (ROOT / path).is_file(),
+                           f"{section_id}: evidence path '{path}' exists under evidence/")
+                if (ROOT / path).is_file():
+                    payload = (ROOT / path).read_bytes()
+                    self.check(row.get("bytes") == len(payload), f"{path}: byte count matches")
+                    self.check(row.get("sha256") == hashlib.sha256(payload).hexdigest(),
+                               f"{path}: SHA-256 matches")
+                self.check(set((row.get("candidate") or {}).keys()) == candidate_fields,
+                           f"{path}: candidate identity envelope is complete")
+                self.check(bool(str(row.get("disposition", "")).strip()),
+                           f"{path}: disposition is recorded")
+
+    @staticmethod
+    def luminance(colour: str) -> float:
+        channels = [int(colour[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+        linear = [value / 12.92 if value <= 0.04045
+                  else ((value + 0.055) / 1.055) ** 2.4 for value in channels]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    @classmethod
+    def contrast_ratio(cls, first: str, second: str) -> float:
+        high, low = sorted((cls.luminance(first), cls.luminance(second)), reverse=True)
+        return (high + 0.05) / (low + 0.05)
+
+    def contrast(self) -> None:
+        print("\n== Declared colour pairs ==")
+        accessibility = self.record["accessibility"]
+        required_text_ids = {"source_link", "selected_extension_row", "disabled_extension_row"}
+        actual_text_ids = {row.get("id") for row in accessibility.get("contrast_pairs", [])}
+        self.check(required_text_ids <= actual_text_ids,
+                   f"SC-18 text pairs exist (missing: {sorted(required_text_ids - actual_text_ids)})")
+        for block, source in CONTRAST_BLOCKS:
+            rows = accessibility.get(block, [])
+            self.check(bool(rows), f"{block}: pairs are declared")
+            source_text = (ROOT / source).read_text(encoding="utf-8").lower()
+            for row in rows:
+                rid = f"{block}.{row.get('id', '(missing)')}"
+                colours = [str(row.get(field, "")).lower() for field in ("foreground", "background")]
+                formed = all(re.fullmatch(r"#[0-9a-f]{6}", colour) for colour in colours)
+                self.check(formed, f"{rid}: colours are #rrggbb")
+                floor = row.get("min_ratio")
+                self.check(isinstance(floor, (int, float)) and floor > 0,
+                           f"{rid}: positive contrast floor exists")
+                if formed and isinstance(floor, (int, float)):
+                    ratio = self.contrast_ratio(*colours)
+                    self.check(ratio >= floor,
+                               f"{rid}: {ratio:.2f}:1 meets {floor}:1")
+                    for colour in colours:
+                        digits = colour[1:]
+                        self.check(colour in source_text or f"0x{digits}" in source_text,
+                                   f"{rid}: {colour} ships in {source}")
+
+    def decisions_and_protocols(self) -> None:
+        print("\n== Scientific and human protocol IDs ==")
+        visual = self.record["visual_matrix"]
+        if visual.get("status") == "PASS":
+            expected = visual.get("expected_cells")
+            captured = visual.get("captured_cells", [])
+            self.check(isinstance(expected, int) and len(captured) >= expected,
+                       f"visual PASS records all {expected} expected cells")
+            self.check(bool(visual.get("reviewed_by")) and bool(visual.get("reviewed_on")),
+                       "visual PASS names its human reviewer and date")
+
+        decisions = self.record["scientific_decisions"]
+        decision_ids = {row.get("id") for row in decisions.get("decisions", [])}
+        self.check(set(decisions.get("required_ids", [])) == DECISION_IDS,
+                   "scientific_decisions requires SD-01 through SD-05")
+        self.check(decision_ids == DECISION_IDS, "all five scientific decisions have status rows")
+        for row in decisions.get("decisions", []):
+            self.check(row.get("status") in STATUSES, f"{row.get('id')}: status is valid")
+            if row.get("status") == "PENDING":
+                self.check(not row.get("reviewer"), f"{row.get('id')}: PENDING invents no reviewer")
+
+        lay = self.record["lay_comprehension"]
+        protocol = lay.get("protocol", {})
+        self.check(protocol.get("id") == "titin-lay-comprehension/2", "lay protocol ID is stable")
+        self.check([row.get("id") for row in protocol.get("questions", [])] == LAY_IDS,
+                   "lay protocol uses the exact eight ordered question IDs")
+        criterion = protocol.get("criterion", {})
+        self.check(protocol.get("min_participants") == 5, "lay protocol requires five participants")
+        self.check(protocol.get("one_candidate_only") is True, "each participant sees one candidate")
+        self.check(protocol.get("coaching_allowed") is False, "coaching is forbidden")
+        self.check(criterion.get("per_question_min_correct") == 4,
+                   "every lay question requires 4/5 correct")
+        self.check(criterion.get("distinguish_motor_min_correct") == 5,
+                   "distinguish_motor requires 5/5 correct")
+        if lay.get("status") == "PENDING":
+            self.check(not lay.get("results"), "PENDING lay gate has no fabricated results")
+        if lay.get("status") == "PASS":
+            results = lay.get("results", [])
+            self.check(len(results) == 5, "lay PASS records exactly five participants")
+            question_counts = {question_id: 0 for question_id in LAY_IDS}
+            candidate_ids = set()
+            participant_ids = set()
+            for result in results:
+                participant_id = result.get("participant_id")
+                self.check(bool(participant_id) and participant_id not in participant_ids,
+                           f"lay participant '{participant_id}' has a unique anonymous ID")
+                participant_ids.add(participant_id)
+                self.check(result.get("informed_consent") is True,
+                           f"lay participant '{participant_id}' gave informed consent")
+                candidate_ids.add(json.dumps(result.get("candidate", {}), sort_keys=True))
+                answers = result.get("answers", {})
+                self.check(set(answers) == set(LAY_IDS),
+                           f"lay participant '{participant_id}' answered all eight questions")
+                for question_id in LAY_IDS:
+                    self.check(isinstance(answers.get(question_id), bool),
+                               f"{participant_id}.{question_id} is a scored boolean")
+                    question_counts[question_id] += answers.get(question_id) is True
+            self.check(len(candidate_ids) == 1, "all lay participants saw one frozen candidate")
+            for question_id, correct in question_counts.items():
+                floor = 5 if question_id == "distinguish_motor" else 4
+                self.check(correct >= floor,
+                           f"{question_id}: {correct}/5 meets the {floor}/5 floor")
+            self.check(bool(lay.get("preregistration")), "lay PASS records preregistration")
+            self.check(bool(lay.get("candidate_history")), "lay PASS retains candidate history")
+
+        expert = self.record["expert_review"]
+        expert_protocol = expert.get("protocol", {})
+        self.check(expert_protocol.get("id") == "titin-expert-review/2",
+                   "expert protocol ID is stable")
+        self.check(set(expert_protocol.get("required_roles", [])) == EXPERT_ROLES,
+                   "expert protocol requires sequence/structure and mechanics")
+        assignments = {row.get("id"): set(row.get("required_roles", []))
+                       for row in expert_protocol.get("checks", [])}
+        self.check(assignments == EXPERT_ASSIGNMENTS,
+                   "expert protocol check IDs and role coverage are exact")
+        criterion = expert_protocol.get("criterion", {})
+        self.check(criterion.get("unresolved_critical_or_major") == 0,
+                   "expert PASS permits no unresolved CRITICAL/MAJOR finding")
+        self.check(criterion.get("independent_reviewer_per_role") is True,
+                   "expert PASS requires independent reviewers")
+        if expert.get("status") == "PENDING":
+            self.check(not expert.get("reviewers"), "PENDING expert gate invents no reviewer")
+        if expert.get("status") == "PASS":
+            reviewers = expert.get("reviewers", [])
+            roles = {reviewer.get("role") for reviewer in reviewers
+                     if reviewer.get("independent") is True}
+            self.check(EXPERT_ROLES <= roles,
+                       "expert PASS has an independent reviewer for both roles")
+            for reviewer in reviewers:
+                rid = reviewer.get("reviewer_id", "(missing)")
+                self.check(all(bool(reviewer.get(field)) for field in
+                               ("reviewer_id", "name", "affiliation", "reviewed_on")),
+                           f"expert reviewer '{rid}' is identified")
+                self.check(reviewer.get("publication_consent") is True,
+                           f"expert reviewer '{rid}' consented to publication")
+                self.check(isinstance(reviewer.get("conflicts"), list),
+                           f"expert reviewer '{rid}' disclosed conflicts")
+                assigned = {row.get("id") for row in reviewer.get("checks", [])}
+                required = {check_id for check_id, check_roles in EXPERT_ASSIGNMENTS.items()
+                            if reviewer.get("role") in check_roles}
+                self.check(required <= assigned,
+                           f"expert reviewer '{rid}' answered every assigned check")
+            unresolved = [finding for finding in expert.get("findings", [])
+                          if str(finding.get("severity", "")).upper() in {"CRITICAL", "MAJOR"}
+                          and str(finding.get("resolution", "")).upper() != "RESOLVED"]
+            self.check(not unresolved,
+                       f"expert PASS has no unresolved CRITICAL/MAJOR finding ({len(unresolved)} open)")
+
+    def final_release(self) -> None:
+        print("\n== Final release definition and blockers ==")
+        final = self.record["final_release_definition"]
+        rows = final.get("conditions", [])
+        ids = {row.get("id") for row in rows}
+        self.check(ids == FINAL_IDS,
+                   f"final condition IDs are stable (missing: {sorted(FINAL_IDS - ids)})")
+        for row in rows:
+            cid = row.get("id", "(missing)")
+            self.check(row.get("status") in STATUSES, f"{cid}: status is valid")
+            self.check(bool(str(row.get("statement", "")).strip()), f"{cid}: statement exists")
+            if row.get("status") == "PASS":
+                self.check(self.relative_exists(row.get("verified_by"))
+                           or str(row.get("verified_by", "")).startswith("npm run"),
+                           f"{cid}: PASS names a verifier")
+            else:
+                blocker = row.get("blocked_by")
+                self.check(blocker in REQUIRED_SECTIONS, f"{cid}: blocker names a gate section")
+                if blocker in self.record:
+                    self.check(self.record[blocker].get("status") != "PASS",
+                               f"{cid}: blocker '{blocker}' is genuinely outstanding")
+
+        blockers = self.record.get("release_blockers", [])
+        self.check(len(blockers) == len(set(blockers)), "release blocker IDs are unique")
+        for blocker in blockers:
+            self.check(blocker in REQUIRED_SECTIONS, f"blocker '{blocker}' is a real section")
+            if blocker in self.record:
+                self.check(self.record[blocker].get("status") != "PASS",
+                           f"blocker '{blocker}' is not already PASS")
+        outstanding = {section for section in REQUIRED_SECTIONS
+                       if self.record[section].get("status") != "PASS"}
+        self.check(outstanding <= set(blockers),
+                   f"every outstanding gate is visible (missing: {sorted(outstanding - set(blockers))})")
+        if self.record.get("release_ready"):
+            self.check(not outstanding, "release_ready requires every gate to pass")
+            self.check(final.get("status") == "PASS",
+                       "release_ready requires the final release definition to pass")
+        else:
+            self.check(bool(outstanding),
+                       "release_ready is false because at least one gate is outstanding")
+
+    def run(self) -> int:
+        self.shape()
+        if self.failures:
+            return self.report()
+        self.checks()
+        self.evidence_refs()
+        self.contrast()
+        self.decisions_and_protocols()
+        self.final_release()
+        return self.report()
+
+    def report(self) -> int:
+        print("\n" + "=" * 44)
+        if self.failures:
+            print(f"RELEASE-GATE VALIDATION FAILED ({len(self.failures)} problem(s))")
+            return 1
+        print("ALL RELEASE-GATE V2 CHECKS PASSED")
+        return 0
 
 
-def relative_luminance(colour):
-    """WCAG relative luminance of an #rrggbb string.
-
-    The same definition test/showcase_phase8.test.js uses for the text pairs, so
-    the two gates cannot disagree about what a ratio is. It lives here as well
-    because SC-12's object pairs describe renderer tokens, and CI must be able to
-    reject a flattened palette without running the browser-facing suite.
-    """
-    channels = [int(colour[index:index + 2], 16) / 255 for index in (1, 3, 5)]
-    linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
-              for c in channels]
-    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
-
-
-def contrast_ratio(foreground, background):
-    high, low = sorted((relative_luminance(foreground), relative_luminance(background)),
-                       reverse=True)
-    return (high + 0.05) / (low + 0.05)
-
-
-def relative_exists(value):
-    """A named verifier must be a real file in this repository."""
-    for candidate in str(value).replace(";", " ").split():
-        candidate = candidate.strip().strip(",")
-        if "/" not in candidate:
-            continue
-        if (ROOT / candidate).is_file():
-            return True
-    return False
-
-
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gates", type=Path, default=DEFAULT_PATH)
     args = parser.parse_args()
-    record = json.loads(args.gates.read_text(encoding="utf-8"))
-
-    print("== Record shape ==")
-    check(record.get("schema") == "titin-showcase-release-gates/1",
-          "release-gate record has the reviewed schema")
-    check(set(record.get("meta", {}).get("statuses", [])) == STATUSES,
-          "the declared status vocabulary is exactly PENDING/PASS/FAIL")
-    for section in ALL_SECTIONS:
-        check(isinstance(record.get(section), dict), f"section '{section}' is present")
-    if failures:
-        return report()
-
-    print("\n== Every check names how it was verified ==")
-    for section in CHECK_SECTIONS:
-        for row in record[section].get("checks", []):
-            rid = f"{section}.{row.get('id', '(missing id)')}"
-            check(row.get("status") in STATUSES, f"{rid}: status is declared vocabulary")
-            check(row.get("verification") in VERIFICATION_KINDS,
-                  f"{rid}: verification kind is declared vocabulary")
-            check(bool(str(row.get("requirement", "")).strip()),
-                  f"{rid}: states what it requires")
-            if row.get("verification") == "automated":
-                # An automated check must point at something a reader can run.
-                check(relative_exists(row.get("verified_by", "")),
-                      f"{rid}: names a real command or test file")
-            elif row.get("status") == "PASS":
-                # A human or browser check may only pass with recorded evidence.
-                check(bool(str(row.get("evidence", "")).strip()),
-                      f"{rid}: a non-automated PASS records its evidence")
-
-    print("\n== A section passes only when all of its checks do ==")
-    for section in CHECK_SECTIONS:
-        rows = record[section].get("checks", [])
-        every = all(row.get("status") == "PASS" for row in rows)
-        if record[section].get("status") == "PASS":
-            check(bool(rows) and every,
-                  f"{section}: PASS requires every check to pass")
-        if not every:
-            check(record[section].get("status") != "PASS",
-                  f"{section}: status reflects its outstanding checks")
-
-    print("\n== Declared colour pairs ==")
-    accessibility = record["accessibility"]
-    for block, source in CONTRAST_BLOCKS:
-        pairs = accessibility.get(block) or []
-        check(bool(pairs), f"{block}: the record declares its pairs")
-        text = (ROOT / source).read_text(encoding="utf-8").lower()
-        for pair in pairs:
-            pid = f"{block}.{pair.get('id', '(missing id)')}"
-            colours = [str(pair.get(field, "")) for field in ("foreground", "background")]
-            well_formed = all(len(c) == 7 and c.startswith("#") for c in colours)
-            check(well_formed, f"{pid}: names two #rrggbb colours")
-            check(bool(str(pair.get("min_ratio", "")).strip()), f"{pid}: declares a floor")
-            if not (well_formed and isinstance(pair.get("min_ratio"), (int, float))):
-                continue
-            ratio = contrast_ratio(*colours)
-            check(ratio >= pair["min_ratio"],
-                  f"{pid}: {ratio:.2f}:1 meets the {pair['min_ratio']}:1 floor")
-            # A pair nobody ships is a claim about nothing. Stylesheets write
-            # #rrggbb and the renderer writes 0xrrggbb; both spellings count,
-            # and requiring one of the two prefixes keeps this from matching an
-            # unrelated run of six hex digits.
-            for colour in colours:
-                digits = colour.lower().lstrip("#")
-                check(f"#{digits}" in text or f"0x{digits}" in text,
-                      f"{pid}: {colour} appears in {source}")
-
-    print("\n== Visual matrix ==")
-    matrix = record["visual_matrix"]
-    expected = matrix.get("expected_cells")
-    check(isinstance(expected, int) and expected > 0, "the matrix declares its cell count")
-    captured = matrix.get("captured_cells") or []
-    if matrix.get("status") == "PASS":
-        check(len(captured) >= expected,
-              f"a passing matrix records all {expected} captured cells (has {len(captured)})")
-        check(bool(matrix.get("reviewed_by")) and bool(matrix.get("reviewed_on")),
-              "a passing matrix names its human reviewer and date")
-    else:
-        check(True, "matrix is outstanding; capture and review are not claimed")
-
-    print("\n== Lay comprehension ==")
-    lay = record["lay_comprehension"]
-    protocol = lay.get("protocol", {})
-    criterion = protocol.get("criterion", {})
-    scored = list(criterion.get("scored_question_ids") or [])
-    question_ids = [q.get("id") for q in protocol.get("questions", [])]
-    check(len(question_ids) == 5 and len(set(question_ids)) == 5,
-          "the protocol asks the five reviewed questions")
-    check(bool(scored) and set(scored) <= set(question_ids),
-          "the scored questions are drawn from the protocol")
-    check(isinstance(protocol.get("min_participants"), int)
-          and protocol["min_participants"] >= 3,
-          "at least three independent non-specialists are required")
-    check(protocol.get("coaching_allowed") is False, "participants are not coached")
-    results = lay.get("results") or []
-    if lay.get("status") == "PASS":
-        check(len(results) >= protocol.get("min_participants", 3),
-              "a passing lay gate records at least the minimum participants")
-        answered = 0
-        total = 0
-        for entry in results:
-            pid = entry.get("participant_id", "(unnamed)")
-            answers = entry.get("answers", {})
-            check(set(scored) <= set(answers),
-                  f"participant '{pid}' answered every scored question")
-            for qid in scored:
-                total += 1
-                if answers.get(qid) is True:
-                    answered += 1
-        floor = criterion.get("min_correct_fraction", 0.8)
-        check(total > 0 and (answered / total) >= floor,
-              f"the recorded pass rate meets the {floor:.0%} criterion")
-        if criterion.get("no_recurring_interface_misconception"):
-            check(not (lay.get("recurring_misconceptions") or []),
-                  "no recurring interface-caused misconception is recorded")
-    else:
-        check(not results or lay.get("status") == "FAIL",
-              "a PENDING lay gate records no participant results")
-
-    print("\n== Expert review ==")
-    expert = record["expert_review"]
-    expert_protocol = expert.get("protocol", {})
-    check(len(expert_protocol.get("questions") or []) == 7,
-          "the reviewer is asked the seven reviewed questions")
-    check(isinstance(expert_protocol.get("min_reviewers"), int)
-          and expert_protocol["min_reviewers"] >= 1,
-          "at least one specialist reviewer is required")
-    reviewers = expert.get("reviewers") or []
-    findings = expert.get("findings") or []
-    if expert.get("status") == "PASS":
-        check(len(reviewers) >= expert_protocol.get("min_reviewers", 1),
-              "a passing expert gate names its reviewers")
-        for reviewer in reviewers:
-            check(all(str(reviewer.get(field, "")).strip()
-                      for field in ("name", "affiliation", "reviewed_on")),
-                  f"reviewer '{reviewer.get('name', '(unnamed)')}' is fully identified")
-        unresolved = [f for f in findings
-                      if str(f.get("severity", "")).upper() == "CRITICAL"
-                      and str(f.get("resolution", "")).strip().upper() != "RESOLVED"]
-        check(not unresolved,
-              f"no unresolved critical scientific finding remains ({len(unresolved)} open)")
-        for finding in findings:
-            check(bool(str(finding.get("resolution", "")).strip()),
-                  f"finding '{finding.get('id', '(unnamed)')}' records a resolution")
-    else:
-        check(not reviewers or expert.get("status") == "FAIL",
-              "a PENDING expert gate names no reviewers")
-
-    print("\n== Final release definition ==")
-    final = record["final_release_definition"]
-    conditions = final.get("conditions") or []
-    check(len(conditions) == 12, f"the plan's twelve release conditions are all present ({len(conditions)})")
-    for condition in conditions:
-        cid = condition.get("id", "(missing id)")
-        check(condition.get("status") in STATUSES, f"condition '{cid}': status is declared vocabulary")
-        check(bool(str(condition.get("statement", "")).strip()),
-              f"condition '{cid}': states the condition")
-        if condition.get("status") == "PASS":
-            # A satisfied condition must point at what satisfied it.
-            check(relative_exists(condition.get("verified_by", ""))
-                  or str(condition.get("verified_by", "")).startswith("npm run"),
-                  f"condition '{cid}': a passing condition names its verifier")
-        else:
-            # An outstanding condition must name the gate it is waiting on, and
-            # that gate must genuinely still be outstanding.
-            blocker = condition.get("blocked_by")
-            check(blocker in ALL_SECTIONS,
-                  f"condition '{cid}': names the gate it waits on")
-            if blocker in ALL_SECTIONS:
-                check(record[blocker].get("status") != "PASS",
-                      f"condition '{cid}': waits on '{blocker}', which has already passed")
-    outstanding_conditions = [c.get("id") for c in conditions if c.get("status") != "PASS"]
-    if final.get("status") == "PASS":
-        check(not outstanding_conditions,
-              f"the definition passes only when every condition does ({outstanding_conditions})")
-    else:
-        check(bool(outstanding_conditions),
-              "the definition is outstanding because conditions genuinely are")
-
-    print("\n== Release readiness ==")
-    outstanding = [name for name in ALL_SECTIONS if record[name].get("status") != "PASS"]
-    if record.get("release_ready") is True:
-        check(not outstanding,
-              f"release_ready requires every gate to pass (outstanding: {outstanding})")
-    else:
-        check(bool(outstanding),
-              "release_ready is false, and at least one gate is genuinely outstanding")
-        blockers = record.get("release_blockers") or []
-        check(bool(blockers), "outstanding gates are listed as explicit blockers")
-        for name in outstanding:
-            check(any(entry.startswith(name) for entry in blockers),
-                  f"'{name}' is named in the release blockers")
-
-    return report()
-
-
-def report():
-    print("\n" + "=" * 44)
-    if failures:
-        print(f"{len(failures)} RELEASE-GATE FAILURE(S)")
-        return 1
-    print("ALL RELEASE-GATE CHECKS PASSED")
-    return 0
+    return GateValidator(json.loads(args.gates.read_text(encoding="utf-8"))).run()
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

@@ -434,8 +434,9 @@ test('SC8: the release record claims nothing that has not been earned', () => {
     }
   }
   // Every outstanding gate is named as a blocker, so the reason is never implicit.
-  const outstanding = ['visual_matrix', 'lay_comprehension', 'expert_review',
-    'accessibility', 'performance']
+  const outstanding = ['scientific_decisions', 'claim_entailment', 'mechanical_validity',
+    'deployment_parity', 'visual_matrix', 'lay_comprehension', 'expert_review',
+    'accessibility', 'performance', 'demo_rehearsal', 'final_release_definition']
     .filter((section) => gates[section].status !== 'PASS');
   for (const section of outstanding) {
     assert.ok(gates.release_blockers.some((entry) => entry.startsWith(section)),

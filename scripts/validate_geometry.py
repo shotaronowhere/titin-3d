@@ -212,12 +212,15 @@ for _row in _an_records:
             _an_bad.append(f"{_row.get('id')}.{_field} exceeds {_bind.get('id')}")
 check(not _an_bad, f"annotation evidence stays within its admitted claim ({_an_bad})")
 
-print("== SC-8 release-gate registry ==")
+print("== SC-18 release-gate registry ==")
 _RG = L["release_gates.json"]
-check(_RG.get("schema") == "titin-showcase-release-gates/1",
-      "release-gate record has the reviewed SC-8 schema")
-_rg_sections = ("automated", "destructive_controls", "visual_matrix",
-                "lay_comprehension", "expert_review", "accessibility", "performance")
+check(_RG.get("schema") == "titin-showcase-release-gates/2",
+      "release-gate record has the reviewed SC-18 schema")
+_rg_sections = ("artifact_identity", "scientific_decisions", "claim_entailment",
+                "mechanical_validity", "browser_qa", "deployment_parity",
+                "automated", "destructive_controls", "visual_matrix",
+                "lay_comprehension", "expert_review", "accessibility", "performance",
+                "release_artifacts", "demo_rehearsal", "final_release_definition")
 _rg_missing = [s for s in _rg_sections if not isinstance(_RG.get(s), dict)]
 check(not _rg_missing, f"every release-gate section is present (missing: {_rg_missing})")
 # Deep rules live in validate_release_gates.py; the one invariant worth repeating

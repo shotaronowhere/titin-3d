@@ -58,6 +58,27 @@ export const EVIDENCE_CLASSES = Object.freeze([
   'UNKNOWN',
 ]);
 
+/** Development/test identity used only when a caller has no generated candidate. */
+export const UNPINNED_IDENTITY = Object.freeze({
+  model_fingerprint: 'unpinned-development-model',
+  app_revision: 'unpinned-development-source',
+  build_inputs_fingerprint: 'unpinned-development-inputs',
+});
+
+function checkedIdentity(identity) {
+  const value = identity || UNPINNED_IDENTITY;
+  for (const field of ['model_fingerprint', 'app_revision', 'build_inputs_fingerprint']) {
+    if (typeof value[field] !== 'string' || !value[field].trim()) {
+      throw new Error(`Spec identity is missing ${field}`);
+    }
+  }
+  return Object.freeze({
+    model_fingerprint: value.model_fingerprint,
+    app_revision: value.app_revision,
+    build_inputs_fingerprint: value.build_inputs_fingerprint,
+  });
+}
+
 export class SpecValidationError extends Error {
   constructor(problems) {
     super(`Spec validation failed with ${problems.length} problem(s):\n  - ` +
@@ -68,7 +89,7 @@ export class SpecValidationError extends Error {
 }
 
 export class Spec {
-  constructor(files) {
+  constructor(files, identity = UNPINNED_IDENTITY) {
     this.sarcomere = files['sarcomere.json'];
     this.titin = files['titin.json'];
     this.states = files['structural_states.json'];
@@ -80,12 +101,16 @@ export class Spec {
     this.geometryStrategy = files[STRATEGY_FILE] || null;
     this.contextMeasurements = files[CONTEXT_FILE] || null;
     this.domainBackbones = files[BACKBONE_FILE] || null;
+    // SC-18. Identity is injected by the builder/generator. Model code never
+    // reaches into window, Git, or the filesystem to discover who it is.
+    this.identity = checkedIdentity(identity);
     this._raw = files;
   }
 
   /** Load every required record (+ optional derived layers), then validate. */
   static async load(fetchJson, {
     validate = true, strategy = true, context = true, backbones = true,
+    identity = UNPINNED_IDENTITY,
   } = {}) {
     const files = {};
     for (const name of SPEC_FILES) {
@@ -103,7 +128,7 @@ export class Spec {
       try { files[BACKBONE_FILE] = await fetchJson(BACKBONE_FILE); }
       catch { /* backbones optional — the archetype capsules are the fallback */ }
     }
-    const spec = new Spec(files);
+    const spec = new Spec(files, identity);
     if (validate) spec.validate(); // throws SpecValidationError on any problem
     return spec;
   }

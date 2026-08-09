@@ -72,9 +72,11 @@ test('SC13: the drawer is tabbed and sources come last', () => {
   }
 });
 
-test('SC13: opening the drawer lands on controls, not on an essay', () => {
-  assert.match(page, /state\.drawerTab = 'inspect'/,
-    'the default tab must be the one with the controls on it');
+test('SC13/18: named drawer entries land on their named destination', () => {
+  assert.match(page, /function openEvidence\(trigger, targetTab\)/);
+  assert.match(page, /openEvidence\(\$\('audienceEvidence'\), 'evidence'\)/);
+  assert.match(page, /openEvidence\(\$\('stageMeasureLink'\), 'measure'\)/);
+  assert.match(page, /openEvidence\(\$\('stageSourcesLink'\), 'sources'\)/);
   const inspect = page.indexOf('id="panelInspect"');
   const evidence = page.indexOf('id="panelEvidence"');
   assert.ok(inspect < evidence);
@@ -115,8 +117,8 @@ test('SC13: the page can copy a citable link to the current view', () => {
     'the reference list must be resolved by the facade, never restated in the page');
   assert.match(page, /id="copyViewLink"/);
   assert.match(page, /navigator\.clipboard\.writeText/);
-  assert.match(page, /__titinBuild\?\.fingerprint/,
-    'a citable link must name the build it came from');
+  assert.match(page, /model\.spec\.identity/,
+    'a citable link must name every candidate identity it came from');
 });
 
 test('SC13: every expert card names the biology it is about', () => {
