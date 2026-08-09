@@ -303,7 +303,7 @@ REQ1_SARC = ["id","name","biological_role","parent","position_nm","dimensions_nm
              "species","isoform","biological_condition","evidence_class","primary_references","notes"]
 REQ1_TITIN = ["id","name","biological_role","parent_structure","resting_axial_position_nm","dimensions_nm",
               "orientation","principal_axes","attachment_points","relationships","repeating_geometry",
-              "domain_composition","mechanical_class","state_dependence","species","isoform",
+              "domain_composition","mechanical_class","state_dependence","scientific_scope_ref",
               "biological_condition","evidence_class","primary_references","notes"]
 # "where applicable" (plan wording): the KEY must be present, so a deliberately empty
 # value (e.g. a lattice has no binding partners) is explicit and distinguishable from an
@@ -323,6 +323,10 @@ for c in L["sarcomere.json"]["components"]:
 for r in L["titin.json"]["regions"]:
     miss = _incomplete(r, REQ1_TITIN)
     check(not miss, f"titin region '{r['id']}' complete" + (f" (missing {miss})" if miss else ""))
+    check(r.get("scientific_scope_ref") == "scientific_scope.json#/sequence",
+          f"titin region '{r['id']}' delegates sequence identity to the scope ledger")
+    check("species" not in r and "isoform" not in r,
+          f"titin region '{r['id']}' does not duplicate sequence identity")
 
 print("== Attachment-point sourcing (every attachment cites a real reference) ==")
 _refs = set(L["references.json"].keys())
