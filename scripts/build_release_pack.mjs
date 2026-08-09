@@ -288,7 +288,6 @@ function scientificAuthorityDoc(pack) {
     ...Object.entries(authority.decision_statuses).map(([id, status]) => `| ${id} | ${status} |`),
     '',
     'Offline registry closure verifies that cited identifiers have canonical metadata. It does not establish semantic entailment; only a named, independently locator-verifying reviewer may approve a claim.',
-    '',
   ];
   return `${lines.join('\n')}\n`;
 }
