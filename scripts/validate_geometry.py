@@ -233,7 +233,7 @@ check(_RG.get("release_ready") is False or not _rg_outstanding,
 _rg_bad = []
 for _section in _rg_sections:
     for _row in (_RG.get(_section) or {}).get("checks", []):
-        if _row.get("verification") != "automated":
+        if _row.get("verification") != "automated" or _row.get("status") != "PASS":
             continue
         _files = [p for p in str(_row.get("verified_by", "")).replace(";", " ").split()
                   if "/" in p]

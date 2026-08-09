@@ -1,10 +1,10 @@
 {
-  "schema": "titin-showcase-release-gates/1",
+  "schema": "titin-showcase-release-gates/2",
   "meta": {
-    "phase": "SC-8 integrated validation and SC-9 release, rehearsal, and handoff",
+    "phase": "SC-18 release truth and urgent integrity defects",
     "status": "IN_PROGRESS",
-    "purpose": "Machine-readable record of every SC-8 release gate. Gates that a machine can decide are decided by a named command; gates that need people or a browser stay PENDING until their evidence is recorded here. scripts/validate_release_gates.py refuses to accept a PASS without that evidence, so this file cannot be used to declare readiness the project has not earned.",
-    "governing_plan": "SHOWCASE_COMPLETION_PLAN.md",
+    "purpose": "Machine-readable release-readiness record. Gates a machine can decide are decided by a named verifier; gates that need people, physical hardware, or deployment stay PENDING until append-only evidence exists. The validator refuses an unsupported PASS, so this record cannot declare readiness the project has not earned.",
+    "governing_plan": "docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md",
     "statuses": [
       "PENDING",
       "PASS",
@@ -14,7 +14,9 @@
       "automated",
       "browser",
       "human"
-    ]
+    ],
+    "revision": "SC-18",
+    "identity_boundary": "Post-candidate evidence is never a Spec, model/build input, or candidate-manifest artifact."
   },
   "automated": {
     "status": "PASS",
@@ -28,6 +30,11 @@
         "id": "verify_sc8",
         "command": "npm run verify:sc8",
         "covers": "the bounded SC-8 integration gate"
+      },
+      {
+        "id": "verify_sc18",
+        "command": "npm run verify:sc18",
+        "covers": "the bounded SC-18 identity, boundary, gate, and regression checks"
       }
     ],
     "checks": [
@@ -211,104 +218,166 @@
         "requirement": "every cell captured from the standalone build at its declared viewport",
         "verification": "browser",
         "status": "PENDING",
-        "note": "Requires a browser with WebGL; this environment has none."
+        "note": "SC-27 captures the frozen candidate; browser automation is not human visual review."
       },
       {
         "id": "human_review",
         "requirement": "captured set reviewed by a person, including colour-vision and grayscale",
         "verification": "human",
         "status": "PENDING",
-        "note": "Pixel comparison supplements human review; it does not decide scientific correctness."
+        "note": "Requires append-only evidence from a consenting named reviewer."
       }
     ],
     "captured_cells": [],
     "reviewed_by": null,
-    "reviewed_on": null
+    "reviewed_on": null,
+    "evidence_refs": []
   },
   "lay_comprehension": {
     "status": "PENDING",
     "protocol": {
-      "min_participants": 3,
-      "preferred_participants": 5,
+      "id": "titin-lay-comprehension/2",
+      "min_participants": 5,
+      "one_candidate_only": true,
       "coaching_allowed": false,
+      "informed_consent_required": true,
+      "preregistration_required": true,
       "questions": [
         {
-          "id": "identify_titin",
-          "prompt": "Which structure is titin?",
+          "id": "define_sarcomere",
+          "prompt": "Define a sarcomere in your own words.",
+          "scored": true
+        },
+        {
+          "id": "identify_titin_route",
+          "prompt": "Identify titin and describe where it runs.",
+          "scored": true
+        },
+        {
+          "id": "distinguish_motor",
+          "prompt": "Distinguish titin from the ATP-powered motor.",
+          "scored": true
+        },
+        {
+          "id": "explain_stretch",
+          "prompt": "Explain what changes when the sarcomere is stretched.",
           "scored": true
         },
         {
           "id": "identify_anchors",
-          "prompt": "Where are its two anchors?",
+          "prompt": "Identify titin’s two anchors.",
           "scored": true
         },
         {
-          "id": "length_change",
-          "prompt": "What changes as the sarcomere lengthens?",
+          "id": "explain_roles",
+          "prompt": "Explain titin’s spring, scaffold, and signaling roles.",
           "scored": true
         },
         {
-          "id": "not_the_motor",
-          "prompt": "Is titin the motor that shortens muscle?",
+          "id": "find_evidence",
+          "prompt": "Find the evidence for one statement.",
           "scored": true
         },
         {
-          "id": "measured_vs_schematic",
-          "prompt": "Which parts are source-backed and which are drawing aids?",
-          "scored": false
+          "id": "distinguish_claim_kinds",
+          "prompt": "Distinguish measured, modeled, inferred, and schematic content.",
+          "scored": true
         }
       ],
       "criterion": {
-        "scored_question_ids": [
-          "identify_titin",
-          "identify_anchors",
-          "length_change",
-          "not_the_motor"
-        ],
-        "min_correct_fraction": 0.8,
-        "no_recurring_interface_misconception": true
+        "per_question_min_correct": 4,
+        "distinguish_motor_min_correct": 5,
+        "no_aggregate_score_substitution": true,
+        "no_repeated_critical_navigation_failure": true
       }
     },
+    "preregistration": null,
+    "candidate_history": [],
     "results": [],
-    "recurring_misconceptions": []
+    "evidence_refs": []
   },
   "expert_review": {
     "status": "PENDING",
     "protocol": {
-      "min_reviewers": 1,
-      "preferred_reviewers": 2,
-      "materials": [
-        "data/showcase_claims.json",
-        "data/references.json",
-        "the standard screenshot set",
-        "the deployed page"
+      "id": "titin-expert-review/2",
+      "required_roles": [
+        "sequence/structure",
+        "mechanics"
       ],
-      "questions": [
-        "Is the actual N2A-containing reference visible to experts without burdening the general story?",
-        "Is titin continuous and correctly routed at the claimed scale?",
-        "Are spring mechanics described without normalizing domain unfolding?",
-        "Are Z-disc and M-band simplifications defensible?",
-        "Is MyBP-C represented without a false rigid-bridge or titin-contact claim?",
-        "Is any static evidence or schematic device presented as a measured trajectory?",
-        "Does any artistic device look like an experimental observation?"
+      "checks": [
+        {
+          "id": "scope_and_coordinate_frame",
+          "required_roles": [
+            "sequence/structure"
+          ]
+        },
+        {
+          "id": "sequence_region_architecture",
+          "required_roles": [
+            "sequence/structure"
+          ]
+        },
+        {
+          "id": "a_band_periodicity_register",
+          "required_roles": [
+            "sequence/structure"
+          ]
+        },
+        {
+          "id": "anchors_stoichiometry_depiction",
+          "required_roles": [
+            "sequence/structure"
+          ]
+        },
+        {
+          "id": "mechanics_reproduction",
+          "required_roles": [
+            "mechanics"
+          ]
+        },
+        {
+          "id": "mechanics_regimes_sensitivity",
+          "required_roles": [
+            "mechanics"
+          ]
+        },
+        {
+          "id": "claim_entailment_and_transfers",
+          "required_roles": [
+            "sequence/structure",
+            "mechanics"
+          ]
+        },
+        {
+          "id": "artifact_depiction_and_nonclaims",
+          "required_roles": [
+            "sequence/structure",
+            "mechanics"
+          ]
+        }
       ],
       "criterion": {
-        "unresolved_critical_findings": 0,
-        "lesser_findings": "recorded as limitations or addressed"
+        "independent_reviewer_per_role": true,
+        "all_assigned_checks_answered": true,
+        "unresolved_critical_or_major": 0,
+        "conflicts_disclosed": true,
+        "publication_consent_required": true,
+        "same_specialty_countersignature_for_sd_author": true
       }
     },
     "reviewers": [],
-    "findings": []
+    "findings": [],
+    "evidence_refs": []
   },
   "accessibility": {
     "status": "PENDING",
     "checks": [
       {
         "id": "contrast",
-        "requirement": "WCAG AA text and control contrast",
+        "requirement": "WCAG AA text/control pairs are declared and no visible anchor or selected extension row falls through to a user-agent/inherited foreground",
         "verification": "automated",
         "status": "PASS",
-        "verified_by": "test/showcase_phase8.test.js"
+        "verified_by": "test/showcase_phase18.test.js; test/browser/smoke.spec.js; scripts/validate_release_gates.py"
       },
       {
         "id": "object_contrast",
@@ -320,23 +389,23 @@
       {
         "id": "keyboard_route",
         "requirement": "full keyboard route through guided steps, controls, and annotations",
-        "verification": "automated",
-        "status": "PASS",
-        "verified_by": "test/showcase_phase8.test.js; test/showcase_phase4.test.js"
+        "verification": "browser",
+        "status": "PENDING",
+        "note": "Static source assertions do not establish rendered behavior; SC-27.2 supplies append-only evidence."
       },
       {
         "id": "focus_order",
         "requirement": "focus order matches visual order (no positive tabindex)",
-        "verification": "automated",
-        "status": "PASS",
-        "verified_by": "test/showcase_phase8.test.js"
+        "verification": "browser",
+        "status": "PENDING",
+        "note": "Static source assertions do not establish rendered behavior; SC-27.2 supplies append-only evidence."
       },
       {
         "id": "touch_targets",
         "requirement": "touch targets suitable for tablets",
-        "verification": "automated",
-        "status": "PASS",
-        "verified_by": "test/showcase_phase8.test.js"
+        "verification": "browser",
+        "status": "PENDING",
+        "note": "Static source assertions do not establish rendered behavior; SC-27.2 supplies append-only evidence."
       },
       {
         "id": "reduced_motion",
@@ -348,9 +417,9 @@
       {
         "id": "not_colour_only",
         "requirement": "selection and evidence are never colour-only",
-        "verification": "automated",
-        "status": "PASS",
-        "verified_by": "test/showcase_phase8.test.js"
+        "verification": "human",
+        "status": "PENDING",
+        "note": "Static source assertions do not establish rendered behavior; SC-27.2 supplies append-only evidence."
       },
       {
         "id": "text_zoom",
@@ -401,7 +470,7 @@
         "foreground": "#f2d06b",
         "background": "#161b22",
         "role": "focus indicator",
-        "min_ratio": 3.0
+        "min_ratio": 3
       },
       {
         "id": "caveat_text",
@@ -472,6 +541,27 @@
         "background": "#0e1116",
         "min_ratio": 4.5,
         "where": "MODELED evidence class beside the stage force readout"
+      },
+      {
+        "id": "source_link",
+        "foreground": "#a9c9f2",
+        "background": "#161b22",
+        "role": "every visible bibliography and evidence link",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "selected_extension_row",
+        "foreground": "#ffe1e8",
+        "background": "#0e1116",
+        "role": "selected, hovered, and focused regional extension row",
+        "min_ratio": 4.5
+      },
+      {
+        "id": "disabled_extension_row",
+        "foreground": "#98a4b3",
+        "background": "#0e1116",
+        "role": "disabled regional extension row before opacity",
+        "min_ratio": 4.5
       }
     ],
     "object_contrast_pairs": [
@@ -496,15 +586,21 @@
         "min_ratio": 1.9,
         "where": "guided myosin thick filament against the stage, on a projector"
       }
-    ]
+    ],
+    "evidence_refs": []
   },
   "performance": {
     "status": "PENDING",
     "baseline": {
-      "recorded_on": "2026-08-07",
-      "standalone_bytes": 2166361,
+      "recorded_on": "2026-08-09",
+      "source_commit": "ef0ce85",
+      "standalone_bytes": 2166960,
+      "standalone_sha256": "a03c9b2071ffd92ec0672cc7e51ce7abc2d7249ceca2c6b56440eb47610dec77",
+      "manifest_sha256": "3000b08b2d057c5190c5a054d3e17ab3abf68f128a75f48e694ce8762a17ed33",
+      "manifest_declared_standalone_bytes": 2165946,
       "standalone_regression_tolerance": 0.2,
-      "basis": "Byte size of the committed standalone index.html at the SC-17 release point, after the SC-10..SC-16 presentation work."
+      "basis": "Raw Git object size and SHA-256 of index.html at the SC-17-followup starting commit. The v1 manifest's declared byte count differed from the actual Git object, which SC-18 records rather than normalizing away.",
+      "sc18_target_hardware_evidence": "evidence/performance/SC-18-baseline.json"
     },
     "checks": [
       {
@@ -554,9 +650,10 @@
         "requirement": "the exact browser, GPU, and projector configuration is exercised",
         "verification": "browser",
         "status": "PENDING",
-        "note": "Belongs to the SC-9 demo-day preflight on the real display."
+          "note": "SC-18 recorded a reproducible headless sample on the target laptop, but the physical display/browser/touch run, connection path, and OS process-memory high-water mark remain unverified."
       }
-    ]
+    ],
+    "evidence_refs": []
   },
   "release_artifacts": {
     "status": "PASS",
@@ -628,10 +725,10 @@
       },
       {
         "id": "build_identity",
-        "requirement": "the page reports a build fingerprint a presenter can compare",
+        "requirement": "manifest v2 separates model, application, build-input, raw standalone, and detached manifest identities",
         "verification": "automated",
         "status": "PASS",
-        "verified_by": "test/showcase_phase9.test.js"
+        "verified_by": "test/showcase_phase18.test.js; scripts/verify_artifact_identity.mjs"
       }
     ]
   },
@@ -677,7 +774,8 @@
       }
     ],
     "rehearsed_by": null,
-    "rehearsed_on": null
+    "rehearsed_on": null,
+    "evidence_refs": []
   },
   "final_release_definition": {
     "status": "PENDING",
@@ -734,21 +832,21 @@
       },
       {
         "id": "novice_comprehension",
-        "statement": "novice comprehension threshold is met",
+        "statement": "the exact titin-lay-comprehension/2 threshold is met on one frozen candidate",
         "status": "PENDING",
         "blocked_by": "lay_comprehension"
       },
       {
         "id": "expert_clear",
-        "statement": "expert review has no unresolved critical finding",
+        "statement": "both independent specialist roles completed titin-expert-review/2 with no unresolved CRITICAL or MAJOR finding",
         "status": "PENDING",
         "blocked_by": "expert_review"
       },
       {
         "id": "outputs_agree",
-        "statement": "standalone, local-server, and GitHub Pages outputs agree",
-        "status": "PASS",
-        "verified_by": "test/standalone.test.js"
+        "statement": "local, standalone, staging when used, and production bytes/identities agree at the release boundary",
+        "status": "PENDING",
+        "blocked_by": "deployment_parity"
       },
       {
         "id": "rehearsal_and_fallback",
@@ -760,12 +858,193 @@
   },
   "release_ready": false,
   "release_blockers": [
-    "visual_matrix: capture and human review require a browser with WebGL",
-    "lay_comprehension: requires at least three independent non-specialists",
-    "expert_review: requires at least one muscle or titin specialist",
-    "accessibility.text_zoom: requires a real browser zoom check",
-    "performance.target_hardware: belongs to the SC-9 demo-day preflight",
-    "demo_rehearsal: requires the presenting machine, display, and projector",
-    "final_release_definition: four conditions depend on the gates above"
-  ]
+    "scientific_decisions",
+    "claim_entailment",
+    "mechanical_validity",
+    "deployment_parity",
+    "visual_matrix",
+    "accessibility",
+    "performance",
+    "demo_rehearsal",
+    "lay_comprehension",
+    "expert_review",
+    "final_release_definition"
+  ],
+  "artifact_identity": {
+    "status": "PASS",
+    "checks": [
+      {
+        "id": "model_fingerprint",
+        "requirement": "explicit primary model inputs produce a deterministic SHA-256 identity",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase18.test.js; scripts/validate_artifact_boundary.mjs"
+      },
+      {
+        "id": "app_revision",
+        "requirement": "application revision resolves from tracked discovered build inputs and reports dirtiness",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase18.test.js"
+      },
+      {
+        "id": "build_inputs_fingerprint",
+        "requirement": "template, module graph, embedded records, builder, dependency bytes, lockfile, and toolchain pins affect identity",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/showcase_phase18.test.js; scripts/validate_artifact_boundary.mjs"
+      },
+      {
+        "id": "raw_artifact",
+        "requirement": "raw standalone bytes match the external manifest checksum",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/verify_artifact_identity.mjs"
+      },
+      {
+        "id": "detached_manifest",
+        "requirement": "manifest bytes match release/MANIFEST.sha256 without self-reference",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/verify_artifact_identity.mjs"
+      },
+      {
+        "id": "candidate_evidence_boundary",
+        "requirement": "post-candidate attestations cannot enter any candidate identity surface",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/validate_artifact_boundary.mjs; scripts/neg_control_artifact_boundary.mjs"
+      }
+    ]
+  },
+  "scientific_decisions": {
+    "status": "PENDING",
+    "required_ids": [
+      "SD-01",
+      "SD-02",
+      "SD-03",
+      "SD-04",
+      "SD-05"
+    ],
+    "decisions": [
+      {
+        "id": "SD-01",
+        "status": "PENDING"
+      },
+      {
+        "id": "SD-02",
+        "status": "PENDING"
+      },
+      {
+        "id": "SD-03",
+        "status": "PENDING"
+      },
+      {
+        "id": "SD-04",
+        "status": "PENDING"
+      },
+      {
+        "id": "SD-05",
+        "status": "PENDING"
+      }
+    ],
+    "evidence_refs": []
+  },
+  "claim_entailment": {
+    "status": "PENDING",
+    "checks": [
+      {
+        "id": "atomic_claim_support",
+        "requirement": "every material visible claim has atomic support and an exact locator",
+        "verification": "human",
+        "status": "PENDING",
+        "note": "SC-19 and SC-22 create the matrix; SC-27 records named review."
+      },
+      {
+        "id": "transfer_review",
+        "requirement": "cross-species, tissue, preparation, and model transfers are explicit and reviewed",
+        "verification": "human",
+        "status": "PENDING"
+      }
+    ],
+    "evidence_refs": []
+  },
+  "mechanical_validity": {
+    "status": "PENDING",
+    "checks": [
+      {
+        "id": "parameter_authority",
+        "requirement": "one parameter record governs browser, reference solver, display, and export",
+        "verification": "automated",
+        "status": "PENDING",
+        "note": "Owned by SC-21."
+      },
+      {
+        "id": "regime_and_uncertainty",
+        "requirement": "displayed force states validity regime, transfer, sensitivity, and uncertainty",
+        "verification": "human",
+        "status": "PENDING"
+      },
+      {
+        "id": "independent_reproduction",
+        "requirement": "mechanics reviewer reproduces supported outputs on the frozen candidate",
+        "verification": "human",
+        "status": "PENDING"
+      }
+    ],
+    "evidence_refs": []
+  },
+  "browser_qa": {
+    "status": "PASS",
+    "checks": [
+      {
+        "id": "source_boot",
+        "requirement": "source-mode page sets its ready marker without boot/module/console error",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/browser/smoke.spec.js"
+      },
+      {
+        "id": "standalone_boot",
+        "requirement": "HTTP and file standalone set the ready marker without boot/module/console error",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/browser/smoke.spec.js"
+      },
+      {
+        "id": "webgl_fallback",
+        "requirement": "a missing WebGL context produces actionable static-fallback guidance",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/browser/smoke.spec.js"
+      },
+      {
+        "id": "drawer_routing",
+        "requirement": "Evidence, Measure, and Sources entries reach their labelled destinations and return focus",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/browser/smoke.spec.js"
+      }
+    ]
+  },
+  "deployment_parity": {
+    "status": "PENDING",
+    "checks": [
+      {
+        "id": "staging_identity",
+        "requirement": "optional staging bytes and embedded identities match the candidate manifest",
+        "verification": "browser",
+        "status": "PENDING",
+        "note": "verify_artifact_identity.mjs --url may establish staging parity without deploying."
+      },
+      {
+        "id": "production_identity",
+        "requirement": "production raw bytes and embedded identities match the approved immutable candidate",
+        "verification": "browser",
+        "status": "PENDING",
+        "note": "Intentionally owned by SC-27.6 after human and expert gates."
+      }
+    ],
+    "evidence_refs": []
+  }
 }
