@@ -25,7 +25,7 @@ const controller = new StoryController(model.spec.presentation, {
 
 test('SC1: presentation.json is required and cross-file validated at runtime', () => {
   assert.equal(model.spec.presentation.schema, 'titin-presentation/1');
-  assert.equal(model.spec.showcaseClaims.schema, 'titin-showcase-claim-audit/1');
+  assert.equal(model.spec.showcaseClaims.schema, 'titin-showcase-claim-audit/2');
   assert.deepEqual(controller.chapters.map((chapter) => chapter.id),
     ['orientation', 'architecture', 'elastic_regions', 'anchors',
       'anchored_scaffold', 'evidence_audit', 'provenance_pipeline']);

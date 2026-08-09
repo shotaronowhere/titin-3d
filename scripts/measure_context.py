@@ -478,9 +478,10 @@ def _write(doc, src, rows):
     doc["provenance"]["reproduce"] = "python3 scripts/measure_context.py --write"
     doc["provenance"]["isoform_caveat"] = (
         "8G4L is cardiac and its titin arrangement is not transferred silently to "
-        "the skeletal N2A model. 6KN7 has cardiac troponin subunits, but the actin "
+        "the reference-sequence model named by scientific_scope.json. 6KN7 has cardiac "
+        "troponin subunits, but the actin "
         "entity measured for rise/twist is alpha-skeletal actin, so that geometry "
-        "is direct for the declared skeletal scope. Every row carries muscle_type "
+        "is admitted only as actin structural context. Every row carries muscle_type "
         "and skeletal_transfer.")
     doc["chain_counts_verified"] = {"8G4L": src["thick"]["chain_counts"],
                                     "6KN7": src["thin"]["chain_counts"]}

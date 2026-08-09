@@ -48,7 +48,7 @@
    "evidence_class": "MEASURED",
    "note": "3 radial sectors x 2 strands (TA outer, TB inner)",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -58,7 +58,7 @@
    "source": "8G4L",
    "evidence_class": "MEASURED",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -68,7 +68,7 @@
    "source": "8G4L",
    "evidence_class": "MEASURED",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -78,7 +78,7 @@
    "source": "8G4L",
    "evidence_class": "MEASURED",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -89,7 +89,7 @@
    "evidence_class": "MEASURED",
    "note": "exact by the reconstruction's IMPOSED 3-fold symmetry",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -100,7 +100,7 @@
    "evidence_class": "MEASURED",
    "note": "paper quotes ~4.8 nm (48 A) between TA and TB",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -110,7 +110,7 @@
    "source": "8G4L",
    "evidence_class": "MEASURED",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -121,7 +121,7 @@
    "evidence_class": "MEASURED",
    "note": "measured 144.4 A; X-ray value 14.3-14.4 nm",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -136,7 +136,7 @@
    "evidence_class": "MEASURED",
    "note": "PAPER values, measured to the head-tail junction of each IHM. Our own centroid-based estimate gave {29.3, 30.2, 60.4}: also unequal, also sums to 120, but numerically different because the reference point differs. Use the paper's values, not ours.",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes"
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json"
   },
   {
    "quantity": "thick filament backbone diameter",
@@ -146,7 +146,7 @@
    "evidence_class": "MEASURED",
    "note": "tail residues >1100, p95 radius; our spec uses 15 nm",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -157,7 +157,7 @@
    "evidence_class": "MEASURED",
    "note": "p99 radius; literature quotes ~30 nm",
    "muscle_type": "cardiac",
-   "skeletal_transfer": "NOT established for the skeletal N2A isoform this model scopes",
+   "skeletal_transfer": "NOT established for the reference-sequence construct named by scientific_scope.json",
    "derived_by": "scripts/measure_context.py (Phase 6 pipeline)"
   },
   {
@@ -214,7 +214,7 @@
  "phase": "Phase 6 \u2014 PDB / Structural Data Pipeline (out-of-band; see followup_register)",
  "provenance": {
   "how_measured": "Re-derived through the Phase 6 pipeline: scripts/parse_structure.py -> scripts/measure_structure.py, driven by scripts/measure_context.py. Supersedes the ad hoc regex-parser measurement of session 15; the diff is recorded in geometry_strategy.json:followup_register item PH6-1.",
-  "isoform_caveat": "8G4L is cardiac and its titin arrangement is not transferred silently to the skeletal N2A model. 6KN7 has cardiac troponin subunits, but the actin entity measured for rise/twist is alpha-skeletal actin, so that geometry is direct for the declared skeletal scope. Every row carries muscle_type and skeletal_transfer.",
+  "isoform_caveat": "8G4L is cardiac and its titin arrangement is not transferred silently to the reference-sequence model named by scientific_scope.json. 6KN7 has cardiac troponin subunits; only the measured alpha-skeletal-actin rise/twist is admitted as structural context. Every row carries muscle_type and skeletal_transfer.",
   "software": "gemmi (see parse_structure), numpy 2.4.6",
   "reproduce": "python3 scripts/measure_context.py --write"
  },

@@ -11,7 +11,7 @@
    "geometry_sources.json",
    "references.json"
   ],
-  "isoform_reconciliation": "Titin geometry (titin.json) is modeled on the canonical SKELETAL N2A isoform (Q8WZ42). Some sarcomere-scale filament values (e.g. thick-filament cryo-EM periodicity) derive from CARDIAC preparations where the architecture is highly conserved across striated muscle. Each value carries its own muscle_type in geometry_sources.json; this cross-muscle use is intentional and documented, NOT a silent combination. Cardiac-specific N2B/N2BA titin is a DIFFERENT isoform and is out of scope for this reference model."
+  "scientific_scope_ref": "scientific_scope.json#/structural_context"
  },
  "reference_lengths_nm": {
   "thick_filament": 1600.0,
@@ -76,7 +76,7 @@
     "10.1016/j.cell.2021.02.047",
     "10.1371/journal.pone.0300348"
    ],
-   "notes": "Z-disc width 30-62 nm species/muscle dependent; using 50 nm skeletal reference.",
+   "notes": "Z-disc width is species- and muscle-dependent (30–62 nm); 50 nm is a declared skeletal-context working value, not construct identity.",
    "evidence_by_claim": {
     "dimensions_and_positions": "MEASURED",
     "render_geometry_proxy": "SCHEMATIC"
@@ -294,7 +294,7 @@
    "item": "Azimuthal arrangement of the 6 titin molecules around the thick filament",
    "class": "MEASURED (human cardiac C-zone) / INFERRED (skeletal transfer)",
    "reason": "Resolved by 6 A cryo-EM of the human cardiac thick-filament C-zone (PDB 8G4L, doi:10.1038/s41586-023-06691-4). Measured from the deposited coordinates: the six strands are NOT equally spaced on one radius. They form three 120 deg sectors, each carrying a TA/TB pair 30 deg apart, TA at r=8.57 nm and TB at r=6.85 nm. The 120 deg sector repeat is exact only because 3-fold symmetry was IMPOSED during reconstruction.",
-   "modeling_directive": "For this skeletal N2A reference, retain the declared six-fold-at-one-radius SCHEMATIC until skeletal evidence exists. Preserve the measured cardiac C-zone two-shell sector arrangement in data/context_measurements.json as an alternative, not as a silent transfer. A future cardiac mode may use it as MEASURED only in the C-zone; skeletal or D-zone use would remain INFERRED and must be explicitly selected.",
+   "modeling_directive": "For the reference-sequence render named by scientific_scope.json, retain the declared six-fold-at-one-radius SCHEMATIC until construct-compatible evidence exists. Preserve the measured cardiac C-zone two-shell sector arrangement in data/context_measurements.json as an alternative, not as a silent transfer. A future cardiac mode may use it as MEASURED only in the C-zone; other tissue or D-zone use would remain INFERRED and must be explicitly selected.",
    "superseded": {
     "previous_class": "UNKNOWN",
     "previous_reason": "Six-fold symmetry inferred; exact angular positions not resolved.",
@@ -303,7 +303,7 @@
    }
   },
   {
-   "item": "Precise Z-disc internal lattice register for the skeletal N2A isoform",
+   "item": "Precise Z-disc internal lattice register for the reference-sequence construct named by scientific_scope.json",
    "class": "INFERRED",
    "reason": "Z-disc architecture resolved by cryo-ET in general; isoform-specific register not fully mapped.",
    "modeling_directive": "Use general cryo-ET architecture; flag isoform specificity as unresolved."
@@ -311,7 +311,7 @@
   {
    "item": "Exact thin-filament pointed-end position (nebulin-capped) per muscle type",
    "class": "STRONGLY INFERRED",
-   "reason": "Thin-filament length varies by muscle; 1.05 um is a skeletal reference.",
+   "reason": "Thin-filament length varies by muscle; 1.05 µm is a declared skeletal-context working value.",
    "modeling_directive": "Parameterize by muscle type; do not fix a single universal value."
   }
  ]

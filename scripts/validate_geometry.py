@@ -59,8 +59,16 @@ _DEFERRED = {
     # provenance and the frame it claims have to be checked, not just its shape.
     "domain_backbones.json":         "== SC-16.2: domain_backbones.json ==",
 }
+_EXTERNAL = {
+    # SC-19 authority records have dedicated fail-closed validators because their
+    # review and digest semantics do not belong in this numerical geometry audit.
+    "scientific_scope.json": "validate_scientific_scope.py",
+    "titin_sequence_features.json": "validate_sequence_features.py",
+    "claim_support.json": "validate_claim_support.py",
+    "scientific_decisions.json": "validate_scientific_decisions.py",
+}
 _on_disk = sorted(f for f in os.listdir(DATA_DIR) if f.endswith(".json"))
-_covered = set(files) | set(_DEFERRED)
+_covered = set(files) | set(_DEFERRED) | set(_EXTERNAL)
 _uncovered = [f for f in _on_disk if f not in _covered]
 check(not _uncovered,
       f"every .json in data/ is validated somewhere (uncovered: {_uncovered})")
@@ -71,8 +79,15 @@ _own_src = open(os.path.abspath(__file__)).read()
 for _df, _where in _DEFERRED.items():
     check(_own_src.count(f'"{_df}"') >= 2 or _df in _own_src.replace(f'"{_df}"', "", 1),
           f"deferred file {_df} is still referenced by its validating section ({_where})")
+for _df, _validator in _EXTERNAL.items():
+    _validator_path = os.path.join(_HERE, _validator)
+    check(os.path.isfile(_validator_path),
+          f"external validator for {_df} exists ({_validator})")
+    check(os.path.isfile(_validator_path) and _df in open(_validator_path).read(),
+          f"external validator {_validator} names {_df}")
 check(len(_covered) == len(_on_disk),
-      f"all {len(_on_disk)} spec files accounted for ({len(files)} eager, {len(_DEFERRED)} deferred)")
+      f"all {len(_on_disk)} spec files accounted for ({len(files)} eager, "
+      f"{len(_DEFERRED)} deferred, {len(_EXTERNAL)} external)")
 
 print("== Structural raw-source reproducibility ==")
 _RAW_DIR = os.path.join(DATA_DIR, "structures")
@@ -143,7 +158,7 @@ check(cited<=refs, f"all cited DOIs present (missing: {sorted(cited-refs)})")
 # geometry validator independently aware of its schema and source closure.
 print("== SC-0 showcase claim registry ==")
 _SC = L["showcase_claims.json"]
-check(_SC.get("schema") == "titin-showcase-claim-audit/1",
+check(_SC.get("schema") == "titin-showcase-claim-audit/2",
       "showcase claim matrix has the reviewed schema")
 _sc_objects = _SC.get("objects") or []
 check(bool(_sc_objects), "showcase claim matrix is non-empty")

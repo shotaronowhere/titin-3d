@@ -100,8 +100,9 @@ export const RADIAL_TITIN_POLICY = Object.freeze({
    * project's evidence classes exist to catch.
    *
    * The schematic is retained for now for a SCOPE reason, not a geometric one:
-   * 8G4L is cardiac, and this model's declared scope is the skeletal N2A isoform.
-   * Adopting cardiac coordinates wholesale would silently mix isoforms.
+   * 8G4L is cardiac, while the sequence construct and tissue status are governed
+   * by scientific_scope.json. Adopting cardiac coordinates wholesale would
+   * silently mix preparations.
    */
   known_divergence_from_measurement: Object.freeze({
     status: 'DECLARED — renderer intentionally lags the measurement',
@@ -116,8 +117,8 @@ export const RADIAL_TITIN_POLICY = Object.freeze({
     measured_in: 'data/context_measurements.json',
     source: 'PDB:8G4L',
     why_not_yet_adopted:
-      '8G4L is CARDIAC; this spec\'s declared scope is the skeletal N2A isoform. '
-      + 'Transferring the arrangement is a scope decision requiring skeletal evidence, '
+      '8G4L is CARDIAC; the current construct tissue status remains pending. '
+      + 'Transferring the arrangement is a scientific-scope decision requiring construct-compatible evidence, '
       + 'not a rendering decision.',
     resolves_to: 'sarcomere.json:unknowns[Azimuthal arrangement].superseded',
   }),

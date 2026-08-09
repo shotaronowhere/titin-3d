@@ -12,6 +12,9 @@
 
 import { checkPresentationSpec } from '../presentation/StoryController.js';
 import { checkAnnotationCatalog } from '../presentation/AnnotationCatalog.js';
+import { mapFeaturesToRegions } from './SequenceFeatures.js';
+import { scopeLedger } from './ScientificScope.js';
+import { decisionLedger } from './ScientificDecisions.js';
 
 export const SPEC_FILES = Object.freeze([
   'sarcomere.json',
@@ -22,6 +25,10 @@ export const SPEC_FILES = Object.freeze([
   'showcase_claims.json',
   'presentation.json',
   'annotations.json',
+  'scientific_scope.json',
+  'titin_sequence_features.json',
+  'claim_support.json',
+  'scientific_decisions.json',
 ]);
 
 // Phase-3 geometry strategy. Distinct from the five canonical source-of-truth
@@ -98,6 +105,10 @@ export class Spec {
     this.showcaseClaims = files['showcase_claims.json'];
     this.presentation = files['presentation.json'];
     this.annotations = files['annotations.json'];
+    this.scientificScope = files['scientific_scope.json'];
+    this.sequenceFeatures = files['titin_sequence_features.json'];
+    this.claimSupport = files['claim_support.json'];
+    this.scientificDecisions = files['scientific_decisions.json'];
     this.geometryStrategy = files[STRATEGY_FILE] || null;
     this.contextMeasurements = files[CONTEXT_FILE] || null;
     this.domainBackbones = files[BACKBONE_FILE] || null;
@@ -147,8 +158,116 @@ export class Spec {
       sarcomere: S, titin: T, states: ST, geometrySources: this.geometrySources, references: R,
       showcaseClaims: this.showcaseClaims, presentation: this.presentation,
       annotations: this.annotations,
+      scientificScope: this.scientificScope,
+      sequenceFeatures: this.sequenceFeatures,
+      claimSupport: this.claimSupport,
+      scientificDecisions: this.scientificDecisions,
     })) if (!v || typeof v !== 'object') p.push(`${k}.json missing or not an object`);
     if (p.length) return { ok: false, problems: p };
+
+    // SC-19 authority records are mandatory and cross-linked. Detailed schema
+    // validation is shared with the standalone Python gates; runtime performs
+    // the boundary checks needed to refuse an incoherent artifact.
+    try {
+      const scope = scopeLedger(this);
+      const decisions = decisionLedger(this);
+      if (scope.sequence.accession !== this.sequenceFeatures.source?.record) {
+        p.push('scientific scope accession differs from pinned sequence record');
+      }
+      if (scope.sequence.isoform_id !== this.sequenceFeatures.source?.isoform_id) {
+        p.push('scientific scope isoform differs from pinned sequence record');
+      }
+      if (T.meta?.coordinate_frame !== scope.sequence.coordinate_frame) {
+        p.push('titin coordinate frame differs from scientific scope');
+      }
+      if (T.meta?.total_length_aa !== this.sequenceFeatures.sequence_length_aa) {
+        p.push('titin total length differs from pinned sequence length');
+      }
+      if (scope.sequence.review_status !== decisions.rows.find((row) => row.id === 'SD-01')?.status) {
+        p.push('scope sequence review status differs from SD-01');
+      }
+      if (scope.mechanics.review_status !== decisions.rows.find((row) => row.id === 'SD-04')?.status) {
+        p.push('scope mechanics review status differs from SD-04');
+      }
+      if (scope.render.review_status !== decisions.rows.find((row) => row.id === 'SD-05')?.status) {
+        p.push('scope render review status differs from SD-05');
+      }
+      const mapped = mapFeaturesToRegions(this.sequenceFeatures, T.regions, {
+        expectedCoordinateFrame: T.meta?.coordinate_frame,
+      });
+      if (mapped.boundaryProblems.length) {
+        p.push(`sequence mapping has ${mapped.boundaryProblems.length} boundary problem(s)`);
+      }
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      p.push(`SC-19 sequence/scope validation failed: ${detail}`);
+    }
+    if (this.claimSupport.schema !== 'titin-claim-support/1') {
+      p.push('claim_support.json has the wrong schema');
+    }
+    if (this.scientificDecisions.schema !== 'titin-scientific-decisions/1') {
+      p.push('scientific_decisions.json has the wrong schema');
+    }
+    const supportIds = new Set((this.claimSupport.claims || []).map((claim) => claim.id));
+    const supportById = new Map((this.claimSupport.claims || []).map((claim) => [claim.id, claim]));
+    const resolvePointer = (value, pointer) => pointer.split('/').slice(1).reduce((node, raw) => {
+      const token = raw.replaceAll('~1', '/').replaceAll('~0', '~');
+      return Array.isArray(node) ? node[Number(token)] : node?.[token];
+    }, value);
+    for (const [index, object] of (this.showcaseClaims.objects || []).entries()) {
+      if (!supportIds.has(object.claim_support_id)) {
+        p.push(`showcase claim '${object.id}' has no claim-support record`);
+      } else {
+        const expected = `data/showcase_claims.json#/objects/${index}/claim`;
+        if (!(supportById.get(object.claim_support_id)?.public_bindings || []).includes(expected)) {
+          p.push(`showcase claim '${object.id}' lacks exact public binding '${expected}'`);
+        }
+      }
+    }
+    for (const section of ['guided_chapters', 'expert_cards']) {
+      for (const [index, row] of (this.presentation[section] || []).entries()) {
+        const claim = supportById.get(row.target_claim_id);
+        const expected = `data/presentation.json#/${section}/${index}`;
+        if (!claim) p.push(`presentation row '${row.id}' has unresolved claim-support ID '${row.target_claim_id}'`);
+        else if (!(claim.public_bindings || []).includes(expected)) {
+          p.push(`presentation row '${row.id}' lacks exact public binding '${expected}'`);
+        }
+      }
+    }
+    for (const [index, annotation] of (this.annotations.components || []).entries()) {
+      if (!annotation.claim_support_ids?.length) {
+        p.push(`annotation '${annotation.id}' has no claim-support record`);
+      }
+      for (const id of annotation.claim_support_ids || []) {
+        const claim = supportById.get(id);
+        if (!claim) p.push(`annotation '${annotation.id}' has unresolved claim-support ID '${id}'`);
+        else {
+          const expected = `data/annotations.json#/components/${index}`;
+          if (!(claim.public_bindings || []).includes(expected)) {
+            p.push(`annotation '${annotation.id}' lacks claim '${id}' binding '${expected}'`);
+          }
+        }
+      }
+    }
+    for (const claim of this.claimSupport.claims || []) {
+      for (const binding of claim.public_bindings || []) {
+        const match = binding.match(/^data\/([^#]+)#(\/.*)$/);
+        if (!match) continue;
+        const file = this._raw[match[1]];
+        if (!file || resolvePointer(file, match[2]) === undefined) {
+          p.push(`claim '${claim.id}' has unresolved public binding '${binding}'`);
+        }
+      }
+    }
+    for (const decisionId of ['SD-01', 'SD-02', 'SD-03', 'SD-04', 'SD-05']) {
+      const decision = this.scientificDecisions.decisions?.[decisionId];
+      if (!decision) {
+        p.push(`scientific decision ${decisionId} is missing`);
+      } else if (decision.status === 'PENDING'
+          && (decision.reviewer !== null || decision.ruling !== null || decision.reviewed_on !== null)) {
+        p.push(`scientific decision ${decisionId} invents review metadata while PENDING`);
+      }
+    }
 
     // 2. cross-reference integrity — every cited DOI/UniProt id resolves in references.json
     const refKeys = new Set(Object.keys(R));
@@ -178,6 +297,7 @@ export class Spec {
       titin: T,
       states: ST,
       annotations: this.annotations,
+      scientificScope: this.scientificScope,
     }));
     p.push(...checkAnnotationCatalog(this.annotations, {
       references: R,
@@ -287,7 +407,6 @@ export class Spec {
     //    is indistinguishable from a note.
     const CM = this.contextMeasurements;
     if (CM) {
-      const scope = (S.meta && S.meta.scope_muscle_type) || 'skeletal';
       for (const m of CM.measurements || []) {
         const q = m.quantity || '(unnamed)';
         if (m.value === undefined || m.value === null) p.push(`context measurement without value: ${q}`);
@@ -295,11 +414,8 @@ export class Spec {
         if (!m.evidence_class) p.push(`context measurement without evidence class: ${q}`);
         else if (!EVIDENCE_CLASSES.includes(this._baseClass(m.evidence_class)))
           p.push(`context measurement non-standard evidence class: ${q} -> ${m.evidence_class}`);
-        // muscle_type is the CONDITION under which sarcomere.json's
-        // isoform_reconciliation policy permits cross-muscle values at all.
         if (!m.muscle_type) p.push(`context measurement without muscle_type: ${q}`);
-        else if (!String(m.muscle_type).toLowerCase().includes(scope) && !m.skeletal_transfer)
-          p.push(`context measurement is out-of-scope muscle type but states no transferability: ${q}`);
+        if (!m.skeletal_transfer) p.push(`context measurement states no transfer/admission status: ${q}`);
         const srcs = m.sources || (m.source ? [m.source] : []);
         if (!srcs.length) p.push(`context measurement without source: ${q}`);
       }

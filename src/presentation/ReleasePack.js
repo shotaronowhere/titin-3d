@@ -159,6 +159,7 @@ function presenterScript(model) {
 function fallbackSlides(model, referenceLengthNm, comparisonLengthNm) {
   const presentation = model.spec.presentation;
   const badge = presentation.scope_badges[0];
+  const scope = model.scientificScope;
   const overlay = createShowcaseOverlay(model, referenceLengthNm);
   const stretched = createShowcaseOverlay(model, comparisonLengthNm);
   const lattice = model.latticeCrossSectionAt(referenceLengthNm);
@@ -170,11 +171,12 @@ function fallbackSlides(model, referenceLengthNm, comparisonLengthNm) {
       id: 'scope',
       kind: 'text',
       title: 'Titin across the sarcomere',
-      subtitle: badge.label,
+      subtitle: scope.publicBadge,
       lines: [
-        `Species: ${presentation.scope.species}`,
-        `Reference: ${presentation.scope.accession} — ${presentation.scope.isoform}`,
-        `Muscle type: ${presentation.scope.muscle_type}`,
+        `Sequence species: ${scope.sequence.species}`,
+        `Reference: ${scope.sequence.gene} — ${scope.sequence.isoform_id}`,
+        'Tissue construct: not established; SD-01 pending',
+        `Mechanics: ${scope.mechanics.display_label}`,
         `Declared working range: ${presentation.scope.working_range_nm.join('–')} nm`,
         `Shown here at ${overlay.sarcomere_length_nm} nm`,
         '',
@@ -281,7 +283,9 @@ export function createReleasePack(model, opts = {}) {
     generated_from: [
       'data/showcase_claims.json', 'data/references.json', 'data/presentation.json',
       'data/annotations.json', 'data/sarcomere.json', 'data/titin.json',
-      'data/structural_states.json',
+      'data/structural_states.json', 'data/scientific_scope.json',
+      'data/titin_sequence_features.json', 'data/claim_support.json',
+      'data/scientific_decisions.json',
     ],
     reference_length_nm: referenceLengthNm,
     comparison_length_nm: comparisonLengthNm,
@@ -292,6 +296,23 @@ export function createReleasePack(model, opts = {}) {
       step: index + 1, id, action, expected,
     })),
     fallback_slides: fallbackSlides(model, referenceLengthNm, comparisonLengthNm),
+    scientific_authority: {
+      status: model.spec.scientificDecisions.sprint_status,
+      public_badge: model.scientificScope.publicBadge,
+      sequence: {
+        accession: model.scientificScope.sequence.accession,
+        isoform_id: model.scientificScope.sequence.isoform_id,
+        coordinate_frame: model.scientificScope.sequence.coordinate_frame,
+        sequence_version: model.spec.sequenceFeatures.source.sequence_version,
+        entry_version: model.spec.sequenceFeatures.source.entry_version,
+        upstream_sha256: model.spec.sequenceFeatures.source.upstream_sha256,
+        feature_count: model.spec.sequenceFeatures.features.length,
+      },
+      claim_count: model.spec.claimSupport.claims.length,
+      decision_statuses: Object.fromEntries(Object.entries(model.spec.scientificDecisions.decisions)
+        .map(([id, decision]) => [id, decision.status])),
+      registry_closure_is_entailment: false,
+    },
   };
   return validateReleasePack(pack);
 }
@@ -302,6 +323,9 @@ export function validateReleasePack(pack) {
     throw new Error('validateReleasePack: unsupported record.');
   }
   if (!pack.claim_matrix.length) throw new Error('validateReleasePack: the claim matrix is empty.');
+  if (!pack.scientific_authority || pack.scientific_authority.registry_closure_is_entailment !== false) {
+    throw new Error('validateReleasePack: scientific authority summary is missing or conflates closure with entailment.');
+  }
   for (const field of ['model_fingerprint', 'app_revision', 'build_inputs_fingerprint']) {
     if (!pack.identity || typeof pack.identity[field] !== 'string' || !pack.identity[field]) {
       throw new Error(`validateReleasePack: identity is missing '${field}'.`);

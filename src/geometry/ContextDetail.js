@@ -29,11 +29,9 @@
  *     produced by the Phase 6 pipeline (scripts/measure_context.py), not by hand.
  *
  *  2. Each emitted feature carries its evidence class, its source, and an
- *     explicit not_claimed list. Where a value is CARDIAC and this model's scope
- *     is skeletal N2A, the descriptor says so: `muscle_type` and
- *     `skeletal_transfer` travel with the geometry, so the isoform mixing the
- *     spec's isoform_reconciliation policy permits stays documented at the point
- *     of use rather than only in the data file.
+ *     explicit not_claimed list. `muscle_type` and `skeletal_transfer` travel
+ *     with every geometry value, so cross-preparation admission remains explicit
+ *     at the point of use rather than only in the data file.
  *
  * -------------------------------------------------------------------------
  * What is deliberately NOT here

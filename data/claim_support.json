@@ -1,0 +1,1564 @@
+{
+  "schema": "titin-claim-support/1",
+  "status": "CODE_COMPLETE_BLOCKED_SCIENCE",
+  "evidence_classes": [
+    "MEASURED",
+    "STRONGLY INFERRED",
+    "MODELED",
+    "INFERRED",
+    "SCHEMATIC",
+    "UNKNOWN"
+  ],
+  "support_relationships": [
+    "direct",
+    "corroborating",
+    "transfer",
+    "context"
+  ],
+  "semantic_entailment": "Named human review only; registry closure is a separate gate.",
+  "claims": [
+    {
+      "id": "aband_periodicity_relation",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The sequence-defined eleven-domain titin repeat, reported axial quantities, and myosin repeat are separate quantities whose relationship awaits SD-03.",
+      "quantity": {
+        "value": 45.5,
+        "unit": "nm",
+        "label": "current displayed titin super-repeat value"
+      },
+      "claim_class": "UNKNOWN",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1016/j.jmb.2020.06.025",
+          "locator": "Fig. 1 and Supplementary Table 1 (domain nomenclature); Figs. 2–6 and Results (antibody positions and axial alignment)",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Oryctolagus cuniculus",
+            "muscle_or_tissue": "psoas skeletal muscle",
+            "preparation": "isolated myofibrils; super-resolution antibody localization"
+          },
+          "extraction_note": "Sequence/domain architecture and A-band organization; exact relation to the displayed axial value awaits SD-03."
+        },
+        {
+          "source_id": "10.1016/j.yjmcc.2019.05.026",
+          "locator": "Figs. 1–4 and Table 1; mouse skinned papillary-muscle IEM/SIM mapping of C-zone epitopes and cMyBP-C stripes",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Mus musculus",
+            "muscle_or_tissue": "cardiac papillary muscle",
+            "preparation": "skinned WT and TtnΔC1–2 papillary muscle; IEM and SIM"
+          },
+          "extraction_note": "Reported axial quantity is included without a pre-assigned measurement-type label for SD-03."
+        }
+      ],
+      "model_dependencies": [
+        "data/titin.json",
+        "data/sarcomere.json",
+        "SD-03"
+      ],
+      "limitations": [
+        "The current model does not establish exact register between titin and myosin repeats."
+      ],
+      "not_claimed": [
+        "that 45.5 nm is the molecular span of one eleven-domain chain",
+        "an exact titin–myosin register"
+      ],
+      "public_bindings": [],
+      "inventory_status": "AUDIT_ONLY",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "actomyosin_motor_function",
+      "subject": {
+        "species": "general striated muscle",
+        "accession": null,
+        "muscle_or_tissue": "striated muscle",
+        "preparation": "functional explanation"
+      },
+      "statement": "Myosin uses ATP to generate active force against actin; titin is not the ATP-powered motor.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1021/bi00801a004",
+          "locator": "Figs. 1–2 and Results/Discussion, ATP-dependent actomyosin dissociation cycle",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Oryctolagus cuniculus",
+            "muscle_or_tissue": "skeletal muscle protein",
+            "preparation": "purified actomyosin biochemical kinetics"
+          },
+          "extraction_note": "Foundational actomyosin ATPase-cycle evidence; exact public wording remains pending independent review."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "The exact locator and modern public wording must be independently reviewed before SC-23 ships."
+      ],
+      "not_claimed": [
+        "that titin hydrolyses ATP to drive contraction",
+        "an active cross-bridge simulation"
+      ],
+      "public_bindings": [
+        "data/annotations.json#/components/1",
+        "data/annotations.json#/components/2",
+        "data/annotations.json#/components/3"
+      ],
+      "inventory_status": "REQUIRED_FOR_SC23",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "ai_provenance_pipeline",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The application is generated from cited scientific records, measured or modeled data, explicit evidence classes, procedural geometry, and executable validation rather than from an unaudited AI illustration.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "data/geometry_strategy.json",
+          "locator": "#/geometric_relationships and #/context_depiction_policy",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "evidence-classified depiction strategy. Transfer limit: The diagram summarizes the real pipeline and must link to inspectable records."
+        },
+        {
+          "source_id": "scripts/validate_geometry.py",
+          "locator": "full executable validation gate",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "executable scientific validation. Transfer limit: Automated tests do not replace external scientific review."
+        }
+      ],
+      "model_dependencies": [
+        "data/geometry_strategy.json",
+        "scripts/validate_geometry.py"
+      ],
+      "limitations": [
+        "The diagram summarizes the real pipeline and must link to inspectable records.",
+        "Automated tests do not replace external scientific review."
+      ],
+      "not_claimed": [
+        "that AI is a scientific authority",
+        "that passing tests proves every biological interpretation",
+        "that procedural geometry is experimental density"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/19/claim",
+        "data/presentation.json#/guided_chapters/6",
+        "data/presentation.json#/expert_cards/6"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "band_and_zone_brackets",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The named sarcomere regions occupy distinct axial intervals, and their live boundaries must follow the same geometry used by the scene.",
+      "quantity": null,
+      "claim_class": "STRONGLY INFERRED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "data/sarcomere.json",
+          "locator": "#/components and #/reference_lengths_nm",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "component and band boundaries. Transfer limit: Some intervals combine measured dimensions with model-derived state positions; each tooltip must report the weakest applicable evidence."
+        },
+        {
+          "source_id": "data/structural_states.json",
+          "locator": "#/states",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "length-dependent boundaries. Transfer limit: State interpolation is a model, not an observed trajectory."
+        }
+      ],
+      "model_dependencies": [
+        "data/sarcomere.json",
+        "data/structural_states.json"
+      ],
+      "limitations": [
+        "Some intervals combine measured dimensions with model-derived state positions; each tooltip must report the weakest applicable evidence.",
+        "State interpolation is a model, not an observed trajectory."
+      ],
+      "not_claimed": [
+        "that a bracket is a molecular structure",
+        "that the bare zone and M-band are synonyms",
+        "that all band boundaries are sharp molecular interfaces"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/4/claim",
+        "data/presentation.json#/guided_chapters/5"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "bare_zone_head_absence",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The bare zone is a central region of the bipolar thick filament characterized by absence of myosin heads, not a solid protein slab.",
+      "quantity": null,
+      "claim_class": "STRONGLY INFERRED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1085/jgp.202012713",
+          "locator": "Figs. 1–7 and Table 1; Fig. 7C and Results/Discussion on 43.1/45.5-nm periodicities",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Oryctolagus cuniculus and Mus musculus",
+            "muscle_or_tissue": "rabbit psoas and mouse EDL skeletal muscle",
+            "preparation": "relaxed demembranated fiber bundles and resting intact muscle; x-ray diffraction/interference"
+          },
+          "extraction_note": "relaxed mammalian skeletal thick-filament structure. Transfer limit: Supports skeletal thick-filament organization; the current interval remains the project's sourced specification."
+        },
+        {
+          "source_id": "data/sarcomere.json",
+          "locator": "#/components and #/reference_lengths_nm",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "current bare-zone interval. Transfer limit: The 160 nm value must be labeled bare-zone width and not reused as M-band protein width."
+        }
+      ],
+      "model_dependencies": [
+        "data/sarcomere.json"
+      ],
+      "limitations": [
+        "Supports skeletal thick-filament organization; the current interval remains the project's sourced specification.",
+        "The 160 nm value must be labeled bare-zone width and not reused as M-band protein width."
+      ],
+      "not_claimed": [
+        "a 160 nm-wide M-line protein",
+        "an impermeable central wall",
+        "a complete molecular description of the bare zone"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/9/claim",
+        "data/annotations.json#/components/1",
+        "data/annotations.json#/components/2"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "force_law_parameter_set",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "Current passive-force outputs use parameters transferred from rat-psoas preparations; their validity and supported range await SD-04.",
+      "quantity": null,
+      "claim_class": "MODELED",
+      "render_class": "MODELED",
+      "support": [
+        {
+          "source_id": "10.1073/pnas.95.14.8052",
+          "locator": "Figs. 2–5; Methods equations 1–2; Results/Discussion force-extension fits and <12-pN/<60%-extension limit",
+          "relationship": "transfer",
+          "source_subject": {
+            "species": "Rattus norvegicus",
+            "muscle_or_tissue": "psoas skeletal muscle",
+            "preparation": "isolated myofibril mechanics plus immunofluorescence/immunoelectron microscopy"
+          },
+          "extraction_note": "Force-law parameter evidence is from rat psoas; transfer to Q8WZ42-1 and all displayed outputs remains pending SD-04."
+        }
+      ],
+      "model_dependencies": [
+        "data/mechanical_model.json",
+        "data/structural_states.json",
+        "SD-04"
+      ],
+      "limitations": [
+        "Slack, unfolding, uncertainty, and the supported range are not yet specialist-approved."
+      ],
+      "not_claimed": [
+        "direct human Q8WZ42-1 force measurements",
+        "release-approved pN predictions"
+      ],
+      "public_bindings": [
+        "src/index.template.html#id=stageForce",
+        "src/index.template.html#id=forceCurve"
+      ],
+      "inventory_status": "AUDIT_ONLY",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "lattice_cross_section",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The current model places thick and thin filaments in a hexagonal lattice and predicts decreasing d10 as sarcomere length increases under its declared constant-volume idealization.",
+      "quantity": null,
+      "claim_class": "MODELED",
+      "render_class": "MODELED",
+      "support": [
+        {
+          "source_id": "10.1152/ajpheart.2000.279.5.h2568",
+          "locator": "Figs. 1–4 and Results; d10 versus sarcomere length in isolated rat myocardium",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Rattus norvegicus",
+            "muscle_or_tissue": "myocardium",
+            "preparation": "isolated cardiac muscle; x-ray diffraction across sarcomere lengths"
+          },
+          "extraction_note": "measured d10 response with sarcomere length. Transfer limit: Rat myocardium calibrates context; it is not direct geometry for the scope-ledger construct."
+        },
+        {
+          "source_id": "data/sarcomere.json",
+          "locator": "#/components and #/reference_lengths_nm",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "declared lattice rule and geometry. Transfer limit: Constant-volume scaling is an idealized model, not active time-resolved lattice mechanics."
+        }
+      ],
+      "model_dependencies": [
+        "data/sarcomere.json"
+      ],
+      "limitations": [
+        "Rat myocardium calibrates context; it is not direct geometry for the scope-ledger construct.",
+        "Constant-volume scaling is an idealized model, not active time-resolved lattice mechanics."
+      ],
+      "not_claimed": [
+        "time-resolved active contraction",
+        "strict biological isovolumetry",
+        "directly measured d10 for the scope-ledger construct",
+        "a second lattice solver"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/13/claim",
+        "data/annotations.json#/components/3"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "length_dependent_activation_card",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "Passive titin tension and MyBP-C are among proposed contributors to length-dependent thick-filament regulation, but the current visualization does not simulate that mechanism.",
+      "quantity": null,
+      "claim_class": "INFERRED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1038/s41467-024-46957-7",
+          "locator": "Figs. 1–5 and Results; permeabilized fast mouse-psoas MyBP-C C-zone/lattice context",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Mus musculus",
+            "muscle_or_tissue": "fast psoas skeletal muscle",
+            "preparation": "permeabilized fibers with MyBP-C extraction/reconstitution and x-ray diffraction"
+          },
+          "extraction_note": "skeletal MyBP-C and length-dependent structural signatures. Transfer limit: Supports a proposed regulatory context, not a complete causal solver or exact human geometry."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "Supports a proposed regulatory context, not a complete causal solver or exact human geometry."
+      ],
+      "not_claimed": [
+        "settled causality",
+        "that titin is the actomyosin motor",
+        "automatic coupling between sarcomere length and activation"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/17/claim",
+        "data/presentation.json#/expert_cards/4"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "mband_m1_density",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The sarcomere midpoint may be labeled as a coordinate reference, but no density in this showcase is identified as M1 from the 2023 averaged reconstruction.",
+      "quantity": null,
+      "claim_class": "UNKNOWN",
+      "render_class": "UNKNOWN",
+      "support": [
+        {
+          "source_id": "10.1038/s41586-023-06690-5",
+          "locator": "Fig. 2a and Extended Data Fig. 2j; averaged human-cardiac C-zone/M-band reconstruction limits",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": "cardiac muscle",
+            "preparation": "native relaxed cardiac sarcomeres; cryo-electron tomography/subtomogram averaging"
+          },
+          "extraction_note": "reports M1 absent from the averaged reconstruction. Transfer limit: The cardiac reconstruction is used only to prevent overclaiming; it supplies no skeletal coordinate."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "The cardiac reconstruction is used only to prevent overclaiming; it supplies no skeletal coordinate."
+      ],
+      "not_claimed": [
+        "that M1 is biologically absent",
+        "that the midpoint marker is an observed density",
+        "that cardiac M-band coordinates apply to the current reference"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/11/claim",
+        "data/annotations.json#/components/8"
+      ],
+      "inventory_status": "OMIT",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "mband_midpoint_and_crosslinks",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The M-band is protein crosslinking and integration architecture near the sarcomere center, where thick filaments and titin from opposing half-sarcomeres meet.",
+      "quantity": null,
+      "claim_class": "STRONGLY INFERRED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1016/j.cell.2021.02.047",
+          "locator": "Figs. 1–4 and Results sections 'Z-disc structure' and 'M-band structure'",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Mus musculus",
+            "muscle_or_tissue": "fast psoas skeletal muscle",
+            "preparation": "native myofibrils; cryo-electron tomography/subtomogram averaging"
+          },
+          "extraction_note": "directly observes pleomorphic crosslinking densities in the mouse-psoas rigor M-band without assigning individual protein identities. Transfer limit: Supports the presence of heterogeneous skeletal M-band crosslinking density, not the identity or exact position of a particular protein."
+        },
+        {
+          "source_id": "10.1083/jcb.134.6.1441",
+          "locator": "Figs. 1–8 and Results, immunoelectron localization in rat-psoas and bovine-sternomandibularis skeletal-muscle fibers",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Rattus norvegicus and Bos taurus",
+            "muscle_or_tissue": "rat psoas and bovine sternomandibularis skeletal muscle",
+            "preparation": "detergent-extracted fibers with antibody decoration, Epon embedding, and immunoelectron microscopy"
+          },
+          "extraction_note": "primary immunoelectron localization of titin, myomesin, and M-protein across the skeletal M-band. Transfer limit: Establishes component relationships and relative M-band organization in vertebrate skeletal muscle; no line coordinate is transferred to the retained human reference."
+        },
+        {
+          "source_id": "10.1038/embor.2010.65",
+          "locator": "Fig. 1 and deposited titin–OBSL1 complex PDB 3KNB",
+          "relationship": "corroborating",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "recombinant titin M10–OBSL1 Ig1 crystal complex (PDB 3KNB)"
+          },
+          "extraction_note": "titin M10–OBSL1 terminal complex. Transfer limit: The isolated complex does not resolve the complete in-situ M-band network."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "Supports the presence of heterogeneous skeletal M-band crosslinking density, not the identity or exact position of a particular protein.",
+        "Establishes component relationships and relative M-band organization in vertebrate skeletal muscle; no line coordinate is transferred to the retained human reference.",
+        "The isolated complex does not resolve the complete in-situ M-band network."
+      ],
+      "not_claimed": [
+        "complete M-band molecular structure",
+        "exact myomesin/OBSL1 coordinates",
+        "an opaque M-line wall",
+        "identity of unresolved density"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/10/claim",
+        "data/annotations.json#/components/8",
+        "data/annotations.json#/components/9"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "mybpc_czone_context",
+      "subject": {
+        "species": "Mus musculus",
+        "accession": null,
+        "muscle_or_tissue": "fast psoas skeletal muscle context",
+        "preparation": "structural/context observation transferred only as declared"
+      },
+      "statement": "Skeletal MyBP-C is an accessory C-zone protein associated with the thick filament in an approximately 43 nm periodic context and can influence lattice and myosin-head regulation.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1038/s41467-024-46957-7",
+          "locator": "Figs. 1–5 and Results; permeabilized fast mouse-psoas MyBP-C C-zone/lattice context",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Mus musculus",
+            "muscle_or_tissue": "fast psoas skeletal muscle",
+            "preparation": "permeabilized fibers with MyBP-C extraction/reconstitution and x-ray diffraction"
+          },
+          "extraction_note": "fast skeletal MyBP-C C-zone and periodic context. Transfer limit: Supports optional skeletal context, not exact human coordinates, domain path, stripe register, reach, or binding pose."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "Supports optional skeletal context, not exact human coordinates, domain path, stripe register, reach, or binding pose."
+      ],
+      "not_claimed": [
+        "cardiac cMyBP-C coordinates",
+        "a universal rigid thick-to-thin bridge",
+        "a direct titin–MyBP-C contact",
+        "three exact molecules at every human titin superrepeat"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/12/claim",
+        "data/presentation.json#/expert_cards/1",
+        "data/annotations.json#/components/10"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "n2a_interaction_hub_card",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The N2A element contains a structured UN2A core with flexible flanks and experimentally characterized CARP binding; it can be discussed as an interaction hub without adding partner coordinates.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1016/j.jmb.2021.166901",
+          "locator": "Figs. 1–7 and deposited PDB 7NIP; recombinant human UN2A structure and CARP binding",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "recombinant UN2A constructs; structural and CARP-binding assays (PDB 7NIP)"
+          },
+          "extraction_note": "UN2A structure and CARP binding. Transfer limit: Does not establish a complete in-sarcomere signalosome geometry."
+        },
+        {
+          "source_id": "10.3389/fphys.2020.00173",
+          "locator": "Fig. 1 constructs; Figs. 2–4 AFM mechanics/CARP; Fig. 5 N2A PKA phosphorylation; Fig. 6 simulation",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "recombinant human N2A constructs; AFM, kinase assays, and simulation"
+          },
+          "extraction_note": "N2A single-molecule mechanics and CARP context. Transfer limit: Single-molecule behavior is not an in-situ partner trajectory."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "Does not establish a complete in-sarcomere signalosome geometry.",
+        "Single-molecule behavior is not an in-situ partner trajectory."
+      ],
+      "not_claimed": [
+        "complete N2A signalosome composition",
+        "resolved partner coordinates",
+        "one universal downstream pathway"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/15/claim",
+        "data/presentation.json#/expert_cards/2"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "object_linked_tooltips",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "Every visible biological component must expose its role, active scope, evidence, shape encoding, source, and explicit non-claims without changing the underlying geometry.",
+      "quantity": null,
+      "claim_class": "SCHEMATIC",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "data/showcase_claims.json",
+          "locator": "#/objects",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "claim and omission contract. Transfer limit: Presentation metadata may summarize but may never strengthen the source evidence class."
+        },
+        {
+          "source_id": "data/references.json",
+          "locator": "#/ (canonical registry)",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "resolvable bibliography. Transfer limit: A citation does not imply that every aspect of a rendered proxy is measured."
+        }
+      ],
+      "model_dependencies": [
+        "data/showcase_claims.json",
+        "data/references.json"
+      ],
+      "limitations": [
+        "Presentation metadata may summarize but may never strengthen the source evidence class.",
+        "A citation does not imply that every aspect of a rendered proxy is measured."
+      ],
+      "not_claimed": [
+        "that the leader line is a molecular bond",
+        "that selection changes evidence",
+        "that a citation validates an unsourced artistic detail"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/14/claim"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "pevk_phosphorylation",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The current N2A phosphorylation source does not support a PEVK-phosphorylation parameter, and the visualization implements no phosphorylation state.",
+      "quantity": null,
+      "claim_class": "UNKNOWN",
+      "render_class": "UNKNOWN",
+      "support": [
+        {
+          "source_id": "10.3389/fphys.2020.00173",
+          "locator": "Fig. 1 constructs; Figs. 2–4 AFM mechanics/CARP; Fig. 5 N2A PKA phosphorylation; Fig. 6 simulation",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "recombinant human N2A constructs; AFM, kinase assays, and simulation"
+          },
+          "extraction_note": "Fig. 5 concerns recombinant human N2A PKA phosphorylation/CARP conditions; it does not measure PEVK phosphorylation mechanics."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "The current cited source is a known binding mismatch for a PEVK-specific claim."
+      ],
+      "not_claimed": [
+        "a PEVK phosphorylation parameter or regulatory simulation"
+      ],
+      "public_bindings": [],
+      "inventory_status": "AUDIT_ONLY",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "regional_extension_story",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "Across the modeled range, tandem-Ig chains primarily straighten while disordered spring regions extend; ordinary length change does not require widespread folded-domain unfolding.",
+      "quantity": null,
+      "claim_class": "MODELED",
+      "render_class": "MODELED",
+      "support": [
+        {
+          "source_id": "10.1083/jcb.140.4.853",
+          "locator": "Figs. 1–4 and Results, especially Fig. 4 segment extension versus sarcomere length",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": "skeletal muscle biopsy",
+            "preparation": "sarcomeres labeled with sequence-specific antibodies across imposed lengths"
+          },
+          "extraction_note": "in-situ folded-Ig and unfolded-PEVK extension behavior. Transfer limit: Supports the qualitative physiological mechanism, not this model's exact per-region nanometer partition."
+        },
+        {
+          "source_id": "data/mechanical_model.json",
+          "locator": "#/per_state and #/chain_parameters",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "force-balanced regional extension states. Transfer limit: Computed model output is not a measured molecular trajectory."
+        }
+      ],
+      "model_dependencies": [
+        "data/mechanical_model.json"
+      ],
+      "limitations": [
+        "Supports the qualitative physiological mechanism, not this model's exact per-region nanometer partition.",
+        "Computed model output is not a measured molecular trajectory."
+      ],
+      "not_claimed": [
+        "normalization of AFM-scale Ig unfolding",
+        "a measured time trajectory",
+        "activation-dependent titin stiffening"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/3/claim",
+        "data/presentation.json#/guided_chapters/2",
+        "data/annotations.json#/components/11"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "sarcomere_definition",
+      "subject": {
+        "species": "general striated muscle",
+        "accession": null,
+        "muscle_or_tissue": "striated muscle",
+        "preparation": "foundational definition"
+      },
+      "statement": "A sarcomere is the repeating contractile unit bounded by Z-discs, with interdigitating actin and myosin filaments.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1016/j.cell.2021.02.047",
+          "locator": "Figs. 1–4 and Results sections 'Z-disc structure' and 'M-band structure'",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Mus musculus",
+            "muscle_or_tissue": "fast psoas skeletal muscle",
+            "preparation": "native myofibrils; cryo-electron tomography/subtomogram averaging"
+          },
+          "extraction_note": "Current registry source is contextual; SC-22 should replace or confirm a primary foundational locator."
+        }
+      ],
+      "model_dependencies": [
+        "data/sarcomere.json"
+      ],
+      "limitations": [
+        "Current support is not yet independently locator-verified."
+      ],
+      "not_claimed": [
+        "that the schematic is a complete sarcomere molecular inventory"
+      ],
+      "public_bindings": [
+        "data/annotations.json#/components/3",
+        "data/annotations.json#/components/5"
+      ],
+      "inventory_status": "REQUIRED_FOR_SC23",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "scope_badge",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The active visualization uses the human TTN reference sequence Q8WZ42-1 at the explicitly named structural state; its tissue construct is under review.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "UniProt:Q8WZ42",
+          "locator": "UniProtKB Q8WZ42 release 2026_02, entry version 221, sequence version 4; DOMAIN, VAR_SEQ, VARIANT, and CONFLICT feature tables",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "curated reference-sequence and feature record"
+          },
+          "extraction_note": "sequence and domain identity. Transfer limit: None beyond the explicit reference label."
+        },
+        {
+          "source_id": "data/structural_states.json",
+          "locator": "#/states",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "active modeled state. Transfer limit: The badge reports the model state; it does not convert a modeled state into an observation."
+        }
+      ],
+      "model_dependencies": [
+        "data/structural_states.json"
+      ],
+      "limitations": [
+        "None beyond the explicit reference label.",
+        "The badge reports the model state; it does not convert a modeled state into an observation."
+      ],
+      "not_claimed": [
+        "an isoform-neutral titin molecule",
+        "a cardiac titin model",
+        "a universal physiological resting length"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/0/claim",
+        "data/presentation.json#/expert_cards/5"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "sequence_region_partition",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "The current N2A/distal-Ig domain allocation disagrees with direct containment of the pinned UniProt domain features and awaits SD-01.",
+      "quantity": null,
+      "claim_class": "UNKNOWN",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "UniProt:Q8WZ42",
+          "locator": "UniProtKB Q8WZ42 release 2026_02, entry version 221, sequence version 4; DOMAIN, VAR_SEQ, VARIANT, and CONFLICT feature tables",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "curated reference-sequence and feature record"
+          },
+          "extraction_note": "Pinned feature containment yields 0 Ig-like domains in N2A and 16 in distal-Ig; it does not decide the reviewer-approved biological partition."
+        }
+      ],
+      "model_dependencies": [
+        "data/titin_sequence_features.json",
+        "data/titin.json",
+        "SD-01"
+      ],
+      "limitations": [
+        "Feature containment is not a substitute for a reviewed N2A definition."
+      ],
+      "not_claimed": [
+        "that the engineer may move the boundary or count without SD-01"
+      ],
+      "public_bindings": [],
+      "inventory_status": "AUDIT_ONLY",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "thin_filament_regulation_layer",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "Thin-filament calcium regulation is valid context but is outside the release-critical titin story and remains absent unless the separate post-core admission test passes.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "UNKNOWN",
+      "support": [
+        {
+          "source_id": "PDB:6KN7",
+          "locator": "Deposited polymer entities and coordinates",
+          "relationship": "corroborating",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": "cardiac thin-filament complex",
+            "preparation": "deposited calcium-free cryo-EM model; alpha-skeletal actin with cardiac troponin subunits"
+          },
+          "extraction_note": "existing calcium-free thin-filament context record. Transfer limit: The structure contains cardiac troponin subunits; only its alpha-skeletal actin measurements are currently admitted into the retained context."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "The structure contains cardiac troponin subunits; only its alpha-skeletal actin measurements are currently admitted into the retained context."
+      ],
+      "not_claimed": [
+        "troponin binding-site dots as a complete regulatory mechanism",
+        "calcium state inferred from sarcomere length",
+        "generic isoform-free thin-filament geometry"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/18/claim"
+      ],
+      "inventory_status": "DEFER",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "thin_filament_twist",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": null,
+        "muscle_or_tissue": "thin-filament structural context",
+        "preparation": "calcium-free cryo-EM structure; cardiac troponin subunits with alpha-skeletal actin"
+      },
+      "statement": "The thin-filament close-up uses a measured actin long-pitch rise/twist as structural context while its continuous helical tube, phase, and radius remain schematic.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "PDB:6KN7",
+          "locator": "PDB 6KN7 polymer entities and deposited alpha-skeletal-actin coordinates",
+          "relationship": "corroborating",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": "cardiac thin-filament complex",
+            "preparation": "deposited calcium-free cryo-EM model; alpha-skeletal actin with cardiac troponin subunits"
+          },
+          "extraction_note": "The coordinate-derived rise/twist is admitted only for actin morphology; cardiac troponin coordinates and biochemical state are not transferred."
+        },
+        {
+          "source_id": "data/context_measurements.json",
+          "locator": "#/thin_filament_6kn7 and #/thin_filament_twist",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "model-scoped; see scientific_scope.json",
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record"
+          },
+          "extraction_note": "Repository-pinned coordinate measurement consumed by the context-detail layer."
+        }
+      ],
+      "model_dependencies": [
+        "data/context_measurements.json"
+      ],
+      "limitations": [
+        "Individual actin subunits, regulatory complexes, shared phase, and biochemical state are not rendered."
+      ],
+      "not_claimed": [
+        "an exact helical phase shared by every filament",
+        "a calcium-regulatory state"
+      ],
+      "public_bindings": [
+        "data/annotations.json#/components/4"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "titin_continuity_trace",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "One titin polypeptide runs continuously through a half-sarcomere from its Z-disc N terminus to its M-band C terminus.",
+      "quantity": null,
+      "claim_class": "STRONGLY INFERRED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1083/jcb.106.5.1563",
+          "locator": "Fig. 10 linear epitope map and Results, relaxed chicken-breast immunoelectron microscopy",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Gallus gallus",
+            "muscle_or_tissue": "breast skeletal muscle",
+            "preparation": "relaxed muscle; monoclonal-antibody immunoelectron microscopy"
+          },
+          "extraction_note": "in-sarcomere epitope mapping from Z-line toward M-line. Transfer limit: The study constrains longitudinal topology, not a resolved atom-by-atom path."
+        },
+        {
+          "source_id": "UniProt:Q8WZ42",
+          "locator": "UniProtKB Q8WZ42 release 2026_02, entry version 221, sequence version 4; DOMAIN, VAR_SEQ, VARIANT, and CONFLICT feature tables",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "curated reference-sequence and feature record"
+          },
+          "extraction_note": "single-chain sequence and domain order. Transfer limit: Sequence order does not resolve transverse placement."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "The study constrains longitudinal topology, not a resolved atom-by-atom path.",
+        "Sequence order does not resolve transverse placement."
+      ],
+      "not_claimed": [
+        "a resolved smooth molecular trajectory",
+        "known transverse azimuth along the entire chain",
+        "uniform spring behavior along the chain"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/1/claim",
+        "data/presentation.json#/guided_chapters/0",
+        "data/annotations.json#/components/0"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "titin_kinase_card",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "Titin contains a kinase domain near the A/M junction; its structural presence is established, while a single mechanical activation and signaling mechanism is not treated as settled.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "UniProt:Q8WZ42",
+          "locator": "UniProtKB Q8WZ42 release 2026_02, entry version 221, sequence version 4; DOMAIN, VAR_SEQ, VARIANT, and CONFLICT feature tables",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "curated reference-sequence and feature record"
+          },
+          "extraction_note": "domain identity and sequence location. Transfer limit: Sequence location does not establish activation mechanism."
+        },
+        {
+          "source_id": "PDB:1TKI+4JNW (Phase 6 measurement, kinase)",
+          "locator": "Deposited kinase coordinates and data/structure_measurements.json kinase rows",
+          "relationship": "corroborating",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "isolated recombinant titin kinase structures"
+          },
+          "extraction_note": "experimental kinase-domain proxy measurements. Transfer limit: The isolated structures do not establish in-situ orientation or a signaling trajectory."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "Sequence location does not establish activation mechanism.",
+        "The isolated structures do not establish in-situ orientation or a signaling trajectory."
+      ],
+      "not_claimed": [
+        "a settled mechanosensor mechanism",
+        "in-situ kinase orientation",
+        "causal downstream signaling animation"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/16/claim",
+        "data/presentation.json#/expert_cards/3"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "titin_region_architecture",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "Titin is regionally heterogeneous: elastic I-band segments lie in series with an A-band segment integrated with the thick filament and a terminal M-region.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "UniProt:Q8WZ42",
+          "locator": "UniProtKB Q8WZ42 release 2026_02, entry version 221, sequence version 4; DOMAIN, VAR_SEQ, VARIANT, and CONFLICT feature tables",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "curated reference-sequence and feature record"
+          },
+          "extraction_note": "region sequence and domain architecture. Transfer limit: Sequence annotations do not determine every 3D conformation."
+        },
+        {
+          "source_id": "10.1016/j.jmb.2020.06.025",
+          "locator": "Fig. 1 and Supplementary Table 1 (domain nomenclature); Figs. 2–6 and Results (antibody positions and axial alignment)",
+          "relationship": "direct",
+          "source_subject": {
+            "species": "Oryctolagus cuniculus",
+            "muscle_or_tissue": "psoas skeletal muscle",
+            "preparation": "isolated myofibrils; super-resolution antibody localization"
+          },
+          "extraction_note": "axial alignment of A-band titin with the thick filament. Transfer limit: Supports axial organization, not a universal exact azimuth."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "Sequence annotations do not determine every 3D conformation.",
+        "Supports axial organization, not a universal exact azimuth."
+      ],
+      "not_claimed": [
+        "atom-level region surfaces",
+        "a single elastic constant for all regions",
+        "exact unresolved linker conformations"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/2/claim",
+        "data/presentation.json#/guided_chapters/1",
+        "data/presentation.json#/guided_chapters/4",
+        "data/presentation.json#/expert_cards/0",
+        "data/annotations.json#/components/1",
+        "data/annotations.json#/components/11"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "universal_zdisc_lattice_icon",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "No single regular small-square, basketweave, or zigzag icon is admitted as the universal Z-disc arrangement.",
+      "quantity": null,
+      "claim_class": "UNKNOWN",
+      "render_class": "UNKNOWN",
+      "support": [
+        {
+          "source_id": "10.1016/j.cell.2021.02.047",
+          "locator": "Figs. 1–4 and Results sections 'Z-disc structure' and 'M-band structure'",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Mus musculus",
+            "muscle_or_tissue": "fast psoas skeletal muscle",
+            "preparation": "native myofibrils; cryo-electron tomography/subtomogram averaging"
+          },
+          "extraction_note": "documents heterogeneous Z-disc forms and state interpretation limits. Transfer limit: The study supports omission of a universal motif; it does not establish one replacement motif for all tissues."
+        },
+        {
+          "source_id": "10.1016/j.jmb.2015.08.018",
+          "locator": "Fig. 1 and Results, rat-cardiac small-square Z-band tomography",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Rattus norvegicus",
+            "muscle_or_tissue": "cardiac muscle",
+            "preparation": "electron tomography/subtomogram averaging of small-square Z-bands"
+          },
+          "extraction_note": "specific rat-cardiac small-square context. Transfer limit: A rat-cardiac small-square structure cannot be promoted to a generic reference-sequence icon."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "The study supports omission of a universal motif; it does not establish one replacement motif for all tissues.",
+        "A rat-cardiac small-square structure cannot be promoted to a generic reference-sequence icon."
+      ],
+      "not_claimed": [
+        "that the omitted motif is biologically absent",
+        "that Z-disc topology is completely unknown"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/8/claim"
+      ],
+      "inventory_status": "OMIT",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "zdisc_alpha_actinin_doublets",
+      "subject": {
+        "species": "Mus musculus",
+        "accession": null,
+        "muscle_or_tissue": "fast psoas skeletal muscle context",
+        "preparation": "structural/context observation transferred only as declared"
+      },
+      "statement": "The selected fast-psoas thin-form reconstruction contains α-actinin crosslink doublets separated by approximately 6 nm, with heterogeneous larger spacings.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1016/j.cell.2021.02.047",
+          "locator": "Figs. 1–4 and Results sections 'Z-disc structure' and 'M-band structure'",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Mus musculus",
+            "muscle_or_tissue": "fast psoas skeletal muscle",
+            "preparation": "native myofibrils; cryo-electron tomography/subtomogram averaging"
+          },
+          "extraction_note": "cryo-ET measurement of the doublets. Transfer limit: The doublets were not regular and may differ across Z-disc forms or muscle types."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "The doublets were not regular and may differ across Z-disc forms or muscle types."
+      ],
+      "not_claimed": [
+        "regular repetition across the entire Z-disc",
+        "presence in every muscle type or state",
+        "a titin-actin end-to-end zigzag"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/6/claim",
+        "data/annotations.json#/components/6"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "zdisc_local_network",
+      "subject": {
+        "species": "Mus musculus",
+        "accession": null,
+        "muscle_or_tissue": "fast psoas skeletal muscle context",
+        "preparation": "structural/context observation transferred only as declared"
+      },
+      "statement": "Antiparallel actin filaments from adjacent sarcomeres interdigitate in the Z-disc and are crosslinked by α-actinin in a heterogeneous local network.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1016/j.cell.2021.02.047",
+          "locator": "Figs. 1–4 and Results sections 'Z-disc structure' and 'M-band structure'",
+          "relationship": "context",
+          "source_subject": {
+            "species": "Mus musculus",
+            "muscle_or_tissue": "fast psoas skeletal muscle",
+            "preparation": "native myofibrils; cryo-electron tomography/subtomogram averaging"
+          },
+          "extraction_note": "native skeletal Z-disc topology and α-actinin network. Transfer limit: Mouse fast-psoas local topology is not an exact human lattice or a universal activation state."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "Mouse fast-psoas local topology is not an exact human lattice or a universal activation state."
+      ],
+      "not_claimed": [
+        "a universal small-square lattice",
+        "a universal basketweave state",
+        "exact human Q8WZ42 lateral routing",
+        "alternating end-to-end titin and actin"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/5/claim",
+        "data/annotations.json#/components/5"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    },
+    {
+      "id": "zdisc_telethonin_sandwich",
+      "subject": {
+        "species": "Homo sapiens",
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers"
+      },
+      "statement": "Telethonin forms a palindromic 2:1 sandwich with two antiparallel titin Z1Z2 N-terminal fragments.",
+      "quantity": null,
+      "claim_class": "MEASURED",
+      "render_class": "SCHEMATIC",
+      "support": [
+        {
+          "source_id": "10.1038/nature04343",
+          "locator": "Fig. 1 and deposited Z1Z2–telethonin complex PDB 1YA5",
+          "relationship": "corroborating",
+          "source_subject": {
+            "species": "Homo sapiens",
+            "muscle_or_tissue": null,
+            "preparation": "recombinant titin Z1Z2–telethonin crystal complex (PDB 1YA5)"
+          },
+          "extraction_note": "crystal structure and antiparallel 2:1 topology. Transfer limit: The isolated complex resolves binding topology, not its complete in-situ lateral route or surrounding Z-disc lattice."
+        }
+      ],
+      "model_dependencies": [],
+      "limitations": [
+        "The isolated complex resolves binding topology, not its complete in-situ lateral route or surrounding Z-disc lattice."
+      ],
+      "not_claimed": [
+        "a decorative cap on one titin chain",
+        "a resolved full in-situ titin route",
+        "that telethonin crosslinks actin"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/7/claim",
+        "data/presentation.json#/guided_chapters/3",
+        "data/annotations.json#/components/5",
+        "data/annotations.json#/components/7"
+      ],
+      "inventory_status": "PUBLIC",
+      "review": {
+        "status": "PENDING",
+        "reviewer": null,
+        "affiliation": null,
+        "publication_consent": false,
+        "locator_verified_independently": null,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null
+      }
+    }
+  ]
+}

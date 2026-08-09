@@ -32,6 +32,7 @@ test('SC18: the model identity has one explicit, non-self-referential input mani
   assert.deepEqual(MODEL_INPUTS, [
     'data/sarcomere.json',
     'data/titin.json',
+    'data/titin_sequence_features.json',
     'data/structural_states.json',
     'data/geometry_sources.json',
     'data/geometry_strategy.json',

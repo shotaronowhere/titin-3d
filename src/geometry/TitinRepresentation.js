@@ -36,9 +36,8 @@ const EPS = 1e-6;
  *    Inter-domain spacing in bound regions is reported per-instance as
  *    `interdomain_linker_nm`, not as a separate instance.
  *
- * `N2B` is absent because this reference model is the skeletal N2A isoform
- * (Q8WZ42); cardiac N2B/N2BA is explicitly out of scope (sarcomere.json
- * `isoform_reconciliation`).
+ * `N2B` is absent because this render consumes the one reference sequence named
+ * by scientific_scope.json; no second isoform is admitted.
  */
 export const DOMAIN_CLASSES = Object.freeze([
   'Ig_like', 'Fn3', 'PEVK', 'N2A', 'flexible_linker', 'kinase', 'terminal_anchor',

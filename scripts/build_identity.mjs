@@ -23,6 +23,7 @@ const DEFAULT_ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), '..
 export const MODEL_INPUTS = Object.freeze([
   'data/sarcomere.json',
   'data/titin.json',
+  'data/titin_sequence_features.json',
   'data/structural_states.json',
   'data/geometry_sources.json',
   'data/geometry_strategy.json',

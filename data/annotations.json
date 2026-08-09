@@ -4,8 +4,9 @@
   "meta": {
     "phase": "SC-4 — Object-linked annotations and evidence access",
     "purpose": "Canonical explanatory copy for directly pickable rendered components. Geometry, coordinates, evidence measurements, and bibliography remain authoritative in their existing scientific records; this file is the validated annotation presentation layer.",
-    "scope": "Generic titin education through the retained human skeletal N2A-containing Q8WZ42 reference model.",
-    "stage_render_meaning": "Stage overlays are presentation geometry, not molecular structure. The band and zone brackets label projected axial positions and their drop ticks mark the boundary each label refers to; the continuity trace marks one titin path at a fixed screen width; the scale bar states the nanometre span of a drawn length, taken from the width of the camera's view at the depth it is focused on. Because the view is a perspective projection, that scale holds at the focused depth and objects nearer the camera read larger; the bar is withdrawn rather than approximated whenever the stage has no measurable span. When the camera is too close for the band brackets to mean anything they are withdrawn and a locator takes the same lane: a miniature of the half-sarcomere, with its Z-disc, I-band/A-band boundary and M-band centre ticked from the same canonical positions the brackets use, and the camera's own view span shaded on it to scale. The locator states where the camera is looking; it is not a control and moves no coordinate."
+    "scope": "Generic titin education; construct identity is supplied only by scientific_scope.json.",
+    "stage_render_meaning": "Stage overlays are presentation geometry, not molecular structure. The band and zone brackets label projected axial positions and their drop ticks mark the boundary each label refers to; the continuity trace marks one titin path at a fixed screen width; the scale bar states the nanometre span of a drawn length, taken from the width of the camera's view at the depth it is focused on. Because the view is a perspective projection, that scale holds at the focused depth and objects nearer the camera read larger; the bar is withdrawn rather than approximated whenever the stage has no measurable span. When the camera is too close for the band brackets to mean anything they are withdrawn and a locator takes the same lane: a miniature of the half-sarcomere, with its Z-disc, I-band/A-band boundary and M-band centre ticked from the same canonical positions the brackets use, and the camera's own view span shaded on it to scale. The locator states where the camera is looking; it is not a control and moves no coordinate.",
+    "scientific_scope_ref": "scientific_scope.json"
   },
   "components": [
     {
@@ -14,7 +15,7 @@
       "label": "Titin",
       "lay_text": "Titin is the giant elastic protein highlighted in pink. One molecule spans a half-sarcomere from the Z-disc to the M-band, acting as both an extensible spring and a thick-filament-associated scaffold.",
       "expert_text": "The axial topology and Q8WZ42 domain order are constrained, but the smooth tube and its transverse I-band route are presentation proxies rather than a resolved molecular trajectory.",
-      "scope": "Human canonical skeletal N2A-containing titin (Q8WZ42); one representative half-sarcomere molecule.",
+      "scope": "Reference-sequence and representative-molecule policy supplied by scientific_scope.json.",
       "claim_evidence_class": "STRONGLY INFERRED",
       "render_evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -31,7 +32,10 @@
       "binding": {
         "kind": "showcase_claim",
         "id": "titin_continuity_trace"
-      }
+      },
+      "claim_support_ids": [
+        "titin_continuity_trace"
+      ]
     },
     {
       "id": "component-thick-filament",
@@ -39,7 +43,7 @@
       "label": "Myosin thick filament",
       "lay_text": "The thick filament is the central myosin-based backbone. Titin’s A-band portion lies along its outer surface, while myosin heads project outward where they can interact with nearby actin.",
       "expert_text": "The axial length, bare-zone interval, and crown measurements are evidence-classified separately. The smooth backbone cylinder is a schematic envelope and does not reproduce native filament surface density.",
-      "scope": "Retained mammalian striated-muscle filament context in the human skeletal reference model.",
+      "scope": "Mammalian striated-muscle filament context; construct identity is supplied by scientific_scope.json.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -55,7 +59,12 @@
       "binding": {
         "kind": "sarcomere_component",
         "id": "thick_filament"
-      }
+      },
+      "claim_support_ids": [
+        "bare_zone_head_absence",
+        "titin_region_architecture",
+        "actomyosin_motor_function"
+      ]
     },
     {
       "id": "component-myosin-heads",
@@ -79,7 +88,11 @@
       "binding": {
         "kind": "sarcomere_component",
         "id": "thick_filament"
-      }
+      },
+      "claim_support_ids": [
+        "bare_zone_head_absence",
+        "actomyosin_motor_function"
+      ]
     },
     {
       "id": "component-thin-filament",
@@ -87,7 +100,7 @@
       "label": "Actin thin filament",
       "lay_text": "Actin thin filaments extend inward from each Z-disc and surround the thick filament. Their overlap with myosin changes with sarcomere length while their modeled filament length stays fixed.",
       "expert_text": "The retained reference length and axial placement are separately sourced; the smooth cylinder is a coarse filament envelope and omits regulatory proteins deferred by the scope contract.",
-      "scope": "Mammalian striated-muscle context in the retained skeletal reference model.",
+      "scope": "Mammalian striated-muscle context; construct identity is supplied by scientific_scope.json.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -103,7 +116,12 @@
       "binding": {
         "kind": "sarcomere_component",
         "id": "thin_filament"
-      }
+      },
+      "claim_support_ids": [
+        "sarcomere_definition",
+        "lattice_cross_section",
+        "actomyosin_motor_function"
+      ]
     },
     {
       "id": "component-thin-filament-twist",
@@ -111,7 +129,7 @@
       "label": "Thin-filament helical twist",
       "lay_text": "The paired green helices reveal actin’s long-pitch two-stranded twist when the camera is close enough to resolve it. They are detail on the same thin filament, not extra filaments.",
       "expert_text": "The crossover repeat is measurement-derived, while phase, tube radius, and continuous helical surface are schematic. Individual actin subunits and regulatory complexes are intentionally absent.",
-      "scope": "Mammalian thin-filament structural context; used only as a local morphology cue in the skeletal reference model.",
+      "scope": "Mammalian thin-filament structural context used only as a local morphology cue.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -126,7 +144,10 @@
       "binding": {
         "kind": "sarcomere_component",
         "id": "thin_filament"
-      }
+      },
+      "claim_support_ids": [
+        "thin_filament_twist"
+      ]
     },
     {
       "id": "component-zdisc",
@@ -134,7 +155,7 @@
       "label": "Z-disc",
       "lay_text": "The Z-disc marks the sarcomere boundary. Thin filaments anchor here, and titin’s N-terminal Z1–Z2 region joins a local protein network that transfers tension between the filament systems.",
       "expert_text": "The overview slab is only an envelope. Its close-up uses a heterogeneous skeletal thin-form motif and does not combine relaxed small-square and activated basketweave lattices.",
-      "scope": "Local vertebrate skeletal Z-disc context applied to the retained human skeletal titin reference without claiming an isoform-specific complete lattice.",
+      "scope": "Local vertebrate skeletal Z-disc context; no isoform-specific complete lattice is claimed.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -149,7 +170,12 @@
       "binding": {
         "kind": "sarcomere_component",
         "id": "zdisc"
-      }
+      },
+      "claim_support_ids": [
+        "sarcomere_definition",
+        "zdisc_local_network",
+        "zdisc_telethonin_sandwich"
+      ]
     },
     {
       "id": "component-alpha-actinin",
@@ -172,7 +198,10 @@
       "binding": {
         "kind": "showcase_claim",
         "id": "zdisc_alpha_actinin_doublets"
-      }
+      },
+      "claim_support_ids": [
+        "zdisc_alpha_actinin_doublets"
+      ]
     },
     {
       "id": "component-telethonin",
@@ -195,7 +224,10 @@
       "binding": {
         "kind": "showcase_claim",
         "id": "zdisc_telethonin_sandwich"
-      }
+      },
+      "claim_support_ids": [
+        "zdisc_telethonin_sandwich"
+      ]
     },
     {
       "id": "component-mline",
@@ -203,7 +235,7 @@
       "label": "M-band center",
       "lay_text": "The M-band is the sarcomere’s center, where thick filaments and the C-terminal ends of titin are integrated. The narrow ring marks only the exact midpoint coordinate.",
       "expert_text": "The marker has zero adopted axial width and is distinct from the 160 nm thick-filament bare zone. No M1 density is inferred from the retained averaged maps.",
-      "scope": "Mammalian striated-muscle midpoint and M-band integration relationships in the retained skeletal reference model.",
+      "scope": "Mammalian striated-muscle midpoint and M-band integration relationships; construct identity is supplied by scientific_scope.json.",
       "claim_evidence_class": "STRONGLY INFERRED",
       "render_evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -219,7 +251,11 @@
       "binding": {
         "kind": "sarcomere_component",
         "id": "mline"
-      }
+      },
+      "claim_support_ids": [
+        "mband_midpoint_and_crosslinks",
+        "mband_m1_density"
+      ]
     },
     {
       "id": "component-mband-crosslinks",
@@ -243,7 +279,10 @@
       "binding": {
         "kind": "showcase_claim",
         "id": "mband_midpoint_and_crosslinks"
-      }
+      },
+      "claim_support_ids": [
+        "mband_midpoint_and_crosslinks"
+      ]
     },
     {
       "id": "component-mybpc",
@@ -251,7 +290,7 @@
       "label": "MyBP-C (C-zone context)",
       "lay_text": "Myosin-binding protein C is an accessory protein of the thick filament, not part of titin. The sparse yellow markers show where it sits along the C-zone, the striped middle stretch of each half filament.",
       "expert_text": "Presence in the C-zone and the approximately 43 nm repeat come from fast skeletal muscle evidence. Stripe register, azimuth, outward reach, and pose are schematic; the layer is optional, Evidence-only, and off by default.",
-      "scope": "Fast skeletal MyBP-C (permeabilized mouse psoas) shown as optional context for the human skeletal N2A titin reference; no cardiac coordinates are imported.",
+      "scope": "Fast skeletal MyBP-C in permeabilized mouse psoas shown as optional context; no cardiac coordinates are imported.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -267,7 +306,10 @@
       "binding": {
         "kind": "showcase_claim",
         "id": "mybpc_czone_context"
-      }
+      },
+      "claim_support_ids": [
+        "mybpc_czone_context"
+      ]
     },
     {
       "id": "component-titin-domains",
@@ -275,7 +317,7 @@
       "label": "Folded titin domains",
       "lay_text": "Repeated bead-like forms represent titin’s folded Ig-like and fibronectin-type III domains. Reusing a few validated shapes keeps the domain architecture readable without pretending every domain surface is known atom by atom.",
       "expert_text": "Domain identity and order follow Q8WZ42. Instanced archetypes are never stretched; changes in titin extension are expressed by spacing and disordered-chain length, not deformation of folded domains.",
-      "scope": "Folded-domain architecture of human canonical Q8WZ42 in the retained skeletal N2A-containing model.",
+      "scope": "Folded-domain architecture for the reference sequence named by scientific_scope.json.",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "source_ids": [
@@ -292,7 +334,11 @@
       "binding": {
         "kind": "titin_architecture",
         "id": "Q8WZ42"
-      }
+      },
+      "claim_support_ids": [
+        "titin_region_architecture",
+        "regional_extension_story"
+      ]
     }
   ]
 }

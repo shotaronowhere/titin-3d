@@ -362,7 +362,8 @@ test('SC5: an Evidence-mode card records why cardiac coordinates were not import
   assert.ok(mybpcCard, 'the admitted MyBP-C layer carries a scope card');
   assert.equal(mybpcCard.audience, 'evidence');
   assert.match(mybpcCard.body, /cardiac/i);
-  assert.match(mybpcCard.body, /mix isoforms/i);
+  assert.match(mybpcCard.body, /mix preparations/i);
+  assert.match(mybpcCard.body, /tissue construct remains under review/i);
   assert.ok(mybpcCard.not_claimed.some((entry) => /cardiac cMyBP-C coordinates/i.test(entry)));
 
   const scaffoldCard = cards.find((card) => card.target_claim_id === 'titin_region_architecture');

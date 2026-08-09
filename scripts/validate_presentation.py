@@ -120,8 +120,9 @@ def validate(presentation_path):
     validate_scientific(p.get("scope", {}), "scope")
     for badge in p.get("scope_badges", []):
         validate_scientific(badge, "scope badge")
-        require(bool(badge.get("label")) and bool(badge.get("state_template")),
-                f"scope badge '{badge.get('id')}' needs label and state_template")
+        require(badge.get("label_ref") == "scientific_scope.json#/public_badge"
+                and "label" not in badge and bool(badge.get("state_template")),
+                f"scope badge '{badge.get('id')}' needs the canonical label_ref and state_template")
 
     represented_states = set()
     for preset in p.get("length_presets", []):

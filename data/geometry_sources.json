@@ -97,7 +97,7 @@
    "primary_source": "10.1152/ajpheart.00800.2011",
    "evidence_class": "MEASURED",
    "verified": "primary-source full text verified 2026-08-01",
-   "notes": "Patel et al. report 2,970 kDa N2B and 3,830 kDa N2BA-G in rat ventricles. This contextual mass range is not used to size the human skeletal N2A render."
+   "notes": "Patel et al. report 2,970 kDa N2B and 3,830 kDa N2BA-G in rat ventricles. This contextual mass range is not used to size the human Q8WZ42-1 reference-sequence render."
   },
   {
    "component": "Thick filament",
@@ -573,7 +573,7 @@
    "primary_source": "10.1038/s41467-024-46957-7",
    "evidence_class": "MEASURED",
    "verified": "primary-source record verified 2026-08-05",
-   "notes": "Hessel et al. place fast skeletal MyBP-C in the C-zone at the ~43 nm thick-filament repeat. CONTEXT_ONLY for this human skeletal N2A model (showcase_claims.json:mybpc_czone_context): it supports presence and periodic context, never an exact human coordinate, stripe register, azimuth, reach, or binding pose."
+   "notes": "Hessel et al. place fast skeletal MyBP-C in the C-zone at the ~43 nm thick-filament repeat. CONTEXT_ONLY for this human Q8WZ42-1 reference-sequence model (showcase_claims.json:mybpc_czone_context): it supports presence and periodic context, never an exact human coordinate, stripe register, azimuth, reach, or binding pose."
   },
   {
    "component": "MyBP-C",
@@ -590,7 +590,7 @@
    "primary_source": "10.1038/s41467-024-46957-7",
    "evidence_class": "MEASURED",
    "verified": "primary-source record verified 2026-08-05",
-   "notes": "Approximately three fast-skeletal MyBP-C molecules per ~43 nm C-zone repeat. Used only as a sparse schematic azimuthal count. The cardiac PDB 8G4L chain count is deliberately NOT the source: importing cardiac cMyBP-C placement into the skeletal reference is forbidden by the SC-0 scope lock."
+   "notes": "Approximately three fast-skeletal MyBP-C molecules per ~43 nm C-zone repeat. Used only as a sparse schematic azimuthal count. The cardiac PDB 8G4L chain count is deliberately NOT the source: importing cardiac cMyBP-C placement into the reference-sequence render is forbidden by the scope lock."
   }
  ]
 }

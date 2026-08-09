@@ -53,10 +53,9 @@ function disclosures(record, evidenceByClaim) {
   return [...new Set(result)];
 }
 
-function scopeText(record) {
-  return [record.species, record.muscle_type, record.isoform]
-    .filter((value) => typeof value === 'string' && value.trim() && value !== '—')
-    .join(' · ');
+function scopeText(model) {
+  const scope = model.scientificScope;
+  return `${scope.sequence.construct_label} · tissue construct ${scope.sequence.review_status.toLowerCase()}`;
 }
 
 function freezeAnnotation(record) {
@@ -152,7 +151,7 @@ function regionAnnotation(model, region, segment, anchor) {
     anchor_nm: anchor,
     lay_text: `${region.name} is part of titin. ${biologicalRole}.`,
     expert_text: [region.relationships, region.state_dependence].filter(Boolean).join(' '),
-    scope: scopeText(region),
+    scope: scopeText(model),
     evidence_class: weakestEvidence(claims),
     evidence: {
       claim_class: evidenceHead(region.evidence_class),
