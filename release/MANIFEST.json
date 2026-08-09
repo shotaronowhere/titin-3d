@@ -1,33 +1,69 @@
 {
-  "schema": "titin-release-manifest/1",
-  "build_fingerprint": "c079c03d56c4",
-  "fingerprint_inputs": [
-    "data/sarcomere.json",
-    "data/titin.json",
-    "data/structural_states.json",
-    "data/geometry_sources.json",
-    "data/references.json",
-    "data/showcase_claims.json",
-    "data/presentation.json",
-    "data/annotations.json",
-    "data/geometry_strategy.json",
-    "data/context_measurements.json",
-    "data/mechanical_model.json",
-    "data/domain_backbones.json"
-  ],
-  "standalone_bytes": 2165946,
+  "schema": "titin-release-manifest/2",
+  "model_fingerprint": "8234f36bad39a916b1428dc082c72dff0f7762d2b8404f50dbccc97eefe01cbe",
+  "app_revision": "076fb1c026ecc22400d44695bec5a047c0761369",
+  "build_inputs_fingerprint": "aaa3c71839d5757cbd0b4a08ab0c35ea70aa40b183903ed4a3c62fce170aeca2",
+  "standalone": {
+    "path": "index.html",
+    "bytes": 2178874,
+    "sha256": "d457fca45cf445e100a5672f4fbe9ee156288373fcd48dde12987373759f8697"
+  },
   "artifacts": [
-    "CLAIM_MATRIX.md",
-    "LIMITATIONS.md",
-    "PREFLIGHT.md",
-    "PRESENTER_SCRIPT.md",
-    "SCREENSHOT_PACK.md",
-    "fallback/architecture.svg",
-    "fallback/extension.svg",
-    "fallback/lattice.svg",
-    "fallback/limitations.svg",
-    "fallback/provenance.svg",
-    "fallback/scope.svg"
+    {
+      "path": "release/CLAIM_MATRIX.md",
+      "bytes": 14014,
+      "sha256": "ba0417c451764725cd7589b1544303cdf4dd396553375a801e89025a3577c4d7"
+    },
+    {
+      "path": "release/fallback/architecture.svg",
+      "bytes": 5147,
+      "sha256": "de95cff2ba08f05e14637418082384412bfe45cca091fe1bf3c7aeae701a1ed8"
+    },
+    {
+      "path": "release/fallback/extension.svg",
+      "bytes": 4786,
+      "sha256": "d3feafbf218327b8d44e56ab16af9211acf944e347c01643a408a59152ee7b3b"
+    },
+    {
+      "path": "release/fallback/lattice.svg",
+      "bytes": 13329,
+      "sha256": "8180baa18ae8b06f3af2f6777113f3e892678d2a19cbd4012a253f0b662a1c1e"
+    },
+    {
+      "path": "release/fallback/limitations.svg",
+      "bytes": 2932,
+      "sha256": "016f2238832199a175e5115178aea22466c52eccfffe0319c9deb368e2609538"
+    },
+    {
+      "path": "release/fallback/provenance.svg",
+      "bytes": 5611,
+      "sha256": "655228e2b1ca379ce35b03a97b6b8722ee2fb3102f63adb7bf30e88491c4bb0d"
+    },
+    {
+      "path": "release/fallback/scope.svg",
+      "bytes": 2370,
+      "sha256": "a1010085d165c4eca90114d6796e9f8e0c525b196f8b737a9abeb92b730db6dc"
+    },
+    {
+      "path": "release/LIMITATIONS.md",
+      "bytes": 8789,
+      "sha256": "dc2836825f6bed7658c2656b798a407d309c85fa96f1a17f5b137d7720aac0d0"
+    },
+    {
+      "path": "release/PREFLIGHT.md",
+      "bytes": 2112,
+      "sha256": "ef122e6aa4e2cee747a0a14e7cb5632cbc2a8f7a1a50181353dc929060cc69dc"
+    },
+    {
+      "path": "release/PRESENTER_SCRIPT.md",
+      "bytes": 6473,
+      "sha256": "f7ae67c5c168138965ac5dd0fa01bbe0be54d58aa1cf9947bd50649909bf91fa"
+    },
+    {
+      "path": "release/SCREENSHOT_PACK.md",
+      "bytes": 9170,
+      "sha256": "a4f73aec02dfb451f6450df9d94f547b1984275e9e273ca79b1dd4c01a73d42f"
+    }
   ],
   "fallback_slides": [
     "scope",
