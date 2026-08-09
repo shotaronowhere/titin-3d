@@ -1,18 +1,18 @@
 {
   "schema": "titin-release-manifest/2",
   "model_fingerprint": "8234f36bad39a916b1428dc082c72dff0f7762d2b8404f50dbccc97eefe01cbe",
-  "app_revision": "076fb1c026ecc22400d44695bec5a047c0761369",
-  "build_inputs_fingerprint": "aaa3c71839d5757cbd0b4a08ab0c35ea70aa40b183903ed4a3c62fce170aeca2",
+  "app_revision": "53a071e85d0df4d1d57af41617ec6f0a9f0d14e3",
+  "build_inputs_fingerprint": "b2baf9914e9ca458864ad1f360f57c0c80f51235a64966ce4450f60f10d40605",
   "standalone": {
     "path": "index.html",
     "bytes": 2178874,
-    "sha256": "d457fca45cf445e100a5672f4fbe9ee156288373fcd48dde12987373759f8697"
+    "sha256": "9d5fefbfdbd429906355ff1fa863c4feaca86ed932b675bf4736afcacc0b9fe1"
   },
   "artifacts": [
     {
       "path": "release/CLAIM_MATRIX.md",
       "bytes": 14014,
-      "sha256": "ba0417c451764725cd7589b1544303cdf4dd396553375a801e89025a3577c4d7"
+      "sha256": "d6d3ed5c63926653ee26a9510ba7a7e0ff1024ba6b2175c00492dd4d479bcddb"
     },
     {
       "path": "release/fallback/architecture.svg",
@@ -47,22 +47,22 @@
     {
       "path": "release/LIMITATIONS.md",
       "bytes": 8789,
-      "sha256": "dc2836825f6bed7658c2656b798a407d309c85fa96f1a17f5b137d7720aac0d0"
+      "sha256": "9a81da9629cf1ee391b2eed31d01995ccb86e2ddcd58528a330b25ca7a55b152"
     },
     {
       "path": "release/PREFLIGHT.md",
       "bytes": 2112,
-      "sha256": "ef122e6aa4e2cee747a0a14e7cb5632cbc2a8f7a1a50181353dc929060cc69dc"
+      "sha256": "478559edb393654aff3fb115cf9d9ecf9358d2d4905088f1b077736667f87bc6"
     },
     {
       "path": "release/PRESENTER_SCRIPT.md",
       "bytes": 6473,
-      "sha256": "f7ae67c5c168138965ac5dd0fa01bbe0be54d58aa1cf9947bd50649909bf91fa"
+      "sha256": "e6d011f41d9df3dcf4e909313f54378ce57e00a479b60721dd71d0a2a8756dda"
     },
     {
       "path": "release/SCREENSHOT_PACK.md",
       "bytes": 9170,
-      "sha256": "a4f73aec02dfb451f6450df9d94f547b1984275e9e273ca79b1dd4c01a73d42f"
+      "sha256": "1e7f496ae44ebb1fd96bf2e31aa0a89541c2a9a9597ce3db233502105233555d"
     }
   ],
   "fallback_slides": [
