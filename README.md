@@ -11,9 +11,11 @@ completion now follows
 `CODE_COMPLETE_BLOCKED_SCIENCE`: every repository-controlled implementation,
 identity, boundary, release-gate, and Chromium check passes, while human recruitment
 and physical/manual hardware evidence are explicitly deferred and remain `PENDING`.
-SC-19 is `NOT_READY` until qualified SD-01–SD-05 reviewer candidates confirm
-availability; SC-19 through SC-27 remain planned work. The immutable SC-18 candidate
-and its evidence are summarized in `docs/sprint-reports/SC-18.md`.
+SC-19 is `CODE_COMPLETE_BLOCKED_SCIENCE`: its repository-controlled sequence,
+scope, claim-support, decision-packet, runtime, release-pack, and validation work is
+complete, but all five SD-01–SD-05 rulings remain `PENDING` because no qualified
+reviewer is confirmed. SC-20 and SC-21 therefore remain blocked. The handoffs are
+summarized in `docs/sprint-reports/SC-18.md` and `docs/sprint-reports/SC-19.md`.
 
 The release pack in `release/` is generated and staleness-gated. The complete final
 release definition is tracked in `data/release_gates.json`; scientific decisions,
@@ -239,6 +241,12 @@ Every displayed claim carries an evidence class and source record. `MEASURED`,
 and must not be silently promoted. Every adopted quantitative geometry source has
 been checked against its primary record; each row records whether that check used
 full text, an abstract, a database record, coordinates, or an executable model.
+`data/scientific_scope.json` is the sole public identity ledger: the displayed
+sequence is the pinned human TTN reference sequence Q8WZ42-1, not a claimed
+tissue-specific human isoform. Mechanics transferred from rat-psoas preparations
+are labelled next to their outputs. `data/claim_support.json` records exact locators
+and limitations separately from human entailment status; all entailment reviews are
+still pending.
 `PHASE0_REVIEW.md` records the completed research audit and the remaining scientific
 uncertainties, which are model limits rather than unfinished provenance work.
 

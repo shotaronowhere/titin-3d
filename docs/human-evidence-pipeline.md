@@ -45,10 +45,14 @@ publication consent is separate from participation consent.
 
 ## Readiness and next action
 
-SC-19 is **NOT_READY**. None of SD-01 through SD-05 has a qualified candidate with confirmed
-availability. The integration owner must supply or authorize a private recruitment channel, screen
-qualifications and conflicts, obtain an availability date, and update each row to `CONFIRMED` before
-SC-19 starts. A hoped-for reviewer does not satisfy that prerequisite.
+SC-19 is **CODE_COMPLETE_BLOCKED_SCIENCE**. At direct owner request, its repository-controlled
+infrastructure was completed despite the reviewer-availability prerequisite remaining unmet. The
+five byte-pinned dossiers now exist under `docs/scientific-decisions/SC-19/`, but none of SD-01
+through SD-05 has a qualified candidate with confirmed availability and no ruling has been
+invented. The integration owner must supply or authorize a private recruitment channel, screen
+qualifications and conflicts, obtain an availability date, and update the applicable row to
+`CONFIRMED` before any dossier is adjudicated. A hoped-for reviewer does not satisfy that condition.
+SC-20 is blocked by SD-01, SD-02, SD-03, and its relevant SD-05 ruling; SC-21 is blocked by SD-04.
 
 ## Target-hardware baseline
 

@@ -958,7 +958,7 @@
         "requirement": "every material visible claim has atomic support and an exact locator",
         "verification": "human",
         "status": "PENDING",
-        "note": "SC-19 and SC-22 create the matrix; SC-27 records named review."
+        "note": "SC-19 created the 27-record atomic matrix with exact source locators. Human entailment remains PENDING; SC-22 extends the matrix and SC-27 records named review."
       },
       {
         "id": "transfer_review",

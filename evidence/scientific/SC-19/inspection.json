@@ -1,0 +1,40 @@
+{
+  "schema": "titin-sc19-manual-evidence/1",
+  "captured_on": "2026-08-09",
+  "candidate": {
+    "source_commit": "3eb7dc54d1246aca59e9980ca7f65bd0d2f4b99a",
+    "generated_output_commit": "638b09f6c2ba471d89cbeed5ec339131ec7df904",
+    "model_fingerprint": "7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c",
+    "app_revision": "3eb7dc54d1246aca59e9980ca7f65bd0d2f4b99a",
+    "build_inputs_fingerprint": "dd3ee440b4a393a537b5686122815d890b9772b093042ee4e76ac3df23a000b3",
+    "index_html_bytes": 2486093,
+    "index_html_sha256": "42baaed3f328f1bfaac3406a90fd5d6862d0c3933ad1aef70ba835e8bd5b51a9",
+    "manifest_sha256": "e746a3350a4547149a2ecda963a367319e7e792b6de52d5e8ad9d3ba853c05b7"
+  },
+  "environment": {
+    "browser_surface": "Codex in-app Browser",
+    "viewport_css_px": {
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "captures": [
+    {
+      "path": "evidence/scientific/SC-19/authority-1280x720.png",
+      "bytes": 78469,
+      "sha256": "eac73e30a3233e3d561ac8a6fdc8ffde1c5d8f0f656653bba0763a7eb43cbc61",
+      "observation": "The public scope badge visibly states Human TTN reference sequence, Q8WZ42-1, construct review pending, and 5 pending / 0 approved / 0 deferred."
+    },
+    {
+      "path": "evidence/scientific/SC-19/claim-source-1280x720.png",
+      "bytes": 111063,
+      "sha256": "a4ecc4d2a9a0974c26021082cd0bd5c57757f9a0faa416cf6da91610d97f3570",
+      "observation": "Evidence mode visibly lists SD-01 through SD-05 as pending and shows the current guided claim, evidence class, two source links, and explicit non-claims without panel overlap."
+    }
+  ],
+  "disposition": "PASS_FOR_SC19_INTEGRATION_INSPECTION",
+  "limitations": [
+    "This is an integration-owner visual inspection, not a scientific ruling or independent release review.",
+    "The five scientific decisions and claim entailment remain PENDING."
+  ]
+}

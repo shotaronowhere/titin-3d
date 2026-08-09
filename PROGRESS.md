@@ -4,11 +4,11 @@
 below are historical snapshots; this header and the latest completion record are
 authoritative when an old snapshot says work is still open.*
 
-**Last updated:** 2026-08-07 — showcase sequence SC-0 … SC-17 complete
-**Current phase:** MVP complete; the showcase sequence is complete in everything
-a machine can decide
-**Next phase:** none coded. What remains needs people, a WebGL browser, or the
-presenting hardware — see “Outstanding work” below.
+**Last updated:** 2026-08-09 — SC-19 repository-controlled authority layer complete
+**Current phase:** SC-19 `CODE_COMPLETE_BLOCKED_SCIENCE`; all five scientific
+decisions remain `PENDING`
+**Next phase:** qualified review of SD-01–SD-05. SC-20 and SC-21 stay blocked until
+their required rulings are consumable.
 
 ---
 
@@ -80,8 +80,9 @@ SC-0 artifacts: `SHOWCASE_DESIGN_CONTRACT.md`,
 `data/showcase_claims.json`, and `scripts/validate_showcase_claims.py`. The
 claim payload is SHA-256 pinned independently in the validator, and admitted
 external sources must provide complete linkable citation metadata. The
-reference remains human skeletal N2A-containing Q8WZ42; no cardiac titin mode or
-lab-specific narrative was admitted. MyBP-C is admitted only as optional
+historical SC-0 audit used a skeletal-N2A label; SC-19 supersedes that wording with
+the human Q8WZ42-1 reference sequence and an explicitly pending tissue-construct
+review. No cardiac titin mode or lab-specific narrative was admitted. MyBP-C is admitted only as optional
 schematic skeletal C-zone context, while thin-filament regulation is deferred.
 
 ---
@@ -1628,3 +1629,20 @@ for now. Their rows remain `NOT_CONTACTED`/`UNCONFIRMED` or `PENDING`; no eviden
 SC-19 remains `NOT_READY` until qualified SD-01–SD-05 reviewer candidates confirm availability.
 Later scientific, human, deployment, and final-release gates remain outstanding, so
 `release_ready` remains `false`.
+
+---
+
+# 2026-08-09 — SC-19 repository-controlled completion
+
+SC-19 is **CODE_COMPLETE_BLOCKED_SCIENCE**. The repository-controlled scientific authority layer is
+complete: pinned Q8WZ42-1 features and deterministic region mapping, normalized public scope,
+27 atomic claim-support records, five byte-pinned decision dossiers, runtime/build/release-pack
+integration, offline citation closure, semantic migration of the showcase audit, and fail-closed
+validators and destructive controls.
+
+All five decisions remain `PENDING` because the human-evidence pipeline has no confirmed qualified
+reviewer. In particular, SD-01 records—but does not resolve—the current N2A zero/one and distal-Ig
+15/16 feature discrepancy. No biological boundary, domain count, render geometry, or mechanics
+parameter was changed without that ruling. SC-20 and SC-21 remain blocked by their named decisions,
+and `release_ready` remains `false`. Full evidence and handoff are in
+`docs/sprint-reports/SC-19.md`.
