@@ -5,15 +5,22 @@ JSON records in `data/` are the scientific source of truth; the renderer and pub
 API consume those records rather than restating biological constants.
 
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
-0–6. Phases 11–12 in `MASTER_PLAN.md` are retained as optional future extensions
-and are intentionally outside the completed release scope. The separate showcase
-completion sequence is complete through SC-17 in everything a machine can decide.
-The release pack in `release/` is generated and staleness-gated, and the twelve
-conditions of the final release definition are tracked in
-`data/release_gates.json`. Four of them — novice comprehension, expert review,
-the visual capture set, and the projector rehearsal — need people, a browser, and
-the presenting hardware, so they remain outstanding. The showcase is therefore
-not yet release-ready, and `npm run validate:gates` will not let that be claimed.
+0–6. Phases 11–12 in `MASTER_PLAN.md` remain optional future extensions. Showcase
+completion now follows
+`docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md`. SC-18 is
+`CODE_COMPLETE_BLOCKED_SCIENCE`: every repository-controlled implementation,
+identity, boundary, release-gate, and Chromium check passes, while human recruitment
+and physical/manual hardware evidence are explicitly deferred and remain `PENDING`.
+SC-19 is `NOT_READY` until qualified SD-01–SD-05 reviewer candidates confirm
+availability; SC-19 through SC-27 remain planned work. The immutable SC-18 candidate
+and its evidence are summarized in `docs/sprint-reports/SC-18.md`.
+
+The release pack in `release/` is generated and staleness-gated. The complete final
+release definition is tracked in `data/release_gates.json`; scientific decisions,
+claim entailment, mechanical validity, human/browser review, target-hardware evidence,
+deployment parity, and final release work remain outstanding. The showcase is not yet
+release-ready, `release_ready` remains `false`, and `npm run validate:gates` rejects
+any unsupported readiness claim.
 
 ## Open the visualization
 

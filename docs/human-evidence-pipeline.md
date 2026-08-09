@@ -11,6 +11,10 @@ information belongs here. At this snapshot there was no authorized contact chann
 candidate roster, so no outreach was performed and no availability was invented. Private
 recruitment records should be created only when outreach begins.
 
+Owner direction on 2026-08-09: defer outbound recruitment and physical/manual evidence work for
+now. Deferral changes no status to `CONFIRMED` or `PASS`; all affected rows and gates remain
+explicitly unresolved until the required people and hardware are actually exercised.
+
 Status vocabulary: `NOT_CONTACTED`, `CONTACTED`, `CONFIRMED`, `DECLINED`, or `WITHDRAWN`.
 `UNASSESSED` means the relevant independence, conflict, or consent check has not happened.
 

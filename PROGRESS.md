@@ -1597,3 +1597,34 @@ the unshipped Tier B explainers (N2A interaction hub, titin-kinase/M-region,
 mechanotransduction, length-dependent thick-filament activation), the §8
 thin-filament regulation extension — never admitted — and `MASTER_PLAN.md`
 Phases 11–12.
+
+---
+
+# 2026-08-09 — SC-18 repository-controlled completion
+
+This entry supersedes the SC-17 statement that no later showcase sprint was planned. The
+authoritative MVP sequence is now
+`docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md`, covering SC-18 through SC-27.
+
+SC-18 is **CODE_COMPLETE_BLOCKED_SCIENCE**. Every repository-controlled implementation and gate is
+complete: separate model/application/build-input identities, raw artifact and detached manifest
+checksums, the candidate/evidence boundary, Playwright/axe bootstrap, link and selected-row
+contrast, labelled drawer routing with focus return, truthful camera state, release-gate schema v2,
+and the sprint handoff. No titin biology or mechanical parameter changed.
+
+The frozen generated candidate is commit `4e8583b`, produced from source-input commit `53a071e`.
+Its model fingerprint is
+`8234f36bad39a916b1428dc082c72dff0f7762d2b8404f50dbccc97eefe01cbe`, build-input fingerprint is
+`b2baf9914e9ca458864ad1f360f57c0c80f51235a64966ce4450f60f10d40605`, standalone SHA-256 is
+`9d5fefbfdbd429906355ff1fa863c4feaca86ed932b675bf4736afcacc0b9fe1`, and detached manifest digest
+is `b55ea0568cebebff8fbe4160849936d0da73c6458c220c26d135a186b2a19662`.
+
+The exhaustive 480-test suite, 45-test bounded SC-18 suite, all identity/boundary/release-gate
+destructive controls, and eight Chromium smoke scenarios pass. Post-candidate documentation and
+evidence leave `index.html`, `release/`, and all three embedded identities unchanged.
+
+At owner direction, outbound human recruitment and physical/manual hardware evidence are deferred
+for now. Their rows remain `NOT_CONTACTED`/`UNCONFIRMED` or `PENDING`; no evidence is fabricated.
+SC-19 remains `NOT_READY` until qualified SD-01–SD-05 reviewer candidates confirm availability.
+Later scientific, human, deployment, and final-release gates remain outstanding, so
+`release_ready` remains `false`.

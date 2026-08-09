@@ -279,15 +279,24 @@ test('SC9: the rehearsal record claims nothing that has not been rehearsed', () 
 // Handoff documentation
 // ---------------------------------------------------------------------------
 
-test('SC9: the README hands the project over accurately', () => {
+test('SC9/18: the README and progress record hand the current project over accurately', () => {
   const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
+  const progress = readFileSync(new URL('../PROGRESS.md', import.meta.url), 'utf8');
   for (const needle of ['Guided', 'Evidence', 'npm run verify', 'index.html',
-    'GitHub Pages', 'release/']) {
+    'GitHub Pages', 'release/', 'SC-18', 'CODE_COMPLETE_BLOCKED_SCIENCE',
+    'docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md']) {
     assert.ok(readme.includes(needle), `README does not mention ${needle}`);
   }
+  assert.ok(!readme.includes('completion sequence is complete through SC-17'),
+    'README still presents SC-17 as the terminal showcase sprint');
+  const sc17 = progress.indexOf('# Showcase sequence complete (session 2026-08-07, SC-17)');
+  const sc18 = progress.indexOf('# 2026-08-09 — SC-18 repository-controlled completion');
+  assert.ok(sc17 >= 0 && sc18 > sc17,
+    'PROGRESS must supersede the historical SC-17 terminal claim with SC-18 status');
+  assert.match(progress.slice(sc18), /CODE_COMPLETE_BLOCKED_SCIENCE/);
   // The status statement must not claim a readiness the gates deny.
   assert.match(readme, /not (yet )?release-ready|remain outstanding/i);
   assert.ok(!/release[- ]ready(?!\W*(:|is not|is false))/i.test(
-    readme.replace(/not yet release-ready/gi, '')),
+    readme.replace(/not\s+yet\s+release-ready/gi, '')),
   'the README must not assert release readiness');
 });

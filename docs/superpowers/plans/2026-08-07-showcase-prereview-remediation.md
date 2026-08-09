@@ -1,5 +1,11 @@
 # Showcase Pre-Review Remediation Implementation Plan
 
+> **SUPERSEDED — DO NOT EXECUTE.** On 2026-08-09 this plan was replaced by
+> [`2026-08-09-titin-mvp-readiness-synthesis.md`](./2026-08-09-titin-mvp-readiness-synthesis.md).
+> It is retained as historical analysis. In particular, its 22-domain example is an unapproved
+> density inference, not an implementation value, and its mobile/control and evidence-routing
+> dispositions do not meet the revised MVP requirements.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Close the thirteen findings in `SHOWCASE_PREREVIEW_FINDINGS.md`, and in each case also close the gate that let the finding through, so the same class of defect cannot ship again.

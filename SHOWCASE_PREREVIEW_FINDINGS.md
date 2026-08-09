@@ -1,5 +1,11 @@
 # Titin showcase — pre-review findings
 
+> **2026-08-09 correction:** The proposed 22-domain distal-Ig remedy below was a density-based
+> hypothesis, not an established count. A subsequent feature-level audit found that the currently
+> declared N2A and distal-Ig intervals themselves require reconciliation. Do not implement 22 from
+> this document. The governing remediation plan is
+> [`docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md`](docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md).
+
 Reviewed build: the deployed page at <https://shotaronowhere.github.io/titin-3d>, build
 fingerprint `c079c03d56c4` (`main` @ `4375fee`, the SC-17 release point). The deployed
 fingerprint was read from `window.__titinBuild.fingerprint` and matches the local build, so
