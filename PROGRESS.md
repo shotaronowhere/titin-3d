@@ -4,11 +4,11 @@
 below are historical snapshots; this header and the latest completion record are
 authoritative when an old snapshot says work is still open.*
 
-**Last updated:** 2026-08-09 — SC-19 repository-controlled authority layer complete
-**Current phase:** SC-19 `CODE_COMPLETE_BLOCKED_SCIENCE`; all five scientific
-decisions remain `PENDING`
-**Next phase:** qualified review of SD-01–SD-05. SC-20 and SC-21 stay blocked until
-their required rulings are consumable.
+**Last updated:** 2026-08-12 — SC-21 mechanics implementation handoff
+**Current phase:** SC-21 `CODE_COMPLETE_BLOCKED_SCIENCE`; SD-04 is `DEFERRED`, so
+every target-force evaluation remains `not_evaluated` and absolute pN is withheld.
+**Next phase:** qualified SD-04 mechanics review. No supported force regime,
+sensitivity envelope, or quantitative release claim may be added before approval.
 
 ---
 
@@ -75,6 +75,16 @@ gate file `test/showcase_phaseNN.test.js` and a `verify:scNN` script.
 | SC-15 | Make the mechanism visible | ✅ **COMPLETE** — disordered-chain slack, declared schematic |
 | SC-16 | The anchor close-up | ✅ **COMPLETE** — envelope ghosting, fitted Z-disc glyph, measured Cα backbones at resolvable zoom |
 | SC-17 | Presentation readiness | ✅ **COMPLETE** — projector type scale with a 9 px floor, presenter keys bound, release record rebaselined |
+
+The current release-readiness sequence is governed by
+`docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md`.
+
+| Showcase package | Name | Status |
+|---|---|---|
+| SC-18 | Candidate identity and artifact boundary | ✅ **CODE COMPLETE** — historical blocked-science handoff retained |
+| SC-19 | Scientific authority and decision packets | ✅ **CODE COMPLETE** — historical blocked-science handoff retained |
+| SC-20 | Sequence/geometry decision consumption | ✅ **COMPLETE** — owner-authorized citation adjudication; SD-02/SD-04 deferred |
+| SC-21 | Mechanics validity, uncertainty, and honesty | ⚠️ **CODE_COMPLETE_BLOCKED_SCIENCE** — canonical parameter authority, parity, status API, and fail-closed UI complete; SD-04 approval absent |
 
 SC-0 artifacts: `SHOWCASE_DESIGN_CONTRACT.md`,
 `data/showcase_claims.json`, and `scripts/validate_showcase_claims.py`. The
@@ -1671,6 +1681,34 @@ matrix checks, and the Python structure smoke. `npm run test:browser` passes 9/9
 The exact before/after audit, eight contract viewport captures, and artifact digests are in
 `docs/sprint-reports/SC-20.md` and `evidence/scientific/SC-20/manifest.json`.
 
-SC-21 remains blocked by deferred SD-04 mechanics validation. Independent claim entailment, the
+SC-21 remains scientifically blocked by deferred SD-04 mechanics validation. Independent claim entailment, the
 human-reviewed visual matrix, deployment/physical-hardware evidence, accessibility/manual checks,
 lay/expert review, rehearsal, and final release remain pending; `release_ready` remains `false`.
+
+---
+
+# 2026-08-12 — SC-21 code-complete mechanics handoff
+
+SC-21 is **CODE_COMPLETE_BLOCKED_SCIENCE**. `data/mechanical_parameters.json` is now the single
+source for every material constant, contour binding, numerical option, source locator,
+species/preparation transfer, applicability statement, decision state, regime policy, and
+sensitivity authority. Python and JavaScript consume that same record and agree over the configured
+111-point grid, including 1900, 2000, 2200, 2400, and 3000 nm.
+
+The browser, geometry API, force-curve presenter, generated model rows, and structural-state
+provenance all expose `not_evaluated` with `force_pN: null` while SD-04 is deferred. No supported
+range, slack/unfolding boundary, sensitivity band, incremental-compliance value, or precision claim
+is manufactured. Regional extension remains a deterministic development geometry; its internal
+scalar is available only through explicitly named development/parity diagnostics and is not a target
+evaluation.
+
+The parameter schema validator and 19 destructive mutations gate both deferred and approved
+authority: units, uncertainty, locators, applicability, named specialist review, regime-boundary
+ordering, scenario coverage/values, output policy, and force leakage. An internally coherent
+approved fixture must pass before its destructive mutations run. Both solver ports reject targets
+outside their configured force bracket, and the Python/JavaScript approved evaluators agree on
+force, sensitivity, and precision. The release pack exports the exact canonical parameter JSON.
+The generated `titin-mechanical-model/2` rows carry both parameter-set and model identities. The
+automated `mechanical_validity.parameter_authority` release check now passes, while the human
+regime/uncertainty and independent-reproduction checks remain pending. See
+`docs/sprint-reports/SC-21.md` for the exact handoff and blocker.

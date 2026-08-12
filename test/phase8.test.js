@@ -22,13 +22,19 @@ import { nodeReader } from '../src/model/readNode.js';
 import { EVIDENCE_CLASSES } from '../src/model/SpecLoader.js';
 import { SarcomereScene, EVIDENCE_STYLE, evidenceStyle } from '../src/render/SarcomereScene.js';
 import {
-  MechanicalModel, IBAND_ORDER, KT_PN_NM,
+  MechanicalModel,
   wlcForce, wlcExtension, ewlcExtension, gInverse, gMarkoSiggia,
 } from '../src/geometry/MechanicalModel.js';
+import { execFileSync } from 'node:child_process';
 
 const CHAIN_LC_FROM_SPEC = new Set(['prox_Ig', 'PEVK', 'dist_Ig']);
 const model = await TitinModel.create(nodeReader());
-const mech = new MechanicalModel(model.spec.titin);
+const mech = new MechanicalModel(
+  model.spec.titin, model.spec.mechanicalParameters, model.spec.identity.model_fingerprint,
+);
+const IBAND_ORDER = mech.order;
+const KT_PN_NM = mech.kT_pN_nm;
+const INVERSE_ITERATIONS = model.spec.mechanicalParameters.solver.inverse_iterations;
 const states = model.spec.states.states;
 
 /* ---------------------------------------------------- primary-source checks */
@@ -43,15 +49,15 @@ test('reproduces the PEVK force-extension datapoints its source reports', () => 
   // pnas.95.14.8052: "~1.5 pN at 20% relative extension ... 8 pN at 50%",
   // pure-entropic WLC with A = 0.65 nm. If these do not come back, the formula
   // or the parameter is not the one that paper used.
-  assert.ok(Math.abs(wlcForce(0.20, 0.65) - 1.5) <= 1.0);
-  assert.ok(Math.abs(wlcForce(0.50, 0.65) - 8.0) <= 0.5);
+  assert.ok(Math.abs(wlcForce(0.20, 0.65, KT_PN_NM) - 1.5) <= 1.0);
+  assert.ok(Math.abs(wlcForce(0.50, 0.65, KT_PN_NM) - 8.0) <= 0.5);
 });
 
 test("independently confirms the source's own stated validity boundary", () => {
   // The paper states PEVK is a pure entropic spring only "below ~12 pN, or
   // relative extensions <60%". Those are two statements of ONE boundary, so the
   // model must map 60% onto ~12 pN. Nothing was tuned to make this hold.
-  const f60 = wlcForce(0.60, 0.65);
+  const f60 = wlcForce(0.60, 0.65, KT_PN_NM);
   assert.ok(Math.abs(f60 - 12.0) <= 1.0, `60% extension -> ${f60.toFixed(2)} pN, expected ~12`);
 });
 
@@ -60,7 +66,7 @@ test('poly-Ig entropic fit limit of ~35 pN sits below, not past, its contour', (
   // WLC approaches contour asymptotically, so 35 pN must land close to but
   // strictly under 100% — otherwise A = 21 nm would be inconsistent with the
   // quoted fit range.
-  const y = gInverse((35.0 * 21.0) / KT_PN_NM);
+  const y = gInverse((35.0 * 21.0) / KT_PN_NM, INVERSE_ITERATIONS);
   assert.ok(y > 0.9 && y < 1.0, `y(35 pN) = ${y}`);
 });
 
@@ -78,7 +84,7 @@ test('g is strictly increasing, so its bisection inverse cannot pick a branch', 
 
 test('gInverse round-trips g to double precision', () => {
   for (const y of [0.01, 0.1, 0.35, 0.6, 0.85, 0.95, 0.99]) {
-    assert.ok(Math.abs(gInverse(gMarkoSiggia(y)) - y) < 1e-9);
+    assert.ok(Math.abs(gInverse(gMarkoSiggia(y), INVERSE_ITERATIONS) - y) < 1e-9);
   }
 });
 
@@ -86,12 +92,15 @@ test('pure-entropic WLC never reaches its contour length', () => {
   // The asymptote is the reason forceForRegion() must return null rather than a
   // big number for at-contour values.
   for (const F of [1, 10, 100, 1e4, 1e6]) {
-    assert.ok(wlcExtension(F, 21.0, 308.0) < 308.0, `WLC reached contour at ${F} pN`);
+    assert.ok(wlcExtension(F, 21.0, 308.0, KT_PN_NM, INVERSE_ITERATIONS) < 308.0,
+      `WLC reached contour at ${F} pN`);
   }
 });
 
 test('extensible WLC has no contour ceiling — the enthalpic term is real strain', () => {
-  assert.ok(ewlcExtension(1e4, 0.55, 542.1, 185.0) > 542.1);
+  assert.ok(ewlcExtension(
+    1e4, 0.55, 542.1, 185.0, KT_PN_NM, INVERSE_ITERATIONS,
+  ) > 542.1);
 });
 
 test('every region extension is monotone increasing in force', () => {
@@ -140,7 +149,8 @@ test('recruitment order is DERIVED, not asserted: compliance migrates Ig -> PEVK
   const igShare = [];
   const pevkShare = [];
   for (const s of byLength) {
-    const { share } = mech.complianceShares(mech.solveForce(s.titin_I_band_total_nm));
+    const force = mech.solveDevelopmentForce(s.titin_I_band_total_nm);
+    const { share } = mech.developmentCompliance(force);
     igShare.push(share.prox_Ig);
     pevkShare.push(share.PEVK);
   }
@@ -224,25 +234,25 @@ test('the weakest-link lattice places MODELED at its documented rung', () => {
   s.clear();
 });
 
-test('chain force rises monotonically with sarcomere length', () => {
+test('development diagnostic force rises monotonically with sarcomere length', () => {
   const byLength = Object.values(states).sort(
     (a, b) => a.sarcomere_length_nm - b.sarcomere_length_nm);
   let prev = -1;
   for (const s of byLength) {
-    const F = mech.solveForce(s.titin_I_band_total_nm);
+    const F = mech.solveDevelopmentForce(s.titin_I_band_total_nm);
     assert.ok(F > prev, 'passive force must increase with stretch');
     prev = F;
   }
 });
 
-test('modelled forces stay in the physiological range across the working SL band', () => {
+test('development diagnostic stays below the omitted unfolding regime in the working band', () => {
   // The spec classifies 6-8 pN as the physiological fold/unfold force and
   // 150-300 pN (AFM) as EXTREME / non-physiological. Within the stated working
   // range (2.0-2.4 um) the model must stay well under the AFM regime, or it
   // would be depicting forces the spec forbids depicting as ordinary.
   for (const s of Object.values(states)) {
     if (s.sarcomere_length_nm > 2400) continue;
-    const F = mech.solveForce(s.titin_I_band_total_nm);
+    const F = mech.solveDevelopmentForce(s.titin_I_band_total_nm);
     assert.ok(F < 6.0,
       `SL ${s.sarcomere_length_nm}: ${F.toFixed(2)} pN reaches the fold/unfold regime`);
   }
@@ -336,26 +346,48 @@ test('the audit detects a mechanically inconsistent partition', () => {
 
 /* --------------------------------- cross-language agreement with the Python */
 
-test('JS port agrees with the Python reference implementation', async () => {
-  // scripts/mechanical_model.py is the reference; this module is a port. If
-  // they diverge, one of them is wrong and every downstream number is suspect.
-  const fs = await import('node:fs');
-  const path = new URL('../data/mechanical_model.json', import.meta.url);
-  if (!fs.existsSync(path)) {
-    assert.fail('data/mechanical_model.json missing — run scripts/mechanical_model.py');
-  }
-  const ref = JSON.parse(fs.readFileSync(path, 'utf8'));
-  for (const [name, s] of Object.entries(ref.per_state)) {
-    const F = mech.solveForce(s.titin_I_band_total_nm);
-    assert.ok(Math.abs(F - s.model_force_pN) < 1e-3,
-      `${name}: JS ${F} vs Python ${s.model_force_pN} pN`);
+test('JS port agrees with Python on the configured dense grid and regime boundaries', () => {
+  const raw = execFileSync('python3', ['scripts/mechanical_model.py', '--parity-json'], {
+    cwd: new URL('..', import.meta.url), encoding: 'utf8', maxBuffer: 8 * 1024 * 1024,
+  });
+  const parity = JSON.parse(raw);
+  assert.ok(parity.rows.length >= 100, 'parity grid must be dense');
+  const tolerance = parity.tolerance;
+  for (const row of parity.rows) {
+    const evaluation = mech.evaluate(row.titin_I_band_total_nm, {
+      sarcomereLengthNm: row.sarcomere_length_nm,
+    });
+    assert.equal(evaluation.status, row.evaluation_status);
+    if (Number.isFinite(row.force_pN)) {
+      assert.ok(Math.abs(evaluation.force_pN - row.force_pN) <= tolerance.force_pN);
+    } else assert.equal(evaluation.force_pN, row.force_pN);
+    assert.equal(evaluation.precision.text, row.precision.text);
+    const diagnostic = row.development_diagnostic;
+    const force = mech.solveDevelopmentForce(row.titin_I_band_total_nm);
+    assert.ok(Math.abs(force - diagnostic.force_pN) <= tolerance.force_pN,
+      `force parity failed at SL ${row.sarcomere_length_nm}`);
+    const compliance = mech.developmentCompliance(force);
     for (const id of IBAND_ORDER) {
-      const z = mech.regionExtension(id, F);
-      assert.ok(Math.abs(z - s.model_partition_nm[id]) < 0.02,
-        `${name}.${id}: JS ${z.toFixed(3)} vs Python ${s.model_partition_nm[id]} nm`);
+      assert.ok(Math.abs(mech.regionExtension(id, force) - diagnostic.extension_nm[id])
+        <= tolerance.extension_nm, `${id} extension parity failed at SL ${row.sarcomere_length_nm}`);
+      assert.ok(Math.abs(compliance.share[id] - diagnostic.compliance_share[id]) <= 1e-9,
+        `${id} compliance-share parity failed at SL ${row.sarcomere_length_nm}`);
     }
-    assert.deepEqual(mech.complianceRank(F), s.compliance_rank,
-      `${name}: compliance rank differs between implementations`);
+  }
+  for (const boundary of [1900, 2000, 2200, 2400, 3000]) {
+    assert.ok(parity.rows.some((row) => row.sarcomere_length_nm === boundary),
+      `parity grid omits ${boundary} nm boundary/reference`);
+  }
+  if (model.spec.mechanicalParameters.decision.status === 'APPROVED') {
+    const policy = model.spec.mechanicalParameters.regime_policy;
+    for (const boundary of [
+      ...policy.approved_supported_range_nm,
+      policy.slack_or_buckling_boundary_nm,
+      policy.unfolding_materiality_boundary_nm,
+    ]) {
+      assert.ok(parity.rows.some((row) => row.sarcomere_length_nm === boundary),
+        `parity grid omits approved regime boundary ${boundary} nm`);
+    }
   }
 });
 
@@ -375,8 +407,9 @@ test('mechanical mode is the default — live geometry is force-balanced', () =>
   assert.equal(e.titinPartitionMode, 'mechanical');
   const g = e.geometryAt(2200);
   assert.ok(g.titin_partition_evidence_class.startsWith('MODELED'));
-  assert.ok(g.titin_chain_force_pN > 0,
-    'canonical live geometry must report the common series force it solved');
+  assert.equal(g.titin_force_status, 'not_evaluated');
+  assert.equal(g.titin_chain_force_pN, null,
+    'canonical live geometry must not expose the development scalar as target force');
 });
 
 test('every geometry declares which route produced its titin partition', () => {
@@ -386,7 +419,8 @@ test('every geometry declares which route produced its titin partition', () => {
     const g = e.geometryAt(2200);
     assert.equal(g.titin_partition_mode, 'mechanical');
     assert.ok(g.titin_partition_evidence_class.includes('MODELED'));
-    assert.ok(g.titin_chain_force_pN > 0);
+    assert.equal(g.titin_force_status, 'not_evaluated');
+    assert.equal(g.titin_chain_force_pN, null);
   } finally {
     e.setTitinPartitionMode('mechanical');
   }

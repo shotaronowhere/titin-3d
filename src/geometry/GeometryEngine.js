@@ -39,7 +39,9 @@ export class GeometryEngine {
 
     // titin region order in the I-band, from the spec keyframe layout
     this.titinElements = Object.keys(this.keyframes[0].titin_I_band_extension_nm);
-    this.mechanicalModel = new MechanicalModel(spec.titin);
+    this.mechanicalModel = new MechanicalModel(
+      spec.titin, spec.mechanicalParameters, spec.identity.model_fingerprint,
+    );
     // Phase 8 established one force-balanced series model as the canonical route.
     // `keyframe` remains available only as an explicit audit/reference mode for
     // reproducing the stored piecewise-linear partitions.
@@ -115,12 +117,17 @@ export class GeometryEngine {
     const totalFromAnchors = iBand - this.zWidth / 2;
     let titinExt;
     let titinEvidence;
+    /** @type {number|null} */
     let titinForce = null;
+    let mechanicalEvaluation = null;
     if (this.titinPartitionMode === 'mechanical') {
-      const partition = this.mechanicalModel.partition(totalFromAnchors);
+      const partition = this.mechanicalModel.partition(totalFromAnchors, {
+        sarcomereLengthNm: sl,
+      });
       titinExt = partition.extension_nm;
       titinEvidence = partition.evidence_class;
       titinForce = partition.force_pN;
+      mechanicalEvaluation = partition;
     } else {
       titinExt = {};
       for (const el of this.titinElements) {
@@ -164,6 +171,13 @@ export class GeometryEngine {
       titin_partition_mode: this.titinPartitionMode,
       titin_partition_evidence_class: titinEvidence,
       titin_chain_force_pN: titinForce,
+      titin_force_status: mechanicalEvaluation?.status || 'not_evaluated',
+      titin_force_reason: mechanicalEvaluation?.reason || null,
+      titin_force_sensitivity: mechanicalEvaluation?.sensitivity || null,
+      titin_force_precision: mechanicalEvaluation?.precision || null,
+      titin_mechanics_decision_status: this.mechanicalModel.parameters.decision.status,
+      mechanical_parameter_set_id: this.mechanicalModel.parameterSetId,
+      mechanical_model_fingerprint: this.mechanicalModel.modelFingerprint,
       titin_iband_extension_nm: titinExt,
       titin_iband_layout_nm: titinLayout,
       titin_iband_total_nm: titinIbandTotal,

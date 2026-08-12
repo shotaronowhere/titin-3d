@@ -8,6 +8,8 @@ import hashlib
 import re
 from pathlib import Path
 
+from validate_scientific_decisions import complete_reviewer, honest_adjudicator
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -106,21 +108,43 @@ def validate(titin: dict, decisions: dict, scope: dict, template: str) -> list[s
 
     expected_status = {
         "SD-01": "APPROVED", "SD-02": "DEFERRED", "SD-03": "APPROVED",
-        "SD-04": "DEFERRED", "SD-05": "APPROVED",
+        "SD-05": "APPROVED",
     }
     implemented_fingerprints: set[str] = set()
     implementation_evidence_kinds: set[str] = set()
-    for decision_id, status in expected_status.items():
+    for decision_id in ["SD-01", "SD-02", "SD-03", "SD-04", "SD-05"]:
         row = decisions.get("decisions", {}).get(decision_id, {})
-        if row.get("status") != status or row.get("reviewer") is not None \
-                or row.get("adjudicator", {}).get("human_expert") is not False \
-                or row.get("independent_human_review_status") != "NOT_PERFORMED":
+        status = row.get("status")
+        if decision_id == "SD-04":
+            status_ok = status in {"DEFERRED", "APPROVED"}
+        else:
+            status_ok = status == expected_status[decision_id]
+        reviewer = row.get("reviewer")
+        if reviewer is None:
+            provenance_ok = row.get("independent_human_review_status") == "NOT_PERFORMED" \
+                and honest_adjudicator(row.get("adjudicator"), human_allowed=False)
+        else:
+            provenance_ok = status == "APPROVED" \
+                and complete_reviewer(reviewer, row.get("required_reviewer_role", "")) \
+                and row.get("independent_human_review_status") \
+                in {"COMPLETE", "COMPLETED", "PERFORMED", "VERIFIED"} \
+                and honest_adjudicator(row.get("adjudicator"), human_allowed=True)
+        if not status_ok or not provenance_ok:
             problems.append(f"{decision_id} status/provenance is stale or overclaims human review")
         verification = row.get("implementation_verification") or {}
         implemented_fingerprint = str(verification.get("implemented_model_fingerprint", ""))
+        verification_reviewer = verification.get("reviewer")
+        verification_authority_ok = (
+            reviewer is None
+            and honest_adjudicator(verification.get("adjudicator"), human_allowed=False)
+            if verification_reviewer is None else
+            complete_reviewer(verification_reviewer, row.get("required_reviewer_role", ""))
+            and (reviewer is None
+                 or verification_reviewer.get("name") == reviewer.get("name"))
+            and honest_adjudicator(verification.get("adjudicator"), human_allowed=True)
+        )
         if verification.get("status") != "VERIFIED" \
-                or verification.get("reviewer") is not None \
-                or verification.get("adjudicator", {}).get("human_expert") is not False \
+                or not verification_authority_ok \
                 or not re.fullmatch(r"[0-9a-f]{64}", implemented_fingerprint) \
                 or not verification.get("implementation_evidence"):
             problems.append(f"{decision_id} implementation is not honestly VERIFIED and evidence-bound")
@@ -145,11 +169,16 @@ def validate(titin: dict, decisions: dict, scope: dict, template: str) -> list[s
     if not {"boundary_audit", "render_audit", "manual_capture"}.issubset(
             implementation_evidence_kinds):
         problems.append("implementation evidence lacks boundary, render, or manual-capture proof")
-    if scope.get("mechanics", {}).get("review_status") != "DEFERRED" \
-            or "absolute pN withheld" not in scope.get("mechanics", {}).get("display_label", ""):
-        problems.append("SD-04 deferral is not propagated into public scope")
+    mechanics_scope = scope.get("mechanics", {})
+    if decisions.get("decisions", {}).get("SD-04", {}).get("status") == "DEFERRED":
+        if mechanics_scope.get("review_status") != "DEFERRED" \
+                or "absolute pN withheld" not in mechanics_scope.get("display_label", ""):
+            problems.append("SD-04 deferral is not propagated into public scope")
+    elif mechanics_scope.get("review_status") != "APPROVED" \
+            or "absolute pN withheld" in mechanics_scope.get("display_label", ""):
+        problems.append("SD-04 approval is not propagated into public scope")
     if "titinStrands: false" not in template \
-            or "absolute pN withheld · SD-04 DEFERRED" not in template:
+            or "absolute pN withheld · SD-04 ${g.titin_mechanics_decision_status}" not in template:
         problems.append("public application does not enforce SD-04/SD-05 depiction policy")
     return problems
 

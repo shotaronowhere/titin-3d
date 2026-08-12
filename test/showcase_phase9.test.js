@@ -30,7 +30,8 @@ const pack = createReleasePack(model, { identity });
 
 test('SC9: every named release artifact exists and is generated, not written', () => {
   for (const name of ['CLAIM_MATRIX.md', 'LIMITATIONS.md', 'PRESENTER_SCRIPT.md',
-    'PREFLIGHT.md', 'SCREENSHOT_PACK.md', 'MANIFEST.json', 'MANIFEST.sha256']) {
+    'PREFLIGHT.md', 'SCREENSHOT_PACK.md', 'mechanical_parameters.json',
+    'MANIFEST.json', 'MANIFEST.sha256']) {
     assert.ok(existsSync(new URL(`../release/${name}`, import.meta.url)), `${name} is missing`);
   }
   for (const slide of ['scope', 'architecture', 'extension', 'lattice', 'provenance', 'limitations']) {

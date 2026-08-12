@@ -67,6 +67,7 @@ _EXTERNAL = {
     "claim_support.json": "validate_claim_support.py",
     "scientific_decisions.json": "validate_scientific_decisions.py",
     "render_style.json": "validate_render_style.py",
+    "mechanical_parameters.json": "validate_mechanical_parameters.py",
 }
 _on_disk = sorted(f for f in os.listdir(DATA_DIR) if f.endswith(".json"))
 _covered = set(files) | set(_DEFERRED) | set(_EXTERNAL)
@@ -1112,11 +1113,11 @@ try:
     # therefore flag rounding in the spec's own 0.1 nm partition figures; the
     # defect this gate was written for was 553x, so 3.0x separates them by more
     # than two orders of magnitude.
-    _SPREAD_MAX = 3.0
+    _SPREAD_MAX = _ch["solver"]["audit_common_force_spread_max"]
     for _name, _v in sorted(_states.items(), key=lambda kv: kv[1]["sarcomere_length_nm"]):
         _sp = _v["titin_I_band_extension_nm"]
         _implied, _unreach = {}, []
-        for _r in _mech.ORDER:
+        for _r in _ch["order"]:
             _f = _mech.force_for_region(_ch, _r, _sp[_r])
             if _f is None: _unreach.append(_r)
             else: _implied[_r] = _f
@@ -1289,9 +1290,17 @@ for _name, _v in L["structural_states.json"]["states"].items():
         check(_c.split(" (")[0] in _ALLOWED_IN,
               f"'{_name}' input '{_k[:34]}' has class '{_c.split(' (')[0]}', "
               f"which is MEASURED or STRONGLY INFERRED as MODELED requires")
-    # a MODELED value that is not reproducible from the law is a false label
-    check(_pv.get("common_force_pN") is not None,
-          f"'{_name}' records the scalar the model solved for")
+    # Status and scalar disclosure must follow the canonical SD-04 regime.
+    _mechanical_parameters = load("mechanical_parameters.json")
+    _expected_status = _mmref.evaluation_status(
+        _mechanical_parameters, _v["sarcomere_length_nm"]
+    )
+    check(_pv.get("force_evaluation_status") == _expected_status
+          and ((_pv.get("common_force_pN") is None) ==
+               (_expected_status == "not_evaluated")),
+          f"'{_name}' obeys the canonical SD-04 output regime")
+    check(_pv.get("parameter_set_id") == _mechanical_parameters.get("parameter_set_id"),
+          f"'{_name}' records the canonical mechanical parameter-set ID")
 
 # ---------------------------------------------------------------------------
 # The chain parameters come from rat psoas; this spec is human canonical Q8WZ42
@@ -1299,42 +1308,39 @@ for _name, _v in L["structural_states.json"]["states"].items():
 # ABSOLUTE force is not — so any agreement in pN across isoforms is a
 # plausibility check, never validation. These checks stop that distinction from
 # being quietly dropped, and re-derive every recorded number from the law.
-print("\n== Cross-isoform scope of the mechanical model ==")
+print("\n== SC-21 mechanical authority boundary ==")
 _M = L["mechanical_model.json"]
+_P = load("mechanical_parameters.json")
+check(_M.get("schema") == "titin-mechanical-model/2",
+      "mechanical output uses the status-bearing SC-21 schema")
+check(_M.get("parameter_set_id") == _P.get("parameter_set_id"),
+      "generated output identifies the canonical parameter set")
+check(_M.get("model_fingerprint") == _mmref.model_fingerprint(),
+      "generated output identifies the exact quantitative model inputs")
+check(_M.get("evaluation_status") == _P.get("output_policy", {}).get("evaluation_status")
+      and _M.get("force_pN") is None,
+      "top-level mechanics output follows the canonical status policy without inventing one state")
+check(_M.get("sensitivity", {}).get("status")
+      == _P.get("sensitivity_policy", {}).get("status")
+      and _M.get("sensitivity", {}).get("force_pN") is None,
+      "top-level sensitivity authority matches the canonical policy without inventing one state")
 _iso = _M.get("isoform_scope") or {}
-for _f in ("spec_isoform", "chain_parameter_isoform",
-           "why_this_is_acceptable_for_A_and_K0",
-           "consequence_for_relative_extension", "consequence_for_absolute_force"):
-    check(bool(_iso.get(_f)), f"isoform_scope declares '{_f}'")
-check("Q8WZ42" in _iso.get("spec_isoform", ""), "isoform_scope names this spec's accession")
-check("psoas" in _iso.get("chain_parameter_isoform", "").lower(),
-      "isoform_scope names the chain parameters' source tissue")
-_x = _M.get("cross_isoform_plausibility_check") or {}
-check("NOT VALIDATION" in _x.get("status", "").upper(),
-      "the cross-isoform comparison is labelled a plausibility check, not validation")
-check(bool(_x.get("why_not_validation")), "it states why it is not validation")
-check(bool(_x.get("what_makes_it_non_circular")), "it states why it is not circular")
-# every quoted prediction must be reproducible from the recorded chain parameters
-_ch = _M["chain_parameters"]; _lcp = _ch["PEVK"]["Lc_nm"]
-_zw = [c for c in L["sarcomere.json"]["components"] if c["id"] == "zdisc"][0]["dimensions_nm"]["width_X"]
-_th = [c for c in L["sarcomere.json"]["components"] if c["id"] == "thick_filament"][0]["dimensions_nm"]["length_X"] / 2.0
-for _row in _x.get("model_prediction_over_that_window", []):
-    _tot = _row["SL_um"] * 1000 / 2.0 - _zw / 2.0 - _th
-    check(abs(_tot - _row["I_band_total_nm"]) < 1e-6,
-          f"SL {_row['SL_um']} um I-band total follows from sarcomere geometry alone")
-    _F = _mm_solve(_ch, _tot)
-    check(abs(_F - _row["force_pN"]) < 1e-3,
-          f"SL {_row['SL_um']} um recorded force {_row['force_pN']} pN reproduces ({_F:.3f})")
-    _pk = 100.0 * _mm_region(_ch, "PEVK", _F) / _lcp
-    check(abs(_pk - _row["PEVK_percent_of_contour"]) < 0.1,
-          f"SL {_row['SL_um']} um recorded PEVK {_row['PEVK_percent_of_contour']}% reproduces ({_pk:.1f}%)")
-# fractional extension must be independent of contour length, or the argument above fails
-_ys = []
-for _lc in (542.1, 300.0, 240.0):
-    _c2 = json.loads(json.dumps(_ch)); _c2["PEVK"]["Lc_nm"] = _lc
-    _ys.append(_mm_region(_c2, "PEVK", 10.0) / _lc)
-check(max(_ys) - min(_ys) < 1e-9,
-      f"fractional extension at fixed force is isoform-independent (spread {max(_ys)-min(_ys):.2e})")
+check(_iso.get("target", {}).get("accession") == "Q8WZ42-1",
+      "mechanical applicability names the target accession")
+check("psoas" in _iso.get("parameter_sources", "").lower(),
+      "mechanical applicability names the transferred source preparation")
+check(_iso.get("status") == _P.get("target_applicability", {}).get("status"),
+      "mixed-source target applicability matches the canonical authority record")
+for _name, _row in (_M.get("per_state") or {}).items():
+    _evaluation = _row.get("evaluation") or {}
+    _expected_status = _mmref.evaluation_status(_P, _row["sarcomere_length_nm"])
+    check(_evaluation.get("status") == _expected_status
+          and ((_evaluation.get("force_pN") is None) ==
+               (_expected_status == "not_evaluated")),
+          f"{_name} exports the canonical status and regime-authorized force presence")
+    check(_evaluation.get("parameter_set_id") == _M.get("parameter_set_id")
+          and _evaluation.get("model_fingerprint") == _M.get("model_fingerprint"),
+          f"{_name} binds parameter-set and model identities")
 
 print("\n" + "="*40)
 print("ALL CHECKS PASSED" if not fails else (str(len(fails)) + " FAILURE(S)"))

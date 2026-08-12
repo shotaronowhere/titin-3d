@@ -192,7 +192,7 @@ def support_row(source: dict[str, Any]) -> dict[str, Any]:
     source_id = source["id"]
     internal_locators = {
         "data/geometry_strategy.json": "#/geometric_relationships and #/context_depiction_policy",
-        "data/mechanical_model.json": "#/per_state and #/chain_parameters",
+        "data/mechanical_model.json": "#/per_state and #/resolved_chain_parameters",
         "data/references.json": "#/ (canonical registry)",
         "data/sarcomere.json": "#/components and #/reference_lengths_nm",
         "data/showcase_claims.json": "#/objects",
@@ -330,7 +330,7 @@ def extra_claims() -> list[dict[str, Any]]:
                 "source_subject": source_subject("10.1073/pnas.95.14.8052"),
                 "extraction_note": "Force-law parameter evidence is from rat psoas; SD-04 permits internal deterministic auditing but explicitly does not approve absolute-pN transfer to Q8WZ42-1."
             }],
-            "model_dependencies": ["data/mechanical_model.json", "data/structural_states.json", "SD-04"],
+            "model_dependencies": ["data/mechanical_parameters.json", "data/mechanical_model.json", "data/structural_states.json", "SD-04"],
             "limitations": ["Species/preparation transfer, supported range, uncertainty, slack/buckling/contact, and unfolding/refolding are unresolved."],
             "not_claimed": ["direct human Q8WZ42-1 force measurements", "public or release-approved absolute-pN predictions"],
             "public_bindings": ["src/index.template.html#id=stageForce", "src/index.template.html#id=forceCurve"],

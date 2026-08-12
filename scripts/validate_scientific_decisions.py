@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import re
 from pathlib import Path
 
@@ -23,6 +24,59 @@ PACKET_PLACEHOLDER = re.compile(
     r"Requires reviewer binding|Figure/table must be supplied|reviewer must confirm|bind .* to exact source",
     re.I,
 )
+
+
+def complete_reviewer(reviewer: object, required_role: str) -> bool:
+    return isinstance(reviewer, dict) \
+        and all(str(reviewer.get(field, "")).strip()
+                for field in ("name", "affiliation", "role")) \
+        and reviewer.get("role") == required_role
+
+
+def honest_adjudicator(adjudicator: object, *, human_allowed: bool) -> bool:
+    if adjudicator is None and human_allowed:
+        return True
+    if not isinstance(adjudicator, dict):
+        return False
+    if adjudicator.get("type") == "AI_SYSTEM":
+        return adjudicator.get("authority_basis") == "project_owner_authorization" \
+            and adjudicator.get("human_expert") is False
+    return human_allowed and adjudicator.get("human_expert") is True \
+        and bool(str(adjudicator.get("name", "")).strip())
+
+
+def finite_number(value: object) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) \
+        and math.isfinite(value)
+
+
+def validate_approved_sd04_ruling(ruling: object) -> list[str]:
+    if not isinstance(ruling, dict):
+        return ["SD-04 APPROVED ruling is not a structured specialist ruling"]
+    problems: list[str] = []
+    for field in ("parameter_set_id", "target_accession", "implementation_record"):
+        if not str(ruling.get(field, "")).strip():
+            problems.append(f"SD-04 APPROVED ruling lacks {field}")
+    supported = ruling.get("approved_supported_range_nm")
+    valid_supported = isinstance(supported, list) and len(supported) == 2 \
+        and all(finite_number(value) for value in supported) \
+        and supported[0] < supported[1]
+    if not valid_supported:
+        problems.append("SD-04 APPROVED ruling lacks an ordered supported range")
+    slack = ruling.get("slack_or_buckling_boundary_nm")
+    if not finite_number(slack) or valid_supported and slack > supported[0]:
+        problems.append("SD-04 APPROVED ruling has no valid slack or buckling boundary")
+    unfolding = ruling.get("unfolding_materiality_boundary_nm")
+    if not finite_number(unfolding) or valid_supported and unfolding <= supported[1]:
+        problems.append("SD-04 APPROVED ruling has no valid unfolding-materiality boundary")
+    scenarios = ruling.get("approved_sensitivity_scenario_ids")
+    if not isinstance(scenarios, list) or not scenarios \
+            or any(not str(value).strip() for value in scenarios) \
+            or len(set(scenarios)) != len(scenarios):
+        problems.append("SD-04 APPROVED ruling lacks unique sensitivity scenario IDs")
+    if ruling.get("public_force_output") != "AUTHORIZED_BY_REGIME":
+        problems.append("SD-04 APPROVED ruling does not authorize regime-bound output")
+    return problems
 
 
 def parse_args() -> argparse.Namespace:
@@ -86,13 +140,19 @@ def validate(record: dict, claim_support: dict) -> list[str]:
                 if row.get(field) is not None:
                     problems.append(f"{prefix} invents {field} while PENDING")
         else:
+            reviewer = row.get("reviewer")
             adjudicator = row.get("adjudicator") or {}
-            if row.get("reviewer") is not None \
-                    or adjudicator.get("type") != "AI_SYSTEM" \
-                    or adjudicator.get("authority_basis") != "project_owner_authorization" \
-                    or adjudicator.get("human_expert") is not False \
-                    or row.get("independent_human_review_status") != "NOT_PERFORMED":
-                problems.append(f"{prefix} adjudication provenance is absent or falsely claims human review")
+            if reviewer is None:
+                if not honest_adjudicator(adjudicator, human_allowed=False) \
+                        or row.get("independent_human_review_status") != "NOT_PERFORMED":
+                    problems.append(f"{prefix} AI adjudication provenance is absent or falsely claims human review")
+            else:
+                if status != "APPROVED" \
+                        or not complete_reviewer(reviewer, row.get("required_reviewer_role", "")) \
+                        or row.get("independent_human_review_status") \
+                        not in {"COMPLETE", "COMPLETED", "PERFORMED", "VERIFIED"} \
+                        or not honest_adjudicator(row.get("adjudicator"), human_allowed=True):
+                    problems.append(f"{prefix} specialist-review provenance is incomplete or inconsistent")
             if not row.get("reviewed_on") or not re.fullmatch(
                 r"[0-9a-f]{64}", str(row.get("reviewed_model_fingerprint", ""))
             ) or not row.get("ruling"):
@@ -101,17 +161,29 @@ def validate(record: dict, claim_support: dict) -> list[str]:
                 problems.append(f"{prefix} reviewed decision payload digest is stale/self-referential")
             if status == "DEFERRED" and not row.get("public_caveat"):
                 problems.append(f"{prefix} DEFERRED ruling lacks an exact public caveat")
+            if decision_id == "SD-04" and status == "APPROVED":
+                problems.extend(validate_approved_sd04_ruling(row.get("ruling")))
             if decision_id == "SD-01" and status == "DEFERRED":
                 problems.append("SD-01 has no DEFERRED implementation path")
         verification = row.get("implementation_verification") or {}
         if verification.get("status") not in {"PENDING", "VERIFIED"}:
             problems.append(f"{prefix} has an invalid implementation-verification status")
         if verification.get("status") == "VERIFIED":
-            adjudicator = verification.get("adjudicator") or {}
-            if verification.get("reviewer") is not None \
-                    or adjudicator.get("type") != "AI_SYSTEM" \
-                    or adjudicator.get("human_expert") is not False \
-                    or not verification.get("reviewed_on"):
+            verification_reviewer = verification.get("reviewer")
+            if verification_reviewer is None:
+                verification_authority_ok = row.get("reviewer") is None \
+                    and honest_adjudicator(
+                        verification.get("adjudicator"), human_allowed=False,
+                    )
+            else:
+                verification_authority_ok = complete_reviewer(
+                    verification_reviewer, row.get("required_reviewer_role", ""),
+                ) and (row.get("reviewer") is None
+                       or verification_reviewer.get("name") == row["reviewer"].get("name")) \
+                    and honest_adjudicator(
+                        verification.get("adjudicator"), human_allowed=True,
+                    )
+            if not verification_authority_ok or not verification.get("reviewed_on"):
                 problems.append(f"{prefix} implementation verification lacks honest adjudicator/date")
             if not re.fullmatch(
                 r"[0-9a-f]{64}", str(verification.get("implemented_model_fingerprint", ""))
@@ -148,7 +220,13 @@ def main() -> None:
         print("SC-20 scientific-decision validation failed:\n  - " + "\n  - ".join(problems))
         raise SystemExit(1)
     statuses = {key: row["status"] for key, row in load_json(args.decisions)["decisions"].items()}
-    print(f"SC-20 scientific decisions: PASS ({statuses}; no independent human review claimed)")
+    independent = any(
+        row.get("reviewer") is not None
+        for row in load_json(args.decisions)["decisions"].values()
+    )
+    suffix = "qualified independent review recorded" if independent \
+        else "no independent human review claimed"
+    print(f"SC-20 scientific decisions: PASS ({statuses}; {suffix})")
 
 
 if __name__ == "__main__":

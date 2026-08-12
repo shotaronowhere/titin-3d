@@ -87,9 +87,9 @@
       },
       "titin_I_band_extension_evidence_class": "MODELED (series force balance over MEASURED chain parameters)",
       "titin_I_band_extension_provenance": {
-        "route": "scripts/mechanical_model.py \u2014 four modeled elastic regions in series; post_N2A_unknown is explicit zero-projection bookkeeping excluded from mechanics.",
-        "common_force_pN": 0.104,
-        "per_region_implied_force_spread": "1.000x (generated from one common-force solve)",
+        "route": "scripts/mechanical_model.py using data/mechanical_parameters.json; four development-model elastic regions in series; post_N2A_unknown is excluded from mechanics.",
+        "common_force_pN": null,
+        "per_region_implied_force_spread": "1.000x in the internal development solve",
         "superseded_partition_nm": {
           "prox_Ig": 81.1,
           "N2A": 7.5,
@@ -100,7 +100,7 @@
         "superseded_because": "the previous partition (prox_Ig 81.1 / N2A 7.5 / PEVK 15.7 / dist_Ig 20.7) was inferred independently of the other states; inverting each region against its sourced force-extension law gave forces spanning 41.2x (0.09-3.85 pN), and a series chain must bear ONE common force.",
         "total_unchanged": "the I-band TOTAL is bit-identical to the superseded partition (125.0 nm), so no filament, overlap, M-line or lattice geometry moved.",
         "precision_note": "stored to 0.001 nm \u2014 far below any measurement's resolution, but required so the per-region implied-force inversion stays faithful: near N2A's rigid folded-domain floor the coil is barely extended, and 0.05 nm of rounding shifts N2A's implied force by ~22%, which would show up as a spurious force-spread failure rather than a real inconsistency.",
-        "model_basis": "Development Marko-Siggia WLC/eWLC solver sourced from 10.1073/pnas.95.14.8052. N2A has a 16 nm four-fold rigid floor plus 39 nm UN2A contour proxy; SD-04 defers biological transfer and public absolute-pN output.",
+        "model_basis": "Development Marko-Siggia WLC/eWLC geometry driven by data/mechanical_parameters.json, with source-law evidence from 10.1073/pnas.95.14.8052 and the separately recorded N2A sources. SD-04 DEFERRED forbids target-force evaluation and public absolute-pN output.",
         "modeled_from": {
           "chain persistence lengths, stretch modulus": "MEASURED (10.1073/pnas.95.14.8052)",
           "region contour lengths": "STRONGLY INFERRED (domain counts MEASURED x sourced per-unit length)",
@@ -108,7 +108,10 @@
           "I-band total at this state": "STRONGLY INFERRED (sarcomere geometry: SL, Z-disc width, thick half-length)"
         },
         "evidence_class_note": "Was 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes. MODELED is now a defined class ranking below STRONGLY INFERRED, so this label is a small DOWNGRADE in declared confidence, which is the honest direction: the partition is a derived consequence of a cited law, not an observation.",
-        "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; zero axial projection is not zero physical length"
+        "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; zero axial projection is not zero physical length",
+        "force_evaluation_status": "not_evaluated",
+        "parameter_set_id": "development-force-law-deferred-SD-04-v1",
+        "development_solver_scalar_disclosed": false
       }
     },
     "resting": {
@@ -162,9 +165,9 @@
       },
       "titin_I_band_extension_evidence_class": "MODELED (series force balance over MEASURED chain parameters)",
       "titin_I_band_extension_provenance": {
-        "route": "scripts/mechanical_model.py \u2014 four modeled elastic regions in series; post_N2A_unknown is explicit zero-projection bookkeeping excluded from mechanics.",
-        "common_force_pN": 0.481,
-        "per_region_implied_force_spread": "1.000x (generated from one common-force solve)",
+        "route": "scripts/mechanical_model.py using data/mechanical_parameters.json; four development-model elastic regions in series; post_N2A_unknown is excluded from mechanics.",
+        "common_force_pN": null,
+        "per_region_implied_force_spread": "1.000x in the internal development solve",
         "superseded_partition_nm": {
           "prox_Ig": 195.1,
           "N2A": 12.0,
@@ -175,7 +178,7 @@
         "superseded_because": "the previous partition (prox_Ig 195.1 / N2A 12.0 / PEVK 25.0 / dist_Ig 42.9) implied per-region forces spanning 15.5x (0.44-6.86 pN); N2A alone implied 6.86 pN, which is inside the 6-8 pN Ig equilibrium fold/unfold band and cannot be the resting force.",
         "total_unchanged": "the I-band TOTAL is bit-identical to the superseded partition (275.0 nm), so no filament, overlap, M-line or lattice geometry moved.",
         "precision_note": "stored to 0.001 nm \u2014 far below any measurement's resolution, but required so the per-region implied-force inversion stays faithful: near N2A's rigid folded-domain floor the coil is barely extended, and 0.05 nm of rounding shifts N2A's implied force by ~22%, which would show up as a spurious force-spread failure rather than a real inconsistency.",
-        "model_basis": "Development Marko-Siggia WLC/eWLC solver sourced from 10.1073/pnas.95.14.8052. N2A has a 16 nm four-fold rigid floor plus 39 nm UN2A contour proxy; SD-04 defers biological transfer and public absolute-pN output.",
+        "model_basis": "Development Marko-Siggia WLC/eWLC geometry driven by data/mechanical_parameters.json, with source-law evidence from 10.1073/pnas.95.14.8052 and the separately recorded N2A sources. SD-04 DEFERRED forbids target-force evaluation and public absolute-pN output.",
         "modeled_from": {
           "chain persistence lengths, stretch modulus": "MEASURED (10.1073/pnas.95.14.8052)",
           "region contour lengths": "STRONGLY INFERRED (domain counts MEASURED x sourced per-unit length)",
@@ -183,7 +186,10 @@
           "I-band total at this state": "STRONGLY INFERRED (sarcomere geometry: SL, Z-disc width, thick half-length)"
         },
         "evidence_class_note": "Was 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes. MODELED is now a defined class ranking below STRONGLY INFERRED, so this label is a small DOWNGRADE in declared confidence, which is the honest direction: the partition is a derived consequence of a cited law, not an observation.",
-        "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; zero axial projection is not zero physical length"
+        "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; zero axial projection is not zero physical length",
+        "force_evaluation_status": "not_evaluated",
+        "parameter_set_id": "development-force-law-deferred-SD-04-v1",
+        "development_solver_scalar_disclosed": false
       }
     },
     "stretched": {
@@ -237,9 +243,9 @@
       },
       "titin_I_band_extension_evidence_class": "MODELED (series force balance over MEASURED chain parameters)",
       "titin_I_band_extension_provenance": {
-        "route": "scripts/mechanical_model.py \u2014 four modeled elastic regions in series; post_N2A_unknown is explicit zero-projection bookkeeping excluded from mechanics.",
-        "common_force_pN": 1.392,
-        "per_region_implied_force_spread": "1.000x (generated from one common-force solve)",
+        "route": "scripts/mechanical_model.py using data/mechanical_parameters.json; four development-model elastic regions in series; post_N2A_unknown is excluded from mechanics.",
+        "common_force_pN": null,
+        "per_region_implied_force_spread": "1.000x in the internal development solve",
         "superseded_partition_nm": {
           "prox_Ig": 278.8,
           "N2A": 12.0,
@@ -285,11 +291,11 @@
             },
             "defect": null,
             "status": "current",
-            "derivation": "MODELED development solver; SD-04 DEFERRED",
+            "derivation": "MODELED development geometry; quantitative force not evaluated",
             "derivation_note": "recorded as 'STRONGLY INFERRED (MODELED: ...)' when the vocabulary was closed at five classes; the same partition is now labelled 'MODELED (series force balance over MEASURED chain parameters)' with MODELED a defined class."
           }
         ],
-        "model_basis": "Development Marko-Siggia WLC/eWLC solver sourced from 10.1073/pnas.95.14.8052. N2A has a 16 nm four-fold rigid floor plus 39 nm UN2A contour proxy; SD-04 defers biological transfer and public absolute-pN output.",
+        "model_basis": "Development Marko-Siggia WLC/eWLC geometry driven by data/mechanical_parameters.json, with source-law evidence from 10.1073/pnas.95.14.8052 and the separately recorded N2A sources. SD-04 DEFERRED forbids target-force evaluation and public absolute-pN output.",
         "modeled_from": {
           "chain persistence lengths, stretch modulus": "MEASURED (10.1073/pnas.95.14.8052)",
           "region contour lengths": "STRONGLY INFERRED (domain counts MEASURED x sourced per-unit length)",
@@ -297,7 +303,10 @@
           "I-band total at this state": "STRONGLY INFERRED (sarcomere geometry: SL, Z-disc width, thick half-length)"
         },
         "evidence_class_note": "Was 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes. MODELED is now a defined class ranking below STRONGLY INFERRED, so this label is a small DOWNGRADE in declared confidence, which is the honest direction: the partition is a derived consequence of a cited law, not an observation.",
-        "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; zero axial projection is not zero physical length"
+        "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; zero axial projection is not zero physical length",
+        "force_evaluation_status": "not_evaluated",
+        "parameter_set_id": "development-force-law-deferred-SD-04-v1",
+        "development_solver_scalar_disclosed": false
       }
     },
     "extended_reference": {
@@ -351,9 +360,9 @@
       },
       "titin_I_band_extension_evidence_class": "MODELED (series force balance over MEASURED chain parameters)",
       "titin_I_band_extension_provenance": {
-        "route": "scripts/mechanical_model.py \u2014 four modeled elastic regions in series; post_N2A_unknown is explicit zero-projection bookkeeping excluded from mechanics.",
-        "common_force_pN": 10.019,
-        "per_region_implied_force_spread": "1.000x (generated from one common-force solve)",
+        "route": "scripts/mechanical_model.py using data/mechanical_parameters.json; four development-model elastic regions in series; post_N2A_unknown is excluded from mechanics.",
+        "common_force_pN": null,
+        "per_region_implied_force_spread": "1.000x in the internal development solve",
         "superseded_partition_nm": {
           "prox_Ig": 283.0,
           "N2A": 39.0,
@@ -364,7 +373,7 @@
         "superseded_because": "the previous partition placed N2A and dist_Ig AT their contour lengths (39.0 and 60.0 nm), which a worm-like chain only approaches asymptotically and never reaches at finite force, so no force could reproduce the state as written.",
         "total_unchanged": "the I-band TOTAL is bit-identical to the superseded partition (675.0 nm), so no filament, overlap, M-line or lattice geometry moved.",
         "precision_note": "stored to 0.001 nm \u2014 far below any measurement's resolution, but required so the per-region implied-force inversion stays faithful: near N2A's rigid folded-domain floor the coil is barely extended, and 0.05 nm of rounding shifts N2A's implied force by ~22%, which would show up as a spurious force-spread failure rather than a real inconsistency.",
-        "model_basis": "Development Marko-Siggia WLC/eWLC solver sourced from 10.1073/pnas.95.14.8052. N2A has a 16 nm four-fold rigid floor plus 39 nm UN2A contour proxy; SD-04 defers biological transfer and public absolute-pN output.",
+        "model_basis": "Development Marko-Siggia WLC/eWLC geometry driven by data/mechanical_parameters.json, with source-law evidence from 10.1073/pnas.95.14.8052 and the separately recorded N2A sources. SD-04 DEFERRED forbids target-force evaluation and public absolute-pN output.",
         "modeled_from": {
           "chain persistence lengths, stretch modulus": "MEASURED (10.1073/pnas.95.14.8052)",
           "region contour lengths": "STRONGLY INFERRED (domain counts MEASURED x sourced per-unit length)",
@@ -372,7 +381,10 @@
           "I-band total at this state": "STRONGLY INFERRED (sarcomere geometry: SL, Z-disc width, thick half-length)"
         },
         "evidence_class_note": "Was 'STRONGLY INFERRED (MODELED: ...)' while the vocabulary was closed at five classes. MODELED is now a defined class ranking below STRONGLY INFERRED, so this label is a small DOWNGRADE in declared confidence, which is the honest direction: the partition is a derived consequence of a cited law, not an observation.",
-        "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; zero axial projection is not zero physical length"
+        "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; zero axial projection is not zero physical length",
+        "force_evaluation_status": "not_evaluated",
+        "parameter_set_id": "development-force-law-deferred-SD-04-v1",
+        "development_solver_scalar_disclosed": false
       }
     }
   },

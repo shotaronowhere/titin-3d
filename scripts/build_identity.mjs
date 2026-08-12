@@ -29,6 +29,7 @@ export const MODEL_INPUTS = Object.freeze([
   'data/geometry_strategy.json',
   'data/context_measurements.json',
   'data/domain_backbones.json',
+  'data/mechanical_parameters.json',
 ]);
 
 /** Files and trees that attest to a candidate and must never create that candidate. */

@@ -276,6 +276,16 @@ export function createReleasePack(model, opts = {}) {
     referenceLengthNm = model.spec.presentation.initial_state.sarcomere_length_nm,
     comparisonLengthNm = model.spec.presentation.scope.working_range_nm[1],
   } = opts;
+  const sd04 = model.spec.scientificDecisions.decisions['SD-04'];
+  const implementationReviewer = sd04.implementation_verification?.reviewer;
+  const mechanicsSprintStatus = sd04.status !== 'APPROVED'
+    ? 'CODE_COMPLETE_BLOCKED_SCIENCE'
+    : sd04.implementation_verification?.status === 'VERIFIED'
+      && sd04.implementation_verification?.implemented_model_fingerprint
+        === model.spec.identity.model_fingerprint
+      && implementationReviewer?.name === sd04.reviewer?.name
+      ? 'COMPLETE'
+      : 'APPROVED_PENDING_IMPLEMENTATION_VERIFICATION';
 
   const pack = {
     schema: 'titin-release-pack/1',
@@ -285,7 +295,7 @@ export function createReleasePack(model, opts = {}) {
       'data/annotations.json', 'data/sarcomere.json', 'data/titin.json',
       'data/structural_states.json', 'data/scientific_scope.json',
       'data/titin_sequence_features.json', 'data/claim_support.json',
-      'data/scientific_decisions.json',
+      'data/scientific_decisions.json', 'data/mechanical_parameters.json',
     ],
     reference_length_nm: referenceLengthNm,
     comparison_length_nm: comparisonLengthNm,
@@ -298,6 +308,7 @@ export function createReleasePack(model, opts = {}) {
     fallback_slides: fallbackSlides(model, referenceLengthNm, comparisonLengthNm),
     scientific_authority: {
       status: model.spec.scientificDecisions.sprint_status,
+      mechanics_sprint_status: mechanicsSprintStatus,
       public_badge: model.scientificScope.publicBadge,
       sequence: {
         accession: model.scientificScope.sequence.accession,
@@ -309,6 +320,30 @@ export function createReleasePack(model, opts = {}) {
         feature_count: model.spec.sequenceFeatures.features.length,
       },
       claim_count: model.spec.claimSupport.claims.length,
+      mechanics: {
+        parameter_set_id: model.spec.mechanicalParameters.parameter_set_id,
+        model_fingerprint: model.spec.identity.model_fingerprint,
+        decision_id: model.spec.mechanicalParameters.decision.id,
+        decision_status: model.spec.mechanicalParameters.decision.status,
+        decision_reviewer: sd04.reviewer ? {
+          name: sd04.reviewer.name,
+          affiliation: sd04.reviewer.affiliation,
+          role: sd04.reviewer.role,
+        } : null,
+        implementation_verification: {
+          status: sd04.implementation_verification?.status || 'PENDING',
+          reviewer_name: implementationReviewer?.name || null,
+          implemented_model_fingerprint:
+            sd04.implementation_verification?.implemented_model_fingerprint || null,
+        },
+        evaluation_status: model.spec.mechanicalParameters.output_policy.evaluation_status,
+        public_force: model.spec.mechanicalParameters.output_policy.public_force,
+        force_pN: model.spec.mechanicalParameters.output_policy.force_value,
+        approved_supported_range_nm:
+          model.spec.mechanicalParameters.regime_policy.approved_supported_range_nm,
+        sensitivity_status: model.spec.mechanicalParameters.sensitivity_policy.status,
+        caveat: model.spec.mechanicalParameters.output_policy.public_caveat,
+      },
       decision_statuses: Object.fromEntries(Object.entries(model.spec.scientificDecisions.decisions)
         .map(([id, decision]) => [id, decision.status])),
       registry_closure_is_entailment: false,
@@ -325,6 +360,53 @@ export function validateReleasePack(pack) {
   if (!pack.claim_matrix.length) throw new Error('validateReleasePack: the claim matrix is empty.');
   if (!pack.scientific_authority || pack.scientific_authority.registry_closure_is_entailment !== false) {
     throw new Error('validateReleasePack: scientific authority summary is missing or conflates closure with entailment.');
+  }
+  const mechanics = pack.scientific_authority.mechanics;
+  if (!mechanics?.parameter_set_id || mechanics.model_fingerprint !== pack.identity.model_fingerprint
+      || mechanics.force_pN !== null) {
+    throw new Error('validateReleasePack: mechanics authority or identity is missing.');
+  }
+  if (mechanics.decision_status !== 'APPROVED') {
+    if (mechanics.public_force !== 'SUPPRESSED'
+        || mechanics.evaluation_status !== 'not_evaluated'
+        || mechanics.approved_supported_range_nm !== null
+        || mechanics.sensitivity_status !== 'not_evaluated') {
+      throw new Error('validateReleasePack: deferred mechanics authority leaks quantitative output.');
+    }
+    if (pack.scientific_authority.mechanics_sprint_status
+        !== 'CODE_COMPLETE_BLOCKED_SCIENCE') {
+      throw new Error('validateReleasePack: deferred mechanics has an invalid sprint status.');
+    }
+  } else if (mechanics.public_force !== 'AUTHORIZED_BY_REGIME'
+      || mechanics.evaluation_status !== 'status_by_length'
+      || !Array.isArray(mechanics.approved_supported_range_nm)
+      || mechanics.approved_supported_range_nm.length !== 2
+      || mechanics.sensitivity_status !== 'approved') {
+    throw new Error('validateReleasePack: approved mechanics authority is incomplete.');
+  }
+  if (pack.scientific_authority.decision_statuses?.['SD-04'] !== mechanics.decision_status) {
+    throw new Error('validateReleasePack: SD-04 ledger and parameter authority disagree.');
+  }
+  if (mechanics.decision_status === 'APPROVED') {
+    const reviewer = mechanics.decision_reviewer;
+    if (!reviewer || !reviewer.name?.trim() || !reviewer.affiliation?.trim()
+        || !reviewer.role?.trim()) {
+      throw new Error('validateReleasePack: approved mechanics lacks specialist provenance.');
+    }
+    const sprintStatus = pack.scientific_authority.mechanics_sprint_status;
+    if (!['APPROVED_PENDING_IMPLEMENTATION_VERIFICATION', 'COMPLETE'].includes(sprintStatus)) {
+      throw new Error('validateReleasePack: approved mechanics has an invalid sprint status.');
+    }
+    if (sprintStatus === 'COMPLETE') {
+      const verification = mechanics.implementation_verification;
+      if (verification?.status !== 'VERIFIED'
+          || verification.implemented_model_fingerprint !== pack.identity.model_fingerprint
+          || verification.reviewer_name !== reviewer.name) {
+        throw new Error(
+          'validateReleasePack: mechanics completion lacks matching implementation verification.',
+        );
+      }
+    }
   }
   for (const field of ['model_fingerprint', 'app_revision', 'build_inputs_fingerprint']) {
     if (!pack.identity || typeof pack.identity[field] !== 'string' || !pack.identity[field]) {

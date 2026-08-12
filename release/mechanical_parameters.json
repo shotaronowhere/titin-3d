@@ -1,0 +1,511 @@
+{
+  "schema": "titin-mechanical-parameters/1",
+  "parameter_set_id": "development-force-law-deferred-SD-04-v1",
+  "purpose": "One auditable input record for the deterministic I-band development solver. This record does not authorize an absolute-force prediction for human Q8WZ42-1.",
+  "decision": {
+    "id": "SD-04",
+    "status": "DEFERRED",
+    "approved_reviewer": null,
+    "reviewed_on": "2026-08-12",
+    "ruling_locator": "data/scientific_decisions.json#/decisions/SD-04",
+    "consequence": "All public force evaluations and exports are not_evaluated and carry force_pN: null. The numerical laws may be used only for deterministic development geometry and implementation parity audits."
+  },
+  "target_applicability": {
+    "species": "Homo sapiens",
+    "accession": "Q8WZ42-1",
+    "muscle_or_tissue": null,
+    "preparation": "reference-sequence model; no tissue-specific construct assigned",
+    "status": "NOT_VALIDATED",
+    "reason": "The model combines rat-psoas material parameters, recombinant-human N2A evidence, and sequence-derived human contours. SD-04 did not approve that combination as an absolute-force predictor."
+  },
+  "topology": {
+    "kind": "series",
+    "region_order": [
+      "prox_Ig",
+      "N2A",
+      "PEVK",
+      "dist_Ig"
+    ],
+    "layout_only_regions": [
+      "post_N2A_unknown"
+    ],
+    "statement": "The four modeled I-band regions share one development-solver force. The unresolved post-N2A interval has no approved contour or force law and is excluded from mechanics."
+  },
+  "physical_constants": {
+    "boltzmann_constant": {
+      "value": 1.380649e-23,
+      "unit": "J K^-1",
+      "uncertainty": {
+        "kind": "exact_definition",
+        "lower": 1.380649e-23,
+        "upper": 1.380649e-23
+      },
+      "source_id": "SI-2019",
+      "source_locator": "2019 SI definition of the kelvin; Boltzmann constant exact numerical value",
+      "species": "not_applicable",
+      "muscle_or_tissue": "not_applicable",
+      "preparation": "not_applicable",
+      "temperature_K": null,
+      "applicability": "universal physical constant",
+      "transfer_rationale": "No biological transfer is involved.",
+      "validity": {
+        "target_status": "UNIVERSAL_EXACT",
+        "approved_range": [
+          1.380649e-23,
+          1.380649e-23
+        ],
+        "reason": "The Boltzmann constant is exact under the SI definition and is not a biological transfer."
+      },
+      "approved_reviewer": null,
+      "decision_status": "DEFERRED"
+    },
+    "temperature": {
+      "value": 300.0,
+      "unit": "K",
+      "uncertainty": {
+        "kind": "NOT_ESTABLISHED",
+        "lower": null,
+        "upper": null
+      },
+      "source_id": "10.1073/pnas.95.14.8052",
+      "source_locator": "Methods; experimental temperature associated with the transferred persistence-length parameterization",
+      "species": "Rattus norvegicus",
+      "muscle_or_tissue": "psoas skeletal muscle",
+      "preparation": "isolated myofibrils and titin-segment mechanics",
+      "temperature_K": 300.0,
+      "applicability": "development reproduction of the source parameterization only",
+      "transfer_rationale": "Using the source temperature avoids silently rescaling kT/A; applicability to the target human construct is unapproved.",
+      "validity": {
+        "target_status": "NOT_ESTABLISHED",
+        "approved_range": null,
+        "reason": "SD-04 did not approve a temperature or temperature range for target-force evaluation."
+      },
+      "approved_reviewer": null,
+      "decision_status": "DEFERRED"
+    }
+  },
+  "regions": [
+    {
+      "id": "prox_Ig",
+      "law": "wlc",
+      "parameters": {
+        "persistence_length": {
+          "value": 21.0,
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "10.1073/pnas.95.14.8052",
+          "source_locator": "Discussion, poly-Ig comparison and cited Linke et al. 1998 J Cell Sci 111:1567–1574; entropic WLC fit discussed to about 35 pN",
+          "species": "Rattus norvegicus",
+          "muscle_or_tissue": "psoas skeletal muscle",
+          "preparation": "N-terminal poly-Ig segment in isolated titin/myofibril mechanics",
+          "temperature_K": 300.0,
+          "applicability": "transferred development-model material parameter",
+          "transfer_rationale": "Used to generate deterministic folded-tandem straightening geometry; SD-04 did not validate transfer to human Q8WZ42-1.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "SD-04 did not approve a target-force validity interval for this transferred parameter."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        },
+        "contour_length": {
+          "value_from_spec": "data/titin.json#/regions[id=prox_Ig]/extension_model/max_end2end_nm",
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "data/titin.json",
+          "source_locator": "prox_Ig.extension_model.max_end2end_nm; curated folded-domain count × sourced unit axial length",
+          "species": "Homo sapiens",
+          "muscle_or_tissue": null,
+          "preparation": "Q8WZ42-1 reference-sequence geometry",
+          "temperature_K": null,
+          "applicability": "sequence-derived contour proxy for straightened-but-folded tandem Ig",
+          "transfer_rationale": "Contour is read from the target sequence specification and is not transferred from rat psoas.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "The target contour binding is explicit, but SD-04 did not approve its force-law validity range."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        }
+      }
+    },
+    {
+      "id": "N2A",
+      "law": "folded_plus_wlc",
+      "parameters": {
+        "persistence_length": {
+          "value": 0.35,
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "10.3389/fphys.2020.00173",
+          "source_locator": "Figs. 1–6 and force-spectroscopy methods for recombinant human N2A constructs",
+          "species": "Homo sapiens",
+          "muscle_or_tissue": null,
+          "preparation": "recombinant N2A single-molecule force spectroscopy",
+          "temperature_K": null,
+          "applicability": "development proxy for the unique-sequence coil in the curated N2A interval",
+          "transfer_rationale": "The source does not establish a tissue-specific full-Q8WZ42-1 N2A construct; SD-04 did not approve quantitative transfer.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "SD-04 did not approve a target-force validity interval for this recombinant-fragment transfer."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        },
+        "contour_length": {
+          "value_from_spec": "data/titin.json#/regions[id=N2A]/extension_model/max_end2end_nm",
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "data/titin.json",
+          "source_locator": "N2A.extension_model.max_end2end_nm; curated folded-domain floor plus unique-sequence contour proxy",
+          "species": "Homo sapiens",
+          "muscle_or_tissue": null,
+          "preparation": "Q8WZ42-1 reference-sequence geometry",
+          "temperature_K": null,
+          "applicability": "sequence-derived contour proxy",
+          "transfer_rationale": "Read directly from the target sequence specification.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "The target contour binding is explicit, but SD-04 did not approve its force-law validity range."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        },
+        "rigid_folded_length": {
+          "value_from_spec": "data/titin.json#/regions[id=N2A]/extension_model/rigid_folded_length_nm",
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "10.1016/j.jmb.2020.06.025",
+          "source_locator": "Structural domain-rise evidence represented in data/geometry_sources.json parameter 10 and the curated four-fold N2A composition",
+          "species": "Homo sapiens",
+          "muscle_or_tissue": null,
+          "preparation": "structural/sequence-derived folded-domain floor",
+          "temperature_K": null,
+          "applicability": "minimum axial floor of four retained folded Ig-like domains",
+          "transfer_rationale": "Read from the target titin record so the floor cannot drift from sequence curation.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "The folded-domain floor is explicit, but SD-04 did not approve a force-law validity range around it."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        }
+      }
+    },
+    {
+      "id": "PEVK",
+      "law": "ewlc",
+      "parameters": {
+        "persistence_length": {
+          "value": 0.55,
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "10.1073/pnas.95.14.8052",
+          "source_locator": "Methods equations 1–2 and Figs. 2–5; extensible-WLC parameterization for rat-psoas PEVK",
+          "species": "Rattus norvegicus",
+          "muscle_or_tissue": "psoas skeletal muscle",
+          "preparation": "isolated myofibrils and PEVK segment mechanics",
+          "temperature_K": 300.0,
+          "applicability": "transferred development-model material parameter",
+          "transfer_rationale": "Treated as per-unit-length for engineering geometry, but SD-04 did not validate species/isoform/preparation transfer.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "SD-04 did not approve a target-force validity interval for this transferred parameter."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        },
+        "stretch_modulus": {
+          "value": 185.0,
+          "unit": "pN",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "10.1073/pnas.95.14.8052",
+          "source_locator": "Methods equations 1–2 and Figs. 2–5; extensible-WLC parameterization for rat-psoas PEVK",
+          "species": "Rattus norvegicus",
+          "muscle_or_tissue": "psoas skeletal muscle",
+          "preparation": "isolated myofibrils and PEVK segment mechanics",
+          "temperature_K": 300.0,
+          "applicability": "transferred development-model material parameter",
+          "transfer_rationale": "Retained only for deterministic engineering audit; target applicability remains unapproved.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "SD-04 did not approve a target-force validity interval for this transferred parameter."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        },
+        "contour_length": {
+          "value_from_spec": "data/titin.json#/regions[id=PEVK]/extension_model/max_end2end_nm",
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "data/titin.json",
+          "source_locator": "PEVK.extension_model.max_end2end_nm; Q8WZ42-1 PEVK residue span × declared residue-rise proxy",
+          "species": "Homo sapiens",
+          "muscle_or_tissue": null,
+          "preparation": "Q8WZ42-1 reference-sequence geometry",
+          "temperature_K": null,
+          "applicability": "sequence-derived contour proxy",
+          "transfer_rationale": "Target-sequence contour replaces the shorter source-preparation contour; the resulting absolute force remains unvalidated.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "The target contour binding is explicit, but SD-04 did not approve its force-law validity range."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        },
+        "residue_rise": {
+          "value": 0.30,
+          "unit": "nm residue^-1",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "10.1073/pnas.95.14.8052",
+          "source_locator": "PEVK contour construction described with the source preparation's sequence length and contour",
+          "species": "Rattus norvegicus",
+          "muscle_or_tissue": "psoas skeletal muscle",
+          "preparation": "PEVK sequence-to-contour conversion",
+          "temperature_K": 300.0,
+          "applicability": "transferred contour-rise proxy used by data/titin.json",
+          "transfer_rationale": "Its effect on high-length output is material; no approved range exists, so SC-21 exposes the missing sensitivity authority and emits no envelope.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "SD-04 did not approve a residue-rise range or its target-force validity interval."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        }
+      }
+    },
+    {
+      "id": "dist_Ig",
+      "law": "wlc",
+      "parameters": {
+        "persistence_length": {
+          "value": 21.0,
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "10.1073/pnas.95.14.8052",
+          "source_locator": "Discussion, poly-Ig comparison and cited Linke et al. 1998 J Cell Sci 111:1567–1574; entropic WLC fit discussed to about 35 pN",
+          "species": "Rattus norvegicus",
+          "muscle_or_tissue": "psoas skeletal muscle",
+          "preparation": "N-terminal poly-Ig segment transferred to distal tandem-Ig geometry",
+          "temperature_K": 300.0,
+          "applicability": "transferred development-model material parameter",
+          "transfer_rationale": "The source segment and target distal tandem are not equivalent preparations; SD-04 did not validate this transfer.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "SD-04 did not approve a target-force validity interval for this transferred parameter."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        },
+        "contour_length": {
+          "value_from_spec": "data/titin.json#/regions[id=dist_Ig]/extension_model/max_end2end_nm",
+          "unit": "nm",
+          "uncertainty": {
+            "kind": "NOT_ESTABLISHED",
+            "lower": null,
+            "upper": null
+          },
+          "source_id": "data/titin.json",
+          "source_locator": "dist_Ig.extension_model.max_end2end_nm; curated folded-domain count × sourced unit axial length",
+          "species": "Homo sapiens",
+          "muscle_or_tissue": null,
+          "preparation": "Q8WZ42-1 reference-sequence geometry",
+          "temperature_K": null,
+          "applicability": "sequence-derived contour proxy for straightened-but-folded tandem Ig",
+          "transfer_rationale": "Contour is read from the target sequence specification.",
+          "validity": {
+            "target_status": "NOT_ESTABLISHED",
+            "approved_range": null,
+            "reason": "The target contour binding is explicit, but SD-04 did not approve its force-law validity range."
+          },
+          "approved_reviewer": null,
+          "decision_status": "DEFERRED"
+        }
+      }
+    }
+  ],
+  "solver": {
+    "algorithm": "monotone_bisection",
+    "iterations": 400,
+    "inverse_iterations": 200,
+    "force_bracket": {
+      "min": 0.0,
+      "max": 10000.0,
+      "unit": "pN"
+    },
+    "finite_difference_relative_step": 0.0001,
+    "finite_difference_min_step_pN": 1e-7,
+    "pure_wlc_contour_guard_fraction": 1e-12,
+    "audit_common_force_spread_max": 3.0,
+    "generated_extension_decimal_places": 3,
+    "continuity_probe": {
+      "force_min_pN": 0.0001,
+      "force_max_pN": 400.0,
+      "sample_counts": [
+        2000,
+        20000
+      ],
+      "minimum_refinement_ratio": 5.0
+    },
+    "parity_grid": {
+      "sarcomere_length_min_nm": 1900,
+      "sarcomere_length_max_nm": 3000,
+      "sample_count": 111
+    },
+    "parity_tolerance": {
+      "force_pN": 1e-9,
+      "extension_nm": 1e-9
+    }
+  },
+  "equations": {
+    "wlc": "f = (kT/A) [1/(4(1-y)^2) - 1/4 + y], y = z/Lc",
+    "ewlc": "z/Lc = inverse_g(fA/kT) + f/K0",
+    "folded_plus_wlc": "z = rigid_folded_length + WLC_extension(f, A, Lc - rigid_folded_length)"
+  },
+  "source_reproduction_checks": [
+    {
+      "id": "PEVK_force_at_20_percent",
+      "law": "wlc",
+      "fractional_extension": 0.2,
+      "persistence_length_nm": 0.65,
+      "reported_pN": 1.5,
+      "tolerance_pN": 1.0,
+      "source_id": "10.1073/pnas.95.14.8052",
+      "source_locator": "Results/Discussion description of PEVK relative extension and force"
+    },
+    {
+      "id": "PEVK_force_at_50_percent",
+      "law": "wlc",
+      "fractional_extension": 0.5,
+      "persistence_length_nm": 0.65,
+      "reported_pN": 8.0,
+      "tolerance_pN": 0.5,
+      "source_id": "10.1073/pnas.95.14.8052",
+      "source_locator": "Results/Discussion description of PEVK relative extension and force"
+    },
+    {
+      "id": "PEVK_pure_entropic_boundary",
+      "law": "wlc",
+      "fractional_extension": 0.6,
+      "persistence_length_nm": 0.65,
+      "reported_pN": 12.0,
+      "tolerance_pN": 1.0,
+      "source_id": "10.1073/pnas.95.14.8052",
+      "source_locator": "Discussion: below about 12 pN or relative extension below 60 percent"
+    },
+    {
+      "id": "poly_Ig_fit_limit_below_contour",
+      "law": "wlc_inverse",
+      "force_pN": 35.0,
+      "persistence_length_nm": 21.0,
+      "expected_fraction_min": 0.9,
+      "expected_fraction_max": 1.0,
+      "source_id": "10.1073/pnas.95.14.8052",
+      "source_locator": "Discussion, poly-Ig entropic-WLC comparison to about 35 pN"
+    }
+  ],
+  "regime_policy": {
+    "ordered_statuses": [
+      "not_evaluated",
+      "supported",
+      "extrapolated"
+    ],
+    "approved_supported_range_nm": null,
+    "approved_upper_bound_rationale": null,
+    "slack_or_buckling_boundary_nm": null,
+    "unfolding_materiality_boundary_nm": null,
+    "regimes": [
+      {
+        "status": "not_evaluated",
+        "enabled": true,
+        "reason": "SD-04 is DEFERRED; biological transfer, slack/contact, validity, uncertainty, and unfolding boundaries are unresolved."
+      },
+      {
+        "status": "supported",
+        "enabled": false,
+        "reason": "No specialist-approved supported interval exists."
+      },
+      {
+        "status": "extrapolated",
+        "enabled": false,
+        "reason": "No approved supported boundary exists from which an extrapolated regime could begin."
+      }
+    ]
+  },
+  "sensitivity_policy": {
+    "status": "not_evaluated",
+    "label": "parameter sensitivity range",
+    "approved_scenarios": [],
+    "required_parameter_ids": [
+      "PEVK.residue_rise",
+      "prox_Ig.persistence_length",
+      "dist_Ig.persistence_length",
+      "PEVK.persistence_length",
+      "PEVK.stretch_modulus",
+      "N2A.persistence_length"
+    ],
+    "reason": "SD-04 provides no reviewer-approved parameter ranges or covariance policy. Emitting a min/max band would manufacture uncertainty. This is neither a confidence interval nor biological population variance."
+  },
+  "output_policy": {
+    "public_force": "SUPPRESSED",
+    "evaluation_status": "not_evaluated",
+    "force_value": null,
+    "sensitivity_value": null,
+    "precision": {
+      "status": "not_applicable",
+      "significant_digit_cap": 2,
+      "reason": "No central estimate is displayed while SD-04 is deferred."
+    },
+    "public_caveat": "Regional extension is a deterministic model illustration. Quantitative pN output is withheld because the current parameter transfers, validity range, uncertainty, slack/contact, and unfolding omissions have not been validated for human Q8WZ42-1."
+  }
+}

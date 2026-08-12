@@ -26,20 +26,28 @@ function build(sl = 2200) {
   return scene;
 }
 
-test('SC20: owner-authorized rulings are consumable without claiming human review', () => {
+test('SC20/21: decision provenance distinguishes AI adjudication from later specialist review', () => {
   const record = model.spec.scientificDecisions;
   assert.equal(record.schema, 'titin-scientific-decisions/2');
   assert.equal(record.review_policy.kind, 'owner_authorized_citation_backed_ai_adjudication');
   assert.equal(record.review_policy.human_expert_review_claimed, false);
-  assert.deepEqual(Object.fromEntries(Object.entries(record.decisions)
-    .map(([id, row]) => [id, row.status])), {
+  const statuses = Object.fromEntries(Object.entries(record.decisions)
+    .map(([id, row]) => [id, row.status]));
+  assert.deepEqual({ ...statuses, 'SD-04': undefined }, {
     'SD-01': 'APPROVED', 'SD-02': 'DEFERRED', 'SD-03': 'APPROVED',
-    'SD-04': 'DEFERRED', 'SD-05': 'APPROVED',
+    'SD-04': undefined, 'SD-05': 'APPROVED',
   });
+  assert.ok(['DEFERRED', 'APPROVED'].includes(statuses['SD-04']));
   for (const row of Object.values(record.decisions)) {
-    assert.equal(row.reviewer, null);
-    assert.equal(row.adjudicator.human_expert, false);
-    assert.equal(row.independent_human_review_status, 'NOT_PERFORMED');
+    if (row.reviewer === null) {
+      assert.equal(row.adjudicator.human_expert, false);
+      assert.equal(row.independent_human_review_status, 'NOT_PERFORMED');
+    } else {
+      assert.equal(row.status, 'APPROVED');
+      for (const field of ['name', 'affiliation', 'role']) assert.ok(row.reviewer[field]);
+      assert.equal(row.reviewer.role, row.required_reviewer_role);
+      assert.match(row.independent_human_review_status, /COMPLETE|PERFORMED|VERIFIED/);
+    }
   }
 });
 

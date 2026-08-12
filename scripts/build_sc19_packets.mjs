@@ -9,9 +9,7 @@ import { dirname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { modelFingerprint } from './build_identity.mjs';
-import {
-  CHAIN_PARAMETERS, IBAND_ORDER, MechanicalModel, ewlcExtension, wlcExtension,
-} from '../src/geometry/MechanicalModel.js';
+import { MechanicalModel } from '../src/geometry/MechanicalModel.js';
 
 const ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const OUT = join(ROOT, 'docs/scientific-decisions/SC-19');
@@ -21,6 +19,7 @@ const sarcomere = readJson('data/sarcomere.json');
 const features = readJson('data/titin_sequence_features.json');
 const report = readJson('docs/scientific-decisions/SC-19/region-feature-report.json');
 const mechanics = readJson('data/mechanical_model.json');
+const mechanicalParameters = readJson('data/mechanical_parameters.json');
 const claims = readJson('data/showcase_claims.json');
 const annotations = readJson('data/annotations.json');
 const scope = readJson('data/scientific_scope.json');
@@ -55,35 +54,18 @@ const header = (id, title, question) => [
   '',
 ].join('\n') + '\n';
 
-function actualChain() {
-  const regions = Object.fromEntries(titin.regions.map((row) => [row.id, row]));
-  return Object.fromEntries(IBAND_ORDER.map((id) => {
-    const row = { ...CHAIN_PARAMETERS[id] };
-    if (row.Lc_from_spec) row.Lc_nm = regions[id].extension_model[row.Lc_from_spec];
-    return [id, row];
-  }));
-}
-
 function sensitivityForce(totalNm, modifiers = {}) {
-  const chain = actualChain();
-  const extension = (id, force) => {
-    const base = chain[id];
-    const A = base.A_nm * (modifiers.persistenceScale ?? 1);
-    const Lc = base.Lc_nm * (modifiers.contourScale ?? 1);
-    if (base.law === 'wlc') return wlcExtension(force, A, Lc);
-    if (base.law === 'folded_plus_wlc') {
-      return base.rigid_nm + wlcExtension(force, A, Lc - base.rigid_nm);
-    }
-    return ewlcExtension(force, A, Lc, base.K0_pN * (modifiers.pevkK0Scale ?? 1));
-  };
-  const chainExtension = (force) => IBAND_ORDER.reduce((sum, id) => sum + extension(id, force), 0);
-  let lo = 0;
-  let hi = 1e4;
-  for (let i = 0; i < 400; i += 1) {
-    const mid = (lo + hi) / 2;
-    if (chainExtension(mid) < totalNm) lo = mid; else hi = mid;
+  const model = new MechanicalModel(titin, mechanicalParameters, fingerprint);
+  const overrides = {};
+  for (const id of model.order) {
+    overrides[`${id}.persistence_length`] = model.chain[id].A_nm
+      * (modifiers.persistenceScale ?? 1);
+    overrides[`${id}.contour_length`] = model.chain[id].Lc_nm
+      * (modifiers.contourScale ?? 1);
   }
-  return (lo + hi) / 2;
+  overrides['PEVK.stretch_modulus'] = model.chain.PEVK.K0_pN
+    * (modifiers.pevkK0Scale ?? 1);
+  return model.solveDevelopmentForce(totalNm, model.chainWithOverrides(overrides));
 }
 
 function sd01() {
@@ -194,20 +176,24 @@ function sd03() {
 }
 
 function sd04() {
-  const model = new MechanicalModel(titin);
+  const model = new MechanicalModel(titin, mechanicalParameters, fingerprint);
   const thick = sarcomere.reference_lengths_nm.half_thick;
   const zHalf = sarcomere.reference_lengths_nm.zdisc_width / 2;
   const outputs = [1900, 2000, 2200, 2400, 3000].map((sl) => {
     const total = sl / 2 - thick - zHalf;
-    const solved = model.partition(total);
-    return [String(sl), total.toFixed(1), solved.force_pN.toFixed(4),
-      Object.entries(solved.extension_nm).map(([id, value]) => `${id} ${value.toFixed(2)}`).join('; ')];
+    const force = model.solveDevelopmentForce(total);
+    const extension = Object.fromEntries(model.order.map((id) => [
+      id, model.regionExtension(id, force),
+    ]));
+    return [String(sl), total.toFixed(1), force.toFixed(4),
+      Object.entries(extension).map(([id, value]) => `${id} ${value.toFixed(2)}`).join('; ')];
   });
-  const parameters = Object.entries(CHAIN_PARAMETERS).map(([id, row]) => [
-    fence(id), row.law, row.A_nm == null ? '—' : String(row.A_nm),
-    row.K0_pN == null ? '—' : String(row.K0_pN),
-    row.Lc_nm == null ? `titin.json:${row.Lc_from_spec}` : String(row.Lc_nm), row.source,
-  ]);
+  const parameters = mechanicalParameters.regions.map((row) => {
+    const inputs = row.parameters;
+    return [fence(row.id), row.law, String(inputs.persistence_length.value),
+      inputs.stretch_modulus ? String(inputs.stretch_modulus.value) : '—',
+      inputs.contour_length.value_from_spec, inputs.persistence_length.source_id];
+  });
   const lengths = [1900, 2000, 2200, 2400, 3000];
   const scenarios = [
     ['baseline', {}],
@@ -223,11 +209,9 @@ function sd04() {
     return sensitivityForce(total, modifiers).toFixed(4);
   })]);
   const validity = mechanics.source_validation.map((row) => [
-    row.quantity, row.reported_pN == null ? '—' : String(row.reported_pN),
+    row.id, row.reported_pN == null ? '—' : String(row.reported_pN),
     row.model_pN == null ? '—' : String(row.model_pN),
-    row.quantity.startsWith('poly-Ig')
-      ? '`10.1073/pnas.95.14.8052` Discussion (poly-Ig comparison and cited ref. 20)'
-      : '`10.1073/pnas.95.14.8052` Figs. 2–5, Methods Eqs. 1–2, Results/Discussion',
+    row.source_locator,
   ]);
   return header('SD-04', 'Force law, parameter transfers, and supported range',
     'Which force laws, parameters, transfers, validity range, uncertainty treatment, slack regime, and unfolding limit support public passive-force outputs?')
@@ -235,7 +219,7 @@ function sd04() {
       '## Current parameter/law inventory', '',
       table(['Region', 'Law', 'A (nm)', 'K0 (pN)', 'Contour source/value (nm)', 'Current source'], parameters),
       '',
-      `Temperature: ${mechanics.physics?.temperature_K ?? 300} K. No fitted parameters: ${mechanics.no_fitted_parameters}`,
+      `Temperature: ${mechanicalParameters.physical_constants.temperature.value} K. Every input is resolved from data/mechanical_parameters.json and data/titin.json.`,
       `Scope transfer: ${scope.mechanics.display_label}.`,
       '', '## Current outputs at the five named lengths (not approved)', '',
       table(['SL (nm)', 'I-band chain span (nm)', 'Force (pN)', 'Regional extension (nm)'], outputs),

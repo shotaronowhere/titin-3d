@@ -12,9 +12,16 @@ SC-19 reached their required historical `CODE_COMPLETE_BLOCKED_SCIENCE` handoffs
 On 2026-08-12 the project owner authorized citation-backed AI adjudication of
 SD-01–SD-05 without representing it as independent human review. SC-20 is complete:
 SD-01, SD-03, and SD-05 are `APPROVED`; SD-02 and SD-04 are `DEFERRED` with enforced
-public caveats. SC-21 remains blocked by the deferred mechanics validation. The
-handoffs are summarized in `docs/sprint-reports/SC-18.md`,
-`docs/sprint-reports/SC-19.md`, and `docs/sprint-reports/SC-20.md`.
+public caveats. SC-21 is `CODE_COMPLETE_BLOCKED_SCIENCE`: one canonical parameter
+record now governs both solver ports, every mechanics evaluation/export carries a
+status and model identity, and deferred SD-04 fails closed to `not_evaluated` with
+no absolute-pN or manufactured sensitivity output. The future approval transition is
+also fail-closed: malformed authority/ranges/scenarios are rejected, unreachable
+solver targets error in both ports, and an accepted approved fixture is parity-tested
+through evaluation, release validation, and the complete plot/readout branch. A qualified mechanics ruling is
+still required before SC-21 can be scientifically complete. The handoffs are
+summarized in `docs/sprint-reports/SC-18.md`, `docs/sprint-reports/SC-19.md`,
+`docs/sprint-reports/SC-20.md`, and `docs/sprint-reports/SC-21.md`.
 
 The release pack in `release/` is generated and staleness-gated. The complete final
 release definition is tracked in `data/release_gates.json`; claim entailment,
@@ -138,7 +145,7 @@ npm run verify:sc8
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
-For a bounded SC-20 check, run `npm run verify:sc20`.
+For a bounded SC-21 check, run `npm run verify:sc21`.
 
 To reproduce the coordinate-derived measurements from the pinned RCSB inputs, fetch
 the optional raw-structure cache and verify it before running the measurement scripts:

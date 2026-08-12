@@ -16,7 +16,7 @@
     ]
   },
   "mechanics": {
-    "parameter_set_id": "development-force-law-deferred-SD-04",
+    "parameter_set_id": "development-force-law-deferred-SD-04-v1",
     "species": "Rattus norvegicus",
     "muscle": "psoas skeletal muscle",
     "preparation": "single myofibrils and isolated titin mechanics transferred into the current model",
@@ -34,7 +34,7 @@
         "source_ids": [
           "10.1073/pnas.95.14.8052"
         ],
-        "limitation": "The transfer is not validated for human Q8WZ42-1. Absolute pN remains available only to development/model APIs and is withheld from the public application."
+        "limitation": "The transfer is not validated for human Q8WZ42-1. Public/model evaluations return not_evaluated with force_pN null; a separately named development diagnostic is retained only for deterministic geometry generation and Python/JavaScript parity audit."
       }
     ]
   },
