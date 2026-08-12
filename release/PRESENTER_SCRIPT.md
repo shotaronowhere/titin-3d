@@ -1,6 +1,6 @@
 # Presenter script
 
-Generated — model `7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c`; app `3eb7dc54d1246aca59e9980ca7f65bd0d2f4b99a`; build inputs `dd3ee440b4a393a537b5686122815d890b9772b093042ee4e76ac3df23a000b3`. Estimated 121.2 s (2 min 1 s), target 110–190 s.
+Generated — model `7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5`; app `caf181bbf2613bc9883999fa64f9853b851a67df`; build inputs `86824eaf73d9b6dd50e338cf59c8177a66f10e263af00caa3b8412b7553bfe5e`. Estimated 123.9 s (2 min 4 s), target 110–190 s.
 
 Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in the Evidence drawer — you do not need to open it to finish the tour.
 
@@ -57,13 +57,13 @@ Resolved from the build, not typed here. Nothing needs the mouse.
 
 **If pushed.** Not claimed: a resolved complete lateral route for titin through the Z-disc; single-ended telethonin binding; a measured display length for the sandwich glyph.
 
-## 5. See titin as a scaffold  `~18.1s`
+## 5. See titin as a scaffold  `~20.8s`
 
 **Do.** fly to the czone close-up; 2200 nm, context scale
 
-**Say.** Titin changes role along its length. Its I-band regions form the extensible spring, while an eleven-domain super-repeat binds the thick filament: that A-band segment keeps a constant span and organizes the filament rather than stretching.
+**Say.** Titin changes role along its length. Its I-band regions form the extensible spring, while an eleven-domain sequence super-repeat binds the thick filament. The bound A-band display allocation stays constant here, but its rendered span is schematic rather than a measured molecular length.
 
-**If asked.** Eleven Ig/Fn3 domains repeat every 45.5 nm along the bound segment, near-commensurate with the 43.1 nm myosin repeat; the 2.4 nm residual is not an exact register. The A-band span is invariant with sarcomere length here, which is what makes the scaffold role legible beside the I-band spring. Titin is widely discussed as a thick-filament ruler and regulator, but this model encodes the geometric scaffold only, never a causal mechanism. The same C-zone carries MyBP-C, an accessory thick-filament protein that is not part of titin; its optional schematic context layer can be switched on here in Evidence mode.
+**If asked.** The C-zone sequence super-repeat contains eleven Ig/Fn3 domains. In one fixed rabbit-psoas mapping dataset the mean domain spacing is 3.98 nm, yielding a source-context arithmetic interval of 43.78 nm. That display derivation remains distinct from the approximately 43.17 nm myosin H periodicity, 14.3 nm crown spacing, and approximately 45.54 nm thick-filament L periodicity. The A-band allocation is invariant with sarcomere length in this renderer, which makes the scaffold role legible beside the I-band spring without asserting an exact molecular length or register. Titin is widely discussed as a thick-filament ruler and regulator, but this model encodes no causal mechanism. The same C-zone carries MyBP-C, an accessory thick-filament protein that is not part of titin; its optional schematic context layer can be switched on here in Evidence mode.
 
 **If pushed.** Not claimed: one elastic constant for the whole molecule; atom-level region surfaces; an exact universal A-band azimuth; exact register between the titin super-repeat and the myosin repeat; a settled causal mechanism by which titin sets thick-filament length or regulates myosin.
 

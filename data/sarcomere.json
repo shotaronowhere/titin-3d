@@ -156,14 +156,34 @@
    ],
    "relationships": [
     "tip defines I/A junction",
-    "axial myosin-crown repeat 43.1 nm, 3 crowns/repeat, 14.3 nm crown spacing"
+    "myosin H periodicity, crown spacing, L periodicity, and titin sequence intervals are stored as distinct quantities"
    ],
    "repeating_geometry": {
-    "axial_period_nm": 43.1,
-    "crowns_per_period": 3,
-    "crown_spacing_nm": 14.3,
-    "titin_super_repeat_nm": 45.5,
-    "C_zone_super_repeats": 11
+    "myosin_head_H_periodicity_nm": {
+     "value": 43.17,
+     "evidence_class": "MEASURED",
+     "source": "10.1085/jgp.202012713",
+     "preparation": "demembranated rabbit-psoas fibers at 35 C with 5% Dextran",
+     "uncertainty": "preparation- and temperature-dependent",
+     "not_claimed": "a titin-domain interval"
+    },
+    "crowns_per_H_period": 3,
+    "myosin_crown_spacing_nm": {
+     "value": 14.3,
+     "evidence_class": "MEASURED",
+     "source": "10.1085/jgp.202012713",
+     "preparation": "relaxed mammalian skeletal-muscle thick filaments",
+     "uncertainty": "approximately 14.3-14.4 nm across reported contexts",
+     "not_claimed": "a titin-domain spacing"
+    },
+    "thick_filament_L_periodicity_nm": {
+     "value": 45.54,
+     "evidence_class": "MEASURED",
+     "source": "10.1085/jgp.202012713",
+     "preparation": "demembranated rabbit-psoas fibers at 35 C with 5% Dextran",
+     "uncertainty": "approximate diffraction spacing",
+     "not_claimed": "the exact molecular length of an 11-domain titin repeat"
+    }
    },
    "mechanical_behavior": "rigid; length INVARIANT with SL",
    "state_dependence": "A-band width constant; only overlap changes",
@@ -175,7 +195,7 @@
     "10.1073/pnas.2311883121",
     "10.1085/jgp.202012713"
    ],
-   "notes": "43.1 nm myosin + 45.5 nm titin periodicities (Caremani 2021).",
+   "notes": "Caremani 2021 reports distinct H (~43.1 nm), crown (~14.3 nm), and axial L (~45.5 nm) quantities; none is stored as an exact titin molecular repeat length.",
    "evidence_by_claim": {
     "dimensions_and_positions": "MEASURED",
     "render_geometry_proxy": "SCHEMATIC"
@@ -284,7 +304,8 @@
   "titin_per_half_thick_filament": 6,
   "titin_per_thick_filament": 12,
   "evidence_class": "MEASURED",
-  "note": "~6 titin molecules per half-thick-filament (hexagonal symmetry)",
+  "note": "~6 titin molecules per half-thick-filament is retained as contextual evidence; the SC-20 public representative path does not encode this copy number.",
+  "public_render_policy": "one representative molecule; copy number and azimuth are not encoded",
   "primary_references": [
    "10.1006/jmbi.2000.4279"
   ]
@@ -294,7 +315,7 @@
    "item": "Azimuthal arrangement of the 6 titin molecules around the thick filament",
    "class": "MEASURED (human cardiac C-zone) / INFERRED (skeletal transfer)",
    "reason": "Resolved by 6 A cryo-EM of the human cardiac thick-filament C-zone (PDB 8G4L, doi:10.1038/s41586-023-06691-4). Measured from the deposited coordinates: the six strands are NOT equally spaced on one radius. They form three 120 deg sectors, each carrying a TA/TB pair 30 deg apart, TA at r=8.57 nm and TB at r=6.85 nm. The 120 deg sector repeat is exact only because 3-fold symmetry was IMPOSED during reconstruction.",
-   "modeling_directive": "For the reference-sequence render named by scientific_scope.json, retain the declared six-fold-at-one-radius SCHEMATIC until construct-compatible evidence exists. Preserve the measured cardiac C-zone two-shell sector arrangement in data/context_measurements.json as an alternative, not as a silent transfer. A future cardiac mode may use it as MEASURED only in the C-zone; other tissue or D-zone use would remain INFERRED and must be explicitly selected.",
+   "modeling_directive": "For the tissue-neutral reference-sequence public render named by scientific_scope.json, show one representative molecule and encode neither copy number nor azimuth. Preserve the measured cardiac C-zone two-shell sector arrangement in data/context_measurements.json as context, not as a silent transfer. A future cardiac mode may use it as MEASURED only in the C-zone; other tissue or D-zone use would remain INFERRED and must be explicitly selected.",
    "superseded": {
     "previous_class": "UNKNOWN",
     "previous_reason": "Six-fold symmetry inferred; exact angular positions not resolved.",

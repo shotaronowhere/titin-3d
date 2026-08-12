@@ -62,6 +62,7 @@ export class GeometryStrategy {
       sarcomere: this._sarcomerePrimitives(geom),
       titin: this._titinPrimitives(geom),
       relationships: this.strategy.geometric_relationships,
+      render_style: this.spec.renderStyle,
     };
     if (opts.lattice) {
       scene.lattice = this._latticeLayer(geom, opts.lattice, opts.latticeRings ?? 1);
@@ -214,29 +215,38 @@ export class GeometryStrategy {
             note: 'straightening (not stretching): domains reorient/space along the widening span',
           };
         } else if (strat.assembly === 'tube') {
-          desc.tube_spec = { variable_length: true, folded_domains: false,
-                             note: 'entropic spring — intrinsically disordered, no folded structure' };
+          desc.tube_spec = {
+            variable_length: strat.mechanical_class !== 'excluded_unknown',
+            folded_domains: false,
+            note: strat.mechanical_class === 'excluded_unknown'
+              ? 'explicit UNKNOWN sequence; zero-projection display only, excluded from mechanics'
+              : 'entropic spring — intrinsically disordered, no folded structure',
+          };
         } else if (strat.assembly === 'composite_spring' && arche) {
           desc.composite_spec = {
             folded_count: strat.n_units,
             folded_archetype: strat.unit_archetype,
             folded_axial_nm: arche.axial_length_nm,
-            coil_span_nm: Math.max(0, (lay.X_end - lay.X_start) - arche.axial_length_nm),
+            coil_span_nm: Math.max(
+              0, (lay.X_end - lay.X_start) - strat.n_units * arche.axial_length_nm,
+            ),
             variable_length: true,
-            note: 'one rigid folded domain in series with a variable-length entropic coil; '
-              + 'region-internal sequence order is unresolved',
+            note: 'four rigid folded domains in curated I80–UN2A–I81–I82–I83 order, '
+              + 'with the variable-length UN2A ribbon between I80 and I81',
           };
         }
       } else {
         // anchored regions (Z1Z2, A-band super-repeat, kinase, M-line): position from spec, not interpolated
         desc.anchored = true;
         if (region.id === 'Aband_super') {
-          const rel = this.strategy.geometric_relationships.titin_Aband_super_repeat;
+          const rel = this.strategy.geometric_relationships.titin_Aband_periodicities;
           desc.super_repeat = {
-            periodicity_nm: rel.values.super_repeat_periodicity_nm,
+            sequence_domains: rel.values.c_zone_sequence_super_repeat_domain_count,
+            derived_interval_nm: rel.values.derived_11_domain_interval_nm.value,
             n_repeats: rel.values.n_C_zone_super_repeats,
             bound_to: 'thick_filament',
-            note: 'axial position translates with SL; internal length INVARIANT',
+            note: 'sequence composition and the source-specific derived display interval are '
+              + 'separate; neither is the 45.54 nm L periodicity',
           };
         }
       }

@@ -1,0 +1,57 @@
+{
+  "schema": "titin-render-style/1",
+  "render_seed": 20260812,
+  "algorithm": {
+    "id": "seeded-irregular-ensemble-ribbon",
+    "version": 1,
+    "prng": "mulberry32",
+    "seed_derivation": "FNV-1a(render_seed, region_id, strand_index)",
+    "control_points": 25,
+    "endpoint_policy": "canonical endpoints are copied exactly; irregularity is transverse only",
+    "determinism_policy": "pure local PRNG; no Math.random, time, platform fingerprint, or model fingerprint"
+  },
+  "titin": {
+    "guided_radius_scale": 1.65,
+    "disordered_radius_scale": 0.58,
+    "continuity_opacity": 0.96,
+    "trace_px": 4.0,
+    "trace_px_evidence": 3.0,
+    "halo_radius_scale": 3.2,
+    "halo_opacity": 0.16,
+    "linker_radius_fraction": 0.5,
+    "irregular_ribbon": {
+      "amplitude_scale": 2.6,
+      "minimum_amplitude_nm": 0.05,
+      "radial_floor_fraction": 0.28,
+      "radial_jitter_fraction": 0.72,
+      "angular_jitter_turns": 0.23,
+      "maximum_transverse_envelope_radius_scale": 2.6,
+      "evidence_class": "SCHEMATIC",
+      "not_claimed": [
+        "a measured or predicted conformation",
+        "molecular transverse amplitude, handedness, wavelength, or persistence length",
+        "an equilibrium ensemble sample"
+      ]
+    },
+    "disordered_regions": [
+      {
+        "id": "N2A",
+        "mode": "composite_unique_sequence_ribbon",
+        "contour_source": "data/titin.json#/regions/2/extension_model/max_end2end_nm",
+        "fallback_slack_fraction": null
+      },
+      {
+        "id": "post_N2A_unknown",
+        "mode": "unresolved_zero_projection_loop",
+        "contour_source": null,
+        "fallback_slack_fraction": 1.0
+      },
+      {
+        "id": "PEVK",
+        "mode": "whole_region_ribbon",
+        "contour_source": "data/titin.json#/regions/4/extension_model/max_end2end_nm",
+        "fallback_slack_fraction": null
+      }
+    ]
+  }
+}

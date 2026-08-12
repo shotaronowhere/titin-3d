@@ -41,6 +41,7 @@ export const KT_PN_NM = 1.380649e-23 * T_KELVIN * 1e21;
 
 /** Order along the chain: Z-disc -> thick-filament tip. */
 export const IBAND_ORDER = ['prox_Ig', 'N2A', 'PEVK', 'dist_Ig'];
+export const IBAND_LAYOUT_ONLY = ['post_N2A_unknown'];
 
 /**
  * Sourced force-extension laws. `Lc_nm: null` means "read the contour from the
@@ -55,19 +56,17 @@ export const CHAIN_PARAMETERS = {
         + 'physiological poly-Ig extension is straightening, not unfolding.',
   },
   N2A: {
-    // NOT a bare WLC: titin.json:domain_composition says N2A contains ONE folded
-    // Ig-like domain, and a folded domain cannot collapse. So the region is a
-    // rigid folded domain in SERIES with the remaining unique sequence as an
-    // entropic coil. Both constants are already in the spec: 4.0 nm from
-    // geometry_sources[10] "Folded Ig/Fn3 domain axial length" (MEASURED,
-    // uncertainty 4.0-4.4, corroborated by the Phase 6 measured Ig_like N-to-C
-    // extent of 4.319 nm), and the 39 nm contour from [11].
+    // NOT a bare WLC: SD-01 resolves four folded Ig domains in the N2A interval,
+    // so the region is their rigid floor in SERIES with the intervening unique
+    // sequence. Both the total contour proxy and the rigid floor are read from
+    // titin.json so sequence curation and mechanics cannot silently diverge.
     //
     // A bare WLC let N2A fall to 0.3 nm at the contracted state -- below the
     // folded domain the region contains, which is physically impossible.
     // NB still no unfolding TRANSITION: the spec records no N2A unfolding force
     // (the 6-8 pN in geometry_sources[19] is the Ig domain's, not N2A's).
-    law: 'folded_plus_wlc', A_nm: 0.35, Lc_nm: 39.0, rigid_nm: 4.0,
+    law: 'folded_plus_wlc', A_nm: 0.35,
+    Lc_from_spec: 'max_end2end_nm', rigid_from_spec: 'rigid_folded_length_nm',
     source: '10.3389/fphys.2020.00173 (recombinant human N2A constructs; geometry_sources[11],[12]); '
           + 'rigid folded-domain length from geometry_sources[10] '
           + '(10.1016/j.jmb.2020.06.025)',
@@ -148,6 +147,16 @@ export class MechanicalModel {
         }
         p.Lc_nm = lc;
       }
+      if (p.rigid_from_spec) {
+        const region = regions[id];
+        if (!region) throw new Error(`MechanicalModel: titin.json has no region "${id}"`);
+        const rigid = region.extension_model[p.rigid_from_spec];
+        if (!(typeof rigid === 'number' && rigid > 0 && rigid < p.Lc_nm)) {
+          throw new Error(`MechanicalModel: ${id}.extension_model.${p.rigid_from_spec} `
+            + 'must be positive and smaller than its contour proxy');
+        }
+        p.rigid_nm = rigid;
+      }
       this.chain[id] = p;
     }
     Object.freeze(this.chain);
@@ -220,6 +229,10 @@ export class MechanicalModel {
     const F = this.solveForce(totalNm);
     const ext = {};
     for (const id of IBAND_ORDER) ext[id] = this.regionExtension(id, F);
+    // SD-01 leaves residues 9852–10215 without an approved contour or force law.
+    // They remain explicit in the sequence/layout ledger but contribute zero to
+    // the force solver; zero is a bookkeeping projection, not a physical length.
+    for (const id of IBAND_LAYOUT_ONLY) ext[id] = 0;
     return {
       force_pN: F,
       extension_nm: ext,

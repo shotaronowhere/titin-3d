@@ -1,0 +1,325 @@
+{
+  "schema": "titin-sc20-boundary-audit/1",
+  "model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+  "canonical_sequence": "UniProt Q8WZ42-1 version 4; 34350 aa",
+  "regions": [
+    {
+      "id": "Z1Z2",
+      "start": 1,
+      "end": 800,
+      "length_aa": 800
+    },
+    {
+      "id": "prox_Ig",
+      "start": 801,
+      "end": 9365,
+      "length_aa": 8565
+    },
+    {
+      "id": "N2A",
+      "start": 9366,
+      "end": 9851,
+      "length_aa": 486
+    },
+    {
+      "id": "post_N2A_unknown",
+      "start": 9852,
+      "end": 10215,
+      "length_aa": 364
+    },
+    {
+      "id": "PEVK",
+      "start": 10216,
+      "end": 12022,
+      "length_aa": 1807
+    },
+    {
+      "id": "dist_Ig",
+      "start": 12023,
+      "end": 14018,
+      "length_aa": 1996
+    },
+    {
+      "id": "Aband_super",
+      "start": 14019,
+      "end": 32177,
+      "length_aa": 18159
+    },
+    {
+      "id": "kinase",
+      "start": 32178,
+      "end": 32432,
+      "length_aa": 255
+    },
+    {
+      "id": "Mline",
+      "start": 32433,
+      "end": 34350,
+      "length_aa": 1918
+    }
+  ],
+  "i_band_ig_counts": {
+    "prox_Ig": 74,
+    "N2A": 4,
+    "dist_Ig": 16
+  },
+  "domain_totals": {
+    "uniprot_domain_feature_count": {
+      "Ig_like": 152,
+      "Fn3": 132,
+      "kinase": 1,
+      "source": "UniProt:Q8WZ42 pinned DOMAIN rows",
+      "evidence_class": "MEASURED"
+    },
+    "curated_biological_domain_count": {
+      "Ig_like": 153,
+      "Fn3": 132,
+      "kinase": 1,
+      "source": "UniProt:Q8WZ42 plus experimentally established human I81 (PDB 5JOE/7AHS)",
+      "evidence_class": "MEASURED",
+      "not_claimed": "that UniProt DOMAIN rows enumerate every biological fold"
+    },
+    "rendered_domain_count": {
+      "Ig_like": 153,
+      "Fn3": 132,
+      "kinase": 1,
+      "source": "SC-20 SD-01 implementation",
+      "evidence_class": "SCHEMATIC render count over MEASURED/curated identities",
+      "intentional_omissions": []
+    }
+  },
+  "n2a_coordinate_accounting": {
+    "policy": "Source-defined elements are preserved even when they overlap; residues not assigned by those sources are explicit unassigned intra-N2A linkers rather than silently absorbed into a neighboring element.",
+    "unassigned_intra_N2A_linkers": [
+      {
+        "start": 9471,
+        "end": 9471,
+        "length_aa": 1,
+        "evidence_class": "UNKNOWN (no source-backed element assignment)"
+      },
+      {
+        "start": 9756,
+        "end": 9759,
+        "length_aa": 4,
+        "evidence_class": "UNKNOWN (no source-backed element assignment)"
+      }
+    ],
+    "preserved_source_overlap": {
+      "elements": [
+        "I81",
+        "I82"
+      ],
+      "start": 9660,
+      "end": 9671,
+      "length_aa": 12,
+      "resolution": "not arithmetically repaired"
+    }
+  },
+  "n2a_runtime_instances": [
+    {
+      "domain_id": "N2A.1",
+      "sequence_position": {
+        "start": 9366,
+        "end": 9470,
+        "label": "I80",
+        "basis": "UniProt:Q8WZ42 Ig-like 77",
+        "evidence_class": "MEASURED"
+      },
+      "folded_domains": true,
+      "representative_pdb_id": "3PUC",
+      "structured_core": null
+    },
+    {
+      "domain_id": "N2A.chain",
+      "sequence_position": {
+        "start": 9472,
+        "end": 9581,
+        "label": "UN2A",
+        "basis": "10.1016/j.jmb.2021.166901",
+        "evidence_class": "MEASURED"
+      },
+      "folded_domains": false,
+      "representative_pdb_id": "7NIP",
+      "structured_core": {
+        "label": "UN2A tri-helix core",
+        "sequence_position": {
+          "start": 9504,
+          "end": 9544
+        },
+        "representative_pdb_id": "7NIP",
+        "fold": "three-helix bundle",
+        "evidence_class": "MEASURED (solution NMR; deposited coordinates)",
+        "source": "10.1016/j.jmb.2021.166901",
+        "render_usage": "semantic provenance only; the coarse ribbon does not claim an atomic or measured in-sarcomere pose"
+      }
+    },
+    {
+      "domain_id": "N2A.2",
+      "sequence_position": {
+        "start": 9582,
+        "end": 9671,
+        "label": "I81",
+        "basis": "PDB:5JOE; PDB:7AHS; 10.1085/jgp.202012766",
+        "evidence_class": "MEASURED"
+      },
+      "folded_domains": true,
+      "representative_pdb_id": "3PUC",
+      "structured_core": null
+    },
+    {
+      "domain_id": "N2A.3",
+      "sequence_position": {
+        "start": 9660,
+        "end": 9755,
+        "label": "I82",
+        "basis": "UniProt:Q8WZ42 Ig-like 78",
+        "evidence_class": "MEASURED"
+      },
+      "folded_domains": true,
+      "representative_pdb_id": "3PUC",
+      "structured_core": null
+    },
+    {
+      "domain_id": "N2A.4",
+      "sequence_position": {
+        "start": 9760,
+        "end": 9851,
+        "label": "I83",
+        "basis": "UniProt:Q8WZ42 Ig-like 79",
+        "evidence_class": "MEASURED"
+      },
+      "folded_domains": true,
+      "representative_pdb_id": "3PUC",
+      "structured_core": null
+    }
+  ],
+  "a_m_allocations": {
+    "Aband_super": {
+      "position_nm": {
+        "X_start": 300,
+        "X_end": 995,
+        "axial_length_nm": 695
+      },
+      "axial_placement": {
+        "kind": "SCHEMATIC_DISPLAY_ALLOCATION",
+        "scientific_axial_length_nm": null,
+        "rule": "continuous bound display path from the A/I junction to the far edge of the approved kinase placement envelope",
+        "evidence_class": "SCHEMATIC",
+        "not_claimed": "an exact A-band titin molecular span or distal biological boundary"
+      }
+    },
+    "kinase": {
+      "position_nm": {
+        "X_start": 995,
+        "X_end": 1030,
+        "axial_length_nm": 35
+      },
+      "axial_placement": {
+        "kind": "SCHEMATIC_DISPLAY_ALLOCATION",
+        "scientific_axial_length_nm": null,
+        "envelope_nm_from_sarcomere_midpoint": {
+          "near": 70,
+          "far": 105,
+          "statistical_confidence_interval": false
+        },
+        "glyph_target_nm_from_sarcomere_midpoint": 87.5,
+        "rule": "glyph centred in an owner-approved rounded display envelope spanning distinct localization/proposal observations",
+        "evidence_class": "SCHEMATIC",
+        "not_claimed": "a confidence interval, exact Q8WZ42 coordinate, or 35 nm kinase molecular length"
+      }
+    },
+    "Mline": {
+      "position_nm": {
+        "X_start": 1030,
+        "X_end": 1100,
+        "axial_length_nm": 70
+      },
+      "axial_placement": {
+        "kind": "SCHEMATIC_DISPLAY_ALLOCATION",
+        "scientific_axial_length_nm": null,
+        "rule": "sparse path from the near edge of the kinase display envelope to the zero-width sarcomere midpoint",
+        "evidence_class": "SCHEMATIC",
+        "not_claimed": "a 70 nm straight molecular span, exact m-domain coordinates, M1 density, or M-band width"
+      }
+    }
+  },
+  "periodicity_quantities": {
+    "c_zone_sequence_super_repeat_domain_count": {
+      "value": 11,
+      "unit": "domains",
+      "evidence_class": "MEASURED",
+      "source": "10.1016/j.jmb.2020.06.025",
+      "locator": "Fig. 1 and Supplementary Table 1",
+      "preparation": "human reference sequence nomenclature compared with rabbit-psoas antibody mapping",
+      "uncertainty": null,
+      "not_claimed": "an axial length"
+    },
+    "rabbit_psoas_mean_titin_domain_spacing_nm": {
+      "value": 3.98,
+      "unit": "nm",
+      "confidence_interval_95_nm": [
+        3.92,
+        4.03
+      ],
+      "evidence_class": "MEASURED",
+      "source": "10.1016/j.jmb.2020.06.025",
+      "locator": "Figs. 2-6 and Results regression",
+      "preparation": "glutaraldehyde-fixed isolated rabbit-psoas skeletal myofibrils in rigor",
+      "uncertainty": "95% confidence interval of the source regression",
+      "not_claimed": "universal human spacing, an unfixed relaxed-state value, or exactly equal spacing for every domain"
+    },
+    "derived_11_domain_interval_nm": {
+      "value": 43.78,
+      "unit": "nm",
+      "confidence_interval_95_nm": [
+        43.12,
+        44.33
+      ],
+      "evidence_class": "STRONGLY INFERRED",
+      "source": "10.1016/j.jmb.2020.06.025",
+      "locator": "11 times the source regression and its confidence endpoints",
+      "preparation": "derived from fixed isolated rabbit-psoas rigor myofibrils",
+      "uncertainty": "arithmetic transformation of the source regression interval",
+      "not_claimed": "an independently measured molecular end-to-end span"
+    },
+    "myosin_head_H_periodicity_nm": {
+      "value": 43.17,
+      "unit": "nm",
+      "evidence_class": "MEASURED",
+      "source": "10.1085/jgp.202012713",
+      "locator": "Table 1, M3 spacing at 35 C with 5% Dextran",
+      "preparation": "demembranated rabbit-psoas fibers at 35 C with 5% Dextran",
+      "uncertainty": "preparation- and temperature-dependent; source also reports 43.11 nm in intact resting mouse EDL",
+      "not_claimed": "an invariant or a titin-domain interval"
+    },
+    "myosin_crown_spacing_nm": {
+      "value": 14.3,
+      "unit": "nm",
+      "evidence_class": "MEASURED",
+      "source": "10.1085/jgp.202012713",
+      "locator": "Figs. 4-7; third-order axial spacing of the H array",
+      "preparation": "relaxed mammalian skeletal-muscle thick filaments",
+      "uncertainty": "approximately 14.3-14.4 nm across reported contexts",
+      "not_claimed": "a titin-domain spacing"
+    },
+    "thick_filament_L_periodicity_nm": {
+      "value": 45.54,
+      "unit": "nm",
+      "evidence_class": "MEASURED",
+      "source": "10.1085/jgp.202012713",
+      "locator": "Table 1 M2L spacing and Discussion 'Origin of the L periodicity'",
+      "preparation": "demembranated rabbit-psoas fibers at 35 C with 5% Dextran",
+      "uncertainty": "source describes the L periodicity as approximate",
+      "not_claimed": "the exact molecular length of an 11-domain titin repeat"
+    },
+    "L_periodicity_titin_origin_hypothesis": {
+      "value": "possible titin contribution to the L periodicity",
+      "evidence_class": "INFERRED",
+      "source": "10.1085/jgp.202012713",
+      "locator": "Discussion 'Origin of the L periodicity'",
+      "preparation": "structural interpretation of skeletal-muscle diffraction",
+      "uncertainty": "hypothesis",
+      "not_claimed": "proven molecular identity, exact molecular length, or one exact titin-myosin register"
+    }
+  }
+}

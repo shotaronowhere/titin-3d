@@ -751,9 +751,9 @@ window.__titinBoot = { ready: false, problems: [] };
       <table id="metrics"></table>
 
       <h2>Passive force</h2>
-      <div class="sub" style="margin:0 0 6px">One force, shared by the four I-band
-        regions in series, solved from sourced force-extension laws with no fitted
-        parameters. The marker is the length on the stage bar.</div>
+      <div class="sub" style="margin:0 0 6px">Regional extension remains a
+        deterministic development-model illustration. Absolute pN is withheld under
+        SD-04 because transfer to human Q8WZ42-1 is not validated.</div>
       <div class="sub" id="mechanicsScope"></div>
       <div id="forceCurve"></div>
 
@@ -916,7 +916,9 @@ $('buildInputsFingerprint').textContent = candidateIdentity.build_inputs_fingerp
 $('scopeIdentity').textContent = model.scientificScope.publicBadge;
 $('mechanicsScope').textContent = model.scientificScope.mechanics.display_label;
 $('scopeDecisions').textContent = model.scientificDecisions.summaryText;
-$('scientificDecisionStatus').textContent = model.scientificDecisions.badgeText;
+$('scientificDecisionStatus').textContent = `${model.scientificDecisions.badgeText} · `
+  + 'citation-backed AI adjudication authorized by the project owner · '
+  + 'independent human review not performed';
 
 function publicPresentationState() {
   return {
@@ -1575,15 +1577,8 @@ function renderExtensionChart(showcase) {
   card.hidden = !show;
   if (!show) { $('extensionRows').replaceChildren(); return; }
   const chart = showcase.extension_chart;
-  // The chart says the regions share out one extension; naming the force they
-  // share makes "series force balance" a visible statement rather than a phrase
-  // in the evidence class. The length comes from the descriptor rather than from
-  // the slider so that the force and the totals beside it are always the same
-  // geometry: renderChapter() runs this once before render() has refreshed the
-  // overlay, and a slider read there would pair the new force with old totals.
-  const chainForce = model.geometryAt(showcase.sarcomere_length_nm).titin_chain_force_pN;
   $('extensionTotal').textContent = `${chart.total_nm.toFixed(1)} nm total · ${chart.evidence_class}`
-    + (Number.isFinite(chainForce) ? ` · ${chainForce.toFixed(2)} pN common force` : '');
+    + ' · common-force development solver; absolute pN withheld pending transfer validation';
   const maxExtension = Math.max(...chart.regions.map((region) => region.extension_nm));
   const mechanismMark = { folded: '●—● straighten', composite: '● + ∿', disordered: '∿ extends' };
   const rows = chart.regions.map((region) => {
@@ -1792,62 +1787,15 @@ function renderLatticeCrossSection() {
   guided.replaceChildren(...(show ? [build()] : []));
 }
 
-/**
- * SC-14 force–extension curve.
- *
- * Plain SVG in data coordinates with one linear map, so the shape on screen is
- * the shape in the numbers. The y axis starts at zero: a force plot with a
- * suppressed origin exaggerates every difference on it.
- */
+/** SD-04 public boundary: no absolute-pN chart is constructed or exposed. */
 function renderForceCurve() {
-  const curve = visualization.forceCurve();
-  const W = 300; const H = 150; const PAD = { l: 38, r: 8, t: 8, b: 26 };
-  const x = (nm) => PAD.l + ((nm - curve.axes.x.min) / (curve.axes.x.max - curve.axes.x.min))
-    * (W - PAD.l - PAD.r);
-  const y = (pN) => H - PAD.b - (pN / curve.axes.y.max) * (H - PAD.t - PAD.b);
-  const svg = svgElement('svg', {
-    viewBox: `0 0 ${W} ${H}`, role: 'img',
-    'aria-label': `Passive force per titin molecule against sarcomere length. `
-      + `${curve.current ? `At ${curve.current.sarcomere_length_nm} nm the model force is `
-        + `${curve.current.force_pN.toFixed(2)} piconewtons.` : ''}`,
-  });
-  const nodes = [
-    svgElement('path', {
-      d: `M ${PAD.l} ${PAD.t} V ${H - PAD.b} H ${W - PAD.r}`,
-      fill: 'none', stroke: '#3f4b5a', 'stroke-width': 1,
-    }),
-    svgElement('path', {
-      d: curve.points.map((point, index) => `${index ? 'L' : 'M'} `
-        + `${x(point.sarcomere_length_nm).toFixed(2)} ${y(point.force_pN).toFixed(2)}`).join(' '),
-      fill: 'none', stroke: hex(COMPONENT_COLOR.titin), 'stroke-width': 1.8,
-    }),
-    svgElement('text', { x: W / 2, y: H - 4, 'text-anchor': 'middle', fill: '#98a4b3', 'font-size': 9 },
-      curve.axes.x.label),
-    svgElement('text', {
-      x: 10, y: H / 2, 'text-anchor': 'middle', fill: '#98a4b3', 'font-size': 9,
-      transform: `rotate(-90 10 ${H / 2})`,
-    }, curve.axes.y.label),
-  ];
-  if (curve.current) {
-    nodes.push(svgElement('circle', {
-      cx: x(curve.current.sarcomere_length_nm), cy: y(curve.current.force_pN), r: 3.5,
-      fill: hex(COMPONENT_COLOR.titin_highlight), stroke: '#0e1116', 'stroke-width': 1.5,
-    }));
-  }
-  svg.replaceChildren(...nodes);
-
-  const shares = document.createElement('div');
-  shares.className = 'sub';
-  if (curve.current) {
-    const ranked = Object.entries(curve.current.shares).sort((a, b) => b[1] - a[1]);
-    shares.textContent = 'Compliance share at this length: '
-      + ranked.map(([id, value]) => `${id} ${(value * 100).toFixed(0)}%`).join(' · ');
-  }
-  const caveat = document.createElement('div');
-  caveat.className = 'lattice-caveat';
-  caveat.textContent = `${curve.evidence_class} · ${curve.basis}. `
-    + `Not claimed: ${curve.not_claimed.join('; ')}.`;
-  $('forceCurve').replaceChildren(svg, shares, caveat);
+  const withheld = document.createElement('div');
+  withheld.className = 'scope-warning';
+  withheld.textContent = 'Absolute pN output is withheld from the public application. '
+    + 'SD-04 deferred transfer of the mixed-source development solver to human Q8WZ42-1; '
+    + 'the extension geometry remains available as MODELED. No absolute force magnitude, '
+    + 'validity range, or human-construct prediction is claimed.';
+  $('forceCurve').replaceChildren(withheld);
 }
 
 function renderChapter() {
@@ -2658,10 +2606,9 @@ function currentDisplayOptions() {
     latticeScope: useExtendedLattice ? 'patch' : 'local',
     rings: useExtendedLattice ? state.rings : 1,
     showFilamentContext: state.showFilamentContext,
-    // One representative molecule by default; the optional extended Evidence
-    // lattice restores its additional copies. This changes presentation density,
-    // never coordinates.
-    titinStrands: state.audienceMode === AUDIENCE_MODES.evidence && useExtendedLattice,
+    // SD-05: the public application always shows one representative molecule.
+    // This path does not encode copy number or azimuthal register.
+    titinStrands: false,
     presentationMode: state.audienceMode,
     showDomains: state.showDomains,
     showContextDetail: state.showContextDetail,
@@ -2744,21 +2691,13 @@ function render(report) {
   syncDepictionToggles();
   syncStageLegend(report);
 
-  // Titin's biomechanical role is force. The number is already computed at every
-  // length by the series force balance; showing it costs nothing and is the one
-  // quantity a muscle mechanics audience will look for first.
+  // SD-04: retain the development solver internally, but do not publish absolute
+  // pN until its parameter transfer to the human Q8WZ42-1 construct is validated.
   const forceEl = $('stageForce');
   forceEl.replaceChildren();
-  if (Number.isFinite(g.titin_chain_force_pN)) {
-    const value = document.createElement('b');
-    value.textContent = `${g.titin_chain_force_pN.toFixed(2)} pN`;
-    const label = document.createElement('span');
-    label.textContent = ' passive force / titin ';
-    const cls = document.createElement('span');
-    cls.className = 'force-class';
-    cls.textContent = 'MODELED';
-    forceEl.append(value, label, cls);
-  }
+  const withheldForce = document.createElement('span');
+  withheldForce.textContent = 'absolute pN withheld · SD-04 DEFERRED';
+  forceEl.append(withheldForce);
 
   const rows = [
     ['Half-sarcomere', `${g.half_sarcomere_nm.toFixed(1)} nm`],
@@ -2773,7 +2712,8 @@ function render(report) {
     ['Thick filaments built', `${man.lattice.thick_drawn}${hiddenSuffix('thick_filament')}`],
       ['Thin filaments built', `${man.lattice.thin_drawn}${hiddenSuffix('thin_filament')}`]);
   }
-  rows.push(['Titin strands built', `${man.titin_strands_drawn}${hiddenSuffix('titin')}`]);
+  rows.push(['Representative titin paths built',
+    `${man.titin_strands_drawn}${hiddenSuffix('titin')}`]);
   if (man.representative_titin?.a_band_surface_bound) {
     const radial = man.representative_titin.a_band_transverse_offset_nm.radius;
     rows.push(['Representative titin A-band radius',
@@ -2821,11 +2761,12 @@ function render(report) {
   // on its own.
   const scaffold = activeShowcaseOverlay.aband_scaffold;
   rows.push(
-    ['A-band anchored span', `${scaffold.anchored_span_nm.toFixed(1)} nm · invariant with sarcomere length`],
-    ['A-band super-repeat', `${scaffold.domains_per_super_repeat} domains / ${scaffold.super_repeat_nm} nm`
-      + ` · ${scaffold.c_zone_super_repeats} in the C-zone`],
-    ['Super-repeat vs myosin repeat', `${scaffold.super_repeat_nm} nm vs ${scaffold.myosin_repeat_nm} nm`
-      + ` · near-commensurate, ${scaffold.periodicity_offset_nm} nm residual, not an exact register`],
+    ['A-band display allocation', `${scaffold.anchored_span_nm.toFixed(1)} nm · SCHEMATIC and invariant in the renderer`],
+    ['C-zone sequence/display derivation', `${scaffold.domains_per_super_repeat} domains × `
+      + `${scaffold.rabbit_psoas_mean_titin_domain_spacing_nm} nm mean = `
+      + `${scaffold.derived_11_domain_interval_nm} nm · ${scaffold.c_zone_super_repeats} repeats displayed`],
+    ['Distinct thick-filament spacings', `H ${scaffold.myosin_H_periodicity_nm} nm · crown `
+      + `${scaffold.myosin_crown_spacing_nm} nm · L ≈${scaffold.thick_filament_L_periodicity_nm} nm`],
   );
   const mybpc = man.mybpc_context;
   if (mybpc) {

@@ -66,6 +66,7 @@ _EXTERNAL = {
     "titin_sequence_features.json": "validate_sequence_features.py",
     "claim_support.json": "validate_claim_support.py",
     "scientific_decisions.json": "validate_scientific_decisions.py",
+    "render_style.json": "validate_render_style.py",
 }
 _on_disk = sorted(f for f in os.listdir(DATA_DIR) if f.endswith(".json"))
 _covered = set(files) | set(_DEFERRED) | set(_EXTERNAL)
@@ -260,7 +261,7 @@ check(not _rg_bad, f"every automated release check names a real file ({_rg_bad})
 print("== Titin domain reconciliation (UniProt Q8WZ42) ==")
 tr=L["titin.json"]["regions"]
 ig=sum(r["domain_composition"]["Ig_like"] for r in tr); fn=sum(r["domain_composition"]["Fn3"] for r in tr)
-check(ig==152, f"Ig-like total == 152 (got {ig})")
+check(ig==153, f"curated Ig-like total == 153 (got {ig}; UniProt rows remain 152 separately)")
 check(fn==132, f"Fn3 total == 132 (got {fn})")
 
 print("== Structural-state numerical identities ==")
@@ -399,14 +400,16 @@ for sname, st in _states.items():
               f"{sname}/{rid} axial rise {rise:.3f} nm <= folded length {_arche} nm "
               "(no unfolding implied)")
 
-print("\n== Phase-4 A-band zoning (only the C-zone has a sourced periodicity) ==")
-# The spec records a super-repeat periodicity for the C-zone ONLY. The C-zone block
+print("\n== SC-20 A-band zoning (source-context derived C-zone interval) ==")
+# The spec records an explicitly derived 11-domain interval for the C-zone only. The block
 # must fit inside the thick-filament-bound segment and leave a positive remainder
 # (the D-zone), whose spacing is a SCHEMATIC modelling choice, not a measurement.
 if _GS:
-    _rel = _GS["geometric_relationships"]["titin_Aband_super_repeat"]["values"]
-    _nC = _rel["n_C_zone_super_repeats"] * _rel["domains_per_super_repeat"]
-    _cLen = _rel["n_C_zone_super_repeats"] * _rel["super_repeat_periodicity_nm"]
+    _rel = _GS["geometric_relationships"]["titin_Aband_periodicities"]["values"]
+    _domains_per = _rel["c_zone_sequence_super_repeat_domain_count"]
+    _interval = _rel["derived_11_domain_interval_nm"]["value"]
+    _nC = _rel["n_C_zone_super_repeats"] * _domains_per
+    _cLen = _rel["n_C_zone_super_repeats"] * _interval
     _ab = next((r for r in L["titin.json"]["regions"] if r["id"] == "Aband_super"), None)
     if _ab:
         _p = _ab["resting_axial_position_nm"]
@@ -418,8 +421,7 @@ if _GS:
               f"D-zone remainder is positive ({_nTot} total - {_nC} C-zone = {_nTot - _nC})")
         # The C-zone periodicity must not be silently applied to the whole A-band:
         # if it were, the domain count and span would have to agree exactly.
-        check(abs(_span - _nTot / _rel["domains_per_super_repeat"]
-                  * _rel["super_repeat_periodicity_nm"]) > 1e-6,
+        check(abs(_span - _nTot / _domains_per * _interval) > 1e-6,
               "A-band span is NOT the whole-region super-repeat product — confirms "
               "the D-zone needs its own (unsourced, SCHEMATIC) spacing")
 
@@ -941,7 +943,7 @@ try:
     _rel = (load("geometry_strategy.json").get("geometric_relationships") or {}) \
         .get("thick_filament_crown_periodicity", {})
     _cs = (_rel.get("values") or {}).get("crown_axial_spacing_nm")
-    _rp = (_rel.get("values") or {}).get("myosin_repeat_nm")
+    _rp = (_rel.get("values") or {}).get("myosin_H_periodicity_nm")
     check(_cs is not None and _rp is not None, f"crown spacing and repeat are both present ({_cs}, {_rp})")
     if _cs and _rp:
         # NOT a 3x-consistency check. 14.3 and 43.1 are INDEPENDENTLY sourced, so
@@ -1227,17 +1229,15 @@ for _rid in _IB8:
     check(_mono, "%s extension is non-decreasing in sarcomere length %s"
                  % (_rid, " -> ".join("%.1f" % _v for _, _v in _vals)))
 
-# N2A contains ONE folded Ig-like domain (titin.json:domain_composition), which
-# cannot collapse, so the region can never be shorter than a folded domain
-# (~4.0 nm, geometry_sources[10], MEASURED). A bare WLC put it at 0.3 nm.
+# N2A contains four folded Ig-like domains, which establish a 16 nm rigid floor.
 _n2a_comp = _by8["N2A"]["domain_composition"]
-if _n2a_comp.get("Ig_like", 0) >= 1:
-    _fold8 = 4.0
+if _n2a_comp.get("Ig_like", 0) == 4:
+    _fold8 = 16.0
     for _sl, _k in _ord8:
         _z = _S8["states"][_k]["titin_I_band_extension_nm"]["N2A"]
         check(_z >= _fold8 - 1e-6,
-              "N2A at SL %.0f (%.1f nm) is not shorter than the folded Ig domain it "
-              "contains (%.1f nm, geometry_sources[10])" % (_sl, _z, _fold8))
+              "N2A at SL %.0f (%.1f nm) is not shorter than its four-fold rigid "
+              "floor (%.1f nm, SD-01)" % (_sl, _z, _fold8))
 
 # ---------------------------------------------------------------------------
 # MODELED is the sixth evidence class, authorised in session 9. It is the only

@@ -6,11 +6,12 @@ import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import {
   ALIAS_THRESHOLD_PX, DOMAIN_BACKBONE_RESOLVE_PX, ENVELOPE_GHOST_OPACITY, EVIDENCE_STYLE,
-  SarcomereScene, TITIN_RENDER_STYLE,
+  SarcomereScene,
 } from '../src/render/SarcomereScene.js';
 import { Viewer } from '../src/render/Viewer.js';
 
 const model = await TitinModel.create(nodeReader());
+const TITIN_RENDER_STYLE = model.spec.renderStyle.titin;
 const sl = 2200;
 
 /**

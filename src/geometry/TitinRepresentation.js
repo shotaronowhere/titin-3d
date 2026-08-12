@@ -40,7 +40,8 @@ const EPS = 1e-6;
  * by scientific_scope.json; no second isoform is admitted.
  */
 export const DOMAIN_CLASSES = Object.freeze([
-  'Ig_like', 'Fn3', 'PEVK', 'N2A', 'flexible_linker', 'kinase', 'terminal_anchor',
+  'Ig_like', 'Fn3', 'PEVK', 'N2A', 'unresolved_sequence',
+  'flexible_linker', 'kinase', 'terminal_anchor',
 ]);
 
 export class TitinRepresentation {
@@ -174,6 +175,18 @@ export class TitinRepresentation {
         out.push(this._placeSingle(region, strat, seg, archetypes));
       }
     }
+    // Keep the public instance record rectangular. These fields are meaningful
+    // for the mixed-structure UN2A envelope but explicit null/false values let
+    // downstream consumers distinguish "not present" from a missing property.
+    for (const instance of out) {
+      if (!("contains_structured_core" in instance)) instance.contains_structured_core = false;
+      if (!("structured_core" in instance)) instance.structured_core = null;
+      if (!("folded_domains_semantics" in instance)) {
+        instance.folded_domains_semantics = instance.folded_domains
+          ? 'true means this instance is rendered with a folded-domain archetype'
+          : 'false means this instance uses a non-instanced chain-envelope route';
+      }
+    }
     return { sarcomere_length_nm: sarcomereLengthNm, level: 1, instances: out };
   }
 
@@ -219,8 +232,8 @@ export class TitinRepresentation {
       }
     }
 
-    // A-band titin is bound to the thick filament with a MEASURED super-repeat
-    // periodicity; it is placed by that periodicity rather than by even division.
+    // A-band titin uses the explicitly labelled, source-context arithmetic
+    // interval in SD-03; it is not a claim of a universal physical register.
     const zones = region.band === 'A-band'
       ? this._abandZones(region, seg, n)
       : [{
@@ -316,8 +329,8 @@ export class TitinRepresentation {
   /**
    * A-band titin splits into two zones whose placement evidence is NOT equal.
    *
-   * C-zone: 11 super-repeats x 11 domains at a MEASURED 45.5 nm periodicity —
-   *   placement is derived directly from sourced values.
+   * C-zone: 11 sequence repeats x 11 domains, displayed with the 43.78 nm
+   *   interval derived from the rabbit-psoas mean spacing (11 x 3.98 nm).
    * D-zone: the tip-proximal remainder. The spec records NO periodicity for it
    *   (`geometry_sources` has only the three C-zone parameters), so it uses a
    *   connected schematic zig-zag. Its terminal domains are untilted so the
@@ -343,9 +356,10 @@ export class TitinRepresentation {
 
   /** @param {{X_start:number, X_end:number}} seg canonical Aband_super segment */
   _cZoneOfSegment(seg) {
-    const relEntry = this.strategy.geometric_relationships.titin_Aband_super_repeat;
+    const relEntry = this.strategy.geometric_relationships.titin_Aband_periodicities;
     const rel = relEntry.values;
-    const lengthNm = rel.n_C_zone_super_repeats * rel.super_repeat_periodicity_nm;
+    const intervalNm = rel.derived_11_domain_interval_nm.value;
+    const lengthNm = rel.n_C_zone_super_repeats * intervalNm;
     // C-zone occupies the M-line-proximal end of the bound segment; the D-zone
     // (filament-tip-proximal) takes the remainder.
     const startNm = seg.X_end - lengthNm;
@@ -360,16 +374,16 @@ export class TitinRepresentation {
       end_nm: seg.X_end,
       length_nm: lengthNm,
       n_super_repeats: rel.n_C_zone_super_repeats,
-      super_repeat_nm: rel.super_repeat_periodicity_nm,
-      domains_per_super_repeat: rel.domains_per_super_repeat,
-      domains: rel.n_C_zone_super_repeats * rel.domains_per_super_repeat,
+      derived_11_domain_interval_nm: intervalNm,
+      domains_per_super_repeat: rel.c_zone_sequence_super_repeat_domain_count,
+      domains: rel.n_C_zone_super_repeats * rel.c_zone_sequence_super_repeat_domain_count,
       evidence_class: relEntry.evidence_class,
       source_ids: [...relEntry.sources],
     };
   }
 
   _abandZones(region, seg, nTotal) {
-    const relEntry = this.strategy.geometric_relationships.titin_Aband_super_repeat;
+    const relEntry = this.strategy.geometric_relationships.titin_Aband_periodicities;
     const cZone = this._cZoneOfSegment(seg);
     const nC = cZone.domains;
     const nD = nTotal - nC;
@@ -379,44 +393,62 @@ export class TitinRepresentation {
     const dArchetypeKey = this.strategy.titin_primitives[region.id].unit_archetype;
     const unit = this.strategy.domain_archetypes[dArchetypeKey].axial_length_nm;
 
-    // Keep an even number of tilted domains so their alternating transverse
-    // components cancel, followed by one or two untilted domains that meet the
-    // untilted C-zone. Positions are derived cumulatively from the same segment
-    // vectors, so every D-zone junction is exactly continuous in 3D. The small
-    // common Y offset of each tilted pair is bounded by half a domain width and
-    // is explicitly SCHEMATIC; it prevents the former centreline-only placement
-    // from creating a 1.580 nm chain break at D58 -> C1.
-    const terminalUntilted = nD % 2 === 0 ? 2 : 1;
-    const nTilted = nD - terminalUntilted;
-    const tiltedRise = nTilted > 0 ? (dSpan - terminalUntilted * unit) / nTilted : 0;
-    if (tiltedRise <= 0 || tiltedRise > unit + EPS || nTilted % 2 !== 0) {
+    // The even D-zone count permits one connected alternating chain whose net
+    // transverse displacement is zero. The C-zone has an odd count (121), so its
+    // first domain is untilted and the remaining 120 alternate. This keeps both
+    // zone endpoints on-axis while preserving the exact derived C-zone interval.
+    const dRise = dSpan / nD;
+    if (dRise <= 0 || dRise > unit + EPS || nD % 2 !== 0) {
       throw new Error(
         `Aband_super D-zone cannot form a connected schematic chain: span=${dSpan}, `
         + `domains=${nD}, unit=${unit}`,
       );
     }
-    const tiltedAngle = Math.acos(Math.min(1, tiltedRise / unit));
-    const pairCentreY = unit * Math.sin(tiltedAngle) / 2;
+    const dAngle = Math.acos(Math.min(1, dRise / unit));
+    const dTransverse = unit * Math.sin(dAngle);
     const dPlacements = [];
     let cursor = seg.X_start;
-    for (let i = 0; i < nTilted; i++) {
+    let cursorY = 0;
+    for (let i = 0; i < nD; i++) {
+      const sign = i % 2 === 0 ? 1 : -1;
       dPlacements.push({
-        axial_rise_nm: tiltedRise,
-        tilt_deg_from_axis: tiltedAngle * 180 / Math.PI,
-        position_nm: { x: cursor + tiltedRise / 2, y: pairCentreY, z: 0 },
+        axial_rise_nm: dRise,
+        tilt_deg_from_axis: dAngle * 180 / Math.PI,
+        position_nm: { x: cursor + dRise / 2, y: cursorY + sign * dTransverse / 2, z: 0 },
       });
-      cursor += tiltedRise;
+      cursor += dRise;
+      cursorY += sign * dTransverse;
     }
-    for (let i = 0; i < terminalUntilted; i++) {
-      dPlacements.push({
-        axial_rise_nm: unit,
-        tilt_deg_from_axis: 0,
-        position_nm: { x: cursor + unit / 2, y: 0, z: 0 },
-      });
-      cursor += unit;
-    }
-    if (Math.abs(cursor - cStart) > EPS) {
+    if (Math.abs(cursor - cStart) > EPS || Math.abs(cursorY) > EPS) {
       throw new Error(`Aband_super D-zone placement ended at ${cursor}, expected ${cStart}`);
+    }
+    const cPlacements = [{
+      axial_rise_nm: unit,
+      tilt_deg_from_axis: 0,
+      position_nm: { x: cStart + unit / 2, y: 0, z: 0 },
+    }];
+    const remainingRise = (cZone.length_nm - unit) / (nC - 1);
+    const cAngle = Math.acos(Math.min(1, remainingRise / unit));
+    const cTransverse = unit * Math.sin(cAngle);
+    cursor = cStart + unit;
+    cursorY = 0;
+    for (let local = 1; local < nC; local += 1) {
+      const globalIndex = nD + local;
+      const sign = globalIndex % 2 === 0 ? 1 : -1;
+      cPlacements.push({
+        axial_rise_nm: remainingRise,
+        tilt_deg_from_axis: cAngle * 180 / Math.PI,
+        position_nm: {
+          x: cursor + remainingRise / 2,
+          y: cursorY + sign * cTransverse / 2,
+          z: 0,
+        },
+      });
+      cursor += remainingRise;
+      cursorY += sign * cTransverse;
+    }
+    if (Math.abs(cursor - seg.X_end) > EPS || Math.abs(cursorY) > EPS) {
+      throw new Error('Aband_super C-zone connected placement failed to close on-axis');
     }
     return [
       {
@@ -431,8 +463,10 @@ export class TitinRepresentation {
       },
       {
         zone: 'C_zone', index0: nD, count: nC, X_start: cStart, X_end: seg.X_end,
+        placements: cPlacements,
         placement_evidence:
-          'MEASURED (11 super-repeats x 11 domains at 45.5 nm periodicity)',
+          'STRONGLY INFERRED (11 sequence repeats x 11 domains at the source-context '
+          + '43.78 nm interval derived as 11 x 3.98 nm)',
         placement_source: cSrc,
       },
     ];
@@ -453,61 +487,74 @@ export class TitinRepresentation {
     return rank(a) <= rank(b) ? a : b;
   }
 
-  /** Intrinsically disordered regions -> ONE chain instance, never folded domains. */
+  /**
+   * Flexible/unresolved sequence regions -> one non-instanced chain envelope.
+   *
+   * This generic path is also used as the render-routing base for UN2A, whose
+   * experimentally resolved structured core is attached by
+   * `_placeCompositeSpring`. `folded_domains: false` therefore means "do not
+   * instance a repeated folded-domain archetype"; it is not, by itself, a claim
+   * that every residue in the sequence lacks structure.
+   */
   _placeDisordered(region, strat, seg) {
     return {
       domain_id: `${region.id}.chain`,
       sequence_position: region.residue_span
         ? { start: region.residue_span.start, end: region.residue_span.end }
         : null,
-      domain_class: region.id === 'PEVK' ? 'PEVK' : 'N2A',
+      domain_class: region.id === 'PEVK' ? 'PEVK'
+        : region.id === 'post_N2A_unknown' ? 'unresolved_sequence' : 'N2A',
       position_nm: { x: (seg.X_start + seg.X_end) / 2, y: 0, z: 0 },
       orientation: { axis: 'X', tilt_deg_from_axis: null, azimuth_deg: null,
                      evidence_class: 'UNKNOWN — no stable fold' },
       scale: 1,
       geometry_archetype: null,
-      // No folded archetype, therefore no representative experimental structure.
-      // Null here is a POSITIVE claim: no PDB entry maps into these spans (see
-      // geometry_strategy.representative_structure_selection.regions_with_zero_structures).
-      representative_pdb_id: null,
+      // The generic PEVK/UNKNOWN path has no representative structure. Composite
+      // regions may override this field when a structure maps to a subspan.
+      representative_pdb_id: /** @type {string|null} */ (null),
       zone: null,
       folded_domains: false,
       span_nm: Number((seg.X_end - seg.X_start).toFixed(3)),
-      variable_length: true,
-      // Disordered regions have no folded unit, so rise/linker/unfolding are not
-      // merely unmeasured but INAPPLICABLE — null, and explicitly never `true`.
+      variable_length: region.mechanical_class !== 'excluded_unknown',
+      // Chain-envelope instances have no repeated folded unit, so rise/linker
+      // fields are INAPPLICABLE — null, and explicitly never `true`.
       axial_rise_nm: null,
       folded_length_nm: null,
       interdomain_linker_nm: null,
       mechanical_class: strat.mechanical_class || 'extensible_spring',
       implies_unfolding: false,
-      domain_class_evidence: 'MEASURED (region identity); no domain sequence to order',
-      domain_evidence_class: 'MEASURED (sequence); UNKNOWN (tertiary conformation)',
+      domain_class_evidence: region.id === 'post_N2A_unknown'
+        ? 'UNKNOWN (no approved biological-region or fold assignment)'
+        : 'MEASURED (region identity); no domain sequence to order',
+      domain_evidence_class: region.id === 'post_N2A_unknown'
+        ? 'MEASURED (sequence continuity); UNKNOWN (identity and conformation)'
+        : 'MEASURED (sequence); UNKNOWN (tertiary conformation)',
       placement_evidence_class: 'UNKNOWN (no stable fold — chain occupies the segment)',
       placement_source: null,
       // Effective class is the conservative FLOOR of the component claims. The
-      // sequence is MEASURED, but the rendered geometry of a disordered chain is
-      // not — a consumer reading only this field must never infer a known shape.
+      // sequence is MEASURED, but the rendered chain envelope is not — a
+      // consumer reading only this field must never infer a known shape.
       evidence_class: this._weakest(
-        'MEASURED (sequence); UNKNOWN (tertiary conformation)',
+        region.id === 'post_N2A_unknown'
+          ? 'MEASURED (sequence continuity); UNKNOWN (identity and conformation)'
+          : 'MEASURED (sequence); UNKNOWN (tertiary conformation)',
         'UNKNOWN (no stable fold — chain occupies the segment)',
       ),
       source: 'UniProt:Q8WZ42',
-      note: 'Entropic/worm-like chain — represent as a flexible chain whose end-to-end ' +
-            'length varies with force; never a fixed fold.',
+      note: region.id === 'post_N2A_unknown'
+        ? 'Explicit unresolved sequence rendered as a bounded zero-projection loop; '
+          + 'zero axial projection is bookkeeping, not zero physical length.'
+        : 'Entropic/worm-like chain — represent as a flexible chain whose end-to-end '
+          + 'length varies with force; never a fixed fold.',
     };
   }
 
   /**
-   * N2A is a composite series element: one folded Ig-like domain plus the
-   * remaining unique sequence as an entropic chain. This mirrors the Phase-8
-   * force law (`folded_plus_wlc`) and, critically, depicts the folded domain that
-   * titin.json declares instead of recording it as a known omission.
-   *
-   * The spec does not resolve the domain's residue subspan or its order inside
-   * this coarse region. It is placed at the Z-disc-proximal end solely to provide
-   * a deterministic serial rendering. That placement is INFERRED and makes no
-   * sequence-order claim; only the count and folded size are measured claims.
+   * N2A is a composite series element in the curated sequence order
+   * I80–UN2A–I81–I82–I83. Four folded domains establish a 16 nm rigid floor;
+   * the remaining axial span belongs to the unique-sequence ribbon. The source
+   * overlap between experimental I81 and UniProt I82 residue intervals is
+   * preserved in metadata and never "repaired" by geometry.
    */
   _placeCompositeSpring(region, strat, seg, archetypes) {
     const archeKey = strat.unit_archetype;
@@ -515,23 +562,43 @@ export class TitinRepresentation {
     if (!arche || arche.axial_length_nm == null) {
       throw new Error(`${region.id}: composite spring requires a measured folded archetype`);
     }
+    const nFolds = strat.n_units;
     const rigid = arche.axial_length_nm;
+    const rigidTotal = rigid * nFolds;
     const span = seg.X_end - seg.X_start;
-    if (span < rigid - EPS) {
+    if (nFolds !== 4 || span < rigidTotal - EPS) {
       throw new Error(
-        `${region.id}: span ${span} nm is shorter than its ${rigid} nm folded domain`,
+        `${region.id}: requires four folds and a span of at least ${rigidTotal} nm; got ${span}`,
       );
     }
-
-    const folded = {
-      domain_id: `${region.id}.1`,
-      sequence_position: null,
+    const curated = region.curated_elements || [];
+    const foldElements = curated.filter((element) => element.kind === 'Ig_like');
+    const unique = curated.find((element) => element.kind === 'unique_sequence');
+    if (foldElements.length !== nFolds || !unique) {
+      throw new Error(`${region.id}: curated I80–UN2A–I81–I82–I83 elements are incomplete`);
+    }
+    const coilSpan = span - rigidTotal;
+    const foldStarts = [
+      seg.X_start,
+      seg.X_start + rigid + coilSpan,
+      seg.X_start + rigid * 2 + coilSpan,
+      seg.X_start + rigid * 3 + coilSpan,
+    ];
+    const folded = foldElements.map((element, index) => {
+      const canonicalSource = element.source.includes('10.1085/jgp.202012766')
+        ? '10.1085/jgp.202012766' : 'UniProt:Q8WZ42';
+      return ({
+      domain_id: `${region.id}.${index + 1}`,
+      sequence_position: {
+        start: element.start, end: element.end, label: element.label,
+        basis: element.source, evidence_class: 'MEASURED',
+      },
       domain_class: 'Ig_like',
-      domain_class_evidence: 'MEASURED (one Ig-like domain declared in titin.json)',
-      position_nm: { x: seg.X_start + rigid / 2, y: 0, z: 0 },
+      domain_class_evidence: 'MEASURED (curated N2A element identity)',
+      position_nm: { x: foldStarts[index] + rigid / 2, y: 0, z: 0 },
       orientation: {
         axis: 'X', tilt_deg_from_axis: 0, azimuth_deg: null,
-        evidence_class: 'INFERRED (serial placement); UNKNOWN (true order/azimuth)',
+        evidence_class: 'INFERRED (serial axial placement); UNKNOWN (azimuth)',
       },
       scale: 1,
       geometry_archetype: archeKey,
@@ -539,29 +606,71 @@ export class TitinRepresentation {
       zone: null,
       folded_domains: true,
       variable_length: false,
-      note: 'Generic Ig archetype depicts the declared fold count; its residue subspan/order and placement within N2A are unresolved.',
+      note: element.source_overlap_note || null,
       span_nm: rigid,
       axial_rise_nm: rigid,
       folded_length_nm: rigid,
-      interdomain_linker_nm: 0,
+      interdomain_linker_nm: index === 0 ? coilSpan : 0,
       mechanical_class: 'rigid_fold_in_series',
       implies_unfolding: false,
       domain_evidence_class: arche.evidence_by_claim?.axial_length_nm || 'MEASURED',
-      placement_evidence_class:
-        'INFERRED (deterministic Z-disc-proximal placement; region-internal order UNKNOWN)',
-      placement_source: null,
+      placement_evidence_class: 'INFERRED (curated sequence order; axial display placement)',
+      placement_source: canonicalSource,
       evidence_class: this._weakest(
         arche.evidence_by_claim?.axial_length_nm || 'MEASURED',
-        'INFERRED (deterministic serial placement)',
+        'INFERRED (curated sequence order; axial display placement)',
       ),
-      source: arche.axial_length_source,
-    };
+      source: canonicalSource,
+    });
+    });
 
-    const coilSeg = { X_start: seg.X_start + rigid, X_end: seg.X_end };
+    const coilSeg = {
+      X_start: seg.X_start + rigid,
+      X_end: seg.X_start + rigid + coilSpan,
+    };
     const coil = this._placeDisordered(region, strat, coilSeg);
-    coil.note = 'N2A unique sequence rendered as the variable-length coil in series with its one folded Ig; '
-      + 'the internal residue boundary is unresolved and is not claimed.';
-    return [folded, coil];
+    coil.sequence_position = {
+      start: unique.start, end: unique.end, label: unique.label,
+      basis: unique.source, evidence_class: 'MEASURED',
+    };
+    coil.source = unique.source;
+    const core = strat.structured_core;
+    if (!core?.pdb_id || !core?.canonical_Q8WZ42_1_span?.start
+        || !core?.canonical_Q8WZ42_1_span?.end || !core?.fold || !core?.source) {
+      throw new Error(`${region.id}: structured UN2A core provenance is incomplete`);
+    }
+    // PDB 7NIP resolves the central human UN2A tri-helix core. The enclosing
+    // ribbon remains the correct SC-20 coarse view because neither the flexible
+    // flanks nor the core's in-sarcomere pose is resolved. Override every generic
+    // "no stable fold" field so render routing cannot erase that measured fold.
+    coil.orientation.evidence_class =
+      'UNKNOWN (in-sarcomere orientation of the UN2A core and flexible flanks)';
+    coil.representative_pdb_id = core.pdb_id;
+    coil.contains_structured_core = true;
+    coil.structured_core = {
+      label: 'UN2A tri-helix core',
+      sequence_position: { ...core.canonical_Q8WZ42_1_span },
+      representative_pdb_id: core.pdb_id,
+      fold: core.fold,
+      evidence_class: 'MEASURED (solution NMR; deposited coordinates)',
+      source: core.source,
+      render_usage: core.render_usage,
+    };
+    coil.folded_domains_semantics = 'false means no repeated folded-domain archetype is '
+      + `instanced for this composite unique-sequence envelope; it does not deny the ${core.pdb_id} core`;
+    coil.domain_class_evidence =
+      'MEASURED (UN2A identity and 7NIP structured core); flexible flanks unresolved';
+    coil.domain_evidence_class =
+      'MEASURED (7NIP structured core); UNKNOWN (flank and in-situ conformation)';
+    coil.placement_evidence_class =
+      'SCHEMATIC (serial chain envelope; core pose and flank paths unresolved)';
+    coil.evidence_class = this._weakest(
+      coil.domain_evidence_class, coil.placement_evidence_class,
+    );
+    coil.note = 'UN2A unique sequence rendered as a non-atomic variable-length ribbon between '
+      + 'curated I80 and I81. PDB 7NIP establishes a structured tri-helix core; flexible flanks '
+      + 'and the complete in-sarcomere conformation remain unresolved.';
+    return [folded[0], coil, ...folded.slice(1)];
   }
 
   /** Single-copy domains (kinase). */
@@ -580,11 +689,10 @@ export class TitinRepresentation {
       geometry_archetype: strat.unit_archetype,
       representative_pdb_id: (arche.representative_structure || {}).pdb_id || null,
       zone: null,
-      span_nm: Number((seg.X_end - seg.X_start).toFixed(3)),
-      // A single domain occupies its whole segment: rise == span, no linker, and
-      // no unfolding is implied. Fields kept present (not undefined) so consumers
-      // can group every instance by mechanical_class without special-casing.
-      axial_rise_nm: Number((seg.X_end - seg.X_start).toFixed(3)),
+      // The 35 nm interval is a SCHEMATIC position envelope. The glyph keeps the
+      // coordinate-derived N-to-C length and is centred in that allocation.
+      span_nm: arche.axial_length_nm != null ? arche.axial_length_nm : null,
+      axial_rise_nm: arche.axial_length_nm != null ? arche.axial_length_nm : null,
       folded_length_nm: arche.axial_length_nm != null ? arche.axial_length_nm : null,
       interdomain_linker_nm: 0,
       mechanical_class: strat.mechanical_class || 'anchored',
@@ -595,11 +703,11 @@ export class TitinRepresentation {
       domain_class_evidence: 'MEASURED (region is single-class)',
       domain_evidence_class: (arche.evidence_by_claim && arche.evidence_by_claim.primitive_choice)
         || 'SCHEMATIC',
-      placement_evidence_class: 'INFERRED (single copy centred on its sourced segment)',
+      placement_evidence_class: 'SCHEMATIC (single copy centred in the 70–105 nm envelope)',
       placement_source: null,
       evidence_class: this._weakest(
         (arche.evidence_by_claim && arche.evidence_by_claim.primitive_choice) || 'SCHEMATIC',
-        'INFERRED (single copy centred on its sourced segment)',
+        'SCHEMATIC (single copy centred in the 70–105 nm envelope)',
       ),
       source: arche.axial_length_source || 'UniProt:Q8WZ42',
     };

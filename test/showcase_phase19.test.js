@@ -37,8 +37,8 @@ test('SC19: scope has no tissue overclaim or literal public fallback', () => {
   const scope = scopeLedger(model.spec);
   assert.equal(scope.sequence.isoform_id, 'Q8WZ42-1');
   assert.equal(scope.sequence.tissue_or_muscle_claim, null);
-  assert.match(scope.publicBadge, /Q8WZ42-1.*pending/i);
-  assert.match(scope.mechanics.display_label, /rat psoas.*pending/i);
+  assert.match(scope.publicBadge, /Q8WZ42-1.*citation-reviewed/i);
+  assert.match(scope.mechanics.display_label, /rat psoas.*SD-04 DEFERRED.*withheld/i);
   assert.ok(scope.render.reference_molecule_policy);
   assert.ok(scope.excludedClaims.length);
   assert.match(page, /\$\('scopeIdentity'\)\.textContent = model\.scientificScope\.publicBadge/);
@@ -50,11 +50,12 @@ test('SC19: scope has no tissue overclaim or literal public fallback', () => {
 
 test('SC19: all five decision statuses are normalized and visibly rendered', () => {
   const decisions = decisionLedger(model.spec);
-  assert.equal(decisions.counts.PENDING, 5);
-  assert.equal(decisions.counts.APPROVED, 0);
-  for (const id of ['SD-01', 'SD-02', 'SD-03', 'SD-04', 'SD-05']) {
-    assert.match(decisions.badgeText, new RegExp(`${id} pending`, 'i'));
-  }
+  assert.deepEqual(decisions.counts, { PENDING: 0, APPROVED: 3, DEFERRED: 2 });
+  assert.match(decisions.badgeText, /SD-01 approved/i);
+  assert.match(decisions.badgeText, /SD-02 deferred/i);
+  assert.match(decisions.badgeText, /SD-03 approved/i);
+  assert.match(decisions.badgeText, /SD-04 deferred/i);
+  assert.match(decisions.badgeText, /SD-05 approved/i);
   assert.match(page, /id="scopeDecisions"/);
   assert.match(page, /id="scientificDecisionStatus"/);
   assert.match(page, /model\.scientificDecisions\.badgeText/);
@@ -122,15 +123,21 @@ test('SC19: runtime rejects a valid pointer rebound to the wrong public claim', 
   assert.ok(result.problems.some((problem) => /scope_badge.*exact public binding/i.test(problem)));
 });
 
-test('SC19: all five decisions are honestly PENDING and packet-byte bound', () => {
-  assert.equal(model.spec.scientificDecisions.sprint_status, 'CODE_COMPLETE_BLOCKED_SCIENCE');
+test('SC20: all five owner-authorized decisions are honest and packet-byte bound', () => {
+  assert.equal(model.spec.scientificDecisions.sprint_status, 'DECISIONS_CONSUMABLE_SC20');
   assert.deepEqual(Object.keys(model.spec.scientificDecisions.decisions), [
     'SD-01', 'SD-02', 'SD-03', 'SD-04', 'SD-05',
   ]);
+  const expected = {
+    'SD-01': 'APPROVED', 'SD-02': 'DEFERRED', 'SD-03': 'APPROVED',
+    'SD-04': 'DEFERRED', 'SD-05': 'APPROVED',
+  };
   for (const [id, decision] of Object.entries(model.spec.scientificDecisions.decisions)) {
-    assert.equal(decision.status, 'PENDING', id);
+    assert.equal(decision.status, expected[id], id);
     assert.equal(decision.reviewer, null, id);
-    assert.equal(decision.ruling, null, id);
+    assert.equal(decision.adjudicator.human_expert, false, id);
+    assert.equal(decision.independent_human_review_status, 'NOT_PERFORMED', id);
+    assert.ok(decision.ruling, id);
     for (const packet of decision.evidence_packet) {
       const bytes = readFileSync(new URL(`../${packet.path}`, import.meta.url));
       assert.equal(createHash('sha256').update(bytes).digest('hex'), packet.sha256, packet.path);

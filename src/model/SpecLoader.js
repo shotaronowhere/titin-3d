@@ -29,6 +29,7 @@ export const SPEC_FILES = Object.freeze([
   'titin_sequence_features.json',
   'claim_support.json',
   'scientific_decisions.json',
+  'render_style.json',
 ]);
 
 // Phase-3 geometry strategy. Distinct from the five canonical source-of-truth
@@ -109,6 +110,7 @@ export class Spec {
     this.sequenceFeatures = files['titin_sequence_features.json'];
     this.claimSupport = files['claim_support.json'];
     this.scientificDecisions = files['scientific_decisions.json'];
+    this.renderStyle = files['render_style.json'];
     this.geometryStrategy = files[STRATEGY_FILE] || null;
     this.contextMeasurements = files[CONTEXT_FILE] || null;
     this.domainBackbones = files[BACKBONE_FILE] || null;
@@ -162,6 +164,7 @@ export class Spec {
       sequenceFeatures: this.sequenceFeatures,
       claimSupport: this.claimSupport,
       scientificDecisions: this.scientificDecisions,
+      renderStyle: this.renderStyle,
     })) if (!v || typeof v !== 'object') p.push(`${k}.json missing or not an object`);
     if (p.length) return { ok: false, problems: p };
 
@@ -205,8 +208,11 @@ export class Spec {
     if (this.claimSupport.schema !== 'titin-claim-support/1') {
       p.push('claim_support.json has the wrong schema');
     }
-    if (this.scientificDecisions.schema !== 'titin-scientific-decisions/1') {
+    if (this.scientificDecisions.schema !== 'titin-scientific-decisions/2') {
       p.push('scientific_decisions.json has the wrong schema');
+    }
+    if (this.renderStyle.schema !== 'titin-render-style/1') {
+      p.push('render_style.json has the wrong schema');
     }
     const supportIds = new Set((this.claimSupport.claims || []).map((claim) => claim.id));
     const supportById = new Map((this.claimSupport.claims || []).map((claim) => [claim.id, claim]));
@@ -310,8 +316,13 @@ export class Spec {
     const ig = T.regions.reduce((a, r) => a + (r.domain_composition?.Ig_like || 0), 0);
     const fn = T.regions.reduce((a, r) => a + (r.domain_composition?.Fn3 || 0), 0);
     const decl = T.domain_totals || {};
-    if (decl.Ig_like != null && ig !== decl.Ig_like) p.push(`Ig-like total ${ig} != declared ${decl.Ig_like}`);
-    if (decl.Fn3 != null && fn !== decl.Fn3) p.push(`Fn3 total ${fn} != declared ${decl.Fn3}`);
+    const curated = decl.curated_biological_domain_count || {};
+    const rendered = decl.rendered_domain_count || {};
+    if (ig !== curated.Ig_like) p.push(`Ig-like total ${ig} != curated ${curated.Ig_like}`);
+    if (fn !== curated.Fn3) p.push(`Fn3 total ${fn} != curated ${curated.Fn3}`);
+    if (rendered.Ig_like !== curated.Ig_like || rendered.Fn3 !== curated.Fn3) {
+      p.push('rendered domain totals differ from curated biological totals');
+    }
 
     // 4. per-state numerical identities (the geometry the engine will interpolate)
     const HALF_THICK = this._halfThick(); // read from spec, not hardcoded

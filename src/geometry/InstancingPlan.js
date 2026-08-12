@@ -75,17 +75,20 @@ export class InstancingPlan {
     const unbatched = [];
 
     for (const d of instances) {
-      // A domain with no folded archetype (PEVK, N2A) must NOT be instanced as a
-      // folded primitive. It is reported separately so a renderer cannot silently
-      // draw a disordered region as a row of capsules.
+      // A record with no region-level archetype (PEVK, N2A) must NOT be instanced
+      // as a repeated folded primitive. UN2A still carries its measured 7NIP core
+      // provenance; the unbatched route means only that its mixed structured-core
+      // / flexible-flank sequence is drawn as one coarse chain envelope.
       if (!d.geometry_archetype) {
         unbatched.push({
           domain_id: d.domain_id,
           domain_class: d.domain_class,
-          reason: 'no folded archetype — disordered/extensible region',
-          render_hint: 'draw as a variable-length path, never as folded domain primitives',
+          reason: 'no region-level repeated-domain archetype — chain-envelope rendering',
+          render_hint: 'draw as a variable-length non-atomic path; consult structural_content',
           span_nm: d.span_nm,
           evidence_class: d.evidence_class,
+          representative_pdb_id: d.representative_pdb_id,
+          structural_content: d.structured_core || null,
         });
         continue;
       }

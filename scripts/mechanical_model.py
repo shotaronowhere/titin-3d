@@ -56,8 +56,9 @@ circular reasoning.
       artefact of the switch, not physics. See test suite.
 
   N2A
-      one 4 nm folded-domain floor in series with a pure-entropic WLC,
-      A = 0.35 nm and total Lc = 39 nm. The AFM and phosphorylation source
+      four 4 nm folded-domain floor (16 nm total) in series with a
+      pure-entropic WLC, A = 0.35 nm and total contour proxy = 55 nm
+      (16 nm folded floor + 39 nm unique-sequence contour). The AFM and phosphorylation source
       (10.3389/fphys.2020.00173) used recombinant human N2A constructs; it did
       not establish a tissue-specific Q8WZ42-1 construct.
       DELIBERATELY NOT MODELLED as a folded bundle with an unfolding
@@ -73,9 +74,11 @@ overwrite the keyframes; it is a second, independent route to the partition,
 and the divergence between the two is reported rather than hidden.
 
 Run:  python3 scripts/mechanical_model.py
-Writes data/mechanical_model.json (+ prints the consistency report).
+Check: python3 scripts/mechanical_model.py --check
+Writes data/mechanical_model.json and data/structural_states.json, or in
+`--check` mode verifies that both committed byte streams are exactly reproducible.
 """
-import json, math, os, sys
+import argparse, copy, json, math, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(os.path.dirname(HERE), "data")
@@ -130,17 +133,12 @@ def chain_parameters(spec_titin):
     return {
         "prox_Ig": {"law": "wlc",  "A_nm": 21.0, "Lc_nm": lc("prox_Ig"),
                     "source": "10.1073/pnas.95.14.8052 (via Linke 1998 J Cell Sci 111:1567)"},
-        # N2A is NOT a bare WLC. titin.json:domain_composition says the region
-        # contains ONE folded Ig-like domain, and a folded domain cannot collapse.
-        # So: rigid folded domain in SERIES with the remaining unique sequence as
-        # the entropic coil. Both constants are already in the spec --
-        # 4.0 nm from geometry_sources[10] "Folded Ig/Fn3 domain axial length"
-        # (MEASURED, uncertainty 4.0-4.4, corroborated by the Phase 6 measured
-        # Ig_like N-to-C extent of 4.319 nm), and the 39 nm N2A contour from [11].
-        # A bare WLC let N2A fall to 0.3 nm at the contracted state, below the
-        # folded domain it contains -- physically impossible.
-        "N2A":     {"law": "folded_plus_wlc", "A_nm": 0.35, "Lc_nm": 39.0,
-                    "rigid_nm": 4.0,
+        # SD-01 resolves four folded N2A Ig domains. Their 16 nm floor is in
+        # SERIES with the 39 nm unique-sequence contour; both values come from
+        # titin.json so the generator cannot drift from sequence curation.
+        "N2A":     {"law": "folded_plus_wlc", "A_nm": 0.35,
+                    "Lc_nm": lc("N2A"),
+                    "rigid_nm": regs["N2A"]["extension_model"]["rigid_folded_length_nm"],
                     "source": "10.3389/fphys.2020.00173 (geometry_sources[11],[12]); "
                               "rigid folded-domain length from geometry_sources[10] "
                               "(10.1016/j.jmb.2020.06.025)"},
@@ -248,9 +246,11 @@ def continuity_probe(ch):
                               "steep but continuous limb; ratio ~1 would mean a true jump"}
 
 # ------------------------------------------------------------------- main ----
-def main():
+def main(check=False):
     titin  = load("titin.json")
-    states = load("structural_states.json")["states"]
+    sarcomere = load("sarcomere.json")
+    states_record = load("structural_states.json")
+    states = states_record["states"]
     ch = chain_parameters(titin)
 
     report = {
@@ -280,6 +280,62 @@ def main():
         "source_validation": validate_against_source(),
         "continuity": continuity_probe(ch),
     }
+    z_width = next(component for component in sarcomere["components"]
+                   if component["id"] == "zdisc")["dimensions_nm"]["width_X"]
+    thick_length = next(component for component in sarcomere["components"]
+                       if component["id"] == "thick_filament")["dimensions_nm"]["length_X"]
+    sensitivity = []
+    for pevk_lc in (ch["PEVK"]["Lc_nm"], 450.0, 350.0, 240.0):
+        candidate = copy.deepcopy(ch)
+        candidate["PEVK"]["Lc_nm"] = pevk_lc
+        sensitivity.append({
+            "PEVK_Lc_nm": pevk_lc,
+            "force_pN": round(solve_force(candidate, 675.0), 1),
+        })
+    relative = [
+        100.0 * ewlc_extension(10.0, ch["PEVK"]["A_nm"], lc,
+                               ch["PEVK"]["K0_pN"]) / lc
+        for lc in (ch["PEVK"]["Lc_nm"], 300.0, 240.0)
+    ]
+    report["isoform_scope"] = {
+        "spec_isoform": "Human canonical titin, UniProt Q8WZ42; contours are read from this spec.",
+        "chain_parameter_isoform": "Rat psoas skeletal titin (10.1073/pnas.95.14.8052).",
+        "why_this_is_acceptable_for_A_and_K0": "Persistence length A and stretch modulus K0 "
+            "are treated as transferable development-model material parameters; contour lengths "
+            "are never transferred and come from the current sequence spec.",
+        "consequence_for_relative_extension": "At fixed force, fractional extension is independent "
+            "of contour length in the adopted law (10 pN spread %.3g percentage points)."
+            % (max(relative) - min(relative)),
+        "consequence_for_absolute_force": "Absolute force at equal sarcomere length is isoform- "
+            "and preparation-sensitive. SD-04 therefore DEFERRED biological transfer and public "
+            "absolute-pN output; these values are development diagnostics, not validation.",
+        "isoform_force_sensitivity_at_SL_3um": sensitivity,
+        "evidence_class": "MODELED development diagnostic; SD-04 DEFERRED",
+    }
+    plausibility_rows = []
+    for sl_um in (2.9, 2.95, 3.0):
+        total = sl_um * 1000.0 / 2.0 - z_width / 2.0 - thick_length / 2.0
+        force = solve_force(ch, total)
+        plausibility_rows.append({
+            "SL_um": sl_um,
+            "I_band_total_nm": total,
+            "force_pN": round(force, 3),
+            "PEVK_percent_of_contour": round(
+                100.0 * region_extension(ch, "PEVK", force) / ch["PEVK"]["Lc_nm"], 1),
+        })
+    report["cross_isoform_plausibility_check"] = {
+        "status": "PLAUSIBILITY CHECK — NOT VALIDATION",
+        "source": "10.1073/pnas.95.14.8052",
+        "source_statement": "At 2.9-3.0 um sarcomere length, force per titin is near "
+                            "10 pN with PEVK extension about 50% in the source preparation.",
+        "model_prediction_over_that_window": plausibility_rows,
+        "why_the_prediction_is_not_a_fit": "No force or extension datum is fitted; I-band totals "
+            "come from the independently declared sarcomere geometry.",
+        "why_not_validation": "The source preparation and current sequence construct differ, and "
+            "absolute force is transfer-sensitive. Agreement cannot validate human Q8WZ42-1.",
+        "what_makes_it_non_circular": "Chain parameters and I-band totals come from independent "
+            "records, so the comparison can fail even though it remains only a plausibility check.",
+    }
 
     # ---- force-based partition at each keyframe SL, vs the spec's partition
     per_state, worst_dev = {}, 0.0
@@ -288,6 +344,55 @@ def main():
         spec  = v["titin_I_band_extension_nm"]
         F     = solve_force(ch, total)
         pred  = {r: region_extension(ch, r, F) for r in ORDER}
+        # Store millinanometre values while preserving the exact declared total.
+        # The explicit UNKNOWN interval is a zero-projection layout record only;
+        # it is absent from ORDER and therefore never enters force balance.
+        stored = {r: round(pred[r], 3) for r in ORDER[:-1]}
+        stored[ORDER[-1]] = round(total - sum(stored.values()), 3)
+        v["titin_I_band_extension_nm"] = {
+            "prox_Ig": stored["prox_Ig"],
+            "N2A": stored["N2A"],
+            "post_N2A_unknown": 0.0,
+            "PEVK": stored["PEVK"],
+            "dist_Ig": stored["dist_Ig"],
+        }
+        zdisc = next(component for component in sarcomere["components"]
+                     if component["id"] == "zdisc")
+        cursor = zdisc["dimensions_nm"]["width_X"] / 2.0
+        layout = {}
+        for region_id, length_nm in v["titin_I_band_extension_nm"].items():
+            layout[region_id] = {
+                "X_start": round(cursor, 3),
+                "X_end": round(cursor + length_nm, 3),
+                "length_nm": length_nm,
+            }
+            cursor += length_nm
+        v["titin_iband_layout_nm"] = layout
+        provenance = v.get("titin_I_band_extension_provenance") or {}
+        provenance.update({
+            "route": "scripts/mechanical_model.py — four modeled elastic regions in series; "
+                     "post_N2A_unknown is explicit zero-projection bookkeeping excluded from mechanics.",
+            "common_force_pN": round(F, 3),
+            "per_region_implied_force_spread": "1.000x (generated from one common-force solve)",
+            "reproduce": "python3 scripts/mechanical_model.py",
+            "model_basis": "Development Marko-Siggia WLC/eWLC solver sourced from "
+                           "10.1073/pnas.95.14.8052. N2A has a 16 nm "
+                           "four-fold rigid floor plus 39 nm UN2A contour proxy; SD-04 "
+                           "defers biological transfer and public absolute-pN output.",
+            "unknown_interval_policy": "residues 9852-10215 have no approved contour or force law; "
+                                       "zero axial projection is not zero physical length",
+        })
+        v["titin_I_band_extension_provenance"] = provenance
+        chain = provenance.get("supersession_chain")
+        if chain:
+            # The current step must reproduce the canonical partition exactly,
+            # including explicit zero-projection layout-only intervals.  Leaving
+            # post_N2A_unknown out here would make the provenance record and the
+            # live state structurally unequal even though their sums agree.
+            chain[-1]["partition_nm"] = copy.deepcopy(v["titin_I_band_extension_nm"])
+            chain[-1]["defect"] = None
+            chain[-1]["status"] = "current"
+            chain[-1]["derivation"] = "MODELED development solver; SD-04 DEFERRED"
         shares, dzdF = compliance_shares(ch, F)
         dev = {r: pred[r] - spec[r] for r in ORDER}
         worst_dev = max(worst_dev, max(abs(d) for d in dev.values()))
@@ -379,8 +484,31 @@ def main():
     print(json.dumps(report["derived_recruitment"]["migration_test"], indent=2))
 
     out = os.path.join(DATA_DIR, "mechanical_model.json")
-    json.dump(report, open(out, "w"), indent=2)
-    print("\nwrote %s" % os.path.relpath(out))
+    states_out = os.path.join(DATA_DIR, "structural_states.json")
+    outputs = ((out, report), (states_out, states_record))
+    if check:
+        stale = []
+        for path, payload in outputs:
+            expected = json.dumps(payload, indent=2).encode("utf-8")
+            try:
+                with open(path, "rb") as handle:
+                    actual = handle.read()
+            except FileNotFoundError:
+                stale.append(os.path.relpath(path))
+                continue
+            if actual != expected:
+                stale.append(os.path.relpath(path))
+        if stale:
+            print("\ngenerated mechanical outputs are stale: %s" % ", ".join(stale))
+            print("run python3 scripts/mechanical_model.py")
+            return 1
+        print("\ngenerator reproducibility: PASS (2/2 byte-identical outputs)")
+    else:
+        for path, payload in outputs:
+            with open(path, "w", encoding="utf-8") as handle:
+                json.dump(payload, handle, indent=2)
+        print("\nwrote %s" % os.path.relpath(out))
+        print("wrote %s" % os.path.relpath(states_out))
     print("worst deviation from the spec partition: %.1f nm" % worst_dev)
     for n in names_by_sl:
         s = per_state[n]
@@ -402,4 +530,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true",
+                        help="verify generated outputs byte-for-byte without writing")
+    sys.exit(main(check=parser.parse_args().check))

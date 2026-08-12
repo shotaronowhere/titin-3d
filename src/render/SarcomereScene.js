@@ -120,7 +120,7 @@ export const DOMAIN_BACKBONE_RESOLVE_PX = 40;
 /**
  * The Cα trace's rendered radius, as a fraction of the archetype's own measured
  * lateral diameter. A backbone has no thickness of its own — this is a reading
- * width, like TITIN_RENDER_STYLE.trace_px, and taking it from the archetype's
+ * width, like render_style.json titin.trace_px, and taking it from the archetype's
  * measured cross-section means it scales with the fold rather than being a
  * constant the renderer invented.
  */
@@ -253,44 +253,27 @@ export const GUIDED_COMPONENT_COLOR = Object.freeze({
   lattice_guide: 0x3c4653,
 });
 
-/**
- * SC-10 subject-emphasis channel.
- *
- * `trace_px` is a SCREEN-SPACE width in CSS pixels. It is a reading aid, not a
- * molecular dimension, and it is deliberately independent of the tube radius:
- * inflating the tube would imply a diameter, while a constant-width ribbon
- * makes no dimensional claim at all. Evidence opacity is untouched by every
- * value here — emphasis and confidence stay on separate channels.
- *
- * SC-15 adds the disordered-chain depiction. `coil_amplitude_scale` is a
- * multiple of the same titin render radius, which is already declared not to be
- * a molecular dimension, so the coil makes no dimensional claim either — and it
- * is deliberately below `halo_radius_scale`, so the emphasis envelope always
- * contains the chain it emphasises. `coil_turns` is a ceiling on visual density,
- * and `coil_min_amplitude_nm` is the width below which a wiggle is narrower than
- * the line drawing it and is therefore not drawn at all.
- */
-export const TITIN_RENDER_STYLE = Object.freeze({
-  guided_radius_scale: 1.65,
-  disordered_radius_scale: 0.58,
-  continuity_opacity: 0.96,
-  trace_px: 4.0,
-  trace_px_evidence: 3.0,
-  halo_radius_scale: 3.2,
-  halo_opacity: 0.16,
-  coil_amplitude_scale: 2.6,
-  coil_turns: 6,
-  coil_min_amplitude_nm: 0.05,
-  // Half: a backbone at half a domain's rendered radius leaves the domain
-  // standing clearly proud of the chain that carries it, at any zoom, without
-  // becoming a hairline that disappears in the overview.
-  linker_radius_fraction: 0.5,
-  // The two regions titin.json declares as having no folded structure. Named
-  // here, once, because both the narrower tube radius and the coil are the same
-  // statement about the same two regions — that they are intrinsically
-  // disordered — and a second copy of the list could disagree with the first.
-  disordered_regions: Object.freeze(['N2A', 'PEVK']),
-});
+/** FNV-1a over UTF-16 code units, kept local and deterministic across runtimes. */
+function fnv1a(text) {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return hash >>> 0;
+}
+
+/** Mulberry32: a tiny, deterministic local PRNG; never touches ambient entropy. */
+function mulberry32(seed) {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let z = state;
+    z = Math.imul(z ^ (z >>> 15), z | 1);
+    z ^= z + Math.imul(z ^ (z >>> 7), z | 61);
+    return ((z ^ (z >>> 14)) >>> 0) / 4294967296;
+  };
+}
 
 /** Nanometres floored to a picometre, for report values that must not round up. */
 const floorPm = (nm) => Math.floor(nm * 1000) / 1000;
@@ -551,97 +534,65 @@ export class SarcomereScene {
   }
 
   /**
-   * SC-15 disordered-chain depiction.
-   *
-   * A transverse sinusoid between two FIXED endpoints. The amplitude falls as the
-   * region approaches its contour length, which is the visual statement "this part
-   * is being pulled straight" — the one thing the extension chart asserts and the
-   * render never showed. It is SCHEMATIC: no measured conformation exists to draw,
-   * and the endpoints, which are canonical, never move.
-   *
-   * Every sample's X is a convex combination of the two canonical endpoints, so
-   * the detour is purely transverse by construction rather than by inspection.
-   *
-   * @param {Array<{x:number,y?:number,z?:number}>} points  canonical path points
-   * @param {{amplitudeNm:number, turns:number}} opts
-   * @returns {Array<{x:number,y:number,z:number}>}
+   * Seeded irregular transverse ribbon with canonical endpoints. It is a stable
+   * depiction descriptor, not an equilibrium conformation or polymer simulation.
+   * Interior canonical anchors (notably N2A fold centres) are revisited exactly,
+   * so the visible linker never detaches from a displayed folded domain.
    */
-  _coilPath(points, { amplitudeNm, turns }) {
+  _irregularRibbonPath(points, descriptor, regionId, strandIndex) {
     const flat = points.map((p) => ({ x: p.x, y: p.y ?? 0, z: p.z ?? 0 }));
-    if (flat.length < 2 || !(amplitudeNm > 0) || !(turns > 0)) return flat;
-    const first = flat[0];
-    const last = flat[flat.length - 1];
-    const span = last.x - first.x;
-    if (!(span > 0)) return flat;
-    // Six samples per turn is the coarsest spacing at which a CatmullRom through
-    // the samples still reads as the sinusoid it was sampled from rather than as
-    // a polygon; below that the curve visibly clips its own extrema.
-    const SAMPLES = Math.max(48, Math.ceil(turns * 6));
+    if (!flat.length || !(descriptor.amplitudeNm > 0)) return flat;
+    const style = this.titinRenderStyle.irregular_ribbon;
+    const seed = fnv1a(`${this.renderStyleRecord.render_seed}|${regionId}|${strandIndex}`);
+    const random = mulberry32(seed);
+    const targetCount = this.renderStyleRecord.algorithm.control_points;
+    const anchors = flat.length === 1 ? [flat[0], flat[0]] : flat;
+    const spans = anchors.length - 1;
+    const perSpan = Math.max(2, Math.ceil((targetCount - 1) / spans));
     const out = [];
-    for (let i = 0; i <= SAMPLES; i += 1) {
-      const t = i / SAMPLES;
-      const x = first.x + span * t;
-      const baseY = first.y + (last.y - first.y) * t;
-      const baseZ = first.z + (last.z - first.z) * t;
-      // A raised-cosine envelope pins the ends exactly on the canonical endpoints.
-      const envelope = 0.5 * (1 - Math.cos(2 * Math.PI * t));
-      const phase = 2 * Math.PI * turns * t;
-      out.push({
-        x,
-        y: baseY + amplitudeNm * envelope * Math.sin(phase),
-        z: baseZ + amplitudeNm * envelope * Math.cos(phase) * 0.6,
-      });
+    let angle = random() * Math.PI * 2;
+    for (let spanIndex = 0; spanIndex < spans; spanIndex += 1) {
+      const first = anchors[spanIndex];
+      const last = anchors[spanIndex + 1];
+      for (let i = 0; i <= perSpan; i += 1) {
+        if (spanIndex > 0 && i === 0) continue;
+        const t = i / perSpan;
+        if (i === 0) { out.push({ ...first }); continue; }
+        if (i === perSpan) { out.push({ ...last }); continue; }
+        const baseY = first.y + (last.y - first.y) * t;
+        const baseZ = first.z + (last.z - first.z) * t;
+        const envelope = Math.sin(Math.PI * t);
+        const radial = descriptor.amplitudeNm * envelope
+          * (style.radial_floor_fraction + style.radial_jitter_fraction * random());
+        angle += (random() * 2 - 1) * style.angular_jitter_turns * Math.PI * 2;
+        out.push({
+          x: first.x + (last.x - first.x) * t,
+          y: baseY + radial * Math.cos(angle),
+          z: baseZ + radial * Math.sin(angle),
+        });
+      }
     }
-    // Floating-point drift in `first.x + span * t` must not reach the canonical
-    // interval: the endpoints are restated, not recomputed.
-    out[0] = { ...first };
-    out[out.length - 1] = { ...last };
+    out[0] = { ...flat[0] };
+    out[out.length - 1] = { ...flat.at(-1) };
     return out;
   }
 
-  /**
-   * SC-15. How wide a coil one disordered region earns at this state, and how
-   * many turns that coil is drawn with.
-   *
-   * `fraction` is the region's canonical axial span over the contour length the
-   * descriptor carries from the spec — the same `max_end2end_nm` the mechanical
-   * model uses as Lc. A slack chain (small fraction) has a lot of length to put
-   * somewhere and gets a wide coil; a chain near its contour has nowhere left to
-   * put it and is drawn essentially straight. Nothing here is a measurement.
-   *
-   * The turn count is a LEGIBILITY constraint, not a claim: at the resting state
-   * N2A holds a 39 nm contour inside a ~5 nm axial span, and a fixed six turns
-   * there would put the coil's pitch an order of magnitude below the tube's own
-   * diameter, fusing the turns into an opaque bead that reads as a fold — the one
-   * thing this region provably is not. The pitch is therefore held at or above
-   * one tube diameter, so the turn count follows continuously from the span and
-   * what is drawn stays a chain the eye can trace. Continuously, not in steps:
-   * the stretch sweep animates through these states, and a turn appearing at a
-   * threshold would read as a rendering fault.
-   *
-   * @param {{X_start:number, X_end:number}} segment  canonical Level-0 interval
-   * @param {number|undefined} contourNm  descriptor contour length, if declared
-   * @param {{amplitudeBasisNm:number, tubeRadiusNm:number}} render
-   * @returns {{amplitudeNm:number, turns:number, fraction:number|null}}
-   */
-  _disorderedCoil(segment, contourNm, { amplitudeBasisNm, tubeRadiusNm }) {
-    const none = { amplitudeNm: 0, turns: 0, fraction: /** @type {number|null} */ (null) };
+  /** Slack-derived schematic amplitude, with an explicit fallback for UNKNOWN sequence. */
+  _disorderedDescriptor(segment, contourNm, fallbackSlackFraction, amplitudeBasisNm) {
     const spanNm = segment.X_end - segment.X_start;
-    // A descriptor without a declared contour gets no coil at all rather than a
-    // guessed one: an invented contour would make the amplitude a claim.
-    const contour = typeof contourNm === 'number' ? contourNm : 0;
-    if (!(spanNm > 0) || !(contour > 0) || !(amplitudeBasisNm > 0) || !(tubeRadiusNm > 0)) {
-      return none;
+    const contour = typeof contourNm === 'number' && contourNm > 0 ? contourNm : null;
+    const fraction = contour === null ? null : Math.min(1, Math.max(0, spanNm / contour));
+    const slack = fraction === null ? fallbackSlackFraction : 1 - fraction;
+    if (!(typeof slack === 'number' && slack >= 0) || !(amplitudeBasisNm > 0)) {
+      return { amplitudeNm: 0, fraction, slack_fraction: null };
     }
-    const fraction = Math.min(1, spanNm / contour);
-    const amplitudeNm = amplitudeBasisNm * TITIN_RENDER_STYLE.coil_amplitude_scale * (1 - fraction);
-    if (!(amplitudeNm > TITIN_RENDER_STYLE.coil_min_amplitude_nm)) {
-      return { ...none, fraction };
-    }
-    const turns = THREE.MathUtils.clamp(
-      spanNm / (2 * tubeRadiusNm), 1, TITIN_RENDER_STYLE.coil_turns,
-    );
-    return { amplitudeNm, turns, fraction };
+    const style = this.titinRenderStyle.irregular_ribbon;
+    const amplitudeNm = amplitudeBasisNm * style.amplitude_scale * slack;
+    return {
+      amplitudeNm: amplitudeNm > style.minimum_amplitude_nm ? amplitudeNm : 0,
+      fraction,
+      slack_fraction: slack,
+    };
   }
 
   /**
@@ -661,12 +612,12 @@ export class SarcomereScene {
     const curve = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.4);
     const geom = this._track(new THREE.TubeGeometry(
       curve, Math.max(24, pts.length * 4),
-      radiusNm * TITIN_RENDER_STYLE.halo_radius_scale, 8, false,
+      radiusNm * this.titinRenderStyle.halo_radius_scale, 8, false,
     ));
     const material = new THREE.MeshBasicMaterial({
       color: COMPONENT_COLOR.titin_highlight,
       transparent: true,
-      opacity: TITIN_RENDER_STYLE.halo_opacity,
+      opacity: this.titinRenderStyle.halo_opacity,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       side: THREE.BackSide,
@@ -743,10 +694,10 @@ export class SarcomereScene {
       // CSS pixels: worldUnits stays false (the default) so the ribbon keeps a
       // constant reading width at every camera distance.
       linewidth: presentationMode === 'guided'
-        ? TITIN_RENDER_STYLE.trace_px
-        : TITIN_RENDER_STYLE.trace_px_evidence,
+        ? this.titinRenderStyle.trace_px
+        : this.titinRenderStyle.trace_px_evidence,
       transparent: true,
-      opacity: TITIN_RENDER_STYLE.continuity_opacity,
+      opacity: this.titinRenderStyle.continuity_opacity,
       depthTest: false,
       depthWrite: false,
     });
@@ -966,6 +917,12 @@ export class SarcomereScene {
    */
   build(scene, domains, opts = {}) {
     this.clear();
+    if (scene?.render_style?.schema !== 'titin-render-style/1'
+        || !scene.render_style.titin?.irregular_ribbon) {
+      throw new Error('build: canonical render_style.json descriptor is unavailable.');
+    }
+    this.renderStyleRecord = scene.render_style;
+    this.titinRenderStyle = scene.render_style.titin;
     const {
       titinStrands = true, mirror = true, neighbourTitin = false,
       presentationMode = 'evidence', latticeScope = 'patch',
@@ -1334,7 +1291,7 @@ export class SarcomereScene {
     const aBandStart = thick.transform.start_nm;
     const baseTitinRadius = opts.titinTubeRadiusNm ?? thin.transform.diameter_nm / 6;
     const titinRadius = baseTitinRadius
-      * (presentationMode === 'guided' ? TITIN_RENDER_STYLE.guided_radius_scale : 1);
+      * (presentationMode === 'guided' ? this.titinRenderStyle.guided_radius_scale : 1);
     // Domain detail is opt-in per strand: 284 domains x 6 strands x 2 halves is
     // 3408 capsules, which is fine as InstancedMesh but visually unreadable in a
     // context view. Default: domains on the central strand only, tubes elsewhere.
@@ -1348,14 +1305,18 @@ export class SarcomereScene {
       domainBatches, opts.domainBackbones ?? null, viewWidthNm, viewportPx,
     );
     const regionDescriptors = new Map(scene.titin.map((region) => [region.id, region]));
-    // SC-15. Which regions get the coil, and how wide. Resolved once, before the
-    // strand loop: the coil is a function of the canonical interval and the
+    // SC-20. Which regions get an irregular ribbon, and how wide. Resolved once,
+    // before the strand loop: the descriptor is a function of the canonical interval and the
     // spec's contour length, both of which are the same on every strand, so
     // every copy of the molecule must show the same slack — and the halo, drawn
     // in a second pass, has to trace the same path its tube does.
-    const disorderedRegions = TITIN_RENDER_STYLE.disordered_regions;
-    /** @type {Map<string, {amplitudeNm:number, turns:number, fraction:number|null}>} */
-    const coils = new Map();
+    const disorderedConfigs = new Map(
+      this.titinRenderStyle.disordered_regions.map((row) => [row.id, row]),
+    );
+    const disorderedRegions = [...disorderedConfigs.keys()];
+    /** @type {Map<string, {amplitudeNm:number, fraction:number|null, slack_fraction:number|null}>} */
+    const ribbons = new Map();
+    const descriptorMetrics = new Map();
     /** @type {Record<string, number|null>} */
     const contourLengths = {};
     let disorderedAmplitudeNm = 0;
@@ -1363,15 +1324,12 @@ export class SarcomereScene {
       if (!disorderedRegions.includes(segment.region_id)) continue;
       const contourNm = regionDescriptors.get(segment.region_id)?.extension_model?.max_end2end_nm;
       contourLengths[segment.region_id] = contourNm ?? null;
-      // The pitch basis is the region's own style radius, not whatever width the
-      // strand about to be drawn ends up using: the coil is one shape belonging
-      // to one molecule, and six copies of it in a lattice must not disagree.
-      const coil = this._disorderedCoil(segment, contourNm, {
-        amplitudeBasisNm: titinRadius,
-        tubeRadiusNm: titinRadius * TITIN_RENDER_STYLE.disordered_radius_scale,
-      });
-      coils.set(segment.region_id, coil);
-      disorderedAmplitudeNm = Math.max(disorderedAmplitudeNm, coil.amplitudeNm);
+      const descriptor = this._disorderedDescriptor(
+        segment, contourNm, disorderedConfigs.get(segment.region_id).fallback_slack_fraction,
+        titinRadius,
+      );
+      ribbons.set(segment.region_id, descriptor);
+      disorderedAmplitudeNm = Math.max(disorderedAmplitudeNm, descriptor.amplitudeNm);
     }
     // SC-15. Where the folded domains are actually DRAWN, the backbone is a
     // linker, not a pipe.
@@ -1393,12 +1351,25 @@ export class SarcomereScene {
       .filter((diameter) => Number.isFinite(diameter) && diameter > 0)
       .map((diameter) => diameter / 2);
     const linkerRadiusNm = drawnArchetypeRadii.length
-      ? Math.min(...drawnArchetypeRadii) * TITIN_RENDER_STYLE.linker_radius_fraction
+      ? Math.min(...drawnArchetypeRadii) * this.titinRenderStyle.linker_radius_fraction
       : null;
     const foldedRegions = new Set(
       (domains?.instances || [])
         .filter((instance) => instance.folded_domains)
         .map((instance) => instance.domain_id.split('.')[0]),
+    );
+    const chainEnvelopeSemantics = new Map(
+      (domains?.instances || [])
+        .filter((instance) => !instance.geometry_archetype)
+        .map((instance) => [instance.domain_id.split('.')[0], {
+          domain_class: instance.domain_class,
+          representative_pdb_id: instance.representative_pdb_id,
+          contains_structured_core: instance.contains_structured_core === true,
+          structured_core: instance.structured_core || null,
+          domain_evidence_class: instance.domain_evidence_class,
+          placement_evidence_class: instance.placement_evidence_class,
+          note: instance.note,
+        }]),
     );
     /**
      * The path one region is DRAWN along: the canonical control points, coiled
@@ -1410,9 +1381,38 @@ export class SarcomereScene {
      */
     const displayPath = (segment, off) => {
       const canonical = this._titinRegionPath(domains, segment, off, aBandStart);
-      const coil = coils.get(segment.region_id);
-      if (!coil?.amplitudeNm) return canonical;
-      return this._coilPath(canonical, coil);
+      const descriptor = ribbons.get(segment.region_id);
+      if (!descriptor?.amplitudeNm) return canonical;
+      const rendered = this._irregularRibbonPath(
+        canonical, descriptor, segment.region_id, off.strand_index,
+      );
+      if (off.strand_index === strandOffsets[0].strand_index) {
+        const first = canonical[0];
+        const last = canonical.at(-1);
+        let maximumOffset = 0;
+        for (let i = 0; i < rendered.length; i += 1) {
+          const axialSpan = last.x - first.x;
+          const t = axialSpan === 0 ? 0 : (rendered[i].x - first.x) / axialSpan;
+          const baseY = first.y + (last.y - first.y) * t;
+          const baseZ = first.z + (last.z - first.z) * t;
+          maximumOffset = Math.max(maximumOffset,
+            Math.hypot(rendered[i].y - baseY, rendered[i].z - baseZ));
+        }
+        const pointPayload = rendered.map((point) => [
+          Number(point.x.toFixed(9)), Number(point.y.toFixed(9)), Number(point.z.toFixed(9)),
+        ]);
+        const canonicalEndpoints = [canonical[0], canonical.at(-1)].map((point) => [
+          Number(point.x.toFixed(9)), Number(point.y.toFixed(9)), Number(point.z.toFixed(9)),
+        ]);
+        descriptorMetrics.set(segment.region_id, {
+          maximum_transverse_offset_nm: Number(maximumOffset.toFixed(9)),
+          declared_envelope_nm: Number(descriptor.amplitudeNm.toFixed(9)),
+          canonical_endpoints_nm: canonicalEndpoints,
+          rendered_endpoints_nm: [pointPayload[0], pointPayload.at(-1)],
+          descriptor_fingerprint: fnv1a(JSON.stringify(pointPayload)).toString(16).padStart(8, '0'),
+        });
+      }
+      return rendered;
     };
     for (const off of strandOffsets) {
       const domainsOnThisStrand = Boolean(domainBatches)
@@ -1432,8 +1432,8 @@ export class SarcomereScene {
             descriptor?.evidence?.backbone_path || 'SCHEMATIC',
           ]);
           const renderRadiusScale = disorderedRegions.includes(segment.region_id)
-            ? TITIN_RENDER_STYLE.disordered_radius_scale : 1;
-          const coil = coils.get(segment.region_id);
+            ? this.titinRenderStyle.disordered_radius_scale : 1;
+          const ribbon = ribbons.get(segment.region_id);
           const styleRadiusNm = titinRadius * renderRadiusScale;
           const linked = domainsOnThisStrand
             && linkerRadiusNm !== null
@@ -1457,8 +1457,8 @@ export class SarcomereScene {
           // The interval the tube was built from, restated on the object so a
           // reader — or the SC-15 gate — can confirm the coil moved nothing.
           tube.userData.axial_range_nm = [segment.X_start, segment.X_end];
-          tube.userData.disordered_depiction = coil?.amplitudeNm
-            ? 'schematic coil' : null;
+          tube.userData.disordered_depiction = ribbon?.amplitudeNm
+            ? 'seeded schematic irregular ribbon' : null;
           strand.add(tube);
         }
         // One x-ray trace is enough to make the molecule's continuity explicit.
@@ -1473,11 +1473,12 @@ export class SarcomereScene {
             // along a coil turns into a chain of overlapping lobes that reads as
             // structure — the opposite of a subordinate emphasis channel. Kept
             // straight, it is the envelope and the coil is the chain inside it.
-            traces.add(this._titinHalo(
-              this._titinRegionPath(domains, segment, off, aBandStart),
-              titinRadius,
-              `titin_halo_${segment.region_id}`,
-            ));
+            const canonicalPath = this._titinRegionPath(domains, segment, off, aBandStart);
+            if (canonicalPath.length > 1) {
+              traces.add(this._titinHalo(
+                canonicalPath, titinRadius, `titin_halo_${segment.region_id}`,
+              ));
+            }
           }
           titinGroup.add(traces);
         }
@@ -1863,6 +1864,8 @@ export class SarcomereScene {
       },
       titin_strands_drawn: strandOffsets.length,
       representative_titin: {
+        depiction_policy: 'one representative molecule; biological copy number is not rendered',
+        copy_number_claimed: false,
         strand_index: strandOffsets[0].strand_index,
         a_band_surface_bound: Boolean(lat),
         a_band_start_nm: aBandStart,
@@ -1882,10 +1885,10 @@ export class SarcomereScene {
       titin_emphasis: {
         channel: 'presentation',
         trace_px: presentationMode === 'guided'
-          ? TITIN_RENDER_STYLE.trace_px
-          : TITIN_RENDER_STYLE.trace_px_evidence,
-        halo_radius_scale: TITIN_RENDER_STYLE.halo_radius_scale,
-        halo_opacity: TITIN_RENDER_STYLE.halo_opacity,
+          ? this.titinRenderStyle.trace_px
+          : this.titinRenderStyle.trace_px_evidence,
+        halo_radius_scale: this.titinRenderStyle.halo_radius_scale,
+        halo_opacity: this.titinRenderStyle.halo_opacity,
         evidence_opacity_unchanged: true,
         meaning: 'screen-space reading width and an additive halo; neither is a molecular dimension',
       },
@@ -1910,11 +1913,11 @@ export class SarcomereScene {
         } : null,
         region_radius_scale: {
           guided_all_regions: presentationMode === 'guided'
-            ? TITIN_RENDER_STYLE.guided_radius_scale : 1,
+            ? this.titinRenderStyle.guided_radius_scale : 1,
           // Built from the one declared list rather than restated, so this record
           // cannot drift from the scale the renderer actually applied.
           ...Object.fromEntries(disorderedRegions
-            .map((id) => [id, TITIN_RENDER_STYLE.disordered_radius_scale])),
+            .map((id) => [id, this.titinRenderStyle.disordered_radius_scale])),
           not_claimed: 'molecular diameter or polymer cross-section',
         },
         // SC-15. Reported whenever domains are drawn, because a reader comparing
@@ -1934,29 +1937,39 @@ export class SarcomereScene {
       // the auditable statement "at this length the chain is drawn straight",
       // which a missing key could not distinguish from a layer that failed.
       disordered_depiction: {
+        algorithm: { ...this.renderStyleRecord.algorithm },
+        render_seed: this.renderStyleRecord.render_seed,
         regions: [...disorderedRegions],
         evidence_class: 'SCHEMATIC',
         amplitude_nm: Number(disorderedAmplitudeNm.toFixed(4)),
         amplitude_by_region: Object.fromEntries(
-          [...coils].map(([id, coil]) => [id, Number(coil.amplitudeNm.toFixed(4))]),
-        ),
-        turns_by_region: Object.fromEntries(
-          [...coils].map(([id, coil]) => [id, Number(coil.turns.toFixed(3))]),
+          [...ribbons].map(([id, row]) => [id, Number(row.amplitudeNm.toFixed(4))]),
         ),
         span_over_contour: Object.fromEntries(
-          [...coils].map(([id, coil]) => [
-            id, coil.fraction === null ? null : Number(coil.fraction.toFixed(4)),
+          [...ribbons].map(([id, row]) => [
+            id, row.fraction === null ? null : Number(row.fraction.toFixed(4)),
           ]),
+        ),
+        slack_fraction_by_region: Object.fromEntries(
+          [...ribbons].map(([id, row]) => [id, row.slack_fraction]),
+        ),
+        descriptor_fingerprint_by_region: Object.fromEntries(
+          [...descriptorMetrics].map(([id, row]) => [id, row.descriptor_fingerprint]),
+        ),
+        by_region: Object.fromEntries(
+          [...descriptorMetrics].map(([id, metrics]) => [id, {
+            ...metrics,
+            representation_semantics: chainEnvelopeSemantics.get(id) || null,
+          }]),
         ),
         contour_length_nm: contourLengths,
         contour_source: 'titin.json regions[].extension_model.max_end2end_nm — the '
           + 'same contour MechanicalModel resolves as Lc',
-        meaning: 'transverse coil amplitude encodes how far the region is from its '
-          + 'contour length; it is a depiction of disorder, not a measured conformation',
-        not_claimed: [
-          'a measured or predicted conformation for the disordered segments',
-          'a coil pitch, handedness, or transverse amplitude with any molecular meaning',
-        ],
+        meaning: 'seeded transverse irregularity depicts a non-atomic flexible/unresolved '
+          + 'chain envelope; the N2A record separately preserves its experimentally resolved '
+          + 'structured UN2A core. Where a contour proxy exists, amplitude decreases with '
+          + 'axial extension',
+        not_claimed: [...this.titinRenderStyle.irregular_ribbon.not_claimed],
       },
       mirrored: mirror,
       neighbour_titin: neighbourTitin,

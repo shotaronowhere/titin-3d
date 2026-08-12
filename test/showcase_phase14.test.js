@@ -66,30 +66,29 @@ test('SC14: the curve carries evidence metadata it cannot silently drop', () => 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 const builder = readFileSync(new URL('../scripts/build_standalone.mjs', import.meta.url), 'utf8');
 
-test('SC14: the stage shows live passive force with its evidence class', () => {
+test('SC20: the public stage withholds absolute pN while naming the deferred decision', () => {
   assert.match(page, /id="stageForce"/);
-  assert.match(page, /titin_chain_force_pN/);
-  assert.match(page, /MODELED/);
+  assert.match(page, /absolute pN withheld/);
+  assert.match(page, /SD-04 DEFERRED/);
+  assert.doesNotMatch(page, /value\.textContent = `\$\{g\.titin_chain_force_pN/);
 });
 
-test('SC14: the Measure tab draws the curve with labelled axes and units', () => {
+test('SC20: the Measure tab explains why the public force curve is withheld', () => {
   assert.match(page, /id="forceCurve"/);
   assert.match(page, /function renderForceCurve/);
-  assert.match(page, /axes\.x\.label/);
-  assert.match(page, /axes\.y\.label/);
+  assert.match(page, /Absolute pN output is withheld from the public application/);
 });
 
-test('SC14: the chart names the force of the length it is drawing', () => {
-  // renderChapter() renders the extension chart once BEFORE render() refreshes
-  // activeShowcaseOverlay. Reading the slider there would print the new length's
-  // force beside the previous length's totals, so the force has to come from the
-  // descriptor the chart itself was built from.
-  assert.match(page, /model\.geometryAt\(showcase\.sarcomere_length_nm\)\.titin_chain_force_pN/);
-  assert.match(page, /pN common force/);
+test('SC20: the extension chart keeps geometry but withholds absolute force', () => {
+  assert.match(page, /chart\.total_nm\.toFixed/);
+  assert.match(page, /absolute pN withheld pending transfer validation/);
 });
 
 test('SC14: the curve panel states what it does not claim', () => {
-  assert.match(page, /curve\.not_claimed/);
+  assert.match(page, /No absolute force magnitude/);
+  assert.match(page, /validity range, or human-construct prediction is claimed/);
+  assert.doesNotMatch(page, /curve\.not_claimed/,
+    'the public panel must not instantiate the deferred force-curve model');
 });
 
 test('SC14: new bundle bindings are re-exported by the standalone builder', () => {

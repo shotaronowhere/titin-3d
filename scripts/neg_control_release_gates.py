@@ -44,6 +44,12 @@ def condition(record, condition_id):
                 if row["id"] == condition_id)
 
 
+def pending_decision_with_reviewer(record):
+    row = record["scientific_decisions"]["decisions"][0]
+    row["status"] = "PENDING"
+    row["reviewer"] = {"name": "Agent Persona"}
+
+
 def lay_result(participant_id, correct=True):
     ids = [row["id"] for row in BASE["lay_comprehension"]["protocol"]["questions"]]
     return {
@@ -94,8 +100,7 @@ rejected("scientific decision ID deleted",
              "decisions", record["scientific_decisions"]["decisions"][:-1]),
          "all five scientific decisions have status rows")
 rejected("PENDING decision invents a reviewer",
-         lambda record: record["scientific_decisions"]["decisions"][0].__setitem__(
-             "reviewer", {"name": "Agent Persona"}),
+         pending_decision_with_reviewer,
          "pending invents no reviewer")
 rejected("lay protocol ID renamed",
          lambda record: record["lay_comprehension"]["protocol"].__setitem__(

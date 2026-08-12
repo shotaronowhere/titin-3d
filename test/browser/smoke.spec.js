@@ -31,22 +31,22 @@ test('committed standalone opens from file:// and reaches its ready marker', asy
   await cleanBoot(page, pathToFileURL(resolve('index.html')).href);
 });
 
-test('SC19 desktop authority: pending scope and a claim source are visibly inspectable', async ({ page }) => {
+test('SC20 desktop authority: consumed rulings and a claim source are visibly inspectable', async ({ page }) => {
   await setReviewViewport(page, 'desktop');
   await cleanBoot(page, '/index.html');
   await expect(page.locator('#scopeIdentity'))
-    .toHaveText(/Human TTN reference sequence.*Q8WZ42-1.*review pending/i);
-  await expect(page.locator('#scopeDecisions')).toHaveText(/5 pending.*0 approved.*0 deferred/i);
+    .toHaveText(/Human TTN reference sequence.*Q8WZ42-1.*citation-reviewed SC-20/i);
+  await expect(page.locator('#scopeDecisions')).toHaveText(/0 pending.*3 approved.*2 deferred/i);
 
   await page.locator('#audienceEvidence').click();
   await expect(page.locator('#scientificDecisionStatus'))
-    .toHaveText(/SD-01 pending.*SD-02 pending.*SD-03 pending.*SD-04 pending.*SD-05 pending/i);
+    .toHaveText(/SD-01 approved.*SD-02 deferred.*SD-03 approved.*SD-04 deferred.*SD-05 approved.*AI adjudication.*independent human review not performed/i);
   await expect(page.locator('#chapterEvidenceTitle')).not.toHaveText('—');
   await expect(page.locator('#chapterSources a').first()).toBeVisible();
 
   await page.locator('#tabMeasure').click();
   await expect(page.locator('#mechanicsScope'))
-    .toHaveText(/rat psoas.*SD-04 pending/i);
+    .toHaveText(/rat psoas.*SD-04 deferred.*absolute pN withheld/i);
 });
 
 for (const viewport of Object.keys(VIEWPORTS)) {

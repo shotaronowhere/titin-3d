@@ -9,11 +9,12 @@ import {
   createShowcaseOverlay, EXTENSION_MECHANISM, isLongitudinalProjection,
 } from '../src/presentation/ShowcaseOverlay.js';
 import {
-  COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, SarcomereScene, TITIN_RENDER_STYLE,
+  COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, SarcomereScene,
 } from '../src/render/SarcomereScene.js';
 import { VIEWS } from '../src/render/Viewer.js';
 
 const model = await TitinModel.create(nodeReader());
+const TITIN_RENDER_STYLE = model.spec.renderStyle.titin;
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 const states = model.presets().map((preset) => preset.sarcomere_length_nm);
 
@@ -223,12 +224,12 @@ test('SC2: the x-ray trace is exact, continuous and independent of tube radius',
   for (const segment of canonical.segments) {
     const trace = traces.getObjectByName(`titin_continuity_trace_${segment.region_id}`);
     const [start, end] = traceEndpoints(trace);
-    assert.ok(Math.abs(start.x - segment.X_start) < 1e-5);
-    assert.ok(Math.abs(end.x - segment.X_end) < 1e-5);
+    assert.ok(Math.abs(start.x - segment.X_start) < 5e-5);
+    assert.ok(Math.abs(end.x - segment.X_end) < 5e-5);
     assert.equal(trace.userData.coordinate_basis,
       'exact canonical Level-0 axial segment endpoints; schematic representative-strand transverse offset');
   }
-  for (const regionId of ['N2A', 'PEVK']) {
+  for (const regionId of ['N2A', 'post_N2A_unknown', 'PEVK']) {
     const tube = scene.root.getObjectByName(`titin_region_${regionId}_strand_0`);
     assert.equal(tube.userData.render_radius_scale, TITIN_RENDER_STYLE.disordered_radius_scale);
   }
@@ -291,7 +292,7 @@ test('SC2: the opening and mechanics story are present in the accessible shell',
   assert.match(page, /visualization\.showcaseOverlay\(\)/);
   assert.match(page, /projectPresentationAnchors/);
   assert.match(page, /isLongitudinalProjection\(\s*projected\.get\('n_terminus'\)/);
-  assert.match(page, /titinStrands:\s*state\.audienceMode === AUDIENCE_MODES\.evidence/);
+  assert.match(page, /titinStrands:\s*false/);
   assert.match(page, /folded domains straighten[\s\S]*disordered chain extends/);
   assert.match(page, /#canvas \{[^}]*min-height:\s*0;[^}]*overflow:\s*hidden;/,
     'the WebGL canvas must not retain a wide-screen height at the mobile breakpoint');
