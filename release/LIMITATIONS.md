@@ -1,6 +1,6 @@
 # Scientific limitations and non-claims
 
-Generated — model `7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c`; app `3eb7dc54d1246aca59e9980ca7f65bd0d2f4b99a`; build inputs `dd3ee440b4a393a537b5686122815d890b9772b093042ee4e76ac3df23a000b3`. Run `npm run pack` to refresh.
+Generated — model `7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5`; app `caf181bbf2613bc9883999fa64f9853b851a67df`; build inputs `86824eaf73d9b6dd50e338cf59c8177a66f10e263af00caa3b8412b7553bfe5e`. Run `npm run pack` to refresh.
 
 Every statement below is recorded in the repository, not written for this sheet.
 
@@ -163,8 +163,8 @@ Source: `data/presentation.json`
 - cardiac titin
 - causal downstream signaling animation
 - complete N2A signalosome composition
-- exact register between the 45.5 nm titin super-repeat and the 43.1 nm myosin repeat
 - exact register between the titin super-repeat and the myosin repeat
+- identity or exact register among the derived 43.78 nm display interval, H periodicity, and L periodicity
 - in-situ kinase orientation
 - known transverse azimuth along the entire chain
 - one elastic constant for the whole molecule
@@ -193,10 +193,10 @@ Source: `data/sarcomere.json; data/titin.json`
 - Azimuthal (rotational) placement of the ~6 titin molecules around each half thick filament
 - Azimuthal arrangement of the 6 titin molecules around the thick filament
 - Exact 3D path/trajectory of I-band titin between Z-disc and thick-filament tip
-- Exact register of A-band titin super-repeats against specific myosin crowns in 3D
+- Exact register of the A-band titin sequence pattern against myosin crowns and thick-filament periodicities in 3D
 - Exact thin-filament pointed-end position (nebulin-capped) per muscle type
 - Precise Z-disc internal lattice register for the reference-sequence construct named by scientific_scope.json
-- Tertiary conformation of PEVK and N2A unique sequence
+- Tertiary conformation of PEVK, the UN2A unique sequence, and residues 9852-10215
 
 ## Forbidden depictions
 

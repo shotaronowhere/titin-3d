@@ -1,10 +1,10 @@
 # Scientific authority status
 
-Generated — model `7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c`; app `3eb7dc54d1246aca59e9980ca7f65bd0d2f4b99a`; build inputs `dd3ee440b4a393a537b5686122815d890b9772b093042ee4e76ac3df23a000b3`.
+Generated — model `7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5`; app `caf181bbf2613bc9883999fa64f9853b851a67df`; build inputs `86824eaf73d9b6dd50e338cf59c8177a66f10e263af00caa3b8412b7553bfe5e`.
 
-**Sprint status:** CODE_COMPLETE_BLOCKED_SCIENCE
+**Sprint status:** DECISIONS_CONSUMABLE_SC20
 
-**Public scope:** Human TTN reference sequence · Q8WZ42-1 · construct review pending
+**Public scope:** Human TTN reference sequence · Q8WZ42-1 · citation-reviewed SC-20 construct · no tissue-specific claim
 
 | Sequence authority | Value |
 |---|---|
@@ -18,10 +18,10 @@ Claim-support inventory: 27 records.
 
 | Decision | Status |
 |---|---|
-| SD-01 | PENDING |
-| SD-02 | PENDING |
-| SD-03 | PENDING |
-| SD-04 | PENDING |
-| SD-05 | PENDING |
+| SD-01 | APPROVED |
+| SD-02 | DEFERRED |
+| SD-03 | APPROVED |
+| SD-04 | DEFERRED |
+| SD-05 | APPROVED |
 
 Offline registry closure verifies that cited identifiers have canonical metadata. It does not establish semantic entailment; only a named, independently locator-verifying reviewer may approve a claim.
