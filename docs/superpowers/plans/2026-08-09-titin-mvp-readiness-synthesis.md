@@ -1603,14 +1603,14 @@ teaching, deeper exploration, honest state, and touch use.
 | Field | Contract |
 |---|---|
 | Prerequisite | SC-23 `COMPLETE`; every chapter resolves to a validated semantic scene and legacy alias |
-| Background to retain | Current primary controls expose camera keys, remain falsely active after chapter cameras, hide important mobile actions in horizontal overflow, and show disabled inventory without a useful path |
+| Background to retain | Current primary controls expose camera keys, remain falsely active after chapter cameras, hide important mobile actions in horizontal overflow, show disabled inventory without a useful path, keep the desktop story card permanently open, and bury lattice-ring and myosin-head detail behind context-dependent drawer controls |
 | Consumes | Presentation/schema v2, validated `scenes.json`, current story/URL state, viewer presets, component availability rules, keyboard map |
-| Produces | Pure `SceneController`, URL v2 migration, Learn/Explore control hierarchy, mobile More surface, truthful active/custom state, teachable stretch framing, regenerated visual matrix, SC-24 handoff |
+| Produces | Pure `SceneController`, URL v2 migration, Learn/Explore control hierarchy, dismissible/reopenable story surface, contextual lattice-ring and myosin-head controls, mobile More surface, truthful active/custom state, teachable stretch framing, regenerated visual matrix, SC-24 handoff |
 | Human decision blocker | None; scientific content is consumed, not changed |
 | Explicitly out of scope | New scene biology, force-law changes, titin hit proxy, expert export |
 | Required order | 24.1 scene schema/resolver → 24.2 URL/history migration → 24.3 desktop/mobile hierarchy → 24.4 advanced/presenter behavior → 24.5 verify/matrix/handoff |
 | Regression gate | `test/showcase_phase24.test.js`, `test/presentation.test.js`, `test/showcase_phase12.test.js`, `test/standalone.test.js`, `test/browser/controls.spec.js`, `test/browser/stretch.spec.js` |
-| Manual evidence | 375×812, 390×844, tablet portrait/landscape, 1280×720: all primary actions visible, More focus trap, back/forward, rotation, real touch spot-check |
+| Manual evidence | 375×812, 390×844, tablet portrait/landscape, 1280×720: all primary actions visible, story dismiss/reopen and Escape behavior, contextual lattice controls, More focus trap, back/forward, rotation, real touch spot-check |
 
 ## Primary control hierarchy
 
@@ -1633,6 +1633,22 @@ Raw longitudinal/transverse/oblique cameras, component inventory, exact region t
 presentation utilities belong in Explore. Do not implement nested horizontal scrolling as the
 primary mobile architecture. SC-24 consumes the `data/scenes.json` contract defined in SC-23; it
 does not redefine scene biology in the control layer.
+
+The Learn story surface is not permanent stage furniture. On desktop and mobile it has an explicit
+Hide story action, supports Escape dismissal, and leaves a persistent, clearly labelled Story action
+that reopens the same chapter. Dismissal survives scene changes, responsive rotation, and reloads in
+the current browser session, but is not serialized into shared URLs; a fresh browser session starts
+with the story visible. Closing restores focus to the persistent Story action, and reopening moves
+focus to the story heading without resetting chapter progress.
+
+Scene-specific scientific controls must appear where their visual effect is meaningful instead of
+being recoverable only from the component inventory. The Lattice scene exposes a labelled 1/2/3
+ring-count control. Lattice, Architecture, and A-band scaffold expose the plain-language “Myosin
+heads + actin twist” detail toggle wherever that layer is available. On desktop the controls may be
+inline; on mobile a clearly labelled Scene details action may open a focused sheet. In either layout,
+each control is discoverable within one interaction from a relevant scene, is omitted rather than
+cryptically disabled when unavailable, and updates through `SceneController` so the semantic scene
+or Custom state remains truthful.
 
 ## Tasks
 
@@ -1661,6 +1677,18 @@ does not redefine scene biology in the control layer.
   compliance labels, with human labels while retaining stable internal keys.
 - [ ] Make advanced component entries either actionable navigation to a scene where they exist or
   omit them from the current context; do not present unexplained disabled controls as invitations.
+- [ ] Replace the permanently open desktop story card and mobile-only peek exception with one
+  responsive story-surface contract: visible Hide story control, Escape dismissal, persistent Story
+  reopen action, same-chapter restoration, bidirectional focus restoration, and current-session
+  persistence across scene changes, reload, and rotation. Do not serialize this preference into a
+  shared URL or let hiding the card change chapter/story state. Escape dismisses the topmost open
+  surface, so the story responds only when no dialog or sheet is above it.
+- [ ] Add contextual scientific controls rather than requiring the general component inventory:
+  Lattice exposes a labelled 1/2/3 ring-count control, and Lattice, Architecture, and A-band scaffold
+  expose “Myosin heads + actin twist” wherever supported. Keep each control within one interaction
+  of its relevant scene on desktop and mobile, omit it when unavailable, route changes through
+  `SceneController`, and transition to Custom whenever the resulting complete state no longer
+  matches a declared semantic scene.
 - [ ] Implement the mobile More surface as a focus-trapped dialog/bottom sheet with clear dismissal,
   not another hidden strip.
 - [ ] At normal text scale, keep the desktop primary bar at or below 20% of a 1280×720 viewport and
@@ -1691,6 +1719,14 @@ does not redefine scene biology in the control layer.
 
 - [ ] Add browser-level interaction tests for truthful pressed state, focus order, URL round trips,
   coarse-pointer targets, rotation, and 375×812 / 390×844 / tablet / desktop layouts.
+- [ ] Add browser coverage at 375×812 and 1280×720 proving that the story can be hidden with its
+  button and Escape, can always be reopened at the same chapter, restores focus in both directions,
+  retains its hidden state through reload/rotation in the current session, and is visible when a
+  shared link is loaded in a fresh browser session.
+- [ ] Add browser coverage proving that ring count and “Myosin heads + actin twist” are discoverable
+  within one interaction from every relevant scene, never appear as unexplained disabled inventory,
+  change the rendered scene, survive URL/history round trips when part of serialized scene/custom
+  state, and never leave a stale semantic-scene button pressed.
 - [ ] Regenerate the visual matrix from semantic scenes and add old-cell→new-cell disposition where
   a legacy cell no longer exists.
 - [ ] Add `test:sc24` and `verify:sc24`; run build → pack → bounded gate → full verify → controls suite.
@@ -1716,6 +1752,12 @@ report.
 - Every legacy URL resolves predictably and every v2 state round-trips exactly.
 - Learn exposes no raw component/region identifiers; Explore remains fully capable.
 - Touch targets, keyboard order, and focus restoration pass automated and browser checks.
+- The story surface can be hidden with its control or Escape on desktop and mobile, always leaves a
+  visible Story action, reopens at the same chapter, and remembers dismissal only for the current
+  browser session; a shared URL carries no dismissal preference and opens visibly in a fresh session.
+- Lattice ring count and “Myosin heads + actin twist” are discoverable within one interaction from
+  every scene where they are meaningful, are omitted when unavailable, visibly affect the model,
+  and preserve truthful semantic-scene/Custom state through URL and history navigation.
 - Starting Stretch from a chapter or close-up always produces a visible, announced demonstration;
   the half-sarcomere and I-band bracket remain on stage for the complete supported sweep.
 
