@@ -38,6 +38,7 @@ test('SC18: the model identity has one explicit, non-self-referential input mani
     'data/geometry_strategy.json',
     'data/context_measurements.json',
     'data/domain_backbones.json',
+    'data/mechanical_parameters.json',
   ]);
   assert.ok(!MODEL_INPUTS.includes('data/mechanical_model.json'),
     'a generated file that may carry model identity cannot hash itself');

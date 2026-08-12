@@ -30,6 +30,7 @@ export const SPEC_FILES = Object.freeze([
   'claim_support.json',
   'scientific_decisions.json',
   'render_style.json',
+  'mechanical_parameters.json',
 ]);
 
 // Phase-3 geometry strategy. Distinct from the five canonical source-of-truth
@@ -111,6 +112,7 @@ export class Spec {
     this.claimSupport = files['claim_support.json'];
     this.scientificDecisions = files['scientific_decisions.json'];
     this.renderStyle = files['render_style.json'];
+    this.mechanicalParameters = files['mechanical_parameters.json'];
     this.geometryStrategy = files[STRATEGY_FILE] || null;
     this.contextMeasurements = files[CONTEXT_FILE] || null;
     this.domainBackbones = files[BACKBONE_FILE] || null;
@@ -165,6 +167,7 @@ export class Spec {
       claimSupport: this.claimSupport,
       scientificDecisions: this.scientificDecisions,
       renderStyle: this.renderStyle,
+      mechanicalParameters: this.mechanicalParameters,
     })) if (!v || typeof v !== 'object') p.push(`${k}.json missing or not an object`);
     if (p.length) return { ok: false, problems: p };
 
@@ -213,6 +216,21 @@ export class Spec {
     }
     if (this.renderStyle.schema !== 'titin-render-style/1') {
       p.push('render_style.json has the wrong schema');
+    }
+    if (this.mechanicalParameters.schema !== 'titin-mechanical-parameters/1') {
+      p.push('mechanical_parameters.json has the wrong schema');
+    }
+    const mechanicsDecision = this.scientificDecisions.decisions?.['SD-04'];
+    if (this.mechanicalParameters.decision?.status !== mechanicsDecision?.status) {
+      p.push('mechanical parameter decision status differs from SD-04');
+    }
+    if (mechanicsDecision?.status !== 'APPROVED') {
+      const output = this.mechanicalParameters.output_policy || {};
+      if (output.evaluation_status !== 'not_evaluated'
+          || output.force_value !== null
+          || output.public_force !== 'SUPPRESSED') {
+        p.push('unapproved mechanical parameter set does not fail closed');
+      }
     }
     const supportIds = new Set((this.claimSupport.claims || []).map((claim) => claim.id));
     const supportById = new Map((this.claimSupport.claims || []).map((claim) => [claim.id, claim]));

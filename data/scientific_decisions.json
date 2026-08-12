@@ -72,16 +72,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/boundary-audit.json",
-            "sha256": "9c8ea35f87021801dda7ba651b7c6cde6b884f5b28bef2894e81413e008167a4",
+            "sha256": "04b6650f22c7ed7c6227f2bfdde740e2150edceaf2ac5127ac8286346e7de335",
             "kind": "boundary_audit"
           },
           {
@@ -156,16 +156,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/boundary-audit.json",
-            "sha256": "9c8ea35f87021801dda7ba651b7c6cde6b884f5b28bef2894e81413e008167a4",
+            "sha256": "04b6650f22c7ed7c6227f2bfdde740e2150edceaf2ac5127ac8286346e7de335",
             "kind": "boundary_audit"
           },
           {
@@ -242,16 +242,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/boundary-audit.json",
-            "sha256": "9c8ea35f87021801dda7ba651b7c6cde6b884f5b28bef2894e81413e008167a4",
+            "sha256": "04b6650f22c7ed7c6227f2bfdde740e2150edceaf2ac5127ac8286346e7de335",
             "kind": "boundary_audit"
           },
           {
@@ -317,16 +317,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/render-audit.json",
-            "sha256": "ea529416fcc0a51dafca2ac610a14bee166120d99f185218ce06c2853bb7ebbd",
+            "sha256": "4703b35a5f8033a2ef904036ab83515bb1a27365f710ff7b3a8f36f2b5f24388",
             "kind": "render_audit"
           },
           {
@@ -390,16 +390,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/render-audit.json",
-            "sha256": "ea529416fcc0a51dafca2ac610a14bee166120d99f185218ce06c2853bb7ebbd",
+            "sha256": "4703b35a5f8033a2ef904036ab83515bb1a27365f710ff7b3a8f36f2b5f24388",
             "kind": "render_audit"
           },
           {

@@ -493,6 +493,16 @@
   "identifier": "10.1073/pnas.95.14.8052",
   "used_for": "Rat-psoas PEVK and tandem-Ig force-law parameter evidence. Registry closure does not approve transfer of those parameters to Q8WZ42-1; SD-04 adjudicates that transfer."
  },
+ "SI-2019": {
+  "doi": null,
+  "authors": "Bureau International des Poids et Mesures",
+  "year": 2019,
+  "title": "The International System of Units (SI Brochure), 9th edition",
+  "journal": "BIPM",
+  "identifier": "SI-2019",
+  "url": "https://www.bipm.org/en/publications/si-brochure",
+  "used_for": "Exact SI-defined numerical value and unit of the Boltzmann constant."
+ },
  "10.1021/bi00801a004": {
   "doi": "10.1021/bi00801a004",
   "authors": "Lymn and Taylor",

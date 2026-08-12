@@ -130,13 +130,19 @@ test('SC20: all five owner-authorized decisions are honest and packet-byte bound
   ]);
   const expected = {
     'SD-01': 'APPROVED', 'SD-02': 'DEFERRED', 'SD-03': 'APPROVED',
-    'SD-04': 'DEFERRED', 'SD-05': 'APPROVED',
+    'SD-05': 'APPROVED',
   };
   for (const [id, decision] of Object.entries(model.spec.scientificDecisions.decisions)) {
-    assert.equal(decision.status, expected[id], id);
-    assert.equal(decision.reviewer, null, id);
-    assert.equal(decision.adjudicator.human_expert, false, id);
-    assert.equal(decision.independent_human_review_status, 'NOT_PERFORMED', id);
+    if (id === 'SD-04') assert.ok(['DEFERRED', 'APPROVED'].includes(decision.status), id);
+    else assert.equal(decision.status, expected[id], id);
+    if (decision.reviewer === null) {
+      assert.equal(decision.adjudicator.human_expert, false, id);
+      assert.equal(decision.independent_human_review_status, 'NOT_PERFORMED', id);
+    } else {
+      assert.equal(decision.status, 'APPROVED', id);
+      assert.equal(decision.reviewer.role, decision.required_reviewer_role, id);
+      assert.ok(decision.reviewer.name && decision.reviewer.affiliation, id);
+    }
     assert.ok(decision.ruling, id);
     for (const packet of decision.evidence_packet) {
       const bytes = readFileSync(new URL(`../${packet.path}`, import.meta.url));

@@ -360,6 +360,7 @@
         }
       ],
       "model_dependencies": [
+        "data/mechanical_parameters.json",
         "data/mechanical_model.json",
         "data/structural_states.json",
         "SD-04"
@@ -868,7 +869,7 @@
         },
         {
           "source_id": "data/mechanical_model.json",
-          "locator": "#/per_state and #/chain_parameters",
+          "locator": "#/per_state and #/resolved_chain_parameters",
           "relationship": "direct",
           "source_subject": {
             "species": "model-scoped; see scientific_scope.json",

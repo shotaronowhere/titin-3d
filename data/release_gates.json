@@ -974,9 +974,10 @@
       {
         "id": "parameter_authority",
         "requirement": "one parameter record governs browser, reference solver, display, and export",
-        "verification": "automated",
-        "status": "PENDING",
-        "note": "Owned by SC-21."
+      "verification": "automated",
+      "status": "PASS",
+      "verified_by": "scripts/validate_mechanical_parameters.py; test/showcase_phase21.test.js; test/phase8.test.js; scripts/neg_control_mechanical_parameters.py",
+      "note": "SC-21: data/mechanical_parameters.json is required by Spec, included in model identity and the generated release pack, consumed by both solver ports, schema-validated for deferred and approved authority, parity-tested, and destructive-control gated. Both solvers reject unbracketed targets; an approved fixture exercises evaluation, sensitivity, precision, release validation, and plot/readout bindings without changing the live DEFERRED decision. This automated pass does not approve the parameters or quantitative force."
       },
       {
         "id": "regime_and_uncertainty",

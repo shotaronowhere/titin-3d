@@ -5,7 +5,6 @@ import { readFileSync } from 'node:fs';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
-import { MechanicalModel } from '../src/geometry/MechanicalModel.js';
 import { createForceCurve, FORCE_CURVE } from '../src/presentation/ForceCurve.js';
 
 const model = await TitinModel.create(nodeReader());
@@ -17,44 +16,52 @@ test('SC14: the curve is sampled from the same pipeline the render uses', () => 
   for (const point of curve.points) {
     const geometry = model.geometryAt(point.sarcomere_length_nm);
     assert.equal(point.force_pN, geometry.titin_chain_force_pN);
+    assert.equal(point.status, geometry.titin_force_status);
     assert.equal(point.iband_total_nm, geometry.titin_iband_total_nm);
+    assert.equal(point.parameter_set_id, model.spec.mechanicalParameters.parameter_set_id);
   }
 });
 
-test('SC14: passive force rises monotonically with sarcomere length', () => {
+test('SC21: deferred curve has monotone geometry and no force values', () => {
   const curve = createForceCurve(model, {});
   for (let i = 1; i < curve.points.length; i += 1) {
-    assert.ok(curve.points[i].force_pN > curve.points[i - 1].force_pN,
-      `force fell between ${curve.points[i - 1].sarcomere_length_nm} and ${curve.points[i].sarcomere_length_nm} nm`);
+    assert.ok(curve.points[i].iband_total_nm > curve.points[i - 1].iband_total_nm);
+    assert.equal(curve.points[i].status, 'not_evaluated');
+    assert.equal(curve.points[i].force_pN, null);
   }
+  assert.equal(curve.axes.y.min, null);
+  assert.equal(curve.axes.y.max, null);
+  assert.equal(curve.supported_range_nm, null);
 });
 
-test('SC14: the displayed force agrees with the reviewed per-state report', () => {
+test('SC21: generated state rows and browser evaluations fail closed together', () => {
   for (const [name, state] of Object.entries(report.per_state)) {
     const geometry = model.geometryAt(state.sarcomere_length_nm);
-    assert.ok(Math.abs(geometry.titin_chain_force_pN - state.model_force_pN) < 1e-3,
-      `${name}: ${geometry.titin_chain_force_pN} pN vs reported ${state.model_force_pN} pN`);
+    assert.equal(geometry.titin_force_status, state.evaluation.status, name);
+    assert.equal(geometry.titin_chain_force_pN, null, name);
+    assert.equal(state.evaluation.force_pN, null, name);
+    assert.equal(state.evaluation.parameter_set_id, report.parameter_set_id, name);
+    assert.equal(state.evaluation.model_fingerprint, report.model_fingerprint, name);
   }
 });
 
-test('SC14: compliance shares sum to one and name the recruitment order', () => {
+test('SC21: added length is distinct from unavailable incremental compliance', () => {
   const curve = createForceCurve(model, { currentLengthNm: 2400 });
-  const shares = Object.values(curve.current.shares);
-  assert.ok(Math.abs(shares.reduce((a, b) => a + b, 0) - 1) < 1e-6);
-  const mechanical = new MechanicalModel(model.spec.titin);
-  const geometry = model.geometryAt(2400);
-  const expected = mechanical.complianceShares(geometry.titin_chain_force_pN).share;
-  for (const [id, value] of Object.entries(expected)) {
-    assert.ok(Math.abs(curve.current.shares[id] - value) < 1e-9, `${id} disagrees`);
-  }
-  // At the top of the working range PEVK is the dominant compliance.
-  const ranked = Object.entries(curve.current.shares).sort((a, b) => b[1] - a[1]);
-  assert.equal(ranked[0][0], 'PEVK');
+  assert.equal(curve.current.incremental_compliance_nm_per_pN, null);
+  assert.ok(curve.current.added_length_contribution_nm.prox_Ig > 0);
+  assert.ok(curve.current.added_length_contribution_nm.PEVK > 0);
+  assert.doesNotMatch(JSON.stringify(curve.current), /compliance_share/);
 });
 
 test('SC14: the curve carries evidence metadata it cannot silently drop', () => {
   const curve = createForceCurve(model, {});
   assert.equal(curve.evidence_class, 'MODELED');
+  assert.equal(curve.status, 'not_evaluated');
+  assert.equal(curve.decision.status, 'DEFERRED');
+  assert.equal(curve.sensitivity_label, 'parameter sensitivity range');
+  assert.equal(curve.parameters.length, 13);
+  assert.ok(curve.parameters.some((row) => row.id === 'physical_constants.boltzmann_constant'));
+  assert.ok(curve.parameters.every((row) => row.validity?.target_status));
   assert.ok(curve.not_claimed.length >= 2);
   for (const id of curve.source_ids) {
     assert.ok(model.spec.references[id], `unresolved source '${id}'`);
@@ -66,17 +73,20 @@ test('SC14: the curve carries evidence metadata it cannot silently drop', () => 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 const builder = readFileSync(new URL('../scripts/build_standalone.mjs', import.meta.url), 'utf8');
 
-test('SC20: the public stage withholds absolute pN while naming the deferred decision', () => {
+test('SC21: the public stage binds force disclosure to the loaded decision and status', () => {
   assert.match(page, /id="stageForce"/);
-  assert.match(page, /absolute pN withheld/);
-  assert.match(page, /SD-04 DEFERRED/);
+  assert.match(page, /force not evaluated · absolute pN withheld/);
+  assert.match(page, /SD-04 \$\{g\.titin_mechanics_decision_status\}/);
+  assert.match(page, /g\.titin_force_precision\?\.text/);
   assert.doesNotMatch(page, /value\.textContent = `\$\{g\.titin_chain_force_pN/);
 });
 
 test('SC20: the Measure tab explains why the public force curve is withheld', () => {
   assert.match(page, /id="forceCurve"/);
   assert.match(page, /function renderForceCurve/);
-  assert.match(page, /Absolute pN output is withheld from the public application/);
+  assert.match(page, /Force evaluation:/);
+  assert.match(page, /curve\.caveat/);
+  assert.match(page, /Equations, parameters, preparation, validity, and transfer audit/);
 });
 
 test('SC20: the extension chart keeps geometry but withholds absolute force', () => {
@@ -84,11 +94,11 @@ test('SC20: the extension chart keeps geometry but withholds absolute force', ()
   assert.match(page, /absolute pN withheld pending transfer validation/);
 });
 
-test('SC14: the curve panel states what it does not claim', () => {
-  assert.match(page, /No absolute force magnitude/);
-  assert.match(page, /validity range, or human-construct prediction is claimed/);
-  assert.doesNotMatch(page, /curve\.not_claimed/,
-    'the public panel must not instantiate the deferred force-curve model');
+test('SC21: the curve panel states what it does not claim', () => {
+  assert.match(page, /No absolute force magnitude, supported validity range/);
+  assert.match(page, /human-construct prediction is claimed/);
+  assert.match(page, /visualization\.forceCurve\(\)/,
+    'the UI must consume the status-bearing evaluator instead of a handwritten caveat');
 });
 
 test('SC14: new bundle bindings are re-exported by the standalone builder', () => {

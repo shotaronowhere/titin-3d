@@ -113,6 +113,9 @@ const plainPdbId = (sourceId) => (
 
 export function sourceHref(sourceId, reference) {
   if (reference?.doi) return `https://doi.org/${encodeURI(reference.doi)}`;
+  if (typeof reference?.url === 'string' && /^https:\/\//.test(reference.url)) {
+    return reference.url;
+  }
   if (sourceId.startsWith('UniProt:')) {
     return `https://www.uniprot.org/uniprotkb/${encodeURIComponent(sourceId.split(':')[1])}/entry`;
   }

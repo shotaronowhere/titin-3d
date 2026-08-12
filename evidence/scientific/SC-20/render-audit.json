@@ -1,6 +1,6 @@
 {
   "schema": "titin-sc20-render-audit/1",
-  "model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+  "model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
   "representative_titin": {
     "depiction_policy": "one representative molecule; biological copy number is not rendered",
     "copy_number_claimed": false,
