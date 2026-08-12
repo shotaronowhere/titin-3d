@@ -1,6 +1,6 @@
 # Standard screenshot review pack
 
-Generated — model `1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6`; app `caf181bbf2613bc9883999fa64f9853b851a67df-dirty`; build inputs `4aa0f4d6a3da63fc906f7c65dbdbfc9f73265f47bec259c5a91cdfcc1750d5d0`. 52 cells.
+Generated — model `1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6`; app `f22f0c9408558bd9a700a36f762667c262ed8305`; build inputs `4aa0f4d6a3da63fc906f7c65dbdbfc9f73265f47bec259c5a91cdfcc1750d5d0`. 52 cells.
 
 Deterministic capture set for the SC-8 visual review. Each cell is a viewport plus a reproducible URL state; pixel comparison supplements human review and does not determine scientific correctness.
 
