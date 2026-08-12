@@ -231,7 +231,7 @@ test('PHASE3: scene descriptors — folded regions instance capsules, disordered
   const prox = sc.titin.find((t) => t.id === 'prox_Ig');
   const pevk = sc.titin.find((t) => t.id === 'PEVK');
   assert.equal(prox.assembly, 'instanced_repeat');
-  assert.ok(prox.instance_spec && prox.instance_spec.count === 77, 'prox_Ig should instance 77 capsules');
+  assert.ok(prox.instance_spec && prox.instance_spec.count === 74, 'prox_Ig should instance 74 capsules');
   assert.ok(!prox.tube_spec, 'folded region must not be a tube');
   assert.equal(pevk.assembly, 'tube');
   assert.ok(pevk.tube_spec && pevk.tube_spec.folded_domains === false, 'PEVK must be a disordered tube');
@@ -383,6 +383,23 @@ test('PHASE4: sequence positions tile each region without gaps or overlaps', () 
   for (const r of model.spec.titin.regions) {
     const sp = byRegion.get(r.id) || [];
     if (!sp.length || !r.residue_span) continue;
+    if (r.id === 'N2A') {
+      assert.deepEqual(sp.map((row) => row.label), ['I80', 'UN2A', 'I81', 'I82', 'I83']);
+      assert.ok(sp[2].end >= sp[3].start,
+        'the experimental I81 / UniProt I82 source overlap must be preserved');
+      assert.deepEqual(r.coordinate_accounting.unassigned_intra_N2A_linkers
+        .map((row) => [row.start, row.end]), [[9471, 9471], [9756, 9759]]);
+      assert.deepEqual(r.coordinate_accounting.preserved_source_overlap,
+        { elements: ['I81', 'I82'], start: 9660, end: 9671, length_aa: 12,
+          resolution: 'not arithmetically repaired' });
+      const assigned = new Set();
+      for (const row of [...sp, ...r.coordinate_accounting.unassigned_intra_N2A_linkers]) {
+        for (let residue = row.start; residue <= row.end; residue += 1) assigned.add(residue);
+      }
+      assert.equal(assigned.size, r.residue_span.length_aa,
+        'curated elements plus explicit linkers must account for every N2A residue');
+      continue;
+    }
     assert.equal(sp[0].start, r.residue_span.start, `${r.id} sequence start mismatch`);
     assert.equal(sp[sp.length - 1].end, r.residue_span.end, `${r.id} sequence end mismatch`);
     for (let i = 1; i < sp.length; i++) {
@@ -391,17 +408,19 @@ test('PHASE4: sequence positions tile each region without gaps or overlaps', () 
   }
 });
 
-test('PHASE4: A-band titin uses the MEASURED super-repeat periodicity', () => {
+test('PHASE4: A-band titin uses the source-context derived 11-domain interval', () => {
   const rel = model.spec.geometryStrategy.geometric_relationships
-    .titin_Aband_super_repeat.values;
+    .titin_Aband_periodicities.values;
   const { instances } = model.domainInstancesAt(2200);
   const cz = instances.filter((d) => d.zone === 'C_zone');
-  assert.equal(cz.length, rel.n_C_zone_super_repeats * rel.domains_per_super_repeat,
+  assert.equal(cz.length,
+    rel.n_C_zone_super_repeats * rel.c_zone_sequence_super_repeat_domain_count,
     'C-zone domain count must equal super-repeats x domains-per-super-repeat');
   // axial extent of the C-zone == n_super_repeats * periodicity
   const extent = cz[cz.length - 1].position_nm.x - cz[0].position_nm.x;
-  const expected = rel.super_repeat_periodicity_nm * rel.n_C_zone_super_repeats
-    - (rel.super_repeat_periodicity_nm / rel.domains_per_super_repeat);
+  const interval = rel.derived_11_domain_interval_nm.value;
+  const expected = interval * rel.n_C_zone_super_repeats
+    - (interval / rel.c_zone_sequence_super_repeat_domain_count);
   assert.ok(Math.abs(extent - expected) < 0.5,
     `C-zone axial extent ${extent.toFixed(2)} != expected ${expected.toFixed(2)}`);
 });
@@ -498,12 +517,12 @@ test('PHASE4: EVIDENCE — only the C-zone may claim MEASURED placement', () => 
 test('PHASE4: disordered regions declare rise/linker INAPPLICABLE, not zero', () => {
   const { instances } = model.domainInstancesAt(2200);
   const dis = instances.filter((d) => d.folded_domains === false);
-  assert.equal(dis.length, 2, 'expected N2A + PEVK as disordered chains');
+  assert.equal(dis.length, 3, 'expected UN2A + explicit UNKNOWN interval + PEVK chains');
   for (const d of dis) {
     assert.equal(d.axial_rise_nm, null, `${d.domain_id} must not report an axial rise`);
     assert.equal(d.interdomain_linker_nm, null, `${d.domain_id} must not report a linker`);
     assert.equal(d.implies_unfolding, false);
-    assert.equal(d.variable_length, true);
+    assert.equal(d.variable_length, d.domain_class !== 'unresolved_sequence');
   }
 });
 
@@ -729,19 +748,24 @@ test('PHASE5: every declared domain is instanced or documented as undepicted', (
   }
 });
 
-test('PHASE5: N2A depicts its declared Ig in series with the disordered coil', () => {
+test('PHASE5: N2A depicts its declared Ig in series with the mixed-structure UN2A envelope', () => {
   // Phase 8's folded_plus_wlc law requires the same two components in the render.
   // The fold count is measured; its coarse region-internal placement is INFERRED.
   const rows = model.instancing.declaredVsInstanced(2200).filter((r) => r.region === 'N2A');
   assert.equal(rows.length, 0, 'the declared N2A fold must not remain omitted');
   const { instances } = model.domainInstancesAt(2200);
   const n2a = instances.filter((d) => d.domain_id.split('.')[0] === 'N2A');
-  assert.equal(n2a.length, 2, 'N2A must contain one folded instance and one coil');
-  const fold = n2a.find((d) => d.geometry_archetype === 'Ig_like');
+  assert.equal(n2a.length, 5, 'N2A must contain four folded instances and one coil');
+  const folds = n2a.filter((d) => d.geometry_archetype === 'Ig_like');
   const coil = n2a.find((d) => d.geometry_archetype === null);
-  assert.ok(fold && fold.folded_domains && /^INFERRED/.test(fold.placement_evidence_class));
+  assert.equal(folds.length, 4);
+  assert.ok(folds.every((fold) => fold.folded_domains
+    && /^INFERRED/.test(fold.placement_evidence_class)));
   assert.ok(coil && !coil.folded_domains && coil.variable_length);
-  assert.ok(Math.abs(fold.span_nm + coil.span_nm
+  assert.equal(coil.contains_structured_core, true);
+  assert.equal(coil.representative_pdb_id, '7NIP');
+  assert.match(coil.folded_domains_semantics, /does not deny the 7NIP core/);
+  assert.ok(Math.abs(folds.reduce((sum, fold) => sum + fold.span_nm, 0) + coil.span_nm
     - model.geometryAt(2200).titin_iband_extension_nm.N2A) < 1e-3);
 });
 
@@ -830,7 +854,7 @@ test('PHASE6: kinase instances no longer emit a null folded length', async () =>
   assert.ok(k[0].folded_length_nm > 0, 'kinase folded_length_nm must be filled');
   // the only remaining nulls are the genuinely disordered regions
   const nulls = inst.filter((d) => d.folded_length_nm == null).map((d) => d.domain_class);
-  assert.deepEqual(nulls.sort(), ['N2A', 'PEVK']);
+  assert.deepEqual(nulls.sort(), ['N2A', 'PEVK', 'unresolved_sequence']);
 });
 
 test('PHASE6: adopting measurements did not move any domain coordinate', async () => {

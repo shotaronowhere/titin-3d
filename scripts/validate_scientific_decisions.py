@@ -34,14 +34,19 @@ def parse_args() -> argparse.Namespace:
 
 def validate(record: dict, claim_support: dict) -> list[str]:
     problems: list[str] = []
-    if record.get("schema") != "titin-scientific-decisions/1":
+    if record.get("schema") != "titin-scientific-decisions/2":
         problems.append("wrong scientific-decisions schema")
     decisions = record.get("decisions") or {}
     if set(decisions) != DECISION_IDS:
         problems.append("decision record must contain exactly SD-01 through SD-05")
-    if any(row.get("status") == "PENDING" for row in decisions.values()):
-        if record.get("sprint_status") != "CODE_COMPLETE_BLOCKED_SCIENCE" or not record.get("blocker"):
-            problems.append("pending decisions require CODE_COMPLETE_BLOCKED_SCIENCE and an explicit blocker")
+    policy = record.get("review_policy") or {}
+    if policy.get("kind") != "owner_authorized_citation_backed_ai_adjudication" \
+            or policy.get("human_expert_review_claimed") is not False \
+            or policy.get("separate_human_release_review_required") is not True:
+        problems.append("SC-20 owner-authorized AI adjudication policy is absent or overclaims human review")
+    if record.get("sprint_status") != "DECISIONS_CONSUMABLE_SC20" or record.get("blocker") is not None:
+        problems.append("SC-20 rulings must be consumable with no decision blocker")
+    authority_path = policy.get("authority_record")
     claim_ids = {row.get("id") for row in claim_support.get("claims") or []}
     for decision_id, row in decisions.items():
         prefix = decision_id
@@ -59,6 +64,8 @@ def validate(record: dict, claim_support: dict) -> list[str]:
             elif not re.fullmatch(r"[0-9a-f]{64}", str(packet.get("sha256", ""))) \
                     or sha256_file(path) != packet.get("sha256"):
                 problems.append(f"{prefix} evidence-packet byte digest is stale")
+        if authority_path not in {packet.get("path") for packet in row.get("evidence_packet") or []}:
+            problems.append(f"{prefix} is not byte-bound to the owner authority record")
         primary_packet = ROOT / f"docs/scientific-decisions/SC-19/{decision_id}.md"
         if primary_packet.is_file():
             text = primary_packet.read_text(encoding="utf-8")
@@ -74,15 +81,18 @@ def validate(record: dict, claim_support: dict) -> list[str]:
         if unresolved:
             problems.append(f"{prefix} has unresolved downstream claims: {sorted(unresolved)}")
         if status == "PENDING":
-            for field in ("reviewer", "reviewed_on", "reviewed_model_fingerprint",
+            for field in ("reviewer", "adjudicator", "reviewed_on", "reviewed_model_fingerprint",
                           "reviewed_payload_sha256", "ruling", "public_caveat"):
                 if row.get(field) is not None:
                     problems.append(f"{prefix} invents {field} while PENDING")
         else:
-            reviewer = row.get("reviewer") or {}
-            if not reviewer.get("name") or not reviewer.get("affiliation") \
-                    or reviewer.get("publication_consent") is not True:
-                problems.append(f"{prefix} lacks a publishable named reviewer")
+            adjudicator = row.get("adjudicator") or {}
+            if row.get("reviewer") is not None \
+                    or adjudicator.get("type") != "AI_SYSTEM" \
+                    or adjudicator.get("authority_basis") != "project_owner_authorization" \
+                    or adjudicator.get("human_expert") is not False \
+                    or row.get("independent_human_review_status") != "NOT_PERFORMED":
+                problems.append(f"{prefix} adjudication provenance is absent or falsely claims human review")
             if not row.get("reviewed_on") or not re.fullmatch(
                 r"[0-9a-f]{64}", str(row.get("reviewed_model_fingerprint", ""))
             ) or not row.get("ruling"):
@@ -97,15 +107,35 @@ def validate(record: dict, claim_support: dict) -> list[str]:
         if verification.get("status") not in {"PENDING", "VERIFIED"}:
             problems.append(f"{prefix} has an invalid implementation-verification status")
         if verification.get("status") == "VERIFIED":
-            reviewer = verification.get("reviewer") or {}
-            if not reviewer.get("name") or not verification.get("reviewed_on"):
-                problems.append(f"{prefix} implementation verification lacks reviewer/date")
-            if not verification.get("implemented_model_fingerprint") \
-                    and not verification.get("implementation_evidence"):
+            adjudicator = verification.get("adjudicator") or {}
+            if verification.get("reviewer") is not None \
+                    or adjudicator.get("type") != "AI_SYSTEM" \
+                    or adjudicator.get("human_expert") is not False \
+                    or not verification.get("reviewed_on"):
+                problems.append(f"{prefix} implementation verification lacks honest adjudicator/date")
+            if not re.fullmatch(
+                r"[0-9a-f]{64}", str(verification.get("implemented_model_fingerprint", ""))
+            ) or not verification.get("implementation_evidence"):
                 problems.append(f"{prefix} implementation verification is not bound to model/evidence")
+            for evidence in verification.get("implementation_evidence") or []:
+                if not isinstance(evidence, dict):
+                    problems.append(f"{prefix} implementation evidence uses legacy path-only form")
+                    continue
+                relative = str(evidence.get("path", ""))
+                evidence_path = (ROOT / relative).resolve()
+                digest = str(evidence.get("sha256", ""))
+                if ROOT not in evidence_path.parents or not evidence_path.is_file():
+                    problems.append(
+                        f"{prefix} implementation evidence is missing/outside repository: {relative}"
+                    )
+                elif not re.fullmatch(r"[0-9a-f]{64}", digest) \
+                        or sha256_file(evidence_path) != digest:
+                    problems.append(f"{prefix} implementation-evidence byte digest is stale: {relative}")
+                if not evidence.get("kind"):
+                    problems.append(f"{prefix} implementation evidence lacks a kind: {relative}")
         else:
             if any(verification.get(field) is not None for field in
-                   ("reviewer", "reviewed_on", "implemented_model_fingerprint")) \
+                   ("reviewer", "adjudicator", "reviewed_on", "implemented_model_fingerprint")) \
                     or verification.get("implementation_evidence"):
                 problems.append(f"{prefix} invents implementation verification while PENDING")
     return problems
@@ -115,10 +145,10 @@ def main() -> None:
     args = parse_args()
     problems = validate(load_json(args.decisions), load_json(args.claims))
     if problems:
-        print("SC-19 scientific-decision validation failed:\n  - " + "\n  - ".join(problems))
+        print("SC-20 scientific-decision validation failed:\n  - " + "\n  - ".join(problems))
         raise SystemExit(1)
     statuses = {key: row["status"] for key, row in load_json(args.decisions)["decisions"].items()}
-    print(f"SC-19 scientific decisions: PASS ({statuses}; dependent science remains blocked)")
+    print(f"SC-20 scientific decisions: PASS ({statuses}; no independent human review claimed)")
 
 
 if __name__ == "__main__":

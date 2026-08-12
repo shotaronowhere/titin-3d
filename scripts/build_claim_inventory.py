@@ -261,20 +261,20 @@ def extra_claims() -> list[dict[str, Any]]:
         {
             "id": "sequence_region_partition",
             "subject": target,
-            "statement": "The current N2A/distal-Ig domain allocation disagrees with direct containment of the pinned UniProt domain features and awaits SD-01.",
+            "statement": "The consumed Q8WZ42-1 partition uses a four-fold I80-UN2A-I81-I82-I83 N2A element, an explicit unresolved 9852-10215 interval, and separate imported, curated, and rendered domain counts.",
             "quantity": None,
-            "claim_class": "UNKNOWN",
+            "claim_class": "STRONGLY INFERRED",
             "render_class": "SCHEMATIC",
             "support": [{
                 "source_id": "UniProt:Q8WZ42",
                 "locator": LOCATORS["UniProt:Q8WZ42"],
                 "relationship": "direct",
                 "source_subject": source_subject("UniProt:Q8WZ42"),
-                "extraction_note": "Pinned feature containment yields 0 Ig-like domains in N2A and 16 in distal-Ig; it does not decide the reviewer-approved biological partition.",
+                "extraction_note": "Pinned containment yields three UniProt Ig-like rows in the 9366-9851 N2A interval and 16 in distal-Ig; the fourth curated N2A fold and the I81/I82 source overlap remain separately recorded under SD-01.",
             }],
             "model_dependencies": ["data/titin_sequence_features.json", "data/titin.json", "SD-01"],
-            "limitations": ["Feature containment is not a substitute for a reviewed N2A definition."],
-            "not_claimed": ["that the engineer may move the boundary or count without SD-01"],
+            "limitations": ["The 9366 boundary is a conservative reproducible project boundary, not a uniquely established biological boundary; residues 9852-10215 remain unresolved."],
+            "not_claimed": ["that imported UniProt rows and curated biological folds are identical counts", "a resolved conformation or force law for residues 9852-10215"],
             "public_bindings": [],
             "inventory_status": "AUDIT_ONLY",
             "review": pending_review(),
@@ -282,29 +282,36 @@ def extra_claims() -> list[dict[str, Any]]:
         {
             "id": "aband_periodicity_relation",
             "subject": target,
-            "statement": "The sequence-defined eleven-domain titin repeat, reported axial quantities, and myosin repeat are separate quantities whose relationship awaits SD-03.",
-            "quantity": {"value": 45.5, "unit": "nm", "label": "current displayed titin super-repeat value"},
-            "claim_class": "UNKNOWN",
+            "statement": "The C-zone sequence super-repeat contains 11 domains; its 43.78 nm derived interval, the 43.17 nm myosin H periodicity, 14.3 nm crown spacing, and approximately 45.54 nm L periodicity are distinct quantities.",
+            "quantity": {"value": 43.78, "unit": "nm", "label": "derived eleven-domain interval from the measured mean titin-domain spacing"},
+            "claim_class": "STRONGLY INFERRED",
             "render_class": "SCHEMATIC",
             "support": [
                 {
                     "source_id": "10.1016/j.jmb.2020.06.025",
                     "locator": LOCATORS["10.1016/j.jmb.2020.06.025"],
-                    "relationship": "context",
+                    "relationship": "direct",
                     "source_subject": source_subject("10.1016/j.jmb.2020.06.025"),
-                    "extraction_note": "Sequence/domain architecture and A-band organization; exact relation to the displayed axial value awaits SD-03."
+                    "extraction_note": "The measured mean titin-domain spacing is 3.98 nm (95% CI 3.92-4.03); multiplying by the sequence-defined 11-domain count gives the separately labelled 43.78 nm interval."
                 },
                 {
                     "source_id": "10.1016/j.yjmcc.2019.05.026",
                     "locator": LOCATORS["10.1016/j.yjmcc.2019.05.026"],
                     "relationship": "context",
                     "source_subject": source_subject("10.1016/j.yjmcc.2019.05.026"),
-                    "extraction_note": "Reported axial quantity is included without a pre-assigned measurement-type label for SD-03."
+                    "extraction_note": "The cardiac epitope map corroborates A-band ordering but is not used to identify the derived titin interval with a myosin or x-ray periodicity."
+                },
+                {
+                    "source_id": "10.1085/jgp.202012713",
+                    "locator": LOCATORS["10.1085/jgp.202012713"],
+                    "relationship": "direct",
+                    "source_subject": source_subject("10.1085/jgp.202012713"),
+                    "extraction_note": "Rabbit-psoas and mouse-EDL x-ray observations support the separately named H, crown, and approximate L periodicities; the proposed titin origin of L remains inferred."
                 }
             ],
             "model_dependencies": ["data/titin.json", "data/sarcomere.json", "SD-03"],
-            "limitations": ["The current model does not establish exact register between titin and myosin repeats."],
-            "not_claimed": ["that 45.5 nm is the molecular span of one eleven-domain chain", "an exact titin–myosin register"],
+            "limitations": ["The proposed titin origin of the L periodicity is an inferred hypothesis, not a measured molecular register."],
+            "not_claimed": ["that approximately 45.54 nm is the exact molecular span of one eleven-domain chain", "an exact titin-myosin register"],
             "public_bindings": [],
             "inventory_status": "AUDIT_ONLY",
             "review": pending_review(),
@@ -312,7 +319,7 @@ def extra_claims() -> list[dict[str, Any]]:
         {
             "id": "force_law_parameter_set",
             "subject": target,
-            "statement": "Current passive-force outputs use parameters transferred from rat-psoas preparations; their validity and supported range await SD-04.",
+            "statement": "A deterministic development solver retains parameters transferred from rat-psoas preparations, but SD-04 withholds all public absolute-pN output because biological transfer, validity range, uncertainty, slack, and unfolding remain unresolved.",
             "quantity": None,
             "claim_class": "MODELED",
             "render_class": "MODELED",
@@ -321,11 +328,11 @@ def extra_claims() -> list[dict[str, Any]]:
                 "locator": LOCATORS["10.1073/pnas.95.14.8052"],
                 "relationship": "transfer",
                 "source_subject": source_subject("10.1073/pnas.95.14.8052"),
-                "extraction_note": "Force-law parameter evidence is from rat psoas; transfer to Q8WZ42-1 and all displayed outputs remains pending SD-04."
+                "extraction_note": "Force-law parameter evidence is from rat psoas; SD-04 permits internal deterministic auditing but explicitly does not approve absolute-pN transfer to Q8WZ42-1."
             }],
             "model_dependencies": ["data/mechanical_model.json", "data/structural_states.json", "SD-04"],
-            "limitations": ["Slack, unfolding, uncertainty, and the supported range are not yet specialist-approved."],
-            "not_claimed": ["direct human Q8WZ42-1 force measurements", "release-approved pN predictions"],
+            "limitations": ["Species/preparation transfer, supported range, uncertainty, slack/buckling/contact, and unfolding/refolding are unresolved."],
+            "not_claimed": ["direct human Q8WZ42-1 force measurements", "public or release-approved absolute-pN predictions"],
             "public_bindings": ["src/index.template.html#id=stageForce", "src/index.template.html#id=forceCurve"],
             "inventory_status": "AUDIT_ONLY",
             "review": pending_review(),

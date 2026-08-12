@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate SC-19 sequence/mechanics/context scope and public bindings."""
+"""Validate SC-20 sequence/mechanics/context scope and public bindings."""
 
 from __future__ import annotations
 
@@ -57,8 +57,8 @@ def validate(scope: dict, presentation: dict, sarcomere: dict, claims: dict,
     problems: list[str] = []
     if scope.get("schema") != "titin-scientific-scope/1":
         problems.append("wrong scientific-scope schema")
-    if scope.get("status") != "CODE_COMPLETE_BLOCKED_SCIENCE":
-        problems.append("scope must expose the unresolved science status")
+    if scope.get("status") != "SC20_CITATION_REVIEWED_DECISIONS_CONSUMED":
+        problems.append("scope must expose the consumed SC-20 decision status")
     sequence = scope.get("sequence") or {}
     expected_sequence = {
         "species": "Homo sapiens", "gene": "TTN", "accession": "Q8WZ42",
@@ -69,18 +69,22 @@ def validate(scope: dict, presentation: dict, sarcomere: dict, claims: dict,
             problems.append(f"sequence.{field} must be {value}")
     if sequence.get("tissue_or_muscle_claim") is not None:
         problems.append("Q8WZ42-1 may not acquire an unreviewed tissue claim")
-    if sequence.get("review_status") != "PENDING":
-        problems.append("sequence construct review must remain visibly PENDING")
-    if "Q8WZ42-1" not in str(scope.get("public_badge")) or "pending" not in str(scope.get("public_badge", "")).lower():
-        problems.append("public badge must name Q8WZ42-1 and the pending review")
+    if sequence.get("review_status") != "APPROVED":
+        problems.append("sequence construct must expose its owner-authorized approval")
+    badge = str(scope.get("public_badge", ""))
+    if "Q8WZ42-1" not in badge or "citation-reviewed" not in badge.lower() \
+            or "no tissue-specific claim" not in badge.lower():
+        problems.append("public badge must name Q8WZ42-1 and its exact citation-reviewed scope")
     mechanics = scope.get("mechanics") or {}
     if "rat psoas" not in str(mechanics.get("display_label", "")).lower():
         problems.append("mechanics display label must expose the rat-psoas transfer")
-    if mechanics.get("review_status") != "PENDING" or not mechanics.get("transfers"):
+    if mechanics.get("review_status") != "DEFERRED" or not mechanics.get("transfers"):
         problems.append("mechanics transfer/review status is incomplete")
+    if "absolute pn withheld" not in str(mechanics.get("display_label", "")).lower():
+        problems.append("mechanics label must disclose that absolute pN is withheld")
     if not scope.get("structural_context", {}).get("transfers"):
         problems.append("structural-context transfers are not enumerated")
-    if not scope.get("render"):
+    if scope.get("render", {}).get("review_status") != "APPROVED":
         problems.append("scope render policy is missing")
     if "representation" in scope:
         problems.append("legacy representation section must be migrated to render")
@@ -108,6 +112,8 @@ def validate(scope: dict, presentation: dict, sarcomere: dict, claims: dict,
         problems.append("template retains the old static scope fallback")
     if "model.scientificDecisions.badgeText" not in template:
         problems.append("template does not visibly expose all normalized scientific decisions")
+    if "titinStrands: false" not in template or "absolute pN withheld" not in template:
+        problems.append("public template does not enforce representative-titin/pN-withholding policy")
 
     listed = {row.get("path"): row.get("value") for row in scope.get("identity_bindings") or []}
     discovered = {}
@@ -146,9 +152,9 @@ def main() -> None:
         load_json(args.claims), args.template.read_text(encoding="utf-8"), args.scan_data,
     )
     if problems:
-        print("SC-19 scientific scope validation failed:\n  - " + "\n  - ".join(problems))
+        print("SC-20 scientific scope validation failed:\n  - " + "\n  - ".join(problems))
         raise SystemExit(1)
-    print("SC-19 scientific scope: PASS (reference sequence, transfers, and pending status are explicit)")
+    print("SC-20 scientific scope: PASS (owner-authorized rulings and deferred transfers are explicit)")
 
 
 if __name__ == "__main__":

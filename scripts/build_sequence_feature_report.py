@@ -8,12 +8,34 @@ import json
 from pathlib import Path
 from typing import Any
 
-from scientific_common import ROOT, load_json, sha256_payload
+from scientific_common import ROOT, load_json, sha256_file, sha256_payload
 
 
 DEFAULT_FEATURES = ROOT / "data" / "titin_sequence_features.json"
 DEFAULT_TITIN = ROOT / "data" / "titin.json"
 DEFAULT_OUTPUT = ROOT / "docs" / "scientific-decisions" / "SC-19" / "region-feature-report.json"
+
+
+def frozen_evidence_digest(output: Path) -> str | None:
+    """Return the adjudicated SD-01 packet digest when this is the canonical report.
+
+    SC-19 is the evidence *input* to SC-20.  Once SD-01 is adjudicated, rebuilding
+    that report from the consumed post-decision model would rewrite the evidence
+    under the ruling.  The decision ledger therefore becomes the check authority.
+    """
+    if output.resolve() != DEFAULT_OUTPUT.resolve():
+        return None
+    ledger_path = ROOT / "data" / "scientific_decisions.json"
+    if not ledger_path.is_file():
+        return None
+    decision = (load_json(ledger_path).get("decisions") or {}).get("SD-01") or {}
+    if decision.get("status") == "PENDING":
+        return None
+    relative = output.resolve().relative_to(ROOT.resolve()).as_posix()
+    for packet in decision.get("evidence_packet") or []:
+        if packet.get("path") == relative:
+            return packet.get("sha256")
+    return None
 
 
 def parse_args() -> argparse.Namespace:
@@ -135,6 +157,17 @@ def build_report(sequence: dict[str, Any], titin: dict[str, Any]) -> dict[str, A
 
 def main() -> None:
     args = parse_args()
+    frozen_digest = frozen_evidence_digest(args.output)
+    if frozen_digest:
+        if not args.check:
+            raise SystemExit(
+                "SC-19 region-feature evidence is frozen by adjudicated SD-01; "
+                "write a new post-decision report instead of overwriting it"
+            )
+        if not args.output.is_file() or sha256_file(args.output) != frozen_digest:
+            raise SystemExit("frozen SC-19 region-feature evidence failed its decision-ledger digest")
+        print("frozen SC-19 region-feature evidence is intact (decision-ledger SHA-256)")
+        return
     result = build_report(load_json(args.features), load_json(args.titin))
     text = json.dumps(result, indent=2, ensure_ascii=False) + "\n"
     if args.check:

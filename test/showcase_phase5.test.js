@@ -53,8 +53,9 @@ test('SC5: the A-band scaffold story is complete and sourced without MyBP-C', ()
     assert.equal(scaffold.region_id, 'Aband_super');
     assert.equal(scaffold.domains_per_super_repeat, 11);
     assert.equal(scaffold.c_zone_super_repeats, 11);
-    assert.equal(scaffold.super_repeat_nm, 45.5);
-    assert.equal(scaffold.myosin_repeat_nm, 43.1);
+    assert.equal(scaffold.derived_11_domain_interval_nm, 43.78);
+    assert.equal(scaffold.myosin_H_periodicity_nm, 43.17);
+    assert.equal(scaffold.thick_filament_L_periodicity_nm, 45.54);
     assert.ok(scaffold.source_ids.length >= 2, 'the scaffold claim carries its sources');
     assert.ok(scaffold.not_claimed.some((entry) => /exact register/i.test(entry)));
     assert.ok(scaffold.not_claimed.some((entry) => /settled causal mechanism/i.test(entry)),
@@ -111,9 +112,10 @@ test('SC5: MyBP-C uses only the canonical C-zone and its sourced skeletal period
     const zone = model.cZoneAt(length);
     assert.equal(context.c_zone.start_nm, zone.start_nm);
     assert.equal(context.c_zone.end_nm, zone.end_nm);
-    // MyBP-C keeps its OWN 43 nm periodicity rather than borrowing titin's 45.5 nm,
+    // MyBP-C keeps its OWN 43 nm periodicity rather than borrowing the derived
+    // 11-domain display interval,
     // which would silently assert an exact shared register.
-    assert.notEqual(context.stripe_spacing_nm, zone.super_repeat_nm);
+    assert.notEqual(context.stripe_spacing_nm, zone.derived_11_domain_interval_nm);
     assert.equal(context.stripe_spacing_nm, 43);
     assert.equal(context.molecules_per_stripe, 3);
     assert.equal(context.stripes.length, 11);
@@ -406,8 +408,8 @@ test('SC5: the page keeps MyBP-C optional, Evidence-scoped, and labelled schemat
   assert.match(page, /\['showMyBPC', 'MyBP-C context \(schematic\)'\]/);
   assert.match(page, /Accessory C-zone context is admitted for Evidence mode only/);
   assert.match(page, /showMyBPC: contextScale\s*\n\s*&& state\.audienceMode === AUDIENCE_MODES\.evidence/);
-  assert.match(page, /A-band anchored span/, 'the scaffold story is reported in the drawer');
-  assert.match(page, /near-commensurate/);
+  assert.match(page, /A-band display allocation/, 'the scaffold story is reported in the drawer');
+  assert.match(page, /Distinct thick-filament spacings/);
   assert.match(page, /MyBP-C C-zone context \(schematic, not titin\)/);
   assert.match(page, /function renderExpertCards/);
   assert.match(page, /visualization\.expertCards\(\)/);

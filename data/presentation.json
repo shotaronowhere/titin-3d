@@ -282,8 +282,8 @@
         "10.1016/j.jmb.2020.06.025",
         "UniProt:Q8WZ42"
       ],
-      "lay_summary": "Titin changes role along its length. Its I-band regions form the extensible spring, while an eleven-domain super-repeat binds the thick filament: that A-band segment keeps a constant span and organizes the filament rather than stretching.",
-      "expert_expansion": "Eleven Ig/Fn3 domains repeat every 45.5 nm along the bound segment, near-commensurate with the 43.1 nm myosin repeat; the 2.4 nm residual is not an exact register. The A-band span is invariant with sarcomere length here, which is what makes the scaffold role legible beside the I-band spring. Titin is widely discussed as a thick-filament ruler and regulator, but this model encodes the geometric scaffold only, never a causal mechanism. The same C-zone carries MyBP-C, an accessory thick-filament protein that is not part of titin; its optional schematic context layer can be switched on here in Evidence mode.",
+      "lay_summary": "Titin changes role along its length. Its I-band regions form the extensible spring, while an eleven-domain sequence super-repeat binds the thick filament. The bound A-band display allocation stays constant here, but its rendered span is schematic rather than a measured molecular length.",
+      "expert_expansion": "The C-zone sequence super-repeat contains eleven Ig/Fn3 domains. In one fixed rabbit-psoas mapping dataset the mean domain spacing is 3.98 nm, yielding a source-context arithmetic interval of 43.78 nm. That display derivation remains distinct from the approximately 43.17 nm myosin H periodicity, 14.3 nm crown spacing, and approximately 45.54 nm thick-filament L periodicity. The A-band allocation is invariant with sarcomere length in this renderer, which makes the scaffold role legible beside the I-band spring without asserting an exact molecular length or register. Titin is widely discussed as a thick-filament ruler and regulator, but this model encodes no causal mechanism. The same C-zone carries MyBP-C, an accessory thick-filament protein that is not part of titin; its optional schematic context layer can be switched on here in Evidence mode.",
       "not_claimed": [
         "one elastic constant for the whole molecule",
         "atom-level region surfaces",
@@ -404,17 +404,17 @@
         "10.1085/jgp.202012713",
         "10.1016/j.yjmcc.2019.05.026"
       ],
-      "body": "The A-band segment binds the thick filament through an eleven-domain super-repeat of 45.5 nm axial periodicity, eleven of which lie in the C-zone. In this model its end-to-end span stays constant while sarcomere length changes, so the same molecule reads as an extensible I-band spring in series with a positionally anchored A-band scaffold. That organizing role is what supports describing titin as a molecular ruler for thick-filament assembly, and as a participant in myosin regulation. Both remain active proposals in the literature: the visualization shows the geometric scaffold that motivates them and encodes no causal mechanism, no length-setting rule, and no activation coupling.",
+      "body": "The A-band segment contains an eleven-domain C-zone sequence pattern. A fixed rabbit-psoas antibody-localization dataset reports a 3.98 nm mean titin-domain spacing, so this visualization may derive a labelled 43.78 nm display interval for eleven domains. That number is not the approximately 45.54 nm thick-filament L periodicity and does not establish an exact titin–myosin register. The schematic A-band allocation stays constant while sarcomere length changes, so the same molecule reads as an extensible I-band spring in series with an anchored display scaffold. Molecular-ruler and regulatory roles remain active proposals: the visualization encodes no causal mechanism, length-setting rule, or activation coupling.",
       "not_claimed": [
         "a settled ruler mechanism for thick-filament length",
         "a settled regulatory pathway from titin to myosin",
-        "exact register between the 45.5 nm titin super-repeat and the 43.1 nm myosin repeat",
+        "identity or exact register among the derived 43.78 nm display interval, H periodicity, and L periodicity",
         "an exact universal A-band azimuth for the bound segment"
       ],
       "findings": [
         {
           "status": "ESTABLISHED",
-          "text": "An eleven-domain super-repeat of 45.5 nm axial periodicity binds the thick filament, with eleven copies in the C-zone."
+          "text": "The C-zone contains an eleven-domain sequence pattern; this display uses a labelled 43.78 nm interval derived from one source-context mean spacing, not an exact molecular repeat length."
         },
         {
           "status": "ESTABLISHED",

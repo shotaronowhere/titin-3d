@@ -1646,3 +1646,31 @@ reviewer. In particular, SD-01 records—but does not resolve—the current N2A 
 parameter was changed without that ruling. SC-20 and SC-21 remain blocked by their named decisions,
 and `release_ready` remains `false`. Full evidence and handoff are in
 `docs/sprint-reports/SC-19.md`.
+
+---
+
+# 2026-08-12 — SC-20 repository-controlled completion
+
+SC-20 is **COMPLETE** under the project owner's explicit authorization for citation-backed AI
+adjudication. The record does not claim independent human review: SD-01, SD-03, and SD-05 are
+`APPROVED`; SD-02 and SD-04 are `DEFERRED` with enforced public caveats.
+
+The Q8WZ42-1 I-band partition now separates proximal Ig 801–9365, N2A 9366–9851,
+UNKNOWN 9852–10215, PEVK 10216–12022, and distal Ig 12023–14018. Imported, curated, and rendered
+Ig totals remain distinct at 152/153/153. A/M placement is a continuous non-metric display
+allocation, the four historical axial quantities are separated, disordered segments use a seeded
+bounded schematic ribbon, and UN2A preserves its measured PDB 7NIP structured core separately from
+its unresolved flexible-flank/in-situ conformation. The public view shows one representative
+molecule, and absolute-pN output is withheld under SD-04.
+
+The final model fingerprint is
+`7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5`.
+`npm run verify:sc20` passes 223/223 bounded tests and the byte-digested evidence/generator checks.
+`npm run verify` passes 498/498 Node tests plus all validators, generators, destructive controls,
+matrix checks, and the Python structure smoke. `npm run test:browser` passes 9/9 Chromium scenarios.
+The exact before/after audit, eight contract viewport captures, and artifact digests are in
+`docs/sprint-reports/SC-20.md` and `evidence/scientific/SC-20/manifest.json`.
+
+SC-21 remains blocked by deferred SD-04 mechanics validation. Independent claim entailment, the
+human-reviewed visual matrix, deployment/physical-hardware evidence, accessibility/manual checks,
+lay/expert review, rehearsal, and final release remain pending; `release_ready` remains `false`.

@@ -94,9 +94,9 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
   const zdiscWidth = model.provenance.forParameter('zdisc', 'Width (super-resolution)');
   const zWidth = components.get('zdisc')?.dimensions_nm?.width_X;
   const bareZoneWidth = components.get('thick_filament')?.dimensions_nm?.bare_zone_center;
-  const superRepeat = model.spec.geometryStrategy?.geometric_relationships
-    ?.titin_Aband_super_repeat;
-  const repeat = superRepeat?.values;
+  const periodicities = model.spec.geometryStrategy?.geometric_relationships
+    ?.titin_Aband_periodicities;
+  const repeat = periodicities?.values;
   const bandClaim = claims.get('band_and_zone_brackets');
   const bareZoneClaim = claims.get('bare_zone_head_absence');
   const mBandClaim = claims.get('mband_midpoint_and_crosslinks');
@@ -112,7 +112,7 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
     iband: requireEvidence(model.spec, bandClaim.claim_evidence_class, 'iband'),
     aband: requireEvidence(model.spec,
       thickFilament.evidence_by_claim?.dimensions_and_positions, 'aband'),
-    czone: requireEvidence(model.spec, superRepeat.evidence_class, 'czone'),
+    czone: requireEvidence(model.spec, periodicities.evidence_class, 'czone'),
     bare_zone: requireEvidence(model.spec, bareZoneClaim.claim_evidence_class, 'bare_zone'),
     mband: requireEvidence(model.spec, mBandClaim.claim_evidence_class, 'mband'),
   });
@@ -120,7 +120,7 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
     zdisc: requireSourceIds(zdiscWidth.sources, 'zdisc'),
     iband: requireSourceIds(bandClaim.sources, 'iband'),
     aband: requireSourceIds(thickFilament.primary_references, 'aband'),
-    czone: requireSourceIds(superRepeat.sources, 'czone'),
+    czone: requireSourceIds(periodicities.sources, 'czone'),
     bare_zone: requireSourceIds(bareZoneClaim.sources, 'bare_zone'),
     mband: requireSourceIds(mBandClaim.sources, 'mband'),
   });
@@ -211,21 +211,20 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
     anchored_span_invariant: true,
     start_nm: aband.X_start,
     end_nm: aband.X_end,
-    super_repeat_nm: cZone.super_repeat_nm,
+    derived_11_domain_interval_nm: cZone.derived_11_domain_interval_nm,
     domains_per_super_repeat: cZone.domains_per_super_repeat,
     c_zone_super_repeats: cZone.n_super_repeats,
     c_zone_length_nm: cZone.length_nm,
     c_zone_start_nm: cZone.start_nm,
     c_zone_end_nm: cZone.end_nm,
-    myosin_repeat_nm: crownPeriodicity.values.myosin_repeat_nm,
-    // Near-commensurate, not equal: stating the residual is what keeps "matching
-    // periodicity" from being read as an exact register claim.
-    periodicity_offset_nm: Number(
-      (cZone.super_repeat_nm - crownPeriodicity.values.myosin_repeat_nm).toFixed(3),
-    ),
-    evidence_class: requireEvidence(model.spec, superRepeat.evidence_class, 'aband_scaffold'),
+    rabbit_psoas_mean_titin_domain_spacing_nm:
+      repeat.rabbit_psoas_mean_titin_domain_spacing_nm.value,
+    myosin_H_periodicity_nm: repeat.myosin_head_H_periodicity_nm,
+    myosin_crown_spacing_nm: repeat.myosin_crown_spacing_nm,
+    thick_filament_L_periodicity_nm: repeat.thick_filament_L_periodicity_nm,
+    evidence_class: requireEvidence(model.spec, periodicities.evidence_class, 'aband_scaffold'),
     source_ids: requireSourceIds(
-      [...superRepeat.sources, ...crownPeriodicity.sources], 'aband_scaffold',
+      [...periodicities.sources, ...crownPeriodicity.sources], 'aband_scaffold',
     ),
     // The bound span translating without stretching is what makes the scaffold
     // role legible beside the I-band spring; both are shown from the same solver.
@@ -233,7 +232,8 @@ export function createShowcaseOverlay(model, sarcomereLengthNm) {
       + 'keeps a constant end-to-end span while the I-band regions change length.',
     not_claimed: Object.freeze([
       ...architectureClaim.not_claimed,
-      'that the super-repeat is in exact register with the myosin repeat',
+      'that the derived 11-domain display interval equals the H or L periodicity',
+      'an exact register between titin sequence repeats and myosin periodicities',
       'a settled causal mechanism by which titin sets thick-filament length or regulates myosin',
     ]),
   });

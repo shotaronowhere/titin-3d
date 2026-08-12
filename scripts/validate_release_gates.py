@@ -204,7 +204,8 @@ class GateValidator:
                    "scientific_decisions requires SD-01 through SD-05")
         self.check(decision_ids == DECISION_IDS, "all five scientific decisions have status rows")
         for row in decisions.get("decisions", []):
-            self.check(row.get("status") in STATUSES, f"{row.get('id')}: status is valid")
+            self.check(row.get("status") in {"PENDING", "APPROVED", "DEFERRED"},
+                       f"{row.get('id')}: decision status is valid")
             if row.get("status") == "PENDING":
                 self.check(not row.get("reviewer"), f"{row.get('id')}: PENDING invents no reviewer")
 

@@ -41,7 +41,12 @@ check(L["annotations.json"].get("schema")=="titin-object-annotations/1",
 print("== Titin domain reconciliation (UniProt Q8WZ42) ==")
 tr=L["titin.json"]["regions"]
 ig=sum(r["domain_composition"]["Ig_like"] for r in tr); fn=sum(r["domain_composition"]["Fn3"] for r in tr)
-check(ig==152, f"Ig-like total == 152 (got {ig})")
+totals=L["titin.json"].get("domain_totals", {})
+imported_ig=(totals.get("uniprot_domain_feature_count") or {}).get("Ig_like")
+curated_ig=(totals.get("curated_biological_domain_count") or {}).get("Ig_like")
+check(ig==153 and curated_ig==153,
+      f"curated Ig-like total == 153 (got regions={ig}, curated={curated_ig})")
+check(imported_ig==152, f"UniProt imported Ig-like rows remain 152 (got {imported_ig})")
 check(fn==132, f"Fn3 total == 132 (got {fn})")
 
 print("== Structural-state numerical identities ==")

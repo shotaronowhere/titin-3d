@@ -1,0 +1,200 @@
+{
+  "schema": "titin-sc20-render-audit/1",
+  "model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+  "representative_titin": {
+    "depiction_policy": "one representative molecule; biological copy number is not rendered",
+    "copy_number_claimed": false,
+    "strand_index": 0,
+    "a_band_surface_bound": true,
+    "a_band_start_nm": 300,
+    "a_band_transverse_offset_nm": {
+      "y": 7.5,
+      "z": 0,
+      "radius": 7.5
+    },
+    "thick_filament_radius_nm": 7.5,
+    "azimuth_deg": 0,
+    "azimuth_evidence": "SCHEMATIC (arrangement) over MEASURED (copy number)",
+    "placement_policy": "six_fold_symmetric",
+    "i_band_transverse_path": "SCHEMATIC render-only linear taper from the A-band surface offset to the Z-disc axis"
+  },
+  "titin_strands_drawn": 1,
+  "disordered_depiction": {
+    "algorithm": {
+      "id": "seeded-irregular-ensemble-ribbon",
+      "version": 1,
+      "prng": "mulberry32",
+      "seed_derivation": "FNV-1a(render_seed, region_id, strand_index)",
+      "control_points": 25,
+      "endpoint_policy": "canonical endpoints are copied exactly; irregularity is transverse only",
+      "determinism_policy": "pure local PRNG; no Math.random, time, platform fingerprint, or model fingerprint"
+    },
+    "render_seed": 20260812,
+    "regions": [
+      "N2A",
+      "post_N2A_unknown",
+      "PEVK"
+    ],
+    "evidence_class": "SCHEMATIC",
+    "amplitude_nm": 3.9,
+    "amplitude_by_region": {
+      "N2A": 2.6915,
+      "post_N2A_unknown": 3.9,
+      "PEVK": 3.7273
+    },
+    "span_over_contour": {
+      "N2A": 0.3099,
+      "post_N2A_unknown": null,
+      "PEVK": 0.0443
+    },
+    "slack_fraction_by_region": {
+      "N2A": 0.6901348052689844,
+      "post_N2A_unknown": 1,
+      "PEVK": 0.9557273572909494
+    },
+    "descriptor_fingerprint_by_region": {
+      "N2A": "369655d1",
+      "post_N2A_unknown": "d60472a4",
+      "PEVK": "2ebc41a3"
+    },
+    "by_region": {
+      "N2A": {
+        "maximum_transverse_offset_nm": 2.491691019,
+        "declared_envelope_nm": 2.691525741,
+        "canonical_endpoints_nm": [
+          [
+            217.364820957,
+            5.434120524,
+            0
+          ],
+          [
+            234.407406667,
+            5.860185167,
+            0
+          ]
+        ],
+        "rendered_endpoints_nm": [
+          [
+            217.364820957,
+            5.434120524,
+            0
+          ],
+          [
+            234.407406667,
+            5.860185167,
+            0
+          ]
+        ],
+        "descriptor_fingerprint": "369655d1",
+        "representation_semantics": {
+          "domain_class": "N2A",
+          "representative_pdb_id": "7NIP",
+          "contains_structured_core": true,
+          "structured_core": {
+            "label": "UN2A tri-helix core",
+            "sequence_position": {
+              "start": 9504,
+              "end": 9544
+            },
+            "representative_pdb_id": "7NIP",
+            "fold": "three-helix bundle",
+            "evidence_class": "MEASURED (solution NMR; deposited coordinates)",
+            "source": "10.1016/j.jmb.2021.166901",
+            "render_usage": "semantic provenance only; the coarse ribbon does not claim an atomic or measured in-sarcomere pose"
+          },
+          "domain_evidence_class": "MEASURED (7NIP structured core); UNKNOWN (flank and in-situ conformation)",
+          "placement_evidence_class": "SCHEMATIC (serial chain envelope; core pose and flank paths unresolved)",
+          "note": "UN2A unique sequence rendered as a non-atomic variable-length ribbon between curated I80 and I81. PDB 7NIP establishes a structured tri-helix core; flexible flanks and the complete in-sarcomere conformation remain unresolved."
+        }
+      },
+      "post_N2A_unknown": {
+        "maximum_transverse_offset_nm": 3.718757141,
+        "declared_envelope_nm": 3.9,
+        "canonical_endpoints_nm": [
+          [
+            234.407406667,
+            5.860185167,
+            0
+          ],
+          [
+            234.407406667,
+            5.860185167,
+            0
+          ]
+        ],
+        "rendered_endpoints_nm": [
+          [
+            234.407406667,
+            5.860185167,
+            0
+          ],
+          [
+            234.407406667,
+            5.860185167,
+            0
+          ]
+        ],
+        "descriptor_fingerprint": "d60472a4",
+        "representation_semantics": {
+          "domain_class": "unresolved_sequence",
+          "representative_pdb_id": null,
+          "contains_structured_core": false,
+          "structured_core": null,
+          "domain_evidence_class": "MEASURED (sequence continuity); UNKNOWN (identity and conformation)",
+          "placement_evidence_class": "UNKNOWN (no stable fold — chain occupies the segment)",
+          "note": "Explicit unresolved sequence rendered as a bounded zero-projection loop; zero axial projection is bookkeeping, not zero physical length."
+        }
+      },
+      "PEVK": {
+        "maximum_transverse_offset_nm": 3.519952179,
+        "declared_envelope_nm": 3.727336693,
+        "canonical_endpoints_nm": [
+          [
+            234.407406667,
+            5.860185167,
+            0
+          ],
+          [
+            258.40760628,
+            6.460190157,
+            0
+          ]
+        ],
+        "rendered_endpoints_nm": [
+          [
+            234.407406667,
+            5.860185167,
+            0
+          ],
+          [
+            258.40760628,
+            6.460190157,
+            0
+          ]
+        ],
+        "descriptor_fingerprint": "2ebc41a3",
+        "representation_semantics": {
+          "domain_class": "PEVK",
+          "representative_pdb_id": null,
+          "contains_structured_core": false,
+          "structured_core": null,
+          "domain_evidence_class": "MEASURED (sequence); UNKNOWN (tertiary conformation)",
+          "placement_evidence_class": "UNKNOWN (no stable fold — chain occupies the segment)",
+          "note": "Entropic/worm-like chain — represent as a flexible chain whose end-to-end length varies with force; never a fixed fold."
+        }
+      }
+    },
+    "contour_length_nm": {
+      "N2A": 55,
+      "post_N2A_unknown": null,
+      "PEVK": 542.1
+    },
+    "contour_source": "titin.json regions[].extension_model.max_end2end_nm — the same contour MechanicalModel resolves as Lc",
+    "meaning": "seeded transverse irregularity depicts a non-atomic flexible/unresolved chain envelope; the N2A record separately preserves its experimentally resolved structured UN2A core. Where a contour proxy exists, amplitude decreases with axial extension",
+    "not_claimed": [
+      "a measured or predicted conformation",
+      "molecular transverse amplitude, handedness, wavelength, or persistence length",
+      "an equilibrium ensemble sample"
+    ]
+  }
+}

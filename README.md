@@ -7,20 +7,19 @@ API consume those records rather than restating biological constants.
 **Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` remain optional future extensions. Showcase
 completion now follows
-`docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md`. SC-18 is
-`CODE_COMPLETE_BLOCKED_SCIENCE`: every repository-controlled implementation,
-identity, boundary, release-gate, and Chromium check passes, while human recruitment
-and physical/manual hardware evidence are explicitly deferred and remain `PENDING`.
-SC-19 is `CODE_COMPLETE_BLOCKED_SCIENCE`: its repository-controlled sequence,
-scope, claim-support, decision-packet, runtime, release-pack, and validation work is
-complete, but all five SD-01–SD-05 rulings remain `PENDING` because no qualified
-reviewer is confirmed. SC-20 and SC-21 therefore remain blocked. The handoffs are
-summarized in `docs/sprint-reports/SC-18.md` and `docs/sprint-reports/SC-19.md`.
+`docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md`. SC-18 and
+SC-19 reached their required historical `CODE_COMPLETE_BLOCKED_SCIENCE` handoffs.
+On 2026-08-12 the project owner authorized citation-backed AI adjudication of
+SD-01–SD-05 without representing it as independent human review. SC-20 is complete:
+SD-01, SD-03, and SD-05 are `APPROVED`; SD-02 and SD-04 are `DEFERRED` with enforced
+public caveats. SC-21 remains blocked by the deferred mechanics validation. The
+handoffs are summarized in `docs/sprint-reports/SC-18.md`,
+`docs/sprint-reports/SC-19.md`, and `docs/sprint-reports/SC-20.md`.
 
 The release pack in `release/` is generated and staleness-gated. The complete final
-release definition is tracked in `data/release_gates.json`; scientific decisions,
-claim entailment, mechanical validity, human/browser review, target-hardware evidence,
-deployment parity, and final release work remain outstanding. The showcase is not yet
+release definition is tracked in `data/release_gates.json`; claim entailment,
+mechanical validity, human/browser review, target-hardware evidence, deployment
+parity, and final release work remain outstanding. The showcase is not yet
 release-ready, `release_ready` remains `false`, and `npm run validate:gates` rejects
 any unsupported readiness claim.
 
@@ -80,10 +79,10 @@ the declared working range so the difference between regions that straighten and
 regions that extend is something to watch rather than something to read. The
 sweep stops on any other interaction and, under `prefers-reduced-motion`, moves
 between the two endpoint states instead of animating between them. Beside it the
-bar carries the **passive force** one titin molecule bears at the current length,
-solved from sourced force–extension laws and labelled with its evidence class;
-the Measure tab plots the same curve with the current length marked and the
-compliance share of each I-band region.
+bar states that absolute passive-force output is withheld under deferred SD-04.
+The Measure tab retains the deterministic regional-extension illustration but does
+not publish an absolute-pN curve or imply that the development solver is validated
+for human Q8WZ42-1.
 
 A presenter can drive the whole route from the keyboard: digits 1–7 step the
 chapters, `r` restarts, `x` shows regional extension, `e` opens Evidence, `g`
@@ -111,7 +110,7 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-Run the complete Phase 10 release gate:
+Run the complete repository gate:
 
 ```sh
 npm run verify
@@ -139,6 +138,7 @@ npm run verify:sc8
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
+For a bounded SC-20 check, run `npm run verify:sc20`.
 
 To reproduce the coordinate-derived measurements from the pinned RCSB inputs, fetch
 the optional raw-structure cache and verify it before running the measurement scripts:
@@ -244,9 +244,9 @@ full text, an abstract, a database record, coordinates, or an executable model.
 `data/scientific_scope.json` is the sole public identity ledger: the displayed
 sequence is the pinned human TTN reference sequence Q8WZ42-1, not a claimed
 tissue-specific human isoform. Mechanics transferred from rat-psoas preparations
-are labelled next to their outputs. `data/claim_support.json` records exact locators
-and limitations separately from human entailment status; all entailment reviews are
-still pending.
+remain identified as development transfers, and absolute-pN output is withheld.
+`data/claim_support.json` records exact locators and limitations separately from
+human entailment status; all independent human entailment reviews are still pending.
 `PHASE0_REVIEW.md` records the completed research audit and the remaining scientific
 uncertainties, which are model limits rather than unfinished provenance work.
 

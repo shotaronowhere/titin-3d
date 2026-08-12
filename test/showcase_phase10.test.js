@@ -6,9 +6,10 @@ import { Line2 } from 'three/addons/lines/Line2.js';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
-import { SarcomereScene, TITIN_RENDER_STYLE } from '../src/render/SarcomereScene.js';
+import { SarcomereScene } from '../src/render/SarcomereScene.js';
 
 const model = await TitinModel.create(nodeReader());
+const TITIN_RENDER_STYLE = model.spec.renderStyle.titin;
 const SL = 2200;
 
 /**
@@ -125,7 +126,8 @@ test('SC10: the halo is an emphasis channel, not an evidence claim', () => {
   };
   assert.ok(halos.some(inMirroredHalf), 'the mirrored half must carry halos too');
   // Exactly one halo per canonical region, per half.
-  const segments = model.backboneAt(SL).segments;
+  const segments = model.backboneAt(SL).segments
+    .filter((segment) => segment.X_end > segment.X_start);
   const perHalf = halos.filter((halo) => !inMirroredHalf(halo));
   assert.equal(perHalf.length, segments.length);
   assert.deepEqual(

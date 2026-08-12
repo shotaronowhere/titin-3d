@@ -519,16 +519,14 @@ test('PHASE7: renderer consumes full tilt azimuth, not only tilt magnitude', () 
   s.clear();
 });
 
-test('PHASE7: the two unbatched path records are the N2A coil and PEVK', () => {
-  // 287 records: 285 folded components are batched, while the N2A composite's
-  // WLC path and the PEVK WLC path remain unbatched. N2A.1's generic Ig component
-  // is included in the folded batch; this check concerns only the path records.
+test('PHASE7: the three chain-envelope records remain outside folded-domain batches', () => {
   const batches = model.instancing.batchesAt(2200);
   const batched = new Set(batches.batches.flatMap((b) => b.transforms.map((t) => t.domain_id)));
   const unbatched = model.domainInstancesAt(2200).instances
     .filter((d) => !batched.has(d.domain_id));
-  assert.equal(unbatched.length, 2);
-  assert.deepEqual(unbatched.map((d) => d.domain_class).sort(), ['N2A', 'PEVK']);
+  assert.equal(unbatched.length, 3);
+  assert.deepEqual(unbatched.map((d) => d.domain_class).sort(),
+    ['N2A', 'PEVK', 'unresolved_sequence']);
 });
 
 test('PHASE7: a batch renders the weakest evidence among its members', () => {

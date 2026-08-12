@@ -858,7 +858,6 @@
   },
   "release_ready": false,
   "release_blockers": [
-    "scientific_decisions",
     "claim_entailment",
     "mechanical_validity",
     "deployment_parity",
@@ -918,7 +917,7 @@
     ]
   },
   "scientific_decisions": {
-    "status": "PENDING",
+    "status": "PASS",
     "required_ids": [
       "SD-01",
       "SD-02",
@@ -929,23 +928,23 @@
     "decisions": [
       {
         "id": "SD-01",
-        "status": "PENDING"
+        "status": "APPROVED"
       },
       {
         "id": "SD-02",
-        "status": "PENDING"
+        "status": "DEFERRED"
       },
       {
         "id": "SD-03",
-        "status": "PENDING"
+        "status": "APPROVED"
       },
       {
         "id": "SD-04",
-        "status": "PENDING"
+        "status": "DEFERRED"
       },
       {
         "id": "SD-05",
-        "status": "PENDING"
+        "status": "APPROVED"
       }
     ],
     "evidence_refs": []

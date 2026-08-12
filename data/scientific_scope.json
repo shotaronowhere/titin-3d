@@ -1,6 +1,6 @@
 {
   "schema": "titin-scientific-scope/1",
-  "status": "CODE_COMPLETE_BLOCKED_SCIENCE",
+  "status": "SC20_CITATION_REVIEWED_DECISIONS_CONSUMED",
   "decision_id": "SD-01",
   "sequence": {
     "species": "Homo sapiens",
@@ -10,18 +10,18 @@
     "coordinate_frame": "canonical",
     "construct_label": "Human TTN reference sequence · Q8WZ42-1",
     "tissue_or_muscle_claim": null,
-    "review_status": "PENDING",
+    "review_status": "APPROVED",
     "source_ids": [
       "UniProt:Q8WZ42"
     ]
   },
   "mechanics": {
-    "parameter_set_id": "legacy-force-law-pending-SD-04",
+    "parameter_set_id": "development-force-law-deferred-SD-04",
     "species": "Rattus norvegicus",
     "muscle": "psoas skeletal muscle",
     "preparation": "single myofibrils and isolated titin mechanics transferred into the current model",
-    "display_label": "Mechanics parameters transferred from rat psoas preparations · SD-04 pending",
-    "review_status": "PENDING",
+    "display_label": "Development mechanics transferred from rat psoas preparations · SD-04 DEFERRED · absolute pN withheld",
+    "review_status": "DEFERRED",
     "transfers": [
       {
         "from": "rat psoas titin preparations",
@@ -34,13 +34,13 @@
         "source_ids": [
           "10.1073/pnas.95.14.8052"
         ],
-        "limitation": "The parameter transfer and supported range await SD-04; displayed pN values are model outputs, not human Q8WZ42-1 measurements."
+        "limitation": "The transfer is not validated for human Q8WZ42-1. Absolute pN remains available only to development/model APIs and is withheld from the public application."
       }
     ]
   },
   "structural_context": {
     "scope": "Mammalian striated-muscle context assembled from separately labelled skeletal and cardiac preparations",
-    "review_status": "PENDING",
+    "review_status": "APPROVED_WITH_DEFERRED_NONMETRIC_AXIAL_CONTEXT",
     "transfers": [
       {
         "source_context": "fast mouse psoas skeletal muscle",
@@ -55,13 +55,13 @@
     ]
   },
   "render": {
-    "reference_molecule_policy": "One representative Q8WZ42-1 sequence is shown per half-sarcomere path; copy number and attachment semantics await SD-05.",
+    "reference_molecule_policy": "One representative Q8WZ42-1 sequence is shown per half-sarcomere path. Biological copy number is contextual metadata and is not depicted or claimed.",
     "multiplicity_claim_id": null,
     "decision_id": "SD-05",
-    "review_status": "PENDING"
+    "review_status": "APPROVED"
   },
-  "public_badge": "Human TTN reference sequence · Q8WZ42-1 · construct review pending",
-  "public_badge_status": "PENDING_REVIEW",
+  "public_badge": "Human TTN reference sequence · Q8WZ42-1 · citation-reviewed SC-20 construct · no tissue-specific claim",
+  "public_badge_status": "OWNER_AUTHORIZED_CITATION_REVIEWED",
   "identity_bindings": [
     {
       "path": "data/annotations.json#/meta/scientific_scope_ref",
@@ -120,13 +120,17 @@
       "value": "scientific_scope.json#/sequence"
     },
     {
+      "path": "data/titin.json#/regions/8/scientific_scope_ref",
+      "value": "scientific_scope.json#/sequence"
+    },
+    {
       "path": "src/index.template.html#id=scopeIdentity",
       "value": "runtime:scopeLedger(spec).publicBadge"
     }
   ],
   "excluded_claims": [
     "that Q8WZ42-1 is a tissue-specific human skeletal-muscle isoform",
-    "that the current region partition is reviewer-approved",
+    "that the current region partition received independent human specialist review",
     "that rat-psoas mechanics are direct measurements of human Q8WZ42-1",
     "that cardiac structural context establishes human skeletal coordinates",
     "an isoform-neutral or tissue-neutral titin molecule"

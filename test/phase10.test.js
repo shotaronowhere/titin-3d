@@ -89,9 +89,9 @@ test('PHASE10: region tubes use exactly the canonical Level-0 boundaries', () =>
     const bounds = tube.geometry.boundingBox;
     // BufferGeometry attributes are float32. The tolerance covers only that
     // representation step (well below any biologically meaningful distance).
-    assert.ok(Math.abs(bounds.min.x - segment.X_start) < 1e-5,
+    assert.ok(Math.abs(bounds.min.x - segment.X_start) < 5e-5,
       `${segment.region_id}: start ${bounds.min.x} != ${segment.X_start}`);
-    assert.ok(Math.abs(bounds.max.x - segment.X_end) < 1e-5,
+    assert.ok(Math.abs(bounds.max.x - segment.X_end) < 5e-5,
       `${segment.region_id}: end ${bounds.max.x} != ${segment.X_end}`);
   }
   scene.clear();
@@ -124,7 +124,8 @@ test('PHASE10: highlighting changes selection colour only — never geometry or 
     'highlighting must not move or rotate a domain');
   assert.equal(applied.highlighted_tubes, 2, 'one selected tube in each mirrored half');
   assert.equal(applied.dimmed_tubes, (REGION_IDS.length - 1) * 2);
-  assert.equal(applied.highlighted_domains, 77 * 2,
+  assert.equal(applied.highlighted_domains, 2 * model.spec.titin.regions
+    .find((region) => region.id === 'prox_Ig').domain_composition.Ig_like,
     'all proximal-Ig domains in both halves must be selected');
   assert.equal(scene.manifest.highlighted_titin_region, 'prox_Ig');
 

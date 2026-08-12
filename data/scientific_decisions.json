@@ -1,10 +1,18 @@
 {
-  "schema": "titin-scientific-decisions/1",
-  "sprint_status": "CODE_COMPLETE_BLOCKED_SCIENCE",
-  "blocker": "No qualified SD-01–SD-05 reviewer candidate is recorded as confirmed; no ruling is fabricated.",
+  "schema": "titin-scientific-decisions/2",
+  "sprint_status": "DECISIONS_CONSUMABLE_SC20",
+  "blocker": null,
+  "review_policy": {
+    "kind": "owner_authorized_citation_backed_ai_adjudication",
+    "authorized_on": "2026-08-12",
+    "authorization_scope": "SD-01 through SD-05 project implementation",
+    "authority_record": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md",
+    "human_expert_review_claimed": false,
+    "separate_human_release_review_required": true
+  },
   "decisions": {
     "SD-01": {
-      "status": "PENDING",
+      "status": "APPROVED",
       "question": "Exact Q8WZ42-1 coordinate frame, N2A definition, and proximal/PEVK/distal residue-domain partition",
       "required_reviewer_role": "Titin sequence annotation and isoform/domain-boundary specialist",
       "evidence_packet": [
@@ -15,132 +23,357 @@
         {
           "path": "docs/scientific-decisions/SC-19/region-feature-report.json",
           "sha256": "31a293737079b5244d8f81eabcd5c1914b568ed1e338fe287bc8f8c6061031a5"
+        },
+        {
+          "path": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md",
+          "sha256": "7f02476c139a006d3bd6ee494f212f6998ef424c7ebb77dcd0b309859d9a22c1"
         }
       ],
       "reviewer": null,
-      "reviewed_on": null,
-      "reviewed_model_fingerprint": null,
-      "reviewed_payload_sha256": null,
-      "ruling": null,
-      "public_caveat": null,
-      "dissent_or_uncertainty": [],
+      "adjudicator": {
+        "type": "AI_SYSTEM",
+        "name": "OpenAI Codex",
+        "authority_basis": "project_owner_authorization",
+        "human_expert": false
+      },
+      "independent_human_review_status": "NOT_PERFORMED",
+      "reviewed_on": "2026-08-12",
+      "reviewed_model_fingerprint": "7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c",
+      "reviewed_payload_sha256": "b08b8805642fc3c9b68d306a7a533f30e5361b49d27b8bce920b14cb60567ce5",
+      "ruling": {
+        "coordinate_frame": "canonical human UniProt Q8WZ42-1 sequence version 4; 34350 aa",
+        "region_partition": {
+          "prox_Ig": "801-9365; 74 contained UniProt Ig-like rows",
+          "N2A": "9366-9851; I80-UN2A-I81-I82-I83; four curated Ig folds",
+          "post_N2A_unknown": "9852-10215; structure, identity, contour, and mechanics UNKNOWN",
+          "PEVK": "10216-12022; 31 UniProt PEVK-repeat rows",
+          "dist_Ig": "12023-14018; 16 contained UniProt Ig-like rows; A/I nomenclature unresolved"
+        },
+        "count_policy": "Store UniProt feature, curated biological, and rendered counts independently; preserve the experimental I81/UniProt I82 overlap as a source conflict.",
+        "implementation_record": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md#sd-01--approved-with-a-conservative-coordinate-policy"
+      },
+      "public_caveat": "N2A is shown as the human I80-UN2A-I81-I82-I83 element. Canonical Q8WZ42-1 coordinates are used under an explicit project boundary policy; the I81/I82 source overlap and the following 9852-10215 interval remain unresolved, and no conformation or mechanics is assigned to that interval.",
+      "dissent_or_uncertainty": [
+        "The 9366 N2A start is a conservative reproducible project boundary at the UniProt I80 feature, not a uniquely established biological boundary.",
+        "The exact distal-Ig/A-I nomenclature crosswalk remains unresolved."
+      ],
       "downstream_claim_ids": [
         "scope_badge",
         "titin_region_architecture",
         "sequence_region_partition"
       ],
       "implementation_verification": {
-        "status": "PENDING",
+        "status": "VERIFIED",
         "reviewer": null,
-        "reviewed_on": null,
-        "implemented_model_fingerprint": null,
-        "implementation_evidence": []
+        "adjudicator": {
+          "type": "AI_SYSTEM",
+          "name": "OpenAI Codex",
+          "authority_basis": "project_owner_authorization",
+          "human_expert": false
+        },
+        "reviewed_on": "2026-08-12",
+        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implementation_evidence": [
+          {
+            "path": "evidence/scientific/SC-20/manifest.json",
+            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "kind": "evidence_manifest"
+          },
+          {
+            "path": "evidence/scientific/SC-20/boundary-audit.json",
+            "sha256": "9c8ea35f87021801dda7ba651b7c6cde6b884f5b28bef2894e81413e008167a4",
+            "kind": "boundary_audit"
+          },
+          {
+            "path": "evidence/scientific/SC-20/n2a-1280x720.jpg",
+            "sha256": "6573c62167cdd473cd8bf92dcbb534389ca841dd4182c6af16608ea31c6d8057",
+            "kind": "manual_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-20/distal-ig-1280x720.jpg",
+            "sha256": "693916362b22beed37f5fdcac91dc76bb61df57edbe991a0a639106a04147773",
+            "kind": "manual_capture"
+          }
+        ]
       }
     },
     "SD-02": {
-      "status": "PENDING",
+      "status": "DEFERRED",
       "question": "A-band super-repeat, kinase, bare-zone, and M-line axial budget",
       "required_reviewer_role": "Titin A-band/M-band ultrastructure specialist",
       "evidence_packet": [
         {
           "path": "docs/scientific-decisions/SC-19/SD-02.md",
           "sha256": "671a547bd3fceeeafd6f7a1002fba795220e6352a593d5d1deec23bfa85d7745"
+        },
+        {
+          "path": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md",
+          "sha256": "7f02476c139a006d3bd6ee494f212f6998ef424c7ebb77dcd0b309859d9a22c1"
         }
       ],
       "reviewer": null,
-      "reviewed_on": null,
-      "reviewed_model_fingerprint": null,
-      "reviewed_payload_sha256": null,
-      "ruling": null,
-      "public_caveat": null,
-      "dissent_or_uncertainty": [],
+      "adjudicator": {
+        "type": "AI_SYSTEM",
+        "name": "OpenAI Codex",
+        "authority_basis": "project_owner_authorization",
+        "human_expert": false
+      },
+      "independent_human_review_status": "NOT_PERFORMED",
+      "reviewed_on": "2026-08-12",
+      "reviewed_model_fingerprint": "7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c",
+      "reviewed_payload_sha256": "f91a4a817151c83910ac06584a07987b44080ed154a2b31fa4c87c63359769c3",
+      "ruling": {
+        "representation": "non-metric schematic continuous bound path",
+        "rejected_claims": [
+          "595 nm or 620 nm as an exact A-band titin molecular span",
+          "30 nm as the kinase molecular span",
+          "150 nm as a straight M-line titin molecular span"
+        ],
+        "kinase_schematic_envelope_nm_from_sarcomere_midpoint": {
+          "near": 70,
+          "far": 105,
+          "semantics": "owner-approved rounded union envelope for display; not a confidence interval"
+        },
+        "scientific_axial_coordinate": null,
+        "implementation_record": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md#sd-02--deferred-with-a-non-metric-topology"
+      },
+      "public_caveat": "A-band and M-band titin are shown as a schematic bound path. Published localizations constrain the A/I junction, C-zone, bare-zone edge, kinase, and M-band in different species and preparations; this view does not claim exact boundaries for the tissue-neutral human Q8WZ42-1 reference sequence or a straight molecular path through those landmarks. Source-defined M1-line distances and titin m-domain names are distinct.",
+      "dissent_or_uncertainty": [
+        "The 70-105 nm display envelope merges no measurements statistically and must never be labelled a confidence interval.",
+        "No exact human Q8WZ42 A/M subregion boundaries are approved."
+      ],
       "downstream_claim_ids": [
         "band_and_zone_brackets",
         "mband_midpoint_and_crosslinks"
       ],
       "implementation_verification": {
-        "status": "PENDING",
+        "status": "VERIFIED",
         "reviewer": null,
-        "reviewed_on": null,
-        "implemented_model_fingerprint": null,
-        "implementation_evidence": []
+        "adjudicator": {
+          "type": "AI_SYSTEM",
+          "name": "OpenAI Codex",
+          "authority_basis": "project_owner_authorization",
+          "human_expert": false
+        },
+        "reviewed_on": "2026-08-12",
+        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implementation_evidence": [
+          {
+            "path": "evidence/scientific/SC-20/manifest.json",
+            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "kind": "evidence_manifest"
+          },
+          {
+            "path": "evidence/scientific/SC-20/boundary-audit.json",
+            "sha256": "9c8ea35f87021801dda7ba651b7c6cde6b884f5b28bef2894e81413e008167a4",
+            "kind": "boundary_audit"
+          },
+          {
+            "path": "evidence/scientific/SC-20/c-zone-1280x720.jpg",
+            "sha256": "4b5d9818b57bde9849ea640b2baa75f42450e93607bba6eae8a74969a3d40ab7",
+            "kind": "manual_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-20/kinase-1280x720.jpg",
+            "sha256": "d163353c0d9cd545ead669add9d70ea9a4f9593ef6f0ea49e9e76d9b91866ebf",
+            "kind": "manual_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-20/m-line-1280x720.jpg",
+            "sha256": "4bda910f8512c4aa8a4600bc71c1911bfdbc0814a33bdddbc3275b728b8ef788",
+            "kind": "manual_capture"
+          }
+        ]
       }
     },
     "SD-03": {
-      "status": "PENDING",
+      "status": "APPROVED",
       "question": "Names and relationships among sequence repeats, reported axial quantities, myosin periodicity, and register hypotheses",
       "required_reviewer_role": "Striated-muscle filament periodicity and structural-biology specialist",
       "evidence_packet": [
         {
           "path": "docs/scientific-decisions/SC-19/SD-03.md",
           "sha256": "e7c671b981a0386926d3e1e5f2799ebe78608451b751e677317dd77f42e61012"
+        },
+        {
+          "path": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md",
+          "sha256": "7f02476c139a006d3bd6ee494f212f6998ef424c7ebb77dcd0b309859d9a22c1"
         }
       ],
       "reviewer": null,
-      "reviewed_on": null,
-      "reviewed_model_fingerprint": null,
-      "reviewed_payload_sha256": null,
-      "ruling": null,
-      "public_caveat": null,
-      "dissent_or_uncertainty": [],
+      "adjudicator": {
+        "type": "AI_SYSTEM",
+        "name": "OpenAI Codex",
+        "authority_basis": "project_owner_authorization",
+        "human_expert": false
+      },
+      "independent_human_review_status": "NOT_PERFORMED",
+      "reviewed_on": "2026-08-12",
+      "reviewed_model_fingerprint": "7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c",
+      "reviewed_payload_sha256": "6fb8f0c56935528ab17774d6177fe4d39423b1ce149528a1506c4fa6ad556182",
+      "ruling": {
+        "required_distinct_fields": [
+          "c_zone_sequence_super_repeat_domain_count",
+          "rabbit_psoas_mean_titin_domain_spacing_nm",
+          "derived_11_domain_interval_nm",
+          "myosin_head_H_periodicity_nm",
+          "myosin_crown_spacing_nm",
+          "thick_filament_L_periodicity_nm",
+          "L_periodicity_titin_origin_hypothesis"
+        ],
+        "forbidden_identity": "45.5 nm is not the exact molecular length of an 11-domain titin repeat and is not interchangeable with H periodicity, crown spacing, or the derived 11-domain interval.",
+        "implementation_record": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md#sd-03--approved-with-physically-distinct-fields"
+      },
+      "public_caveat": "Titin's C-zone sequence repeats every 11 domains. In fixed rabbit-psoas rigor myofibrils, an antibody-localization regression gives a mean axial domain spacing of 3.98 nm, implying about 43.8 nm per 11-domain interval. Separately, near-physiological-temperature diffraction resolves an approximately 43.1 nm myosin helical periodicity and an approximately 45.5 nm purely axial thick-filament periodicity. A titin contribution to the latter is a structural hypothesis, not an exact molecular-length or register measurement.",
+      "dissent_or_uncertainty": [
+        "The source preparations differ and none establishes one universal human axial register."
+      ],
       "downstream_claim_ids": [
         "titin_region_architecture",
         "aband_periodicity_relation"
       ],
       "implementation_verification": {
-        "status": "PENDING",
+        "status": "VERIFIED",
         "reviewer": null,
-        "reviewed_on": null,
-        "implemented_model_fingerprint": null,
-        "implementation_evidence": []
+        "adjudicator": {
+          "type": "AI_SYSTEM",
+          "name": "OpenAI Codex",
+          "authority_basis": "project_owner_authorization",
+          "human_expert": false
+        },
+        "reviewed_on": "2026-08-12",
+        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implementation_evidence": [
+          {
+            "path": "evidence/scientific/SC-20/manifest.json",
+            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "kind": "evidence_manifest"
+          },
+          {
+            "path": "evidence/scientific/SC-20/boundary-audit.json",
+            "sha256": "9c8ea35f87021801dda7ba651b7c6cde6b884f5b28bef2894e81413e008167a4",
+            "kind": "boundary_audit"
+          },
+          {
+            "path": "evidence/scientific/SC-20/c-zone-1280x720.jpg",
+            "sha256": "4b5d9818b57bde9849ea640b2baa75f42450e93607bba6eae8a74969a3d40ab7",
+            "kind": "manual_capture"
+          }
+        ]
       }
     },
     "SD-04": {
-      "status": "PENDING",
+      "status": "DEFERRED",
       "question": "Force-law parameters, transfers, validity, sensitivity, slack/unfolding omissions, and uncertainty",
       "required_reviewer_role": "Titin passive-mechanics and single-molecule force-law specialist",
       "evidence_packet": [
         {
           "path": "docs/scientific-decisions/SC-19/SD-04.md",
           "sha256": "af2d78b23bd26531cd0363b76b0e5e7dc51b759b07635c8985aba9afdcdfd42b"
+        },
+        {
+          "path": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md",
+          "sha256": "7f02476c139a006d3bd6ee494f212f6998ef424c7ebb77dcd0b309859d9a22c1"
         }
       ],
       "reviewer": null,
-      "reviewed_on": null,
-      "reviewed_model_fingerprint": null,
-      "reviewed_payload_sha256": null,
-      "ruling": null,
-      "public_caveat": null,
-      "dissent_or_uncertainty": [],
+      "adjudicator": {
+        "type": "AI_SYSTEM",
+        "name": "OpenAI Codex",
+        "authority_basis": "project_owner_authorization",
+        "human_expert": false
+      },
+      "independent_human_review_status": "NOT_PERFORMED",
+      "reviewed_on": "2026-08-12",
+      "reviewed_model_fingerprint": "7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c",
+      "reviewed_payload_sha256": "adea4bc46fee13f5d151526a5426f93d5573937f41bd21b358bee07456e88404",
+      "ruling": {
+        "development_solver": "retained for deterministic engineering audit only",
+        "public_force_output": "SUPPRESSED",
+        "unresolved": [
+          "species and preparation transfers",
+          "validity range",
+          "parameter uncertainty and sensitivity",
+          "slack, buckling, and contact",
+          "unfolding and refolding transitions"
+        ],
+        "implementation_record": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md#sd-04--deferred-quantitative-force-is-not-public-evidence"
+      },
+      "public_caveat": "Regional extension is a deterministic model illustration. Quantitative pN output is withheld because the current parameter transfers, validity range, uncertainty, slack/contact, and unfolding omissions have not been validated for human Q8WZ42-1.",
+      "dissent_or_uncertainty": [
+        "The retained solver is not validated as a human Q8WZ42-1 force predictor."
+      ],
       "downstream_claim_ids": [
         "regional_extension_story",
         "force_law_parameter_set"
       ],
       "implementation_verification": {
-        "status": "PENDING",
+        "status": "VERIFIED",
         "reviewer": null,
-        "reviewed_on": null,
-        "implemented_model_fingerprint": null,
-        "implementation_evidence": []
+        "adjudicator": {
+          "type": "AI_SYSTEM",
+          "name": "OpenAI Codex",
+          "authority_basis": "project_owner_authorization",
+          "human_expert": false
+        },
+        "reviewed_on": "2026-08-12",
+        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implementation_evidence": [
+          {
+            "path": "evidence/scientific/SC-20/manifest.json",
+            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "kind": "evidence_manifest"
+          },
+          {
+            "path": "evidence/scientific/SC-20/render-audit.json",
+            "sha256": "ea529416fcc0a51dafca2ac610a14bee166120d99f185218ce06c2853bb7ebbd",
+            "kind": "render_audit"
+          },
+          {
+            "path": "evidence/scientific/SC-20/pevk-1280x720.jpg",
+            "sha256": "f12dcd228c498399a071691c11396b790ddc17b4f3ec1d8cc431ca57bb2d7861",
+            "kind": "manual_capture"
+          }
+        ]
       }
     },
     "SD-05": {
-      "status": "PENDING",
+      "status": "APPROVED",
       "question": "Z-disc/M-line anchoring language, telethonin/alpha-actinin emphasis, stoichiometry, and depiction semantics",
       "required_reviewer_role": "Sarcomere terminal anchoring and titin-binding structural-biology specialist",
       "evidence_packet": [
         {
           "path": "docs/scientific-decisions/SC-19/SD-05.md",
           "sha256": "a868b383592da89af486bee713dc84f40e851e65b25545ca346a77ae8ebb984c"
+        },
+        {
+          "path": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md",
+          "sha256": "7f02476c139a006d3bd6ee494f212f6998ef424c7ebb77dcd0b309859d9a22c1"
         }
       ],
       "reviewer": null,
-      "reviewed_on": null,
-      "reviewed_model_fingerprint": null,
-      "reviewed_payload_sha256": null,
-      "ruling": null,
-      "public_caveat": null,
-      "dissent_or_uncertainty": [],
+      "adjudicator": {
+        "type": "AI_SYSTEM",
+        "name": "OpenAI Codex",
+        "authority_basis": "project_owner_authorization",
+        "human_expert": false
+      },
+      "independent_human_review_status": "NOT_PERFORMED",
+      "reviewed_on": "2026-08-12",
+      "reviewed_model_fingerprint": "7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c",
+      "reviewed_payload_sha256": "77c50b510efee926a60ed01932a4bb2306d22e160edeeb59ea7441bf40b30b90",
+      "ruling": {
+        "primary_titin_render": "one representative Q8WZ42-1 molecule per half-sarcomere path",
+        "copy_number_claim": "not encoded by the representative path",
+        "six_strand_public_view": "DISALLOWED",
+        "telethonin_topology": "two antiparallel titin Z1Z2 fragments to one telethonin; recombinant structural topology only",
+        "terminal_path_semantics": "zero-width M-band midpoint and sparse schematic relationships; no unresolved density identity",
+        "implementation_record": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md#sd-05--approved-for-the-consumed-depiction-rules"
+      },
+      "public_caveat": "One representative titin molecule is shown. Copy number and azimuth are not encoded; terminal partners preserve only source-supported topology, while unresolved in-situ paths remain schematic.",
+      "dissent_or_uncertainty": [
+        "Whole-path titin copy number and exact azimuth for this construct remain unresolved."
+      ],
       "downstream_claim_ids": [
         "zdisc_local_network",
         "zdisc_alpha_actinin_doublets",
@@ -148,11 +381,43 @@
         "mband_midpoint_and_crosslinks"
       ],
       "implementation_verification": {
-        "status": "PENDING",
+        "status": "VERIFIED",
         "reviewer": null,
-        "reviewed_on": null,
-        "implemented_model_fingerprint": null,
-        "implementation_evidence": []
+        "adjudicator": {
+          "type": "AI_SYSTEM",
+          "name": "OpenAI Codex",
+          "authority_basis": "project_owner_authorization",
+          "human_expert": false
+        },
+        "reviewed_on": "2026-08-12",
+        "implemented_model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+        "implementation_evidence": [
+          {
+            "path": "evidence/scientific/SC-20/manifest.json",
+            "sha256": "e90c5135575ba80c3069c792c2895364b1542096ef4867cf001ec50314ad71f4",
+            "kind": "evidence_manifest"
+          },
+          {
+            "path": "evidence/scientific/SC-20/render-audit.json",
+            "sha256": "ea529416fcc0a51dafca2ac610a14bee166120d99f185218ce06c2853bb7ebbd",
+            "kind": "render_audit"
+          },
+          {
+            "path": "evidence/scientific/SC-20/overview-1280x720.jpg",
+            "sha256": "08dc3ddedaa9d2137c1c5a3d1d75c5ee2f94fed2352e97300f6445bd9a7d1ed5",
+            "kind": "manual_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-20/overview-375x812.jpg",
+            "sha256": "1d3d42b576c8ed2d54531a05891d8ad1342e3d0355d05313b0a9dd40be36d023",
+            "kind": "manual_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-20/m-line-1280x720.jpg",
+            "sha256": "4bda910f8512c4aa8a4600bc71c1911bfdbc0814a33bdddbc3275b728b8ef788",
+            "kind": "manual_capture"
+          }
+        ]
       }
     }
   }

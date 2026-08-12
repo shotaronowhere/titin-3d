@@ -4,6 +4,7 @@
 import {
   existsSync, mkdirSync, readFileSync, writeFileSync,
 } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -309,6 +310,40 @@ const files = new Map([
   ['SD-04.md', sd04()], ['SD-05.md', sd05()],
 ]);
 const check = process.argv.includes('--check');
+const decisionLedger = readJson('data/scientific_decisions.json').decisions || {};
+const adjudicated = [...files.keys()].every((name) => (
+  decisionLedger[name.slice(0, 5)]?.status !== 'PENDING'
+));
+
+// These packets are the pre-adjudication evidence consumed by SC-20.  Once all
+// five decisions are final, comparing them with text generated from the
+// post-decision model would demand that the evidence rewrite itself.  Verify
+// their immutable decision-ledger hashes instead, and refuse destructive
+// regeneration.  A later scientific cycle must use a new packet directory.
+if (adjudicated) {
+  if (!check) {
+    throw new Error('SC-19 evidence packets are frozen by adjudicated SD-01–SD-05');
+  }
+  const frozenProblems = [];
+  for (const name of files.keys()) {
+    const decisionId = name.slice(0, 5);
+    const relative = `docs/scientific-decisions/SC-19/${name}`;
+    const packet = (decisionLedger[decisionId]?.evidence_packet || [])
+      .find((row) => row.path === relative);
+    const path = join(OUT, name);
+    const actual = existsSync(path)
+      ? createHash('sha256').update(readFileSync(path)).digest('hex')
+      : null;
+    if (!packet || actual !== packet.sha256) frozenProblems.push(`${name} failed its decision-ledger digest`);
+  }
+  if (frozenProblems.length) {
+    console.error(`Frozen SC-19 packet verification failed:\n  - ${frozenProblems.join('\n  - ')}`);
+    process.exit(1);
+  }
+  console.log(`frozen SC-19 evidence packets are intact (${files.size}, decision-ledger SHA-256)`);
+  process.exit(0);
+}
+
 const problems = [];
 if (!check) mkdirSync(OUT, { recursive: true });
 for (const [name, content] of files) {

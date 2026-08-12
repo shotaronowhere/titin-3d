@@ -102,19 +102,19 @@
   {
    "component": "Thick filament",
    "region": "A-band",
-   "parameter": "Axial repeat period (myosin crowns)",
-   "value": "43.1",
+   "parameter": "Myosin H periodicity",
+   "value": "43.17",
    "unit": "nm",
    "species": "mammal",
    "isoform": "\u2014",
-   "muscle_type": "cardiac",
-   "biological_state": "relaxed",
-   "method": "cryo-EM/X-ray",
-   "uncertainty": "\u00b1",
+   "muscle_type": "rabbit psoas skeletal muscle",
+   "biological_state": "relaxed; 35 C; 5% Dextran",
+   "method": "X-ray diffraction/interference",
+   "uncertainty": "preparation- and temperature-dependent; 43.11 nm also reported for intact resting mouse EDL",
    "primary_source": "10.1085/jgp.202012713",
    "evidence_class": "MEASURED",
    "verified": "primary-source confirmed",
-   "notes": "CONFIRMED Caremani 2021 (JGP): 43.1 nm myosin periodicity + 45.5 nm super-repeat, X-ray diffraction."
+   "notes": "Caremani 2021 Table 1: M3/H spacing 43.17 nm in this preparation. This is distinct from crown spacing, the L periodicity, and any titin sequence interval."
   },
   {
    "component": "Thick filament",
@@ -151,21 +151,21 @@
    "notes": "14.3 nm is the established crown spacing and is consistent with dividing the approximately 43 nm three-crown repeat; the derived class is retained."
   },
   {
-   "component": "Titin",
-   "region": "A-band C-zone",
-   "parameter": "Super-repeat axial periodicity",
-   "value": "45.5",
+   "component": "Thick filament",
+   "region": "A-band",
+   "parameter": "Thick-filament L periodicity",
+   "value": "45.54",
    "unit": "nm",
-   "species": "mammal",
+   "species": "rabbit",
    "isoform": "\u2014",
-   "muscle_type": "cardiac",
-   "biological_state": "relaxed",
+   "muscle_type": "psoas skeletal muscle",
+   "biological_state": "relaxed; 35 C; 5% Dextran",
    "method": "fiber diffraction",
-   "uncertainty": "\u2248",
+   "uncertainty": "approximate diffraction spacing; source does not identify it as an exact titin molecular length",
    "primary_source": "10.1085/jgp.202012713",
    "evidence_class": "MEASURED",
    "verified": "primary-source confirmed",
-   "notes": "CONFIRMED Caremani 2021: 45.5 nm."
+   "notes": "Caremani 2021 Table 1 M2L spacing. The proposed titin contribution is a hypothesis; 45.54 nm is not stored as the molecular span of an 11-domain titin chain."
   },
   {
    "component": "Titin",
@@ -183,6 +183,23 @@
    "evidence_class": "MEASURED",
    "verified": "primary-source full text verified 2026-08-01",
    "notes": "Tonino et al. explicitly describe an 11-domain super-repeat pattern."
+  },
+  {
+   "component": "Titin",
+   "region": "A-band C-zone",
+   "parameter": "Mean A-band titin domain spacing",
+   "value": "3.98",
+   "unit": "nm",
+   "species": "rabbit",
+   "isoform": "A-band titin antibody map",
+   "muscle_type": "psoas skeletal muscle",
+   "biological_state": "glutaraldehyde-fixed isolated myofibrils in rigor",
+   "method": "super-resolution antibody localization and regression",
+   "uncertainty": "95% CI 3.92-4.03 nm",
+   "primary_source": "10.1016/j.jmb.2020.06.025",
+   "evidence_class": "MEASURED",
+   "verified": "primary-source full text verified 2026-08-09",
+   "notes": "A source-specific mean axial spacing. Eleven times the mean is 43.78 nm (CI endpoints 43.12-44.33 nm), a STRONGLY INFERRED display derivation rather than an independent molecular-span measurement."
   },
   {
    "component": "Titin",

@@ -486,7 +486,7 @@
    "unit_archetype": "Ig_like",
    "backbone_path_primitive": "spline",
    "rationale": "serial Ig capsules along backbone spline; straighten (not stretch) with extension",
-   "n_units": 77,
+   "n_units": 74,
    "mechanical_class": "extensible_straighten",
    "preserves": [
     "serial topology",
@@ -507,12 +507,12 @@
    }
   },
   "N2A": {
-   "spec_geometry_proxy": "folded_domain_plus_worm_like_chain",
+   "spec_geometry_proxy": "four_folded_domains_plus_unique_sequence_ribbon",
    "assembly": "composite_spring",
    "unit_archetype": "Ig_like",
    "backbone_path_primitive": "spline",
-   "rationale": "one declared folded Ig-like domain (rigid) in series with a smooth variable-length unique-sequence coil; matches the Phase-8 folded_plus_wlc mechanical law",
-   "n_units": 1,
+   "rationale": "four curated Ig-like domains in I80-UN2A-I81-I82-I83 sequence order, with a seeded irregular non-atomic UN2A envelope between I80 and I81. PDB 7NIP establishes a central tri-helix core while the flexible flanks and complete in-sarcomere conformation remain unresolved; the envelope matches the SC-20 folded_plus_wlc development law without denying that core",
+   "n_units": 4,
    "mechanical_class": "extensible_spring",
    "preserves": [
     "serial topology",
@@ -521,8 +521,8 @@
     "recruitment behavior"
    ],
    "not_claimed": [
-    "residue-level location or exact order of the folded domain inside this coarse region",
-    "tertiary structure of the unique-sequence coil",
+    "a resolved I81/I82 boundary where the preserved source intervals overlap",
+    "complete tertiary structure or in-sarcomere pose of the UN2A unique sequence beyond the PDB 7NIP core",
     "backbone path",
     "persistence-length detail beyond spring behavior"
    ],
@@ -530,6 +530,43 @@
     "domain_count": "MEASURED",
     "axial_span": "STRONGLY INFERRED",
     "backbone_path": "UNKNOWN (only end-to-end span constrained)",
+    "primitive_choice": "SCHEMATIC",
+    "UN2A_structured_core": "MEASURED (PDB 7NIP solution NMR)",
+    "UN2A_flanks_and_in_situ_pose": "UNKNOWN"
+   },
+   "structured_core": {
+    "pdb_id": "7NIP",
+    "canonical_Q8WZ42_1_span": {
+     "start": 9504,
+     "end": 9544
+    },
+    "fold": "three-helix bundle",
+    "source": "10.1016/j.jmb.2021.166901",
+    "render_usage": "semantic provenance only; the coarse ribbon does not claim an atomic or measured in-sarcomere pose"
+   }
+  },
+  "post_N2A_unknown": {
+   "spec_geometry_proxy": "unresolved_zero_projection_ribbon",
+   "assembly": "tube",
+   "unit_archetype": null,
+   "backbone_path_primitive": "spline",
+   "rationale": "explicit bounded display loop for residues 9852-10215; zero axial projection prevents an unsupported physical contour or mechanical law from entering the layout",
+   "n_units": null,
+   "mechanical_class": "excluded_unknown",
+   "preserves": [
+    "sequence continuity",
+    "explicit unknown status",
+    "canonical coincident axial endpoints"
+   ],
+   "not_claimed": [
+    "zero physical length",
+    "biological-region identity",
+    "folded or disordered structure",
+    "contour length or mechanical behavior"
+   ],
+   "evidence_by_claim": {
+    "axial_span": "SCHEMATIC (zero-projection bookkeeping only)",
+    "backbone_path": "UNKNOWN (bounded render loop only)",
     "primitive_choice": "SCHEMATIC"
    }
   },
@@ -564,7 +601,7 @@
    "unit_archetype": "Ig_like",
    "backbone_path_primitive": "spline",
    "rationale": "serial Ig capsules along backbone spline; straighten (not stretch) with extension",
-   "n_units": 15,
+   "n_units": 16,
    "mechanical_class": "extensible_straighten",
    "preserves": [
     "serial topology",
@@ -589,7 +626,7 @@
    "assembly": "instanced_repeat",
    "unit_archetype": "Ig_like",
    "backbone_path_primitive": "cylinder_bound",
-   "rationale": "Ig/Fn3 capsules laid on the thick-filament surface at super-repeat periodicity",
+   "rationale": "Ig/Fn3 capsules laid schematically on the thick-filament surface; the C-zone uses the source-specific 3.98 nm mean domain spacing only as a labelled display derivation",
    "n_units": 179,
    "mechanical_class": "anchored",
    "preserves": [
@@ -605,7 +642,7 @@
    ],
    "evidence_by_claim": {
     "domain_count": "MEASURED",
-    "axial_span": "STRONGLY INFERRED",
+    "axial_span": "SCHEMATIC (deferred A/M display allocation)",
     "backbone_path": "SCHEMATIC (idealized serial path)",
     "primitive_choice": "SCHEMATIC"
    }
@@ -615,7 +652,7 @@
    "assembly": "single",
    "unit_archetype": "kinase",
    "backbone_path_primitive": null,
-   "rationale": "single ellipsoid marking a domain position",
+   "rationale": "single measured-size ellipsoid centred in the 70-105 nm schematic placement envelope; envelope is not molecular size or a confidence interval",
    "n_units": null,
    "mechanical_class": "anchored",
    "preserves": [
@@ -630,7 +667,7 @@
     "azimuthal placement"
    ],
    "evidence_by_claim": {
-    "axial_span": "STRONGLY INFERRED",
+    "axial_span": "SCHEMATIC (placement envelope, not molecular span)",
     "backbone_path": "SCHEMATIC (idealized serial path)",
     "primitive_choice": "SCHEMATIC"
    }
@@ -656,7 +693,7 @@
    ],
    "evidence_by_claim": {
     "domain_count": "MEASURED",
-    "axial_span": "STRONGLY INFERRED",
+    "axial_span": "SCHEMATIC (deferred M-band display allocation)",
     "backbone_path": "SCHEMATIC (idealized serial path)",
     "primitive_choice": "SCHEMATIC"
    }
@@ -664,40 +701,57 @@
  },
  "geometric_relationships": {
   "thick_filament_crown_periodicity": {
-   "relationship": "Myosin crowns repeat axially every 14.3 nm; the super-repeat (3 crowns) every 43.1 nm.",
+   "relationship": "Myosin crowns have an approximately 14.3 nm third-order spacing; the separately measured H periodicity is 43.17 nm in the adopted source context.",
    "encode_as": "instanced crown markers along thick-filament cylinder at spacing = crown_axial_spacing",
    "values": {
     "crown_axial_spacing_nm": 14.3,
-    "myosin_repeat_nm": 43.1
+    "myosin_H_periodicity_nm": 43.17
    },
    "source_params": [
     "Crown axial spacing",
-    "Axial repeat period (myosin crowns)"
+    "Myosin H periodicity"
    ],
    "sources": [
     "10.1073/pnas.2311883121",
     "10.1085/jgp.202012713"
    ],
-   "evidence_class": "MEASURED (43.1) / STRONGLY INFERRED (14.3)"
+   "evidence_class": "MEASURED (source-specific H periodicity and crown spacing)",
+   "not_claimed": "that three rounded 14.3 nm intervals must equal every measured H periodicity exactly"
   },
-  "titin_Aband_super_repeat": {
-   "relationship": "A-band titin binds the thick filament with an 11-domain super-repeat of axial periodicity 45.5 nm, matching (near-commensurate with) the myosin 43.1 nm repeat; 11 C-zone super-repeats.",
-   "encode_as": "Ig/Fn3 capsules placed on the thick-filament surface at super_repeat_periodicity, n_super_repeats copies; axial position translates with SL but internal length INVARIANT.",
+  "titin_Aband_periodicities": {
+   "relationship": "The 11-domain C-zone sequence pattern, source-specific mean titin-domain spacing, derived 11-domain interval, myosin H periodicity, crown spacing, and thick-filament L periodicity are distinct quantities.",
+   "encode_as": "Use the 43.78 nm arithmetic interval only for a labelled source-context C-zone display derivation; never substitute the 45.54 nm L diffraction spacing as an exact titin molecular span or register.",
    "values": {
-    "super_repeat_periodicity_nm": 45.5,
-    "domains_per_super_repeat": 11,
+    "c_zone_sequence_super_repeat_domain_count": 11,
+    "rabbit_psoas_mean_titin_domain_spacing_nm": {
+     "value": 3.98,
+     "confidence_interval_95_nm": [3.92, 4.03],
+     "evidence_class": "MEASURED"
+    },
+    "derived_11_domain_interval_nm": {
+     "value": 43.78,
+     "confidence_interval_95_nm": [43.12, 44.33],
+     "evidence_class": "STRONGLY INFERRED"
+    },
+    "myosin_head_H_periodicity_nm": 43.17,
+    "myosin_crown_spacing_nm": 14.3,
+    "thick_filament_L_periodicity_nm": 45.54,
     "n_C_zone_super_repeats": 11
    },
    "source_params": [
-    "Super-repeat axial periodicity",
+    "Mean A-band titin domain spacing",
+    "Myosin H periodicity",
+    "Thick-filament L periodicity",
     "Ig/Fn3 domains per super-repeat",
     "Number of C-zone super-repeats"
    ],
    "sources": [
+    "10.1016/j.jmb.2020.06.025",
     "10.1085/jgp.202012713",
     "10.1016/j.yjmcc.2019.05.026"
    ],
-   "evidence_class": "MEASURED"
+   "evidence_class": "MEASURED (sequence/spacing/diffraction observations); STRONGLY INFERRED (derived interval); INFERRED (register hypothesis)",
+   "not_claimed": "that 45.54 nm is an exact 11-domain titin molecular length or that any pair of these quantities is physically identical"
   },
   "lattice_d10_scaling": {
    "relationship": "Interfilament spacing follows the constant-volume law d10 \u221d 1/sqrt(SL); d10 = sqrt(V_cell / ((2/sqrt3)\u00b7SL)). Hexagonal symmetry with myosin\u2013actin center spacing d10/sqrt(3)\u00b7(specific factor).",
@@ -765,16 +819,16 @@
   },
   "filter_bug_found_and_fixed": "An earlier pass excluded 7NIP as a complex because its Pfam PF18362 'Tri-helix bundle domain' matched a non-titin keyword hint. 7NIP has ONE entity and the tri-helix bundle IS titin's own UN2A fold. The rule now requires BOTH >1 entity AND a foreign partner.",
   "regions_with_zero_structures": {
-   "N2A": "0 PDB cross-references map into spec span 9852-10215",
+   "post_N2A_unknown": "0 approved structures map into residues 9852-10215, and no biological-region identity is assigned",
    "PEVK": "0 PDB cross-references map into spec span 10216-12022",
-   "interpretation": "No deposited structure maps directly into either coarse region span. PEVK therefore receives no folded archetype. N2A is different: sequence annotation declares one Ig-like domain, so the renderer depicts one generic Ig archetype in a composite spring while explicitly declining residue-level placement or a resolved region conformation."
+   "interpretation": "PEVK receives no folded archetype. The post-N2A interval receives only a bounded zero-projection UNKNOWN ribbon. N2A is separately curated as I80-UN2A-I81-I82-I83 and depicts four generic Ig archetypes plus a non-atomic UN2A envelope whose metadata preserves the measured PDB 7NIP core and unresolved flexible flanks."
   },
-  "nomenclature_caveat_UN2A": "PDB 7NIP 'titin N2A unique sequence (UN2A) core' maps (SIFTS, authoritative) to canonical Q8WZ42 9504-9544, which falls inside this spec's prox_Ig (801-9851), NOT inside its N2A region (9852-10215). This is a PARTITION/NOMENCLATURE difference \u2014 the literature's 'N2A element' spans Ig80-Ig83 plus UN2A and so straddles this spec's prox_Ig/N2A boundary \u2014 not an error in either source. Phase 1 residue spans are reviewed and are deliberately NOT re-cut here; recorded so a later session does not read this as a contradiction. 7NIP is additionally annotated against Isoform 11, though SIFTS confirms the mapping is canonical.",
+  "nomenclature_caveat_UN2A": "SD-01 resolves the project N2A interval as canonical Q8WZ42-1 residues 9366-9851 (I80-UN2A-I81-I82-I83). PDB 7NIP maps its UN2A core to residues 9504-9544 inside that interval but is annotated against Isoform 11; it informs UN2A identity and does not supply a Q8WZ42-1 full-region conformation. The preserved experimental I81 interval overlaps the UniProt I82 row through residue 9671, so no artificial non-overlapping boundary is claimed.",
   "classification_method_note": "InterPro/CATH/SCOP2 annotations from RCSB proved to be whole-protein rollups IDENTICAL across every titin entry (all listing Ig, Fn3, kinase, Z-repeat, PPAK simultaneously) and therefore carry no per-entry discriminating power. Entries lacking per-entity Pfam (1TIT, 1TIU, 1WAA, 2RQ8, 7NIP) were classified instead by their SIFTS-verified residue range against the spec's own region spans.",
   "phase_boundary": "Phase 5 SELECTS and JUSTIFIES representative structures. Downloading coordinates, extracting chains, measuring dimensions and principal axes, and fitting primitives are Phase 6 (PDB / Structural Data Pipeline). No coordinate file was downloaded or measured in Phase 5, so no archetype dimension here is derived from these structures \u2014 axial lengths remain sourced from the literature parameter in geometry_sources.json."
  },
  "undepicted_declared_domains": {
-  "_purpose": "Declared folded domains not emitted as instances. Empty after the Phase-9 completion audit: the N2A Ig-like domain is depicted in the composite spring and guarded by InstancingPlan.declaredVsInstanced()."
+  "_purpose": "Declared folded domains not emitted as instances. Empty after SC-20: all four curated N2A Ig domains are depicted in the composite spring and guarded by InstancingPlan.declaredVsInstanced()."
  },
  "measured_geometry_adoption": {
   "phase": "Phase 6 \u2014 PDB / Structural Data Pipeline",
@@ -949,7 +1003,7 @@
     "actin_crossover_repeat": 37.091,
     "titin_TA_TB_radial_gap": 1.72,
     "myosin_head_length": 16.0,
-    "titin_C_zone_super_repeat": 45.54
+    "derived_titin_11_domain_interval": 43.78
    },
    "views_nm_across": {
     "full_sarcomere_SL2200": 2500,
@@ -965,7 +1019,7 @@
      "actin_crossover_repeat": 17.8,
      "titin_TA_TB_radial_gap": 0.8,
      "myosin_head_length": 7.7,
-     "titin_C_zone_super_repeat": 21.9
+     "derived_titin_11_domain_interval": 21.0
     },
     "half_sarcomere": {
      "crown_axial_spacing": 13.9,
@@ -973,7 +1027,7 @@
      "actin_crossover_repeat": 35.5,
      "titin_TA_TB_radial_gap": 1.7,
      "myosin_head_length": 15.4,
-     "titin_C_zone_super_repeat": 43.7
+     "derived_titin_11_domain_interval": 42.0
     },
     "A_band_zoom": {
      "crown_axial_spacing": 43.3,
@@ -981,7 +1035,7 @@
      "actin_crossover_repeat": 111.1,
      "titin_TA_TB_radial_gap": 5.2,
      "myosin_head_length": 48.0,
-     "titin_C_zone_super_repeat": 136.6
+     "derived_titin_11_domain_interval": 131.3
     },
     "C_zone_zoom": {
      "crown_axial_spacing": 190.2,
@@ -989,7 +1043,7 @@
      "actin_crossover_repeat": 487.6,
      "titin_TA_TB_radial_gap": 22.7,
      "myosin_head_length": 210.8,
-     "titin_C_zone_super_repeat": 599.9
+     "derived_titin_11_domain_interval": 576.7
     },
     "single_crown_zoom": {
      "crown_axial_spacing": 385.1,
@@ -997,7 +1051,7 @@
      "actin_crossover_repeat": 987.2,
      "titin_TA_TB_radial_gap": 45.9,
      "myosin_head_length": 426.7,
-     "titin_C_zone_super_repeat": 1214.4
+     "derived_titin_11_domain_interval": 1167.5
     }
    },
    "key_consequence": "Actin subunit rise is 1.3 px at full-sarcomere scale \u2014 BELOW the aliasing threshold. The actin crossover repeat is 17.8 px in the same view. So the thin filament's twist is depictable at context scale while its subunits are not; these are two different decisions about the same filament."
@@ -1031,7 +1085,7 @@
     "feature": "Myosin head pairs on crowns (rod-plus-head morphology)",
     "verdict": "ADMIT \u2014 this pass",
     "major_geometry": {
-     "crowns_per_43.1nm_period": 3,
+     "crowns_per_H_period": 3,
      "heads_per_crown": 6,
      "crown_axial_spacing_nm": 14.3,
      "head_length_nm": 16.0,
@@ -1166,20 +1220,20 @@
     "verdict": "DEFER \u2014 with a flag",
     "major_geometry": {
      "copies_per_C_zone_repeat": 3,
-     "shares_periodicity_with_titin": true,
-     "shared_period_nm": 45.54,
+     "periodicity_identity_with_titin_claimed": false,
+     "cardiac_source_repeat_nm": 43.0,
      "sources": [
       "PDB:8G4L"
      ],
      "source_note": "3 chains in the deposited model."
     },
     "tests": {
-     "1_explains_titin": "PARTIALLY \u2014 shares titin's 45.54 nm super-repeat",
+     "1_explains_titin": "PARTIALLY - occupies the same C-zone context; no exact shared titin periodicity is claimed",
      "2_resolvable": "yes at A-band zoom",
      "3_standard": "increasingly",
      "4_cost": "3 per repeat"
     },
-    "reasoning": "The closest call in this table. cMyBP-C shares titin's 45.54 nm super-repeat and binds in the same C-zone, so it is arguably part of titin's story rather than context. Deferred for a scope reason, not a geometric one: construct identity comes from scientific_scope.json, and 8G4L is CARDIAC. Adopting a cardiac accessory protein's placement into that reference-sequence model would silently mix preparations \u2014 the exact class of error this project's evidence classes exist to prevent.",
+    "reasoning": "The closest call in this table. cMyBP-C occupies the same C-zone context, but its source-specific stripe placement is not identified with the 11-domain titin sequence interval or the L periodicity. It remains deferred for a scope reason: construct identity comes from scientific_scope.json, and 8G4L is CARDIAC. Adopting cardiac accessory-protein coordinates into the reference-sequence model would silently mix preparations.",
     "illustration_convention": "Common in modern thick-filament figures, rare in classic sarcomere schematics.",
     "depiction_cost": "Very low \u2014 3 instances per repeat.",
     "what_a_maximal_pass_would_add": "Resolve the isoform question first (skeletal MyBP-C placement), then admit. Do not port the cardiac coordinates across."
@@ -1313,7 +1367,7 @@
     "title": "I-band partition was mechanically unrealisable at every keyframe",
     "found_by": "series force-balance audit (scripts/mechanical_model.py, src/geometry/MechanicalModel.js auditPartition)",
     "detail": "The four I-band regions are in mechanical series, so they must bear one common force. Inverting each region of the previously inferred partitions gave forces spanning 41x (contracted), 16x (resting) and 553x (stretched); extended_reference placed N2A and dist_Ig AT contour, unreachable at any finite force. stretched implied 277.5 pN, inside the regime the spec itself forbids depicting as ordinary contraction. Correcting stretched alone then made the N2A column DECREASE with stretch, which a series chain forbids.",
-    "resolution": "All four partitions re-derived by force balance over sourced force-extension laws, with N2A modelled as its one folded Ig domain (4.0 nm, MEASURED) rigid in series with the remaining unique sequence as an entropic coil, so it can never collapse below the domain it contains. Every state now implies one common force (spread <1.03x), every region extends monotonically, and every total is bit-identical so no filament, overlap, M-line or lattice geometry moved.",
+    "resolution": "The four modeled elastic partitions are re-derived by force balance over sourced development laws. SD-01 updates N2A to four 4.0 nm folded domains (16.0 nm rigid floor) in series with the 39 nm UN2A unique-sequence contour proxy. Residues 9852-10215 remain an explicit UNKNOWN zero-projection layout element excluded from the solver. Every state preserves its exact I-band total, so filament, overlap, M-line and lattice geometry remain unchanged.",
     "gates_added": [
      "per-state implied-force spread <= 3.0x",
      "common force outside the forbidden 150-300 pN regime",

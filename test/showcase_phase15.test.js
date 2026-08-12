@@ -4,11 +4,12 @@ import assert from 'node:assert/strict';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
-import { SarcomereScene, TITIN_RENDER_STYLE } from '../src/render/SarcomereScene.js';
+import { SarcomereScene } from '../src/render/SarcomereScene.js';
 
 const model = await TitinModel.create(nodeReader());
+const TITIN_RENDER_STYLE = model.spec.renderStyle.titin;
 
-const DISORDERED = ['N2A', 'PEVK'];
+const DISORDERED = ['N2A', 'PEVK', 'post_N2A_unknown'];
 
 /**
  * Build one context scene the way the Viewer does.
@@ -36,18 +37,18 @@ function build(sl, options = {}) {
   return scene;
 }
 
-test('SC15: the disordered regions are drawn as a coil and declared schematic', () => {
+test('SC15: unresolved/disordered regions use a seeded irregular ribbon and remain schematic', () => {
   const scene = build(2200);
   const depiction = scene.manifest.disordered_depiction;
   assert.deepEqual([...depiction.regions].sort(), DISORDERED);
   assert.equal(depiction.evidence_class, 'SCHEMATIC');
-  assert.ok(depiction.meaning.includes('not a measured conformation'));
+  assert.ok(depiction.not_claimed.some((claim) => claim.includes('measured or predicted')));
   assert.ok(depiction.amplitude_nm > 0,
-    'a resting chain far from its contour length must actually be coiled');
+    'a resting chain far from its contour length must visibly remain irregular');
   scene.clear();
 });
 
-test('SC15: coiling never moves a canonical axial coordinate', () => {
+test('SC15: irregular ribbons never move a canonical axial coordinate', () => {
   const geometry = model.geometryAt(2200);
   const scene = build(2200);
   const layout = geometry.titin_iband_layout_nm;
@@ -68,7 +69,7 @@ test('SC15: coiling never moves a canonical axial coordinate', () => {
   scene.clear();
 });
 
-test('SC15: the coil is bounded by the canonical interval it decorates', () => {
+test('SC15: the irregular ribbon is bounded by the canonical interval it decorates', () => {
   const geometry = model.geometryAt(2200);
   const layout = geometry.titin_iband_layout_nm;
   const scene = build(2200);
@@ -95,11 +96,11 @@ test('SC15: the coil is bounded by the canonical interval it decorates', () => {
   scene.clear();
 });
 
-test('SC15: stretching straightens the coil', () => {
+test('SC15: stretching straightens contour-backed ribbons', () => {
   const short = build(2000);
   const long = build(2400);
-  assert.ok(long.manifest.disordered_depiction.amplitude_nm
-    < short.manifest.disordered_depiction.amplitude_nm,
+  assert.ok(long.manifest.disordered_depiction.amplitude_by_region.PEVK
+    < short.manifest.disordered_depiction.amplitude_by_region.PEVK,
   'a chain closer to its contour length must look straighter');
   short.clear(); long.clear();
 });
@@ -109,8 +110,9 @@ test('SC15: the coil is driven by the same contour length the mechanics use', ()
   const contours = scene.manifest.disordered_depiction.contour_length_nm;
   const spec = new Map(model.spec.titin.regions.map((region) => [region.id, region]));
   for (const region of DISORDERED) {
-    assert.equal(contours[region], spec.get(region).extension_model.max_end2end_nm,
-      `${region} must coil against titin.json's contour, not a renderer constant`);
+    const expected = spec.get(region).extension_model.max_end2end_nm ?? null;
+    assert.equal(contours[region], expected,
+      `${region} must use titin.json's contour or an explicit null fallback`);
   }
   scene.clear();
 });
@@ -120,7 +122,8 @@ test('SC15: the emphasis halo always contains the chain it emphasises', () => {
   // can never leave the SC-10 halo — the reading aid keeps pointing at the
   // subject at every sarcomere length, without either constant knowing the other
   // at run time.
-  assert.ok(TITIN_RENDER_STYLE.coil_amplitude_scale < TITIN_RENDER_STYLE.halo_radius_scale,
+  assert.ok(TITIN_RENDER_STYLE.irregular_ribbon.maximum_transverse_envelope_radius_scale
+    < TITIN_RENDER_STYLE.halo_radius_scale,
     'a coil wider than its own halo would read as escaping the molecule');
   const scene = build(1900);
   const halo = scene.root.getObjectByName('titin_halo_PEVK');

@@ -88,8 +88,8 @@
         "GUIDED",
         "EVIDENCE"
       ],
-      "claim": "The active visualization uses the human TTN reference sequence Q8WZ42-1 at the explicitly named structural state; its tissue construct is under review.",
-      "scope": "Homo sapiens Q8WZ42-1 reference sequence; tissue construct review pending; active state shown live",
+      "claim": "The active visualization uses the citation-reviewed human TTN reference sequence Q8WZ42-1 at the explicitly named structural state without assigning a tissue-specific construct.",
+      "scope": "Homo sapiens Q8WZ42-1 reference sequence; no tissue-specific claim; active state shown live",
       "claim_evidence_class": "MEASURED",
       "render_evidence_class": "SCHEMATIC",
       "sources": [

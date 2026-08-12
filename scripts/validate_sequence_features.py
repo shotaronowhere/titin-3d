@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 
 from build_sequence_feature_report import build_report
-from scientific_common import ROOT, load_json, sha256_payload
+from scientific_common import ROOT, load_json, sha256_file, sha256_payload
 
 
 def parse_args() -> argparse.Namespace:
@@ -19,7 +19,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def validate(features: dict, titin: dict, report: dict) -> list[str]:
+def validate(
+    features: dict,
+    titin: dict,
+    report: dict,
+    decisions: dict | None = None,
+    report_sha256: str | None = None,
+) -> list[str]:
     problems: list[str] = []
     if features.get("schema") != "titin-sequence-features/1":
         problems.append("wrong sequence-feature schema")
@@ -95,27 +101,73 @@ def validate(features: dict, titin: dict, report: dict) -> list[str]:
     if recorded_payload != sha256_payload(payload):
         problems.append("normalized feature payload digest is stale")
 
-    expected_report = build_report(features, titin)
-    if report != expected_report:
-        problems.append("region-feature report diverges from the pinned features/titin boundaries")
-    if report.get("unassigned_features") or report.get("multiply_assigned_features") or report.get("boundary_problems"):
-        problems.append("region mapping has unassigned, multiply assigned, or boundary-crossing domains")
-    discrepancy_ids = {
-        (row.get("decision_id"), row.get("region_id"))
-        for row in report.get("known_pending_discrepancies") or []
-    }
-    if discrepancy_ids != {("SD-01", "N2A"), ("SD-01", "dist_Ig")}:
-        problems.append("known N2A/distal-Ig discrepancy changed without SD-01")
+    current_report = build_report(features, titin)
+    sd01 = (decisions or {}).get("decisions", {}).get("SD-01", {})
+    if sd01.get("status") == "APPROVED":
+        packet = next(
+            (
+                row for row in sd01.get("evidence_packet") or []
+                if row.get("path") == "docs/scientific-decisions/SC-19/region-feature-report.json"
+            ),
+            None,
+        )
+        if packet is None:
+            problems.append("SD-01 has no frozen SC-19 region-feature evidence packet")
+        elif report_sha256 != packet.get("sha256"):
+            problems.append("frozen SC-19 region-feature evidence digest is stale")
+
+        if (
+            current_report.get("unassigned_features")
+            or current_report.get("multiply_assigned_features")
+            or current_report.get("boundary_problems")
+        ):
+            problems.append(
+                "approved SD-01 region mapping has unassigned, multiply assigned, "
+                "or boundary-crossing domains"
+            )
+        discrepancy_ids = {
+            (row.get("decision_id"), row.get("region_id"))
+            for row in current_report.get("known_pending_discrepancies") or []
+        }
+        if discrepancy_ids != {("SD-01", "N2A")}:
+            problems.append("approved SD-01 discrepancy set is not the documented N2A count conflict")
+    else:
+        # Before adjudication, the candidate report must be a live, exact rendering
+        # of the then-current boundaries. Once approved, it becomes immutable evidence
+        # and the consumed state is checked independently above.
+        if report != current_report:
+            problems.append("region-feature report diverges from the pinned features/titin boundaries")
+        if (
+            report.get("unassigned_features")
+            or report.get("multiply_assigned_features")
+            or report.get("boundary_problems")
+        ):
+            problems.append("region mapping has unassigned, multiply assigned, or boundary-crossing domains")
+        discrepancy_ids = {
+            (row.get("decision_id"), row.get("region_id"))
+            for row in report.get("known_pending_discrepancies") or []
+        }
+        if discrepancy_ids != {("SD-01", "N2A"), ("SD-01", "dist_Ig")}:
+            problems.append("known N2A/distal-Ig discrepancy changed without SD-01")
     return problems
 
 
 def main() -> None:
     args = parse_args()
-    problems = validate(load_json(args.features), load_json(args.titin), load_json(args.report))
+    problems = validate(
+        load_json(args.features),
+        load_json(args.titin),
+        load_json(args.report),
+        load_json(ROOT / "data/scientific_decisions.json"),
+        sha256_file(args.report),
+    )
     if problems:
-        print("SC-19 sequence validation failed:\n  - " + "\n  - ".join(problems))
+        print("Sequence authority validation failed:\n  - " + "\n  - ".join(problems))
         raise SystemExit(1)
-    print("SC-19 sequence features: PASS (285 domains; exact region report; SD-01 discrepancy retained)")
+    print(
+        "Sequence authority: PASS (285 pinned domains; frozen SC-19 evidence; "
+        "approved SD-01 partition reconciled)"
+    )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,120 @@
+{
+  "schema": "titin-sc20-implementation-evidence/1",
+  "model_fingerprint": "7eb186ab18ecd5106beb0961b430f72fb8964abd5d2bd48e5bbc81defe1fbed5",
+  "captured_on": "2026-08-12",
+  "review_semantics": {
+    "decision_specific_implementation_evidence": "VERIFIED",
+    "visual_release_matrix": "UNREVIEWED_UNTIL_SC-27",
+    "independent_human_review_claimed": false
+  },
+  "files": [
+    {
+      "path": "boundary-audit.json",
+      "kind": "boundary_audit",
+      "bytes": 10318,
+      "sha256": "9c8ea35f87021801dda7ba651b7c6cde6b884f5b28bef2894e81413e008167a4"
+    },
+    {
+      "path": "render-audit.json",
+      "kind": "render_audit",
+      "bytes": 6810,
+      "sha256": "ea529416fcc0a51dafca2ac610a14bee166120d99f185218ce06c2853bb7ebbd"
+    },
+    {
+      "path": "overview-1280x720.jpg",
+      "kind": "manual_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "camera_preset": "view.longitudinal",
+      "selected_region": null,
+      "bytes": 72114,
+      "sha256": "08dc3ddedaa9d2137c1c5a3d1d75c5ee2f94fed2352e97300f6445bd9a7d1ed5"
+    },
+    {
+      "path": "n2a-1280x720.jpg",
+      "kind": "manual_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "camera_preset": "region.N2A",
+      "selected_region": "N2A",
+      "bytes": 90577,
+      "sha256": "6573c62167cdd473cd8bf92dcbb534389ca841dd4182c6af16608ea31c6d8057"
+    },
+    {
+      "path": "pevk-1280x720.jpg",
+      "kind": "manual_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "camera_preset": "region.PEVK",
+      "selected_region": "PEVK",
+      "bytes": 90882,
+      "sha256": "f12dcd228c498399a071691c11396b790ddc17b4f3ec1d8cc431ca57bb2d7861"
+    },
+    {
+      "path": "distal-ig-1280x720.jpg",
+      "kind": "manual_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "camera_preset": "region.dist_Ig",
+      "selected_region": "dist_Ig",
+      "bytes": 90694,
+      "sha256": "693916362b22beed37f5fdcac91dc76bb61df57edbe991a0a639106a04147773"
+    },
+    {
+      "path": "c-zone-1280x720.jpg",
+      "kind": "manual_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "camera_preset": "closeup.czone",
+      "selected_region": "Aband_super",
+      "bytes": 102535,
+      "sha256": "4b5d9818b57bde9849ea640b2baa75f42450e93607bba6eae8a74969a3d40ab7"
+    },
+    {
+      "path": "kinase-1280x720.jpg",
+      "kind": "manual_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "camera_preset": "region.kinase",
+      "selected_region": "kinase",
+      "bytes": 78058,
+      "sha256": "d163353c0d9cd545ead669add9d70ea9a4f9593ef6f0ea49e9e76d9b91866ebf"
+    },
+    {
+      "path": "m-line-1280x720.jpg",
+      "kind": "manual_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "camera_preset": "closeup.mline",
+      "selected_region": "Mline",
+      "bytes": 94014,
+      "sha256": "4bda910f8512c4aa8a4600bc71c1911bfdbc0814a33bdddbc3275b728b8ef788"
+    },
+    {
+      "path": "overview-375x812.jpg",
+      "kind": "manual_capture",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "camera_preset": "view.longitudinal",
+      "selected_region": null,
+      "bytes": 28216,
+      "sha256": "1d3d42b576c8ed2d54531a05891d8ad1342e3d0355d05313b0a9dd40be36d023"
+    }
+  ]
+}

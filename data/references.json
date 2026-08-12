@@ -1,4 +1,74 @@
 {
+  "PDB:5JOE": {
+    "doi": null,
+    "authors": "Fleming, Zhou, Bogomolovas, Labeit, and Mayans",
+    "year": 2016,
+    "title": "Crystal structure of I81 from titin",
+    "journal": "Worldwide Protein Data Bank",
+    "identifier": "PDB:5JOE",
+    "url": "https://www.rcsb.org/structure/5JOE",
+    "pdb_doi": "10.2210/pdb5JOE/pdb",
+    "primary_citation": "10.1002/1873-3468.12362"
+  },
+  "PDB:7AHS": {
+    "doi": null,
+    "authors": "Fleming and Mayans",
+    "year": 2021,
+    "title": "titin-N2A Ig81-Ig83",
+    "journal": "Worldwide Protein Data Bank",
+    "identifier": "PDB:7AHS",
+    "url": "https://www.rcsb.org/structure/7AHS",
+    "pdb_doi": "10.2210/pdb7AHS/pdb",
+    "primary_citation": "10.1085/jgp.202012766"
+  },
+  "10.1002/1873-3468.12362": {
+    "doi": "10.1002/1873-3468.12362",
+    "authors": "Zhou et al.",
+    "year": 2016,
+    "title": "CARP interacts with titin at a unique helical N2A sequence and at the domain Ig81 to form a structured complex",
+    "journal": "FEBS Letters",
+    "identifier": "10.1002/1873-3468.12362"
+  },
+  "10.1085/jgp.202012766": {
+    "doi": "10.1085/jgp.202012766",
+    "authors": "Stronczek et al.",
+    "year": 2021,
+    "title": "The N2A region of titin has a unique structural configuration",
+    "journal": "J Gen Physiol",
+    "identifier": "10.1085/jgp.202012766"
+  },
+  "10.1007/s10858-026-00493-2": {
+    "doi": "10.1007/s10858-026-00493-2",
+    "authors": "Kelly et al.",
+    "year": 2026,
+    "title": "Solution NMR study of the titin I-band IgI domain I82 shows unusual conformational dynamics",
+    "journal": "J Biomol NMR",
+    "identifier": "10.1007/s10858-026-00493-2"
+  },
+  "10.1002/pro.70378": {
+    "doi": "10.1002/pro.70378",
+    "authors": "Kelly et al.",
+    "year": 2025,
+    "title": "Calcium-dependent cooperativity and stability of Titin's tandem I82-I83 domains",
+    "journal": "Protein Sci",
+    "identifier": "10.1002/pro.70378"
+  },
+  "10.1085/jgp.202513891": {
+    "doi": "10.1085/jgp.202513891",
+    "authors": "Hoover Browne et al.",
+    "year": 2026,
+    "title": "Titin's P-zone domains A164-167 are essential for thick filament structural arrangement",
+    "journal": "J Gen Physiol",
+    "identifier": "10.1085/jgp.202513891"
+  },
+  "10.1113/EP092361": {
+    "doi": "10.1113/EP092361",
+    "authors": "Privett et al.",
+    "year": 2025,
+    "title": "Chronic and acute mediators of passive viscoelasticity in human skeletal muscle fibres",
+    "journal": "Exp Physiol",
+    "identifier": "10.1113/EP092361"
+  },
  "10.1073/pnas.1516732113": {
   "doi": "10.1073/pnas.1516732113",
   "authors": "Ait-Mou et al.",

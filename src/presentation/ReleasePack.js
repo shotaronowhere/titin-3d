@@ -175,7 +175,7 @@ function fallbackSlides(model, referenceLengthNm, comparisonLengthNm) {
       lines: [
         `Sequence species: ${scope.sequence.species}`,
         `Reference: ${scope.sequence.gene} — ${scope.sequence.isoform_id}`,
-        'Tissue construct: not established; SD-01 pending',
+        'Tissue construct: not assigned; SD-01 citation-backed owner-authorized ruling',
         `Mechanics: ${scope.mechanics.display_label}`,
         `Declared working range: ${presentation.scope.working_range_nm.join('–')} nm`,
         `Shown here at ${overlay.sarcomere_length_nm} nm`,

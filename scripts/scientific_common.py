@@ -65,6 +65,8 @@ def decision_payload(record: dict[str, Any]) -> dict[str, Any]:
     for field in (
         "status",
         "reviewer",
+        "adjudicator",
+        "independent_human_review_status",
         "reviewed_on",
         "reviewed_model_fingerprint",
         "reviewed_payload_sha256",
