@@ -72,16 +72,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
+        "implemented_model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
+            "sha256": "6a32d9433e3f6891abbb1adf05b7215218988b9bbeae374c8b7f69109709013f",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/boundary-audit.json",
-            "sha256": "04b6650f22c7ed7c6227f2bfdde740e2150edceaf2ac5127ac8286346e7de335",
+            "sha256": "514b2314cae463c2a9d8638faea5edffefe89072e0741f275882e8e18d983444",
             "kind": "boundary_audit"
           },
           {
@@ -156,16 +156,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
+        "implemented_model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
+            "sha256": "6a32d9433e3f6891abbb1adf05b7215218988b9bbeae374c8b7f69109709013f",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/boundary-audit.json",
-            "sha256": "04b6650f22c7ed7c6227f2bfdde740e2150edceaf2ac5127ac8286346e7de335",
+            "sha256": "514b2314cae463c2a9d8638faea5edffefe89072e0741f275882e8e18d983444",
             "kind": "boundary_audit"
           },
           {
@@ -242,16 +242,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
+        "implemented_model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
+            "sha256": "6a32d9433e3f6891abbb1adf05b7215218988b9bbeae374c8b7f69109709013f",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/boundary-audit.json",
-            "sha256": "04b6650f22c7ed7c6227f2bfdde740e2150edceaf2ac5127ac8286346e7de335",
+            "sha256": "514b2314cae463c2a9d8638faea5edffefe89072e0741f275882e8e18d983444",
             "kind": "boundary_audit"
           },
           {
@@ -263,7 +263,7 @@
       }
     },
     "SD-04": {
-      "status": "DEFERRED",
+      "status": "APPROVED",
       "question": "Force-law parameters, transfers, validity, sensitivity, slack/unfolding omissions, and uncertainty",
       "required_reviewer_role": "Titin passive-mechanics and single-molecule force-law specialist",
       "evidence_packet": [
@@ -274,6 +274,10 @@
         {
           "path": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md",
           "sha256": "7f02476c139a006d3bd6ee494f212f6998ef424c7ebb77dcd0b309859d9a22c1"
+        },
+        {
+          "path": "docs/scientific-decisions/SC-21/SD-04-LITERATURE-RULING.md",
+          "sha256": "9a47c263657a823a7707668a19377cefb69ccf028b01cf64c78d6df11d449709"
         }
       ],
       "reviewer": null,
@@ -285,23 +289,36 @@
       },
       "independent_human_review_status": "NOT_PERFORMED",
       "reviewed_on": "2026-08-12",
-      "reviewed_model_fingerprint": "7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c",
-      "reviewed_payload_sha256": "adea4bc46fee13f5d151526a5426f93d5573937f41bd21b358bee07456e88404",
+      "reviewed_model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+      "reviewed_payload_sha256": "7a696828d1a882c2324ac39726bb2d8709acc6c34c100b05227bcd5fe9b3c3a0",
       "ruling": {
-        "development_solver": "retained for deterministic engineering audit only",
-        "public_force_output": "SUPPRESSED",
-        "unresolved": [
-          "species and preparation transfers",
-          "validity range",
-          "parameter uncertainty and sensitivity",
-          "slack, buckling, and contact",
-          "unfolding and refolding transitions"
+        "parameter_set_id": "q8wz42-1-literature-bounded-force-law-SD-04-v2",
+        "target_accession": "Q8WZ42-1",
+        "approved_supported_range_nm": [
+          2000.0,
+          2400.0
         ],
-        "implementation_record": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md#sd-04--deferred-quantitative-force-is-not-public-evidence"
+        "slack_or_buckling_boundary_nm": 2000.0,
+        "unfolding_materiality_boundary_nm": 2500.0,
+        "approved_sensitivity_scenario_ids": [
+          "ig_persistence_lower_literature_endpoint",
+          "ig_persistence_upper_literature_endpoint",
+          "n2a_persistence_lower_observed_endpoint",
+          "n2a_persistence_upper_observed_endpoint",
+          "pevk_persistence_lower_literature_endpoint",
+          "pevk_persistence_upper_literature_endpoint",
+          "pevk_modulus_lower_literature_endpoint",
+          "pevk_modulus_upper_literature_endpoint",
+          "pevk_residue_rise_alternate_convention"
+        ],
+        "public_force_output": "AUTHORIZED_BY_REGIME",
+        "implementation_record": "docs/scientific-decisions/SC-21/SD-04-LITERATURE-RULING.md#approved-claim-and-mandatory-caveat"
       },
-      "public_caveat": "Regional extension is a deterministic model illustration. Quantitative pN output is withheld because the current parameter transfers, validity range, uncertainty, slack/contact, and unfolding omissions have not been validated for human Q8WZ42-1.",
+      "public_caveat": "Approximate passive force per titin for a tissue-neutral Q8WZ42-1 reference-sequence model, not a measured or tissue-specific human force. Material values transfer rat/rabbit skeletal-muscle and recombinant-human evidence. The band is one-at-a-time literature parameter sensitivity, not a confidence interval or biological variance. Slack/contact/compression and Ig unfolding/refolding are omitted; force is not evaluated below 2000 nm or at/above 2500 nm.",
       "dissent_or_uncertainty": [
-        "The retained solver is not validated as a human Q8WZ42-1 force predictor."
+        "No independent human expert review is claimed; this is project-owner-authorized citation-backed AI adjudication.",
+        "The model has no tissue-specific human construct and transfers material parameters across rat/rabbit skeletal muscle and recombinant-human fragments.",
+        "The 2500 nm unfolding-materiality cutoff is a conservative project boundary, not a measured biological transition."
       ],
       "downstream_claim_ids": [
         "regional_extension_story",
@@ -317,16 +334,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
+        "implemented_model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
+            "sha256": "6a32d9433e3f6891abbb1adf05b7215218988b9bbeae374c8b7f69109709013f",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/render-audit.json",
-            "sha256": "4703b35a5f8033a2ef904036ab83515bb1a27365f710ff7b3a8f36f2b5f24388",
+            "sha256": "4c6d1b045d2b7e03f82edd49ebb2874b63dbece7f80b8e977af42136f419db23",
             "kind": "render_audit"
           },
           {
@@ -390,16 +407,16 @@
           "human_expert": false
         },
         "reviewed_on": "2026-08-12",
-        "implemented_model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
+        "implemented_model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-20/manifest.json",
-            "sha256": "15cc063cf6a4c0c1112431dde0f9f032f6853d2ad7a577ed837ec4e2f0df6030",
+            "sha256": "6a32d9433e3f6891abbb1adf05b7215218988b9bbeae374c8b7f69109709013f",
             "kind": "evidence_manifest"
           },
           {
             "path": "evidence/scientific/SC-20/render-audit.json",
-            "sha256": "4703b35a5f8033a2ef904036ab83515bb1a27365f710ff7b3a8f36f2b5f24388",
+            "sha256": "4c6d1b045d2b7e03f82edd49ebb2874b63dbece7f80b8e977af42136f419db23",
             "kind": "render_audit"
           },
           {

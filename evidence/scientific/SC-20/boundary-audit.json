@@ -1,6 +1,6 @@
 {
   "schema": "titin-sc20-boundary-audit/1",
-  "model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
+  "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
   "canonical_sequence": "UniProt Q8WZ42-1 version 4; 34350 aa",
   "regions": [
     {

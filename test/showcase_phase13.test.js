@@ -10,6 +10,9 @@ import { checkPresentationSpec } from '../src/presentation/StoryController.js';
 import { createProvenancePipeline } from '../src/presentation/ProvenancePipeline.js';
 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
+const claimRenderer = readFileSync(
+  new URL('../src/presentation/ClaimViewRenderer.js', import.meta.url), 'utf8',
+);
 const model = await TitinModel.create(nodeReader());
 
 const specContext = {
@@ -22,25 +25,30 @@ const specContext = {
 };
 
 test('SC13: specialist depth is disclosed, not dumped', () => {
-  assert.match(page, /<details id="objectInspectorDetails"/);
-  assert.match(page, /<summary[^>]*>For specialists<\/summary>/);
-  // Evidence mode opens it; Guided leaves it closed.
-  assert.match(page, /objectInspectorDetails'\)\.open = state\.audienceMode === AUDIENCE_MODES\.evidence/);
+  assert.match(claimRenderer, /element\(document, 'details', 'claim-view-specialist'\)/);
+  assert.match(claimRenderer, /specialistSummary\.textContent = 'For specialists'/);
+  // SC-22 keeps the same disclosure in the one renderer and suppresses it only
+  // on the compact Guided owner; the Evidence drawer retains full specialist depth.
+  assert.match(page, /#app\[data-mode="guided"\] #objectInspectorClaim \.claim-view-specialist/);
 });
 
 test('SC13: the card reads lay text before detail and citations last', () => {
-  const order = ['objectInspectorTitle', 'objectInspectorEvidence', 'objectInspectorLay',
-    'objectInspectorDetails', 'objectInspectorSources'];
-  const positions = order.map((id) => page.indexOf(`id="${id}"`));
-  assert.ok(positions.every((value) => value > -1), `missing: ${order[positions.indexOf(-1)]}`);
+  const order = ['root.append(title, plain, specialist, fields)',
+    "'Limitations'", "'Not claimed'", 'root.append(citations)'];
+  const positions = order.map((needle) => claimRenderer.indexOf(needle));
+  assert.ok(positions.every((value) => value > -1),
+    `missing ClaimView order marker: ${order[positions.indexOf(-1)]}`);
   for (let i = 1; i < positions.length; i += 1) {
     assert.ok(positions[i] > positions[i - 1], `${order[i]} must follow ${order[i - 1]}`);
   }
 });
 
-test('SC13: citations are one compact line, not a stack of full-width links', () => {
-  assert.match(page, /\.object-sources \{[^}]*font-size: 9px/);
-  assert.match(page, /Sources: /);
+test('SC13/22: Guided citations are compact and remain at the card foot', () => {
+  assert.match(page, /\.claim-view-sources \{[^}]*font-size: 9px/);
+  assert.match(claimRenderer, /sourceLabel\.textContent = 'Sources'/);
+  assert.match(page,
+    /#app\[data-mode="guided"\] #objectInspectorClaim \.claim-view-source:nth-of-type\(n\+3\)/,
+    'the compact owner must cap its visible citations without changing the full drawer');
 });
 
 test('SC13: the card is placed by the tested layout function', () => {

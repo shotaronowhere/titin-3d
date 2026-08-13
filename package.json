@@ -15,7 +15,7 @@
     "validate:presentation": "python3 scripts/validate_presentation.py",
     "validate:annotations": "python3 scripts/validate_annotations.py",
     "validate:python": ".venv/bin/python scripts/smoke_structure_pipeline.py",
-    "test:negative": "node scripts/neg_control_phase5.mjs && node scripts/neg_control_phase6.mjs && python3 scripts/neg_control_phase6_spec.py && python3 scripts/neg_control_phase6_review.py && python3 scripts/neg_control_showcase_claims.py && python3 scripts/neg_control_presentation.py && node scripts/neg_control_showcase_release.mjs && python3 scripts/neg_control_release_gates.py && python3 scripts/neg_control_sc19.py && python3 scripts/neg_control_sc20.py && python3 scripts/neg_control_mechanical_parameters.py",
+    "test:negative": "node scripts/neg_control_phase5.mjs && node scripts/neg_control_phase6.mjs && python3 scripts/neg_control_phase6_spec.py && python3 scripts/neg_control_phase6_review.py && python3 scripts/neg_control_showcase_claims.py && python3 scripts/neg_control_presentation.py && node scripts/neg_control_showcase_release.mjs && python3 scripts/neg_control_release_gates.py && python3 scripts/neg_control_sc19.py && python3 scripts/neg_control_sc20.py && python3 scripts/neg_control_mechanical_parameters.py && python3 scripts/neg_control_sc22.py",
     "fetch:structures": ".venv/bin/python scripts/fetch_structures.py",
     "check:structures": ".venv/bin/python scripts/fetch_structures.py --check",
     "typecheck": "tsc -p tsconfig.json",
@@ -81,7 +81,10 @@
     "test:sc20": "node --test --test-concurrency=1 test/showcase_phase20.test.js test/dataLayer.test.js test/phase8.test.js test/showcase_phase3.test.js test/closeup.test.js test/phase10.test.js test/showcase_phase2.test.js test/showcase_phase5.test.js test/showcase_phase14.test.js test/showcase_phase15.test.js test/showcase_phase19.test.js test/standalone.test.js",
     "verify:sc20": "npm run check:build && npm run check:pack && npm run check:mechanical-generated && npm run check:sc20:evidence && npm run typecheck && npm run test:sc20 && npm run validate:sc20 && npm run validate:render-style && npm run validate:decisions && npm run validate:scope && npm run validate && npm run validate:spec && npm run validate:annotations && npm run test:negative",
     "test:sc21": "node --test --test-concurrency=1 test/showcase_phase21.test.js test/phase8.test.js test/showcase_phase14.test.js test/showcase_phase20.test.js test/dataLayer.test.js test/standalone.test.js",
-    "verify:sc21": "npm run check:build && npm run check:pack && npm run check:mechanical-generated && npm run typecheck && npm run test:sc21 && npm run validate:mechanical-parameters && python3 scripts/neg_control_mechanical_parameters.py && npm run validate && npm run validate:spec && npm run validate:scope && npm run validate:decisions && npm run validate:claims"
+    "verify:sc21": "npm run check:build && npm run check:pack && npm run check:mechanical-generated && npm run typecheck && npm run test:sc21 && npm run validate:mechanical-parameters && python3 scripts/neg_control_mechanical_parameters.py && npm run validate && npm run validate:spec && npm run validate:scope && npm run validate:decisions && npm run validate:claims",
+    "test:sc22": "node --test --test-concurrency=1 test/showcase_phase22.test.js test/showcase_phase4.test.js test/presentation.test.js test/standalone.test.js",
+    "verify:sc22": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc22 && npm run validate:annotations && npm run validate:presentation && npm run validate:claims && python3 scripts/neg_control_sc22.py",
+    "test:browser:evidence": "playwright test test/browser/evidence.spec.js --project=chromium"
   },
   "license": "CC-BY-4.0",
   "dependencies": {

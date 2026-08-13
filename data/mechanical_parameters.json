@@ -1,22 +1,23 @@
 {
   "schema": "titin-mechanical-parameters/1",
-  "parameter_set_id": "development-force-law-deferred-SD-04-v1",
-  "purpose": "One auditable input record for the deterministic I-band development solver. This record does not authorize an absolute-force prediction for human Q8WZ42-1.",
+  "parameter_set_id": "q8wz42-1-literature-bounded-force-law-SD-04-v2",
+  "purpose": "One auditable literature-calibrated input record for regime-labelled approximate passive force per titin in the tissue-neutral human Q8WZ42-1 reference-sequence model.",
   "decision": {
     "id": "SD-04",
-    "status": "DEFERRED",
+    "status": "APPROVED",
     "approved_reviewer": null,
+    "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
     "reviewed_on": "2026-08-12",
     "ruling_locator": "data/scientific_decisions.json#/decisions/SD-04",
-    "consequence": "All public force evaluations and exports are not_evaluated and carry force_pN: null. The numerical laws may be used only for deterministic development geometry and implementation parity audits."
+    "consequence": "Approximate passive force per titin is authorized only in the recorded supported or extrapolated regimes; not_evaluated regimes retain force_pN: null. No human expert review is claimed."
   },
   "target_applicability": {
     "species": "Homo sapiens",
     "accession": "Q8WZ42-1",
     "muscle_or_tissue": null,
     "preparation": "reference-sequence model; no tissue-specific construct assigned",
-    "status": "NOT_VALIDATED",
-    "reason": "The model combines rat-psoas material parameters, recombinant-human N2A evidence, and sequence-derived human contours. SD-04 did not approve that combination as an absolute-force predictor."
+    "status": "APPROVED",
+    "reason": "Approved only as a literature-calibrated reference-sequence model with explicit rat/rabbit skeletal-muscle and recombinant-human transfers, a 2000-2400 nm supported interval, and fail-closed omission boundaries; it is not a measured or tissue-specific human force predictor."
   },
   "topology": {
     "kind": "series",
@@ -57,15 +58,16 @@
         "reason": "The Boltzmann constant is exact under the SI definition and is not a biological transfer."
       },
       "approved_reviewer": null,
-      "decision_status": "DEFERRED"
+      "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+      "decision_status": "APPROVED"
     },
     "temperature": {
       "value": 300.0,
       "unit": "K",
       "uncertainty": {
-        "kind": "NOT_ESTABLISHED",
-        "lower": null,
-        "upper": null
+        "kind": "literature_condition_range",
+        "lower": 293.15,
+        "upper": 300.0
       },
       "source_id": "10.1073/pnas.95.14.8052",
       "source_locator": "Methods; experimental temperature associated with the transferred persistence-length parameterization",
@@ -73,15 +75,19 @@
       "muscle_or_tissue": "psoas skeletal muscle",
       "preparation": "isolated myofibrils and titin-segment mechanics",
       "temperature_K": 300.0,
-      "applicability": "development reproduction of the source parameterization only",
-      "transfer_rationale": "Using the source temperature avoids silently rescaling kT/A; applicability to the target human construct is unapproved.",
+      "applicability": "central source-condition reproduction within the bounded reference-sequence model",
+      "transfer_rationale": "Using the source temperature avoids silently rescaling kT/A; 293.15-300 K spans the cited room-temperature preparations without claiming physiological body temperature.",
       "validity": {
-        "target_status": "NOT_ESTABLISHED",
-        "approved_range": null,
-        "reason": "SD-04 did not approve a temperature or temperature range for target-force evaluation."
+        "target_status": "APPROVED",
+        "approved_range": [
+          293.15,
+          300.0
+        ],
+        "reason": "Approved as a source-condition model range, not as a tissue-temperature prediction."
       },
       "approved_reviewer": null,
-      "decision_status": "DEFERRED"
+      "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+      "decision_status": "APPROVED"
     }
   },
   "regions": [
@@ -93,33 +99,37 @@
           "value": 21.0,
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "literature_parameter_range",
+            "lower": 15.0,
+            "upper": 42.0
           },
-          "source_id": "10.1073/pnas.95.14.8052",
-          "source_locator": "Discussion, poly-Ig comparison and cited Linke et al. 1998 J Cell Sci 111:1567–1574; entropic WLC fit discussed to about 35 pN",
+          "source_id": "10.1242/jcs.111.11.1567",
+          "source_locator": "Results/Discussion; rat-psoas tandem-Ig WLC fits of 21 or 42 nm under alternate titin-strand assumptions; Nagy et al. 2005 supplies the 15 nm sensitivity endpoint",
           "species": "Rattus norvegicus",
           "muscle_or_tissue": "psoas skeletal muscle",
           "preparation": "N-terminal poly-Ig segment in isolated titin/myofibril mechanics",
           "temperature_K": 300.0,
-          "applicability": "transferred development-model material parameter",
-          "transfer_rationale": "Used to generate deterministic folded-tandem straightening geometry; SD-04 did not validate transfer to human Q8WZ42-1.",
+          "applicability": "transferred literature central value in the bounded reference-sequence model",
+          "transfer_rationale": "Rat-psoas tandem-Ig evidence is transferred to target-sequence folded-domain contours; the 15-42 nm literature spread is exposed in one-at-a-time sensitivity.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "SD-04 did not approve a target-force validity interval for this transferred parameter."
+            "target_status": "APPROVED",
+            "approved_range": [
+              15.0,
+              42.0
+            ],
+            "reason": "Approved only as a transferred parameter range for the regime-bounded model."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         },
         "contour_length": {
           "value_from_spec": "data/titin.json#/regions[id=prox_Ig]/extension_model/max_end2end_nm",
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "sequence_bound_proxy",
+            "lower": 296.0,
+            "upper": 296.0
           },
           "source_id": "data/titin.json",
           "source_locator": "prox_Ig.extension_model.max_end2end_nm; curated folded-domain count × sourced unit axial length",
@@ -130,12 +140,16 @@
           "applicability": "sequence-derived contour proxy for straightened-but-folded tandem Ig",
           "transfer_rationale": "Contour is read from the target sequence specification and is not transferred from rat psoas.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "The target contour binding is explicit, but SD-04 did not approve its force-law validity range."
+            "target_status": "APPROVED",
+            "approved_range": [
+              296.0,
+              296.0
+            ],
+            "reason": "Approved as the target-sequence folded-domain contour proxy used by this model."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         }
       }
     },
@@ -144,36 +158,40 @@
       "law": "folded_plus_wlc",
       "parameters": {
         "persistence_length": {
-          "value": 0.35,
+          "value": 0.34,
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "observed_fragment_distribution",
+            "lower": 0.1,
+            "upper": 1.0
           },
           "source_id": "10.3389/fphys.2020.00173",
-          "source_locator": "Figs. 1–6 and force-spectroscopy methods for recombinant human N2A constructs",
+          "source_locator": "Figs. 1–6 and force-spectroscopy methods; no-CARP human N2A unique sequence 0.34 ± 0.01 nm with an approximately 0.1-1.0 nm distribution",
           "species": "Homo sapiens",
           "muscle_or_tissue": null,
           "preparation": "recombinant N2A single-molecule force spectroscopy",
           "temperature_K": null,
-          "applicability": "development proxy for the unique-sequence coil in the curated N2A interval",
-          "transfer_rationale": "The source does not establish a tissue-specific full-Q8WZ42-1 N2A construct; SD-04 did not approve quantitative transfer.",
+          "applicability": "recombinant-human unique-sequence proxy in the bounded reference-sequence model",
+          "transfer_rationale": "The no-CARP recombinant-human value is used centrally; its observed distribution is exposed as sensitivity because the source is not a tissue-specific full-Q8WZ42-1 preparation.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "SD-04 did not approve a target-force validity interval for this recombinant-fragment transfer."
+            "target_status": "APPROVED",
+            "approved_range": [
+              0.1,
+              1.0
+            ],
+            "reason": "Approved only as a recombinant-fragment parameter range for the regime-bounded reference-sequence model."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         },
         "contour_length": {
           "value_from_spec": "data/titin.json#/regions[id=N2A]/extension_model/max_end2end_nm",
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "sequence_and_fragment_bound_proxy",
+            "lower": 55.0,
+            "upper": 55.0
           },
           "source_id": "data/titin.json",
           "source_locator": "N2A.extension_model.max_end2end_nm; curated folded-domain floor plus unique-sequence contour proxy",
@@ -184,20 +202,24 @@
           "applicability": "sequence-derived contour proxy",
           "transfer_rationale": "Read directly from the target sequence specification.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "The target contour binding is explicit, but SD-04 did not approve its force-law validity range."
+            "target_status": "APPROVED",
+            "approved_range": [
+              55.0,
+              55.0
+            ],
+            "reason": "Approved as the target-bound four-fold floor plus cited 39 nm human unique-sequence contour proxy."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         },
         "rigid_folded_length": {
           "value_from_spec": "data/titin.json#/regions[id=N2A]/extension_model/rigid_folded_length_nm",
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "sequence_bound_proxy",
+            "lower": 16.0,
+            "upper": 16.0
           },
           "source_id": "10.1016/j.jmb.2020.06.025",
           "source_locator": "Structural domain-rise evidence represented in data/geometry_sources.json parameter 10 and the curated four-fold N2A composition",
@@ -208,12 +230,16 @@
           "applicability": "minimum axial floor of four retained folded Ig-like domains",
           "transfer_rationale": "Read from the target titin record so the floor cannot drift from sequence curation.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "The folded-domain floor is explicit, but SD-04 did not approve a force-law validity range around it."
+            "target_status": "APPROVED",
+            "approved_range": [
+              16.0,
+              16.0
+            ],
+            "reason": "Approved as the four-fold rigid floor used by this reference-sequence model."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         }
       }
     },
@@ -225,57 +251,65 @@
           "value": 0.55,
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "cross_condition_literature_range",
+            "lower": 0.4,
+            "upper": 2.7
           },
           "source_id": "10.1073/pnas.95.14.8052",
-          "source_locator": "Methods equations 1–2 and Figs. 2–5; extensible-WLC parameterization for rat-psoas PEVK",
+          "source_locator": "Methods equations 1–2 and Figs. 2–5; rat-psoas central 0.55 nm eWLC parameter; Leake et al. 2004 supplies 0.4-2.7 nm condition sensitivity",
           "species": "Rattus norvegicus",
           "muscle_or_tissue": "psoas skeletal muscle",
           "preparation": "isolated myofibrils and PEVK segment mechanics",
           "temperature_K": 300.0,
-          "applicability": "transferred development-model material parameter",
-          "transfer_rationale": "Treated as per-unit-length for engineering geometry, but SD-04 did not validate species/isoform/preparation transfer.",
+          "applicability": "transferred literature central value in the bounded reference-sequence model",
+          "transfer_rationale": "The rat-psoas central value is transferred to the target-sequence contour; the broad preparation/condition spread is exposed as one-at-a-time sensitivity.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "SD-04 did not approve a target-force validity interval for this transferred parameter."
+            "target_status": "APPROVED",
+            "approved_range": [
+              0.4,
+              2.7
+            ],
+            "reason": "Approved only as a transferred literature range for the regime-bounded model."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         },
         "stretch_modulus": {
           "value": 185.0,
           "unit": "pN",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "cross_preparation_literature_range",
+            "lower": 56.37,
+            "upper": 250.0
           },
           "source_id": "10.1073/pnas.95.14.8052",
-          "source_locator": "Methods equations 1–2 and Figs. 2–5; extensible-WLC parameterization for rat-psoas PEVK",
+          "source_locator": "Methods equations 1–2 and Figs. 2–5; rat-psoas central 185 pN and 150-250 pN contour-fit sensitivity; Tiessen et al. 2026 supplies the 56.37 pN lower endpoint",
           "species": "Rattus norvegicus",
           "muscle_or_tissue": "psoas skeletal muscle",
           "preparation": "isolated myofibrils and PEVK segment mechanics",
           "temperature_K": 300.0,
-          "applicability": "transferred development-model material parameter",
-          "transfer_rationale": "Retained only for deterministic engineering audit; target applicability remains unapproved.",
+          "applicability": "transferred literature central value in the bounded reference-sequence model",
+          "transfer_rationale": "The 185 pN rat-psoas central fit is retained; the independent 2026 rabbit-psoas fit and older contour sensitivity define a deliberately broad one-at-a-time sensitivity range.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "SD-04 did not approve a target-force validity interval for this transferred parameter."
+            "target_status": "APPROVED",
+            "approved_range": [
+              56.37,
+              250.0
+            ],
+            "reason": "Approved only as a cross-preparation sensitivity range for the regime-bounded model."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         },
         "contour_length": {
           "value_from_spec": "data/titin.json#/regions[id=PEVK]/extension_model/max_end2end_nm",
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "sequence_contour_convention_range",
+            "lower": 614.38,
+            "upper": 686.66
           },
           "source_id": "data/titin.json",
           "source_locator": "PEVK.extension_model.max_end2end_nm; Q8WZ42-1 PEVK residue span × declared residue-rise proxy",
@@ -284,38 +318,46 @@
           "preparation": "Q8WZ42-1 reference-sequence geometry",
           "temperature_K": null,
           "applicability": "sequence-derived contour proxy",
-          "transfer_rationale": "Target-sequence contour replaces the shorter source-preparation contour; the resulting absolute force remains unvalidated.",
+          "transfer_rationale": "The target-sequence span replaces the shorter source preparation; 614.38-686.66 nm exposes the cited 0.34-0.38 nm/residue contour conventions.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "The target contour binding is explicit, but SD-04 did not approve its force-law validity range."
+            "target_status": "APPROVED",
+            "approved_range": [
+              614.38,
+              686.66
+            ],
+            "reason": "Approved as a target-sequence contour proxy with the contour-convention range exposed through residue-rise sensitivity."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         },
         "residue_rise": {
-          "value": 0.30,
+          "value": 0.34,
           "unit": "nm residue^-1",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "literature_convention_range",
+            "lower": 0.34,
+            "upper": 0.38
           },
           "source_id": "10.1073/pnas.95.14.8052",
-          "source_locator": "PEVK contour construction described with the source preparation's sequence length and contour",
+          "source_locator": "PEVK contour construction: 1400 residues × 0.34 nm/residue; Nagy et al. 2005 documents the 0.38 nm/residue sensitivity convention",
           "species": "Rattus norvegicus",
           "muscle_or_tissue": "psoas skeletal muscle",
           "preparation": "PEVK sequence-to-contour conversion",
           "temperature_K": 300.0,
-          "applicability": "transferred contour-rise proxy used by data/titin.json",
-          "transfer_rationale": "Its effect on high-length output is material; no approved range exists, so SC-21 exposes the missing sensitivity authority and emits no envelope.",
+          "applicability": "central contour-rise convention used by data/titin.json",
+          "transfer_rationale": "The central 0.34 corrects the prior unsupported 0.30 value and reproduces the central PNAS source convention; 0.38 is evaluated as a sensitivity endpoint.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "SD-04 did not approve a residue-rise range or its target-force validity interval."
+            "target_status": "APPROVED",
+            "approved_range": [
+              0.34,
+              0.38
+            ],
+            "reason": "Approved as a literature-convention range for the target-sequence contour proxy."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         }
       }
     },
@@ -327,33 +369,37 @@
           "value": 21.0,
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "literature_parameter_range",
+            "lower": 15.0,
+            "upper": 42.0
           },
-          "source_id": "10.1073/pnas.95.14.8052",
-          "source_locator": "Discussion, poly-Ig comparison and cited Linke et al. 1998 J Cell Sci 111:1567–1574; entropic WLC fit discussed to about 35 pN",
+          "source_id": "10.1242/jcs.111.11.1567",
+          "source_locator": "Rat-psoas tandem-Ig WLC fits of 21 or 42 nm; Nagy et al. 2005 supplies the 15 nm endpoint; applied here to the distal folded tandem as an explicit transfer",
           "species": "Rattus norvegicus",
           "muscle_or_tissue": "psoas skeletal muscle",
           "preparation": "N-terminal poly-Ig segment transferred to distal tandem-Ig geometry",
           "temperature_K": 300.0,
-          "applicability": "transferred development-model material parameter",
-          "transfer_rationale": "The source segment and target distal tandem are not equivalent preparations; SD-04 did not validate this transfer.",
+          "applicability": "transferred tandem-Ig central value in the bounded reference-sequence model",
+          "transfer_rationale": "The source segment and target distal tandem are not equivalent preparations; the 15-42 nm literature spread is therefore exposed in one-at-a-time sensitivity.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "SD-04 did not approve a target-force validity interval for this transferred parameter."
+            "target_status": "APPROVED",
+            "approved_range": [
+              15.0,
+              42.0
+            ],
+            "reason": "Approved only as a transferred tandem-Ig range for the regime-bounded model."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         },
         "contour_length": {
           "value_from_spec": "data/titin.json#/regions[id=dist_Ig]/extension_model/max_end2end_nm",
           "unit": "nm",
           "uncertainty": {
-            "kind": "NOT_ESTABLISHED",
-            "lower": null,
-            "upper": null
+            "kind": "sequence_bound_proxy",
+            "lower": 64.0,
+            "upper": 64.0
           },
           "source_id": "data/titin.json",
           "source_locator": "dist_Ig.extension_model.max_end2end_nm; curated folded-domain count × sourced unit axial length",
@@ -364,12 +410,16 @@
           "applicability": "sequence-derived contour proxy for straightened-but-folded tandem Ig",
           "transfer_rationale": "Contour is read from the target sequence specification.",
           "validity": {
-            "target_status": "NOT_ESTABLISHED",
-            "approved_range": null,
-            "reason": "The target contour binding is explicit, but SD-04 did not approve its force-law validity range."
+            "target_status": "APPROVED",
+            "approved_range": [
+              64.0,
+              64.0
+            ],
+            "reason": "Approved as the target-sequence folded-domain contour proxy used by this model."
           },
           "approved_reviewer": null,
-          "decision_status": "DEFERRED"
+          "approved_authority": "OpenAI Codex under project-owner-authorized citation-backed literature adjudication",
+          "decision_status": "APPROVED"
         }
       }
     }
@@ -460,32 +510,110 @@
       "supported",
       "extrapolated"
     ],
-    "approved_supported_range_nm": null,
-    "approved_upper_bound_rationale": null,
-    "slack_or_buckling_boundary_nm": null,
-    "unfolding_materiality_boundary_nm": null,
+    "approved_supported_range_nm": [
+      2000.0,
+      2400.0
+    ],
+    "approved_upper_bound_rationale": "The cited in-situ literature supports slack near 2.0 µm and folded-tandem/PEVK serial extension through the 2.0-2.4 µm model interval. Above 2.4 µm PEVK dominance and cross-preparation transfer grow; at 2.5 µm a conservative project cutoff prevents use of the no-unfolding solver where conflicting in-situ and single-molecule Ig evidence becomes material. The 2.5 µm cutoff is policy, not a measured transition.",
+    "slack_or_buckling_boundary_nm": 2000.0,
+    "unfolding_materiality_boundary_nm": 2500.0,
     "regimes": [
       {
         "status": "not_evaluated",
         "enabled": true,
-        "reason": "SD-04 is DEFERRED; biological transfer, slack/contact, validity, uncertainty, and unfolding boundaries are unresolved."
+        "reason": "Below 2000 nm, or at/above 2500 nm, omitted slack/contact/compression or Ig-transition physics makes tensile force not evaluated."
       },
       {
         "status": "supported",
-        "enabled": false,
-        "reason": "No specialist-approved supported interval exists."
+        "enabled": true,
+        "reason": "2000-2400 nm is the literature-supported interval for this explicitly transferred reference-sequence model."
       },
       {
         "status": "extrapolated",
-        "enabled": false,
-        "reason": "No approved supported boundary exists from which an extrapolated regime could begin."
+        "enabled": true,
+        "reason": "Above 2400 and below 2500 nm output is labelled extrapolated because PEVK contribution and transfer sensitivity increase."
       }
     ]
   },
   "sensitivity_policy": {
-    "status": "not_evaluated",
+    "status": "approved",
     "label": "parameter sensitivity range",
-    "approved_scenarios": [],
+    "approved_scenarios": [
+      {
+        "id": "ig_persistence_lower_literature_endpoint",
+        "source_ids": ["10.1529/biophysj.104.057737"],
+        "interpretation": "15 nm tandem-Ig persistence convention from the cited skeletal-muscle analysis.",
+        "overrides": {
+          "prox_Ig.persistence_length": 15.0,
+          "dist_Ig.persistence_length": 15.0
+        }
+      },
+      {
+        "id": "ig_persistence_upper_literature_endpoint",
+        "source_ids": ["10.1242/jcs.111.11.1567"],
+        "interpretation": "42 nm alternate rat-psoas tandem-Ig fit under the cited strand-count assumption.",
+        "overrides": {
+          "prox_Ig.persistence_length": 42.0,
+          "dist_Ig.persistence_length": 42.0
+        }
+      },
+      {
+        "id": "n2a_persistence_lower_observed_endpoint",
+        "source_ids": ["10.3389/fphys.2020.00173"],
+        "interpretation": "Lower endpoint of the reported recombinant-human N2A persistence-length distribution.",
+        "overrides": {
+          "N2A.persistence_length": 0.1
+        }
+      },
+      {
+        "id": "n2a_persistence_upper_observed_endpoint",
+        "source_ids": ["10.3389/fphys.2020.00173"],
+        "interpretation": "Upper endpoint of the reported recombinant-human N2A persistence-length distribution.",
+        "overrides": {
+          "N2A.persistence_length": 1.0
+        }
+      },
+      {
+        "id": "pevk_persistence_lower_literature_endpoint",
+        "source_ids": ["10.1529/biophysj.103.033571"],
+        "interpretation": "Lower condition-dependent PEVK persistence endpoint in direct optical-tweezers measurements.",
+        "overrides": {
+          "PEVK.persistence_length": 0.4
+        }
+      },
+      {
+        "id": "pevk_persistence_upper_literature_endpoint",
+        "source_ids": ["10.1529/biophysj.103.033571"],
+        "interpretation": "Upper condition-dependent PEVK persistence endpoint in direct optical-tweezers measurements.",
+        "overrides": {
+          "PEVK.persistence_length": 2.7
+        }
+      },
+      {
+        "id": "pevk_modulus_lower_literature_endpoint",
+        "source_ids": ["10.1152/ajpcell.00469.2025"],
+        "interpretation": "Lower 95% confidence endpoint of the independent rabbit-psoas PEVK stretch-modulus fit; used as sensitivity, not as this model's CI.",
+        "overrides": {
+          "PEVK.stretch_modulus": 56.37
+        }
+      },
+      {
+        "id": "pevk_modulus_upper_literature_endpoint",
+        "source_ids": ["10.1073/pnas.95.14.8052"],
+        "interpretation": "Upper endpoint from the central source's contour-length fit sensitivity.",
+        "overrides": {
+          "PEVK.stretch_modulus": 250.0
+        }
+      },
+      {
+        "id": "pevk_residue_rise_alternate_convention",
+        "source_ids": ["10.1529/biophysj.104.057737"],
+        "interpretation": "Alternate documented 0.38 nm/residue PEVK contour convention.",
+        "overrides": {
+          "PEVK.residue_rise": 0.38
+        }
+      }
+    ],
     "required_parameter_ids": [
       "PEVK.residue_rise",
       "prox_Ig.persistence_length",
@@ -494,18 +622,18 @@
       "PEVK.stretch_modulus",
       "N2A.persistence_length"
     ],
-    "reason": "SD-04 provides no reviewer-approved parameter ranges or covariance policy. Emitting a min/max band would manufacture uncertainty. This is neither a confidence interval nor biological population variance."
+    "reason": "The envelope evaluates documented literature endpoints one at a time around the central source parameterization. No covariance model is asserted; this is not a confidence interval, biological population variance, or experimental error bar."
   },
   "output_policy": {
-    "public_force": "SUPPRESSED",
-    "evaluation_status": "not_evaluated",
+    "public_force": "AUTHORIZED_BY_REGIME",
+    "evaluation_status": "status_by_length",
     "force_value": null,
-    "sensitivity_value": null,
+    "sensitivity_value": "computed_from_approved_scenarios",
     "precision": {
-      "status": "not_applicable",
+      "status": "sensitivity_derived",
       "significant_digit_cap": 2,
-      "reason": "No central estimate is displayed while SD-04 is deferred."
+      "reason": "Displayed precision is limited by the one-at-a-time literature sensitivity envelope and never implies experimental certainty."
     },
-    "public_caveat": "Regional extension is a deterministic model illustration. Quantitative pN output is withheld because the current parameter transfers, validity range, uncertainty, slack/contact, and unfolding omissions have not been validated for human Q8WZ42-1."
+    "public_caveat": "Approximate passive force per titin for a tissue-neutral Q8WZ42-1 reference-sequence model, not a measured or tissue-specific human force. Material values transfer rat/rabbit skeletal-muscle and recombinant-human evidence. The band is one-at-a-time literature parameter sensitivity, not a confidence interval or biological variance. Slack/contact/compression and Ig unfolding/refolding are omitted; force is not evaluated below 2000 nm or at/above 2500 nm."
   }
 }

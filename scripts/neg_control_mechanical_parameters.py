@@ -36,6 +36,7 @@ def approved_fixture():
     candidate["decision"].update({
         "status": "APPROVED",
         "approved_reviewer": reviewer,
+        "approved_authority": reviewer,
         "consequence": "Quantitative output is authorized only under the approved regime policy.",
     })
     candidate["purpose"] = (
@@ -53,22 +54,11 @@ def approved_fixture():
     for parameter in parameter_rows:
         parameter["decision_status"] = "APPROVED"
         parameter["approved_reviewer"] = reviewer
+        parameter["approved_authority"] = reviewer
         parameter["applicability"] = "Specialist-approved applicability for this fixture."
         parameter["transfer_rationale"] = (
             "The specialist approved this declared transfer for the fixture."
         )
-        value = parameter.get("value")
-        interval = [value, value] if isinstance(value, (int, float)) else [1.0, 10000.0]
-        parameter["uncertainty"] = {
-            "kind": "specialist_approved_range",
-            "lower": interval[0],
-            "upper": interval[1],
-        }
-        parameter["validity"] = {
-            "target_status": "APPROVED",
-            "approved_range": interval,
-            "reason": "Approved-fixture range for destructive validator controls.",
-        }
     regimes = candidate["regime_policy"]
     regimes.update({
         "approved_supported_range_nm": [2000.0, 2400.0],
@@ -83,8 +73,10 @@ def approved_fixture():
         "status": "approved",
         "approved_scenarios": [{
             "id": "approved_lower_transfer",
+            "source_ids": ["10.1073/pnas.95.14.8052"],
+            "interpretation": "Approved-fixture destructive-control scenario.",
             "overrides": {
-                "PEVK.residue_rise": 0.27,
+                "PEVK.residue_rise": 0.38,
                 "prox_Ig.persistence_length": 18.0,
                 "dist_Ig.persistence_length": 18.0,
                 "PEVK.persistence_length": 0.50,
@@ -162,7 +154,7 @@ rejected(
 )
 rejected(
     "decision mismatch",
-    lambda row: row["decision"].__setitem__("status", "APPROVED"),
+    lambda row: row["decision"].__setitem__("status", "DEFERRED"),
     "does not match SD-04",
 )
 rejected(
@@ -177,12 +169,12 @@ rejected(
     lambda row: row["sensitivity_policy"]["approved_scenarios"].append(
         {"id": "invented", "ranges": {}}
     ),
-    "approved sensitivity",
+    "registered source evidence",
 )
 rejected(
     "force leakage",
     lambda row: row["output_policy"].__setitem__("force_value", 1.23),
-    "exposes quantitative force",
+    "not regime-authorized",
 )
 
 approved, approved_decisions = approved_fixture()
@@ -219,9 +211,12 @@ rejected_approved(
     "do not cover",
 )
 rejected_approved(
-    "missing specialist reviewer",
-    lambda _, ledger: ledger["decisions"]["SD-04"].__setitem__("reviewer", None),
-    "named specialist reviewer",
+    "incomplete decision authority",
+    lambda _, ledger: (
+        ledger["decisions"]["SD-04"].__setitem__("reviewer", None),
+        ledger["decisions"]["SD-04"].__setitem__("adjudicator", None),
+    ),
+    "complete human review or honest owner-authorized",
 )
 rejected_approved(
     "unvalidated approved target",
@@ -245,7 +240,7 @@ rejected_approved(
     lambda _, ledger: ledger["decisions"]["SD-04"]["ruling"].__setitem__(
         "approved_supported_range_nm", [2000.0, 2500.0]
     ),
-    "specialist ruling does not bind approved approved_supported_range_nm",
+    "ruling does not bind approved approved_supported_range_nm",
 )
 rejected_approved(
     "redundant PEVK contour scenario",

@@ -16,12 +16,12 @@
     ]
   },
   "mechanics": {
-    "parameter_set_id": "development-force-law-deferred-SD-04-v1",
-    "species": "Rattus norvegicus",
-    "muscle": "psoas skeletal muscle",
-    "preparation": "single myofibrils and isolated titin mechanics transferred into the current model",
-    "display_label": "Development mechanics transferred from rat psoas preparations · SD-04 DEFERRED · absolute pN withheld",
-    "review_status": "DEFERRED",
+    "parameter_set_id": "q8wz42-1-literature-bounded-force-law-SD-04-v2",
+    "species": "Homo sapiens reference sequence with explicit cross-preparation parameters",
+    "muscle": null,
+    "preparation": "tissue-neutral Q8WZ42-1 reference-sequence model using rat/rabbit skeletal-muscle and recombinant-human mechanics evidence",
+    "display_label": "Rat/rabbit skeletal-muscle + recombinant-human literature transfer · SD-04 APPROVED WITH LIMITS · approximate passive pN per titin",
+    "review_status": "APPROVED",
     "transfers": [
       {
         "from": "rat psoas titin preparations",
@@ -32,9 +32,23 @@
           "PEVK stretch modulus"
         ],
         "source_ids": [
-          "10.1073/pnas.95.14.8052"
+          "10.1073/pnas.95.14.8052",
+          "10.1242/jcs.111.11.1567",
+          "10.1152/ajpcell.00469.2025"
         ],
-        "limitation": "The transfer is not validated for human Q8WZ42-1. Public/model evaluations return not_evaluated with force_pN null; a separately named development diagnostic is retained only for deterministic geometry generation and Python/JavaScript parity audit."
+        "limitation": "The transfer is approved only for a regime-labelled reference-sequence model: supported at 2000-2400 nm, extrapolated above 2400 and below 2500 nm, and not_evaluated outside the omission boundaries. It is not a measured or tissue-specific human force."
+      },
+      {
+        "from": "recombinant human N2A unique-sequence force spectroscopy",
+        "to": "human Q8WZ42-1 reference-sequence model",
+        "quantities": [
+          "N2A persistence length",
+          "N2A unique-sequence contour"
+        ],
+        "source_ids": [
+          "10.3389/fphys.2020.00173"
+        ],
+        "limitation": "The fragment is not a tissue-specific full-length construct; its observed persistence-length spread is shown only as one-at-a-time parameter sensitivity."
       }
     ]
   },

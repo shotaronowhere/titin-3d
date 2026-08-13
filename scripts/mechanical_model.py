@@ -2,12 +2,11 @@
 """SC-21 canonical mechanics generator and Python reference implementation.
 
 All dimensional inputs and numerical options come from
-``data/mechanical_parameters.json``.  The development solve still determines a
-continuous regional geometry, but an unapproved SD-04 never emits an absolute
-force result: generated evaluation rows are ``not_evaluated`` with ``force_pN``
-set to null.  ``--parity-json`` is an explicit engineering-only diagnostic used
-to compare the independent Python and JavaScript algorithms; it is not a public
-or committed model export.
+``data/mechanical_parameters.json``. The development solve determines continuous
+regional geometry; public force is emitted only in an SD-04-authorized length
+regime, while omission-boundary rows remain ``not_evaluated`` with ``force_pN``
+null. ``--parity-json`` is an explicit diagnostic used to compare the independent
+Python and JavaScript algorithms; it is not a separate authority surface.
 """
 
 from __future__ import annotations
@@ -650,7 +649,7 @@ def build_outputs(run_expensive_audits: bool = True) -> tuple[dict, dict, dict]:
             "per_region_implied_force_spread": "1.000x in the internal development solve",
             "reproduce": "python3 scripts/mechanical_model.py",
             "model_basis": (
-                "SD-04-approved Marko-Siggia WLC/eWLC mechanics driven by data/mechanical_parameters.json; output authority is bounded by the recorded regime and sensitivity policy."
+                "SD-04-approved Marko-Siggia WLC/eWLC mechanics driven by data/mechanical_parameters.json; central source-law evidence is 10.1073/pnas.95.14.8052, with all transfers and endpoint sources recorded in the parameter set and literature ruling; output authority is bounded by the recorded regime and sensitivity policy."
                 if parameters["decision"]["status"] == "APPROVED" else
                 "Development Marko-Siggia WLC/eWLC geometry driven by data/mechanical_parameters.json, with source-law evidence from 10.1073/pnas.95.14.8052 and the separately recorded N2A sources. SD-04 DEFERRED forbids target-force evaluation and public absolute-pN output."
             ),

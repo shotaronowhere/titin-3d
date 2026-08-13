@@ -4,8 +4,8 @@
  * This module contains equations and numerical algorithms only. Material
  * constants, contours, solver options, decision state, validity policy, and
  * sensitivity authority are injected from data/mechanical_parameters.json and
- * data/titin.json. A deferred SD-04 therefore cannot accidentally become a
- * numeric public result merely because the development solver can find one.
+ * data/titin.json. Public evaluation remains bound to SD-04's status and exact
+ * length regime, so an internal solve cannot leak through an omission boundary.
  */
 
 /** Marko-Siggia interpolation: g(y), where f = (kT/A) g(y). */

@@ -1,6 +1,6 @@
 {
   "schema": "titin-sc20-implementation-evidence/1",
-  "model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
+  "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
   "captured_on": "2026-08-12",
   "review_semantics": {
     "decision_specific_implementation_evidence": "VERIFIED",
@@ -12,13 +12,13 @@
       "path": "boundary-audit.json",
       "kind": "boundary_audit",
       "bytes": 10318,
-      "sha256": "04b6650f22c7ed7c6227f2bfdde740e2150edceaf2ac5127ac8286346e7de335"
+      "sha256": "514b2314cae463c2a9d8638faea5edffefe89072e0741f275882e8e18d983444"
     },
     {
       "path": "render-audit.json",
       "kind": "render_audit",
-      "bytes": 6810,
-      "sha256": "4703b35a5f8033a2ef904036ab83515bb1a27365f710ff7b3a8f36f2b5f24388"
+      "bytes": 6812,
+      "sha256": "4c6d1b045d2b7e03f82edd49ebb2874b63dbece7f80b8e977af42136f419db23"
     },
     {
       "path": "overview-1280x720.jpg",

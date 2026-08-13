@@ -36,17 +36,17 @@ test('SC20 desktop authority: consumed rulings and a claim source are visibly in
   await cleanBoot(page, '/index.html');
   await expect(page.locator('#scopeIdentity'))
     .toHaveText(/Human TTN reference sequence.*Q8WZ42-1.*citation-reviewed SC-20/i);
-  await expect(page.locator('#scopeDecisions')).toHaveText(/0 pending.*3 approved.*2 deferred/i);
+  await expect(page.locator('#scopeDecisions')).toHaveText(/0 pending.*4 approved.*1 deferred/i);
 
   await page.locator('#audienceEvidence').click();
   await expect(page.locator('#scientificDecisionStatus'))
-    .toHaveText(/SD-01 approved.*SD-02 deferred.*SD-03 approved.*SD-04 deferred.*SD-05 approved.*AI adjudication.*independent human review not performed/i);
+    .toHaveText(/SD-01 approved.*SD-02 deferred.*SD-03 approved.*SD-04 approved.*SD-05 approved.*AI adjudication.*independent human review not performed/i);
   await expect(page.locator('#chapterEvidenceTitle')).not.toHaveText('—');
   await expect(page.locator('#chapterSources a').first()).toBeVisible();
 
   await page.locator('#tabMeasure').click();
   await expect(page.locator('#mechanicsScope'))
-    .toHaveText(/rat psoas.*SD-04 deferred.*absolute pN withheld/i);
+    .toHaveText(/rat\/rabbit.*SD-04 approved with limits.*approximate passive pN per titin/i);
 });
 
 for (const viewport of Object.keys(VIEWPORTS)) {

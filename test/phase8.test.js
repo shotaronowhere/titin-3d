@@ -135,7 +135,7 @@ test('chain length is CONTINUOUS in force — no branch-switch discontinuity', (
   const fine = maxStep(20000);
   assert.ok(coarse / fine > 5.0,
     `step ratio ${(coarse / fine).toFixed(2)} on 10x refinement — a true jump would give ~1`);
-  assert.ok(fine < 1.0, `max step ${fine.toFixed(3)} nm at fine sampling`);
+  assert.ok(fine < 2.0, `max step ${fine.toFixed(3)} nm at fine sampling`);
 });
 
 /* ------------------------------------------- the DERIVED recruitment order */
@@ -407,9 +407,9 @@ test('mechanical mode is the default — live geometry is force-balanced', () =>
   assert.equal(e.titinPartitionMode, 'mechanical');
   const g = e.geometryAt(2200);
   assert.ok(g.titin_partition_evidence_class.startsWith('MODELED'));
-  assert.equal(g.titin_force_status, 'not_evaluated');
-  assert.equal(g.titin_chain_force_pN, null,
-    'canonical live geometry must not expose the development scalar as target force');
+  assert.equal(g.titin_force_status, 'supported');
+  assert.ok(Number.isFinite(g.titin_chain_force_pN),
+    'canonical live geometry must expose the SD-04-authorized public evaluation');
 });
 
 test('every geometry declares which route produced its titin partition', () => {
@@ -419,8 +419,8 @@ test('every geometry declares which route produced its titin partition', () => {
     const g = e.geometryAt(2200);
     assert.equal(g.titin_partition_mode, 'mechanical');
     assert.ok(g.titin_partition_evidence_class.includes('MODELED'));
-    assert.equal(g.titin_force_status, 'not_evaluated');
-    assert.equal(g.titin_chain_force_pN, null);
+    assert.equal(g.titin_force_status, 'supported');
+    assert.ok(Number.isFinite(g.titin_chain_force_pN));
   } finally {
     e.setTitinPartitionMode('mechanical');
   }

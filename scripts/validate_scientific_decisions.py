@@ -52,7 +52,7 @@ def finite_number(value: object) -> bool:
 
 def validate_approved_sd04_ruling(ruling: object) -> list[str]:
     if not isinstance(ruling, dict):
-        return ["SD-04 APPROVED ruling is not a structured specialist ruling"]
+        return ["SD-04 APPROVED ruling is not a structured mechanics ruling"]
     problems: list[str] = []
     for field in ("parameter_set_id", "target_accession", "implementation_record"):
         if not str(ruling.get(field, "")).strip():

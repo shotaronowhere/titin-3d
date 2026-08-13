@@ -33,7 +33,8 @@ import { createShowcaseOverlay } from '../presentation/ShowcaseOverlay.js';
 import { createProvenancePipeline } from '../presentation/ProvenancePipeline.js';
 import { createAnnotations } from './TitinAnnotations.js';
 import { resolveSources } from '../presentation/AnnotationCatalog.js';
-import { createBibliography } from '../presentation/Bibliography.js';
+import { createBibliography, resolveSourceContext } from '../presentation/Bibliography.js';
+import { claimViewModel } from '../presentation/ClaimView.js';
 import { createForceCurve } from '../presentation/ForceCurve.js';
 import {
   createSarcomere, createTitin, createTitinPath, createDomainChain,
@@ -556,6 +557,27 @@ export class TitinVisualization {
       for (const id of chapter.source_ids || []) citedIds.add(id);
     }
     return createBibliography(this.model.spec.references, { citedIds: [...citedIds] });
+  }
+
+  /**
+   * Build one canonical, DOM-independent claim view. Callers may supply a
+   * validated annotation or presentation record to choose contextual copy, but
+   * claim classes and source relationships always come from claim_support.json.
+   */
+  claimView(claimId, context = {}) {
+    return claimViewModel(claimId, {
+      ...context,
+      claimSupport: this.model.spec.claimSupport,
+      references: this.model.spec.references,
+    });
+  }
+
+  /** Contextual Sources drawer with value -> object -> chapter -> all fallback. */
+  sourceContext(context = {}) {
+    return resolveSourceContext({
+      references: this.model.spec.references,
+      claimSupport: this.model.spec.claimSupport,
+    }, context);
   }
 
   /** Names of the scientifically defined structural states. */

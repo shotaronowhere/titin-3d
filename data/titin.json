@@ -143,8 +143,8 @@
       "geometry_proxy": "ig_bead_chain",
       "resting_axial_position_nm": {
         "X_start": 25.0,
-        "X_end": 217.365,
-        "axial_length_nm": 192.365
+        "X_end": 215.487,
+        "axial_length_nm": 190.487
       },
       "mechanical_class": "extensible_straighten",
       "extension_model": {
@@ -204,8 +204,8 @@
         "evidence_class": "SCHEMATIC"
       },
       "dimensions_nm": {
-        "axial_length_X": 192.365,
-        "axial_length_note": "SC-20 resting development-solver value; MUST equal structural_states.states.resting.titin_I_band_extension_nm.prox_Ig. Absolute pN transfer remains deferred by SD-04.",
+        "axial_length_X": 190.487,
+        "axial_length_note": "Resting serial-solver value; MUST equal structural_states.states.resting.titin_I_band_extension_nm.prox_Ig. SD-04 authorizes only regime-labelled approximate model force under the recorded transfer caveat.",
         "lateral_extent_YZ": null,
         "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
         "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
@@ -302,9 +302,9 @@
       },
       "geometry_proxy": "four_folded_domains_plus_unique_sequence_ribbon",
       "resting_axial_position_nm": {
-        "X_start": 217.365,
-        "X_end": 234.408,
-        "axial_length_nm": 17.043
+        "X_start": 215.487,
+        "X_end": 232.468,
+        "axial_length_nm": 16.981
       },
       "mechanical_class": "extensible_spring",
       "extension_model": {
@@ -367,8 +367,8 @@
         "evidence_class": "SCHEMATIC"
       },
       "dimensions_nm": {
-        "axial_length_X": 17.043,
-        "axial_length_note": "SC-20 resting development-solver value with a 16 nm four-fold rigid floor; MUST equal structural_states.states.resting.titin_I_band_extension_nm.N2A. Absolute pN transfer remains deferred by SD-04.",
+        "axial_length_X": 16.981,
+        "axial_length_note": "Resting serial-solver value with a 16 nm four-fold rigid floor; MUST equal structural_states.states.resting.titin_I_band_extension_nm.N2A. SD-04 authorizes only regime-labelled approximate model force under the recorded transfer caveat.",
         "lateral_extent_YZ": null,
         "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
         "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
@@ -399,8 +399,8 @@
       },
       "geometry_proxy": "unresolved_zero_projection_ribbon",
       "resting_axial_position_nm": {
-        "X_start": 234.408,
-        "X_end": 234.408,
+        "X_start": 232.468,
+        "X_end": 232.468,
         "axial_length_nm": 0.0
       },
       "mechanical_class": "excluded_unknown",
@@ -414,7 +414,7 @@
         "note": "No pinned UniProt DOMAIN/PEVK-repeat feature or source-backed mechanical law is assigned. The interval is excluded from the force solver rather than silently merged into N2A or PEVK."
       },
       "biological_role": "UNKNOWN",
-      "state_dependence": "UNKNOWN; omitted from the quantitative force partition under deferred SD-04.",
+      "state_dependence": "UNKNOWN; omitted from the quantitative force partition under the SD-04 literature ruling.",
       "scientific_scope_ref": "scientific_scope.json#/sequence",
       "evidence_class": "MEASURED (sequence interval); UNKNOWN (identity, structure, contour, and mechanics)",
       "primary_references": [
@@ -474,14 +474,14 @@
       },
       "geometry_proxy": "worm_like_chain",
       "resting_axial_position_nm": {
-        "X_start": 234.408,
-        "X_end": 258.408,
-        "axial_length_nm": 24.0
+        "X_start": 232.468,
+        "X_end": 258.813,
+        "axial_length_nm": 26.345
       },
       "mechanical_class": "extensible_spring",
       "extension_model": {
         "resting_end2end_nm": 25.0,
-        "max_end2end_nm": 542.1,
+        "max_end2end_nm": 614.38,
         "n_units": 31,
         "recruitment_order": 3,
         "geometry": "worm-like-chain / straightening tandem",
@@ -534,8 +534,8 @@
         "evidence_class": "SCHEMATIC"
       },
       "dimensions_nm": {
-        "axial_length_X": 24.0,
-        "axial_length_note": "SC-20 resting development-solver value; MUST equal structural_states.states.resting.titin_I_band_extension_nm.PEVK. Absolute pN transfer remains deferred by SD-04.",
+        "axial_length_X": 26.345,
+        "axial_length_note": "Resting serial-solver value; MUST equal structural_states.states.resting.titin_I_band_extension_nm.PEVK. The 614.38 nm contour proxy is 1,807 residues × the cited 0.34 nm/residue central convention; 0.38 nm/residue is a sensitivity endpoint.",
         "lateral_extent_YZ": null,
         "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
         "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"
@@ -566,9 +566,9 @@
       },
       "geometry_proxy": "ig_bead_chain",
       "resting_axial_position_nm": {
-        "X_start": 258.408,
+        "X_start": 258.813,
         "X_end": 300.0,
-        "axial_length_nm": 41.592
+        "axial_length_nm": 41.187
       },
       "mechanical_class": "extensible_straighten",
       "extension_model": {
@@ -627,8 +627,8 @@
         "evidence_class": "SCHEMATIC"
       },
       "dimensions_nm": {
-        "axial_length_X": 41.592,
-        "axial_length_note": "SC-20 resting development-solver value; MUST equal structural_states.states.resting.titin_I_band_extension_nm.dist_Ig. Absolute pN transfer remains deferred by SD-04.",
+        "axial_length_X": 41.187,
+        "axial_length_note": "Resting serial-solver value; MUST equal structural_states.states.resting.titin_I_band_extension_nm.dist_Ig. SD-04 authorizes only regime-labelled approximate model force under the recorded transfer caveat.",
         "lateral_extent_YZ": null,
         "lateral_extent_note": "UNKNOWN \u2014 the transverse footprint of a single titin strand is not resolved at this scale; render width is SCHEMATIC (see geometry_strategy.json domain archetypes).",
         "evidence_class": "STRONGLY INFERRED (axial); UNKNOWN (lateral)"

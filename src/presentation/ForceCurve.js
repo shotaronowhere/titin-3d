@@ -1,9 +1,9 @@
 /**
  * SC-21 status-bearing force-curve presenter.
  *
- * It samples GeometryEngine but never upgrades a development solve into a public
- * result. Under deferred SD-04 every sample remains `not_evaluated` with a null
- * force, while regional extension geometry and the audit trail remain usable.
+ * It samples GeometryEngine and discloses force only when SD-04 authorizes the
+ * current length regime. Omission-boundary samples remain `not_evaluated` with
+ * null force while regional geometry and the audit trail remain usable.
  */
 
 export const FORCE_CURVE = Object.freeze({
@@ -13,6 +13,13 @@ export const FORCE_CURVE = Object.freeze({
   source_ids: Object.freeze([
     '10.1083/jcb.140.4.853',
     '10.3389/fphys.2020.00173',
+    '10.1073/pnas.95.14.8052',
+    '10.1242/jcs.111.11.1567',
+    '10.1529/biophysj.103.033571',
+    '10.1529/biophysj.104.057737',
+    '10.1016/s0006-3495(03)74732-8',
+    '10.1016/j.celrep.2016.01.025',
+    '10.1152/ajpcell.00469.2025',
   ]),
   not_claimed: Object.freeze([
     'a measured single-molecule force trace for this sarcomere',
@@ -26,6 +33,23 @@ export const FORCE_CURVE = Object.freeze({
 
 /** @type {Map<string, any>} */
 const memo = new Map();
+
+function parameterSourceContext(parameter) {
+  const direct = String(parameter.source_id || '').startsWith('data/')
+    || parameter.validity?.target_status === 'UNIVERSAL_EXACT';
+  return Object.freeze({
+    claim_id: 'force_law_parameter_set',
+    source_id: parameter.source_id,
+    locator: parameter.source_locator,
+    relationship: direct ? 'direct' : 'transfer',
+    source_subject: Object.freeze({
+      species: parameter.species,
+      muscle_or_tissue: parameter.muscle_or_tissue,
+      preparation: parameter.preparation,
+    }),
+    extraction_note: `${parameter.applicability} ${parameter.transfer_rationale}`,
+  });
+}
 
 function parameterRows(record) {
   const rows = [];
@@ -46,7 +70,9 @@ function parameterRows(record) {
       transfer_rationale: parameter.transfer_rationale,
       validity: Object.freeze({ ...parameter.validity }),
       approved_reviewer: parameter.approved_reviewer,
+      approved_authority: parameter.approved_authority,
       decision_status: parameter.decision_status,
+      source_context: parameterSourceContext(parameter),
     }));
   }
   for (const region of record.regions) {
@@ -67,7 +93,9 @@ function parameterRows(record) {
         transfer_rationale: parameter.transfer_rationale,
         validity: Object.freeze({ ...parameter.validity }),
         approved_reviewer: parameter.approved_reviewer,
+        approved_authority: parameter.approved_authority,
         decision_status: parameter.decision_status,
+        source_context: parameterSourceContext(parameter),
       }));
     }
   }

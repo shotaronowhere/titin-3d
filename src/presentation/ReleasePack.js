@@ -278,12 +278,22 @@ export function createReleasePack(model, opts = {}) {
   } = opts;
   const sd04 = model.spec.scientificDecisions.decisions['SD-04'];
   const implementationReviewer = sd04.implementation_verification?.reviewer;
+  const implementationAdjudicator = sd04.implementation_verification?.adjudicator;
+  const humanImplementationMatches = implementationReviewer?.name
+    && implementationReviewer.name === sd04.reviewer?.name;
+  const citationImplementationMatches = !sd04.reviewer && !implementationReviewer
+    && sd04.adjudicator?.type === 'AI_SYSTEM'
+    && sd04.adjudicator?.authority_basis === 'project_owner_authorization'
+    && sd04.adjudicator?.human_expert === false
+    && implementationAdjudicator?.type === 'AI_SYSTEM'
+    && implementationAdjudicator?.authority_basis === 'project_owner_authorization'
+    && implementationAdjudicator?.human_expert === false;
   const mechanicsSprintStatus = sd04.status !== 'APPROVED'
     ? 'CODE_COMPLETE_BLOCKED_SCIENCE'
     : sd04.implementation_verification?.status === 'VERIFIED'
       && sd04.implementation_verification?.implemented_model_fingerprint
         === model.spec.identity.model_fingerprint
-      && implementationReviewer?.name === sd04.reviewer?.name
+      && (humanImplementationMatches || citationImplementationMatches)
       ? 'COMPLETE'
       : 'APPROVED_PENDING_IMPLEMENTATION_VERIFICATION';
 
@@ -330,9 +340,19 @@ export function createReleasePack(model, opts = {}) {
           affiliation: sd04.reviewer.affiliation,
           role: sd04.reviewer.role,
         } : null,
+        decision_adjudicator: sd04.adjudicator ? {
+          type: sd04.adjudicator.type,
+          name: sd04.adjudicator.name,
+          authority_basis: sd04.adjudicator.authority_basis,
+          human_expert: sd04.adjudicator.human_expert,
+        } : null,
+        independent_human_review_status: sd04.independent_human_review_status,
         implementation_verification: {
           status: sd04.implementation_verification?.status || 'PENDING',
           reviewer_name: implementationReviewer?.name || null,
+          adjudicator_name: implementationAdjudicator?.name || null,
+          adjudicator_authority_basis: implementationAdjudicator?.authority_basis || null,
+          adjudicator_human_expert: implementationAdjudicator?.human_expert ?? null,
           implemented_model_fingerprint:
             sd04.implementation_verification?.implemented_model_fingerprint || null,
         },
@@ -389,9 +409,17 @@ export function validateReleasePack(pack) {
   }
   if (mechanics.decision_status === 'APPROVED') {
     const reviewer = mechanics.decision_reviewer;
-    if (!reviewer || !reviewer.name?.trim() || !reviewer.affiliation?.trim()
-        || !reviewer.role?.trim()) {
-      throw new Error('validateReleasePack: approved mechanics lacks specialist provenance.');
+    const adjudicator = mechanics.decision_adjudicator;
+    const humanAuthority = reviewer?.name?.trim() && reviewer?.affiliation?.trim()
+      && reviewer?.role?.trim()
+      && ['COMPLETE', 'COMPLETED', 'PERFORMED', 'VERIFIED']
+        .includes(mechanics.independent_human_review_status);
+    const citationAuthority = !reviewer && adjudicator?.type === 'AI_SYSTEM'
+      && adjudicator?.authority_basis === 'project_owner_authorization'
+      && adjudicator?.human_expert === false
+      && mechanics.independent_human_review_status === 'NOT_PERFORMED';
+    if (!humanAuthority && !citationAuthority) {
+      throw new Error('validateReleasePack: approved mechanics lacks honest decision provenance.');
     }
     const sprintStatus = pack.scientific_authority.mechanics_sprint_status;
     if (!['APPROVED_PENDING_IMPLEMENTATION_VERIFICATION', 'COMPLETE'].includes(sprintStatus)) {
@@ -401,7 +429,10 @@ export function validateReleasePack(pack) {
       const verification = mechanics.implementation_verification;
       if (verification?.status !== 'VERIFIED'
           || verification.implemented_model_fingerprint !== pack.identity.model_fingerprint
-          || verification.reviewer_name !== reviewer.name) {
+          || (humanAuthority && verification.reviewer_name !== reviewer.name)
+          || (citationAuthority && (verification.reviewer_name !== null
+            || verification.adjudicator_authority_basis !== 'project_owner_authorization'
+            || verification.adjudicator_human_expert !== false))) {
         throw new Error(
           'validateReleasePack: mechanics completion lacks matching implementation verification.',
         );

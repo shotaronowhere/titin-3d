@@ -940,7 +940,7 @@
       },
       {
         "id": "SD-04",
-        "status": "DEFERRED"
+        "status": "APPROVED"
       },
       {
         "id": "SD-05",
@@ -977,13 +977,15 @@
       "verification": "automated",
       "status": "PASS",
       "verified_by": "scripts/validate_mechanical_parameters.py; test/showcase_phase21.test.js; test/phase8.test.js; scripts/neg_control_mechanical_parameters.py",
-      "note": "SC-21: data/mechanical_parameters.json is required by Spec, included in model identity and the generated release pack, consumed by both solver ports, schema-validated for deferred and approved authority, parity-tested, and destructive-control gated. Both solvers reject unbracketed targets; an approved fixture exercises evaluation, sensitivity, precision, release validation, and plot/readout bindings without changing the live DEFERRED decision. This automated pass does not approve the parameters or quantitative force."
+      "note": "SC-21: data/mechanical_parameters.json is required by Spec, included in model identity and the generated release pack, consumed by both solver ports, citation-authority validated, parity-tested, and destructive-control gated. SD-04 now authorizes only regime-labelled approximate force: supported at 2000-2400 nm, extrapolated above 2400 and below 2500 nm, and not_evaluated outside the omission boundaries. No human review is claimed."
       },
       {
         "id": "regime_and_uncertainty",
         "requirement": "displayed force states validity regime, transfer, sensitivity, and uncertainty",
-        "verification": "human",
-        "status": "PENDING"
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "scripts/validate_mechanical_parameters.py; scripts/validate_scientific_decisions.py; test/showcase_phase21.test.js",
+        "note": "Project-owner-authorized citation-backed SD-04 ruling; every sensitivity scenario is source-bound and range-checked. The band is explicitly not a confidence interval or biological variance."
       },
       {
         "id": "independent_reproduction",

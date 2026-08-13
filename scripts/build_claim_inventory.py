@@ -36,6 +36,12 @@ LOCATORS = {
     "10.1016/j.jmb.2021.166901": "Figs. 1–7 and deposited PDB 7NIP; recombinant human UN2A structure and CARP binding",
     "10.3389/fphys.2020.00173": "Fig. 1 constructs; Figs. 2–4 AFM mechanics/CARP; Fig. 5 N2A PKA phosphorylation; Fig. 6 simulation",
     "10.1073/pnas.95.14.8052": "Figs. 2–5; Methods equations 1–2; Results/Discussion force-extension fits and <12-pN/<60%-extension limit",
+    "10.1242/jcs.111.11.1567": "Figs. 1–7 and Results/Discussion; rat-psoas tandem-Ig WLC fits under alternate titin-strand assumptions",
+    "10.1529/biophysj.103.033571": "Results and Discussion; direct optical-tweezers PEVK measurements across ionic-strength and temperature conditions",
+    "10.1529/biophysj.104.057737": "Methods equations 2–8 and Results; 0.38 nm/residue PEVK contour convention and 15 nm tandem-Ig persistence input",
+    "10.1016/s0006-3495(03)74732-8": "Methods and Figs. 2–6; human-soleus slack length and assessment of Ig-domain unfolding during passive stress relaxation",
+    "10.1016/j.celrep.2016.01.025": "Figs. 1–5 and Results/Discussion; titin Ig folding/unfolding at physiological forces",
+    "10.1152/ajpcell.00469.2025": "Methods and Results; rabbit-psoas in-situ PEVK eWLC fit and Ig refolding work",
     "10.1021/bi00801a004": "Figs. 1–2 and Results/Discussion, ATP-dependent actomyosin dissociation cycle",
     "10.1016/j.yjmcc.2019.05.026": "Figs. 1–4 and Table 1; mouse skinned papillary-muscle IEM/SIM mapping of C-zone epitopes and cMyBP-C stripes",
     "PDB:1TKI+4JNW (Phase 6 measurement, kinase)": "Deposited kinase coordinates and data/structure_measurements.json kinase rows",
@@ -108,6 +114,30 @@ SOURCE_SUBJECTS = {
     "10.1073/pnas.95.14.8052": {
         "species": "Rattus norvegicus", "muscle_or_tissue": "psoas skeletal muscle",
         "preparation": "isolated myofibril mechanics plus immunofluorescence/immunoelectron microscopy",
+    },
+    "10.1242/jcs.111.11.1567": {
+        "species": "Rattus norvegicus", "muscle_or_tissue": "psoas skeletal muscle",
+        "preparation": "single myofibrils; tandem-Ig immunolabeling and WLC fitting",
+    },
+    "10.1529/biophysj.103.033571": {
+        "species": "Oryctolagus cuniculus", "muscle_or_tissue": "longissimus dorsi skeletal muscle",
+        "preparation": "native/skeletal PEVK constructs measured with dual optical tweezers",
+    },
+    "10.1529/biophysj.104.057737": {
+        "species": "Oryctolagus cuniculus", "muscle_or_tissue": "skeletal muscle",
+        "preparation": "single-molecule mechanics plus immunoelectron microscopy",
+    },
+    "10.1016/s0006-3495(03)74732-8": {
+        "species": "Homo sapiens", "muscle_or_tissue": "soleus skeletal muscle",
+        "preparation": "mechanically and chemically skinned single fibers",
+    },
+    "10.1016/j.celrep.2016.01.025": {
+        "species": "mixed recombinant and muscle preparations", "muscle_or_tissue": None,
+        "preparation": "single-molecule magnetic tweezers and muscle mechanics",
+    },
+    "10.1152/ajpcell.00469.2025": {
+        "species": "Oryctolagus cuniculus", "muscle_or_tissue": "psoas skeletal muscle",
+        "preparation": "skinned single fibers with in-situ titin mechanics modeling",
     },
     "10.1021/bi00801a004": {
         "species": "Oryctolagus cuniculus", "muscle_or_tissue": "skeletal muscle protein",
@@ -319,22 +349,34 @@ def extra_claims() -> list[dict[str, Any]]:
         {
             "id": "force_law_parameter_set",
             "subject": target,
-            "statement": "A deterministic development solver retains parameters transferred from rat-psoas preparations, but SD-04 withholds all public absolute-pN output because biological transfer, validity range, uncertainty, slack, and unfolding remain unresolved.",
+            "statement": "SD-04 authorizes regime-labelled approximate passive force per titin for the tissue-neutral Q8WZ42-1 reference-sequence model from 2000-2400 nm, with 2400-2500 nm labelled extrapolated and omitted-physics regimes returning not_evaluated.",
             "quantity": None,
             "claim_class": "MODELED",
             "render_class": "MODELED",
-            "support": [{
-                "source_id": "10.1073/pnas.95.14.8052",
-                "locator": LOCATORS["10.1073/pnas.95.14.8052"],
-                "relationship": "transfer",
-                "source_subject": source_subject("10.1073/pnas.95.14.8052"),
-                "extraction_note": "Force-law parameter evidence is from rat psoas; SD-04 permits internal deterministic auditing but explicitly does not approve absolute-pN transfer to Q8WZ42-1."
-            }],
+            "support": [
+                {
+                    "source_id": source_id,
+                    "locator": LOCATORS[source_id],
+                    "relationship": "transfer",
+                    "source_subject": source_subject(source_id),
+                    "extraction_note": note,
+                }
+                for source_id, note in [
+                    ("10.1073/pnas.95.14.8052", "Central rat-psoas PEVK eWLC parameters and 0.34 nm/residue contour convention; transferred, not a direct human-tissue measurement."),
+                    ("10.1242/jcs.111.11.1567", "Rat-psoas tandem-Ig WLC parameter and alternate strand-assumption fit."),
+                    ("10.3389/fphys.2020.00173", "Recombinant-human N2A central value and observed parameter spread."),
+                    ("10.1529/biophysj.103.033571", "Condition-dependent PEVK persistence range used only for one-at-a-time sensitivity."),
+                    ("10.1529/biophysj.104.057737", "Alternate PEVK contour and tandem-Ig persistence conventions used only for sensitivity."),
+                    ("10.1152/ajpcell.00469.2025", "Independent rabbit-psoas PEVK stretch-modulus fit used only for sensitivity."),
+                    ("10.1016/s0006-3495(03)74732-8", "Human-soleus slack-length and in-situ Ig-transition constraint supporting fail-closed boundaries."),
+                    ("10.1016/j.celrep.2016.01.025", "Physiological-force Ig folding/unfolding evidence requiring the conservative upper omission boundary."),
+                ]
+            ],
             "model_dependencies": ["data/mechanical_parameters.json", "data/mechanical_model.json", "data/structural_states.json", "SD-04"],
-            "limitations": ["Species/preparation transfer, supported range, uncertainty, slack/buckling/contact, and unfolding/refolding are unresolved."],
-            "not_claimed": ["direct human Q8WZ42-1 force measurements", "public or release-approved absolute-pN predictions"],
+            "limitations": ["Material parameters cross rat/rabbit skeletal-muscle and recombinant-human preparations.", "The sensitivity envelope is one-at-a-time literature parameter sensitivity, not a confidence interval or biological variance.", "Slack/contact/compression and Ig unfolding/refolding are omitted and force is fail-closed outside the approved regime."],
+            "not_claimed": ["direct or tissue-specific human Q8WZ42-1 force measurements", "active force or total myofibril force", "a model of Ig unfolding/refolding"],
             "public_bindings": ["src/index.template.html#id=stageForce", "src/index.template.html#id=forceCurve"],
-            "inventory_status": "AUDIT_ONLY",
+            "inventory_status": "PUBLIC",
             "review": pending_review(),
         },
         {

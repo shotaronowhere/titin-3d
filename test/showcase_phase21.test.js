@@ -28,29 +28,7 @@ const mechanics = new MechanicalModel(
 );
 
 function approvedParameterFixture() {
-  const approved = structuredClone(parameters);
-  approved.decision.status = 'APPROVED';
-  approved.regime_policy.approved_supported_range_nm = [2000, 2400];
-  approved.regime_policy.slack_or_buckling_boundary_nm = 1950;
-  approved.regime_policy.unfolding_materiality_boundary_nm = 2600;
-  for (const regime of approved.regime_policy.regimes) regime.enabled = true;
-  approved.sensitivity_policy.status = 'approved';
-  approved.sensitivity_policy.approved_scenarios = [{
-    id: 'test_lower_transfer',
-    overrides: {
-      'PEVK.residue_rise': 0.27,
-      'prox_Ig.persistence_length': 18.0,
-      'dist_Ig.persistence_length': 18.0,
-      'PEVK.persistence_length': 0.50,
-      'PEVK.stretch_modulus': 170.0,
-      'N2A.persistence_length': 0.30,
-    },
-  }];
-  approved.output_policy.public_force = 'AUTHORIZED_BY_REGIME';
-  approved.output_policy.evaluation_status = 'status_by_length';
-  approved.output_policy.sensitivity_value = 'computed_from_approved_scenarios';
-  approved.output_policy.precision.status = 'sensitivity_derived';
-  return approved;
+  return structuredClone(parameters);
 }
 
 test('SC21: the parameter record is required, model-identifying, and decision-bound', () => {
@@ -58,8 +36,9 @@ test('SC21: the parameter record is required, model-identifying, and decision-bo
   assert.deepEqual(model.spec.mechanicalParameters, parameters);
   assert.ok(MODEL_INPUTS.includes('data/mechanical_parameters.json'));
   assert.equal(parameters.decision.id, 'SD-04');
-  assert.equal(parameters.decision.status, 'DEFERRED');
+  assert.equal(parameters.decision.status, 'APPROVED');
   assert.equal(parameters.decision.approved_reviewer, null);
+  assert.match(parameters.decision.approved_authority, /citation-backed literature adjudication/);
   assert.equal(report.parameter_set_id, parameters.parameter_set_id);
   assert.equal(report.model_fingerprint, modelFingerprint());
 });
@@ -85,7 +64,8 @@ test('SC21: every law parameter carries units, uncertainty, source, preparation,
     assert.ok(Object.hasOwn(row.validity, 'approved_range'));
     assert.ok(row.validity.reason);
     assert.equal(row.approved_reviewer, null);
-    assert.equal(row.decision_status, 'DEFERRED');
+    assert.equal(row.approved_authority, parameters.decision.approved_authority);
+    assert.equal(row.decision_status, 'APPROVED');
   }
   assert.equal(
     sourceHref('SI-2019', model.spec.references['SI-2019']),
@@ -102,12 +82,25 @@ test('SC21: JavaScript contains algorithms but no duplicated material constants'
   assert.match(source, /mechanicalParameters\.topology\.region_order/);
 });
 
-test('SC21: deferred SD-04 returns not_evaluated at every named length', () => {
-  for (const length of [1900, 2000, 2200, 2400, 3000]) {
+test('SC21: approved SD-04 emits force only inside its length regimes', () => {
+  const expected = new Map([
+    [1900, 'not_evaluated'], [2000, 'supported'], [2200, 'supported'],
+    [2400, 'supported'], [2450, 'extrapolated'], [2500, 'not_evaluated'],
+    [3000, 'not_evaluated'],
+  ]);
+  for (const [length, status] of expected) {
     const geometry = model.geometryAt(length);
-    assert.equal(geometry.titin_force_status, 'not_evaluated');
-    assert.equal(geometry.titin_chain_force_pN, null);
-    assert.equal(geometry.titin_force_sensitivity, null);
+    assert.equal(geometry.titin_force_status, status);
+    if (status === 'not_evaluated') {
+      assert.equal(geometry.titin_chain_force_pN, null);
+      assert.equal(geometry.titin_force_sensitivity, null);
+    } else {
+      assert.ok(Number.isFinite(geometry.titin_chain_force_pN));
+      assert.ok(geometry.titin_force_sensitivity.force_pN.min
+        <= geometry.titin_chain_force_pN);
+      assert.ok(geometry.titin_force_sensitivity.force_pN.max
+        >= geometry.titin_chain_force_pN);
+    }
     assert.equal(geometry.mechanical_parameter_set_id, parameters.parameter_set_id);
     assert.equal(geometry.mechanical_model_fingerprint, model.spec.identity.model_fingerprint);
   }
@@ -115,17 +108,17 @@ test('SC21: deferred SD-04 returns not_evaluated at every named length', () => {
 
 test('SC21: target evaluation cannot be confused with the development geometry solve', () => {
   const evaluation = mechanics.evaluateSarcomereLength(2200, { totalNm: 275 });
-  assert.deepEqual({ status: evaluation.status, force_pN: evaluation.force_pN }, {
-    status: 'not_evaluated', force_pN: null,
-  });
-  assert.equal(evaluation.sensitivity, null);
+  assert.equal(evaluation.status, 'supported');
+  assert.ok(Number.isFinite(evaluation.force_pN));
+  assert.ok(evaluation.sensitivity.force_pN.min <= evaluation.force_pN);
+  assert.ok(evaluation.sensitivity.force_pN.max >= evaluation.force_pN);
   assert.ok(Math.abs(Object.values(evaluation.region_extension_nm)
     .reduce((sum, value) => sum + value, 0) - 275) < 1e-9,
-  'a deferred evaluation should retain the available regional geometry');
+  'the public evaluation should retain the force-balanced regional geometry');
   assert.throws(() => mechanics.solveForce(275), /not a public evaluation/);
   const partition = mechanics.partition(275, { sarcomereLengthNm: 2200 });
-  assert.equal(partition.force_pN, null);
-  assert.equal(partition.status, 'not_evaluated');
+  assert.ok(Number.isFinite(partition.force_pN));
+  assert.equal(partition.status, 'supported');
   assert.equal('development_force_pN' in partition, false);
   assert.ok(Math.abs(partition.total_nm - 275) < 1e-9);
 });
@@ -152,7 +145,7 @@ else:
   });
 });
 
-test('SC21: decision validation admits only complete qualified-human SD-04 provenance', () => {
+test('SC21: decision validation admits honest citation-backed and qualified-human provenance', () => {
   const probe = `
 import copy, sys
 sys.path.insert(0, 'scripts')
@@ -160,6 +153,7 @@ from scientific_common import decision_payload_sha256, load_json, ROOT
 from validate_scientific_decisions import validate
 record = load_json(ROOT / 'data/scientific_decisions.json')
 claims = load_json(ROOT / 'data/claim_support.json')
+assert not validate(record, claims)
 approved = copy.deepcopy(record)
 row = approved['decisions']['SD-04']
 row['status'] = 'APPROVED'
@@ -193,32 +187,34 @@ assert any('specialist-review provenance' in problem for problem in problems), p
   });
 });
 
-test('SC21: generated outputs contain identities and null quantitative evaluations', () => {
+test('SC21: generated outputs contain identities and regime-authorized evaluations', () => {
   assert.equal(report.schema, 'titin-mechanical-model/2');
   assert.equal(report.force_pN, null);
-  assert.equal(report.evaluation_status, 'not_evaluated');
-  assert.equal(report.sensitivity.status, 'not_evaluated');
+  assert.equal(report.evaluation_status, 'status_by_length');
+  assert.equal(report.sensitivity.status, 'approved');
   assert.equal(report.sensitivity.force_pN, null);
   for (const [name, row] of Object.entries(report.per_state)) {
-    assert.equal(row.evaluation.status, 'not_evaluated', name);
-    assert.equal(row.evaluation.force_pN, null, name);
-    assert.equal(row.evaluation.sensitivity_pN, null, name);
+    const evaluated = row.sarcomere_length_nm >= 2000 && row.sarcomere_length_nm < 2500;
+    assert.equal(row.evaluation.status, evaluated ? 'supported' : 'not_evaluated', name);
+    assert.equal(Number.isFinite(row.evaluation.force_pN), evaluated, name);
+    assert.equal(Array.isArray(row.evaluation.sensitivity_pN), evaluated, name);
     assert.ok(Math.abs(Object.values(row.evaluation.region_extension_nm)
       .reduce((sum, value) => sum + value, 0) - row.titin_I_band_total_nm) < 1e-9, name);
     for (const id of mechanics.order) {
       assert.ok(Math.abs(row.evaluation.region_extension_nm[id]
         - row.model_partition_nm[id]) < 0.01, `${name} ${id}`);
     }
-    assert.equal(row.evaluation.incremental_compliance_share, null, name);
+    assert.equal(row.evaluation.incremental_compliance_share !== null, evaluated, name);
     assert.equal(row.evaluation.parameter_set_id, parameters.parameter_set_id, name);
     assert.equal(row.evaluation.model_fingerprint, report.model_fingerprint, name);
-    assert.equal(row.parameter_sensitivity_range.force_pN, null, name);
-    assert.equal(row.regional_incremental_compliance_nm_per_pN.values, null, name);
+    assert.equal(row.parameter_sensitivity_range.force_pN !== null, evaluated, name);
+    assert.equal(row.regional_incremental_compliance_nm_per_pN.values !== null, evaluated, name);
   }
   for (const [name, state] of Object.entries(states.states)) {
     const provenance = state.titin_I_band_extension_provenance;
-    assert.equal(provenance.force_evaluation_status, 'not_evaluated', name);
-    assert.equal(provenance.common_force_pN, null, name);
+    const evaluated = state.sarcomere_length_nm >= 2000 && state.sarcomere_length_nm < 2500;
+    assert.equal(provenance.force_evaluation_status, evaluated ? 'supported' : 'not_evaluated', name);
+    assert.equal(Number.isFinite(provenance.common_force_pN), evaluated, name);
     assert.equal(provenance.parameter_set_id, parameters.parameter_set_id, name);
   }
 });
@@ -241,6 +237,7 @@ test('SC21: release pack exports the exact canonical parameter record', () => {
 
 test('SC21: release validation supports a complete approved authority but rejects partial approval', () => {
   const pack = createReleasePack(model);
+  assert.doesNotThrow(() => validateReleasePack(pack));
   const approved = structuredClone(pack);
   approved.scientific_authority.mechanics = {
     ...approved.scientific_authority.mechanics,
@@ -250,6 +247,7 @@ test('SC21: release validation supports a complete approved authority but reject
       affiliation: 'Independent Mechanics Institute',
       role: 'Titin passive-mechanics and single-molecule force-law specialist',
     },
+    independent_human_review_status: 'COMPLETED',
     public_force: 'AUTHORIZED_BY_REGIME',
     evaluation_status: 'status_by_length',
     approved_supported_range_nm: [2000, 2400],
@@ -283,13 +281,18 @@ test('SC21: release validation supports a complete approved authority but reject
   );
 });
 
-test('SC21: no supported range or sensitivity band is invented under deferral', () => {
-  assert.equal(parameters.regime_policy.approved_supported_range_nm, null);
-  assert.equal(parameters.regime_policy.slack_or_buckling_boundary_nm, null);
-  assert.equal(parameters.regime_policy.unfolding_materiality_boundary_nm, null);
-  assert.deepEqual(parameters.sensitivity_policy.approved_scenarios, []);
-  assert.equal(parameters.sensitivity_policy.status, 'not_evaluated');
+test('SC21: every sensitivity scenario is source-bound and remains non-probabilistic', () => {
+  assert.deepEqual(parameters.regime_policy.approved_supported_range_nm, [2000, 2400]);
+  assert.equal(parameters.regime_policy.slack_or_buckling_boundary_nm, 2000);
+  assert.equal(parameters.regime_policy.unfolding_materiality_boundary_nm, 2500);
+  assert.equal(parameters.sensitivity_policy.approved_scenarios.length, 9);
+  assert.equal(parameters.sensitivity_policy.status, 'approved');
   assert.equal(parameters.sensitivity_policy.label, 'parameter sensitivity range');
+  for (const scenario of parameters.sensitivity_policy.approved_scenarios) {
+    assert.ok(scenario.source_ids.length);
+    assert.ok(scenario.interpretation);
+    for (const sourceId of scenario.source_ids) assert.ok(model.spec.references[sourceId]);
+  }
   assert.match(parameters.sensitivity_policy.reason, /confidence interval/i);
 });
 
@@ -301,15 +304,15 @@ test('SC21: approved-regime scaffold honors both omission boundaries and PEVK-ri
   assert.equal(approvedMechanics.statusAt(1900), 'not_evaluated');
   assert.equal(approvedMechanics.statusAt(2000), 'supported');
   assert.equal(approvedMechanics.statusAt(2400), 'supported');
-  assert.equal(approvedMechanics.statusAt(2500), 'extrapolated');
-  assert.equal(approvedMechanics.statusAt(2600), 'not_evaluated');
+  assert.equal(approvedMechanics.statusAt(2450), 'extrapolated');
+  assert.equal(approvedMechanics.statusAt(2500), 'not_evaluated');
 
   const centralContour = approvedMechanics.chain.PEVK.Lc_nm;
-  const scenario = approvedMechanics.chainWithOverrides({ 'PEVK.residue_rise': 0.27 });
-  assert.ok(Math.abs(scenario.PEVK.Lc_nm - centralContour * 0.9) < 1e-12);
+  const scenario = approvedMechanics.chainWithOverrides({ 'PEVK.residue_rise': 0.38 });
+  assert.ok(Math.abs(scenario.PEVK.Lc_nm - centralContour * (0.38 / 0.34)) < 1e-12);
   assert.throws(
     () => approvedMechanics.chainWithOverrides({
-      'PEVK.residue_rise': 0.27,
+      'PEVK.residue_rise': 0.38,
       'PEVK.contour_length': 500,
     }),
     /redundantly overrides both PEVK residue rise and contour length/,
@@ -349,7 +352,7 @@ test('SC21: approved evaluations conserve length and stay continuous and monoton
   const approvedMechanics = new MechanicalModel(
     model.spec.titin, approvedParameterFixture(), model.spec.identity.model_fingerprint,
   );
-  const lengths = [1950, 1975, 2000, 2100, 2200, 2300, 2400, 2500, 2599];
+  const lengths = [2000, 2025, 2100, 2200, 2300, 2400, 2450, 2499];
   let previousForce = -Infinity;
   const previousExtension = Object.fromEntries(approvedMechanics.order.map((id) => [id, -Infinity]));
   for (const sarcomereLengthNm of lengths) {
@@ -372,7 +375,7 @@ test('SC21: approved evaluations conserve length and stay continuous and monoton
       previousExtension[id] = evaluation.region_extension_nm[id];
     }
   }
-  for (const boundary of [2000, 2400]) {
+  for (const boundary of [2400]) {
     const evaluate = (sarcomereLengthNm) => approvedMechanics.evaluateSarcomereLength(
       sarcomereLengthNm,
       { totalNm: model.geometryAt(sarcomereLengthNm).titin_iband_total_nm },
@@ -382,8 +385,8 @@ test('SC21: approved evaluations conserve length and stay continuous and monoton
     assert.notEqual(left.status, right.status);
     assert.ok(Math.abs(left.force_pN - right.force_pN) < 1e-4, boundary);
   }
-  assert.equal(approvedMechanics.statusAt(1949.999), 'not_evaluated');
-  assert.equal(approvedMechanics.statusAt(2600), 'not_evaluated');
+  assert.equal(approvedMechanics.statusAt(1999.999), 'not_evaluated');
+  assert.equal(approvedMechanics.statusAt(2500), 'not_evaluated');
 });
 
 test('SC21: uncertainty formatting obeys sensitivity place and significant-digit cap', () => {
