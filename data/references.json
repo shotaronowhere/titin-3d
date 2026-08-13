@@ -491,7 +491,52 @@
   "title": "Nature of PEVK-titin elasticity in skeletal muscle",
   "journal": "Proceedings of the National Academy of Sciences",
   "identifier": "10.1073/pnas.95.14.8052",
-  "used_for": "Rat-psoas PEVK and tandem-Ig force-law parameter evidence. Registry closure does not approve transfer of those parameters to Q8WZ42-1; SD-04 adjudicates that transfer."
+  "used_for": "Rat-psoas PEVK and tandem-Ig force-law parameter evidence, including the 0.34 nm/residue contour convention, 0.55 nm PEVK persistence length, 185 pN stretch modulus, and reported contour-fit sensitivity. SD-04 authorizes only a bounded reference-sequence transfer."
+ },
+ "10.1242/jcs.111.11.1567": {
+  "doi": "10.1242/jcs.111.11.1567",
+  "authors": "Linke, Stockmeier, Ivemeyer, Hosser, and Mundel",
+  "year": 1998,
+  "title": "Characterizing titin's I-band Ig domain region as an entropic spring",
+  "journal": "Journal of Cell Science",
+  "identifier": "10.1242/jcs.111.11.1567",
+  "used_for": "Rat-psoas tandem-Ig WLC fits and the 21-42 nm persistence-length sensitivity endpoints."
+ },
+ "10.1529/biophysj.103.033571": {
+  "doi": "10.1529/biophysj.103.033571",
+  "authors": "Leake, Wilson, Gautel, and Simmons",
+  "year": 2004,
+  "title": "The Elasticity of Single Titin Molecules Using a Two-Bead Optical Tweezers Assay",
+  "journal": "Biophysical Journal",
+  "identifier": "10.1529/biophysj.103.033571",
+  "used_for": "Direct single-molecule evidence that PEVK persistence length varies with preparation conditions; 0.4-2.7 nm sensitivity endpoints."
+ },
+ "10.1529/biophysj.104.057737": {
+  "doi": "10.1529/biophysj.104.057737",
+  "authors": "Nagy, Grama, Huber, Bianco, Trombitas, Granzier, and Kellermayer",
+  "year": 2005,
+  "title": "Hierarchical Extensibility in the PEVK Domain of Skeletal-Muscle Titin",
+  "journal": "Biophysical Journal",
+  "identifier": "10.1529/biophysj.104.057737",
+  "used_for": "Documented 0.38 nm/residue PEVK contour convention and 15 nm tandem-Ig persistence sensitivity endpoint."
+ },
+ "10.1016/s0006-3495(03)74732-8": {
+  "doi": "10.1016/s0006-3495(03)74732-8",
+  "authors": "Trombitas, Wu, Labeit, Labeit, and Granzier",
+  "year": 2003,
+  "title": "Molecular Basis of Passive Stress Relaxation in Human Soleus Fibers: Assessment of the Role of Immunoglobulin-Like Domain Unfolding",
+  "journal": "Biophysical Journal",
+  "identifier": "10.1016/s0006-3495(03)74732-8",
+  "used_for": "Human-soleus slack-length evidence and an in-situ constraint on large-scale Ig unfolding."
+ },
+ "10.1152/ajpcell.00469.2025": {
+  "doi": "10.1152/ajpcell.00469.2025",
+  "authors": "Tiessen, Leonard, and Herzog",
+  "year": 2026,
+  "title": "Titin immunoglobulin domain refolding produces mechanical work in situ",
+  "journal": "American Journal of Physiology-Cell Physiology",
+  "identifier": "10.1152/ajpcell.00469.2025",
+  "used_for": "Independent rabbit-psoas PEVK eWLC parameterization and lower stretch-modulus sensitivity endpoint."
  },
  "SI-2019": {
   "doi": null,

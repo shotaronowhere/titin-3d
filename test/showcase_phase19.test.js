@@ -38,7 +38,7 @@ test('SC19: scope has no tissue overclaim or literal public fallback', () => {
   assert.equal(scope.sequence.isoform_id, 'Q8WZ42-1');
   assert.equal(scope.sequence.tissue_or_muscle_claim, null);
   assert.match(scope.publicBadge, /Q8WZ42-1.*citation-reviewed/i);
-  assert.match(scope.mechanics.display_label, /rat psoas.*SD-04 DEFERRED.*withheld/i);
+  assert.match(scope.mechanics.display_label, /rat\/rabbit.*SD-04 APPROVED WITH LIMITS.*approximate passive pN per titin/i);
   assert.ok(scope.render.reference_molecule_policy);
   assert.ok(scope.excludedClaims.length);
   assert.match(page, /\$\('scopeIdentity'\)\.textContent = model\.scientificScope\.publicBadge/);
@@ -50,11 +50,11 @@ test('SC19: scope has no tissue overclaim or literal public fallback', () => {
 
 test('SC19: all five decision statuses are normalized and visibly rendered', () => {
   const decisions = decisionLedger(model.spec);
-  assert.deepEqual(decisions.counts, { PENDING: 0, APPROVED: 3, DEFERRED: 2 });
+  assert.deepEqual(decisions.counts, { PENDING: 0, APPROVED: 4, DEFERRED: 1 });
   assert.match(decisions.badgeText, /SD-01 approved/i);
   assert.match(decisions.badgeText, /SD-02 deferred/i);
   assert.match(decisions.badgeText, /SD-03 approved/i);
-  assert.match(decisions.badgeText, /SD-04 deferred/i);
+  assert.match(decisions.badgeText, /SD-04 approved/i);
   assert.match(decisions.badgeText, /SD-05 approved/i);
   assert.match(page, /id="scopeDecisions"/);
   assert.match(page, /id="scientificDecisionStatus"/);

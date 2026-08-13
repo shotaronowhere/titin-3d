@@ -25,6 +25,7 @@ PARAMETER_FIELDS = {
     "transfer_rationale",
     "validity",
     "approved_reviewer",
+    "approved_authority",
     "decision_status",
 }
 EXPECTED_REGIONS = ["prox_Ig", "N2A", "PEVK", "dist_Ig"]
@@ -83,26 +84,48 @@ def validate(record: dict, decisions: dict, references: dict) -> list[str]:
 
     decision = record.get("decision") or {}
     ledger = (decisions.get("decisions") or {}).get("SD-04") or {}
+    review_policy = decisions.get("review_policy") or {}
     if decision.get("id") != "SD-04" or decision.get("status") != ledger.get("status"):
         problems.append("parameter decision does not match SD-04")
     if decision.get("status") not in {"PENDING", "DEFERRED", "APPROVED"}:
         problems.append("parameter decision status is invalid")
     if decision.get("status") != "APPROVED" and decision.get("approved_reviewer") is not None:
         problems.append("unapproved parameter set invents an approved reviewer")
+    if decision.get("status") != "APPROVED" and decision.get("approved_authority") is not None:
+        problems.append("unapproved parameter set invents an approved authority")
+    approved_authority = None
     if decision.get("status") == "APPROVED":
         reviewer = ledger.get("reviewer") or {}
         reviewer_name = reviewer.get("name") if isinstance(reviewer, dict) else None
-        if not isinstance(reviewer, dict) or any(
-                not str(reviewer.get(field, "")).strip()
-                for field in ("name", "affiliation", "role")):
-            problems.append("approved SD-04 lacks a named specialist reviewer, affiliation, or role in the decision ledger")
-        elif reviewer.get("role") != ledger.get("required_reviewer_role"):
-            problems.append("approved SD-04 reviewer role does not match the required specialist role")
-        if ledger.get("independent_human_review_status") not in {
-                "COMPLETE", "COMPLETED", "PERFORMED", "VERIFIED"}:
-            problems.append("approved SD-04 lacks completed independent human review")
-        if decision.get("approved_reviewer") != reviewer_name:
-            problems.append("parameter-set reviewer does not match the SD-04 specialist reviewer")
+        human_review = isinstance(reviewer, dict) and all(
+            str(reviewer.get(field, "")).strip()
+            for field in ("name", "affiliation", "role")
+        ) and reviewer.get("role") == ledger.get("required_reviewer_role") \
+            and ledger.get("independent_human_review_status") in {
+                "COMPLETE", "COMPLETED", "PERFORMED", "VERIFIED"}
+        adjudicator = ledger.get("adjudicator") or {}
+        citation_adjudication = reviewer_name is None \
+            and review_policy.get("kind") \
+                == "owner_authorized_citation_backed_ai_adjudication" \
+            and review_policy.get("human_expert_review_claimed") is False \
+            and adjudicator.get("type") == "AI_SYSTEM" \
+            and adjudicator.get("authority_basis") == "project_owner_authorization" \
+            and adjudicator.get("human_expert") is False \
+            and ledger.get("independent_human_review_status") == "NOT_PERFORMED" \
+            and str(decision.get("approved_authority", "")).strip()
+        if not human_review and not citation_adjudication:
+            problems.append(
+                "approved SD-04 lacks complete human review or honest owner-authorized "
+                "citation-backed adjudication"
+            )
+        if human_review:
+            approved_authority = reviewer_name
+            if decision.get("approved_reviewer") != reviewer_name:
+                problems.append("parameter-set reviewer does not match the SD-04 specialist reviewer")
+        else:
+            approved_authority = decision.get("approved_authority")
+            if decision.get("approved_reviewer") is not None:
+                problems.append("citation-backed SD-04 falsely names a human reviewer")
     if not str(decision.get("ruling_locator", "")).strip():
         problems.append("parameter decision lacks an exact ruling locator")
 
@@ -174,12 +197,13 @@ def validate(record: dict, decisions: dict, references: dict) -> list[str]:
             problems.append(f"{label} central value lies outside its target-validity range")
         if decision.get("status") != "APPROVED" and parameter.get("approved_reviewer") is not None:
             problems.append(f"{label} invents an approved reviewer")
-        if decision.get("status") == "APPROVED" \
-                and not str(parameter.get("approved_reviewer", "")).strip():
-            problems.append(f"{label} lacks the SD-04-approved reviewer")
+        if decision.get("status") != "APPROVED" and parameter.get("approved_authority") is not None:
+            problems.append(f"{label} invents an approved authority")
         if decision.get("status") == "APPROVED":
             if parameter.get("approved_reviewer") != decision.get("approved_reviewer"):
-                problems.append(f"{label} reviewer differs from the SD-04 specialist")
+                problems.append(f"{label} reviewer differs from the SD-04 decision")
+            if parameter.get("approved_authority") != approved_authority:
+                problems.append(f"{label} authority differs from the SD-04 decision")
             if parameter.get("validity", {}).get("target_status") \
                     not in {"APPROVED", "UNIVERSAL_EXACT"}:
                 problems.append(f"{label} target validity is not approved")
@@ -224,6 +248,10 @@ def validate(record: dict, decisions: dict, references: dict) -> list[str]:
         expected_pointer = f"data/titin.json#/regions[id={region_id}]/extension_model/max_end2end_nm"
         if contour.get("value_from_spec") != expected_pointer:
             problems.append(f"{region_id} contour is not bound to titin.json")
+    parameter_by_path = {
+        f"{region['id']}.{name}": parameter
+        for region in regions for name, parameter in (region.get("parameters") or {}).items()
+    }
 
     solver = record.get("solver") or {}
     if solver.get("algorithm") != "monotone_bisection":
@@ -280,7 +308,6 @@ def validate(record: dict, decisions: dict, references: dict) -> list[str]:
                 or output.get("sensitivity_value") is not None:
             problems.append("deferred SD-04 output policy exposes quantitative force")
     elif decision.get("status") == "APPROVED":
-        reviewer_name = decision.get("approved_reviewer")
         if target.get("status") not in {"APPROVED", "VALIDATED"}:
             problems.append("approved SD-04 lacks validated target applicability")
         stale_authority_text = " ".join([
@@ -346,6 +373,14 @@ def validate(record: dict, decisions: dict, references: dict) -> list[str]:
                 if not str(scenario_id or "").strip() or scenario_id in scenario_ids:
                     problems.append("sensitivity scenario IDs are missing or duplicated")
                 scenario_ids.add(scenario_id)
+                source_ids = scenario.get("source_ids")
+                if not isinstance(source_ids, list) or not source_ids \
+                        or any(source_id not in references for source_id in source_ids):
+                    problems.append(
+                        f"sensitivity scenario {scenario_id} lacks registered source evidence"
+                    )
+                if not str(scenario.get("interpretation", "")).strip():
+                    problems.append(f"sensitivity scenario {scenario_id} lacks interpretation")
                 overrides = scenario.get("overrides")
                 if not isinstance(overrides, dict) or not overrides:
                     problems.append(f"sensitivity scenario {scenario_id} has no overrides")
@@ -356,6 +391,14 @@ def validate(record: dict, decisions: dict, references: dict) -> list[str]:
                     value = raw.get("value") if isinstance(raw, dict) else raw
                     if not finite_number(value) or value <= 0:
                         problems.append(f"sensitivity scenario {scenario_id} has invalid value for {path}")
+                    parameter = parameter_by_path.get(path) or {}
+                    approved_range = (parameter.get("validity") or {}).get("approved_range")
+                    if finite_number(value) and numeric_range(approved_range) \
+                            and not approved_range[0] <= value <= approved_range[1]:
+                        problems.append(
+                            f"sensitivity scenario {scenario_id} value for {path} "
+                            "lies outside its approved range"
+                        )
                     covered.add(path)
             missing_sensitivity = required_sensitivity - covered
             if missing_sensitivity:
@@ -386,9 +429,9 @@ def validate(record: dict, decisions: dict, references: dict) -> list[str]:
         }
         for field, expected in expected_ruling.items():
             if ruling.get(field) != expected:
-                problems.append(f"SD-04 specialist ruling does not bind approved {field}")
+                problems.append(f"SD-04 ruling does not bind approved {field}")
         if not str(ruling.get("implementation_record", "")).strip():
-            problems.append("SD-04 specialist ruling lacks an implementation record")
+            problems.append("SD-04 ruling lacks an implementation record")
 
         if output.get("public_force") != "AUTHORIZED_BY_REGIME" \
                 or output.get("evaluation_status") != "status_by_length" \
@@ -400,8 +443,8 @@ def validate(record: dict, decisions: dict, references: dict) -> list[str]:
                 or precision.get("significant_digit_cap") not in {1, 2} \
                 or not str(precision.get("reason", "")).strip():
             problems.append("approved SD-04 precision policy is invalid")
-        if not str(reviewer_name or "").strip():
-            problems.append("approved SD-04 output lacks a reviewer authority")
+        if not str(approved_authority or "").strip():
+            problems.append("approved SD-04 output lacks a decision authority")
     if not str(output.get("public_caveat", "")).strip():
         problems.append("output policy has no public caveat")
     return problems
@@ -416,7 +459,7 @@ def main() -> None:
         raise SystemExit(1)
     count = sum(len(row["parameters"]) for row in record["regions"]) \
         + len(record["physical_constants"])
-    print(f"Mechanical parameter validation: PASS ({count} parameters; SD-04 fail-closed)")
+    print(f"Mechanical parameter validation: PASS ({count} parameters; SD-04 regime-bound)")
 
 
 if __name__ == "__main__":

@@ -76,12 +76,13 @@ def validate(scope: dict, presentation: dict, sarcomere: dict, claims: dict,
             or "no tissue-specific claim" not in badge.lower():
         problems.append("public badge must name Q8WZ42-1 and its exact citation-reviewed scope")
     mechanics = scope.get("mechanics") or {}
-    if "rat psoas" not in str(mechanics.get("display_label", "")).lower():
-        problems.append("mechanics display label must expose the rat-psoas transfer")
-    if mechanics.get("review_status") != "DEFERRED" or not mechanics.get("transfers"):
+    mechanics_label = str(mechanics.get("display_label", "")).lower()
+    if "rat/rabbit" not in mechanics_label or "recombinant-human" not in mechanics_label:
+        problems.append("mechanics display label must expose its cross-preparation transfers")
+    if mechanics.get("review_status") != "APPROVED" or not mechanics.get("transfers"):
         problems.append("mechanics transfer/review status is incomplete")
-    if "absolute pn withheld" not in str(mechanics.get("display_label", "")).lower():
-        problems.append("mechanics label must disclose that absolute pN is withheld")
+    if "approximate passive pn per titin" not in mechanics_label:
+        problems.append("approved mechanics label must state the bounded output semantics")
     if not scope.get("structural_context", {}).get("transfers"):
         problems.append("structural-context transfers are not enumerated")
     if scope.get("render", {}).get("review_status") != "APPROVED":
@@ -154,7 +155,7 @@ def main() -> None:
     if problems:
         print("SC-20 scientific scope validation failed:\n  - " + "\n  - ".join(problems))
         raise SystemExit(1)
-    print("SC-20 scientific scope: PASS (owner-authorized rulings and deferred transfers are explicit)")
+    print("SC-20 scientific scope: PASS (owner-authorized rulings and transfer limits are explicit)")
 
 
 if __name__ == "__main__":

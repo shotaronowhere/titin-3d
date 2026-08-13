@@ -217,12 +217,22 @@ window.__titinBoot = { ready: false, problems: [] };
   #objectTooltipText { color: #cbd4de; font-size: 10px; margin-top: 2px; }
   #objectInspector { position: absolute; z-index: 8; pointer-events: auto; width: min(370px, calc(100% - 24px));
     padding: 11px 12px; border-radius: 8px; color: var(--text); background: rgb(22 27 34 / 97%);
-    border: 1px solid rgb(255 176 192 / 65%); box-shadow: 0 12px 34px rgb(0 0 0 / 44%); }
+    border: 1px solid rgb(255 176 192 / 65%); box-shadow: 0 12px 34px rgb(0 0 0 / 44%);
+    max-height: calc(100% - var(--stage-bar-h, 114px) - 128px); overflow-y: auto;
+    overscroll-behavior: contain; }
+  /* SC-22: Guided owns the compact on-stage card. Evidence owns the full drawer
+     at every viewport, so the same long claim is never painted twice. */
+  #app[data-mode="evidence"] #objectInspector { display: none; }
+  #app[data-mode="guided"] #objectInspectorClaim .claim-view-specialist,
+  #app[data-mode="guided"] #objectInspectorClaim .claim-view-fields,
+  #app[data-mode="guided"] #objectInspectorClaim .claim-view-limitations,
+  #app[data-mode="guided"] #objectInspectorClaim .claim-view-not-claimed {
+    display: none;
+  }
+  #app[data-mode="guided"] #objectInspectorClaim .claim-view-source:nth-of-type(n+3) {
+    display: none;
+  }
   .object-inspector-head { display: flex; align-items: flex-start; gap: 8px; }
-  /* The identity block takes the room and the nav group keeps the right edge,
-     rather than the head's shape depending on how long this structure's
-     evidence chip happens to be. */
-  .object-inspector-head > div:first-child { flex: 1; min-width: 0; }
   .object-inspector-title { flex: 1; font-size: 14px; font-weight: 650; }
   .object-evidence { display: inline-block; margin: 3px 0 6px; color: #f0cc7a;
     font-size: 9px; font-weight: 700; letter-spacing: .035em; }
@@ -231,7 +241,6 @@ window.__titinBoot = { ready: false, problems: [] };
     color: var(--dim); font-size: 10px; }
   /* Inside the disclosure the summary already carries the rule that separates
      the specialist text from the lay text; a second one would draw two. */
-  #objectInspectorDetails .object-detail { margin-top: 0; padding-top: 6px; border-top: 0; }
   .object-detail b { color: var(--text); font-weight: 600; }
   /* SC-13. Five stacked full-width links read as a bibliography the card was
      never meant to be. One muted line at the foot cites the same records and
@@ -248,7 +257,7 @@ window.__titinBoot = { ready: false, problems: [] };
     margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--edge); list-style: none; }
   .object-disclosure::before { content: "▸ "; }
   details[open] > .object-disclosure::before { content: "▾ "; }
-  .object-inspector-nav { display: flex; gap: 4px; }
+  .object-inspector-nav { display: flex; gap: 4px; margin-left: auto; }
   .object-instance { color: #ffd7e0; font-size: 9px; margin-top: 4px; }
   /* The route from a structure to the reviewed card that discusses it. Full
      width and left-aligned: it is a link to a named card, not a chrome control,
@@ -256,6 +265,40 @@ window.__titinBoot = { ready: false, problems: [] };
   .object-expert-link button { width: 100%; margin-top: 8px; text-align: left;
     font-size: 10px; line-height: 1.35; border-color: rgb(255 176 192 / 45%); }
   .object-expert-link button[hidden] { display: none; }
+  .claim-view { color: var(--text); }
+  .claim-view-title { margin: 0 0 6px; color: var(--text); font-size: 14px;
+    line-height: 1.3; text-transform: none; letter-spacing: 0; }
+  .claim-view-plain { margin: 0 0 8px; color: #d6dde5; font-size: 11px; }
+  .claim-view-specialist { margin: 0 0 8px; color: var(--dim); font-size: 10px; }
+  .claim-view-specialist summary { cursor: pointer; color: #dfe7f2; font-weight: 650; }
+  .claim-view-specialist p { margin: 6px 0 0; }
+  .claim-view-fields { margin: 8px 0 0; }
+  .claim-view-fields dt { color: #dfe7f2; font-size: 10px; font-weight: 650; }
+  .claim-view-fields dd { margin: 1px 0 7px; color: var(--dim); font-size: 10px; }
+  .claim-field-status { display: inline-block; margin-left: 4px; border: 1px solid #775b29;
+    border-radius: 999px; padding: 0 5px; color: #f0cc7a; font-size: 9px;
+    font-weight: 750; letter-spacing: .04em; vertical-align: 1px; }
+  .claim-view h4 { margin: 9px 0 3px; color: #dfe7f2; font-size: 10px; }
+  .claim-view-limitations, .claim-view-not-claimed { color: var(--dim); font-size: 10px; }
+  .claim-view-sources { margin-top: 9px; padding-top: 7px; border-top: 1px solid var(--edge);
+    color: var(--dim); font-size: 9px; }
+  .claim-view-source { margin-top: 3px; }
+  .claim-view-source a { color: var(--source-link); text-decoration: underline;
+    text-underline-offset: 2px; }
+  .claim-source-id { overflow-wrap: anywhere; color: #7f8b9c; }
+  .source-filters { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 7px; }
+  .source-result { margin-top: 7px; border: 1px solid var(--edge); border-radius: 5px;
+    padding: 7px 8px; }
+  .source-result summary { cursor: pointer; color: #dfe7f2; font-weight: 650; }
+  .source-result-title { display: block; }
+  .source-result-citation { display: block; color: var(--dim); font-size: 10px;
+    font-weight: 400; }
+  .source-result-meta { margin-top: 6px; color: var(--dim); font-size: 10px; }
+  .source-support { margin-top: 7px; padding-top: 6px; border-top: 1px solid var(--edge); }
+  .source-support dl { display: grid; grid-template-columns: 88px minmax(0, 1fr);
+    gap: 2px 7px; margin: 3px 0 0; }
+  .source-support dt { color: #aeb9c7; }
+  .source-support dd { margin: 0; overflow-wrap: anywhere; }
   #guidedSelection { margin: 0 0 9px; padding: 6px 8px; border-left: 2px solid var(--titin);
     background: rgb(255 93 125 / 8%); color: #d8dfe7; font-size: 10px; }
   #selectedEvidence[hidden] { display: none; }
@@ -370,6 +413,8 @@ window.__titinBoot = { ready: false, problems: [] };
   .mechanics-audit .force-chart { margin-top: 7px; background: #11161d; }
   .mechanics-audit .force-chart text { fill: #aeb9c7; font: 10px system-ui, sans-serif; }
   .mechanics-audit .force-chart .axis-title { fill: #dfe7f2; font-weight: 650; }
+  .mechanics-audit .force-current-point { cursor: pointer; }
+  .mechanics-audit .force-current-point:focus { stroke: var(--focus); stroke-width: 4; }
   .mechanics-audit .force-readout { margin-top: 7px; color: #ffd7e0;
     font-variant-numeric: tabular-nums; font-weight: 650; }
   @media (max-width: 460px) { .lattice-pair { grid-template-columns: 1fr; } }
@@ -533,10 +578,6 @@ window.__titinBoot = { ready: false, problems: [] };
     #panel { position: fixed; inset: auto 0 var(--stage-bar-h, 114px); z-index: 20;
       max-height: 64vh; border-left: 0;
       border-top: 1px solid var(--edge); border-radius: 12px 12px 0 0; box-shadow: 0 -16px 50px rgb(0 0 0 / 50%); }
-    /* The drawer already contains the synchronized selected-structure card. At
-       phone widths, suppress its canvas duplicate so two long explanations do
-       not overlap while preserving the pinned state in the drawer. */
-    #app[data-mode="evidence"] #objectInspector { display: none; }
     #objectInspector { width: min(340px, calc(100% - 18px)); }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -563,24 +604,18 @@ window.__titinBoot = { ready: false, problems: [] };
          them and a specialist goes looking for them. -->
     <section id="objectInspector" aria-label="Pinned structure explanation" hidden>
       <div class="object-inspector-head">
-        <div>
-          <div class="object-inspector-title" id="objectInspectorTitle"></div>
-          <div class="object-evidence" id="objectInspectorEvidence"></div>
-        </div>
         <div class="object-inspector-nav">
           <button id="objectInspectorPrevious" aria-label="Previous structure">&#8249;</button>
           <button id="objectInspectorNext" aria-label="Next structure">&#8250;</button>
           <button id="objectInspectorClose" aria-label="Close pinned structure explanation">Close</button>
         </div>
       </div>
+      <div id="objectInspectorClaim"></div>
       <div class="object-instance" id="objectInspectorInstance" hidden></div>
-      <div class="object-lay" id="objectInspectorLay"></div>
-      <details id="objectInspectorDetails">
-        <summary class="object-disclosure">For specialists</summary>
-        <div class="object-detail" id="objectInspectorDetail"></div>
-      </details>
-      <div class="object-expert-link"><button id="objectInspectorExpertLink" hidden></button></div>
-      <div class="object-sources" id="objectInspectorSources"></div>
+      <div class="object-expert-link">
+        <button id="objectInspectorSourcesLink">Sources for this object</button>
+        <button id="objectInspectorExpertLink" hidden></button>
+      </div>
     </section>
     <div id="objectAnnouncement" class="sr-only" aria-live="polite"></div>
     <div id="stageChrome">
@@ -712,9 +747,6 @@ window.__titinBoot = { ready: false, problems: [] };
     </div>
 
     <div id="panelInspect" role="tabpanel" aria-labelledby="tabInspect">
-      <h2 id="selectedStructureHeading">Selected structure</h2>
-      <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
-
       <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
       <div class="sub" id="viewDescription">Titin positioned on the thick-filament periphery beside
         one myosin thick filament and its six nearest actin thin filaments; the representative
@@ -781,6 +813,10 @@ window.__titinBoot = { ready: false, problems: [] };
     </div>
 
     <div id="panelEvidence" role="tabpanel" aria-labelledby="tabEvidence" hidden>
+      <h2 id="selectedStructureHeading">Selected structure</h2>
+      <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
+      <button id="selectedEvidenceSourcesLink" hidden>Sources for this object</button>
+
       <h2>Scientific decisions</h2>
       <div class="note warn" id="scientificDecisionStatus"></div>
       <h2>Current guided claim</h2>
@@ -809,16 +845,21 @@ window.__titinBoot = { ready: false, problems: [] };
     </div>
 
     <div id="panelSources" role="tabpanel" aria-labelledby="tabSources" hidden>
+      <h2>Sources</h2>
+      <div class="sub" id="sourceContextLabel" style="margin:0 0 6px"></div>
+      <div class="source-filters" id="sourceFilters" role="group"
+        aria-label="Filter sources by the current context">
+        <button data-source-scope="value">Sources for this value</button>
+        <button data-source-scope="object">Sources for this object</button>
+        <button data-source-scope="chapter">Sources for this chapter</button>
+        <button data-source-scope="all">All sources</button>
+      </div>
+      <div id="bibliography" aria-live="polite"></div>
+
       <h2>How this model was built</h2>
       <div class="sub" style="margin:0 0 6px">Every figure below is counted from the
         loaded records when this page renders, not written into the copy.</div>
       <div id="provenancePipeline"></div>
-
-      <h2>Bibliography</h2>
-      <div class="sub" style="margin:0 0 6px">Every record in the canonical registry,
-        ordered by citation. A titin-coloured rule marks the records this build's
-        annotations and chapters actually cite.</div>
-      <div id="bibliography"></div>
 
       <h2>Cite this view</h2>
       <div class="sub" style="margin:0 0 6px">The link restores this exact state; the
@@ -844,6 +885,7 @@ import { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
 // The presenter key map. In a module, not here, so release/PRESENTER_SCRIPT.md
 // can print the keys this page actually binds rather than restating them.
 import { presenterKeys, unboundShortcutIds } from './src/presentation/PresenterKeys.js';
+import { renderClaimView } from './src/presentation/ClaimViewRenderer.js';
 // The evidence vocabulary is imported, never restated here. This panel used to
 // hardcode a five-class list, which silently sorted a MODELED claim into UNKNOWN —
 // understating it by four rungs of the ladder. Importing makes that class of drift
@@ -879,7 +921,7 @@ const state = { showDomains: false, showFilamentContext: true,
                 // the shared URL state: it is a reading position, not a claim
                 // about the model, and story.serialize() is the contract for
                 // what a shared link reproduces.
-                drawerTab: 'inspect' };
+                drawerTab: 'inspect', sourceFilter: 'auto', selectedSourceValue: null };
 
 try {
   visualization = await TitinVisualization.create($('canvas'), {
@@ -1023,19 +1065,30 @@ function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {
   rebuild();
   if (focusDrawer) requestAnimationFrame(() => $('closeEvidence').focus());
   if (restoreFocus) {
-    const target = evidenceReturnFocus?.isConnected ? evidenceReturnFocus : $('audienceEvidence');
-    requestAnimationFrame(() => target.focus());
+    requestAnimationFrame(() => {
+      const target = evidenceReturnFocus?.isConnected
+        && !evidenceReturnFocus.disabled && evidenceReturnFocus.getClientRects().length
+        ? evidenceReturnFocus : $('audienceEvidence');
+      target.focus();
+    });
   }
   markStageDirty();
 }
 
 function openEvidence(trigger, targetTab) {
-  evidenceReturnFocus = trigger;
+  // A route used from inside the drawer changes its section, not the surface that
+  // originally opened it. Retaining the outer invoker gives Close a visible focus
+  // target instead of trying to focus a now-hidden parameter or chart control.
+  if (trigger && !$('panel').contains(trigger)) evidenceReturnFocus = trigger;
   if (!DRAWER_TABS.some(([id]) => id === targetTab)) {
     throw new Error(`Unknown evidence drawer tab '${targetTab}'`);
   }
   state.drawerTab = targetTab;
   syncDrawerTabs();
+  if (targetTab === 'sources') renderBibliography();
+  // Entry points name a destination, so they must land at that destination's
+  // beginning even when invoked from far down another drawer section.
+  $('panel').scrollTop = 0;
   setAudienceMode(AUDIENCE_MODES.evidence, { focusDrawer: true });
 }
 
@@ -1069,6 +1122,7 @@ for (const [id, tabId] of DRAWER_TABS) {
   $(tabId).onclick = () => {
     state.drawerTab = id;
     syncDrawerTabs();
+    if (id === 'sources') renderBibliography();
     // The drawer is one scroll container, so a section opened from halfway down
     // another one would start halfway down itself.
     $('panel').scrollTop = 0;
@@ -1590,8 +1644,11 @@ function renderExtensionChart(showcase) {
   card.hidden = !show;
   if (!show) { $('extensionRows').replaceChildren(); return; }
   const chart = showcase.extension_chart;
+  const mechanicsDecision = model.spec.mechanicalParameters.decision.status;
   $('extensionTotal').textContent = `${chart.total_nm.toFixed(1)} nm total · ${chart.evidence_class}`
-    + ' · common-force development solver; absolute pN withheld pending transfer validation';
+    + (mechanicsDecision === 'APPROVED'
+      ? ' · common-force literature-bounded solver; see Passive force for regime and sensitivity'
+      : ' · common-force development solver; absolute pN withheld pending transfer validation');
   const maxExtension = Math.max(...chart.regions.map((region) => region.extension_nm));
   const mechanismMark = { folded: '●—● straighten', composite: '● + ∿', disordered: '∿ extends' };
   const rows = chart.regions.map((region) => {
@@ -1800,7 +1857,7 @@ function renderLatticeCrossSection() {
   guided.replaceChildren(...(show ? [build()] : []));
 }
 
-function numericForceChart(curve) {
+function numericForceChart(curve, selectCurrentPoint) {
   const numeric = curve.points.filter((point) => Number.isFinite(point.force_pN));
   if (!numeric.length) return null;
   const width = 620; const height = 300;
@@ -1819,7 +1876,7 @@ function numericForceChart(curve) {
   const x = (value) => margin.left + ((value - xMin) / (xMax - xMin)) * plotWidth;
   const y = (value) => margin.top + (1 - (value - yMin) / (yMax - yMin)) * plotHeight;
   const svg = svgElement('svg', {
-    class: 'force-chart', viewBox: `0 0 ${width} ${height}`, role: 'img',
+    class: 'force-chart', viewBox: `0 0 ${width} ${height}`, role: 'group',
     'aria-label': 'Approximate passive force per titin across sarcomere length, with supported and extrapolated regimes and parameter sensitivity range.',
   });
   if (curve.supported_range_nm) {
@@ -1888,9 +1945,20 @@ function numericForceChart(curve) {
   if (Number.isFinite(curve.current?.force_pN)) {
     const markerX = x(curve.current.sarcomere_length_nm);
     const markerY = y(curve.current.force_pN);
-    svg.append(svgElement('circle', {
-      cx: markerX, cy: markerY, r: 5, fill: '#f5f7fa', stroke: '#ff5d7d', 'stroke-width': 2,
-    }));
+    const marker = svgElement('circle', {
+      class: 'force-current-point', cx: markerX, cy: markerY, r: 7,
+      fill: '#f5f7fa', stroke: '#ff5d7d', 'stroke-width': 2,
+      role: 'button', tabindex: 0,
+      'aria-label': `Sources for modeled chart point at ${curve.current.sarcomere_length_nm} nm, `
+        + `${curve.current.precision?.text || `${curve.current.force_pN} pN`}, ${curve.current.status}`,
+    });
+    marker.addEventListener('click', () => selectCurrentPoint(marker));
+    marker.addEventListener('keydown', (event) => {
+      if (!['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      selectCurrentPoint(marker);
+    });
+    svg.append(marker);
     svg.append(svgElement('text', {
       x: Math.min(markerX + 8, width - margin.right - 6), y: markerY - 9,
       'text-anchor': markerX > width - 170 ? 'end' : 'start', fill: '#f5f7fa',
@@ -1907,7 +1975,7 @@ function numericForceChart(curve) {
   return svg;
 }
 
-/** SC-21 status-bearing mechanics surface. Deferred means no numeric force plot. */
+/** SC-21 status-bearing mechanics surface. Omission regimes have no numeric force plot. */
 function renderForceCurve() {
   const curve = visualization.forceCurve();
   const wrapper = document.createElement('div');
@@ -1918,7 +1986,16 @@ function renderForceCurve() {
   status.textContent = `Force evaluation: ${curve.status.replaceAll('_', ' ')}`;
   const scope = document.createElement('div');
   scope.className = 'scope-warning';
-  const chart = numericForceChart(curve);
+  const selectModeledPointSources = (trigger) => {
+    state.selectedSourceValue = {
+      label: `Modeled chart point at ${curve.current.sarcomere_length_nm} nm `
+        + `(${curve.current.precision?.text || `${curve.current.force_pN} pN`}; ${curve.current.status})`,
+      claimIds: [curve.claim_id, 'force_law_parameter_set'],
+    };
+    state.sourceFilter = 'value';
+    openEvidence(trigger, 'sources');
+  };
+  const chart = numericForceChart(curve, selectModeledPointSources);
   scope.textContent = chart
     ? `${curve.current.reason} Approximate passive force per titin only; active force and non-titin passive contributions are excluded.`
     : `${curve.current?.reason || curve.caveat} No absolute force magnitude, supported validity range, or human-construct prediction is claimed.`;
@@ -1974,22 +2051,48 @@ function renderForceCurve() {
     const row = document.createElement('tr');
     const name = document.createElement('td'); name.textContent = parameter.id;
     const value = document.createElement('td');
-    value.textContent = parameter.value === null
+    const valueText = parameter.value === null
       ? parameter.value_from_spec
       : `${parameter.value} ${parameter.unit}`;
+    value.append(document.createTextNode(valueText));
+    const parameterSource = document.createElement('button');
+    parameterSource.textContent = 'Exact source';
+    parameterSource.className = 'parameter-source-link';
+    parameterSource.onclick = () => {
+      state.selectedSourceValue = {
+        label: `${parameter.id}: ${valueText}`,
+        sourceRows: [parameter.source_context],
+      };
+      state.sourceFilter = 'value';
+      openEvidence(parameterSource, 'sources');
+    };
+    value.append(document.createTextNode(' '), parameterSource);
     const preparation = document.createElement('td');
     preparation.textContent = `${parameter.species} · ${parameter.preparation} · ${parameter.source_id}`;
     preparation.title = parameter.source_locator;
     const applicability = document.createElement('td');
-    const reviewer = parameter.approved_reviewer || 'no SD-04-approved reviewer';
+    const decisionAuthority = parameter.approved_reviewer
+      || parameter.approved_authority || 'no SD-04-approved decision authority';
     applicability.textContent = `${parameter.applicability}; ${parameter.transfer_rationale} `
       + `Target validity: ${parameter.validity.target_status} — ${parameter.validity.reason} `
-      + `Reviewer: ${reviewer}.`;
+      + `Decision authority: ${decisionAuthority}.`;
     row.append(name, value, preparation, applicability); parameterTable.append(row);
   }
+  const auditLinks = document.createElement('div');
+  auditLinks.className = 'row';
+  const parametersLink = document.createElement('button');
+  parametersLink.textContent = 'Parameters behind this modeled output';
+  parametersLink.onclick = () => {
+    details.open = true;
+    parameterTable.scrollIntoView({ block: 'nearest' });
+  };
+  const outputSourcesLink = document.createElement('button');
+  outputSourcesLink.textContent = 'Sources for this modeled output';
+  outputSourcesLink.onclick = () => selectModeledPointSources(outputSourcesLink);
+  auditLinks.append(parametersLink, outputSourcesLink);
   details.append(summary, identity, equations, parameterTable);
   wrapper.append(status, scope, ...(chart ? [chart] : []), readout,
-    contributionHeading, contributionTable, details);
+    contributionHeading, contributionTable, auditLinks, details);
   $('forceCurve').replaceChildren(wrapper);
 }
 
@@ -2002,23 +2105,16 @@ function renderChapter() {
   $('chapterSummary').textContent = chapter.lay_summary;
   $('chapterPrevious').disabled = index <= 0;
   $('chapterNext').disabled = index >= story.chapters.length - 1;
-  $('chapterEvidenceTitle').textContent = `${chapter.title} · ${chapter.evidence_class}`;
-  $('chapterExpert').textContent = chapter.expert_expansion;
-  const sources = visualization.sources(chapter.source_ids);
-  const sourceNodes = [document.createTextNode('Sources: ')];
-  sources.forEach((source, index) => {
-    if (index) sourceNodes.push(document.createTextNode('; '));
-    const link = document.createElement('a');
-    link.href = source.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
-    link.textContent = source.citation; link.title = source.title;
-    sourceNodes.push(link);
-  });
-  $('chapterSources').replaceChildren(...sourceNodes);
-  $('chapterNotClaimed').replaceChildren(...chapter.not_claimed.map((claim) => {
-    const item = document.createElement('li');
-    item.textContent = `Not claimed: ${claim}`;
-    return item;
-  }));
+  const claimNode = renderClaimView(visualization.claimView(chapter.target_claim_id, {
+    presentationRecord: chapter,
+  }), document);
+  claimNode.querySelector('.claim-view-title').id = 'chapterEvidenceTitle';
+  claimNode.querySelector('.claim-view-specialist p').id = 'chapterExpert';
+  claimNode.querySelector('.claim-view-sources').id = 'chapterSources';
+  const chapterNotClaimed = claimNode.querySelector('.claim-view-not-claimed');
+  if (chapterNotClaimed) chapterNotClaimed.id = 'chapterNotClaimed';
+  $('chapterEvidence').replaceChildren(claimNode);
+  if (state.drawerTab === 'sources') renderBibliography();
   renderScienceOverlay();
   renderExtensionChart(activeShowcaseOverlay);
   renderProvenancePipeline();
@@ -2353,51 +2449,6 @@ function evidenceSummary(annotation) {
   return `Claim ${annotation.evidence.claim_class} · render ${annotation.evidence.render_class}`;
 }
 
-function sourceLinks(sources) {
-  return sources.map((source) => {
-    const link = document.createElement('a');
-    link.href = source.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
-    link.textContent = source.citation; link.title = source.title;
-    return link;
-  });
-}
-
-/**
- * One muted line rather than a stack of full-width links. The full title stays
- * available on hover and to assistive technology, so compactness costs nothing
- * a reader actually needs.
- */
-function sourceLine(sources) {
-  const fragment = document.createDocumentFragment();
-  fragment.append(document.createTextNode('Sources: '));
-  sources.forEach((source, index) => {
-    if (index) fragment.append(document.createTextNode(' · '));
-    const link = document.createElement('a');
-    link.href = source.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
-    link.textContent = source.citation; link.title = source.title;
-    fragment.append(link);
-  });
-  return fragment;
-}
-
-function detailBlock(annotation) {
-  const fragment = document.createDocumentFragment();
-  const expert = document.createElement('div');
-  const expertLabel = document.createElement('b'); expertLabel.textContent = 'Expert: ';
-  expert.append(expertLabel, document.createTextNode(annotation.expert_text));
-  const scope = document.createElement('div');
-  const scopeLabel = document.createElement('b'); scopeLabel.textContent = 'Scope: ';
-  scope.append(scopeLabel, document.createTextNode(annotation.scope));
-  const render = document.createElement('div');
-  const renderLabel = document.createElement('b'); renderLabel.textContent = 'Render means: ';
-  render.append(renderLabel, document.createTextNode(annotation.render_meaning));
-  const nonclaim = document.createElement('div');
-  const nonclaimLabel = document.createElement('b'); nonclaimLabel.textContent = 'Not claimed: ';
-  nonclaim.append(nonclaimLabel, document.createTextNode(annotation.not_claimed.join('; ')));
-  fragment.append(expert, scope, render, nonclaim);
-  return fragment;
-}
-
 // SC-5. Expert cards are static Evidence-mode records, so they are built once from
 // the validated presentation catalog. Text goes in through safe DOM APIs and every
 // citation is resolved through the canonical bibliography rather than restated here.
@@ -2405,59 +2456,113 @@ function renderExpertCards() {
   const container = $('expertCards');
   const cards = visualization.expertCards();
   container.replaceChildren(...cards.map((card) => {
-    const box = document.createElement('div');
-    box.className = 'note';
+    const box = renderClaimView(visualization.claimView(card.target_claim_id, {
+      presentationRecord: card,
+    }), document);
+    box.classList.add('note');
     box.dataset.card = card.id;
-    const title = document.createElement('b'); title.textContent = card.title;
-    const evidence = document.createElement('div');
-    evidence.className = 'object-evidence';
-    evidence.textContent = `Evidence ${card.evidence_class} · Evidence mode only`;
-    const body = document.createElement('div'); body.textContent = card.body;
-    // The plan's gate is that a card DISTINGUISHES established findings from
-    // proposed mechanisms, so the split is rendered as labelled rows rather than
-    // left for a reader to infer from how carefully the prose hedges.
-    const findings = document.createElement('ul');
-    findings.className = 'card-findings';
-    findings.append(...card.findings.map((found) => {
-      const item = document.createElement('li');
-      const status = document.createElement('span');
-      status.className = `finding-status finding-${found.status}`;
-      status.textContent = found.status;
-      const text = document.createElement('span');
-      text.textContent = found.text;
-      item.append(status, text);
-      return item;
-    }));
-    const sources = document.createElement('div');
-    sources.className = 'object-sources';
-    sources.append(...sourceLinks(card.sources));
-    const nonclaim = document.createElement('div');
-    const nonclaimLabel = document.createElement('b');
-    nonclaimLabel.textContent = 'Not claimed: ';
-    nonclaim.append(nonclaimLabel, document.createTextNode(card.not_claimed.join('; ')));
-    box.append(title, evidence, body, findings, nonclaim, sources);
     return box;
   }));
 }
 
-// SC-13. 46 reviewed records were reachable only one claim at a time. The full
-// registry is static for a build, so it is rendered once, in the tab a reader
-// goes to when they want the corpus rather than a single citation.
+function sourceObjectDescriptor() {
+  const annotation = resolvedAnnotation(pinnedPick)
+    || (visualization.currentState()
+      ? visualization.annotations().find((candidate) => candidate.target_id === state.selectedTarget)
+      : model.spec.annotations.components
+        .find((candidate) => candidate.target_id === state.selectedTarget))
+    || null;
+  return annotation ? {
+    label: annotation.label,
+    claimIds: annotation.claim_support_ids,
+  } : null;
+}
+
+function sourceChapterDescriptor() {
+  const chapter = activeChapter();
+  return chapter ? {
+    label: chapter.title,
+    claimIds: [chapter.target_claim_id],
+    sourceIds: chapter.source_ids,
+  } : null;
+}
+
+function sourceSupportNode(support) {
+  const block = document.createElement('div');
+  block.className = 'source-support';
+  const claim = document.createElement('b');
+  claim.textContent = support.claimId === 'Registry record'
+    ? support.claimId : `Supports ${support.claimId}`;
+  const list = document.createElement('dl');
+  for (const [label, value] of [
+    ['Species', support.species],
+    ['Tissue', support.muscleOrTissue],
+    ['Preparation', support.preparation],
+    ['Locator', support.locator],
+    ['Relationship', support.relationship],
+    ['Extraction note', support.extractionNote],
+  ]) {
+    const term = document.createElement('dt'); term.textContent = label;
+    const detail = document.createElement('dd'); detail.textContent = value;
+    list.append(term, detail);
+  }
+  block.append(claim, list);
+  return block;
+}
+
+// SC-22. This retains visualization.bibliography() as the all-registry facade,
+// then resolves the actual drawer through the stricter contextual precedence.
 function renderBibliography() {
-  const entries = visualization.bibliography();
-  $('bibliography').replaceChildren(...entries.map((entry) => {
+  const canonicalRegistry = visualization.bibliography();
+  const result = visualization.sourceContext({
+    requestedScope: state.sourceFilter,
+    selectedValue: state.selectedSourceValue,
+    selectedObject: sourceObjectDescriptor(),
+    currentChapter: sourceChapterDescriptor(),
+  });
+  state.sourceFilter = result.requestedScope === 'auto' ? 'auto' : result.scope;
+  $('sourceContextLabel').textContent = `${result.label} · ${result.entries.length} record(s)`;
+  for (const button of $('sourceFilters').children) {
+    const scope = button.dataset.sourceScope;
+    const on = result.scope === scope;
+    button.classList.toggle('on', on);
+    button.setAttribute('aria-pressed', String(on));
+    button.disabled = scope !== 'all' && !result.available[scope];
+  }
+  $('bibliography').dataset.registryCount = String(canonicalRegistry.length);
+  $('bibliography').dataset.sourceScope = result.scope;
+  $('bibliography').replaceChildren(...result.entries.map((entry) => {
     const row = document.createElement('div');
-    row.className = 'bib-row';
-    const link = document.createElement('a');
-    link.href = entry.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
-    link.textContent = entry.citation;
+    row.className = 'source-result';
+    row.dataset.sourceId = entry.id;
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
     const title = document.createElement('span');
-    title.className = 'bib-title';
-    title.textContent = ` — ${entry.title}`;
-    row.append(link, title);
+    title.className = 'source-result-title'; title.textContent = entry.title;
+    const citation = document.createElement('span');
+    citation.className = 'source-result-citation'; citation.textContent = entry.citation;
+    summary.append(title, citation);
+    const meta = document.createElement('div'); meta.className = 'source-result-meta';
+    const offline = document.createElement('div');
+    offline.textContent = `Offline source ID: ${entry.id}`;
+    meta.append(offline);
+    if (entry.href) {
+      const link = document.createElement('a');
+      link.href = entry.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.textContent = 'Open external source';
+      meta.append(document.createTextNode(' · '), link);
+    }
+    meta.append(...entry.support.map(sourceSupportNode));
+    details.append(summary, meta); row.append(details);
     if (entry.cited) row.dataset.cited = 'true';
     return row;
   }));
+}
+for (const button of $('sourceFilters').children) {
+  button.onclick = () => {
+    state.sourceFilter = button.dataset.sourceScope;
+    renderBibliography();
+  };
 }
 renderBibliography();
 
@@ -2488,21 +2593,33 @@ function resolvedAnnotation(selection) {
   return selection ? visualization.resolveAnnotation(selection) : null;
 }
 
+function claimViewForAnnotation(annotation) {
+  const claimIds = annotation?.claim_support_ids || [];
+  if (!claimIds.length) {
+    throw new Error(`Selected annotation '${annotation?.id || 'unknown'}' has no canonical claim.`);
+  }
+  return visualization.claimView(claimIds[0], {
+    annotation,
+    relatedClaimIds: claimIds,
+  });
+}
+
+function openObjectSources(trigger) {
+  state.selectedSourceValue = null;
+  state.sourceFilter = 'object';
+  openEvidence(trigger, 'sources');
+}
+$('objectInspectorSourcesLink').onclick = () => openObjectSources($('objectInspectorSourcesLink'));
+$('selectedEvidenceSourcesLink').onclick = () => openObjectSources($('selectedEvidenceSourcesLink'));
+
 function renderSelectedEvidence(annotation) {
   const box = $('selectedEvidence');
   // An empty heading over nothing reads as a section that failed to load.
   $('selectedStructureHeading').hidden = !annotation;
   box.hidden = !annotation;
+  $('selectedEvidenceSourcesLink').hidden = !annotation;
   if (!annotation) { box.replaceChildren(); return; }
-  const title = document.createElement('b'); title.textContent = annotation.label;
-  const evidence = document.createElement('div'); evidence.className = 'object-evidence';
-  evidence.textContent = evidenceSummary(annotation);
-  const lay = document.createElement('div'); lay.textContent = annotation.lay_text;
-  const detail = document.createElement('div'); detail.className = 'object-detail';
-  detail.append(detailBlock(annotation));
-  const sources = document.createElement('div'); sources.className = 'object-sources';
-  sources.append(...sourceLinks(annotation.sources));
-  box.replaceChildren(title, evidence, lay, detail, sources);
+  box.replaceChildren(renderClaimView(claimViewForAnnotation(annotation), document));
 }
 
 function renderPinnedSelection() {
@@ -2511,19 +2628,14 @@ function renderPinnedSelection() {
   inspector.hidden = !annotation;
   if (!annotation) {
     $('guidedSelection').hidden = true;
+    $('objectInspectorClaim').replaceChildren();
     renderSelectedEvidence(null);
     syncAnnotationIndex();
     objectOverlaySignature = null;
     return;
   }
-  $('objectInspectorTitle').textContent = annotation.label;
-  $('objectInspectorEvidence').textContent = evidenceSummary(annotation);
-  $('objectInspectorLay').textContent = annotation.lay_text;
-  $('objectInspectorDetail').replaceChildren(detailBlock(annotation));
-  $('objectInspectorSources').replaceChildren(sourceLine(annotation.sources));
-  // The disclosure follows the audience the reader has already declared: a
-  // specialist in Evidence mode should not have to open it once per structure.
-  $('objectInspectorDetails').open = state.audienceMode === AUDIENCE_MODES.evidence;
+  const claimView = claimViewForAnnotation(annotation);
+  $('objectInspectorClaim').replaceChildren(renderClaimView(claimView, document));
   // Seven reviewed expert cards used to be reachable only by scrolling one
   // column in Evidence mode. Selecting the kinase region now offers the kinase
   // card, because the card itself declares the biology it is about.
@@ -2554,8 +2666,9 @@ function renderPinnedSelection() {
   // reader parse the same paragraph twice.
   $('guidedSelectionText').textContent = '';
   renderSelectedEvidence(annotation);
+  if (state.drawerTab === 'sources') renderBibliography();
   syncAnnotationIndex();
-  $('objectAnnouncement').textContent = `${annotation.label}. ${annotation.lay_text} `
+  $('objectAnnouncement').textContent = `${annotation.label}. ${claimView.plain} `
     + `${evidenceSummary(annotation)}. Sources are available in the pinned explanation.`;
   objectOverlaySignature = null;
 }
@@ -2565,6 +2678,8 @@ function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
   if (!annotation) return false;
   pinnedPick = { ...selection };
   hoverPick = null;
+  state.selectedSourceValue = null;
+  state.sourceFilter = 'auto';
   if (synchronizeBiology) {
     state.selectedTarget = annotation.target_id;
     state.region = annotation.target_type === 'titin_region' ? annotation.target_id : null;
@@ -2582,6 +2697,7 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
   pinnedPick = null; hoverPick = null; keyboardAnnotationIndex = -1;
   if (!preserveBiologicalSelection) {
     state.selectedTarget = null; state.region = null;
+    state.selectedSourceValue = null; state.sourceFilter = 'auto';
     visualization.highlightTitinRegion(null);
     syncRegions(); syncExtensionRows(); refreshRegionReadout();
     syncComponentButtons(visualization.currentState());
@@ -2590,6 +2706,7 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
   $('objectTooltip').hidden = true;
   $('objectLeader').replaceChildren();
   renderPinnedSelection();
+  if (state.drawerTab === 'sources') renderBibliography();
   markStageDirty();
   $('canvas').focus();
 }
@@ -2692,8 +2809,9 @@ function showHoverPick(pick) {
   const tooltip = $('objectTooltip');
   tooltip.hidden = !annotation || Boolean(pinnedPick);
   if (!annotation || pinnedPick) return;
+  const claimView = claimViewForAnnotation(annotation);
   $('objectTooltipLabel').textContent = `${annotation.label} · ${annotation.evidence.render_class}`;
-  $('objectTooltipText').textContent = annotation.lay_text;
+  $('objectTooltipText').textContent = claimView.plain;
   $('objectAnnouncement').textContent = `${annotation.label}. Press Enter to pin its explanation.`;
   objectOverlaySignature = null;
 }
@@ -3177,6 +3295,8 @@ function restorePresentationFromHash() {
   state.region = regionIds.has(state.selectedTarget) ? state.selectedTarget : null;
   state.showEvidence = incoming.evidence_display;
   state.cameraPreset = incoming.camera_preset;
+  state.selectedSourceValue = null;
+  state.sourceFilter = 'auto';
   pinnedPick = null; hoverPick = null;
   const [cameraKind, cameraName] = state.cameraPreset.split('.');
   state.view = cameraKind === 'view' ? cameraName : 'titin_story';

@@ -343,8 +343,14 @@ test('SC7: the page renders the route, the cards, and the counted pipeline', () 
   assert.match(page, /visualization\.provenancePipeline\(\)/);
   assert.match(page, /activeFeatures\(\)\.has\('provenance_pipeline'\)/);
   assert.match(page, /renderProvenancePipeline\(\);/);
-  assert.match(page, /className = `finding-status finding-\$\{found\.status\}`/,
-    'the established/proposed split must be visible, not implied by prose');
+  const claimRenderer = readFileSync(
+    new URL('../src/presentation/ClaimViewRenderer.js', import.meta.url), 'utf8',
+  );
+  assert.match(claimRenderer,
+    /field\.statusKind === 'finding'[\s\S]*finding-\$\{field\.evidenceClass\}/,
+    'the renderer must visibly preserve an already-resolved established/proposed split');
+  assert.doesNotMatch(page, /finding-\$\{found\.status\}/,
+    'the page must not classify a finding after the ClaimView DOM boundary');
   const drawerStart = page.indexOf('id="panel"');
   const drawerEnd = page.indexOf('</aside>', drawerStart);
   const pipelineAt = page.indexOf('id="provenancePipeline"');

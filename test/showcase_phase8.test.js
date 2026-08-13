@@ -299,8 +299,11 @@ test('SC8: focus order, keyboard route, and touch targets hold', () => {
 test('SC8: evidence and selection are never carried by colour alone', () => {
   // Evidence always reaches the reader as text.
   assert.match(page, /Claim \$\{annotation\.evidence\.claim_class\} · render \$\{annotation\.evidence\.render_class\}/);
-  assert.match(page, /className = `finding-status finding-\$\{found\.status\}`/);
-  assert.match(page, /status\.textContent = found\.status/,
+  const claimRenderer = readFileSync(
+    new URL('../src/presentation/ClaimViewRenderer.js', import.meta.url), 'utf8',
+  );
+  assert.match(claimRenderer, /classList\.add\('finding-status', `finding-\$\{field\.evidenceClass\}`\)/);
+  assert.match(claimRenderer, /status\.textContent = field\.evidenceClass/,
     'a finding status must be readable as text, not only as a colour');
   // Selection reaches assistive technology as state, not as a hue.
   assert.match(page, /aria-pressed/);

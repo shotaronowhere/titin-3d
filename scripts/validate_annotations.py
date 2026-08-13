@@ -137,8 +137,8 @@ def validate(path):
     page = (ROOT / "src" / "index.template.html").read_text(encoding="utf-8")
     require("annotation.sources.join" not in page,
             "UI never stringifies raw source IDs")
-    require("visualization.sources(chapter.source_ids)" in page,
-            "guided citations resolve through the canonical bibliography")
+    require("renderClaimView(claimViewForAnnotation(annotation), document)" in page,
+            "guided citations resolve through the canonical ClaimView bibliography")
     require("visualization.resolveAnnotation(selection)" in page,
             "tooltip, pinned card, and drawer share one annotation resolver")
     return problems

@@ -1,6 +1,6 @@
 {
   "schema": "titin-sc20-render-audit/1",
-  "model_fingerprint": "1aa3b94535eee58c282d2a5bd439b025d30410ba492d320d675eea8416fd39a6",
+  "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
   "representative_titin": {
     "depiction_policy": "one representative molecule; biological copy number is not rendered",
     "copy_number_claimed": false,
@@ -38,54 +38,54 @@
     "evidence_class": "SCHEMATIC",
     "amplitude_nm": 3.9,
     "amplitude_by_region": {
-      "N2A": 2.6915,
+      "N2A": 2.6959,
       "post_N2A_unknown": 3.9,
-      "PEVK": 3.7273
+      "PEVK": 3.7328
     },
     "span_over_contour": {
-      "N2A": 0.3099,
+      "N2A": 0.3087,
       "post_N2A_unknown": null,
-      "PEVK": 0.0443
+      "PEVK": 0.0429
     },
     "slack_fraction_by_region": {
-      "N2A": 0.6901348052689844,
+      "N2A": 0.6912524522297092,
       "post_N2A_unknown": 1,
-      "PEVK": 0.9557273572909494
+      "PEVK": 0.9571191650484853
     },
     "descriptor_fingerprint_by_region": {
-      "N2A": "369655d1",
-      "post_N2A_unknown": "d60472a4",
-      "PEVK": "2ebc41a3"
+      "N2A": "97f9c067",
+      "post_N2A_unknown": "7b180cc2",
+      "PEVK": "f46c87a9"
     },
     "by_region": {
       "N2A": {
-        "maximum_transverse_offset_nm": 2.491691019,
-        "declared_envelope_nm": 2.691525741,
+        "maximum_transverse_offset_nm": 2.495726218,
+        "declared_envelope_nm": 2.695884564,
         "canonical_endpoints_nm": [
           [
-            217.364820957,
-            5.434120524,
+            215.487311718,
+            5.387182793,
             0
           ],
           [
-            234.407406667,
-            5.860185167,
+            232.468426846,
+            5.811710671,
             0
           ]
         ],
         "rendered_endpoints_nm": [
           [
-            217.364820957,
-            5.434120524,
+            215.487311718,
+            5.387182793,
             0
           ],
           [
-            234.407406667,
-            5.860185167,
+            232.468426846,
+            5.811710671,
             0
           ]
         ],
-        "descriptor_fingerprint": "369655d1",
+        "descriptor_fingerprint": "97f9c067",
         "representation_semantics": {
           "domain_class": "N2A",
           "representative_pdb_id": "7NIP",
@@ -112,29 +112,29 @@
         "declared_envelope_nm": 3.9,
         "canonical_endpoints_nm": [
           [
-            234.407406667,
-            5.860185167,
+            232.468426846,
+            5.811710671,
             0
           ],
           [
-            234.407406667,
-            5.860185167,
+            232.468426846,
+            5.811710671,
             0
           ]
         ],
         "rendered_endpoints_nm": [
           [
-            234.407406667,
-            5.860185167,
+            232.468426846,
+            5.811710671,
             0
           ],
           [
-            234.407406667,
-            5.860185167,
+            232.468426846,
+            5.811710671,
             0
           ]
         ],
-        "descriptor_fingerprint": "d60472a4",
+        "descriptor_fingerprint": "7b180cc2",
         "representation_semantics": {
           "domain_class": "unresolved_sequence",
           "representative_pdb_id": null,
@@ -146,33 +146,33 @@
         }
       },
       "PEVK": {
-        "maximum_transverse_offset_nm": 3.519952179,
-        "declared_envelope_nm": 3.727336693,
+        "maximum_transverse_offset_nm": 3.52507822,
+        "declared_envelope_nm": 3.732764744,
         "canonical_endpoints_nm": [
           [
-            234.407406667,
-            5.860185167,
+            232.468426846,
+            5.811710671,
             0
           ],
           [
-            258.40760628,
-            6.460190157,
+            258.813554223,
+            6.470338856,
             0
           ]
         ],
         "rendered_endpoints_nm": [
           [
-            234.407406667,
-            5.860185167,
+            232.468426846,
+            5.811710671,
             0
           ],
           [
-            258.40760628,
-            6.460190157,
+            258.813554223,
+            6.470338856,
             0
           ]
         ],
-        "descriptor_fingerprint": "2ebc41a3",
+        "descriptor_fingerprint": "f46c87a9",
         "representation_semantics": {
           "domain_class": "PEVK",
           "representative_pdb_id": null,
@@ -187,7 +187,7 @@
     "contour_length_nm": {
       "N2A": 55,
       "post_N2A_unknown": null,
-      "PEVK": 542.1
+      "PEVK": 614.38
     },
     "contour_source": "titin.json regions[].extension_model.max_end2end_nm — the same contour MechanicalModel resolves as Lc",
     "meaning": "seeded transverse irregularity depicts a non-atomic flexible/unresolved chain envelope; the N2A record separately preserves its experimentally resolved structured UN2A core. Where a contour proxy exists, amplitude decreases with axial extension",

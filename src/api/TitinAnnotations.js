@@ -67,6 +67,7 @@ function freezeAnnotation(record) {
       by_claim: Object.freeze({ ...(record.evidence?.by_claim || {}) }),
     }),
     evidence_by_claim: Object.freeze({ ...(record.evidence_by_claim || {}) }),
+    claim_support_ids: Object.freeze([...(record.claim_support_ids || [])]),
     source_ids: Object.freeze([...(record.source_ids || [])]),
     sources: Object.freeze([...(record.sources || [])]),
     not_claimed: Object.freeze([...(record.not_claimed || [])]),
@@ -126,6 +127,7 @@ function componentAnnotation(model, copy, anchor) {
       by_claim: {},
     },
     evidence_by_claim: {},
+    claim_support_ids: copy.claim_support_ids,
     source_ids: sourceIds,
     sources,
     short_citation: sources[0].citation,
@@ -143,6 +145,12 @@ function regionAnnotation(model, region, segment, anchor) {
   const strategy = model.spec.geometryStrategy?.titin_primitives?.[region.id] || {};
   const renderClass = evidenceHead(claims.render_geometry_proxy || 'SCHEMATIC');
   const biologicalRole = String(region.biological_role || '').replace(/;\s*/g, '; ');
+  const claimSupportIds = ['titin_region_architecture'];
+  if (['prox_Ig', 'N2A', 'PEVK', 'dist_Ig'].includes(region.id)) {
+    claimSupportIds.push('regional_extension_story');
+  }
+  if (region.id === 'N2A') claimSupportIds.push('n2a_interaction_hub_card');
+  if (region.id === 'kinase') claimSupportIds.push('titin_kinase_card');
   return freezeAnnotation({
     id: `titin-${region.id}`,
     label: region.name,
@@ -159,6 +167,7 @@ function regionAnnotation(model, region, segment, anchor) {
       by_claim: claims,
     },
     evidence_by_claim: claims,
+    claim_support_ids: claimSupportIds,
     source_ids: sourceIds,
     sources,
     short_citation: sources[0].citation,
