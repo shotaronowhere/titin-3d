@@ -1,18 +1,18 @@
 {
   "schema": "titin-release-manifest/2",
   "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-  "app_revision": "f22f0c9408558bd9a700a36f762667c262ed8305-dirty",
+  "app_revision": "cc77aec9b25d679fa8f815da7635f9cf58da2c5b",
   "build_inputs_fingerprint": "e05bfa833ae4d8f02c5def3ef5926d930e13078926e182a7f9fb70eee470b0b5",
   "standalone": {
     "path": "index.html",
-    "bytes": 1987197,
-    "sha256": "7e255999d7b430f9e75cdee008ffc71b901323609b86937a426d58fecb09e6b2"
+    "bytes": 1987191,
+    "sha256": "db9a05c89ca903f6b131af940eeb4d9555ed759505c82f57a66892a0c2cc4265"
   },
   "artifacts": [
     {
       "path": "release/CLAIM_MATRIX.md",
-      "bytes": 14112,
-      "sha256": "cd5e24091e85e7a9e9f5e75b1ebb2e6f0d873d159fd32e2c09763e8f5bd5a324"
+      "bytes": 14106,
+      "sha256": "e584205b5c32fa6b1609c3b6a0e2abad1ee292804acdd0fce1787f7d9e0ae5ca"
     },
     {
       "path": "release/fallback/architecture.svg",
@@ -46,8 +46,8 @@
     },
     {
       "path": "release/LIMITATIONS.md",
-      "bytes": 8944,
-      "sha256": "a09b25893a21d91a3748c2b2614dfefea615018022e573750a9a373452ff2cb7"
+      "bytes": 8938,
+      "sha256": "792a8fc9b5db6cb58e26ab8222d3d07a9ccc82cd16acd6b1ef04f07ee8c5fe97"
     },
     {
       "path": "release/mechanical_parameters.json",
@@ -56,23 +56,23 @@
     },
     {
       "path": "release/PREFLIGHT.md",
-      "bytes": 2124,
-      "sha256": "360bfe3bf9496e3cc46050ea2e24e59fc750647d6c56e1d4162164541c3fd0df"
+      "bytes": 2112,
+      "sha256": "ff780ea9659efb96ab57666fa6a171db35125b8bfcd89cac5196bfc7ff0da76a"
     },
     {
       "path": "release/PRESENTER_SCRIPT.md",
-      "bytes": 6773,
-      "sha256": "9cacef53513d213bd688dcfedd665abc745c9b40fce84722df5dd1d5045f4210"
+      "bytes": 6767,
+      "sha256": "e9283dfbe200724d99dfd9385751bf341db1490479d0071286b628de0dbd0adc"
     },
     {
       "path": "release/SCIENTIFIC_AUTHORITY.md",
-      "bytes": 1958,
-      "sha256": "f7fd0a9ea93e0a488b448fd2d85b4b4435672f089708efe6b107f2c0a1ebeaec"
+      "bytes": 1952,
+      "sha256": "d06d299efc0488a5f9e247191cdd3d545177137e15103edfaab66ecfdf72e611"
     },
     {
       "path": "release/SCREENSHOT_PACK.md",
-      "bytes": 9176,
-      "sha256": "9ef4359f3198205a62964f940ea9a6bd60fd75b8489cf0fb1a620ec6b42d9c1f"
+      "bytes": 9170,
+      "sha256": "291cc03eab4b16fde53213bc223497bfd5f462722c793f2aec4d62e216acb72e"
     }
   ],
   "fallback_slides": [

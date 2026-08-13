@@ -249,6 +249,9 @@ test('SC22: handoff records the required schema, coverage, and ownership matrix'
     'Human-evidence pipeline status',
     'Known limitations and next-sprint obligations',
   ]) assert.match(handoff, new RegExp(field));
+  assert.match(handoff,
+    /Starting commit \/ ending commit:\s+`[0-9a-f]{40}` \/\s+`[0-9a-f]{40}`\./,
+    'handoff must record full starting and ending implementation commits');
   for (const count of [
     '27 canonical claims', '51 support relations', '65 references',
     '12 annotation components', '7 guided chapters', '7 expert cards',
