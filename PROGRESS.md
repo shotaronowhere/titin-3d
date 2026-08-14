@@ -1712,3 +1712,27 @@ The generated `titin-mechanical-model/2` rows carry both parameter-set and model
 automated `mechanical_validity.parameter_authority` release check now passes, while the human
 regime/uncertainty and independent-reproduction checks remain pending. See
 `docs/sprint-reports/SC-21.md` for the exact handoff and blocker.
+
+---
+
+# 2026-08-14 — SC-23 lay curriculum implementation
+
+SC-23 is **COMPLETE**. Presentation schema v2 now carries seven
+explicit outcomes, canonical multi-claim bindings, first-use lay vocabulary, semantic scene IDs,
+visible state-change announcements, reversible actions, and a one-to-one legacy alias table.
+`data/scenes.json` contains presentation intent only; runtime and independent validators reject
+invented IDs, scientific constants, invalid targets/cameras/layers, claim drift, and chapter drift.
+
+Navigation preserves the user's length. The stretch sweep starts from the current declared-range
+value, while an outside-range value requires a visible saved start/restore sequence. Text-only and
+screen-reader transcripts come from the same presentation record and are gated for concept
+coverage, claim bindings, announcements, ordering, and 181.3-second pacing. The final frame again
+shows the complete titin route with replay, region inspection, and evidence actions.
+
+The opening thesis is source-bound. On 2026-08-14 the project owner approved
+`sarcomere_definition` and `actomyosin_motor_function` because both have registered scientific
+evidence. Their digest-bound approval provenance explicitly records that independent human wording
+and locator review was not performed. The SC-23 release-pack content interlock is ready, while the
+overall showcase remains `release_ready: false` under its broader gates. See
+`docs/sprint-reports/SC-23.md` for aliases, transcript budget, negative controls, viewport coverage,
+and final verification results.

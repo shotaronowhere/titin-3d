@@ -100,8 +100,9 @@ test('SC12: the sweep stays inside the declared working range', () => {
   // The 1,900 nm and 3,000 nm presets are declared outside the working range;
   // sweeping through them would animate as ordinary physiology something the
   // presentation record explicitly says is not.
-  assert.match(page, /outside_working_range[\s\S]{0,220}sweepRange/,
-    'the sweep bounds must be filtered by the reviewed working range');
+  assert.match(page,
+    /sweepRange\s*=\s*\{[\s\S]{0,180}presentation\.scope\.working_range_nm\[0\][\s\S]{0,100}presentation\.scope\.working_range_nm\[1\]/,
+    'the sweep bounds must consume the reviewed working range directly');
   assert.equal(SWEEP.reduced_motion_period_ms < SWEEP.period_ms, true);
 });
 

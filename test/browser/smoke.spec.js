@@ -83,6 +83,7 @@ test('visible source links and every selected-row state use declared readable fo
   await page.locator('#closeEvidence').click();
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
+  await page.locator('#chapterNext').click();
   const pevk = page.locator('.extension-row[data-region="PEVK"]');
   await expect(pevk).toBeVisible();
   await pevk.click();
@@ -98,6 +99,7 @@ test('visible source links and every selected-row state use declared readable fo
 
 test('region and close-up navigation never leave a false wide-view pressed state', async ({ page }) => {
   await cleanBoot(page, '/index.html');
+  await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
   await expect(page.locator('.extension-row[data-region="PEVK"]'))

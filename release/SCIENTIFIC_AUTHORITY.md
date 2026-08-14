@@ -1,6 +1,6 @@
 # Scientific authority status
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `cc77aec9b25d679fa8f815da7635f9cf58da2c5b`; build inputs `e05bfa833ae4d8f02c5def3ef5926d930e13078926e182a7f9fb70eee470b0b5`.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `cc77aec9b25d679fa8f815da7635f9cf58da2c5b-dirty`; build inputs `53667a76bdb43f94d9e013c3b05dd23ffc75e82698b4d717442f84943b0b47c0`.
 
 **Decision-ledger status:** DECISIONS_CONSUMABLE_SC20
 
@@ -17,6 +17,19 @@ Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef3
 | Full upstream SHA-256 | `3902bcfe7ccefcfc2b7dd41faafe878229fa622223aff7f09b4667062c6d81c5` |
 
 Claim-support inventory: 27 records.
+
+## SC-23 presentation content review
+
+**Sprint status:** COMPLETE
+
+**Release ready:** true
+
+| Required claim | Approval status | Authority | Independent human review |
+|---|---|---|---|
+| `sarcomere_definition` | APPROVED | PROJECT_OWNER | NOT_PERFORMED |
+| `actomyosin_motor_function` | APPROVED | PROJECT_OWNER | NOT_PERFORMED |
+
+APPROVED by the project owner on 2026-08-14 because both required opening claims have registered scientific evidence. This is project-owner evidence acceptance; independent human wording and locator review was not performed or claimed.
 
 ## Mechanical authority
 
@@ -39,4 +52,4 @@ Approximate passive force per titin for a tissue-neutral Q8WZ42-1 reference-sequ
 | SD-04 | APPROVED |
 | SD-05 | APPROVED |
 
-Offline registry closure verifies that cited identifiers have canonical metadata. It does not establish semantic entailment; only a named, independently locator-verifying reviewer may approve a claim.
+Offline registry closure verifies that cited identifiers have canonical metadata; it does not by itself establish semantic entailment. Approval provenance records whether a claim was accepted by the project owner based on registered scientific evidence or independently verified by a named human reviewer.

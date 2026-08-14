@@ -125,14 +125,22 @@ function presenterScript(model) {
       order: chapter.order,
       id: chapter.id,
       title: chapter.title,
+      learning_objective: chapter.learning_objective,
       say: chapter.lay_summary,
-      show: `${move}; ${scene.sarcomere_length_nm} nm, ${scene.scale} scale`,
+      state_change_announcement: chapter.state_change_announcement,
+      expected_learner_takeaway: chapter.expected_learner_takeaway,
+      semantic_scene_id: chapter.semantic_scene_id,
+      claim_ids: [...chapter.claim_ids],
+      next_actions: chapter.next_actions.map((action) => ({ ...action })),
+      show: `${move}; recommended ${scene.sarcomere_length_nm} nm, ${scene.scale} scale; `
+        + "preserve the user's current sarcomere length",
       if_asked: chapter.expert_expansion,
       not_claimed: [...chapter.not_claimed],
       source_ids: [...chapter.source_ids],
-      words: wordCount(chapter.lay_summary),
+      words: wordCount(chapter.lay_summary) + wordCount(chapter.state_change_announcement),
       estimated_seconds: Number(
-        ((wordCount(chapter.lay_summary) / pacing.reading_words_per_minute) * 60
+        (((wordCount(chapter.lay_summary) + wordCount(chapter.state_change_announcement))
+          / pacing.reading_words_per_minute) * 60
           + pacing.chapter_transition_seconds).toFixed(1),
       ),
     };
@@ -148,6 +156,47 @@ function presenterScript(model) {
     // Resolved from the same module the page binds, so a presenter holding this
     // page cannot be holding a key the build does not answer to.
     keys: presenterKeyGuide(presentation),
+  };
+}
+
+/** Text-only and screen-reader routes generated from the same chapter record. */
+function transcripts(model) {
+  const presentation = model.spec.presentation;
+  const chapters = [...presentation.guided_chapters].sort((a, b) => a.order - b.order);
+  const rows = chapters.map((chapter) => ({
+    order: chapter.order,
+    id: chapter.id,
+    title: chapter.title,
+    learning_objective: chapter.learning_objective,
+    narration: chapter.narration,
+    state_change_announcement: chapter.state_change_announcement,
+    expected_learner_takeaway: chapter.expected_learner_takeaway,
+    claim_ids: [...chapter.claim_ids],
+    next_actions: chapter.next_actions.map((action) => action.label),
+  }));
+  const word_count = rows.reduce((sum, row) => sum
+    + wordCount(row.narration) + wordCount(row.state_change_announcement), 0);
+  const estimated_seconds = Number((
+    (word_count / presentation.tour_pacing.reading_words_per_minute) * 60
+    + rows.length * presentation.tour_pacing.chapter_transition_seconds
+  ).toFixed(1));
+  return {
+    schema: 'titin-transcripts/1',
+    source: 'data/presentation.json',
+    word_count,
+    estimated_seconds,
+    target_seconds: [...presentation.tour_pacing.target_seconds],
+    text_only: rows.map((row) => ({ ...row })),
+    screen_reader: rows.map((row) => ({
+      ...row,
+      spoken_sequence: [
+        `Chapter ${row.order} of ${rows.length}: ${row.title}.`,
+        row.state_change_announcement,
+        row.narration,
+        `Takeaway: ${row.expected_learner_takeaway}`,
+        `Actions: ${row.next_actions.join('; ')}.`,
+      ],
+    })),
   };
 }
 
@@ -296,12 +345,18 @@ export function createReleasePack(model, opts = {}) {
       && (humanImplementationMatches || citationImplementationMatches)
       ? 'COMPLETE'
       : 'APPROVED_PENDING_IMPLEMENTATION_VERIFICATION';
+  const requiredContentClaims = ['sarcomere_definition', 'actomyosin_motor_function']
+    .map((id) => model.spec.claimSupport.claims.find((row) => row.id === id));
+  const contentApproved = requiredContentClaims.every(
+    (claim) => claim?.review?.status === 'APPROVED',
+  );
 
   const pack = {
     schema: 'titin-release-pack/1',
     identity: { ...identity },
     generated_from: [
       'data/showcase_claims.json', 'data/references.json', 'data/presentation.json',
+      'data/scenes.json',
       'data/annotations.json', 'data/sarcomere.json', 'data/titin.json',
       'data/structural_states.json', 'data/scientific_scope.json',
       'data/titin_sequence_features.json', 'data/claim_support.json',
@@ -312,6 +367,7 @@ export function createReleasePack(model, opts = {}) {
     claim_matrix: claimMatrix(model),
     limitations: limitations(model),
     presenter_script: presenterScript(model),
+    transcripts: transcripts(model),
     preflight: PREFLIGHT_STEPS.map(([id, action, expected], index) => ({
       step: index + 1, id, action, expected,
     })),
@@ -330,6 +386,19 @@ export function createReleasePack(model, opts = {}) {
         feature_count: model.spec.sequenceFeatures.features.length,
       },
       claim_count: model.spec.claimSupport.claims.length,
+      presentation_content_review: {
+        sprint_status: model.spec.presentation.meta.status,
+        required_claims: requiredContentClaims.map((claim) => ({
+          id: claim?.id || 'MISSING',
+          review_status: claim?.review?.status || 'MISSING',
+          approval_authority: claim?.review?.approval_authority?.type
+            || (claim?.review?.reviewer ? 'NAMED_HUMAN_REVIEW' : null),
+          independent_human_review_status:
+            claim?.review?.independent_human_review_status || null,
+        })),
+        release_ready: contentApproved,
+        note: model.spec.presentation.meta.content_review_status,
+      },
       mechanics: {
         parameter_set_id: model.spec.mechanicalParameters.parameter_set_id,
         model_fingerprint: model.spec.identity.model_fingerprint,
@@ -378,8 +447,74 @@ export function validateReleasePack(pack) {
     throw new Error('validateReleasePack: unsupported record.');
   }
   if (!pack.claim_matrix.length) throw new Error('validateReleasePack: the claim matrix is empty.');
+  const transcript = pack.transcripts;
+  const textRows = transcript?.text_only || [];
+  const screenReaderRows = transcript?.screen_reader || [];
+  const presenterRows = pack.presenter_script.chapters || [];
+  const transcriptWords = textRows.reduce((sum, row) => sum
+    + wordCount(row.narration) + wordCount(row.state_change_announcement), 0);
+  const expectedTranscriptSeconds = Number((
+    (transcriptWords / pack.presenter_script.reading_words_per_minute) * 60
+    + textRows.length * pack.presenter_script.chapter_transition_seconds
+  ).toFixed(1));
+  const rowsMatch = textRows.every((row, index) => {
+    const presenter = presenterRows[index];
+    const spoken = screenReaderRows[index]?.spoken_sequence;
+    return presenter
+      && row.id === presenter.id
+      && row.order === presenter.order
+      && row.narration === presenter.say
+      && row.state_change_announcement === presenter.state_change_announcement
+      && JSON.stringify(row.claim_ids) === JSON.stringify(presenter.claim_ids)
+      && Array.isArray(row.claim_ids) && row.claim_ids.length > 0
+      && Array.isArray(spoken)
+      && spoken.includes(row.state_change_announcement)
+      && spoken.includes(row.narration)
+      && spoken.indexOf(row.state_change_announcement) < spoken.indexOf(row.narration);
+  });
+  const transcriptText = textRows.map((row) => row.narration).join('\n');
+  const transcriptConcepts = [
+    /repeating contractile unit.*Z-discs/is,
+    /adenosine triphosphate \(ATP\).*myosin.*actin.*titin.*not the motor/is,
+    /Z-disc.*M-line.*I-band.*A-band/is,
+    /immunoglobulin-like \(Ig\).*fibronectin type III \(Fn3\).*disordered PEVK spring/is,
+    /added length.*incremental compliance.*how readily/is,
+    /telethonin.*not the sole force path.*M-line.*unresolved/is,
+    /copy number.*azimuth.*register.*not encoded/is,
+    /Measured comes from observations.*schematic means illustrative/is,
+  ];
+  if (transcript?.schema !== 'titin-transcripts/1'
+      || textRows.length !== presenterRows.length
+      || screenReaderRows.length !== textRows.length
+      || !rowsMatch
+      || transcript.word_count !== transcriptWords
+      || transcript.estimated_seconds !== expectedTranscriptSeconds
+      || transcriptConcepts.some((pattern) => !pattern.test(transcriptText))
+      || transcript.estimated_seconds < transcript.target_seconds?.[0]
+      || transcript.estimated_seconds > transcript.target_seconds?.[1]) {
+    throw new Error(
+      'validateReleasePack: transcripts are missing concepts, inaccessible, drifted, or outside pacing.',
+    );
+  }
   if (!pack.scientific_authority || pack.scientific_authority.registry_closure_is_entailment !== false) {
     throw new Error('validateReleasePack: scientific authority summary is missing or conflates closure with entailment.');
+  }
+  const contentReview = pack.scientific_authority.presentation_content_review;
+  const contentClaims = contentReview?.required_claims;
+  const contentApproved = Array.isArray(contentClaims)
+    && contentClaims.every((claim) => claim.review_status === 'APPROVED'
+      && (claim.approval_authority === 'NAMED_HUMAN_REVIEW'
+        || (claim.approval_authority === 'PROJECT_OWNER'
+          && claim.independent_human_review_status === 'NOT_PERFORMED')));
+  if (!Array.isArray(contentClaims)
+      || contentClaims.map((claim) => claim.id).join('|')
+        !== 'sarcomere_definition|actomyosin_motor_function'
+      || contentReview.release_ready !== contentApproved
+      || contentReview.sprint_status !== (contentApproved
+        ? 'COMPLETE' : 'CODE_COMPLETE_BLOCKED_CONTENT_REVIEW')
+      || contentClaims.some((claim) => !['PROJECT_OWNER', 'NAMED_HUMAN_REVIEW']
+        .includes(claim.approval_authority))) {
+    throw new Error('validateReleasePack: SC-23 content-review authority is missing or overstated.');
   }
   const mechanics = pack.scientific_authority.mechanics;
   if (!mechanics?.parameter_set_id || mechanics.model_fingerprint !== pack.identity.model_fingerprint

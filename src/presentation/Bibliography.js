@@ -130,14 +130,15 @@ function allSourceEntries(references, claimSupport) {
 }
 
 /**
- * Resolve the Sources drawer without consulting DOM or future semantic scenes.
- * Automatic precedence is value -> object/region -> chapter -> all. If a
+ * Resolve the Sources drawer without consulting DOM state. Automatic precedence
+ * is value -> object/region -> semantic scene -> chapter -> all. If a
  * requested context disappears, the same precedence selects the next available
  * context rather than returning an empty result.
  *
  * @param {{references:Record<string, any>, claimSupport:any}} registry
- * @param {{requestedScope?:'auto'|'value'|'object'|'chapter'|'all',
- * selectedValue?:any, selectedObject?:any, currentChapter?:any}} [context]
+ * @param {{requestedScope?:'auto'|'value'|'object'|'scene'|'chapter'|'all',
+ * selectedValue?:any, selectedObject?:any, semanticScene?:any,
+ * currentChapter?:any}} [context]
  */
 export function resolveSourceContext(registry, context = {}) {
   const references = registry?.references || {};
@@ -148,19 +149,22 @@ export function resolveSourceContext(registry, context = {}) {
   const descriptors = {
     value: context.selectedValue || null,
     object: context.selectedObject || null,
+    scene: context.semanticScene || null,
     chapter: context.currentChapter || null,
   };
   const available = Object.freeze({
     value: descriptorAvailable(descriptors.value),
     object: descriptorAvailable(descriptors.object),
+    scene: descriptorAvailable(descriptors.scene),
     chapter: descriptorAvailable(descriptors.chapter),
     all: true,
   });
   const requested = context.requestedScope || 'auto';
-  if (!['auto', 'value', 'object', 'chapter', 'all'].includes(requested)) {
+  if (!['auto', 'value', 'object', 'scene', 'chapter', 'all'].includes(requested)) {
     throw new Error(`resolveSourceContext: unknown requested scope '${requested}'.`);
   }
-  const automatic = ['value', 'object', 'chapter'].find((scope) => available[scope]) || 'all';
+  const automatic = ['value', 'object', 'scene', 'chapter']
+    .find((scope) => available[scope]) || 'all';
   const scope = requested === 'all'
     ? 'all'
     : (requested !== 'auto' && available[requested] ? requested : automatic);
@@ -168,6 +172,7 @@ export function resolveSourceContext(registry, context = {}) {
   const labels = {
     value: `Sources for this value — ${text(descriptor?.label, 'selected value')}`,
     object: `Sources for this object — ${text(descriptor?.label, 'selected object or region')}`,
+    scene: `Sources for this scene — ${text(descriptor?.label, 'current semantic scene')}`,
     chapter: `Sources for this chapter — ${text(descriptor?.label, 'current chapter')}`,
     all: 'All sources',
   };

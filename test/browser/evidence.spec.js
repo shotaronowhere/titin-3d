@@ -12,6 +12,7 @@ test('SC22 desktop uses the drawer as the sole full selected-claim surface', asy
   await boot(page);
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
+  await page.locator('#chapterNext').click();
   await page.locator('.extension-row[data-region="prox_Ig"]').click();
   await expect(page.locator('#objectInspector')).toBeVisible();
   await page.locator('#audienceEvidence').click();
@@ -25,7 +26,8 @@ test('SC22 Guided inspector stays compact and clear of the stage controls', asyn
   await boot(page);
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
-  // Chapter 3 starts with PEVK selected; move away and back so the PEVK row
+  await page.locator('#chapterNext').click();
+  // Chapter 4 starts with PEVK selected; move away and back so the PEVK row
   // exercises the pinning path instead of its intentional toggle-off path.
   await page.locator('.extension-row[data-region="prox_Ig"]').click();
   await page.locator('.extension-row[data-region="PEVK"]').click();

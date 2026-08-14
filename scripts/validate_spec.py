@@ -14,7 +14,7 @@ def check(cond, msg):
 
 print("== JSON validity ==")
 files=["sarcomere.json","titin.json","structural_states.json","geometry_sources.json","references.json",
-       "showcase_claims.json","presentation.json","annotations.json"]
+       "showcase_claims.json","presentation.json","scenes.json","annotations.json"]
 L={}
 for f in files:
     try: L[f]=load(f); check(True, f)
@@ -33,8 +33,10 @@ def fr(o):
         for it in o: fr(it)
 for f in files[:4]: fr(L[f])
 check(cited<=refs, f"all cited DOIs present (missing: {sorted(cited-refs)})")
-check(L["presentation.json"].get("schema")=="titin-presentation/1",
-      "presentation.json has the SC-1 schema (full checks: validate_presentation.py)")
+check(L["presentation.json"].get("schema")=="titin-presentation/2",
+      "presentation.json has the SC-23 schema (full checks: validate_presentation.py)")
+check(L["scenes.json"].get("schema")=="titin-semantic-scenes/1",
+      "scenes.json has the SC-23 semantic-scene schema")
 check(L["annotations.json"].get("schema")=="titin-object-annotations/1",
       "annotations.json has the SC-4 schema (full checks: validate_annotations.py)")
 

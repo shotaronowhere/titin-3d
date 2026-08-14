@@ -9,6 +9,9 @@
 
 export const AUDIENCE_MODES = Object.freeze({ guided: 'guided', evidence: 'evidence' });
 
+const PRESENTATION_SCHEMA = 'titin-presentation/2';
+const SCENES_SCHEMA = 'titin-semantic-scenes/1';
+
 const EVIDENCE_RANK = Object.freeze({
   MEASURED: 0,
   'STRONGLY INFERRED': 1,
@@ -30,6 +33,56 @@ const PRESENTATION_FEATURES = new Set([
   // SC-7. The closing chapter's counted, inspectable build pipeline.
   'provenance_pipeline',
 ]);
+
+const SCENE_LAYERS = new Set([
+  'show_lattice', 'show_domains', 'show_context_detail', 'mirror',
+]);
+
+const SCENE_FIELDS = new Set([
+  'label', 'available_in', 'camera_preset', 'scale', 'context', 'layers',
+  'selection', 'length_policy', 'claim_ids', 'source_filter',
+]);
+
+const SCENE_EVIDENCE_VALUES = new Set(Object.keys(EVIDENCE_RANK));
+
+const CHAPTER_REQUIRED_FIELDS = Object.freeze([
+  'id', 'legacy_ids', 'title', 'learning_objective', 'lay_summary', 'claim_ids',
+  'semantic_scene_id', 'source_filter', 'state_change_announcement',
+  'recommended_state', 'next_actions',
+]);
+
+const SC23_CHAPTER_IDS = Object.freeze([
+  'meet_sarcomere', 'follow_titin', 'molecular_architecture', 'stretch_spring',
+  'inspect_anchors', 'scaffold_thick_filament', 'knowledge_recap',
+]);
+
+const SC23_CONCEPT_PATTERNS = Object.freeze({
+  meet_sarcomere: [
+    /repeating contractile unit.*Z-discs/is,
+    /adenosine triphosphate \(ATP\).*myosin.*actin/is,
+    /titin.*passive spring.*scaffold.*not the motor/is,
+  ],
+  follow_titin: [/Z-disc.*M-line/is, /I-band.*elastic.*A-band.*thick filament/is],
+  molecular_architecture: [
+    /immunoglobulin-like \(Ig\)/i, /fibronectin type III \(Fn3\)/i,
+    /disordered PEVK spring/i, /does not place Fn3.*elastic I-band/is,
+  ],
+  stretch_spring: [
+    /I-band lengthens.*A-band.*approximately fixed/is,
+    /model predicts rising passive force/is,
+    /added length.*incremental compliance.*how readily/is,
+  ],
+  inspect_anchors: [/telethonin.*not the sole force path/is, /M-line.*unresolved/is],
+  scaffold_thick_filament: [
+    /A-band.*thick filament.*scaffold/is, /copy number.*azimuth.*register.*not encoded/is,
+  ],
+  knowledge_recap: [
+    /full Z-disc-to-M-line route/is,
+    /passive spring.*scaffold.*interaction\/signaling platform/is,
+    /Measured comes from observations.*inferred from interpretation.*modeled from equations.*schematic means illustrative/is,
+    /Replay the stretch.*inspect a region.*open its evidence/is,
+  ],
+});
 
 /**
  * SC-7. Expert cards must separate what is established from what is proposed and
@@ -64,13 +117,13 @@ function baseEvidence(value) {
  */
 export function checkPresentationSpec(presentation, context = {}) {
   const {
-    claims, references, sarcomere, titin, states, annotations,
+    claims, claimSupport, references, sarcomere, titin, states, annotations, scenes,
   } = context;
   const problems = [];
   if (!presentation || typeof presentation !== 'object') {
     return ['presentation.json missing or not an object'];
   }
-  if (presentation.schema !== 'titin-presentation/1') {
+  if (presentation.schema !== PRESENTATION_SCHEMA || presentation.version !== 2) {
     problems.push(`presentation schema '${presentation.schema}' is unsupported`);
   }
   const collections = [
@@ -112,6 +165,23 @@ export function checkPresentationSpec(presentation, context = {}) {
   }
 
   const claimMap = new Map((claims?.objects || []).map((claim) => [claim.id, claim]));
+  const supportMap = new Map((claimSupport?.claims || []).map((claim) => [claim.id, claim]));
+  // The two opening-thesis records may be approved either by named independent
+  // review or by the explicitly provenance-bearing project-owner evidence path.
+  // Until both are approved, the presentation must remain visibly blocked.
+  const contentReviewClaims = ['sarcomere_definition', 'actomyosin_motor_function'];
+  const pendingContentReview = contentReviewClaims.filter(
+    (id) => supportMap.get(id)?.review?.status !== 'APPROVED',
+  );
+  if (pendingContentReview.length
+      && presentation.meta?.status !== 'CODE_COMPLETE_BLOCKED_CONTENT_REVIEW') {
+    problems.push(
+      `presentation content review is pending for ${pendingContentReview.join(', ')}; `
+      + "meta.status must be 'CODE_COMPLETE_BLOCKED_CONTENT_REVIEW'",
+    );
+  } else if (!pendingContentReview.length && presentation.meta?.status !== 'COMPLETE') {
+    problems.push("approved SC-23 content requires meta.status 'COMPLETE'");
+  }
   const referenceIds = new Set(Object.keys(references || {}));
   const componentIds = new Set((sarcomere?.components || []).map((component) => component.id));
   // Titin is specified in titin.json rather than sarcomere.components, but it is
@@ -198,11 +268,62 @@ export function checkPresentationSpec(presentation, context = {}) {
 
   const chapterOrders = new Set();
   for (const chapter of presentation.guided_chapters || []) {
+    for (const field of CHAPTER_REQUIRED_FIELDS) {
+      if (!Object.hasOwn(chapter, field)) {
+        problems.push(`guided chapter '${chapter.id}' lacks required field '${field}'`);
+      }
+    }
     validateScientificRecord(chapter, 'guided chapter');
     if (!Number.isInteger(chapter.order) || chapterOrders.has(chapter.order)) {
       problems.push(`guided chapter '${chapter.id}' has a missing or duplicate integer order`);
     }
     chapterOrders.add(chapter.order);
+    if (!Array.isArray(chapter.legacy_ids)) {
+      problems.push(`guided chapter '${chapter.id}' legacy_ids must be an array`);
+    }
+    if (!String(chapter.learning_objective || '').trim()) {
+      problems.push(`guided chapter '${chapter.id}' needs a learning objective`);
+    }
+    if (!String(chapter.expected_learner_takeaway || '').trim()) {
+      problems.push(`guided chapter '${chapter.id}' needs an expected learner takeaway`);
+    }
+    if (chapter.narration !== chapter.lay_summary) {
+      problems.push(`guided chapter '${chapter.id}' narration must be the canonical lay summary`);
+    }
+    if (!Array.isArray(chapter.claim_ids) || !chapter.claim_ids.length
+        || new Set(chapter.claim_ids).size !== chapter.claim_ids.length) {
+      problems.push(`guided chapter '${chapter.id}' needs unique canonical claim_ids`);
+    } else {
+      for (const claimId of chapter.claim_ids) {
+        if (!supportMap.has(claimId)) {
+          problems.push(`guided chapter '${chapter.id}' cites unknown canonical claim '${claimId}'`);
+        }
+      }
+      if (!chapter.claim_ids.includes(chapter.target_claim_id)) {
+        problems.push(`guided chapter '${chapter.id}' claim_ids omit its target claim`);
+      }
+    }
+    const sourceFilter = chapter.source_filter || {};
+    if (sourceFilter.kind !== 'claims'
+        || JSON.stringify(sourceFilter.claim_ids) !== JSON.stringify(chapter.claim_ids)) {
+      problems.push(`guided chapter '${chapter.id}' source_filter must use its canonical claim_ids`);
+    }
+    if (!String(chapter.state_change_announcement || '').trim()
+        || !/length/i.test(chapter.state_change_announcement)) {
+      problems.push(`guided chapter '${chapter.id}' must announce its length policy`);
+    }
+    if (!Array.isArray(chapter.next_actions) || !chapter.next_actions.length) {
+      problems.push(`guided chapter '${chapter.id}' needs at least one next action`);
+    } else {
+      const actionIds = new Set();
+      for (const action of chapter.next_actions) {
+        if (!String(action?.id || '').trim() || actionIds.has(action.id)
+            || !String(action?.label || '').trim() || !String(action?.action || '').trim()) {
+          problems.push(`guided chapter '${chapter.id}' has an invalid or duplicate next action`);
+        }
+        actionIds.add(action?.id);
+      }
+    }
     const targetSet = chapter.target?.kind === 'region' ? regionIds
       : (chapter.target?.kind === 'component' ? componentIds : null);
     if (!targetSet) problems.push(`guided chapter '${chapter.id}' has invalid target kind '${chapter.target?.kind}'`);
@@ -255,6 +376,49 @@ export function checkPresentationSpec(presentation, context = {}) {
     }
     if (!Number.isInteger(visibility.rings) || visibility.rings < 1) {
       problems.push(`guided chapter '${chapter.id}' visibility.rings must be a positive integer`);
+    }
+  }
+
+  const chapterIds = new Set((presentation.guided_chapters || []).map((chapter) => chapter.id));
+  const orderedChapters = [...(presentation.guided_chapters || [])].sort((a, b) => a.order - b.order);
+  if (JSON.stringify(orderedChapters.map((chapter) => chapter.id))
+      !== JSON.stringify(SC23_CHAPTER_IDS)) {
+    problems.push('guided chapters must implement the ordered seven-outcome SC-23 curriculum');
+  }
+  for (const chapter of orderedChapters) {
+    const text = chapter.narration || '';
+    for (const pattern of SC23_CONCEPT_PATTERNS[chapter.id] || []) {
+      if (!pattern.test(text)) {
+        problems.push(`guided chapter '${chapter.id}' misses required SC-23 concept ${pattern}`);
+      }
+    }
+  }
+  const aliases = presentation.chapter_aliases;
+  if (aliases?.schema !== 'titin-chapter-aliases/1'
+      || !aliases.aliases || typeof aliases.aliases !== 'object'
+      || Array.isArray(aliases.aliases)) {
+    problems.push('presentation needs a titin-chapter-aliases/1 alias table');
+  } else {
+    const declaredLegacy = new Map();
+    for (const chapter of presentation.guided_chapters || []) {
+      for (const legacyId of chapter.legacy_ids || []) {
+        if (chapterIds.has(legacyId)) {
+          problems.push(`legacy chapter ID '${legacyId}' collides with a current chapter`);
+        } else if (declaredLegacy.has(legacyId)) {
+          problems.push(`legacy chapter ID '${legacyId}' is declared more than once`);
+        } else declaredLegacy.set(legacyId, chapter.id);
+      }
+    }
+    for (const [legacyId, chapterId] of Object.entries(aliases.aliases)) {
+      if (!chapterIds.has(chapterId)) {
+        problems.push(`legacy chapter alias '${legacyId}' targets unknown chapter '${chapterId}'`);
+      }
+      if (declaredLegacy.get(legacyId) !== chapterId) {
+        problems.push(`legacy chapter alias '${legacyId}' disagrees with chapter legacy_ids`);
+      }
+    }
+    if (declaredLegacy.size !== Object.keys(aliases.aliases).length) {
+      problems.push('chapter legacy_ids and the v1 alias table are not one-to-one');
     }
   }
 
@@ -319,7 +483,9 @@ export function checkPresentationSpec(presentation, context = {}) {
   } else {
     const chapterList = presentation.guided_chapters || [];
     const tourWords = chapterList.reduce((sum, chapter) => (
-      sum + String(chapter.lay_summary || '').trim().split(/\s+/).filter(Boolean).length
+      sum + [chapter.narration, chapter.state_change_announcement]
+        .reduce((chapterWords, text) => chapterWords
+          + String(text || '').trim().split(/\s+/).filter(Boolean).length, 0)
     ), 0);
     const seconds = (tourWords / rate) * 60 + chapterList.length * transition;
     if (seconds < target[0] || seconds > target[1]) {
@@ -364,7 +530,6 @@ export function checkPresentationSpec(presentation, context = {}) {
   if (typeof initial.evidence_display !== 'boolean') {
     problems.push('initial_state evidence_display must be boolean');
   }
-  const chapterIds = new Set((presentation.guided_chapters || []).map((chapter) => chapter.id));
   for (const shortcut of presentation.presenter_shortcuts || []) {
     const action = shortcut.action || '';
     if (!shortcut.label) problems.push(`presenter shortcut '${shortcut.id}' needs a label`);
@@ -373,16 +538,176 @@ export function checkPresentationSpec(presentation, context = {}) {
       problems.push(`presenter shortcut '${shortcut.id}' has invalid action '${action}'`);
     }
   }
+  const sceneIds = new Set(Object.keys(scenes?.scenes || {}));
+  for (const chapter of presentation.guided_chapters || []) {
+    if (!sceneIds.has(chapter.semantic_scene_id)) {
+      problems.push(`guided chapter '${chapter.id}' cites unknown semantic scene '${chapter.semantic_scene_id}'`);
+    }
+  }
+  return problems;
+}
+
+/**
+ * SC-23 declarative scene validation. Scenes can name only an admitted object,
+ * claim, and presentation state; they cannot smuggle scientific numbers into a
+ * second geometry source of truth.
+ */
+export function checkSemanticScenes(scenes, context = {}) {
+  const { presentation, claimSupport, sarcomere, titin, annotations } = context;
+  const problems = [];
+  if (!scenes || typeof scenes !== 'object') return ['scenes.json missing or not an object'];
+  if (scenes.schema !== SCENES_SCHEMA) {
+    problems.push(`semantic scene schema '${scenes.schema}' is unsupported`);
+  }
+  const records = scenes.scenes;
+  if (!records || typeof records !== 'object' || Array.isArray(records)
+      || !Object.keys(records).length) {
+    return [...problems, 'semantic scene records are missing or empty'];
+  }
+  const chapters = presentation?.guided_chapters || [];
+  const chapterByScene = new Map(chapters.map((chapter) => [chapter.semantic_scene_id, chapter]));
+  if (chapterByScene.size !== chapters.length) {
+    problems.push('every guided chapter must own a unique semantic scene');
+  }
+  if (!chapterByScene.has(scenes.primary_presenter_scene_id)) {
+    problems.push('primary_presenter_scene_id does not resolve to a guided chapter scene');
+  }
+  const claimIds = new Set((claimSupport?.claims || []).map((claim) => claim.id));
+  const componentIds = new Set((sarcomere?.components || []).map((component) => component.id));
+  componentIds.add('titin');
+  for (const annotation of annotations?.components || []) componentIds.add(annotation.target_id);
+  const regionIds = new Set((titin?.regions || []).map((region) => region.id));
+  const forbiddenKey = /coordinate|force|evidence|(?:^|_)nm(?:$|_)/i;
+  const exactKeys = (value, admitted, sceneId, field) => {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      problems.push(`semantic scene '${sceneId}' ${field} must be an object`);
+      return false;
+    }
+    const actual = Object.keys(value);
+    const missing = [...admitted].filter((key) => !Object.hasOwn(value, key));
+    const unexpected = actual.filter((key) => !admitted.has(key));
+    if (missing.length) {
+      problems.push(`semantic scene '${sceneId}' ${field} lacks ${missing.join(', ')}`);
+    }
+    if (unexpected.length) {
+      problems.push(`semantic scene '${sceneId}' ${field} has unexpected fields ${unexpected.join(', ')}`);
+    }
+    return missing.length === 0 && unexpected.length === 0;
+  };
+  const walkValues = (value, sceneId, key = '') => {
+    if (key && forbiddenKey.test(key)) {
+      problems.push(`semantic scene '${sceneId}' contains forbidden scientific field '${key}'`);
+    }
+    if (typeof value === 'number') {
+      problems.push(`semantic scene '${sceneId}' contains a forbidden numeric scientific value`);
+      return;
+    }
+    if (typeof value === 'string' && SCENE_EVIDENCE_VALUES.has(value)) {
+      problems.push(`semantic scene '${sceneId}' contains forbidden evidence-class value '${value}'`);
+      return;
+    }
+    if (Array.isArray(value)) {
+      for (const child of value) walkValues(child, sceneId);
+    } else if (value && typeof value === 'object') {
+      for (const [childKey, child] of Object.entries(value)) {
+        walkValues(child, sceneId, childKey);
+      }
+    }
+  };
+  for (const [sceneId, scene] of Object.entries(records)) {
+    const chapter = chapterByScene.get(sceneId);
+    if (!chapter) problems.push(`semantic scene '${sceneId}' is not owned by a guided chapter`);
+    if (!scene || typeof scene !== 'object' || Array.isArray(scene)) {
+      problems.push(`semantic scene '${sceneId}' must be an object`);
+      continue;
+    }
+    exactKeys(scene, SCENE_FIELDS, sceneId, 'record');
+    if (typeof scene.label !== 'string' || !scene.label.trim()) {
+      problems.push(`semantic scene '${sceneId}' needs a string label`);
+    }
+    if (!Array.isArray(scene.available_in)
+        || scene.available_in.length !== 2
+        || new Set(scene.available_in).size !== 2
+        || !['LEARN', 'EXPLORE'].every((mode) => scene.available_in.includes(mode))) {
+      problems.push(`semantic scene '${sceneId}' must be available in LEARN and EXPLORE only`);
+    }
+    if (!/^(view|closeup|region)\.[A-Za-z0-9_]+$/.test(scene.camera_preset || '')) {
+      problems.push(`semantic scene '${sceneId}' has an invalid camera preset`);
+    }
+    if (!['context', 'detail'].includes(scene.scale)) {
+      problems.push(`semantic scene '${sceneId}' has an invalid scale`);
+    }
+    if (typeof scene.context !== 'boolean') problems.push(`semantic scene '${sceneId}' context must be boolean`);
+    if (exactKeys(scene.layers, SCENE_LAYERS, sceneId, 'layers')) {
+      for (const [layer, visible] of Object.entries(scene.layers)) {
+        if (typeof visible !== 'boolean') {
+          problems.push(`semantic scene '${sceneId}' layer '${layer}' must be boolean`);
+        }
+      }
+    }
+    const selection = scene.selection;
+    const selectionSet = selection?.kind === 'region' ? regionIds
+      : selection?.kind === 'component' ? componentIds : null;
+    if (selection !== null) {
+      const selectionShape = exactKeys(selection, new Set(['kind', 'id']), sceneId, 'selection');
+      if (!selectionShape || !selectionSet || typeof selection.id !== 'string'
+          || !selectionSet.has(selection.id)) {
+        problems.push(`semantic scene '${sceneId}' has an unknown selection`);
+      }
+    }
+    const lengthPolicyShape = exactKeys(
+      scene.length_policy, new Set(['kind']), sceneId, 'length_policy',
+    );
+    if (!lengthPolicyShape || scene.length_policy.kind !== 'preserve') {
+      problems.push(`semantic scene '${sceneId}' must preserve the user's length`);
+    }
+    if (!Array.isArray(scene.claim_ids) || !scene.claim_ids.length
+        || new Set(scene.claim_ids).size !== scene.claim_ids.length
+        || scene.claim_ids.some((id) => typeof id !== 'string' || !claimIds.has(id))) {
+      problems.push(`semantic scene '${sceneId}' has unresolved canonical claim_ids`);
+    }
+    const sourceFilterShape = exactKeys(
+      scene.source_filter, new Set(['kind', 'claim_ids']), sceneId, 'source_filter',
+    );
+    if (!sourceFilterShape || scene.source_filter.kind !== 'claims'
+        || JSON.stringify(scene.source_filter.claim_ids) !== JSON.stringify(scene.claim_ids)) {
+      problems.push(`semantic scene '${sceneId}' source_filter must use its claim_ids`);
+    }
+    if (chapter) {
+      const expectedLayers = Object.fromEntries([...SCENE_LAYERS]
+        .map((key) => [key, chapter.recommended_state?.visibility?.[key]]));
+      if (scene.camera_preset !== chapter.recommended_state?.camera_preset
+          || scene.scale !== chapter.recommended_state?.scale
+          || JSON.stringify(scene.selection) !== JSON.stringify(chapter.target)
+          || JSON.stringify(scene.layers) !== JSON.stringify(expectedLayers)
+          || JSON.stringify(scene.claim_ids) !== JSON.stringify(chapter.claim_ids)) {
+        problems.push(`semantic scene '${sceneId}' drifts from its chapter presentation state`);
+      }
+    }
+    walkValues(scene, sceneId);
+  }
+  if (Object.keys(records).length !== chapterByScene.size) {
+    problems.push('semantic scene count must equal the guided chapter count');
+  }
   return problems;
 }
 
 /** Runtime presentation controller. Geometry and render types stay outside it. */
 export class StoryController {
-  constructor(presentation, capabilities) {
-    if (!presentation || presentation.schema !== 'titin-presentation/1') {
+  /**
+   * @param {any} presentation
+   * @param {any} capabilities
+   * @param {any} scenes
+   */
+  constructor(presentation, capabilities, scenes = null) {
+    if (!presentation || presentation.schema !== PRESENTATION_SCHEMA) {
       throw new Error('StoryController: presentation.json has an unsupported schema.');
     }
+    if (!scenes || scenes.schema !== SCENES_SCHEMA) {
+      throw new Error('StoryController: scenes.json has an unsupported schema.');
+    }
     this.presentation = presentation;
+    this.sceneCatalog = scenes;
     this.capabilities = {
       views: new Set(capabilities.views || []),
       closeups: new Set(capabilities.closeups || []),
@@ -395,6 +720,8 @@ export class StoryController {
     };
     this.chapters = [...presentation.guided_chapters].sort((a, b) => a.order - b.order);
     this.chapterMap = new Map(this.chapters.map((chapter) => [chapter.id, chapter]));
+    this.aliasMap = new Map(Object.entries(presentation.chapter_aliases.aliases));
+    this.sceneMap = new Map(Object.entries(scenes.scenes));
     if (this.chapterMap.size !== this.chapters.length) {
       throw new Error('StoryController: guided chapter IDs must be unique.');
     }
@@ -405,6 +732,10 @@ export class StoryController {
   _validateRuntimeTargets() {
     const problems = [];
     for (const chapter of this.chapters) {
+      const semanticScene = this.scene(chapter.semantic_scene_id);
+      if (!semanticScene) {
+        problems.push(`chapter '${chapter.id}' uses unavailable semantic scene '${chapter.semantic_scene_id}'`);
+      }
       if (!this.capabilities.targets.has(chapter.target.id)) {
         problems.push(`chapter '${chapter.id}' targets unavailable ${chapter.target.kind} '${chapter.target.id}'`);
       }
@@ -459,17 +790,25 @@ export class StoryController {
     return !this.capabilities.hiddenTargetsByScale.get(scale)?.has(target);
   }
 
-  chapter(id) { return this.chapterMap.get(id) || null; }
+  resolveChapterId(id) { return this.aliasMap.get(id) || id; }
 
-  chapterIndex(id) { return this.chapters.findIndex((chapter) => chapter.id === id); }
+  chapter(id) { return this.chapterMap.get(this.resolveChapterId(id)) || null; }
 
-  stateForChapter(id) {
+  scene(id) { return this.sceneMap.get(id) || null; }
+
+  chapterIndex(id) {
+    const canonical = this.resolveChapterId(id);
+    return this.chapters.findIndex((chapter) => chapter.id === canonical);
+  }
+
+  stateForChapter(id, { currentLengthNm = null } = {}) {
     const chapter = this.chapter(id);
     if (!chapter) throw new Error(`StoryController: unknown chapter '${id}'.`);
     return {
       audience_mode: AUDIENCE_MODES.guided,
       story_step: chapter.id,
-      sarcomere_length_nm: chapter.recommended_state.sarcomere_length_nm,
+      sarcomere_length_nm: Number.isFinite(currentLengthNm)
+        ? currentLengthNm : chapter.recommended_state.sarcomere_length_nm,
       scale: chapter.recommended_state.scale,
       camera_preset: chapter.recommended_state.camera_preset,
       selected_component_or_region: chapter.recommended_state.selected_component_or_region,
@@ -500,10 +839,29 @@ export class StoryController {
       if (Object.hasOwn(AUDIENCE_MODES, value)) state.audience_mode = value;
       else fallback('mode', value, 'expected guided or evidence', state.audience_mode);
     }
+    let resolvedStepChapter = null;
     if (params.has('step')) {
       const value = targetValue(first('step'));
-      if (value === null || this.chapterMap.has(value)) state.story_step = value;
-      else fallback('step', value, 'unknown guided chapter', state.story_step);
+      const canonical = value === null ? null : this.resolveChapterId(value);
+      if (canonical === null || this.chapterMap.has(canonical)) {
+        state.story_step = canonical;
+        if (canonical !== null) resolvedStepChapter = this.chapterMap.get(canonical);
+        if (value !== null && canonical !== value) {
+          issues.push(`Legacy chapter '${value}' resolved to '${canonical}'.`);
+        }
+      } else fallback('step', value, 'unknown guided chapter', state.story_step);
+    }
+    // A chapter-bearing hash adopts the complete declared scene wherever the
+    // URL omitted a scene field. Explicit scale, camera, and target fields are
+    // parsed below and still win. Sarcomere length remains independently
+    // supplied/defaulted because every SC-23 scene has a preserve policy.
+    if (resolvedStepChapter) {
+      const recommended = resolvedStepChapter.recommended_state;
+      if (!params.has('scale')) state.scale = recommended.scale;
+      if (!params.has('camera')) state.camera_preset = recommended.camera_preset;
+      if (!params.has('target')) {
+        state.selected_component_or_region = recommended.selected_component_or_region;
+      }
     }
     if (params.has('sl')) {
       const value = first('sl');
@@ -521,19 +879,6 @@ export class StoryController {
       const value = first('scale');
       if (this.capabilities.scales.has(value)) state.scale = value;
       else fallback('scale', value, 'unavailable scale', state.scale);
-    }
-    // A hash that named a step but no camera used to keep whatever camera the
-    // page was already showing, so '#mode=guided&step=anchors' rendered chapter
-    // 1's frame under chapter 4's text. A URL that names a chapter and nothing
-    // else can only mean that chapter's own declared frame.
-    //
-    // This adds NO URL field: URL_KEYS is closed and unchanged, and what moves is
-    // only what an ABSENT 'camera' key defaults to. An explicit camera below
-    // still wins, including its unavailable-camera fallback, which is why this
-    // runs before that block rather than inside it.
-    if (params.has('step') && !params.has('camera') && this.chapterMap.has(state.story_step)) {
-      state.camera_preset = this.chapterMap
-        .get(state.story_step).recommended_state.camera_preset;
     }
     if (params.has('camera')) {
       const value = first('camera');

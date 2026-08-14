@@ -89,7 +89,7 @@ export function validateVisualMatrix(matrix) {
  */
 export function createVisualMatrix(model, capabilities) {
   const presentation = model.spec.presentation;
-  const controller = new StoryController(presentation, capabilities);
+  const controller = new StoryController(presentation, capabilities, model.spec.scenes);
   const cells = [];
 
   /**
@@ -178,7 +178,7 @@ export function createVisualMatrix(model, capabilities) {
   // The optional MyBP-C layer, both ways, on the view that carries it. The two
   // cells are the same application state; only the display option differs, which
   // is what makes them a usable before/after pair.
-  const scaffold = controller.stateForChapter('anchored_scaffold');
+  const scaffold = controller.stateForChapter('scaffold_thick_filament');
   const scaffoldEvidence = { ...scaffold, audience_mode: 'evidence', evidence_display: true };
   for (const enabled of [false, true]) {
     cell(`mybpc_${enabled ? 'on' : 'off'}`, 'mybpc_context', PRIMARY_VIEWPORT,

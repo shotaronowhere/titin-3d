@@ -30,7 +30,7 @@ const capabilities = {
   minLength: min,
   maxLength: max,
 };
-const controller = new StoryController(model.spec.presentation, capabilities);
+const controller = new StoryController(model.spec.presentation, capabilities, model.spec.scenes);
 
 /** The presentation option space SC-8 has to sweep. */
 const MODES = ['guided', 'evidence'];

@@ -359,13 +359,17 @@ window.__titinBoot = { ready: false, problems: [] };
      reserve assumed, and the card sat on top of it. */
   #guidedCard { pointer-events: auto; margin-top: auto;
     margin-bottom: calc(var(--stage-bar-h, 114px) + 14px); width: min(500px, calc(100vw - 28px));
-    border-radius: 10px; padding: 14px 15px 12px; border-top: 2px solid var(--titin); }
+    max-height: calc(100vh - var(--stage-bar-h, 114px) - 126px); overflow-y: auto;
+    overscroll-behavior: contain; border-radius: 10px; padding: 14px 15px 12px;
+    border-top: 2px solid var(--titin); }
   #app[data-mode="evidence"] #guidedCard { display: none; }
   .chapter-meta { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .1em;
     text-transform: uppercase; }
   #chapterTitle { font-size: 19px; line-height: 1.2; margin: 4px 0 7px; }
   #chapterSummary { margin: 0 0 10px; color: #d2d9e1; font-size: 12px; line-height: 1.55; }
+  #chapterStateAnnouncement { margin: 0 0 8px; color: #aeb9c7; font-size: 10px; line-height: 1.45; }
   .chapter-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  #chapterNextActions { display: flex; gap: 5px; flex-wrap: wrap; margin: 0 0 8px; }
   #chapterEvidenceLink { margin-left: auto; border-color: rgb(217 79 79 / 75%); }
   .status-pill { display: inline-block; border: 1px solid #775b29; border-radius: 999px;
     color: #e8c16d; padding: 1px 6px; font-size: 9px; font-weight: 700; letter-spacing: .05em; }
@@ -656,19 +660,24 @@ window.__titinBoot = { ready: false, problems: [] };
           aria-controls="guidedCardBody">Read this chapter</button>
         <div id="guidedCardBody">
         <p id="chapterSummary"></p>
+        <p id="chapterStateAnnouncement" role="status" aria-live="polite"></p>
         <div id="guidedSelection" hidden><b id="guidedSelectionLabel"></b><span id="guidedSelectionText"></span></div>
+        <!-- Route controls precede optional chapter figures so a large lattice or
+             extension comparison can never cover the only way to continue. -->
+        <div id="chapterNextActions" aria-label="Actions for this chapter"></div>
+        <div class="chapter-actions">
+          <button id="chapterPrevious">Previous</button>
+          <button id="chapterNext">Next</button>
+          <button id="chapterRestart">Restart</button>
+          <button id="chapterRestoreView" disabled>Restore previous view</button>
+          <button id="chapterEvidenceLink">Evidence</button>
+        </div>
         <div id="extensionStory" hidden>
           <div class="extension-head"><span>Regional end-to-end span at this length</span><span id="extensionTotal">—</span></div>
           <div id="extensionRows"></div>
           <div class="mechanism-key">●—● folded domains straighten · ∿ disordered chain extends</div>
         </div>
         <div id="guidedLattice" hidden></div>
-        <div class="chapter-actions">
-          <button id="chapterPrevious">Previous</button>
-          <button id="chapterNext">Next</button>
-          <button id="chapterRestart">Restart</button>
-          <button id="chapterEvidenceLink">Evidence</button>
-        </div>
         </div><!-- /guidedCardBody -->
       </section>
     </div>
@@ -851,6 +860,7 @@ window.__titinBoot = { ready: false, problems: [] };
         aria-label="Filter sources by the current context">
         <button data-source-scope="value">Sources for this value</button>
         <button data-source-scope="object">Sources for this object</button>
+        <button data-source-scope="scene">Sources for this scene</button>
         <button data-source-scope="chapter">Sources for this chapter</button>
         <button data-source-scope="all">All sources</button>
       </div>
@@ -881,7 +891,7 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
 import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible } from './src/presentation/StageLayout.js';
-import { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
+import { SWEEP, sweepElapsedAtLength, sweepLength } from './src/presentation/StretchSweep.js';
 // The presenter key map. In a module, not here, so release/PRESENTER_SCRIPT.md
 // can print the keys this page actually binds rather than restating them.
 import { presenterKeys, unboundShortcutIds } from './src/presentation/PresenterKeys.js';
@@ -922,6 +932,9 @@ const state = { showDomains: false, showFilamentContext: true,
                 // about the model, and story.serialize() is the contract for
                 // what a shared link reproduces.
                 drawerTab: 'inspect', sourceFilter: 'auto', selectedSourceValue: null };
+let demonstrationRestoreLength = null;
+let chapterRestoreViewState = null;
+let chapterViewAnnouncement = '';
 
 try {
   visualization = await TitinVisualization.create($('canvas'), {
@@ -942,7 +955,7 @@ const story = new StoryController(presentation, {
   hiddenTargetsByScale: { [SCALES.detail]: TitinVisualization.DETAIL_HIDDEN },
   minLength: min,
   maxLength: max,
-});
+}, model.spec.scenes);
 const restored = story.parse(window.location.hash);
 state.audienceMode = restored.state.audience_mode;
 state.storyStep = restored.state.story_step;
@@ -2103,10 +2116,26 @@ function renderChapter() {
   $('chapterEvidenceClass').textContent = chapter.evidence_class;
   $('chapterTitle').textContent = chapter.title;
   $('chapterSummary').textContent = chapter.lay_summary;
+  $('chapterStateAnnouncement').textContent = chapterViewAnnouncement
+    || chapter.state_change_announcement;
   $('chapterPrevious').disabled = index <= 0;
   $('chapterNext').disabled = index >= story.chapters.length - 1;
+  $('chapterPrevious').textContent = index > 0
+    ? `Previous: ${story.chapters[index - 1].title}` : 'Previous';
+  $('chapterNext').textContent = index < story.chapters.length - 1
+    ? `Next: ${story.chapters[index + 1].title}` : 'Next';
+  $('chapterNextActions').replaceChildren(...chapter.next_actions.map((action) => {
+    const button = document.createElement('button');
+    button.textContent = action.label;
+    button.dataset.chapterAction = action.action;
+    button.onclick = () => runChapterAction(action.action, button);
+    return button;
+  }));
+  syncChapterActionButtons();
+  $('chapterRestoreView').disabled = chapterRestoreViewState === null;
   const claimNode = renderClaimView(visualization.claimView(chapter.target_claim_id, {
     presentationRecord: chapter,
+    relatedClaimIds: chapter.claim_ids,
   }), document);
   claimNode.querySelector('.claim-view-title').id = 'chapterEvidenceTitle';
   claimNode.querySelector('.claim-view-specialist p').id = 'chapterExpert';
@@ -2118,6 +2147,43 @@ function renderChapter() {
   renderScienceOverlay();
   renderExtensionChart(activeShowcaseOverlay);
   renderProvenancePipeline();
+}
+
+function syncChapterActionButtons() {
+  const length = Number(slider.value);
+  const inRange = length >= sweepRange.min && length <= sweepRange.max;
+  for (const button of $('chapterNextActions').children) {
+    const action = button.dataset.chapterAction;
+    button.disabled = (action === 'length.set_demo_start' && inRange)
+      || (action === 'length.restore' && demonstrationRestoreLength === null)
+      || (action === 'sweep.toggle' && !inRange);
+  }
+}
+
+function setDemonstrationStart() {
+  const current = Number(slider.value);
+  if (current >= sweepRange.min && current <= sweepRange.max) return;
+  if (demonstrationRestoreLength === null) demonstrationRestoreLength = current;
+  slider.value = String(sweepRange.min);
+  rebuild();
+  renderChapter();
+}
+
+function restoreDemonstrationLength() {
+  if (demonstrationRestoreLength === null) return;
+  slider.value = String(demonstrationRestoreLength);
+  demonstrationRestoreLength = null;
+  rebuild();
+  renderChapter();
+}
+
+function runChapterAction(action, trigger) {
+  if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
+  else if (action === 'mode.evidence') openEvidence(trigger, 'evidence');
+  else if (action === 'sweep.toggle') toggleSweep();
+  else if (action === 'length.set_demo_start') setDemonstrationStart();
+  else if (action === 'length.restore') restoreDemonstrationLength();
+  else if (action.startsWith('target.')) selectRegion(action.slice('target.'.length));
 }
 
 function applyChapterVisibility(chapterId) {
@@ -2151,18 +2217,58 @@ function applyCameraPreset({ animate = false } = {}) {
     syncCloseups(visualization.closeUp(name, { move: false }));
     syncDepictionToggles();
   } else if (kind === 'region') {
-    state.region = name; state.selectedTarget = name; state.closeup = null;
-    visualization.highlightTitinRegion(name);
+    // Camera focus and biological selection are independent URL fields. A
+    // chapter may frame a representative region while selecting a component
+    // (molecular architecture does exactly that), so applying the camera must
+    // not silently replace the chapter's declared target.
+    state.closeup = null;
     visualization.focusTitinRegion(name, { animate });
     syncRegions(); syncCloseups(null);
   }
   syncViews();
 }
 
+function captureChapterViewState() {
+  return {
+    scale: state.scale,
+    cameraPreset: state.cameraPreset,
+    selectedTarget: state.selectedTarget,
+    region: state.region,
+    closeup: state.closeup,
+    view: state.view,
+    showFilamentContext: state.showFilamentContext,
+    showDomains: state.showDomains,
+    showContextDetail: state.showContextDetail,
+    mirror: state.mirror,
+    rings: state.rings,
+  };
+}
+
+function restorePreviousChapterView() {
+  if (chapterRestoreViewState === null) return;
+  stopSweep();
+  const previous = chapterRestoreViewState;
+  chapterRestoreViewState = null;
+  Object.assign(state, previous);
+  chapterViewAnnouncement = 'Previous view restored; the current chapter and sarcomere length are unchanged.';
+  pinnedPick = null; hoverPick = null;
+  if (visualization.scale !== state.scale) visualization.setScale(state.scale);
+  rebuild(true);
+  visualization.highlightTitinRegion(state.region);
+  applyCameraPreset({ animate: true });
+  render(visualization.currentState());
+  renderChapter();
+  renderPinnedSelection();
+  syncScales(); syncRegions(); syncDepictionToggles(); refreshRegionReadout();
+  syncPublicPresentation(); syncUrl();
+  markStageDirty();
+}
+
 function applyChapter(chapterId) {
   stopSweep();
   const chapter = story.chapter(chapterId);
   if (!chapter) return;
+  chapterRestoreViewState = captureChapterViewState();
   const scene = chapter.recommended_state;
   state.audienceMode = AUDIENCE_MODES.guided;
   state.storyStep = chapter.id;
@@ -2172,9 +2278,13 @@ function applyChapter(chapterId) {
   state.selectedTarget = scene.selected_component_or_region;
   state.region = chapter.target.kind === 'region' ? chapter.target.id : null;
   state.closeup = null;
+  chapterViewAnnouncement = `${chapter.state_change_announcement} `
+    + 'Restore previous view is available; it restores framing, layers, and selection only.';
   pinnedPick = null; hoverPick = null;
   applyChapterVisibility(chapter.id);
-  slider.value = scene.sarcomere_length_nm;
+  // SC-23 scenes recommend framing and visibility but preserve the user's
+  // sarcomere length. A chapter may offer an explicit, reversible demonstration
+  // start action; navigation itself never overwrites the slider.
   if (visualization.scale !== state.scale) visualization.setScale(state.scale);
   syncAudienceMode();
   rebuild(true);
@@ -2197,6 +2307,7 @@ $('chapterNext').onclick = () => {
   if (index < story.chapters.length - 1) applyChapter(story.chapters[index + 1].id);
 };
 $('chapterRestart').onclick = () => applyChapter(story.chapters[0].id);
+$('chapterRestoreView').onclick = restorePreviousChapterView;
 
 // ---- controls -------------------------------------------------------------
 for (const scale of Object.values(SCALES)) {
@@ -2284,8 +2395,9 @@ for (const [k, v] of Object.entries(VIEWS)) {
   $('views').append(b);
 }
 function syncViews() {
+  const [cameraKind] = state.cameraPreset.split('.');
   for (const b of $('views').children) {
-    const on = !state.closeup && !state.region
+    const on = cameraKind === 'view'
       && b.dataset.view === state.view;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   }
@@ -2482,8 +2594,17 @@ function sourceChapterDescriptor() {
   const chapter = activeChapter();
   return chapter ? {
     label: chapter.title,
-    claimIds: [chapter.target_claim_id],
+    claimIds: chapter.claim_ids,
     sourceIds: chapter.source_ids,
+  } : null;
+}
+
+function sourceSceneDescriptor() {
+  const chapter = activeChapter();
+  const scene = chapter ? story.scene(chapter.semantic_scene_id) : null;
+  return scene ? {
+    label: scene.label,
+    claimIds: scene.source_filter.claim_ids,
   } : null;
 }
 
@@ -2518,6 +2639,7 @@ function renderBibliography() {
     requestedScope: state.sourceFilter,
     selectedValue: state.selectedSourceValue,
     selectedObject: sourceObjectDescriptor(),
+    semanticScene: sourceSceneDescriptor(),
     currentChapter: sourceChapterDescriptor(),
   });
   state.sourceFilter = result.requestedScope === 'auto' ? 'auto' : result.scope;
@@ -2985,6 +3107,7 @@ function render(report) {
   // reporting. Same value, same clamp disclosure, beside the control itself.
   $('stageLengthReadout').textContent = `${g.sarcomere_length_nm.toLocaleString()} nm`
     + (report.clamped ? ' (clamped)' : '');
+  syncChapterActionButtons();
   const statePreset = presentation.length_presets
     .find((preset) => preset.sarcomere_length_nm === g.sarcomere_length_nm);
   const scopeState = statePreset
@@ -3297,6 +3420,8 @@ function restorePresentationFromHash() {
   state.cameraPreset = incoming.camera_preset;
   state.selectedSourceValue = null;
   state.sourceFilter = 'auto';
+  chapterRestoreViewState = null;
+  chapterViewAnnouncement = '';
   pinnedPick = null; hoverPick = null;
   const [cameraKind, cameraName] = state.cameraPreset.split('.');
   state.view = cameraKind === 'view' ? cameraName : 'titin_story';
@@ -3399,11 +3524,9 @@ function stepSweep(now) {
 // The working range, not the slider's full range: the illustrative 3,000 nm
 // reference and the 1,900 nm short state are outside the declared comparison
 // interval and must not be swept through as if they were ordinary physiology.
-const workingPresets = presentation.length_presets
-  .filter((preset) => !preset.outside_working_range);
 const sweepRange = {
-  min: Math.min(...workingPresets.map((preset) => preset.sarcomere_length_nm)),
-  max: Math.max(...workingPresets.map((preset) => preset.sarcomere_length_nm)),
+  min: presentation.scope.working_range_nm[0],
+  max: presentation.scope.working_range_nm[1],
 };
 
 // A control that cannot do anything says so, rather than looking available and
@@ -3422,7 +3545,16 @@ function toggleSweep() {
   // The keyboard route arrives here directly, so the disabled state has to be
   // enforced here too and not only by the control that displays it.
   if ($('stagePlay').disabled) return;
-  sweepStartedAt = performance.now();
+  const current = Number(slider.value);
+  if (current < sweepRange.min || current > sweepRange.max) {
+    $('objectAnnouncement').textContent = 'Stretch not started. The current length is outside '
+      + 'the supported range; in Stretch the spring, choose Set demonstration start first.';
+    return;
+  }
+  const periodMs = prefersReducedMotion() ? SWEEP.reduced_motion_period_ms : SWEEP.period_ms;
+  sweepStartedAt = performance.now() - sweepElapsedAtLength(current, {
+    minNm: sweepRange.min, maxNm: sweepRange.max, periodMs,
+  });
   $('stagePlay').classList.add('on');
   $('stagePlay').setAttribute('aria-pressed', 'true');
   sweepHandle = requestAnimationFrame(stepSweep);

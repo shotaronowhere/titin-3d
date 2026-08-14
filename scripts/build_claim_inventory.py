@@ -195,6 +195,7 @@ def claim_subject(object_id: str) -> dict[str, Any]:
 
 def public_bindings(claim_id: str, presentation: dict[str, Any], annotations: dict[str, Any]) -> list[str]:
     showcase = load_json(ROOT / "data" / "showcase_claims.json")
+    scenes = load_json(ROOT / "data" / "scenes.json")
     paths = [
         f"data/showcase_claims.json#/objects/{index}/claim"
         for index, row in enumerate(showcase.get("objects") or [])
@@ -203,7 +204,7 @@ def public_bindings(claim_id: str, presentation: dict[str, Any], annotations: di
     paths.extend(
         f"data/presentation.json#/guided_chapters/{index}"
         for index, row in enumerate(presentation.get("guided_chapters") or [])
-        if row.get("target_claim_id") == claim_id
+        if row.get("target_claim_id") == claim_id or claim_id in (row.get("claim_ids") or [])
     )
     paths.extend(
         f"data/presentation.json#/expert_cards/{index}"
@@ -215,7 +216,12 @@ def public_bindings(claim_id: str, presentation: dict[str, Any], annotations: di
         for index, row in enumerate(annotations.get("components") or [])
         if claim_id in (row.get("claim_support_ids") or [])
     )
-    return paths
+    paths.extend(
+        f"data/scenes.json#/scenes/{scene_id}"
+        for scene_id, row in (scenes.get("scenes") or {}).items()
+        if claim_id in (row.get("claim_ids") or [])
+    )
+    return list(dict.fromkeys(paths))
 
 
 def support_row(source: dict[str, Any]) -> dict[str, Any]:
@@ -412,10 +418,10 @@ def extra_claims() -> list[dict[str, Any]]:
                 "locator": LOCATORS["10.1016/j.cell.2021.02.047"],
                 "relationship": "context",
                 "source_subject": source_subject("10.1016/j.cell.2021.02.047"),
-                "extraction_note": "Current registry source is contextual; SC-22 should replace or confirm a primary foundational locator."
+                "extraction_note": "Native skeletal-muscle structural evidence supports the registered definition; project-owner approval accepts this evidence without claiming independent locator review."
             }],
             "model_dependencies": ["data/sarcomere.json"],
-            "limitations": ["Current support is not yet independently locator-verified."],
+            "limitations": ["Project-owner evidence acceptance is not independent human semantic or locator review."],
             "not_claimed": ["that the schematic is a complete sarcomere molecular inventory"],
             "public_bindings": [],
             "inventory_status": "REQUIRED_FOR_SC23",
@@ -433,10 +439,10 @@ def extra_claims() -> list[dict[str, Any]]:
                 "locator": LOCATORS["10.1021/bi00801a004"],
                 "relationship": "direct",
                 "source_subject": source_subject("10.1021/bi00801a004"),
-                "extraction_note": "Foundational actomyosin ATPase-cycle evidence; exact public wording remains pending independent review."
+                "extraction_note": "Foundational actomyosin ATPase-cycle evidence accepted by the project owner for the registered public wording."
             }],
             "model_dependencies": [],
-            "limitations": ["The exact locator and modern public wording must be independently reviewed before SC-23 ships."],
+            "limitations": ["Project-owner evidence acceptance is not independent human semantic or locator review."],
             "not_claimed": ["that titin hydrolyses ATP to drive contraction", "an active cross-bridge simulation"],
             "public_bindings": [],
             "inventory_status": "REQUIRED_FOR_SC23",
@@ -479,6 +485,10 @@ def build(previous: dict[str, Any] | None = None) -> dict[str, Any]:
         record["public_bindings"] = list(dict.fromkeys(
             [*(record.get("public_bindings") or []), *discovered]
         ))
+        old = previous_by_id.get(record["id"])
+        if old and (old.get("review") or {}).get("status") in {"APPROVED", "DEFERRED"}:
+            if old["review"].get("reviewed_payload_sha256") == claim_payload_sha256(record):
+                record["review"] = copy.deepcopy(old["review"])
         claims.append(record)
     claims.sort(key=lambda row: row["id"])
     return {
@@ -488,7 +498,7 @@ def build(previous: dict[str, Any] | None = None) -> dict[str, Any]:
             "MEASURED", "STRONGLY INFERRED", "MODELED", "INFERRED", "SCHEMATIC", "UNKNOWN"
         ],
         "support_relationships": ["direct", "corroborating", "transfer", "context"],
-        "semantic_entailment": "Named human review only; registry closure is a separate gate.",
+        "semantic_entailment": "Approval provenance distinguishes named independent human review from project-owner acceptance of registered scientific evidence; registry closure alone is not entailment.",
         "claims": claims,
     }
 

@@ -21,8 +21,8 @@
 
 /** One letter per declared presenter action. */
 export const PRESENTER_KEY_BY_ACTION = Object.freeze({
-  'story.orientation': 'r',
-  'story.elastic_regions': 'x',
+  'story.meet_sarcomere': 'r',
+  'story.stretch_spring': 'x',
   'mode.evidence': 'e',
 });
 

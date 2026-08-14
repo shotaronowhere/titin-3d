@@ -1,0 +1,268 @@
+{
+  "schema": "titin-semantic-scenes/1",
+  "meta": {
+    "purpose": "Declarative SC-23 scene intent. Records may select admitted scientific objects and presentation state, but contain no coordinates, biological constants, evidence classes, or force values.",
+    "controller_owner": "SC-24"
+  },
+  "primary_presenter_scene_id": "meet_sarcomere",
+  "scenes": {
+    "meet_sarcomere": {
+      "label": "Meet the sarcomere",
+      "available_in": [
+        "LEARN",
+        "EXPLORE"
+      ],
+      "camera_preset": "view.titin_story",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": false,
+        "show_context_detail": false,
+        "mirror": true
+      },
+      "selection": {
+        "kind": "component",
+        "id": "titin"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "sarcomere_definition",
+        "actomyosin_motor_function",
+        "titin_continuity_trace",
+        "titin_region_architecture"
+      ],
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "sarcomere_definition",
+          "actomyosin_motor_function",
+          "titin_continuity_trace",
+          "titin_region_architecture"
+        ]
+      }
+    },
+    "follow_titin": {
+      "label": "Follow one giant molecule",
+      "available_in": [
+        "LEARN",
+        "EXPLORE"
+      ],
+      "camera_preset": "view.titin_story",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": false,
+        "show_context_detail": false,
+        "mirror": true
+      },
+      "selection": {
+        "kind": "component",
+        "id": "titin"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "titin_continuity_trace",
+        "titin_region_architecture",
+        "mband_midpoint_and_crosslinks"
+      ],
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "titin_continuity_trace",
+          "titin_region_architecture",
+          "mband_midpoint_and_crosslinks"
+        ]
+      }
+    },
+    "molecular_architecture": {
+      "label": "See its molecular architecture",
+      "available_in": [
+        "LEARN",
+        "EXPLORE"
+      ],
+      "camera_preset": "region.prox_Ig",
+      "scale": "detail",
+      "context": false,
+      "layers": {
+        "show_lattice": false,
+        "show_domains": true,
+        "show_context_detail": false,
+        "mirror": false
+      },
+      "selection": {
+        "kind": "component",
+        "id": "titin_domains"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "titin_region_architecture",
+        "sequence_region_partition"
+      ],
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "titin_region_architecture",
+          "sequence_region_partition"
+        ]
+      }
+    },
+    "stretch_spring": {
+      "label": "Stretch the spring",
+      "available_in": [
+        "LEARN",
+        "EXPLORE"
+      ],
+      "camera_preset": "region.PEVK",
+      "scale": "detail",
+      "context": false,
+      "layers": {
+        "show_lattice": false,
+        "show_domains": true,
+        "show_context_detail": false,
+        "mirror": false
+      },
+      "selection": {
+        "kind": "region",
+        "id": "PEVK"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "regional_extension_story",
+        "force_law_parameter_set",
+        "titin_region_architecture"
+      ],
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "regional_extension_story",
+          "force_law_parameter_set",
+          "titin_region_architecture"
+        ]
+      }
+    },
+    "inspect_anchors": {
+      "label": "Inspect both anchors",
+      "available_in": [
+        "LEARN",
+        "EXPLORE"
+      ],
+      "camera_preset": "closeup.zdisc",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": false,
+        "show_context_detail": true,
+        "mirror": true
+      },
+      "selection": {
+        "kind": "region",
+        "id": "Z1Z2"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "zdisc_local_network",
+        "zdisc_telethonin_sandwich",
+        "mband_midpoint_and_crosslinks"
+      ],
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "zdisc_local_network",
+          "zdisc_telethonin_sandwich",
+          "mband_midpoint_and_crosslinks"
+        ]
+      }
+    },
+    "scaffold_thick_filament": {
+      "label": "Scaffold the thick filament",
+      "available_in": [
+        "LEARN",
+        "EXPLORE"
+      ],
+      "camera_preset": "closeup.czone",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": true,
+        "show_context_detail": true,
+        "mirror": true
+      },
+      "selection": {
+        "kind": "region",
+        "id": "Aband_super"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "titin_region_architecture",
+        "aband_periodicity_relation",
+        "lattice_cross_section"
+      ],
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "titin_region_architecture",
+          "aband_periodicity_relation",
+          "lattice_cross_section"
+        ]
+      }
+    },
+    "knowledge_recap": {
+      "label": "What do we know?",
+      "available_in": [
+        "LEARN",
+        "EXPLORE"
+      ],
+      "camera_preset": "view.titin_story",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": false,
+        "show_context_detail": false,
+        "mirror": true
+      },
+      "selection": {
+        "kind": "component",
+        "id": "titin"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "titin_continuity_trace",
+        "titin_region_architecture",
+        "regional_extension_story",
+        "n2a_interaction_hub_card",
+        "titin_kinase_card",
+        "ai_provenance_pipeline"
+      ],
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "titin_continuity_trace",
+          "titin_region_architecture",
+          "regional_extension_story",
+          "n2a_interaction_hub_card",
+          "titin_kinase_card",
+          "ai_provenance_pipeline"
+        ]
+      }
+    }
+  }
+}

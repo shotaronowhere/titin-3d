@@ -17,11 +17,13 @@ const model = await TitinModel.create(nodeReader());
 
 const specContext = {
   claims: model.spec.showcaseClaims,
+  claimSupport: model.spec.claimSupport,
   references: model.spec.references,
   sarcomere: model.spec.sarcomere,
   titin: model.spec.titin,
   states: model.spec.states,
   annotations: model.spec.annotations,
+  scenes: model.spec.scenes,
 };
 
 test('SC13: specialist depth is disclosed, not dumped', () => {

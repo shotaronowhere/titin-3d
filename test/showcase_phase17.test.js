@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
+import { COMPONENT_COLOR, GUIDED_COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
 import {
   PRESENTER_KEY_BY_ACTION, STAGE_KEYS, presenterKeyGuide, presenterKeys, unboundShortcutIds,
 } from '../src/presentation/PresenterKeys.js';
@@ -93,14 +94,18 @@ test('SC17: the printed script names the keys the page binds', () => {
   assert.match(preflight, /presenter keys/i);
 });
 
-test('SC17: the page names titin one colour', () => {
+test('SC17: orientation is claim-bound while titin retains one identity colour', () => {
   const chapter = model.spec.presentation.guided_chapters
-    .find((entry) => entry.id === 'orientation');
-  assert.ok(!/\bin red\b/.test(chapter.lay_summary),
-    'titin is #ff5d7d — pink — everywhere else in the copy');
-  assert.match(chapter.lay_summary, /\bpink\b/);
-  // The page quoted that sentence back in a comment; a fixed word in one place
-  // and the old word in the other is the same drift with an extra hop.
-  assert.ok(!page.includes('shown in red'),
-    'the page still quotes the superseded copy');
+    .find((entry) => entry.id === 'meet_sarcomere');
+  assert.ok(chapter.claim_ids.includes('sarcomere_definition'));
+  assert.ok(chapter.claim_ids.includes('actomyosin_motor_function'));
+  assert.ok(chapter.claim_ids.includes('titin_continuity_trace'));
+  assert.match(chapter.lay_summary, /sarcomere[\s\S]*Z-discs/i);
+  assert.match(chapter.lay_summary,
+    /(?:ATP|\(ATP\))-powered myosin[\s\S]*titin[\s\S]*not the motor/i);
+  assert.equal(COMPONENT_COLOR.titin, 0xff5d7d);
+  assert.equal(Object.hasOwn(GUIDED_COMPONENT_COLOR, 'titin'), false,
+    'Guided mode must inherit, not redefine, titin identity colour');
+  assert.match(page, /--titin:\s*#ff5d7d/i,
+    'the UI identity channel must consume the same single titin colour');
 });

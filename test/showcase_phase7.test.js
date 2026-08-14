@@ -26,14 +26,16 @@ const controller = new StoryController(presentation, {
   hiddenTargetsByScale: { [SCALES.detail]: TitinVisualization.DETAIL_HIDDEN },
   minLength: min,
   maxLength: max,
-});
+}, model.spec.scenes);
 const specContext = {
   claims: model.spec.showcaseClaims,
+  claimSupport: model.spec.claimSupport,
   references: model.spec.references,
   sarcomere: model.spec.sarcomere,
   titin: model.spec.titin,
   states: model.spec.states,
   annotations: model.spec.annotations,
+  scenes: model.spec.scenes,
 };
 const words = (text) => String(text || '').trim().split(/\s+/).filter(Boolean).length;
 
@@ -41,15 +43,15 @@ const words = (text) => String(text || '').trim().split(/\s+/).filter(Boolean).l
 // The main guided route
 // ---------------------------------------------------------------------------
 
-test('SC7: the route walks the six planned steps and closes with the pipeline', () => {
+test('SC7: the route retains seven deterministic presentation steps', () => {
   assert.deepEqual(controller.chapters.map((chapter) => chapter.id), [
-    'orientation', 'architecture', 'elastic_regions', 'anchors',
-    'anchored_scaffold', 'evidence_audit', 'provenance_pipeline',
+    'meet_sarcomere', 'follow_titin', 'molecular_architecture', 'stretch_spring',
+    'inspect_anchors', 'scaffold_thick_filament', 'knowledge_recap',
   ]);
   assert.deepEqual(controller.chapters.map((chapter) => chapter.order),
     [1, 2, 3, 4, 5, 6, 7]);
-  assert.equal(controller.chapters.at(-1).id, 'provenance_pipeline',
-    'the build pipeline ends the presentation');
+  assert.equal(controller.chapters.at(-1).id, 'knowledge_recap',
+    'the complete titin route ends the presentation');
   assert.deepEqual(checkPresentationSpec(presentation, specContext), []);
 });
 
@@ -89,21 +91,18 @@ test('SC7: every chapter owns one takeaway, camera, configuration, and source se
 test('SC7: each chapter covers the subject the plan assigned it', () => {
   const chapter = (id) => controller.chapter(id);
   const all = (id) => `${chapter(id).lay_summary} ${chapter(id).expert_expansion}`;
-  assert.match(all('orientation'), /continuous/i);
-  assert.match(all('orientation'), /Z-disc/);
-  assert.match(all('architecture'), /Ig|domain/i);
-  assert.match(all('elastic_regions'), /PEVK|disordered/i);
+  assert.match(all('meet_sarcomere'), /motor/i);
+  assert.match(all('meet_sarcomere'), /sarcomere/i);
+  assert.match(all('molecular_architecture'), /Ig|domain/i);
+  assert.match(all('stretch_spring'), /PEVK|disordered/i);
   // Both anchors, not just the one the camera frames.
-  assert.match(all('anchors'), /telethonin/i);
-  assert.match(all('anchors'), /M-band/);
-  // The scaffold chapter's brief includes the optional MyBP-C context; the mention
-  // sits in the expert expansion, which renders in the mode that can show it.
-  assert.match(chapter('anchored_scaffold').expert_expansion, /MyBP-C/);
-  assert.doesNotMatch(chapter('anchored_scaffold').lay_summary, /MyBP-C/,
+  assert.match(all('inspect_anchors'), /telethonin/i);
+  assert.match(all('inspect_anchors'), /M-band/);
+  assert.doesNotMatch(chapter('scaffold_thick_filament').lay_summary, /MyBP-C/,
     'Guided mode never draws MyBP-C, so its lay copy must not promise it');
-  assert.match(all('anchored_scaffold'), /super-repeat/i);
-  assert.match(all('evidence_audit'), /MEASURED[\s\S]*UNKNOWN|measured/);
-  assert.match(all('provenance_pipeline'), /records|pipeline|cited/i);
+  assert.match(all('scaffold_thick_filament'), /repeat|periodicit/i);
+  assert.match(all('knowledge_recap'), /Measured[\s\S]*schematic/i);
+  assert.match(all('knowledge_recap'), /spring[\s\S]*scaffold/i);
 });
 
 test('SC7: the tour is paced to the plan window without opening the drawer', () => {
@@ -111,7 +110,8 @@ test('SC7: the tour is paced to the plan window without opening the drawer', () 
   assert.ok(pacing.reading_words_per_minute > 0);
   assert.ok(pacing.basis.trim());
   const [low, high] = pacing.target_seconds;
-  const total = controller.chapters.reduce((sum, chapter) => sum + words(chapter.lay_summary), 0);
+  const total = controller.chapters.reduce((sum, chapter) => sum
+    + words(chapter.narration) + words(chapter.state_change_announcement), 0);
   const seconds = (total / pacing.reading_words_per_minute) * 60
     + controller.chapters.length * pacing.chapter_transition_seconds;
   assert.ok(seconds >= low && seconds <= high,
@@ -270,10 +270,11 @@ test('SC7: the pipeline message stays a provenance claim, not an AI claim', () =
     'that procedural geometry is experimental density']) {
     assert.ok(pipeline.not_claimed.includes(expected), `missing non-claim: ${expected}`);
   }
-  const chapter = controller.chapter('provenance_pipeline');
-  assert.deepEqual(chapter.presentation_features, ['provenance_pipeline']);
-  assert.match(chapter.lay_summary, /not an illustration drawn to look convincing/i);
-  assert.match(chapter.expert_expansion, /not the scientific authority/i);
+  const chapter = controller.chapter('knowledge_recap');
+  assert.ok(chapter.claim_ids.includes('ai_provenance_pipeline'));
+  assert.ok(!chapter.presentation_features.includes('provenance_pipeline'),
+    'the final visual frame must return to the complete titin route');
+  assert.match(chapter.lay_summary, /passive spring/i);
 
   assert.throws(() => validateProvenancePipeline({
     ...pipeline, stages: pipeline.stages.slice(0, 3),

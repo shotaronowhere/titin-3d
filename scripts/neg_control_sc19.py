@@ -29,6 +29,7 @@ template = (ROOT / "src/index.template.html").read_text(encoding="utf-8")
 claims = load_json(ROOT / "data/claim_support.json")
 references = load_json(ROOT / "data/references.json")
 annotations = load_json(ROOT / "data/annotations.json")
+scenes = load_json(ROOT / "data/scenes.json")
 decisions = load_json(ROOT / "data/scientific_decisions.json")
 
 
@@ -78,7 +79,7 @@ def claim_by_id(record, claim_id):
 def claim_case(name, mutate, needle):
     c, s = copy.deepcopy(claims), copy.deepcopy(showcase)
     mutate(c, s)
-    rejected(name, validate_claims(c, references, s, presentation, annotations), needle)
+    rejected(name, validate_claims(c, references, s, presentation, annotations, scenes), needle)
 
 
 claim_case("missing exact locator", lambda c, s: claim_by_id(c, "scope_badge")["support"][0].__setitem__("locator", ""), "missing identifier, locator")
@@ -86,6 +87,18 @@ claim_case("permitted but wrong quantitative unit", lambda c, s: claim_by_id(c, 
 claim_case("absent subject metadata", lambda c, s: claim_by_id(c, "scope_badge")["subject"].__setitem__("preparation", None), "absent subject/preparation")
 claim_case("unresolved source identifier", lambda c, s: claim_by_id(c, "scope_badge")["support"][0].__setitem__("source_id", "10.9999/not-registered"), "unresolved identifier")
 claim_case("claimed human review without reviewer", lambda c, s: claim_by_id(c, "scope_badge")["review"].__setitem__("status", "APPROVED"), "without reviewer metadata")
+claim_case(
+    "project-owner approval loses its evidence basis",
+    lambda c, s: claim_by_id(c, "sarcomere_definition")["review"]
+    ["approval_authority"].__setitem__("authority_basis", "unspecified"),
+    "invalid project-owner approval provenance",
+)
+claim_case(
+    "project-owner approval claims independent review",
+    lambda c, s: claim_by_id(c, "actomyosin_motor_function")["review"]
+    .__setitem__("independent_human_review_status", "COMPLETED"),
+    "overstates independent human review",
+)
 claim_case("SCHEMATIC render promotes claim class", lambda c, s: next(row for row in s["objects"] if row["id"] == "mybpc_czone_context").__setitem__("claim_evidence_class", "SCHEMATIC"), "changed claim class")
 claim_case("invalid public JSON pointer", lambda c, s: claim_by_id(c, "scope_badge")["public_bindings"].__setitem__(0, "data/showcase_claims.json#/objects/scope_badge/claim"), "does not resolve")
 claim_case("valid but wrong public pointer", lambda c, s: claim_by_id(c, "scope_badge")["public_bindings"].__setitem__(0, "data/showcase_claims.json#/objects/1/claim"), "not bound to its exact visible claim")
@@ -95,7 +108,7 @@ changed_annotations = copy.deepcopy(annotations)
 next(row for row in changed_annotations["components"] if row["id"] == "component-thick-filament")["claim_support_ids"] = []
 rejected(
     "visible annotation loses claim binding",
-    validate_claims(claims, references, showcase, presentation, changed_annotations),
+    validate_claims(claims, references, showcase, presentation, changed_annotations, scenes),
     "has no claim-support IDs",
 )
 
@@ -119,7 +132,9 @@ for name, mutate in (
 ):
     changed = approved_claim()
     mutate(claim_by_id(changed, "titin_continuity_trace"))
-    rejected(name, validate_claims(changed, references, showcase, presentation, annotations), "reviewed payload digest is stale")
+    rejected(name, validate_claims(
+        changed, references, showcase, presentation, annotations, scenes),
+        "reviewed payload digest is stale")
 
 
 def approved_decision() -> dict:
