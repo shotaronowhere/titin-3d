@@ -11,17 +11,16 @@ completion now follows
 SC-19 reached their required historical `CODE_COMPLETE_BLOCKED_SCIENCE` handoffs.
 On 2026-08-12 the project owner authorized citation-backed AI adjudication of
 SD-01–SD-05 without representing it as independent human review. SC-20 is complete:
-SD-01, SD-03, and SD-05 are `APPROVED`; SD-02 and SD-04 are `DEFERRED` with enforced
-public caveats. SC-21 is `CODE_COMPLETE_BLOCKED_SCIENCE`: one canonical parameter
-record now governs both solver ports, every mechanics evaluation/export carries a
-status and model identity, and deferred SD-04 fails closed to `not_evaluated` with
-no absolute-pN or manufactured sensitivity output. The future approval transition is
-also fail-closed: malformed authority/ranges/scenarios are rejected, unreachable
-solver targets error in both ports, and an accepted approved fixture is parity-tested
-through evaluation, release validation, and the complete plot/readout branch. A qualified mechanics ruling is
-still required before SC-21 can be scientifically complete. The handoffs are
+SD-01, SD-03, and SD-05 were `APPROVED`; SD-02 and SD-04 were initially `DEFERRED` with
+enforced public caveats. A later owner-authorized citation-backed ruling completed SC-21 mechanics,
+and SC-22 completed the canonical responsive claim/source presenter. SC-23 is `COMPLETE`:
+presentation schema v2, the seven-outcome lay curriculum, declarative semantic scenes, legacy
+chapter aliases, reversible length behavior, and generated accessible transcripts are implemented.
+On 2026-08-14 the project owner approved the evidence-backed opening sarcomere and actomyosin
+claims; their provenance explicitly records that independent human review was not performed. The handoffs are
 summarized in `docs/sprint-reports/SC-18.md`, `docs/sprint-reports/SC-19.md`,
-`docs/sprint-reports/SC-20.md`, and `docs/sprint-reports/SC-21.md`.
+`docs/sprint-reports/SC-20.md`, `docs/sprint-reports/SC-21.md`,
+`docs/sprint-reports/SC-22.md`, and `docs/sprint-reports/SC-23.md`.
 
 The release pack in `release/` is generated and staleness-gated. The complete final
 release definition is tracked in `data/release_gates.json`; claim entailment,
@@ -57,7 +56,8 @@ required.
 
 The application opens in **Guided** mode: the 3D stage remains full width, the
 reference scope and current geometry stay visible above the fold, and a concise
-seven-chapter card walks from locating titin to how the model was built, without
+seven-chapter card walks from the sarcomere and titin's passive spring/scaffold role through its
+full route, architecture, stretch, anchors, and thick-filament scaffold to a titin-centered recap, without
 showing the raw evidence inventory. The route is paced to about two minutes.
 Choose **Evidence** (or **Evidence & controls**) to open every existing control,
 measurement, annotation, caveat, confidence group, and advanced close-up.
@@ -145,7 +145,8 @@ npm run verify:sc8
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
-For a bounded SC-21 check, run `npm run verify:sc21`.
+For a bounded SC-23 check, run `npm run verify:sc23`; run `npm run test:browser:sc23` for the
+1280×720 and 375×812 Learn-route browser checks.
 
 To reproduce the coordinate-derived measurements from the pinned RCSB inputs, fetch
 the optional raw-structure cache and verify it before running the measurement scripts:
@@ -198,6 +199,8 @@ cannot drift away from the science it describes.
 | `release/CLAIM_MATRIX.md` | every reviewed claim with its decision, evidence classes, sources, and non-claims |
 | `release/LIMITATIONS.md` | every recorded non-claim in the project, grouped by the record that holds it |
 | `release/PRESENTER_SCRIPT.md` | the guided route as a presenter reads it, with per-chapter timings |
+| `release/LEARN_TRANSCRIPT.md` | the complete text-only lay route generated from presentation v2 |
+| `release/SCREEN_READER_TRANSCRIPT.md` | the same conceptual sequence with spoken state announcements and actions |
 | `release/PREFLIGHT.md` | the demo-day checklist, including the build fingerprint to compare |
 | `release/SCREENSHOT_PACK.md` | the 52-cell deterministic capture set, each a viewport plus a URL hash |
 | `release/fallback/*.svg` | six static slides generated from this build; no GPU, browser engine, or network |

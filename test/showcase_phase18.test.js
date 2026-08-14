@@ -190,8 +190,8 @@ test('SC18: drawer entry routing and camera state tell the truth', () => {
     assert.match(page, new RegExp(`openEvidence\\(\\$\\('${id}'\\), '${tab}'\\)`),
       `${id} does not route to ${tab}`);
   }
-  assert.match(page, /const on = !state\.closeup && !state\.region\s*&& b\.dataset\.view === state\.view/,
-    'a region or close-up must not leave a false wide-view pressed state');
+  assert.match(page, /const \[cameraKind\] = state\.cameraPreset\.split\('\.'\)[\s\S]*?const on = cameraKind === 'view'\s*&& b\.dataset\.view === state\.view/,
+    'only an actual wide-view camera may leave a wide-view button pressed');
 });
 
 test('SC18: release-gate v2 retains pending human evidence and uses stable protocol IDs', () => {

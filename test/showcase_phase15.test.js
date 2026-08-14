@@ -139,7 +139,7 @@ test('SC15: the emphasis halo always contains the chain it emphasises', () => {
 
 test('SC15: the architecture chapter frames a span where domains resolve', () => {
   const chapter = model.spec.presentation.guided_chapters
-    .find((entry) => entry.id === 'architecture');
+    .find((entry) => entry.id === 'molecular_architecture');
   assert.equal(chapter.recommended_state.visibility.show_domains, true);
   assert.ok(chapter.recommended_state.camera_preset.startsWith('region.'),
     'a whole-half-sarcomere framing cannot resolve a 4 nm domain');
@@ -147,7 +147,7 @@ test('SC15: the architecture chapter frames a span where domains resolve', () =>
 
 test('SC15: the architecture chapter frames a region that actually has domains', () => {
   const chapter = model.spec.presentation.guided_chapters
-    .find((entry) => entry.id === 'architecture');
+    .find((entry) => entry.id === 'molecular_architecture');
   const regionId = chapter.recommended_state.camera_preset.split('.')[1];
   const region = model.titinRegions().find((entry) => entry.id === regionId);
   assert.ok(region, `the chapter frames unknown region '${regionId}'`);

@@ -15,7 +15,7 @@
     "transfer",
     "context"
   ],
-  "semantic_entailment": "Named human review only; registry closure is a separate gate.",
+  "semantic_entailment": "Approval provenance distinguishes named independent human review from project-owner acceptance of registered scientific evidence; registry closure alone is not entailment.",
   "claims": [
     {
       "id": "aband_periodicity_relation",
@@ -80,7 +80,10 @@
         "that approximately 45.54 nm is the exact molecular span of one eleven-domain chain",
         "an exact titin-myosin register"
       ],
-      "public_bindings": [],
+      "public_bindings": [
+        "data/presentation.json#/guided_chapters/5",
+        "data/scenes.json#/scenes/scaffold_thick_filament"
+      ],
       "inventory_status": "AUDIT_ONLY",
       "review": {
         "status": "PENDING",
@@ -114,31 +117,41 @@
             "muscle_or_tissue": "skeletal muscle protein",
             "preparation": "purified actomyosin biochemical kinetics"
           },
-          "extraction_note": "Foundational actomyosin ATPase-cycle evidence; exact public wording remains pending independent review."
+          "extraction_note": "Foundational actomyosin ATPase-cycle evidence accepted by the project owner for the registered public wording."
         }
       ],
       "model_dependencies": [],
       "limitations": [
-        "The exact locator and modern public wording must be independently reviewed before SC-23 ships."
+        "Project-owner evidence acceptance is not independent human semantic or locator review."
       ],
       "not_claimed": [
         "that titin hydrolyses ATP to drive contraction",
         "an active cross-bridge simulation"
       ],
       "public_bindings": [
+        "data/presentation.json#/guided_chapters/0",
         "data/annotations.json#/components/1",
         "data/annotations.json#/components/2",
-        "data/annotations.json#/components/3"
+        "data/annotations.json#/components/3",
+        "data/scenes.json#/scenes/meet_sarcomere"
       ],
       "inventory_status": "REQUIRED_FOR_SC23",
       "review": {
-        "status": "PENDING",
+        "status": "APPROVED",
         "reviewer": null,
         "affiliation": null,
         "publication_consent": false,
-        "locator_verified_independently": null,
+        "locator_verified_independently": false,
         "reviewed_on": null,
-        "reviewed_payload_sha256": null
+        "reviewed_payload_sha256": "36e56905bdaa355b986a502eafa393dead615c0abb30f50b83adc7bc47ab5b71",
+        "approval_authority": {
+          "type": "PROJECT_OWNER",
+          "identity": "UNDISCLOSED_PROJECT_OWNER",
+          "authority_basis": "registered_scientific_evidence_accepted",
+          "independent_scientific_reviewer": false
+        },
+        "approved_on": "2026-08-14",
+        "independent_human_review_status": "NOT_PERFORMED"
       }
     },
     {
@@ -193,7 +206,8 @@
       "public_bindings": [
         "data/showcase_claims.json#/objects/19/claim",
         "data/presentation.json#/guided_chapters/6",
-        "data/presentation.json#/expert_cards/6"
+        "data/presentation.json#/expert_cards/6",
+        "data/scenes.json#/scenes/knowledge_recap"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -256,8 +270,7 @@
         "that all band boundaries are sharp molecular interfaces"
       ],
       "public_bindings": [
-        "data/showcase_claims.json#/objects/4/claim",
-        "data/presentation.json#/guided_chapters/5"
+        "data/showcase_claims.json#/objects/4/claim"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -454,7 +467,9 @@
       ],
       "public_bindings": [
         "src/index.template.html#id=stageForce",
-        "src/index.template.html#id=forceCurve"
+        "src/index.template.html#id=forceCurve",
+        "data/presentation.json#/guided_chapters/3",
+        "data/scenes.json#/scenes/stretch_spring"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -518,7 +533,9 @@
       ],
       "public_bindings": [
         "data/showcase_claims.json#/objects/13/claim",
-        "data/annotations.json#/components/3"
+        "data/presentation.json#/guided_chapters/5",
+        "data/annotations.json#/components/3",
+        "data/scenes.json#/scenes/scaffold_thick_filament"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -690,8 +707,12 @@
       ],
       "public_bindings": [
         "data/showcase_claims.json#/objects/10/claim",
+        "data/presentation.json#/guided_chapters/1",
+        "data/presentation.json#/guided_chapters/4",
         "data/annotations.json#/components/8",
-        "data/annotations.json#/components/9"
+        "data/annotations.json#/components/9",
+        "data/scenes.json#/scenes/follow_titin",
+        "data/scenes.json#/scenes/inspect_anchors"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -803,7 +824,9 @@
       ],
       "public_bindings": [
         "data/showcase_claims.json#/objects/15/claim",
-        "data/presentation.json#/expert_cards/2"
+        "data/presentation.json#/guided_chapters/6",
+        "data/presentation.json#/expert_cards/2",
+        "data/scenes.json#/scenes/knowledge_recap"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -973,8 +996,11 @@
       ],
       "public_bindings": [
         "data/showcase_claims.json#/objects/3/claim",
-        "data/presentation.json#/guided_chapters/2",
-        "data/annotations.json#/components/11"
+        "data/presentation.json#/guided_chapters/3",
+        "data/presentation.json#/guided_chapters/6",
+        "data/annotations.json#/components/11",
+        "data/scenes.json#/scenes/stretch_spring",
+        "data/scenes.json#/scenes/knowledge_recap"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -1009,31 +1035,41 @@
             "muscle_or_tissue": "fast psoas skeletal muscle",
             "preparation": "native myofibrils; cryo-electron tomography/subtomogram averaging"
           },
-          "extraction_note": "Current registry source is contextual; SC-22 should replace or confirm a primary foundational locator."
+          "extraction_note": "Native skeletal-muscle structural evidence supports the registered definition; project-owner approval accepts this evidence without claiming independent locator review."
         }
       ],
       "model_dependencies": [
         "data/sarcomere.json"
       ],
       "limitations": [
-        "Current support is not yet independently locator-verified."
+        "Project-owner evidence acceptance is not independent human semantic or locator review."
       ],
       "not_claimed": [
         "that the schematic is a complete sarcomere molecular inventory"
       ],
       "public_bindings": [
+        "data/presentation.json#/guided_chapters/0",
         "data/annotations.json#/components/3",
-        "data/annotations.json#/components/5"
+        "data/annotations.json#/components/5",
+        "data/scenes.json#/scenes/meet_sarcomere"
       ],
       "inventory_status": "REQUIRED_FOR_SC23",
       "review": {
-        "status": "PENDING",
+        "status": "APPROVED",
         "reviewer": null,
         "affiliation": null,
         "publication_consent": false,
-        "locator_verified_independently": null,
+        "locator_verified_independently": false,
         "reviewed_on": null,
-        "reviewed_payload_sha256": null
+        "reviewed_payload_sha256": "12cf20a65be697ffd5462a46906cb24547fc1eae9de3b620c7c752915c44323a",
+        "approval_authority": {
+          "type": "PROJECT_OWNER",
+          "identity": "UNDISCLOSED_PROJECT_OWNER",
+          "authority_basis": "registered_scientific_evidence_accepted",
+          "independent_scientific_reviewer": false
+        },
+        "approved_on": "2026-08-14",
+        "independent_human_review_status": "NOT_PERFORMED"
       }
     },
     {
@@ -1136,7 +1172,10 @@
         "that imported UniProt rows and curated biological folds are identical counts",
         "a resolved conformation or force law for residues 9852-10215"
       ],
-      "public_bindings": [],
+      "public_bindings": [
+        "data/presentation.json#/guided_chapters/2",
+        "data/scenes.json#/scenes/molecular_architecture"
+      ],
       "inventory_status": "AUDIT_ONLY",
       "review": {
         "status": "PENDING",
@@ -1305,7 +1344,12 @@
       "public_bindings": [
         "data/showcase_claims.json#/objects/1/claim",
         "data/presentation.json#/guided_chapters/0",
-        "data/annotations.json#/components/0"
+        "data/presentation.json#/guided_chapters/1",
+        "data/presentation.json#/guided_chapters/6",
+        "data/annotations.json#/components/0",
+        "data/scenes.json#/scenes/meet_sarcomere",
+        "data/scenes.json#/scenes/follow_titin",
+        "data/scenes.json#/scenes/knowledge_recap"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -1366,7 +1410,9 @@
       ],
       "public_bindings": [
         "data/showcase_claims.json#/objects/16/claim",
-        "data/presentation.json#/expert_cards/3"
+        "data/presentation.json#/guided_chapters/6",
+        "data/presentation.json#/expert_cards/3",
+        "data/scenes.json#/scenes/knowledge_recap"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -1427,11 +1473,21 @@
       ],
       "public_bindings": [
         "data/showcase_claims.json#/objects/2/claim",
+        "data/presentation.json#/guided_chapters/0",
         "data/presentation.json#/guided_chapters/1",
-        "data/presentation.json#/guided_chapters/4",
+        "data/presentation.json#/guided_chapters/2",
+        "data/presentation.json#/guided_chapters/3",
+        "data/presentation.json#/guided_chapters/5",
+        "data/presentation.json#/guided_chapters/6",
         "data/presentation.json#/expert_cards/0",
         "data/annotations.json#/components/1",
-        "data/annotations.json#/components/11"
+        "data/annotations.json#/components/11",
+        "data/scenes.json#/scenes/meet_sarcomere",
+        "data/scenes.json#/scenes/follow_titin",
+        "data/scenes.json#/scenes/molecular_architecture",
+        "data/scenes.json#/scenes/stretch_spring",
+        "data/scenes.json#/scenes/scaffold_thick_filament",
+        "data/scenes.json#/scenes/knowledge_recap"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -1589,7 +1645,9 @@
       ],
       "public_bindings": [
         "data/showcase_claims.json#/objects/5/claim",
-        "data/annotations.json#/components/5"
+        "data/presentation.json#/guided_chapters/4",
+        "data/annotations.json#/components/5",
+        "data/scenes.json#/scenes/inspect_anchors"
       ],
       "inventory_status": "PUBLIC",
       "review": {
@@ -1638,9 +1696,10 @@
       ],
       "public_bindings": [
         "data/showcase_claims.json#/objects/7/claim",
-        "data/presentation.json#/guided_chapters/3",
+        "data/presentation.json#/guided_chapters/4",
         "data/annotations.json#/components/5",
-        "data/annotations.json#/components/7"
+        "data/annotations.json#/components/7",
+        "data/scenes.json#/scenes/inspect_anchors"
       ],
       "inventory_status": "PUBLIC",
       "review": {

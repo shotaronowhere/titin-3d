@@ -133,15 +133,22 @@ test('SC22: every annotation ClaimView is closed over its canonical claim suppor
   }
 });
 
-test('SC22: source precedence falls through value, object, chapter, then all', () => {
+test('SC22/23: source precedence falls through value, object, scene, chapter, then all', () => {
   const value = { label: 'PEVK persistence length', claimIds: ['force_law_parameter_set'] };
   const object = { label: 'PEVK', claimIds: ['titin_region_architecture'] };
   const chapter = { label: 'Elastic regions', claimIds: ['regional_extension_story'] };
-  const contexts = { selectedValue: value, selectedObject: object, currentChapter: chapter };
+  const scene = { label: 'Stretch scene', claimIds: ['force_law_parameter_set'] };
+  const contexts = {
+    selectedValue: value, selectedObject: object, semanticScene: scene, currentChapter: chapter,
+  };
   assert.equal(resolveSourceContext(registry, contexts).scope, 'value');
   assert.equal(resolveSourceContext(registry, { ...contexts, selectedValue: null }).scope, 'object');
   assert.equal(resolveSourceContext(registry, {
     ...contexts, selectedValue: null, selectedObject: null,
+    semanticScene: scene,
+  }).scope, 'scene');
+  assert.equal(resolveSourceContext(registry, {
+    ...contexts, selectedValue: null, selectedObject: null, semanticScene: null,
   }).scope, 'chapter');
   assert.equal(resolveSourceContext(registry, {
     requestedScope: 'value', selectedValue: null, selectedObject: object,
@@ -154,14 +161,14 @@ test('SC22: every chapter retains its declared contextual citations', () => {
   const claims = new Map(model.spec.claimSupport.claims.map((claim) => [claim.id, claim]));
   for (const chapter of model.spec.presentation.guided_chapters) {
     const expected = [...new Set([
-      ...claims.get(chapter.target_claim_id).support.map((row) => row.source_id),
+      ...chapter.claim_ids.flatMap((id) => claims.get(id).support.map((row) => row.source_id)),
       ...chapter.source_ids,
     ])].sort();
     const sourceContext = resolveSourceContext(registry, {
       requestedScope: 'chapter',
       currentChapter: {
         label: chapter.title,
-        claimIds: [chapter.target_claim_id],
+        claimIds: chapter.claim_ids,
         sourceIds: chapter.source_ids,
       },
     });
@@ -170,11 +177,12 @@ test('SC22: every chapter retains its declared contextual citations', () => {
     const view = ClaimViewModule.claimViewModel(chapter.target_claim_id, {
       ...registry,
       presentationRecord: chapter,
+      relatedClaimIds: chapter.claim_ids,
     });
     assert.deepEqual(view.sources.map((source) => source.id).sort(), expected,
       `${chapter.id} ClaimView citations are incomplete`);
   }
-  assert.match(page, /claimIds: \[chapter\.target_claim_id\],[\s\S]*sourceIds: chapter\.source_ids/);
+  assert.match(page, /claimIds: chapter\.claim_ids,[\s\S]*sourceIds: chapter\.source_ids/);
 });
 
 test('SC22: exact parameter source context remains useful offline', () => {
@@ -201,7 +209,10 @@ test('SC22: facade uses the canonical registries and rejects unknown contexts', 
   assert.equal(facade.sourceContext({
     currentChapter: { label: 'Orientation', claimIds: ['titin_continuity_trace'] },
   }).scope, 'chapter');
-  assert.throws(() => facade.sourceContext({ requestedScope: 'scene' }), /unknown requested scope/i);
+  assert.equal(facade.sourceContext({
+    requestedScope: 'scene',
+    semanticScene: { label: 'Overview', claimIds: ['titin_continuity_trace'] },
+  }).scope, 'scene');
 });
 
 test('SC22: UI gives Evidence drawer sole full-detail ownership and final Sources routing', () => {
@@ -209,8 +220,8 @@ test('SC22: UI gives Evidence drawer sole full-detail ownership and final Source
   assert.match(page, /#app\[data-mode="guided"\] #objectInspectorClaim \.claim-view-specialist/);
   assert.match(page, /max-height: calc\(100% - var\(--stage-bar-h/);
   assert.match(page, /renderClaimView\(claimViewForAnnotation\(annotation\), document\)/);
-  assert.match(page, /Sources for this value[\s\S]*Sources for this object[\s\S]*Sources for this chapter[\s\S]*All sources/);
-  assert.match(page, /selectedValue[\s\S]*selectedObject[\s\S]*currentChapter/);
+  assert.match(page, /Sources for this value[\s\S]*Sources for this object[\s\S]*Sources for this scene[\s\S]*Sources for this chapter[\s\S]*All sources/);
+  assert.match(page, /selectedValue[\s\S]*selectedObject[\s\S]*semanticScene[\s\S]*currentChapter/);
   assert.match(page, /Parameters behind this modeled output/);
   assert.match(page, /Sources for this modeled output/);
   assert.match(page, /parameter\.source_context/);

@@ -110,11 +110,13 @@ control('a presentation claim with no source and no SCHEMATIC status', () => {
   chapter.evidence_class = 'MEASURED';
   const problems = checkPresentationSpec(stripped, {
     claims: model.spec.showcaseClaims,
+    claimSupport: model.spec.claimSupport,
     references: model.spec.references,
     sarcomere: model.spec.sarcomere,
     titin: model.spec.titin,
     states: model.spec.states,
     annotations: model.spec.annotations,
+    scenes: model.spec.scenes,
   });
   assert.ok(problems.some((problem) => /no source_ids or SCHEMATIC designation/.test(problem)),
     `expected an unsourced-claim problem, got: ${problems.join('; ')}`);
@@ -143,11 +145,13 @@ control('sarcomere length coupled to activation', () => {
     .activation_independent = false;
   const problems = checkPresentationSpec(coupled, {
     claims: model.spec.showcaseClaims,
+    claimSupport: model.spec.claimSupport,
     references: model.spec.references,
     sarcomere: model.spec.sarcomere,
     titin: model.spec.titin,
     states: model.spec.states,
     annotations: model.spec.annotations,
+    scenes: model.spec.scenes,
   });
   assert.ok(problems.some((problem) => /separate geometry from activation/.test(problem)),
     `expected an activation-coupling problem, got: ${problems.join('; ')}`);

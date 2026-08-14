@@ -383,11 +383,13 @@ test('SC5: an Evidence-mode card records why cardiac coordinates were not import
 
   const context = {
     claims: model.spec.showcaseClaims,
+    claimSupport: model.spec.claimSupport,
     references: model.spec.references,
     sarcomere: model.spec.sarcomere,
     titin: model.spec.titin,
     states: model.spec.states,
     annotations: model.spec.annotations,
+    scenes: model.spec.scenes,
   };
   assert.deepEqual(checkPresentationSpec(model.spec.presentation, context), []);
 

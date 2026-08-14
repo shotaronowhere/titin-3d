@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Validate SC-19 atomic claim/source bindings and named-human approvals."""
+"""Validate SC-19 claim/source bindings and explicit approval provenance."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import re
+from datetime import date
 from pathlib import Path
 
 from scientific_common import (
@@ -15,6 +16,7 @@ from scientific_common import (
 
 RELATIONSHIPS = {"direct", "corroborating", "transfer", "context"}
 REVIEW_STATUSES = {"PENDING", "APPROVED", "DEFERRED"}
+OWNER_APPROVABLE_CLAIMS = {"sarcomere_definition", "actomyosin_motor_function"}
 UNITS = {"aa", "nm", "pN", "K", "degree", "dimensionless", "%"}
 PLACEHOLDER_LOCATOR = re.compile(
     r"reviewer must|requires reviewer|must be supplied|see extraction note|source-specific context",
@@ -27,6 +29,15 @@ SOURCE_SUBJECT_REQUIREMENTS = {
     "10.1016/j.yjmcc.2019.05.026": ("Mus musculus", "cardiac papillary muscle", "papillary muscle"),
     "10.1083/jcb.134.6.1441": ("Rattus norvegicus and Bos taurus", "rat psoas and bovine sternomandibularis", "immunoelectron"),
 }
+
+
+def is_iso_date(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    try:
+        return date.fromisoformat(value).isoformat() == value
+    except ValueError:
+        return False
 
 
 def resolve_pointer(value, pointer: str):
@@ -67,11 +78,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--showcase", type=Path, default=ROOT / "data/showcase_claims.json")
     parser.add_argument("--presentation", type=Path, default=ROOT / "data/presentation.json")
     parser.add_argument("--annotations", type=Path, default=ROOT / "data/annotations.json")
+    parser.add_argument("--scenes", type=Path, default=ROOT / "data/scenes.json")
     return parser.parse_args()
 
 
 def validate(record: dict, references: dict, showcase: dict, presentation: dict,
-             annotations: dict) -> list[str]:
+             annotations: dict, scenes: dict) -> list[str]:
     problems: list[str] = []
     if record.get("schema") != "titin-claim-support/1":
         problems.append("wrong claim-support schema")
@@ -161,15 +173,46 @@ def validate(record: dict, references: dict, showcase: dict, presentation: dict,
         if status == "PENDING":
             if any(review.get(field) is not None for field in human_fields) \
                     or review.get("publication_consent") is not False \
-                    or review.get("locator_verified_independently") is not None:
+                    or review.get("locator_verified_independently") is not None \
+                    or review.get("approval_authority") is not None \
+                    or review.get("approved_on") is not None \
+                    or review.get("independent_human_review_status") is not None:
                 problems.append(f"{prefix} invents human review while PENDING")
         else:
-            if not all(review.get(field) for field in human_fields):
-                problems.append(f"{prefix} claims human review without reviewer metadata")
-            if review.get("publication_consent") is not True:
-                problems.append(f"{prefix} reviewed identity lacks publication consent")
-            if review.get("locator_verified_independently") is not True:
-                problems.append(f"{prefix} reviewer did not independently verify the locator")
+            authority = review.get("approval_authority")
+            owner_approved = status == "APPROVED" and isinstance(authority, dict) \
+                and authority.get("type") == "PROJECT_OWNER"
+            if owner_approved:
+                expected_authority = {
+                    "type", "identity", "authority_basis", "independent_scientific_reviewer",
+                }
+                if set(authority) != expected_authority \
+                        or claim_id not in OWNER_APPROVABLE_CLAIMS \
+                        or claim.get("inventory_status") != "REQUIRED_FOR_SC23" \
+                        or authority.get("identity") != "UNDISCLOSED_PROJECT_OWNER" \
+                        or authority.get("authority_basis") \
+                        != "registered_scientific_evidence_accepted" \
+                        or authority.get("independent_scientific_reviewer") is not False:
+                    problems.append(f"{prefix} has invalid project-owner approval provenance")
+                if review.get("reviewer") is not None or review.get("affiliation") is not None \
+                        or review.get("reviewed_on") is not None \
+                        or review.get("publication_consent") is not False \
+                        or review.get("locator_verified_independently") is not False \
+                        or review.get("independent_human_review_status") != "NOT_PERFORMED" \
+                        or not is_iso_date(review.get("approved_on")) \
+                        or not re.fullmatch(
+                            r"[0-9a-f]{64}", str(review.get("reviewed_payload_sha256", ""))
+                        ):
+                    problems.append(
+                        f"{prefix} project-owner approval overstates independent human review"
+                    )
+            else:
+                if not all(review.get(field) for field in human_fields):
+                    problems.append(f"{prefix} claims human review without reviewer metadata")
+                if review.get("publication_consent") is not True:
+                    problems.append(f"{prefix} reviewed identity lacks publication consent")
+                if review.get("locator_verified_independently") is not True:
+                    problems.append(f"{prefix} reviewer did not independently verify the locator")
             if review.get("reviewed_payload_sha256") != claim_payload_sha256(claim):
                 problems.append(f"{prefix} reviewed payload digest is stale")
 
@@ -189,15 +232,29 @@ def validate(record: dict, references: dict, showcase: dict, presentation: dict,
             problems.append(f"showcase object {obj.get('id')} changed render class at the render boundary")
     for section in ("guided_chapters", "expert_cards"):
         for index, row in enumerate(presentation.get(section) or []):
-            claim_id = row.get("target_claim_id")
-            if claim_id not in by_id:
-                problems.append(f"presentation row {row.get('id')} has no claim-support entry")
-            else:
+            row_claim_ids = ([row.get("target_claim_id")] if section == "expert_cards"
+                             else row.get("claim_ids") or [])
+            for claim_id in row_claim_ids:
+                if claim_id not in by_id:
+                    problems.append(
+                        f"presentation row {row.get('id')} has no claim-support entry {claim_id}"
+                    )
+                    continue
                 expected = f"data/presentation.json#/{section}/{index}"
                 if expected not in (by_id[claim_id].get("public_bindings") or []):
                     problems.append(
-                        f"presentation row {row.get('id')} is not bound to its exact public record at {expected}"
+                        f"presentation row {row.get('id')} is not bound to claim {claim_id} at {expected}"
                     )
+    for scene_id, row in (scenes.get("scenes") or {}).items():
+        for claim_id in row.get("claim_ids") or []:
+            if claim_id not in by_id:
+                problems.append(f"semantic scene {scene_id} has no claim-support entry {claim_id}")
+                continue
+            expected = f"data/scenes.json#/scenes/{scene_id}"
+            if expected not in (by_id[claim_id].get("public_bindings") or []):
+                problems.append(
+                    f"semantic scene {scene_id} is not bound to claim {claim_id} at {expected}"
+                )
     for index, row in enumerate(annotations.get("components") or []):
         annotation_ids = row.get("claim_support_ids") or []
         if not annotation_ids:
@@ -225,13 +282,13 @@ def main() -> None:
     args = parse_args()
     problems = validate(
         load_json(args.claims), load_json(args.references), load_json(args.showcase),
-        load_json(args.presentation), load_json(args.annotations),
+        load_json(args.presentation), load_json(args.annotations), load_json(args.scenes),
     )
     if problems:
         print("SC-19 claim-support validation failed:\n  - " + "\n  - ".join(problems))
         raise SystemExit(1)
     count = len(load_json(args.claims).get("claims") or [])
-    print(f"SC-19 claim support: PASS ({count} inventoried claims; human entailment remains PENDING)")
+    print(f"SC-19 claim support: PASS ({count} inventoried claims; approval provenance is explicit)")
 
 
 if __name__ == "__main__":

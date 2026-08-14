@@ -22,6 +22,42 @@ PRESENTATION_FEATURES = {
     "lattice_cross_section", "provenance_pipeline",
 }
 FINDING_STATUSES = {"ESTABLISHED", "PROPOSED", "OPEN"}
+CHAPTER_REQUIRED_FIELDS = {
+    "id", "legacy_ids", "title", "learning_objective", "lay_summary", "claim_ids",
+    "semantic_scene_id", "source_filter", "state_change_announcement",
+    "recommended_state", "next_actions",
+}
+SCENE_LAYERS = {"show_lattice", "show_domains", "show_context_detail", "mirror"}
+SCENE_FIELDS = {
+    "label", "available_in", "camera_preset", "scale", "context", "layers",
+    "selection", "length_policy", "claim_ids", "source_filter",
+}
+SCENE_EVIDENCE_VALUES = set(RANK)
+SC23_CHAPTER_IDS = [
+    "meet_sarcomere", "follow_titin", "molecular_architecture", "stretch_spring",
+    "inspect_anchors", "scaffold_thick_filament", "knowledge_recap",
+]
+SC23_CONCEPT_PATTERNS = {
+    "meet_sarcomere": [r"repeating contractile unit.*Z-discs",
+                        r"adenosine triphosphate \(ATP\).*myosin.*actin",
+                        r"titin.*passive spring.*scaffold.*not the motor"],
+    "follow_titin": [r"Z-disc.*M-line", r"I-band.*elastic.*A-band.*thick filament"],
+    "molecular_architecture": [r"immunoglobulin-like \(Ig\)",
+                               r"fibronectin type III \(Fn3\)",
+                               r"disordered PEVK spring",
+                               r"does not place Fn3.*elastic I-band"],
+    "stretch_spring": [r"I-band lengthens.*A-band.*approximately fixed",
+                       r"model predicts rising passive force",
+                       r"added length.*incremental compliance.*how readily"],
+    "inspect_anchors": [r"telethonin.*not the sole force path", r"M-line.*unresolved"],
+    "scaffold_thick_filament": [r"A-band.*thick filament.*scaffold",
+                                r"copy number.*azimuth.*register.*not encoded"],
+    "knowledge_recap": [r"full Z-disc-to-M-line route",
+                        r"passive spring.*scaffold.*interaction/signaling platform",
+                        r"Measured comes from observations.*inferred from interpretation"
+                        r".*modeled from equations.*schematic means illustrative",
+                        r"Replay the stretch.*inspect a region.*open its evidence"],
+}
 
 
 def sentences(text):
@@ -39,7 +75,7 @@ def base_evidence(value):
     return next((key for key in sorted(RANK, key=len, reverse=True) if text.startswith(key)), None)
 
 
-def validate(presentation_path):
+def validate(presentation_path, scenes_path=DATA / "scenes.json"):
     p = load(presentation_path)
     claims = load(DATA / "showcase_claims.json")
     references = load(DATA / "references.json")
@@ -47,13 +83,16 @@ def validate(presentation_path):
     titin = load(DATA / "titin.json")
     states = load(DATA / "structural_states.json")["states"]
     annotations = load(DATA / "annotations.json")
+    claim_support = load(DATA / "claim_support.json")
+    scenes = load(scenes_path)
     errors = []
 
     def require(condition, message):
         if not condition:
             errors.append(message)
 
-    require(p.get("schema") == "titin-presentation/1", "unsupported presentation schema")
+    require(p.get("schema") == "titin-presentation/2" and p.get("version") == 2,
+            "unsupported presentation schema")
     collections = [
         ("audience mode", p.get("audience_modes")),
         ("scope badge", p.get("scope_badges")),
@@ -82,6 +121,20 @@ def validate(presentation_path):
     modes = {row.get("id") for row in p.get("audience_modes", [])}
     require(modes == {"guided", "evidence"}, "audience modes must be exactly guided and evidence")
     claim_map = {row["id"]: row for row in claims.get("objects", [])}
+    support_ids = {row["id"] for row in claim_support.get("claims", [])}
+    support_by_id = {row["id"]: row for row in claim_support.get("claims", [])}
+    pending_content_review = [
+        claim_id for claim_id in ("sarcomere_definition", "actomyosin_motor_function")
+        if ((support_by_id.get(claim_id) or {}).get("review") or {}).get("status") != "APPROVED"
+    ]
+    require(not pending_content_review
+            or (p.get("meta") or {}).get("status") == "CODE_COMPLETE_BLOCKED_CONTENT_REVIEW",
+            "presentation content review is pending for "
+            + ", ".join(pending_content_review)
+            + "; meta.status must be CODE_COMPLETE_BLOCKED_CONTENT_REVIEW")
+    require(bool(pending_content_review)
+            or (p.get("meta") or {}).get("status") == "COMPLETE",
+            "approved SC-23 content requires meta.status COMPLETE")
     region_ids = {row["id"] for row in titin.get("regions", [])}
     # annotations.json carries one record per pickable render component, so it is
     # the data-resident form of the vocabulary the runtime actually offers.
@@ -155,11 +208,42 @@ def validate(presentation_path):
     chapter_ids = set()
     for chapter in p.get("guided_chapters", []):
         chapter_ids.add(chapter.get("id"))
+        missing = CHAPTER_REQUIRED_FIELDS - set(chapter)
+        require(not missing,
+                f"guided chapter '{chapter.get('id')}' lacks required fields {sorted(missing)}")
         validate_scientific(chapter, "guided chapter")
         order = chapter.get("order")
         require(isinstance(order, int) and order not in orders,
                 f"guided chapter '{chapter.get('id')}' has missing or duplicate order")
         orders.add(order)
+        require(isinstance(chapter.get("legacy_ids"), list),
+                f"guided chapter '{chapter.get('id')}' legacy_ids must be an array")
+        require(bool(str(chapter.get("learning_objective", "")).strip()),
+                f"guided chapter '{chapter.get('id')}' needs a learning objective")
+        require(bool(str(chapter.get("expected_learner_takeaway", "")).strip()),
+                f"guided chapter '{chapter.get('id')}' needs an expected learner takeaway")
+        require(chapter.get("narration") == chapter.get("lay_summary"),
+                f"guided chapter '{chapter.get('id')}' narration must equal lay_summary")
+        canonical = chapter.get("claim_ids")
+        require(isinstance(canonical, list) and bool(canonical)
+                and len(canonical) == len(set(canonical))
+                and all(claim_id in support_ids for claim_id in canonical),
+                f"guided chapter '{chapter.get('id')}' has invalid canonical claim_ids")
+        require(chapter.get("target_claim_id") in (canonical or []),
+                f"guided chapter '{chapter.get('id')}' claim_ids omit its target claim")
+        source_filter = chapter.get("source_filter") or {}
+        require(source_filter.get("kind") == "claims"
+                and source_filter.get("claim_ids") == canonical,
+                f"guided chapter '{chapter.get('id')}' source_filter must use its claim_ids")
+        require(bool(str(chapter.get("state_change_announcement", "")).strip())
+                and re.search(r"length", chapter.get("state_change_announcement", ""), re.I),
+                f"guided chapter '{chapter.get('id')}' must announce its length policy")
+        actions = chapter.get("next_actions")
+        require(isinstance(actions, list) and bool(actions)
+                and len({row.get('id') for row in actions or []}) == len(actions or [])
+                and all(row.get("id") and row.get("label") and row.get("action")
+                        for row in actions or []),
+                f"guided chapter '{chapter.get('id')}' has invalid next_actions")
         target = chapter.get("target") or {}
         known = region_ids if target.get("kind") == "region" else (
             component_ids if target.get("kind") == "component" else None)
@@ -200,6 +284,134 @@ def validate(presentation_path):
                     f"guided chapter '{chapter.get('id')}' visibility.{field} must be boolean")
         require(type(visibility.get("rings")) is int and visibility["rings"] >= 1,
                 f"guided chapter '{chapter.get('id')}' visibility.rings must be positive integer")
+
+    alias_record = p.get("chapter_aliases") or {}
+    ordered_chapters = sorted(p.get("guided_chapters", []), key=lambda row: row.get("order", 0))
+    require([row.get("id") for row in ordered_chapters] == SC23_CHAPTER_IDS,
+            "guided chapters must implement the ordered seven-outcome SC-23 curriculum")
+    for chapter in ordered_chapters:
+        for pattern in SC23_CONCEPT_PATTERNS.get(chapter.get("id"), []):
+            require(re.search(pattern, chapter.get("narration", ""), re.I | re.S),
+                    f"guided chapter '{chapter.get('id')}' misses required SC-23 concept {pattern}")
+    aliases = alias_record.get("aliases") or {}
+    require(alias_record.get("schema") == "titin-chapter-aliases/1"
+            and isinstance(aliases, dict) and bool(aliases),
+            "presentation needs a titin-chapter-aliases/1 alias table")
+    declared_legacy = {}
+    for chapter in p.get("guided_chapters", []):
+        for legacy_id in chapter.get("legacy_ids") or []:
+            require(legacy_id not in chapter_ids and legacy_id not in declared_legacy,
+                    f"legacy chapter ID '{legacy_id}' collides or is duplicated")
+            declared_legacy[legacy_id] = chapter.get("id")
+    require(aliases == declared_legacy,
+            "chapter legacy_ids and the v1 alias table must match exactly")
+
+    scene_records = scenes.get("scenes") or {}
+    require(scenes.get("schema") == "titin-semantic-scenes/1",
+            "unsupported semantic scene schema")
+    require(scenes.get("primary_presenter_scene_id") in scene_records,
+            "primary presenter scene is unresolved")
+    chapter_scenes = {row.get("semantic_scene_id"): row for row in p.get("guided_chapters", [])}
+    require(len(chapter_scenes) == len(p.get("guided_chapters", []))
+            and set(scene_records) == set(chapter_scenes),
+            "semantic scenes and guided chapters must be one-to-one")
+    forbidden_scene_key = re.compile(r"coordinate|force|evidence|(?:^|_)nm(?:$|_)", re.I)
+
+    def validate_scene_values(value, scene_id, key=None):
+        if key is not None:
+            require(not forbidden_scene_key.search(key),
+                    f"semantic scene '{scene_id}' contains forbidden field '{key}'")
+        if type(value) in (int, float):
+            require(False,
+                    f"semantic scene '{scene_id}' contains a forbidden numeric scientific value")
+            return
+        if isinstance(value, str) and value in SCENE_EVIDENCE_VALUES:
+            require(False,
+                    f"semantic scene '{scene_id}' contains forbidden evidence-class value '{value}'")
+            return
+        if isinstance(value, dict):
+            for key, child in value.items():
+                validate_scene_values(child, scene_id, key)
+        elif isinstance(value, list):
+            for child in value:
+                validate_scene_values(child, scene_id)
+
+    def require_exact_scene_keys(value, admitted, scene_id, field):
+        if not isinstance(value, dict):
+            require(False, f"semantic scene '{scene_id}' {field} must be an object")
+            return False
+        missing = admitted - set(value)
+        unexpected = set(value) - admitted
+        require(not missing,
+                f"semantic scene '{scene_id}' {field} lacks {sorted(missing)}")
+        require(not unexpected,
+                f"semantic scene '{scene_id}' {field} has unexpected fields {sorted(unexpected)}")
+        return not missing and not unexpected
+
+    for scene_id, scene_record in scene_records.items():
+        chapter = chapter_scenes.get(scene_id) or {}
+        if not isinstance(scene_record, dict):
+            require(False, f"semantic scene '{scene_id}' must be an object")
+            continue
+        require_exact_scene_keys(scene_record, SCENE_FIELDS, scene_id, "record")
+        require(isinstance(scene_record.get("label"), str)
+                and bool(scene_record.get("label", "").strip()),
+                f"semantic scene '{scene_id}' needs a string label")
+        availability = scene_record.get("available_in")
+        require(isinstance(availability, list) and len(availability) == 2
+                and all(isinstance(value, str) for value in availability)
+                and len(set(availability)) == 2
+                and set(availability) == {"LEARN", "EXPLORE"},
+                f"semantic scene '{scene_id}' has invalid availability")
+        camera_preset = scene_record.get("camera_preset")
+        require(isinstance(camera_preset, str)
+                and bool(re.fullmatch(r"(view|closeup|region)\.[A-Za-z0-9_]+",
+                                      camera_preset)),
+                f"semantic scene '{scene_id}' has invalid camera preset")
+        scale = scene_record.get("scale")
+        require(isinstance(scale, str) and scale in {"context", "detail"}
+                and type(scene_record.get("context")) is bool,
+                f"semantic scene '{scene_id}' has invalid scale/context")
+        layers = scene_record.get("layers") or {}
+        layers_shape = require_exact_scene_keys(layers, SCENE_LAYERS, scene_id, "layers")
+        require(layers_shape and all(type(value) is bool for value in layers.values()),
+                f"semantic scene '{scene_id}' has invalid layers")
+        selection = scene_record.get("selection")
+        selection_kind = selection.get("kind") if isinstance(selection, dict) else None
+        known = region_ids if selection_kind == "region" else (
+            component_ids if selection_kind == "component" else None)
+        selection_shape = selection is None or require_exact_scene_keys(
+            selection, {"kind", "id"}, scene_id, "selection")
+        require(selection is None or (selection_shape and known is not None
+                                      and isinstance(selection.get("id"), str)
+                                      and selection.get("id") in known),
+                f"semantic scene '{scene_id}' has unknown selection")
+        length_policy = scene_record.get("length_policy")
+        length_policy_shape = require_exact_scene_keys(
+            length_policy, {"kind"}, scene_id, "length_policy")
+        require(length_policy_shape and length_policy.get("kind") == "preserve",
+                f"semantic scene '{scene_id}' must preserve length")
+        scene_claims = scene_record.get("claim_ids")
+        require(isinstance(scene_claims, list) and bool(scene_claims)
+                and all(isinstance(claim_id, str) for claim_id in scene_claims)
+                and len(scene_claims) == len(set(scene_claims))
+                and all(claim_id in support_ids for claim_id in scene_claims),
+                f"semantic scene '{scene_id}' has unresolved claim_ids")
+        source_filter = scene_record.get("source_filter")
+        source_filter_shape = require_exact_scene_keys(
+            source_filter, {"kind", "claim_ids"}, scene_id, "source_filter")
+        require(source_filter_shape and source_filter.get("kind") == "claims"
+                and source_filter.get("claim_ids") == scene_claims,
+                f"semantic scene '{scene_id}' has invalid source_filter")
+        expected_layers = {key: (chapter.get("recommended_state") or {})
+                           .get("visibility", {}).get(key) for key in SCENE_LAYERS}
+        require(scene_record.get("camera_preset") == (chapter.get("recommended_state") or {}).get("camera_preset")
+                and scene_record.get("scale") == (chapter.get("recommended_state") or {}).get("scale")
+                and selection == chapter.get("target")
+                and layers == expected_layers
+                and scene_claims == chapter.get("claim_ids"),
+                f"semantic scene '{scene_id}' drifts from its chapter")
+        validate_scene_values(scene_record, scene_id)
 
     for card in p.get("expert_cards", []):
         validate_scientific(card, "expert card")
@@ -252,7 +464,11 @@ def validate(presentation_path):
                        "increasing target window, and a stated basis")
     if pacing_ok:
         chapter_list = p.get("guided_chapters", [])
-        tour_words = sum(len(re.findall(r"\S+", c.get("lay_summary", ""))) for c in chapter_list)
+        tour_words = sum(
+            len(re.findall(r"\S+", c.get("narration", "")))
+            + len(re.findall(r"\S+", c.get("state_change_announcement", "")))
+            for c in chapter_list
+        )
         seconds = tour_words / rate * 60 + len(chapter_list) * transition
         require(target_seconds[0] <= seconds <= target_seconds[1],
                 f"guided tour runs {seconds:.0f} s, outside the declared "
@@ -296,8 +512,9 @@ def validate(presentation_path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--presentation", default=DATA / "presentation.json", type=Path)
+    parser.add_argument("--scenes", default=DATA / "scenes.json", type=Path)
     args = parser.parse_args()
-    errors = validate(args.presentation)
+    errors = validate(args.presentation, args.scenes)
     if errors:
         print(f"PRESENTATION VALIDATION FAILED ({len(errors)} problem(s))")
         for error in errors:

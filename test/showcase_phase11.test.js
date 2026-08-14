@@ -31,20 +31,29 @@ const story = new StoryController(model.spec.presentation, {
   hiddenTargetsByScale: { [SCALES.detail]: TitinVisualization.DETAIL_HIDDEN },
   minLength: min,
   maxLength: max,
-});
+}, model.spec.scenes);
 
 // `story.chapters` is an array property, not a method — assigned at StoryController:383.
-test('SC11-0: a step-only hash adopts that chapter\'s declared camera', () => {
+test('SC11-0: a step-only hash adopts that chapter\'s complete declared scene', () => {
   for (const chapter of story.chapters) {
     const decoded = story.parse(`#mode=guided&step=${chapter.id}`);
+    assert.equal(decoded.state.scale, chapter.recommended_state.scale,
+      `step=${chapter.id} must use ${chapter.id}'s declared scale`);
     assert.equal(decoded.state.camera_preset, chapter.recommended_state.camera_preset,
       `step=${chapter.id} must frame ${chapter.id}, not whatever was on screen before`);
+    assert.equal(decoded.state.selected_component_or_region,
+      chapter.recommended_state.selected_component_or_region,
+      `step=${chapter.id} must select ${chapter.id}'s declared target`);
   }
 });
 
-test('SC11-0: an explicit camera still wins over the chapter default', () => {
-  const decoded = story.parse('#mode=guided&step=anchors&camera=view.oblique');
+test('SC11-0: explicit scene fields still win over the chapter defaults', () => {
+  const decoded = story.parse(
+    '#mode=guided&step=anchors&scale=detail&camera=view.oblique&target=PEVK',
+  );
+  assert.equal(decoded.state.scale, 'detail');
   assert.equal(decoded.state.camera_preset, 'view.oblique');
+  assert.equal(decoded.state.selected_component_or_region, 'PEVK');
 });
 
 // A close-up chapter that leaves the context-detail layer off renders the bare

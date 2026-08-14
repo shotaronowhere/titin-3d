@@ -123,6 +123,27 @@ test('SC19: runtime rejects a valid pointer rebound to the wrong public claim', 
   assert.ok(result.problems.some((problem) => /scope_badge.*exact public binding/i.test(problem)));
 });
 
+test('SC23: runtime rejects fabricated project-owner approval provenance', () => {
+  const files = structuredClone(model.spec._raw);
+  const claim = files['claim_support.json'].claims
+    .find((row) => row.id === 'sarcomere_definition');
+  claim.review.independent_human_review_status = 'COMPLETED';
+  const result = new Spec(files).check();
+  assert.equal(result.ok, false);
+  assert.ok(result.problems.some(
+    (problem) => /invalid project-owner approval provenance/i.test(problem),
+  ));
+  const invalidDateFiles = structuredClone(model.spec._raw);
+  const invalidDateClaim = invalidDateFiles['claim_support.json'].claims
+    .find((row) => row.id === 'sarcomere_definition');
+  invalidDateClaim.review.approved_on = '2026-02-30';
+  const invalidDateResult = new Spec(invalidDateFiles).check();
+  assert.equal(invalidDateResult.ok, false);
+  assert.ok(invalidDateResult.problems.some(
+    (problem) => /invalid project-owner approval provenance/i.test(problem),
+  ));
+});
+
 test('SC20: all five owner-authorized decisions are honest and packet-byte bound', () => {
   assert.equal(model.spec.scientificDecisions.sprint_status, 'DECISIONS_CONSUMABLE_SC20');
   assert.deepEqual(Object.keys(model.spec.scientificDecisions.decisions), [
@@ -152,7 +173,8 @@ test('SC20: all five owner-authorized decisions are honest and packet-byte bound
 });
 
 test('SC19: registry closure and human entailment stay separate', () => {
-  assert.match(model.spec.claimSupport.semantic_entailment, /Named human review only/i);
+  assert.match(model.spec.claimSupport.semantic_entailment,
+    /distinguishes named independent human review from project-owner acceptance/i);
   assert.match(readFileSync(new URL('../scripts/validate_citations.py', import.meta.url), 'utf8'),
     /never claim semantic entailment/i);
   assert.doesNotMatch(readFileSync(new URL('../scripts/validate_citations.py', import.meta.url), 'utf8'),

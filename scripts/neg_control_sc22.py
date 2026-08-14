@@ -14,10 +14,11 @@ references = load_json(ROOT / "data/references.json")
 showcase = load_json(ROOT / "data/showcase_claims.json")
 presentation = load_json(ROOT / "data/presentation.json")
 annotations = load_json(ROOT / "data/annotations.json")
+scenes = load_json(ROOT / "data/scenes.json")
 
 
 def problems(record: dict) -> list[str]:
-    return validate(record, references, showcase, presentation, annotations)
+    return validate(record, references, showcase, presentation, annotations, scenes)
 
 
 reviewed = copy.deepcopy(claims)
@@ -53,7 +54,7 @@ if any("unresolved identifier" in problem for problem in mutated):
 
 missing_annotations = copy.deepcopy(annotations)
 missing_annotations["components"][0]["claim_support_ids"] = []
-missing = validate(claims, references, showcase, presentation, missing_annotations)
+missing = validate(claims, references, showcase, presentation, missing_annotations, scenes)
 if not any("has no claim-support IDs" in problem for problem in missing):
     raise AssertionError(f"missing public annotation binding was not rejected: {missing}")
 

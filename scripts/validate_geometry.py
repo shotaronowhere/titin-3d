@@ -30,6 +30,7 @@ files=["sarcomere.json","titin.json","structural_states.json","geometry_sources.
        # not loaded here before session 9 — the definitions every other check
        # relies on were themselves unvalidated.
        "geometry_strategy.json","mechanical_model.json","showcase_claims.json","presentation.json",
+       "scenes.json",
        # SC-4 added annotations.json as a REQUIRED spec file (SpecLoader.SPEC_FILES)
        # but did not register it here, so the coverage guard below was failing and
        # nothing in this validator looked at the catalog. Registered in SC-5.
@@ -186,8 +187,10 @@ check(all(path and os.path.isfile(os.path.join(os.path.dirname(DATA_DIR), path))
 
 print("== SC-1 presentation registry ==")
 _PR = L["presentation.json"]
-check(_PR.get("schema") == "titin-presentation/1",
-      "presentation record has the reviewed SC-1 schema")
+check(_PR.get("schema") == "titin-presentation/2",
+      "presentation record has the SC-23 schema")
+check(L["scenes.json"].get("schema") == "titin-semantic-scenes/1",
+      "semantic scene record has the SC-23 schema")
 _pr_ids = [row.get("id") for key in ("audience_modes", "scope_badges", "length_presets",
                                      "guided_chapters", "expert_cards", "presenter_shortcuts")
            for row in (_PR.get(key) or [])]

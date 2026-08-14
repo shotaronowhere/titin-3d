@@ -290,11 +290,13 @@ test('SC6: a guided chapter may legally request the comparison', () => {
   // feature — otherwise the SC-7 chapter that surfaces it could not be written.
   const context = {
     claims: model.spec.showcaseClaims,
+    claimSupport: model.spec.claimSupport,
     references: model.spec.references,
     sarcomere: model.spec.sarcomere,
     titin: model.spec.titin,
     states: model.spec.states,
     annotations: model.spec.annotations,
+    scenes: model.spec.scenes,
   };
   assert.deepEqual(model.spec.showcaseClaims.objects
     .find((object) => object.id === 'lattice_cross_section').audience, ['GUIDED', 'EVIDENCE']);

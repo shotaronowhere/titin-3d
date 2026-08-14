@@ -112,7 +112,7 @@ export { EVIDENCE_CLASSES } from './src/model/SpecLoader.js';
 export { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
 export { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
 export { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible } from './src/presentation/StageLayout.js';
-export { SWEEP, sweepLength } from './src/presentation/StretchSweep.js';
+export { SWEEP, sweepElapsedAtLength, sweepLength } from './src/presentation/StretchSweep.js';
 export { presenterKeys, unboundShortcutIds } from './src/presentation/PresenterKeys.js';
 export { renderClaimView } from './src/presentation/ClaimViewRenderer.js';
 `);

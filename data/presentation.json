@@ -1,12 +1,13 @@
 {
-  "schema": "titin-presentation/1",
-  "version": 1,
+  "schema": "titin-presentation/2",
+  "version": 2,
   "meta": {
-    "phase": "SC-2 — Visual language and titin-first story",
+    "phase": "SC-23 — Lay narrative and semantic scene curriculum",
     "status": "COMPLETE",
     "purpose": "Presentation-only narrative and interface state. This record contains no authoritative biological coordinates and cannot replace the scientific geometry specifications.",
-    "governing_plan": "SHOWCASE_COMPLETION_PLAN.md",
-    "claim_authority": "data/showcase_claims.json"
+    "governing_plan": "docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md#sc-23--lay-narrative-and-semantic-scene-curriculum",
+    "claim_authority": "data/claim_support.json",
+    "content_review_status": "APPROVED by the project owner on 2026-08-14 because both required opening claims have registered scientific evidence. This is project-owner evidence acceptance; independent human wording and locator review was not performed or claimed."
   },
   "scope": {
     "target_claim_id": "scope_badge",
@@ -115,9 +116,13 @@
   ],
   "guided_chapters": [
     {
-      "id": "orientation",
+      "id": "meet_sarcomere",
+      "legacy_ids": [
+        "orientation"
+      ],
       "order": 1,
-      "title": "Meet titin in the sarcomere",
+      "title": "Meet the sarcomere",
+      "learning_objective": "Define a sarcomere and distinguish ATP-powered actomyosin contraction from titin's passive spring-and-scaffold roles.",
       "target_claim_id": "titin_continuity_trace",
       "target": {
         "kind": "component",
@@ -125,10 +130,31 @@
       },
       "evidence_class": "STRONGLY INFERRED",
       "source_ids": [
+        "10.1021/bi00801a004",
+        "10.1016/j.cell.2021.02.047",
         "10.1083/jcb.106.5.1563",
         "UniProt:Q8WZ42"
       ],
-      "lay_summary": "Titin is one continuous giant protein running from the Z-disc toward the sarcomere center. Here it is shown in pink beside actin and myosin so its full half-sarcomere route stays visible.",
+      "lay_summary": "A sarcomere is the repeating contractile unit between two Z-discs. Adenosine triphosphate (ATP)-powered myosin pulls on actin to drive active contraction; titin is the long passive spring and scaffold that helps the unit recoil and stay organized, not the motor.",
+      "narration": "A sarcomere is the repeating contractile unit between two Z-discs. Adenosine triphosphate (ATP)-powered myosin pulls on actin to drive active contraction; titin is the long passive spring and scaffold that helps the unit recoil and stay organized, not the motor.",
+      "claim_ids": [
+        "sarcomere_definition",
+        "actomyosin_motor_function",
+        "titin_continuity_trace",
+        "titin_region_architecture"
+      ],
+      "semantic_scene_id": "meet_sarcomere",
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "sarcomere_definition",
+          "actomyosin_motor_function",
+          "titin_continuity_trace",
+          "titin_region_architecture"
+        ]
+      },
+      "state_change_announcement": "Showing the full sarcomere and one representative titin route; your current sarcomere length is preserved.",
+      "expected_learner_takeaway": "Myosin and actin power active contraction; titin is a passive spring and scaffold spanning the sarcomere.",
       "expert_expansion": "The continuous axial topology and domain order are constrained, while the smooth three-dimensional backbone path remains a schematic presentation of unresolved transverse placement.",
       "not_claimed": [
         "a resolved atom-by-atom path",
@@ -151,12 +177,89 @@
           "mirror": true,
           "rings": 1
         }
-      }
+      },
+      "next_actions": [
+        {
+          "id": "next_chapter",
+          "label": "Next: Follow one giant molecule",
+          "action": "story.follow_titin"
+        }
+      ]
     },
     {
-      "id": "architecture",
+      "id": "follow_titin",
+      "legacy_ids": [],
       "order": 2,
-      "title": "Read its architecture",
+      "title": "Follow one giant molecule",
+      "learning_objective": "Trace one representative titin from Z-disc to M-line and distinguish its elastic I-band from its thick-filament-associated A-band.",
+      "target_claim_id": "titin_region_architecture",
+      "target": {
+        "kind": "component",
+        "id": "titin"
+      },
+      "evidence_class": "MEASURED",
+      "source_ids": [
+        "UniProt:Q8WZ42",
+        "10.1016/j.jmb.2020.06.025"
+      ],
+      "lay_summary": "Follow one representative titin from its N-terminal end at the Z-disc to its C-terminal end at the central M-line. Its I-band portion is the elastic span that extends, while its A-band portion stays associated with the myosin thick filament.",
+      "narration": "Follow one representative titin from its N-terminal end at the Z-disc to its C-terminal end at the central M-line. Its I-band portion is the elastic span that extends, while its A-band portion stays associated with the myosin thick filament.",
+      "claim_ids": [
+        "titin_continuity_trace",
+        "titin_region_architecture",
+        "mband_midpoint_and_crosslinks"
+      ],
+      "semantic_scene_id": "follow_titin",
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "titin_continuity_trace",
+          "titin_region_architecture",
+          "mband_midpoint_and_crosslinks"
+        ]
+      },
+      "state_change_announcement": "Framing the full titin route from Z-disc to M-line; your current sarcomere length is preserved.",
+      "expected_learner_takeaway": "A single titin path links the Z-disc and M-line, with an elastic I-band portion in series with a bound A-band portion.",
+      "expert_expansion": "Domain identity and order follow Q8WZ42; instanced archetypes encode class, position, and orientation rather than unique molecular surfaces. The smooth linkers between them are presentation proxies for unresolved conformations.",
+      "not_claimed": [
+        "atom-resolved surfaces for every domain",
+        "a known azimuth for every folded domain",
+        "that domain spacing is measured everywhere along the molecule"
+      ],
+      "presentation_features": [
+        "continuity_trace",
+        "band_brackets",
+        "termini"
+      ],
+      "recommended_state": {
+        "sarcomere_length_nm": 2200,
+        "scale": "context",
+        "camera_preset": "view.titin_story",
+        "selected_component_or_region": "titin",
+        "visibility": {
+          "show_lattice": true,
+          "show_domains": false,
+          "show_context_detail": false,
+          "mirror": true,
+          "rings": 1
+        }
+      },
+      "next_actions": [
+        {
+          "id": "next_chapter",
+          "label": "Next: See its molecular architecture",
+          "action": "story.molecular_architecture"
+        }
+      ]
+    },
+    {
+      "id": "molecular_architecture",
+      "legacy_ids": [
+        "architecture"
+      ],
+      "order": 3,
+      "title": "See its molecular architecture",
+      "learning_objective": "Introduce titin's folded Ig and Fn3 domains and disordered N2A/PEVK elements without moving Fn3 into the elastic I-band.",
       "target_claim_id": "titin_region_architecture",
       "target": {
         "kind": "component",
@@ -167,12 +270,27 @@
         "UniProt:Q8WZ42",
         "10.1016/j.jmb.2020.06.025"
       ],
-      "lay_summary": "Titin is not one uniform coil. Folded Ig and Fn3 domains alternate with disordered segments, and the order of those regions is fixed by the sequence: elastic parts near the Z-disc, anchored scaffold further in.",
+      "lay_summary": "Zoom in on titin’s building blocks: folded immunoglobulin-like (Ig) domains, fibronectin type III (Fn3) domains, N2A, and the disordered PEVK spring. The A-band carries the Ig/Fn3 array; this model does not place Fn3 in the elastic I-band.",
+      "narration": "Zoom in on titin’s building blocks: folded immunoglobulin-like (Ig) domains, fibronectin type III (Fn3) domains, N2A, and the disordered PEVK spring. The A-band carries the Ig/Fn3 array; this model does not place Fn3 in the elastic I-band.",
+      "claim_ids": [
+        "titin_region_architecture",
+        "sequence_region_partition"
+      ],
+      "semantic_scene_id": "molecular_architecture",
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "titin_region_architecture",
+          "sequence_region_partition"
+        ]
+      },
+      "state_change_announcement": "Zooming to folded and disordered titin regions; your current sarcomere length is preserved.",
+      "expected_learner_takeaway": "Titin combines folded Ig/Fn3 domains with disordered spring elements, arranged differently in the I-band and A-band.",
       "expert_expansion": "Domain identity and order follow Q8WZ42; instanced archetypes encode class, position, and orientation rather than unique molecular surfaces. The smooth linkers between them are presentation proxies for unresolved conformations.",
       "not_claimed": [
         "atom-resolved surfaces for every domain",
         "a known azimuth for every folded domain",
-        "that domain spacing is measured everywhere along the molecule"
+        "that Fn3 domains occur in the modeled elastic I-band"
       ],
       "presentation_features": [
         "continuity_trace",
@@ -190,12 +308,23 @@
           "mirror": false,
           "rings": 1
         }
-      }
+      },
+      "next_actions": [
+        {
+          "id": "next_chapter",
+          "label": "Next: Stretch the spring",
+          "action": "story.stretch_spring"
+        }
+      ]
     },
     {
-      "id": "elastic_regions",
-      "order": 3,
-      "title": "Different regions extend differently",
+      "id": "stretch_spring",
+      "legacy_ids": [
+        "elastic_regions"
+      ],
+      "order": 4,
+      "title": "Stretch the spring",
+      "learning_objective": "Compare I-band lengthening with the approximately fixed A-band and distinguish added length, incremental compliance, and modeled passive force.",
       "target_claim_id": "regional_extension_story",
       "target": {
         "kind": "region",
@@ -203,20 +332,40 @@
       },
       "evidence_class": "MODELED",
       "source_ids": [
-        "10.1083/jcb.140.4.853"
+        "10.1083/jcb.140.4.853",
+        "10.1073/pnas.95.14.8052",
+        "10.1529/biophysj.103.033571"
       ],
-      "lay_summary": "Stretch does not scale every part of titin equally. Folded Ig chains mainly straighten, while disordered spring regions such as PEVK take a larger share of extension in the force-balanced model.",
-      "expert_expansion": "Regional nanometer partitions are modeled by a common-force series-chain solver using sourced force-extension laws; the interpolation is explanatory geometry, not a measured time trajectory.",
+      "lay_summary": "As the sarcomere stretches within the supported range, titin’s I-band lengthens while its A-band span stays approximately fixed. The model predicts rising passive force; PEVK takes a growing share of added length and incremental compliance—how readily the next small stretch occurs—not simply more total extension.",
+      "narration": "As the sarcomere stretches within the supported range, titin’s I-band lengthens while its A-band span stays approximately fixed. The model predicts rising passive force; PEVK takes a growing share of added length and incremental compliance—how readily the next small stretch occurs—not simply more total extension.",
+      "claim_ids": [
+        "regional_extension_story",
+        "force_law_parameter_set",
+        "titin_region_architecture"
+      ],
+      "semantic_scene_id": "stretch_spring",
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "regional_extension_story",
+          "force_law_parameter_set",
+          "titin_region_architecture"
+        ]
+      },
+      "state_change_announcement": "Preparing the stretch comparison without changing your current length. If that length is outside the supported range, Set demonstration start saves it for Restore.",
+      "expected_learner_takeaway": "Stretch is concentrated in elastic I-band elements; the A-band stays approximately fixed and modeled passive force rises within the supported range.",
+      "expert_expansion": "Regional nanometer partitions and passive force are modeled by a common-force series-chain solver using source-bounded force-extension laws. Incremental compliance is the local change in extension per added force; it is distinct from a segment's absolute length or total extension.",
       "not_claimed": [
         "uniform scaling of titin regions",
         "widespread physiological Ig-domain unfolding",
-        "a measured molecular trajectory"
+        "a measured molecular trajectory",
+        "tissue-specific human force"
       ],
       "presentation_features": [
         "region_extension_chart"
       ],
       "recommended_state": {
-        "sarcomere_length_nm": 2400,
+        "sarcomere_length_nm": 2200,
         "scale": "detail",
         "camera_preset": "region.PEVK",
         "selected_component_or_region": "PEVK",
@@ -227,12 +376,38 @@
           "mirror": false,
           "rings": 1
         }
-      }
+      },
+      "next_actions": [
+        {
+          "id": "play_stretch",
+          "label": "Play stretch",
+          "action": "sweep.toggle"
+        },
+        {
+          "id": "set_demonstration_start",
+          "label": "Set demonstration start",
+          "action": "length.set_demo_start"
+        },
+        {
+          "id": "restore_previous_length",
+          "label": "Restore previous length",
+          "action": "length.restore"
+        },
+        {
+          "id": "next_chapter",
+          "label": "Next: Inspect both anchors",
+          "action": "story.inspect_anchors"
+        }
+      ]
     },
     {
-      "id": "anchors",
-      "order": 4,
-      "title": "Inspect its anchors",
+      "id": "inspect_anchors",
+      "legacy_ids": [
+        "anchors"
+      ],
+      "order": 5,
+      "title": "Inspect both anchors",
+      "learning_objective": "Explain the Z-disc interaction network without treating telethonin as the sole force path, and identify the source-limited M-line integration network.",
       "target_claim_id": "zdisc_telethonin_sandwich",
       "target": {
         "kind": "region",
@@ -241,16 +416,37 @@
       "evidence_class": "MEASURED",
       "source_ids": [
         "10.1038/nature04343",
-        "10.1016/j.cell.2021.02.047"
+        "10.1016/j.cell.2021.02.047",
+        "10.1083/jcb.134.6.1441",
+        "10.1038/embor.2010.65"
       ],
-      "lay_summary": "A spring only works if both ends are held. At the Z-disc, two titin N-termini from neighbouring half-sarcomeres clamp a telethonin molecule between them, which is how tension passes across the sarcomere boundary.",
-      "expert_expansion": "The antiparallel two-titin-to-one-telethonin topology is structure-supported; the displayed span and the surrounding network are schematic. At the far end titin's C-terminus integrates with the M-band, where the opposing half-sarcomere's titin arrives — reachable from the M-band close-up in Evidence mode.",
+      "lay_summary": "At the Z-disc, titin joins a network containing the actin-crosslinker α-actinin; telethonin binds two antiparallel Z1Z2 fragments but is not the sole force path. At the central M-line, titin meets a protein-crosslinking network whose exact in-situ route remains unresolved.",
+      "narration": "At the Z-disc, titin joins a network containing the actin-crosslinker α-actinin; telethonin binds two antiparallel Z1Z2 fragments but is not the sole force path. At the central M-line, titin meets a protein-crosslinking network whose exact in-situ route remains unresolved.",
+      "claim_ids": [
+        "zdisc_local_network",
+        "zdisc_telethonin_sandwich",
+        "mband_midpoint_and_crosslinks"
+      ],
+      "semantic_scene_id": "inspect_anchors",
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "zdisc_local_network",
+          "zdisc_telethonin_sandwich",
+          "mband_midpoint_and_crosslinks"
+        ]
+      },
+      "state_change_announcement": "Moving to the Z-disc anchor close-up while retaining the full-sarcomere relationship; your current sarcomere length is preserved.",
+      "expected_learner_takeaway": "Both titin ends participate in protein networks; telethonin is one supported Z-disc interaction, not the complete force-transmission route.",
+      "expert_expansion": "The antiparallel two-titin-to-one-telethonin topology is structure-supported, but the full in-situ force path remains unresolved. At the other end, titin's C-terminus integrates into a heterogeneous M-band network; sparse schematic relationships avoid inventing exact crosslink identities or coordinates.",
       "not_claimed": [
-        "a resolved complete lateral route for titin through the Z-disc",
-        "single-ended telethonin binding",
-        "a measured display length for the sandwich glyph"
+        "telethonin as the sole path carrying titin tension",
+        "a resolved complete lateral route through the Z-disc",
+        "a complete M-band molecular structure",
+        "exact in-situ crosslink coordinates"
       ],
       "presentation_features": [
+        "continuity_trace",
         "band_brackets",
         "termini"
       ],
@@ -266,12 +462,23 @@
           "mirror": true,
           "rings": 1
         }
-      }
+      },
+      "next_actions": [
+        {
+          "id": "next_chapter",
+          "label": "Next: Scaffold the thick filament",
+          "action": "story.scaffold_thick_filament"
+        }
+      ]
     },
     {
-      "id": "anchored_scaffold",
-      "order": 5,
-      "title": "See titin as a scaffold",
+      "id": "scaffold_thick_filament",
+      "legacy_ids": [
+        "anchored_scaffold"
+      ],
+      "order": 6,
+      "title": "Scaffold the thick filament",
+      "learning_objective": "Show titin's A-band association and surrounding lattice while keeping whole-path copy number, azimuth, and disputed register claims explicitly unencoded.",
       "target_claim_id": "titin_region_architecture",
       "target": {
         "kind": "region",
@@ -280,21 +487,40 @@
       "evidence_class": "MEASURED",
       "source_ids": [
         "10.1016/j.jmb.2020.06.025",
+        "10.1085/jgp.202012713",
+        "10.1152/ajpheart.2000.279.5.h2568",
         "UniProt:Q8WZ42"
       ],
-      "lay_summary": "Titin changes role along its length. Its I-band regions form the extensible spring, while an eleven-domain sequence super-repeat binds the thick filament. The bound A-band display allocation stays constant here, but its rendered span is schematic rather than a measured molecular length.",
-      "expert_expansion": "The C-zone sequence super-repeat contains eleven Ig/Fn3 domains. In one fixed rabbit-psoas mapping dataset the mean domain spacing is 3.98 nm, yielding a source-context arithmetic interval of 43.78 nm. That display derivation remains distinct from the approximately 43.17 nm myosin H periodicity, 14.3 nm crown spacing, and approximately 45.54 nm thick-filament L periodicity. The A-band allocation is invariant with sarcomere length in this renderer, which makes the scaffold role legible beside the I-band spring without asserting an exact molecular length or register. Titin is widely discussed as a thick-filament ruler and regulator, but this model encodes no causal mechanism. The same C-zone carries MyBP-C, an accessory thick-filament protein that is not part of titin; its optional schematic context layer can be switched on here in Evidence mode.",
+      "lay_summary": "Along the A-band, titin associates with the myosin thick filament as a scaffold. The surrounding lattice shows thick and thin filament packing. One representative molecule is shown; copy number, azimuth, and disputed repeat-to-myosin register are not encoded.",
+      "narration": "Along the A-band, titin associates with the myosin thick filament as a scaffold. The surrounding lattice shows thick and thin filament packing. One representative molecule is shown; copy number, azimuth, and disputed repeat-to-myosin register are not encoded.",
+      "claim_ids": [
+        "titin_region_architecture",
+        "aband_periodicity_relation",
+        "lattice_cross_section"
+      ],
+      "semantic_scene_id": "scaffold_thick_filament",
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "titin_region_architecture",
+          "aband_periodicity_relation",
+          "lattice_cross_section"
+        ]
+      },
+      "state_change_announcement": "Moving to the A-band C-zone and its filament context; your current sarcomere length is preserved.",
+      "expected_learner_takeaway": "Titin's A-band segment scaffolds the thick filament, but the representative path encodes neither molecular multiplicity nor an exact repeat register.",
+      "expert_expansion": "The C-zone sequence super-repeat contains eleven Ig/Fn3 domains, but its derived interval remains distinct from the measured myosin H, crown, and L periodicities. SD-05 authorizes one representative path and explicitly withholds whole-path copy number and azimuth for this construct.",
       "not_claimed": [
-        "one elastic constant for the whole molecule",
-        "atom-level region surfaces",
-        "an exact universal A-band azimuth",
-        "exact register between the titin super-repeat and the myosin repeat",
-        "a settled causal mechanism by which titin sets thick-filament length or regulates myosin"
+        "whole-path titin copy number",
+        "a resolved universal titin azimuth",
+        "exact register between titin sequence repeats and myosin periodicities",
+        "a universal constant-volume lattice response"
       ],
       "presentation_features": [
-        "continuity_trace",
         "band_brackets",
-        "termini"
+        "continuity_trace",
+        "termini",
+        "lattice_cross_section"
       ],
       "recommended_state": {
         "sarcomere_length_nm": 2200,
@@ -308,52 +534,24 @@
           "mirror": true,
           "rings": 1
         }
-      }
-    },
-    {
-      "id": "evidence_audit",
-      "order": 6,
-      "title": "Audit the evidence",
-      "target_claim_id": "band_and_zone_brackets",
-      "target": {
-        "kind": "component",
-        "id": "titin"
       },
-      "evidence_class": "STRONGLY INFERRED",
-      "source_ids": [
-        "10.1016/j.cell.2021.02.047",
-        "10.1085/jgp.202012713"
-      ],
-      "lay_summary": "Not every line here is equally certain. Lengths and periodicities are measured, regional extension is solved from a model, and smooth three-dimensional paths are schematic. Every object on screen says which it is.",
-      "expert_expansion": "Six evidence classes run from MEASURED to UNKNOWN and are never silently promoted. Click any structure for its claim class, render class, scope, sources, and explicit non-claims; the Evidence drawer groups every claim in the current scene by class.",
-      "not_claimed": [
-        "that a schematic path is an experimental density",
-        "that passing validation proves a biological interpretation",
-        "one uniform confidence across the whole model"
-      ],
-      "presentation_features": [
-        "band_brackets",
-        "continuity_trace",
-        "termini"
-      ],
-      "recommended_state": {
-        "sarcomere_length_nm": 2200,
-        "scale": "context",
-        "camera_preset": "view.oblique",
-        "selected_component_or_region": "titin",
-        "visibility": {
-          "show_lattice": true,
-          "show_domains": false,
-          "show_context_detail": false,
-          "mirror": true,
-          "rings": 1
+      "next_actions": [
+        {
+          "id": "next_chapter",
+          "label": "Next: What do we know?",
+          "action": "story.knowledge_recap"
         }
-      }
+      ]
     },
     {
-      "id": "provenance_pipeline",
+      "id": "knowledge_recap",
+      "legacy_ids": [
+        "evidence_audit",
+        "provenance_pipeline"
+      ],
       "order": 7,
-      "title": "How this model was built",
+      "title": "What do we know?",
+      "learning_objective": "Recap titin's spring, scaffold, and interaction/signaling-platform roles; distinguish evidence classes and offer concrete routes for replay and inspection.",
       "target_claim_id": "ai_provenance_pipeline",
       "target": {
         "kind": "component",
@@ -361,17 +559,46 @@
       },
       "evidence_class": "SCHEMATIC",
       "source_ids": [
-        "UniProt:Q8WZ42"
+        "UniProt:Q8WZ42",
+        "10.1083/jcb.106.5.1563",
+        "10.1016/j.jmb.2020.06.025",
+        "10.1016/j.jmb.2021.166901"
       ],
-      "lay_summary": "This is not an illustration drawn to look convincing. Every shape traces back through counted, inspectable records: cited papers, sourced measurements, evidence-classified data, an executable model, and tests built to reject it.",
-      "expert_expansion": "The figures in the diagram are counted from the loaded records at render time rather than written into the copy, so they cannot drift from the data layer. AI helped build and audit a reproducible model; it is not the scientific authority for any claim, and passing validation does not settle a biological interpretation.",
+      "lay_summary": "Across its full Z-disc-to-M-line route, titin is a passive spring, thick-filament scaffold, and interaction/signaling platform. Measured comes from observations, inferred from interpretation, modeled from equations, and schematic means illustrative. Replay the stretch, inspect a region, or open its evidence.",
+      "narration": "Across its full Z-disc-to-M-line route, titin is a passive spring, thick-filament scaffold, and interaction/signaling platform. Measured comes from observations, inferred from interpretation, modeled from equations, and schematic means illustrative. Replay the stretch, inspect a region, or open its evidence.",
+      "claim_ids": [
+        "titin_continuity_trace",
+        "titin_region_architecture",
+        "regional_extension_story",
+        "n2a_interaction_hub_card",
+        "titin_kinase_card",
+        "ai_provenance_pipeline"
+      ],
+      "semantic_scene_id": "knowledge_recap",
+      "source_filter": {
+        "kind": "claims",
+        "claim_ids": [
+          "titin_continuity_trace",
+          "titin_region_architecture",
+          "regional_extension_story",
+          "n2a_interaction_hub_card",
+          "titin_kinase_card",
+          "ai_provenance_pipeline"
+        ]
+      },
+      "state_change_announcement": "Returning to the complete titin route for the recap; your current sarcomere length is preserved.",
+      "expected_learner_takeaway": "Titin is a passive spring, thick-filament scaffold, and interaction/signaling platform, and each visual claim carries an explicit evidence status.",
+      "expert_expansion": "Evidence labels distinguish direct measurements, source-supported inference, model output, and schematic depiction without promoting one into another. Interaction and signaling sites are structurally present, while this visualization does not animate a settled causal signaling pathway.",
       "not_claimed": [
         "that AI is a scientific authority",
         "that passing tests proves every biological interpretation",
-        "that procedural geometry is experimental density"
+        "that procedural geometry is experimental density",
+        "a settled causal signaling mechanism"
       ],
       "presentation_features": [
-        "provenance_pipeline"
+        "continuity_trace",
+        "band_brackets",
+        "termini"
       ],
       "recommended_state": {
         "sarcomere_length_nm": 2200,
@@ -385,9 +612,39 @@
           "mirror": true,
           "rings": 1
         }
-      }
+      },
+      "next_actions": [
+        {
+          "id": "replay_stretch",
+          "label": "Replay stretch",
+          "action": "story.stretch_spring"
+        },
+        {
+          "id": "inspect_region",
+          "label": "Inspect a region",
+          "action": "target.PEVK"
+        },
+        {
+          "id": "open_evidence",
+          "label": "Open evidence",
+          "action": "mode.evidence"
+        }
+      ]
     }
   ],
+  "chapter_aliases": {
+    "schema": "titin-chapter-aliases/1",
+    "source_version": 1,
+    "aliases": {
+      "orientation": "meet_sarcomere",
+      "architecture": "molecular_architecture",
+      "elastic_regions": "stretch_spring",
+      "anchors": "inspect_anchors",
+      "anchored_scaffold": "scaffold_thick_filament",
+      "evidence_audit": "knowledge_recap",
+      "provenance_pipeline": "knowledge_recap"
+    }
+  },
   "expert_cards": [
     {
       "id": "aband_scaffold_card",
@@ -655,7 +912,7 @@
   ],
   "initial_state": {
     "audience_mode": "guided",
-    "story_step": "orientation",
+    "story_step": "meet_sarcomere",
     "sarcomere_length_nm": 2200,
     "scale": "context",
     "camera_preset": "view.titin_story",
@@ -666,12 +923,12 @@
     {
       "id": "restart_guided",
       "label": "Restart guided route",
-      "action": "story.orientation"
+      "action": "story.meet_sarcomere"
     },
     {
       "id": "show_extension",
       "label": "Show regional extension",
-      "action": "story.elastic_regions"
+      "action": "story.stretch_spring"
     },
     {
       "id": "open_evidence",

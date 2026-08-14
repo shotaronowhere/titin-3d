@@ -21,20 +21,21 @@ const controller = new StoryController(model.spec.presentation, {
   hiddenTargetsByScale: { [SCALES.detail]: TitinVisualization.DETAIL_HIDDEN },
   minLength: min,
   maxLength: max,
-});
+}, model.spec.scenes);
 
 test('SC1: presentation.json is required and cross-file validated at runtime', () => {
-  assert.equal(model.spec.presentation.schema, 'titin-presentation/1');
+  assert.equal(model.spec.presentation.schema, 'titin-presentation/2');
+  assert.equal(model.spec.scenes.schema, 'titin-semantic-scenes/1');
   assert.equal(model.spec.showcaseClaims.schema, 'titin-showcase-claim-audit/2');
   assert.deepEqual(controller.chapters.map((chapter) => chapter.id),
-    ['orientation', 'architecture', 'elastic_regions', 'anchors',
-      'anchored_scaffold', 'evidence_audit', 'provenance_pipeline']);
+    ['meet_sarcomere', 'follow_titin', 'molecular_architecture', 'stretch_spring',
+      'inspect_anchors', 'scaffold_thick_filament', 'knowledge_recap']);
 });
 
 test('SC1: every supported public URL state round-trips exactly', () => {
   const expected = {
     audience_mode: AUDIENCE_MODES.evidence,
-    story_step: 'elastic_regions',
+    story_step: 'stretch_spring',
     sarcomere_length_nm: 2375,
     scale: SCALES.detail,
     camera_preset: 'region.PEVK',
@@ -43,7 +44,7 @@ test('SC1: every supported public URL state round-trips exactly', () => {
   };
   const hash = controller.serialize(expected);
   assert.equal(hash,
-    '#mode=evidence&step=elastic_regions&sl=2375&scale=detail&camera=region.PEVK&target=PEVK&evidence=1');
+    '#mode=evidence&step=stretch_spring&sl=2375&scale=detail&camera=region.PEVK&target=PEVK&evidence=1');
   assert.deepEqual(controller.parse(hash), { state: expected, issues: [] });
   assert.throws(() => controller.serialize({ ...expected, audience_mode: 'guided', evidence_display: true }),
     /cannot serialize unsupported state/i);
@@ -67,7 +68,7 @@ test('SC1: bad URL fields fail visibly and use documented defaults', () => {
   assert.deepEqual(decoded.state, model.spec.presentation.initial_state);
 
   const incompatible = controller.parse(
-    '#mode=guided&step=orientation&sl=2200&scale=detail&camera=closeup.zdisc&target=Z1Z2&evidence=1',
+    '#mode=guided&step=meet_sarcomere&sl=2200&scale=detail&camera=closeup.zdisc&target=Z1Z2&evidence=1',
   );
   assert.equal(incompatible.state.evidence_display, false);
   assert.equal(incompatible.state.camera_preset, 'view.longitudinal');
@@ -75,7 +76,7 @@ test('SC1: bad URL fields fail visibly and use documented defaults', () => {
   assert.match(incompatible.issues.join(' '), /unavailable at the detail scale/);
 
   const hiddenTarget = controller.parse(
-    '#mode=evidence&step=orientation&sl=2200&scale=detail&camera=view.longitudinal&target=thick_filament&evidence=1',
+    '#mode=evidence&step=meet_sarcomere&sl=2200&scale=detail&camera=view.longitudinal&target=thick_filament&evidence=1',
   );
   assert.equal(hiddenTarget.state.selected_component_or_region, null);
   assert.match(hiddenTarget.issues.join(' '), /Target 'thick_filament'.*unavailable at scale 'detail'/);
@@ -96,13 +97,13 @@ test('SC1: public facade reports audience/story/selection without adding activat
   };
   const result = facade.setPresentationState({
     audience_mode: AUDIENCE_MODES.evidence,
-    story_step: 'orientation',
+    story_step: 'meet_sarcomere',
     selected_component_or_region: 'PEVK',
     camera_preset: 'region.PEVK',
     evidence_display: true,
   });
   assert.deepEqual(result, {
-    audience_mode: 'evidence', story_step: 'orientation',
+    audience_mode: 'evidence', story_step: 'meet_sarcomere',
     selected_component_or_region: 'PEVK', regulatory_state: null,
     camera_preset: 'region.PEVK', evidence_display: true,
     sarcomere_length_nm: 2200, structural_state: 'resting', scale: 'context',

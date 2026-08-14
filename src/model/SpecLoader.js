@@ -10,7 +10,7 @@
  * same code runs under Node (fs) and the browser (fetch).
  */
 
-import { checkPresentationSpec } from '../presentation/StoryController.js';
+import { checkPresentationSpec, checkSemanticScenes } from '../presentation/StoryController.js';
 import { checkAnnotationCatalog } from '../presentation/AnnotationCatalog.js';
 import { mapFeaturesToRegions } from './SequenceFeatures.js';
 import { scopeLedger } from './ScientificScope.js';
@@ -24,6 +24,7 @@ export const SPEC_FILES = Object.freeze([
   'references.json',
   'showcase_claims.json',
   'presentation.json',
+  'scenes.json',
   'annotations.json',
   'scientific_scope.json',
   'titin_sequence_features.json',
@@ -88,6 +89,15 @@ function checkedIdentity(identity) {
   });
 }
 
+function isIsoCalendarDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return parsed.getUTCFullYear() === year
+    && parsed.getUTCMonth() === month - 1
+    && parsed.getUTCDate() === day;
+}
+
 export class SpecValidationError extends Error {
   constructor(problems) {
     super(`Spec validation failed with ${problems.length} problem(s):\n  - ` +
@@ -106,6 +116,7 @@ export class Spec {
     this.references = files['references.json'];
     this.showcaseClaims = files['showcase_claims.json'];
     this.presentation = files['presentation.json'];
+    this.scenes = files['scenes.json'];
     this.annotations = files['annotations.json'];
     this.scientificScope = files['scientific_scope.json'];
     this.sequenceFeatures = files['titin_sequence_features.json'];
@@ -161,6 +172,7 @@ export class Spec {
     for (const [k, v] of Object.entries({
       sarcomere: S, titin: T, states: ST, geometrySources: this.geometrySources, references: R,
       showcaseClaims: this.showcaseClaims, presentation: this.presentation,
+      scenes: this.scenes,
       annotations: this.annotations,
       scientificScope: this.scientificScope,
       sequenceFeatures: this.sequenceFeatures,
@@ -250,11 +262,24 @@ export class Spec {
     }
     for (const section of ['guided_chapters', 'expert_cards']) {
       for (const [index, row] of (this.presentation[section] || []).entries()) {
-        const claim = supportById.get(row.target_claim_id);
         const expected = `data/presentation.json#/${section}/${index}`;
-        if (!claim) p.push(`presentation row '${row.id}' has unresolved claim-support ID '${row.target_claim_id}'`);
+        const rowClaimIds = section === 'guided_chapters' ? row.claim_ids || [] : [row.target_claim_id];
+        for (const claimId of rowClaimIds) {
+          const claim = supportById.get(claimId);
+          if (!claim) p.push(`presentation row '${row.id}' has unresolved claim-support ID '${claimId}'`);
+          else if (!(claim.public_bindings || []).includes(expected)) {
+            p.push(`presentation row '${row.id}' claim '${claimId}' lacks exact public binding '${expected}'`);
+          }
+        }
+      }
+    }
+    for (const [sceneId, scene] of Object.entries(this.scenes.scenes || {})) {
+      const expected = `data/scenes.json#/scenes/${sceneId}`;
+      for (const claimId of scene.claim_ids || []) {
+        const claim = supportById.get(claimId);
+        if (!claim) p.push(`semantic scene '${sceneId}' has unresolved claim-support ID '${claimId}'`);
         else if (!(claim.public_bindings || []).includes(expected)) {
-          p.push(`presentation row '${row.id}' lacks exact public binding '${expected}'`);
+          p.push(`semantic scene '${sceneId}' claim '${claimId}' lacks exact public binding '${expected}'`);
         }
       }
     }
@@ -273,7 +298,38 @@ export class Spec {
         }
       }
     }
+    const ownerApprovableClaims = new Set([
+      'sarcomere_definition', 'actomyosin_motor_function',
+    ]);
     for (const claim of this.claimSupport.claims || []) {
+      const review = claim.review || {};
+      const authority = review.approval_authority;
+      if (review.status === 'PENDING' && authority) {
+        p.push(`claim '${claim.id}' invents approval authority while PENDING`);
+      } else if (review.status === 'APPROVED' && authority?.type === 'PROJECT_OWNER') {
+        const authorityKeys = Object.keys(authority).sort().join('|');
+        if (authorityKeys !== [
+          'authority_basis', 'identity', 'independent_scientific_reviewer', 'type',
+        ].sort().join('|')
+            || !ownerApprovableClaims.has(claim.id)
+            || claim.inventory_status !== 'REQUIRED_FOR_SC23'
+            || authority.identity !== 'UNDISCLOSED_PROJECT_OWNER'
+            || authority.authority_basis !== 'registered_scientific_evidence_accepted'
+            || authority.independent_scientific_reviewer !== false
+            || review.independent_human_review_status !== 'NOT_PERFORMED'
+            || review.locator_verified_independently !== false
+            || review.reviewer !== null || review.affiliation !== null
+            || review.reviewed_on !== null
+            || review.publication_consent !== false
+            || !isIsoCalendarDate(review.approved_on)
+            || !/^[0-9a-f]{64}$/.test(review.reviewed_payload_sha256 || '')) {
+          p.push(`claim '${claim.id}' has invalid project-owner approval provenance`);
+        }
+      } else if (review.status === 'APPROVED'
+          && (!review.reviewer || !review.affiliation
+            || review.locator_verified_independently !== true)) {
+        p.push(`claim '${claim.id}' has unsupported approval provenance`);
+      }
       for (const binding of claim.public_bindings || []) {
         const match = binding.match(/^data\/([^#]+)#(\/.*)$/);
         if (!match) continue;
@@ -314,14 +370,21 @@ export class Spec {
     // 2b. SC-1 presentation contract. It is a required presentation layer, not a
     // source of geometry, and may only reference IDs admitted by the scientific
     // records. Browser runtime therefore rejects the same cross-file drift as CI.
-    p.push(...checkPresentationSpec(this.presentation, {
+    const presentationContext = {
       claims: this.showcaseClaims,
+      claimSupport: this.claimSupport,
       references: R,
       sarcomere: S,
       titin: T,
       states: ST,
       annotations: this.annotations,
       scientificScope: this.scientificScope,
+      scenes: this.scenes,
+    };
+    p.push(...checkPresentationSpec(this.presentation, presentationContext));
+    p.push(...checkSemanticScenes(this.scenes, {
+      ...presentationContext,
+      presentation: this.presentation,
     }));
     p.push(...checkAnnotationCatalog(this.annotations, {
       references: R,

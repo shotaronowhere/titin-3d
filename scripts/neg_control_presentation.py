@@ -48,27 +48,27 @@ def card(payload, card_id):
 
 
 rejected("duplicate chapter ID",
-         lambda p: chapter(p, "architecture").__setitem__("id", "orientation"),
+         lambda p: chapter(p, "molecular_architecture").__setitem__("id", "meet_sarcomere"),
          "duplicate guided chapter")
 rejected("unknown narrative target",
-         lambda p: chapter(p, "orientation")["target"].__setitem__("id", "not_a_region"),
+         lambda p: chapter(p, "meet_sarcomere")["target"].__setitem__("id", "not_a_region"),
          "targets unknown")
 rejected("missing source closure",
-         lambda p: chapter(p, "orientation").__setitem__("source_ids", ["10.invalid/missing"]),
+         lambda p: chapter(p, "meet_sarcomere").__setitem__("source_ids", ["10.invalid/missing"]),
          "unknown source")
 rejected("overstated evidence",
-         lambda p: chapter(p, "elastic_regions").__setitem__("evidence_class", "MEASURED"),
+         lambda p: chapter(p, "stretch_spring").__setitem__("evidence_class", "MEASURED"),
          "stronger than target")
 rejected("chapter targeting a deferred claim",
-         lambda p: chapter(p, "orientation").__setitem__(
+         lambda p: chapter(p, "meet_sarcomere").__setitem__(
              "target_claim_id", "thin_filament_regulation_layer"),
          "targets non-admitted claim")
 rejected("dense single-sentence chapter summary",
-         lambda p: chapter(p, "orientation").__setitem__(
+         lambda p: chapter(p, "meet_sarcomere").__setitem__(
              "lay_summary", " ".join(["titin"] * 40)),
          "sentences; expected 2-3")
 rejected("chapter summary with an overlong sentence",
-         lambda p: chapter(p, "orientation").__setitem__(
+         lambda p: chapter(p, "meet_sarcomere").__setitem__(
              "lay_summary", " ".join(["titin"] * 34) + ". And a short second one."),
          "word sentence; expected at most 30")
 rejected("hidden out-of-range state",

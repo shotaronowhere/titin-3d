@@ -1,6 +1,6 @@
 # Scientific limitations and non-claims
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `cc77aec9b25d679fa8f815da7635f9cf58da2c5b`; build inputs `e05bfa833ae4d8f02c5def3ef5926d930e13078926e182a7f9fb70eee470b0b5`. Run `npm run pack` to refresh.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `cc77aec9b25d679fa8f815da7635f9cf58da2c5b-dirty`; build inputs `53667a76bdb43f94d9e013c3b05dd23ffc75e82698b4d717442f84943b0b47c0`. Run `npm run pack` to refresh.
 
 Every statement below is recorded in the repository, not written for this sheet.
 
@@ -139,51 +139,50 @@ Source: `data/presentation.json`
 - a complete M-band molecular structure
 - a direct titin–MyBP-C contact
 - a known azimuth for every folded domain
-- a measured display length for the sandwich glyph
 - a measured molecular trajectory
 - a per-isoform comparison of passive stiffness
 - a resolved atom-by-atom path
-- a resolved complete lateral route for titin through the Z-disc
+- a resolved complete lateral route through the Z-disc
 - a resolved skeletal titin azimuth
 - a resolved stripe register, azimuth, reach, or binding pose
-- a settled causal mechanism by which titin sets thick-filament length or regulates myosin
+- a resolved universal titin azimuth
+- a settled causal signaling mechanism
 - a settled mechanosensor mechanism
 - a settled regulatory pathway from titin to myosin
 - a settled ruler mechanism for thick-filament length
+- a universal constant-volume lattice response
 - a universal physiological resting length
 - a universal rigid thick-to-thin bridge
 - an added partner molecule in the 3-D scene
-- an exact universal A-band azimuth
 - an exact universal A-band azimuth for the bound segment
 - an isoform-neutral titin molecule
-- atom-level region surfaces
 - atom-resolved surfaces for every domain
 - automatic coupling between sarcomere length and activation
 - cardiac cMyBP-C coordinates transferred into the reference-sequence model
 - cardiac titin
 - causal downstream signaling animation
 - complete N2A signalosome composition
-- exact register between the titin super-repeat and the myosin repeat
+- exact in-situ crosslink coordinates
+- exact register between titin sequence repeats and myosin periodicities
 - identity or exact register among the derived 43.78 nm display interval, H periodicity, and L periodicity
 - in-situ kinase orientation
 - known transverse azimuth along the entire chain
-- one elastic constant for the whole molecule
-- one uniform confidence across the whole model
 - one universal downstream pathway
 - resolved partner coordinates
 - settled causality
-- single-ended telethonin binding
+- telethonin as the sole path carrying titin tension
 - that AI is a scientific authority
-- that a schematic path is an experimental density
+- that Fn3 domains occur in the modeled elastic I-band
 - that domain spacing is measured everywhere along the molecule
 - that passing tests proves every biological interpretation
-- that passing validation proves a biological interpretation
 - that procedural geometry is experimental density
 - that these gaps are the only ones
 - that titin is the actomyosin motor
 - three exact molecules at every human titin super-repeat
 - time-resolved active contraction
+- tissue-specific human force
 - uniform scaling of titin regions
+- whole-path titin copy number
 - widespread physiological Ig-domain unfolding
 
 ## Specification unknowns

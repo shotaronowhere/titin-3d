@@ -264,6 +264,7 @@ function claimMatrixDoc(pack) {
 
 function scientificAuthorityDoc(pack) {
   const authority = pack.scientific_authority;
+  const contentReview = authority.presentation_content_review;
   const lines = [
     '# Scientific authority status',
     '',
@@ -285,6 +286,18 @@ function scientificAuthorityDoc(pack) {
     '',
     `Claim-support inventory: ${authority.claim_count} records.`,
     '',
+    '## SC-23 presentation content review',
+    '',
+    `**Sprint status:** ${contentReview.sprint_status}`,
+    '',
+    `**Release ready:** ${contentReview.release_ready}`,
+    '',
+    '| Required claim | Approval status | Authority | Independent human review |',
+    '|---|---|---|---|',
+    ...contentReview.required_claims.map((claim) => `| \`${claim.id}\` | ${claim.review_status} | ${claim.approval_authority || 'none'} | ${claim.independent_human_review_status || 'not recorded'} |`),
+    '',
+    contentReview.note,
+    '',
     '## Mechanical authority',
     '',
     '| Field | Value |',
@@ -302,7 +315,7 @@ function scientificAuthorityDoc(pack) {
     '|---|---|',
     ...Object.entries(authority.decision_statuses).map(([id, status]) => `| ${id} | ${status} |`),
     '',
-    'Offline registry closure verifies that cited identifiers have canonical metadata. It does not establish semantic entailment; only a named, independently locator-verifying reviewer may approve a claim.',
+    'Offline registry closure verifies that cited identifiers have canonical metadata; it does not by itself establish semantic entailment. Approval provenance records whether a claim was accepted by the project owner based on registered scientific evidence or independently verified by a named human reviewer.',
   ];
   return `${lines.join('\n')}\n`;
 }
@@ -348,13 +361,43 @@ function presenterDoc(pack) {
   ];
   for (const chapter of script.chapters) {
     lines.push(`## ${chapter.order}. ${chapter.title}  \`~${chapter.estimated_seconds}s\``, '',
-      `**Do.** ${chapter.show}`, '', `**Say.** ${chapter.say}`, '',
+      `**Objective.** ${chapter.learning_objective}`, '',
+      `**Do.** ${chapter.show}`, '',
+      `**Announce.** ${chapter.state_change_announcement}`, '', `**Say.** ${chapter.say}`, '',
+      `**Takeaway.** ${chapter.expected_learner_takeaway}`, '',
       `**If asked.** ${chapter.if_asked}`, '');
     if (chapter.not_claimed.length) {
       lines.push(`**If pushed.** Not claimed: ${chapter.not_claimed.join('; ')}.`, '');
     }
   }
   return `${lines.join('\n')}\n`;
+}
+
+function transcriptDoc(pack, { screenReader = false } = {}) {
+  const transcript = pack.transcripts;
+  const rows = screenReader ? transcript.screen_reader : transcript.text_only;
+  const lines = [
+    screenReader ? '# Screen-reader transcript' : '# Text-only Learn transcript',
+    '',
+    `Generated from \`${transcript.source}\` — ${identitySummary(pack)}.`,
+    `${transcript.word_count} narrated/announced words; estimated ${transcript.estimated_seconds} s; `
+      + `target ${transcript.target_seconds[0]}–${transcript.target_seconds[1]} s.`,
+    '',
+  ];
+  for (const chapter of rows) {
+    lines.push(`## ${chapter.order}. ${chapter.title}`, '');
+    if (screenReader) {
+      for (const sentence of chapter.spoken_sequence) lines.push(sentence, '');
+    } else {
+      lines.push(`**Objective.** ${chapter.learning_objective}`, '',
+        `**State announcement.** ${chapter.state_change_announcement}`, '',
+        chapter.narration, '',
+        `**Takeaway.** ${chapter.expected_learner_takeaway}`, '',
+        `**Actions.** ${chapter.next_actions.join('; ')}.`, '');
+    }
+    lines.push(`**Canonical claims.** ${chapter.claim_ids.map((id) => `\`${id}\``).join(', ')}`, '');
+  }
+  return `${lines.slice(0, -1).join('\n')}\n`;
 }
 
 function preflightDoc(pack, matrix) {
@@ -431,6 +474,8 @@ const files = new Map([
   ['SCIENTIFIC_AUTHORITY.md', scientificAuthorityDoc(pack)],
   ['LIMITATIONS.md', limitationsDoc(pack)],
   ['PRESENTER_SCRIPT.md', presenterDoc(pack)],
+  ['LEARN_TRANSCRIPT.md', transcriptDoc(pack)],
+  ['SCREEN_READER_TRANSCRIPT.md', transcriptDoc(pack, { screenReader: true })],
   ['PREFLIGHT.md', preflightDoc(pack, matrix)],
   ['SCREENSHOT_PACK.md', screenshotDoc(pack, matrix)],
   ['mechanical_parameters.json', readFileSync(join(ROOT, 'data/mechanical_parameters.json'), 'utf8')],

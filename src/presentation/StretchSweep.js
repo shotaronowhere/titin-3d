@@ -31,3 +31,15 @@ export function sweepLength(elapsedMs, { minNm, maxNm, periodMs = SWEEP.period_m
   const triangle = phase < 0.5 ? phase * 2 : 2 - phase * 2;
   return Math.round(minNm + (maxNm - minNm) * triangle);
 }
+
+/** Elapsed time on the ascending half-cycle that starts at an in-range length. */
+export function sweepElapsedAtLength(lengthNm, {
+  minNm, maxNm, periodMs = SWEEP.period_ms,
+}) {
+  if (!(periodMs > 0) || !Number.isFinite(minNm) || !Number.isFinite(maxNm)
+      || maxNm <= minNm || !Number.isFinite(lengthNm)
+      || lengthNm < minNm || lengthNm > maxNm) {
+    throw new Error('sweepElapsedAtLength: expected an in-range length and valid bounds');
+  }
+  return ((lengthNm - minNm) / (maxNm - minNm)) * (periodMs / 2);
+}
