@@ -720,6 +720,20 @@ export class TitinVisualization {
   }
 
   /**
+   * SC-25 onboarding cue: pulse titin's identity colour to show the model is
+   * inspectable. Colour only — evidence opacity is never read or written — and it
+   * yields to a real selection rather than competing with it.
+   *
+   * @param {number} intensity01 0 restores the base identity colour exactly
+   */
+  pulseTitinIdentity(intensity01) {
+    if (!this._state) {
+      throw new Error('pulseTitinIdentity: set a state before pulsing an identity.');
+    }
+    return this.viewer.sarcomere.setTitinIdentityPulse(intensity01);
+  }
+
+  /**
    * Highlight one named titin region, or pass null to clear the selection.
    * Geometry and evidence opacity remain unchanged; only the selection colour
    * channel changes.

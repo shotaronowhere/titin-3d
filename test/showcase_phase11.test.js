@@ -212,9 +212,12 @@ function pageFunction(name) {
 test('SC11: overlay work is dirty-flagged, not run on every frame', () => {
   assert.match(page, /function markStageDirty\(\)/);
   // The per-frame callback must consult the flag before doing DOM measurement.
+  // The window is generous because SC-25's onboarding pulse advances ahead of the
+  // early-out — a still stage is exactly when it still has to move — but the
+  // order the assertion pins is unchanged: flag first, DOM measurement after.
   assert.match(
     page,
-    /\}, \(\{ camera_moving[\s\S]{0,200}if \(!stageDirty[\s\S]{0,200}renderScienceOverlay\(\); renderObjectOverlay\(\);/,
+    /\}, \(\{ camera_moving[\s\S]{0,400}if \(!stageDirty[\s\S]{0,200}renderScienceOverlay\(\); renderObjectOverlay\(\);/,
     'the frame callback must early-out when nothing changed',
   );
   assert.match(page, /window\.addEventListener\('resize', markStageDirty\)/,

@@ -2679,6 +2679,70 @@ export class SarcomereScene {
   }
 
   /**
+   * SC-25 onboarding pulse: identify titin by moving its COLOUR, briefly.
+   *
+   * A novice is not told that the model is clickable, so the affordance has to be
+   * shown. The one channel available for that is the same one selection already
+   * uses — colour — because opacity encodes confidence and a pulse that touched it
+   * would be a claim that the evidence for titin was rising and falling twice a
+   * second. Nothing here reads or writes opacity, and the return value says so.
+   *
+   * Refuses to run while a region is highlighted: the two would fight over the
+   * same channel, and a selection is a stronger statement than an invitation.
+   *
+   * @param {number} intensity01 0 restores the base identity colour exactly
+   * @returns {{intensity:number, recolored_objects:number,
+   *   preserves_evidence_opacity:boolean, suppressed_by_selection:boolean}}
+   */
+  setTitinIdentityPulse(intensity01) {
+    if (!this._built) throw new Error('setTitinIdentityPulse: nothing built yet.');
+    const intensity = Number(intensity01);
+    if (!Number.isFinite(intensity) || intensity < 0 || intensity > 1) {
+      throw new Error(`setTitinIdentityPulse: intensity must be within 0..1, got ${intensity01}`);
+    }
+    if (this.highlightedTitinRegion !== null) {
+      return {
+        intensity: 0,
+        recolored_objects: 0,
+        preserves_evidence_opacity: true,
+        suppressed_by_selection: true,
+      };
+    }
+    const highlight = new THREE.Color(COMPONENT_COLOR.titin_highlight);
+    const tube = new THREE.Color(COMPONENT_COLOR.titin).lerp(highlight, intensity);
+    const trace = new THREE.Color(COMPONENT_COLOR.titin_highlight);
+    let recolored = 0;
+    this.root.traverse((object) => {
+      if (object.userData?.titin_region && object.material?.color) {
+        object.material.color.copy(tube);
+        recolored += 1;
+        return;
+      }
+      // The continuity trace already sits at the identity highlight and stays
+      // there: the pulse is the TUBES travelling toward the colour the trace
+      // holds, which is why the effect reads as "this pink thing is one molecule"
+      // rather than as the whole stage flickering.
+      if (object.userData?.titin_trace_region && object.material?.color) {
+        object.material.color.copy(trace);
+        return;
+      }
+      if (!object.isInstancedMesh || !Array.isArray(object.userData?.instance_regions)) return;
+      for (let i = 0; i < object.userData.instance_regions.length; i += 1) {
+        object.setColorAt(i, tube);
+        recolored += 1;
+      }
+      if (object.instanceColor) object.instanceColor.needsUpdate = true;
+    });
+    this.titinIdentityPulse = intensity;
+    return {
+      intensity,
+      recolored_objects: recolored,
+      preserves_evidence_opacity: true,
+      suppressed_by_selection: false,
+    };
+  }
+
+  /**
    * Emphasize titin for Guided mode using colour alone. Evidence opacity is
    * intentionally never read or written here.
    */
@@ -2784,6 +2848,7 @@ export class SarcomereScene {
     // path would describe a molecule that is no longer on stage.
     this._titinPickPaths = [];
     this.highlightedTitinRegion = null;
+    this.titinIdentityPulse = 0;
     this.presentationEmphasis = null;
     this.annotationRecords = new Map();
   }

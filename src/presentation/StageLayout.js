@@ -298,8 +298,31 @@ export function scaleBarPlacement({
   return { left: pad, baseline: Math.max(safeTopPx + 20, card.top - pad) };
 }
 
+/** Overlap area of two container-local rectangles, in square pixels. */
+function overlapArea(a, b) {
+  const width = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+  const height = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+  return width > 0 && height > 0 ? width * height : 0;
+}
+
 /**
- * Place a pinned explanation card so it never covers its own anchor.
+ * Place a pinned explanation card so it covers neither its own anchor nor any
+ * control.
+ *
+ * SC-11 gave this one job: do not cover the object being explained. SC-25 adds
+ * the other half of the same rule, because a card that lands on the primary
+ * controls is a card that swallows the clicks meant for them — it has pointer
+ * events, so "visually on top" and "functionally in the way" are the same thing
+ * here. Obstacles are passed in as measured rectangles rather than assumed: the
+ * stage bar wraps to more rows as the viewport narrows, the story card's height
+ * is set by the chapter's copy, and a phone adds safe-area insets, so no constant
+ * in this module could describe where the free space actually is.
+ *
+ * The search is deliberately small and total: four placements around the anchor,
+ * each clamped into the safe band, scored by how much control area they would
+ * cover. A zero-collision placement wins outright; when the stage genuinely has
+ * no room, the least-bad placement is returned WITH what it collides with, so the
+ * caller can report a real constraint instead of silently painting over a button.
  *
  * @param {{
  *   anchor: {x_px:number, y_px:number},
@@ -307,31 +330,91 @@ export function scaleBarPlacement({
  *   canvas: {width:number, height:number},
  *   safeTopPx: number,
  *   gapPx?: number,
+ *   safeBottomPx?: number,
+ *   safeLeftPx?: number,
+ *   safeRightPx?: number,
+ *   obstacles?: Array<{id:string, left:number, top:number, right:number, bottom:number}>,
  * }} opts
- * @returns {{left:number, top:number, side:'left'|'right', overlaps_anchor:boolean}}
+ * @returns {{left:number, top:number, side:'left'|'right', overlaps_anchor:boolean,
+ *   collides_with:string[], collision_area_px:number}}
  */
 export function inspectorPlacement({
   anchor, card, canvas, safeTopPx, gapPx = STAGE_LAYOUT.card_gap_px,
+  safeBottomPx = 0, safeLeftPx = 0, safeRightPx = 0, obstacles = [],
 }) {
   const pad = STAGE_LAYOUT.edge_padding_px;
-  /** @param {number} left */
-  const fits = (left) => left >= pad && left + card.width <= canvas.width - pad;
+  const minLeft = pad + safeLeftPx;
+  const maxLeft = canvas.width - card.width - pad - safeRightPx;
+  const minTop = safeTopPx;
+  const maxTop = canvas.height - card.height - pad - safeBottomPx;
+  const clampLeft = (value) => Math.max(minLeft, Math.min(maxLeft, value));
+  const clampTop = (value) => Math.max(minTop, Math.min(maxTop, value));
   const toLeft = anchor.x_px - card.width - gapPx;
   const toRight = anchor.x_px + gapPx;
+  const fits = (left) => left >= minLeft && left <= maxLeft;
   // Prefer the side with more room; fall back to the other before clamping, so
   // a clamp is the last resort rather than the first behaviour.
-  const preferred = anchor.x_px > canvas.width / 2 ? toLeft : toRight;
-  const alternate = preferred === toLeft ? toRight : toLeft;
-  let left = fits(preferred) ? preferred : (fits(alternate) ? alternate : preferred);
-  left = Math.max(pad, Math.min(canvas.width - card.width - pad, left));
-  let top = anchor.y_px - card.height / 2;
-  top = Math.max(safeTopPx, Math.min(canvas.height - card.height - pad, top));
-  const overlapsAnchor = anchor.x_px >= left && anchor.x_px <= left + card.width
-    && anchor.y_px >= top && anchor.y_px <= top + card.height;
+  const preferredX = anchor.x_px > canvas.width / 2 ? toLeft : toRight;
+  const alternateX = preferredX === toLeft ? toRight : toLeft;
+  const beside = fits(preferredX) ? preferredX : (fits(alternateX) ? alternateX : preferredX);
+  const centredY = anchor.y_px - card.height / 2;
+  const otherSide = preferredX === toLeft ? toRight : toLeft;
+  // Beside the anchor and vertically centred on it is the SC-11 placement and
+  // stays first, because it keeps the explanation next to the thing explained.
+  // The rest are escapes, in decreasing order of how well they keep that
+  // relationship: the same side higher or lower, then the other side, then
+  // directly above or below. The list is fixed and short so the result is
+  // reproducible and cheap; nothing here searches.
+  const candidates = [
+    { left: beside, top: centredY },
+    { left: beside, top: minTop },
+    { left: beside, top: maxTop },
+    { left: otherSide, top: centredY },
+    { left: otherSide, top: minTop },
+    { left: otherSide, top: maxTop },
+    { left: anchor.x_px - card.width / 2, top: anchor.y_px - card.height - gapPx },
+    { left: anchor.x_px - card.width / 2, top: anchor.y_px + gapPx },
+  ];
+  // Then the escapes past each obstacle in turn. A stage whose story card is half
+  // its width leaves no anchor-relative placement clear of it, and the answer to
+  // "the only free space is beyond that edge" has to be expressed as that edge —
+  // the alternative is a card that lands on the chapter's own Next button.
+  for (const obstacle of obstacles) {
+    candidates.push(
+      { left: obstacle.right + gapPx, top: centredY },
+      { left: obstacle.left - card.width - gapPx, top: centredY },
+      { left: beside, top: obstacle.bottom + gapPx },
+      { left: beside, top: obstacle.top - card.height - gapPx },
+    );
+  }
+  /** @type {{left:number, top:number, score:number, collides_with:string[],
+   *   area:number, coversAnchor:boolean}|null} */
+  let chosen = null;
+  for (const candidate of candidates) {
+    const left = clampLeft(candidate.left);
+    const top = clampTop(candidate.top);
+    const box = { left, top, right: left + card.width, bottom: top + card.height };
+    const hit = obstacles.filter((obstacle) => overlapArea(box, obstacle) > 0);
+    const area = hit.reduce((sum, obstacle) => sum + overlapArea(box, obstacle), 0);
+    const coversAnchor = anchor.x_px >= left && anchor.x_px <= left + card.width
+      && anchor.y_px >= top && anchor.y_px <= top + card.height;
+    // The anchor is scored, not vetoed: a stage with no clear placement must
+    // still return one, and "next to its object" is worth more than "clear of a
+    // control" only when both cannot be had.
+    const score = area + (coversAnchor ? canvas.width * canvas.height : 0);
+    if (!chosen || score < chosen.score) {
+      chosen = { left, top, score, collides_with: hit.map((obstacle) => obstacle.id), area, coversAnchor };
+    }
+    if (score === 0) break;
+  }
+  if (!chosen) throw new Error('inspectorPlacement: no candidate placement was scored.');
+  const placed = chosen;
   return {
-    left,
-    top,
-    side: /** @type {'left'|'right'} */ (left > anchor.x_px ? 'right' : 'left'),
-    overlaps_anchor: overlapsAnchor,
+    left: placed.left,
+    top: placed.top,
+    side: /** @type {'left'|'right'} */ (placed.left > anchor.x_px ? 'right' : 'left'),
+    overlaps_anchor: placed.coversAnchor,
+    collides_with: placed.collides_with,
+    collision_area_px: placed.area,
   };
 }

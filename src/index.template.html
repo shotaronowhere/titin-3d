@@ -249,6 +249,34 @@ window.__titinBoot = { ready: false, problems: [] };
   #stageLegend { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto;
     color: var(--dim); font-size: 10px; }
   #stageLegend .key { margin: 0; }
+  /* SC-25. A legend entry names a structure; making it a control removes the
+     step where a reader has to find that structure in the model first. */
+  button.key { appearance: none; background: none; border: 1px solid transparent;
+    border-radius: 6px; color: inherit; font: inherit; padding: 4px 6px; cursor: pointer;
+    min-height: 32px; }
+  button.key:hover { border-color: rgb(230 237 245 / 34%); }
+  button.key[aria-pressed="true"] { border-color: var(--titin-hi); color: var(--text); }
+  #stageLegend button.key { min-height: 28px; padding: 2px 5px; }
+  /* SC-25 onboarding. One sentence, once, and it leaves as soon as the reader
+     does the thing it describes. It sits above the stage bar rather than over the
+     model, so the affordance it teaches is never the thing it covers. */
+  #inspectHint { position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: calc(var(--stage-bar-h, 114px) + 14px); z-index: 9; pointer-events: auto;
+    display: flex; align-items: center; gap: 10px; padding: 7px 10px 7px 12px;
+    border-radius: 999px; background: rgb(42 10 19 / 94%); border: 1px solid var(--titin);
+    color: #ffe1e8; font-size: 12px; font-weight: 650; max-width: calc(100% - 28px);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 42%); }
+  #inspectHintDismiss { appearance: none; background: none; border: 0; color: inherit;
+    font: inherit; cursor: pointer; padding: 6px; min-width: 32px; min-height: 32px;
+    border-radius: 999px; }
+  #inspectHintDismiss:hover { background: rgb(255 255 255 / 12%); }
+  @media (prefers-reduced-motion: no-preference) {
+    #inspectHint { animation: inspect-hint-in 320ms ease-out both; }
+  }
+  @keyframes inspect-hint-in {
+    from { opacity: 0; transform: translate(-50%, 8px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
   .region-chip.on { background: var(--titin-hi); border-color: var(--titin-hi); color: #251016; }
   #scienceOverlay { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%;
     overflow: visible; pointer-events: none; }
@@ -354,6 +382,16 @@ window.__titinBoot = { ready: false, problems: [] };
   .sr-only { position: absolute !important; width: 1px !important; height: 1px !important;
     padding: 0 !important; margin: -1px !important; overflow: hidden !important;
     clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
+  /* SC-25. A direct label that names a structure is the shortest route to that
+     structure's explanation, so the labels that HAVE a canonical target become
+     controls. The overlay stays pointer-transparent everywhere else, or it would
+     eat the orbit gesture. Touch targets are widened with an invisible hit rect
+     rather than by growing the type, which would spend the attention budget. */
+  .label-target { cursor: pointer; pointer-events: auto; }
+  .label-hit { fill: transparent; pointer-events: auto; cursor: pointer; }
+  .label-target:hover, .label-hit:hover + .label-target { fill: #fff; }
+  .label-target:focus-visible, .label-hit:focus-visible + .label-target {
+    outline: 2px solid var(--titin-hi); outline-offset: 2px; }
   .science-bracket { fill: none; stroke: rgb(230 237 245 / 78%); stroke-width: 1.2; }
   .science-bracket.minor { stroke: rgb(230 237 245 / 47%); }
   .science-label { fill: #dce4ed; font-size: 9px; font-weight: 650; letter-spacing: .035em;
@@ -692,11 +730,23 @@ window.__titinBoot = { ready: false, problems: [] };
       <div id="objectInspectorClaim"></div>
       <div class="object-instance" id="objectInspectorInstance" hidden></div>
       <div class="object-expert-link">
+        <!-- SC-25. Learn's card is deliberately short: it stops at the lay claim
+             and the first two citations, and everything a specialist wants is one
+             click away in the drawer rather than pushed onto the stage until the
+             card reaches the controls. -->
+        <button id="objectInspectorDetailLink">Full detail in the drawer</button>
         <button id="objectInspectorSourcesLink">Sources for this object</button>
         <button id="objectInspectorExpertLink" hidden></button>
       </div>
     </section>
     <div id="objectAnnouncement" class="sr-only" aria-live="polite"></div>
+    <!-- SC-25. The one-time inspection affordance. A novice was expected to
+         discover clicking; this says it once, in the same words the canvas's
+         accessible description uses, and disappears the moment it is acted on. -->
+    <div id="inspectHint" role="status" hidden>
+      <span id="inspectHintText">Click or tap a structure to explain it</span>
+      <button id="inspectHintDismiss" aria-label="Dismiss the inspection hint">&#10005;</button>
+    </div>
     <div id="stageChrome">
       <div id="stageHeader">
         <div class="brand-block">
@@ -799,7 +849,13 @@ window.__titinBoot = { ready: false, problems: [] };
           <button id="sceneDetailsToggle" hidden>Scene details</button>
           <button id="stageMore" aria-haspopup="dialog" aria-expanded="false">More</button>
         </div>
-        <div id="stageLegend" hidden aria-label="Colour key"></div>
+        <!-- SC-25. The key was built on every render and never shown: an id
+             selector does not beat the user-agent's `[hidden] { display: none
+             !important }`, so the "novice cannot act on pink without a key"
+             comment below described a control nobody could see. It is the
+             cold-open's own answer to "which one is titin", so it is on the bar,
+             and its entries select the structures they name. -->
+        <div id="stageLegend" role="group" aria-label="Colour key: select a structure"></div>
         <div id="stretchHint" role="status" hidden>Watch the I-band bracket</div>
       </div><!-- /stageBar -->
     <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
@@ -1387,16 +1443,56 @@ function syncStageLegend(report) {
   if (state.showFilamentContext && !hidden.has('thin_filament')) {
     entries.push(['thin_filament', 'Actin', palette.thin_filament]);
   }
-  $('stageLegend').replaceChildren(...entries.map(([id, label, colour]) => {
-    const row = document.createElement('div');
-    row.className = 'key';
-    row.dataset.component = id;
-    const swatch = document.createElement('div');
-    swatch.className = 'sw';
-    swatch.style.background = hex(colour);
-    row.append(swatch, document.createTextNode(label));
-    return row;
-  }));
+  $('stageLegend').replaceChildren(...entries.map(([id, label, colour]) => (
+    legendEntry(id, label, colour)
+  )));
+}
+
+/**
+ * One legend row, as a control.
+ *
+ * SC-25: a legend already tells the reader which colour is which structure, so it
+ * is the shortest route from "what is the pink thing" to that structure's
+ * explanation — but only when it can be operated. Rows whose component has no
+ * canonical annotation stay inert rather than becoming a button that does
+ * nothing.
+ */
+function legendEntry(componentId, label, colour) {
+  const selectable = activeAnnotations.some((annotation) => (
+    annotation.target_type === 'component' && annotation.target_id === componentId
+  ));
+  const row = document.createElement(selectable ? 'button' : 'div');
+  row.className = 'key';
+  row.dataset.component = componentId;
+  const swatch = document.createElement('div');
+  swatch.className = 'sw';
+  swatch.style.background = hex(colour);
+  row.append(swatch, document.createTextNode(label));
+  if (!selectable) return row;
+  row.type = 'button';
+  row.setAttribute('aria-label', `Inspect ${label}`);
+  row.setAttribute('aria-pressed', String(
+    pinnedPick?.target_type === 'component' && pinnedPick?.target_id === componentId,
+  ));
+  row.onclick = () => selectNamedTarget('component', componentId);
+  return row;
+}
+
+/**
+ * Select a structure that a label, legend entry, or keyboard target NAMED.
+ *
+ * This is the reviewed resolver's first clause expressed in the page: when the
+ * reader points at a word rather than at a pixel, no ray is involved and no
+ * ambiguity has to be resolved. Returns whether anything was selectable, so a
+ * caller can stay silent instead of announcing a selection that did not happen.
+ */
+function selectNamedTarget(targetType, targetId) {
+  return setPinnedSelection({
+    target_type: targetType,
+    target_id: targetId,
+    sarcomere_length_nm: visualization.currentState().sarcomere_length_nm,
+    scale: state.scale,
+  });
 }
 $('filamentContextToggle').onclick = () => {
   abandonStretchPresentation();
@@ -1684,6 +1780,82 @@ function setStoryVisible(visible, { focusHeading = false, restoreFocus = false }
   markStageDirty();
 }
 
+// ---- SC-25 one-time inspection onboarding -----------------------------------
+// The affordance the whole sprint is about — that the model explains itself when
+// you click it — was never stated anywhere a novice would read it. This says it
+// once and then never again, which is why the flag is local rather than session
+// storage: "one-time" across visits is what the plan asks for, and a per-session
+// hint would be a recurring interruption for a returning reader. Storage is
+// optional at every step; a browser that refuses it simply shows the hint.
+const INSPECT_HINT_KEY = 'titin.sc25.inspect-hint-seen';
+const INSPECT_PULSE_MS = 2600;
+let inspectOnboardingDone = false;
+let inspectPulseStartedAt = null;
+try { inspectOnboardingDone = localStorage.getItem(INSPECT_HINT_KEY) === 'seen'; } catch {}
+
+/** Whether the reduced-motion preference is set right now, not at load. */
+const wantsReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function startInspectionOnboarding() {
+  if (inspectOnboardingDone) return false;
+  $('inspectHint').hidden = false;
+  // Reduced motion gets the sentence and a single steady emphasis, not a pulse:
+  // the identical teaching state, reached without animation, is the reviewed
+  // motion rule this project already applies to every other transition.
+  inspectPulseStartedAt = performance.now();
+  if (wantsReducedMotion()) {
+    visualization.pulseTitinIdentity(1);
+    inspectPulseStartedAt = null;
+  }
+  markStageDirty();
+  return true;
+}
+
+/**
+ * The reader inspected something, so the invitation is spent.
+ *
+ * Called from every route into a selection — pointer, keyboard, label, legend,
+ * annotation index — rather than from the pointer handler alone, because the
+ * lesson is "structures explain themselves", not "the mouse works".
+ */
+function completeInspectionOnboarding() {
+  if ($('inspectHint').hidden && inspectOnboardingDone) return;
+  // Always restore the base identity colour, whether the pulse was animating or
+  // sitting at its reduced-motion steady value.
+  visualization.pulseTitinIdentity(0);
+  inspectPulseStartedAt = null;
+  $('inspectHint').hidden = true;
+  inspectOnboardingDone = true;
+  try { localStorage.setItem(INSPECT_HINT_KEY, 'seen'); } catch {}
+  markStageDirty();
+}
+
+/**
+ * Advance the identity pulse. Colour only: {@link TitinVisualization#pulseTitinIdentity}
+ * never touches the opacity that encodes confidence, and the pulse yields to a
+ * real region selection rather than competing with it for the same channel.
+ */
+function stepInspectionPulse(now) {
+  if (inspectPulseStartedAt === null) return false;
+  const elapsed = now - inspectPulseStartedAt;
+  if (elapsed >= INSPECT_PULSE_MS) {
+    visualization.pulseTitinIdentity(0);
+    inspectPulseStartedAt = null;
+    return false;
+  }
+  // Two full breaths over the window, easing to zero at the end so the colour
+  // lands exactly on the base identity rather than being cut off mid-pulse.
+  const phase = Math.sin((elapsed / INSPECT_PULSE_MS) * Math.PI * 4) * 0.5 + 0.5;
+  const decay = 1 - elapsed / INSPECT_PULSE_MS;
+  visualization.pulseTitinIdentity(Math.max(0, Math.min(1, phase * decay)));
+  return true;
+}
+
+$('inspectHintDismiss').onclick = () => {
+  completeInspectionOnboarding();
+  $('canvas').focus();
+};
+
 function publishStageBarHeight() {
   const height = Math.round($('stageBar').getBoundingClientRect().height);
   $('app').style.setProperty('--stage-bar-h', `${height}px`);
@@ -1840,6 +2012,97 @@ function svgElement(name, attributes = {}, textContent = null) {
   return node;
 }
 
+/**
+ * The measured folded-domain cross-section, read from the canonical archetype
+ * record rather than restated. It is the only molecular width in this project
+ * that titin's drawn width can honestly be compared against — the tube radius and
+ * the trace width are both declared render-only.
+ */
+const TITIN_CROSS_SECTION_NM =
+  model.spec.geometryStrategy.domain_archetypes.Ig_like.lateral_diameter_nm;
+
+/**
+ * How many times wider than the molecule titin is currently drawn, or null when
+ * the drawn width is at or below the molecular one and the statement would be
+ * false.
+ *
+ * @param {number|null} pxPerNm stage scale where the ruler is measured
+ */
+function illustrativeWidthRatio(pxPerNm) {
+  const drawnPx = visualization.currentState()?.manifest?.titin_emphasis?.trace_px;
+  if (!Number.isFinite(pxPerNm) || !(pxPerNm > 0) || !Number.isFinite(drawnPx)) return null;
+  const molecularPx = TITIN_CROSS_SECTION_NM * pxPerNm;
+  if (!(molecularPx > 0) || drawnPx <= molecularPx) return null;
+  const ratio = drawnPx / molecularPx;
+  // One significant figure below ten: "≈3×" is the honest resolution of a
+  // statement whose inputs are a reading width and a mean cross-section.
+  return ratio >= 10 ? Math.round(ratio) : Number(ratio.toFixed(1));
+}
+
+/**
+ * Which canonical target each directly-labelled landmark names.
+ *
+ * Band brackets are deliberately absent: "I-band" and "C-zone" are regions of the
+ * sarcomere, not annotatable objects, and a control that resolved them to the
+ * nearest protein would be answering a question the reader did not ask.
+ */
+const TERMINUS_REGION = Object.freeze({ n_terminus: 'Z1Z2', c_terminus: 'Mline' });
+const BRACKET_TARGET = Object.freeze({ zdisc: 'zdisc', mband: 'mline' });
+/** Coarse-pointer hit area for a direct label, in CSS pixels. */
+const LABEL_HIT = Object.freeze({ width: 96, height: 30 });
+
+/** A band label that names an annotatable component becomes a control. */
+function withBracketTarget(label, bracketId, centreX, baselineY) {
+  const targetId = BRACKET_TARGET[bracketId];
+  if (!targetId) return [label];
+  return selectableLabel(label, { target_type: 'component', target_id: targetId }, {
+    x: centreX - LABEL_HIT.width / 2,
+    y: baselineY - LABEL_HIT.height + 6,
+    width: LABEL_HIT.width,
+    height: LABEL_HIT.height,
+  });
+}
+
+/**
+ * Turn one overlay label into a control for the structure it names.
+ *
+ * SC-25.3. Returns the nodes to draw: an invisible hit rectangle sized for a
+ * coarse pointer, then the label itself. The rectangle exists because the
+ * reviewed attention budget fixes the type size, so the touch target cannot be
+ * bought by making the label bigger. Labels whose target is not currently
+ * annotatable are returned unchanged and stay inert.
+ *
+ * @param {SVGTextElement} label
+ * @param {{target_type:'titin_region'|'component', target_id:string}} target
+ * @param {{width:number, height:number, x:number, y:number}} box hit area
+ */
+function selectableLabel(label, target, box) {
+  const available = availableAnnotations().some((annotation) => (
+    annotation.target_type === target.target_type && annotation.target_id === target.target_id
+  ));
+  if (!available) return [label];
+  const annotation = activeAnnotations.find((entry) => (
+    entry.target_type === target.target_type && entry.target_id === target.target_id
+  ));
+  const hit = svgElement('rect', {
+    x: box.x, y: box.y, width: box.width, height: box.height,
+    rx: 4, class: 'label-hit', tabindex: '0', role: 'button',
+    'aria-label': `Inspect ${annotation?.label || target.target_id}`,
+  });
+  const select = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    selectNamedTarget(target.target_type, target.target_id);
+  };
+  hit.addEventListener('click', select);
+  hit.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') select(event);
+  });
+  label.classList.add('label-target');
+  label.setAttribute('aria-hidden', 'true');
+  return [hit, label];
+}
+
 function renderedTitinAnchor(record) {
   const placement = visualization.currentState()?.manifest?.representative_titin;
   const offset = placement?.a_band_transverse_offset_nm;
@@ -1989,7 +2252,10 @@ function renderScienceOverlay() {
           d: `M ${x1} ${y - 5} V ${y + 7}`,
           class: 'science-bracket minor',
         }));
-        nodes.push(svgElement('text', { x: x1, y: y - 8, 'text-anchor': 'middle', class: 'science-label' }, bracket.label));
+        nodes.push(...withBracketTarget(
+          svgElement('text', { x: x1, y: y - 8, 'text-anchor': 'middle', class: 'science-label' }, bracket.label),
+          bracket.id, x1, y - 8,
+        ));
       } else {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y + 5} V ${y} H ${x2} V ${y + 5}`,
@@ -2005,9 +2271,12 @@ function renderScienceOverlay() {
             class: 'science-bracket minor',
           }));
         }
-        nodes.push(svgElement('text', {
-          x: (x1 + x2) / 2, y: y - 5, 'text-anchor': 'middle', class: 'science-label',
-        }, bracket.label));
+        nodes.push(...withBracketTarget(
+          svgElement('text', {
+            x: (x1 + x2) / 2, y: y - 5, 'text-anchor': 'middle', class: 'science-label',
+          }, bracket.label),
+          bracket.id, (x1 + x2) / 2, y - 5,
+        ));
       }
     }
   }
@@ -2053,10 +2322,22 @@ function renderScienceOverlay() {
       const dx = left ? 16 : -16;
       nodes.push(svgElement('circle', { cx: x, cy: y, r: 3.2, class: 'terminus-dot' }));
       nodes.push(svgElement('line', { x1: x, y1: y, x2: x + dx, y2: y - 12, class: 'terminus-line' }));
-      nodes.push(svgElement('text', {
-        x: x + dx + (left ? 3 : -3), y: y - 15,
+      const labelX = x + dx + (left ? 3 : -3);
+      const label = svgElement('text', {
+        x: labelX, y: y - 15,
         'text-anchor': left ? 'start' : 'end', class: 'terminus-label',
-      }, terminus.label));
+      }, terminus.label);
+      // The two termini ARE titin regions — the N-terminal Z1Z2 anchor and the
+      // C-terminal M-line segment — so the labels that name them select them.
+      nodes.push(...selectableLabel(label, {
+        target_type: 'titin_region',
+        target_id: TERMINUS_REGION[terminus.id],
+      }, {
+        x: left ? labelX - 6 : labelX - LABEL_HIT.width + 6,
+        y: y - 15 - LABEL_HIT.height + 6,
+        width: LABEL_HIT.width,
+        height: LABEL_HIT.height,
+      }));
     }
   }
   // The ruler. Every number in this project is in nanometres and nothing on the
@@ -2079,6 +2360,17 @@ function renderScienceOverlay() {
     nodes.push(svgElement('text', {
       x: barX + bar.px / 2, y: barY - 7, 'text-anchor': 'middle', class: 'science-label',
     }, bar.label));
+    // SC-25. Beside the ruler, because it is a statement about scale. Titin's
+    // reading width is a constant number of CSS pixels, so at a whole-sarcomere
+    // zoom the drawn line is many times the molecule's measured cross-section —
+    // and a viewer who has just been given a ruler is entitled to know that this
+    // one line is not measured by it. Shown only when the exaggeration is real.
+    const illustrative = illustrativeWidthRatio(pxPerNm);
+    if (illustrative !== null) {
+      nodes.push(svgElement('text', {
+        x: barX, y: barY + 11, 'text-anchor': 'start', class: 'science-label',
+      }, `titin line ≈${illustrative}× its ${TITIN_CROSS_SECTION_NM} nm cross-section — reading width, not scale`));
+    }
   }
   svg.replaceChildren(...nodes);
 }
@@ -3302,6 +3594,11 @@ function renderPinnedSelection() {
 function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
   const annotation = resolvedAnnotation(selection);
   if (!annotation) return false;
+  // Every route into a selection passes here — pointer, keyboard, direct label,
+  // legend entry, annotation index — so this is where the one-time invitation is
+  // spent. Hooking the pointer handler instead would leave a keyboard-only reader
+  // being invited to click forever.
+  completeInspectionOnboarding();
   pinnedPick = { ...selection };
   hoverPick = null;
   state.selectedSourceValue = null;
@@ -3342,6 +3639,12 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
 }
 
 $('objectInspectorClose').onclick = () => clearPinnedSelection();
+// The card carries the reading; the drawer carries the record. Routing rather
+// than duplicating is what keeps the on-stage card short enough to stay clear of
+// the primary controls at every viewport.
+$('objectInspectorDetailLink').onclick = () => {
+  openEvidence($('objectInspectorDetailLink'), 'evidence');
+};
 
 // The keyboard could already walk the visible structures; the pointer could not.
 function stepPinnedSelection(direction) {
@@ -3446,6 +3749,45 @@ function showHoverPick(pick) {
   objectOverlaySignature = null;
 }
 
+/**
+ * Chrome the pinned explanation must not land on, in container-local pixels.
+ *
+ * Everything here is a control or a route the reader needs while an explanation
+ * is open: the identity/mode header, the story card and its actions, the primary
+ * stage bar, and the onboarding invitation. Hidden surfaces are omitted rather
+ * than listed with zero size, so a closed story card gives the card its space
+ * back instead of reserving a rectangle nobody can see.
+ */
+function stageObstacles(canvasRect) {
+  const ids = ['stageHeader', 'guidedCard', 'guidedPipeline', 'stageBar', 'inspectHint',
+    'urlNotice'];
+  const obstacles = [];
+  for (const id of ids) {
+    const node = $(id);
+    if (!node || node.hidden || node.offsetParent === null) continue;
+    const rect = node.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) continue;
+    obstacles.push({
+      id,
+      left: rect.left - canvasRect.left,
+      top: rect.top - canvasRect.top,
+      right: rect.right - canvasRect.left,
+      bottom: rect.bottom - canvasRect.top,
+    });
+  }
+  return obstacles;
+}
+
+/** The device's safe-area inset on one side, in CSS pixels. */
+function stageSafeInsetPx(side) {
+  const probe = document.createElement('div');
+  probe.style.cssText = `position:absolute;visibility:hidden;width:env(safe-area-inset-${side},0px)`;
+  $('app').append(probe);
+  const width = probe.getBoundingClientRect().width;
+  probe.remove();
+  return Number.isFinite(width) ? width : 0;
+}
+
 function renderObjectOverlay() {
   const selection = pinnedPick || hoverPick;
   const annotation = resolvedAnnotation(selection);
@@ -3468,7 +3810,8 @@ function renderObjectOverlay() {
   }
   card.style.left = '0px'; card.style.top = '0px';
   const cardWidth = card.offsetWidth; const cardHeight = card.offsetHeight;
-  const canvasTop = $('canvas').getBoundingClientRect().top;
+  const canvasRect = $('canvas').getBoundingClientRect();
+  const canvasTop = canvasRect.top;
   const headerBottom = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 8;
   // The stage bar is the floor, not the bottom of the canvas: this card has
   // pointer events, so letting it settle over the bar would put an explanation
@@ -3481,6 +3824,12 @@ function renderObjectOverlay() {
     canvas: { width, height: barTop },
     safeTopPx: headerBottom,
     gapPx: pinnedPick ? STAGE_LAYOUT.card_gap_px : 14,
+    // SC-25. Measured, never assumed: the story card's height follows the
+    // chapter's copy and the phone's safe-area insets follow the device, so the
+    // free space has to be read off the page it is actually in.
+    safeLeftPx: stageSafeInsetPx('left'),
+    safeRightPx: stageSafeInsetPx('right'),
+    obstacles: stageObstacles(canvasRect),
   });
   const left = placed.left;
   const top = placed.top;
@@ -3752,12 +4101,15 @@ function render(report) {
   // is thick-filament context, and titin remains the subject of the scene.
   if (mybpc?.drawn) legend.splice(-1, 0,
     ['mybpc', 'MyBP-C C-zone context (schematic, not titin)', 'mybpc']);
-  $('legend').innerHTML = legend
-    .filter(([, , component]) => component === 'titin'
+  $('legend').replaceChildren(...legend
+    .filter(([, , component]) => (component === 'titin'
       ? !(hiddenComponents.has('titin') && hiddenComponents.has('titin_domains'))
-      : !hiddenComponents.has(component))
-    .map(([k, l]) => `<div class="key"><div class="sw" style="background:${hex(COMPONENT_COLOR[k])}"></div>${l}</div>`)
-    .join('');
+      : !hiddenComponents.has(component)))
+    // SC-25: the same key, operable here too. Built as elements rather than an
+    // HTML string because a control needs handlers, not markup.
+    .map(([colourKey, label, component]) => (
+      legendEntry(component, label, COMPONENT_COLOR[colourKey])
+    )));
 
   // 49 individual claims is too many to list flat, and a plain count would hide
   // which claims are weak. Group by class, strongest first, and name the claims
@@ -4188,10 +4540,15 @@ visualization.start((report) => {
     syncCloseups(visualization.closeUp(state.closeup, { move: false }));
   }
 }, ({ camera_moving: cameraMoving } = {}) => {
-  if (!stageDirty && !cameraMoving) return;
+  // Before the early-out: the onboarding pulse is a change to the scene, so a
+  // still stage is exactly the state in which it still has to advance.
+  const pulsing = stepInspectionPulse(performance.now());
+  if (!stageDirty && !cameraMoving && !pulsing) return;
   stageDirty = false;
   renderScienceOverlay(); renderObjectOverlay();
 });
+// Last, so a hint can never appear over a stage that failed to build.
+startInspectionOnboarding();
 window.titinVisualization = visualization;   // biological facade for console inspection
 // Tell the boot diagnostic above that the module reached its end. Without this the
 // watchdog would fire on a perfectly healthy page, and a false alarm in an error
