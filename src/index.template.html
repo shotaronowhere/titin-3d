@@ -2927,9 +2927,15 @@ function applyChapterVisibility(chapterId) {
 
 function applyCameraPreset({ animate = false } = {}) {
   const [kind, name] = state.cameraPreset.split('.');
+  // SC-25. Every camera the reader is given lands in the band the chrome leaves
+  // free, so the molecule is both legible and reachable. The band is measured, so
+  // this is not a Learn-only special case: with no story card on the stage it is
+  // simply the space between the header and the primary bar, which is where the
+  // model belongs in Explore too.
+  const framing = unobscuredFrameOptions({ animate });
   if (kind === 'view') {
     state.view = name; state.closeup = null;
-    visualization.frame(name, { animate });
+    visualization.frame(name, framing);
     syncViews(); syncCloseups(null);
   } else if (kind === 'closeup') {
     state.closeup = name;
@@ -2941,7 +2947,7 @@ function applyCameraPreset({ animate = false } = {}) {
     // link must not switch a layer the reader turned off back on.
     state.showFilamentContext = true;
     if (name === 'mline') state.mirror = true;
-    visualization.closeUp(name, { animate });
+    visualization.closeUp(name, framing);
     rebuild();
     syncCloseups(visualization.closeUp(name, { move: false }));
     syncDepictionToggles();
@@ -2951,7 +2957,7 @@ function applyCameraPreset({ animate = false } = {}) {
     // (molecular architecture does exactly that), so applying the camera must
     // not silently replace the chapter's declared target.
     state.closeup = null;
-    visualization.focusTitinRegion(name, { animate });
+    visualization.focusTitinRegion(name, framing);
     syncRegions(); syncCloseups(null);
   }
   syncViews();
@@ -4290,8 +4296,29 @@ $('canvas').addEventListener('titin:manual-camera-change', () => {
   $('objectAnnouncement').textContent = 'Camera adjusted manually. Scene is now Custom.';
 });
 
+/**
+ * The resolution context every pointer and keyboard pick is answered in.
+ *
+ * SC-25. Learn emphasises titin, so a pointer within the reviewed tolerance of it
+ * resolves to the molecule even where a context surface is geometrically in front
+ * — which is what the reader sees, because the continuity trace is drawn over its
+ * occluders on purpose. Explore states no emphasis: a specialist asking what is at
+ * a pixel gets what is actually at that pixel. The current selection is passed
+ * because the reviewed candidate record names it, and the resolver is required to
+ * ignore it; passing it is how that stays observable.
+ */
+function pickIntent() {
+  return {
+    emphasis: state.audienceMode === AUDIENCE_MODES.guided
+      && model.spec.renderStyle.titin.picking.emphasis_depth === 'learn' ? 'titin' : null,
+    selection: pinnedPick
+      ? { target_type: pinnedPick.target_type, target_id: pinnedPick.target_id }
+      : null,
+  };
+}
+
 function pickAt(clientX, clientY) {
-  try { return visualization.pickObject(clientX, clientY); }
+  try { return visualization.pickObject(clientX, clientY, pickIntent()); }
   catch (error) { fail(error); return null; }
 }
 
@@ -4389,21 +4416,37 @@ const sweepRange = {
   max: presentation.scope.working_range_nm[1],
 };
 
-function stretchFrameOptions() {
+/**
+ * The centre of the stage band no chrome is over, measured rather than assumed.
+ *
+ * SC-24 introduced this for the Stretch demonstration. SC-25 promotes it to every
+ * framing path, because the cold open had a worse version of the same problem: at
+ * 1280x720 the story card covered the whole I-band, so the PEVK spring the story
+ * is about could not be clicked at all — not merely sat low in the frame. The
+ * measurement is the honest one either way; only the number of callers changed.
+ */
+function unobscuredFrameOptions({ animate = false } = {}) {
   const canvasBox = $('canvas').getBoundingClientRect();
   const headerBox = $('stageHeader').getBoundingClientRect();
   const barBox = $('stageBar').getBoundingClientRect();
   const storyCard = $('guidedCard');
   const storyBox = storyVisible && !storyCard.hidden && storyCard.getClientRects().length
     ? storyCard.getBoundingClientRect() : null;
-  const safeTop = Math.max(0, headerBox.bottom - canvasBox.top);
+  const pipeline = $('guidedPipeline');
+  const pipelineBox = !pipeline.hidden && pipeline.getClientRects().length
+    ? pipeline.getBoundingClientRect() : null;
+  const safeTop = Math.max(
+    0,
+    headerBox.bottom - canvasBox.top,
+    pipelineBox ? pipelineBox.bottom - canvasBox.top : 0,
+  );
   const safeBottom = Math.min(
     canvasBox.height,
     barBox.top - canvasBox.top,
     storyBox ? storyBox.top - canvasBox.top : Infinity,
   );
   return {
-    animate: false,
+    animate,
     contentCenterYPx: safeBottom > safeTop
       ? (safeTop + safeBottom) / 2 : canvasBox.height / 2,
   };
@@ -4443,7 +4486,7 @@ function toggleSweep() {
   // The sweep must not outrun its own camera transition. Resolve the semantic
   // Spring action normally, then establish the reviewed maximum-extent frame
   // synchronously before the first length frame is allowed to run.
-  visualization.frameStretchSweep(sweepRange.max, stretchFrameOptions());
+  visualization.frameStretchSweep(sweepRange.max, unobscuredFrameOptions());
   const periodMs = prefersReducedMotion() ? SWEEP.reduced_motion_period_ms : SWEEP.period_ms;
   sweepElapsedMs = sweepElapsedAtLength(start, {
     minNm: sweepRange.min, maxNm: sweepRange.max, periodMs,
@@ -4470,7 +4513,7 @@ $('stageReset').onclick = () => {
   slider.value = String(resetLength);
   sweepResetLength = null;
   rebuild();
-  visualization.frameStretchSweep(sweepRange.max, stretchFrameOptions());
+  visualization.frameStretchSweep(sweepRange.max, unobscuredFrameOptions());
   $('stageReset').disabled = true;
   $('objectAnnouncement').textContent = 'Stretch reset to its starting length; the Spring scene remains framed.';
 };

@@ -366,6 +366,10 @@
         {
           "path": "docs/scientific-decisions/SC-20/OWNER-AUTHORIZED-RULINGS.md",
           "sha256": "7f02476c139a006d3bd6ee494f212f6998ef424c7ebb77dcd0b309859d9a22c1"
+        },
+        {
+          "path": "docs/scientific-decisions/SC-25/SD-05-DEPICTION-REVIEW.md",
+          "sha256": "a1ef46c387905744473c30512fc248893a994007519aa6afffd0c12825c535d3"
         }
       ],
       "reviewer": null,
@@ -376,9 +380,9 @@
         "human_expert": false
       },
       "independent_human_review_status": "NOT_PERFORMED",
-      "reviewed_on": "2026-08-12",
+      "reviewed_on": "2026-08-18",
       "reviewed_model_fingerprint": "7c32782023041e9e4ced13b30828ffadda11f08e6b744d1a6857cfbb18a68d5c",
-      "reviewed_payload_sha256": "77c50b510efee926a60ed01932a4bb2306d22e160edeeb59ea7441bf40b30b90",
+      "reviewed_payload_sha256": "f6d0691cf9c6e0233c45c44edda4e2824f8fb500cec471e450924f039c877340",
       "ruling": {
         "primary_titin_render": "one representative Q8WZ42-1 molecule per half-sarcomere path",
         "copy_number_claim": "not encoded by the representative path",
@@ -406,9 +410,49 @@
           "authority_basis": "project_owner_authorization",
           "human_expert": false
         },
-        "reviewed_on": "2026-08-12",
+        "reviewed_on": "2026-08-18",
         "implemented_model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
         "implementation_evidence": [
+          {
+            "path": "evidence/scientific/SC-25/manifest.json",
+            "sha256": "2f5db4b93526853e8fb7868d070954793b7fef19f9c24d4b4fbc49729e9aff98",
+            "kind": "evidence_manifest"
+          },
+          {
+            "path": "evidence/scientific/SC-25/render-audit.json",
+            "sha256": "740b7ee85432b1bffe06675ed2eb9e9bd65d00da57a5112939b7cc0622683a5f",
+            "kind": "render_audit"
+          },
+          {
+            "path": "evidence/scientific/SC-25/picking-audit.json",
+            "sha256": "f95a593d4e335d0f63ac16ca5b24afec0adfead5f27a7b1bb33596f84a1b6bdc",
+            "kind": "picking_audit"
+          },
+          {
+            "path": "evidence/scientific/SC-25/cold-open-1280x720.png",
+            "sha256": "779cc4b0d47e8c1a2a31bb3b47702464d1c68ffa75e503f084a778e30c9f7e0e",
+            "kind": "automated_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-25/cold-open-375x812.png",
+            "sha256": "c36c58793bbb6443149c5104b12d60ef26090283786aeee86c50a9414a5395cd",
+            "kind": "automated_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-25/route-recap-1280x720.png",
+            "sha256": "b170916fa96e2e26f65c49a93c9c5bb339d8b8be85e4196e29df0de3938e4065",
+            "kind": "automated_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-25/a-band-scaffold-1280x720.png",
+            "sha256": "a6dca27967345acabf5bfa5da75308a24a1d378e8a40c2766ccfcf7c2ff7ec1e",
+            "kind": "automated_capture"
+          },
+          {
+            "path": "evidence/scientific/SC-25/pinned-titin-1280x720.png",
+            "sha256": "12615fc7d50b78346720c70e37af8cc9743097647d1627d84be21f191bcac63c",
+            "kind": "automated_capture"
+          },
           {
             "path": "evidence/scientific/SC-20/manifest.json",
             "sha256": "6a32d9433e3f6891abbb1adf05b7215218988b9bbeae374c8b7f69109709013f",

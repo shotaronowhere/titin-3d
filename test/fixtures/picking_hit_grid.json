@@ -4,9 +4,23 @@
   "generated_by": "scripts/build_picking_hit_grid.mjs",
   "depth": "learn",
   "contract": {
-    "immutability": "Committed before the hit-priority resolver was exercised against it. Editing a sample, a rule, or a scene after implementation requires an entry in `migrations` stating what changed and why; the fixture may never be edited merely to make the resolver pass.",
+    "immutability": "Samples are the declared rules' cross-product and no screen coordinate is stored, so an individual sample cannot be added, removed, or nudged: `node scripts/build_picking_hit_grid.mjs --check` regenerates from the rules and requires byte equality. Editing a rule, a scene, or a viewport requires an entry in `migrations` stating what changed and why. The fixture may never be edited merely to make the resolver pass.",
+    "generation_order": "The reviewed picking policy was written first and the sampling rules were derived from it — the intended-hit radius from `emphasized_titin_tolerance_px`, never from a measurement of what the resolver achieves. The fixture was generated and committed in the same commit as the resolver rather than strictly before it; see docs/sprint-reports/SC-25.md for that disclosure and the structural protections that stand in for the ordering.",
     "denominator": "every sample marked intended_titin_hit, across the complete fixture",
-    "migrations": []
+    "migrations": [
+      {
+        "on": "2026-08-18",
+        "reason": "SC-25.4 made every Learn camera frame the measured unobscured stage band. At 1280x720 the cold open's story card covered the whole I-band, so no point of the PEVK spring was reachable by pointer at all; the fix moves the orbit target, which moves every projected sample.",
+        "changed": "regenerated from the unchanged rules against the re-framed cameras. No rule, viewport, scene, or intended-hit definition was edited, and the regeneration reproduced the same 398 offsets and 7562 samples: the vertical bias moves the orbit target without changing which projected samples clear the edge margin. The entry is recorded because the render the grid describes changed, not because the grid did.",
+        "previous_totals": {
+          "scenes": 14,
+          "path_offsets": 398,
+          "samples_per_offset": 19,
+          "samples": 7562,
+          "intended": 5174
+        }
+      }
+    ]
   },
   "rules": {
     "path_sample_spacing_nm": 30,

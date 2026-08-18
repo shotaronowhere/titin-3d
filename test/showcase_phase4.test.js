@@ -237,7 +237,9 @@ test('SC4: page wires one synchronized accessible tooltip and pinned explanation
   assert.match(page, /id="objectInspector"[^>]*aria-label="Pinned structure explanation"/);
   assert.match(page, /id="objectAnnouncement"[^>]*aria-live="polite"/);
   assert.match(page, /id="objectLeader"/);
-  assert.match(page, /visualization\.pickObject\(clientX, clientY\)/);
+  // SC-25 added the resolution context. The wiring the assertion is about is
+  // unchanged: one facade call, from one place, with the client coordinate.
+  assert.match(page, /visualization\.pickObject\(clientX, clientY, pickIntent\(\)\)/);
   assert.match(page, /visualization\.resolveAnnotation\(selection\)/);
   assert.match(page, /event\.pointerType === 'touch' \? 12 : 5/);
   assert.match(page, /\['ArrowLeft', 'ArrowRight', 'Enter', ' '\]/);

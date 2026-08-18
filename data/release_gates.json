@@ -585,6 +585,27 @@
         "background": "#0e1116",
         "min_ratio": 1.9,
         "where": "guided myosin thick filament against the stage, on a projector"
+      },
+      {
+        "id": "titin_vs_stage_guided",
+        "foreground": "#ff5d7d",
+        "background": "#0e1116",
+        "min_ratio": 5.5,
+        "where": "SC-25: titin against the stage, the first visual read in every Learn scene"
+      },
+      {
+        "id": "titin_vs_myosin_guided",
+        "foreground": "#ff5d7d",
+        "background": "#2d4661",
+        "min_ratio": 2.6,
+        "where": "SC-25: titin against the guided myosin thick filament it lies on in the A-band"
+      },
+      {
+        "id": "titin_vs_actin_guided",
+        "foreground": "#ff5d7d",
+        "background": "#337467",
+        "min_ratio": 1.7,
+        "where": "SC-25: titin against the guided actin thin filament that crosses it in the I-band"
       }
     ],
     "evidence_refs": []
@@ -1026,6 +1047,37 @@
         "verification": "automated",
         "status": "PASS",
         "verified_by": "test/browser/smoke.spec.js"
+      },
+      {
+        "id": "titin_pick_coverage",
+        "requirement": "at least 95% of the immutable hit-grid samples marked as intended titin hits resolve to a titin target, over the complete fixture",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/browser/picking.spec.js; test/fixtures/picking_hit_grid.json; scripts/build_picking_hit_grid.mjs --check",
+        "note": "SC-25: 5,174 intended samples across seven semantic scenes at two release viewports; reported per scene, per ring, and in aggregate. Misses are required to resolve to the nearest drawn surface, never to a lower clause of the reviewed order."
+      },
+      {
+        "id": "pick_proxy_non_rendering",
+        "requirement": "titin hit proxies answer rays and appear in no frame, bound, or object count",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/browser/picking.spec.js; test/showcase_phase25.test.js; scripts/neg_control_sc25.py"
+      },
+      {
+        "id": "inspection_affordance",
+        "requirement": "a first-time reader is shown that structures are inspectable before being expected to discover it, and direct labels and legend entries are operable by pointer, keyboard, and touch",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/browser/picking.spec.js",
+        "note": "SC-25: automated pointer, keyboard, and emulated-touch coverage. A physical-device touch review remains part of SC-27 and is not claimed here."
+      },
+      {
+        "id": "inspector_control_clearance",
+        "requirement": "a pinned explanation never lands on the header or the primary stage controls at any release viewport",
+        "verification": "automated",
+        "status": "PASS",
+        "verified_by": "test/browser/picking.spec.js; test/showcase_phase25.test.js",
+        "note": "SC-25: at 375-390 px a 340 px card and a story sheet cannot both have the stage width, so the placement reports the story-surface collision rather than concealing it; the control-clearance clause holds at every viewport."
       }
     ]
   },

@@ -379,16 +379,29 @@ export function inspectorPlacement({
   // its width leaves no anchor-relative placement clear of it, and the answer to
   // "the only free space is beyond that edge" has to be expressed as that edge —
   // the alternative is a card that lands on the chapter's own Next button.
+  //
+  // Ordered by how far each would sit from the anchor, NOT by the order the
+  // obstacles happened to arrive in. Both matter and only one is meaningful: the
+  // header's escape and the story card's escape are equally legal, and taking
+  // whichever was listed first parks the explanation in a far corner while a
+  // clear placement beside its molecule goes unused.
+  const escapes = [];
   for (const obstacle of obstacles) {
-    candidates.push(
+    escapes.push(
       { left: obstacle.right + gapPx, top: centredY },
       { left: obstacle.left - card.width - gapPx, top: centredY },
       { left: beside, top: obstacle.bottom + gapPx },
       { left: beside, top: obstacle.top - card.height - gapPx },
     );
   }
-  /** @type {{left:number, top:number, score:number, collides_with:string[],
-   *   area:number, coversAnchor:boolean}|null} */
+  const anchorDistance = (candidate) => Math.hypot(
+    clampLeft(candidate.left) + card.width / 2 - anchor.x_px,
+    clampTop(candidate.top) + card.height / 2 - anchor.y_px,
+  );
+  escapes.sort((a, b) => anchorDistance(a) - anchorDistance(b));
+  candidates.push(...escapes);
+  /** @type {{left:number, top:number, collides_with:string[], area:number,
+   *   coversAnchor:boolean}|null} */
   let chosen = null;
   for (const candidate of candidates) {
     const left = clampLeft(candidate.left);
@@ -398,14 +411,22 @@ export function inspectorPlacement({
     const area = hit.reduce((sum, obstacle) => sum + overlapArea(box, obstacle), 0);
     const coversAnchor = anchor.x_px >= left && anchor.x_px <= left + card.width
       && anchor.y_px >= top && anchor.y_px <= top + card.height;
-    // The anchor is scored, not vetoed: a stage with no clear placement must
-    // still return one, and "next to its object" is worth more than "clear of a
-    // control" only when both cannot be had.
-    const score = area + (coversAnchor ? canvas.width * canvas.height : 0);
-    if (!chosen || score < chosen.score) {
-      chosen = { left, top, score, collides_with: hit.map((obstacle) => obstacle.id), area, coversAnchor };
-    }
-    if (score === 0) break;
+    const row = {
+      left, top, area, coversAnchor,
+      collides_with: hit.map((obstacle) => obstacle.id),
+    };
+    // Lexicographic, not a weighted sum, so no arbitrary exchange rate decides
+    // whether covering a control is worth being nearer the anchor: never cover the
+    // object being explained; then cover as little chrome as possible; then keep
+    // the list's own order, which is the SC-11 preference for the side away from
+    // the anchor followed by the escapes, nearest first. The anchor is scored
+    // rather than vetoed, because a stage with no clear placement must still
+    // answer.
+    const better = !chosen
+      || (row.coversAnchor !== chosen.coversAnchor ? !row.coversAnchor
+        : row.area < chosen.area);
+    if (better) chosen = row;
+    if (!row.coversAnchor && row.area === 0) break;
   }
   if (!chosen) throw new Error('inspectorPlacement: no candidate placement was scored.');
   const placed = chosen;

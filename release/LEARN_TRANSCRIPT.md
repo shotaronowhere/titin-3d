@@ -1,6 +1,6 @@
 # Text-only Learn transcript
 
-Generated from `data/presentation.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `eb6500f2e66e512f99a7567a5e2caea5d2e9d722`; build inputs `2b15a893e5974ec19a48ca926e94afba61c7cda0b6022b595b636b6f2d6a6d72`.
+Generated from `data/presentation.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0c6f7d1d9cfcd8e9edd0bc8f945fbf4c8b3c9e53-dirty`; build inputs `d16060d67d8fb68075584e0393a1a798e026d7c71c667386dc01a245cd2db853`.
 390 narrated/announced words; estimated 181.3 s; target 110–190 s.
 
 ## 1. Meet the sarcomere

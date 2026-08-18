@@ -1,0 +1,305 @@
+{
+  "schema": "titin-sc25-render-audit/1",
+  "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+  "representative_titin": {
+    "depiction_policy": "one representative molecule; biological copy number is not rendered",
+    "copy_number_claimed": false,
+    "strand_index": 0,
+    "a_band_surface_bound": true,
+    "a_band_start_nm": 300,
+    "a_band_transverse_offset_nm": {
+      "y": 7.5,
+      "z": 0,
+      "radius": 7.5
+    },
+    "thick_filament_radius_nm": 7.5,
+    "azimuth_deg": 0,
+    "azimuth_evidence": "SCHEMATIC (arrangement) over MEASURED (copy number)",
+    "placement_policy": "six_fold_symmetric",
+    "i_band_transverse_path": "SCHEMATIC render-only linear taper from the A-band surface offset to the Z-disc axis"
+  },
+  "titin_strands_drawn": 1,
+  "titin_emphasis": {
+    "channel": "presentation",
+    "trace_px": 5,
+    "halo_radius_scale": 3.2,
+    "halo_opacity": 0.2,
+    "evidence_opacity_unchanged": true,
+    "meaning": "screen-space reading width and an additive halo; neither is a molecular dimension"
+  },
+  "titin_pick_proxies": {
+    "channel": "interaction",
+    "policy_id": "titin-first-within-tolerance/1",
+    "count": 9,
+    "layer": 1,
+    "rendered": false,
+    "counted_in_geometry": false,
+    "screen_space_width_px": 14,
+    "resolves_to": "the canonical visible titin region of the same identifier",
+    "region_ids": [
+      "Z1Z2",
+      "prox_Ig",
+      "N2A",
+      "post_N2A_unknown",
+      "PEVK",
+      "dist_Ig",
+      "Aband_super",
+      "kinase",
+      "Mline"
+    ],
+    "evidence_opacity_unchanged": true,
+    "meaning": "non-rendering screen-space hit area for the titin path; not a molecular envelope, surface, width, or a second copy of the molecule"
+  },
+  "disordered_depiction": {
+    "algorithm": {
+      "id": "seeded-irregular-ensemble-ribbon",
+      "version": 1,
+      "prng": "mulberry32",
+      "seed_derivation": "FNV-1a(render_seed, region_id, strand_index)",
+      "control_points": 25,
+      "endpoint_policy": "canonical endpoints are copied exactly; irregularity is transverse only",
+      "determinism_policy": "pure local PRNG; no Math.random, time, platform fingerprint, or model fingerprint"
+    },
+    "render_seed": 20260812,
+    "regions": [
+      "N2A",
+      "post_N2A_unknown",
+      "PEVK"
+    ],
+    "evidence_class": "SCHEMATIC",
+    "amplitude_nm": 6.435,
+    "amplitude_by_region": {
+      "N2A": 4.4482,
+      "post_N2A_unknown": 6.435,
+      "PEVK": 6.1591
+    },
+    "span_over_contour": {
+      "N2A": 0.3087,
+      "post_N2A_unknown": null,
+      "PEVK": 0.0429
+    },
+    "slack_fraction_by_region": {
+      "N2A": 0.6912524522297092,
+      "post_N2A_unknown": 1,
+      "PEVK": 0.9571191650484853
+    },
+    "descriptor_fingerprint_by_region": {
+      "N2A": "ad82c187",
+      "post_N2A_unknown": "eba2f2b5",
+      "PEVK": "b3d4af5f"
+    },
+    "by_region": {
+      "N2A": {
+        "maximum_transverse_offset_nm": 4.117948259,
+        "declared_envelope_nm": 4.44820953,
+        "canonical_endpoints_nm": [
+          [
+            215.487311718,
+            5.387182793,
+            0
+          ],
+          [
+            232.468426846,
+            5.811710671,
+            0
+          ]
+        ],
+        "rendered_endpoints_nm": [
+          [
+            215.487311718,
+            5.387182793,
+            0
+          ],
+          [
+            232.468426846,
+            5.811710671,
+            0
+          ]
+        ],
+        "descriptor_fingerprint": "ad82c187",
+        "representation_semantics": {
+          "domain_class": "N2A",
+          "representative_pdb_id": "7NIP",
+          "contains_structured_core": true,
+          "structured_core": {
+            "label": "UN2A tri-helix core",
+            "sequence_position": {
+              "start": 9504,
+              "end": 9544
+            },
+            "representative_pdb_id": "7NIP",
+            "fold": "three-helix bundle",
+            "evidence_class": "MEASURED (solution NMR; deposited coordinates)",
+            "source": "10.1016/j.jmb.2021.166901",
+            "render_usage": "semantic provenance only; the coarse ribbon does not claim an atomic or measured in-sarcomere pose"
+          },
+          "domain_evidence_class": "MEASURED (7NIP structured core); UNKNOWN (flank and in-situ conformation)",
+          "placement_evidence_class": "SCHEMATIC (serial chain envelope; core pose and flank paths unresolved)",
+          "note": "UN2A unique sequence rendered as a non-atomic variable-length ribbon between curated I80 and I81. PDB 7NIP establishes a structured tri-helix core; flexible flanks and the complete in-sarcomere conformation remain unresolved."
+        }
+      },
+      "post_N2A_unknown": {
+        "maximum_transverse_offset_nm": 6.135949282,
+        "declared_envelope_nm": 6.435,
+        "canonical_endpoints_nm": [
+          [
+            232.468426846,
+            5.811710671,
+            0
+          ],
+          [
+            232.468426846,
+            5.811710671,
+            0
+          ]
+        ],
+        "rendered_endpoints_nm": [
+          [
+            232.468426846,
+            5.811710671,
+            0
+          ],
+          [
+            232.468426846,
+            5.811710671,
+            0
+          ]
+        ],
+        "descriptor_fingerprint": "eba2f2b5",
+        "representation_semantics": {
+          "domain_class": "unresolved_sequence",
+          "representative_pdb_id": null,
+          "contains_structured_core": false,
+          "structured_core": null,
+          "domain_evidence_class": "MEASURED (sequence continuity); UNKNOWN (identity and conformation)",
+          "placement_evidence_class": "UNKNOWN (no stable fold — chain occupies the segment)",
+          "note": "Explicit unresolved sequence rendered as a bounded zero-projection loop; zero axial projection is bookkeeping, not zero physical length."
+        }
+      },
+      "PEVK": {
+        "maximum_transverse_offset_nm": 5.816379062,
+        "declared_envelope_nm": 6.159061827,
+        "canonical_endpoints_nm": [
+          [
+            232.468426846,
+            5.811710671,
+            0
+          ],
+          [
+            258.813554223,
+            6.470338856,
+            0
+          ]
+        ],
+        "rendered_endpoints_nm": [
+          [
+            232.468426846,
+            5.811710671,
+            0
+          ],
+          [
+            258.813554223,
+            6.470338856,
+            0
+          ]
+        ],
+        "descriptor_fingerprint": "b3d4af5f",
+        "representation_semantics": {
+          "domain_class": "PEVK",
+          "representative_pdb_id": null,
+          "contains_structured_core": false,
+          "structured_core": null,
+          "domain_evidence_class": "MEASURED (sequence); UNKNOWN (tertiary conformation)",
+          "placement_evidence_class": "UNKNOWN (no stable fold — chain occupies the segment)",
+          "note": "Entropic/worm-like chain — represent as a flexible chain whose end-to-end length varies with force; never a fixed fold."
+        }
+      }
+    },
+    "contour_length_nm": {
+      "N2A": 55,
+      "post_N2A_unknown": null,
+      "PEVK": 614.38
+    },
+    "contour_source": "titin.json regions[].extension_model.max_end2end_nm — the same contour MechanicalModel resolves as Lc",
+    "meaning": "seeded transverse irregularity depicts a non-atomic flexible/unresolved chain envelope; the N2A record separately preserves its experimentally resolved structured UN2A core. Where a contour proxy exists, amplitude decreases with axial extension",
+    "not_claimed": [
+      "a measured or predicted conformation",
+      "molecular transverse amplitude, handedness, wavelength, or persistence length",
+      "an equilibrium ensemble sample"
+    ]
+  },
+  "drawn_chain_irregularity": [
+    {
+      "region_id": "Z1Z2",
+      "control_points": 4,
+      "mean_transverse_radius_nm": 0,
+      "transverse_radius_relative_spread": 0,
+      "angular_step_spread_rad": 0,
+      "reads_as_regular_helix": false
+    },
+    {
+      "region_id": "prox_Ig",
+      "control_points": 76,
+      "mean_transverse_radius_nm": 0,
+      "transverse_radius_relative_spread": 1.766983,
+      "angular_step_spread_rad": 1.56,
+      "reads_as_regular_helix": false
+    },
+    {
+      "region_id": "N2A",
+      "control_points": 25,
+      "mean_transverse_radius_nm": 1.977041,
+      "transverse_radius_relative_spread": 0.632581,
+      "angular_step_spread_rad": 0.795581,
+      "reads_as_regular_helix": false
+    },
+    {
+      "region_id": "post_N2A_unknown",
+      "control_points": 25,
+      "mean_transverse_radius_nm": 2.755743,
+      "transverse_radius_relative_spread": 0.600335,
+      "angular_step_spread_rad": 0.792111,
+      "reads_as_regular_helix": false
+    },
+    {
+      "region_id": "PEVK",
+      "control_points": 25,
+      "mean_transverse_radius_nm": 2.694751,
+      "transverse_radius_relative_spread": 0.629096,
+      "angular_step_spread_rad": 1.201055,
+      "reads_as_regular_helix": false
+    },
+    {
+      "region_id": "dist_Ig",
+      "control_points": 18,
+      "mean_transverse_radius_nm": 0,
+      "transverse_radius_relative_spread": 1.732051,
+      "angular_step_spread_rad": 1.986918,
+      "reads_as_regular_helix": false
+    },
+    {
+      "region_id": "Aband_super",
+      "control_points": 181,
+      "mean_transverse_radius_nm": 0.388578,
+      "transverse_radius_relative_spread": 0.706015,
+      "angular_step_spread_rad": 0.23481,
+      "reads_as_regular_helix": false
+    },
+    {
+      "region_id": "kinase",
+      "control_points": 3,
+      "mean_transverse_radius_nm": 0,
+      "transverse_radius_relative_spread": 0,
+      "angular_step_spread_rad": 0,
+      "reads_as_regular_helix": false
+    },
+    {
+      "region_id": "Mline",
+      "control_points": 12,
+      "mean_transverse_radius_nm": 0,
+      "transverse_radius_relative_spread": 0,
+      "angular_step_spread_rad": 0,
+      "reads_as_regular_helix": false
+    }
+  ]
+}

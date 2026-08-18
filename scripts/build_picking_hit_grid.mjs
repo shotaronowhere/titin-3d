@@ -24,7 +24,7 @@
  */
 import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { chromium } from '@playwright/test';
@@ -223,10 +223,8 @@ async function generate() {
     generated_by: 'scripts/build_picking_hit_grid.mjs',
     depth: 'learn',
     contract: {
-      immutability: 'Committed before the hit-priority resolver was exercised against '
-        + 'it. Editing a sample, a rule, or a scene after implementation requires an '
-        + 'entry in `migrations` stating what changed and why; the fixture may never '
-        + 'be edited merely to make the resolver pass.',
+      immutability: "Samples are the declared rules' cross-product and no screen coordinate is stored, so an individual sample cannot be added, removed, or nudged: `node scripts/build_picking_hit_grid.mjs --check` regenerates from the rules and requires byte equality. Editing a rule, a scene, or a viewport requires an entry in `migrations` stating what changed and why. The fixture may never be edited merely to make the resolver pass.",
+      generation_order: "The reviewed picking policy was written first and the sampling rules were derived from it \u2014 the intended-hit radius from `emphasized_titin_tolerance_px`, never from a measurement of what the resolver achieves. The fixture was generated and committed in the same commit as the resolver rather than strictly before it; see docs/sprint-reports/SC-25.md for that disclosure and the structural protections that stand in for the ordering.",
       denominator: 'every sample marked intended_titin_hit, across the complete fixture',
       migrations: [],
     },
@@ -246,26 +244,49 @@ async function generate() {
   };
 }
 
-const grid = await generate();
-const text = `${JSON.stringify(grid, null, 2)}\n`;
-if (CHECK) {
-  if (!existsSync(FIXTURE)) {
-    console.error('picking hit grid: fixture is missing');
-    process.exit(1);
+/**
+ * Only when run as a command.
+ *
+ * `HIT_GRID_RULES` and {@link ringSamples} are the fixture's contract and the
+ * SC-25 Node gate imports them, so this module must be importable without side
+ * effects. Without this guard the gate launched a browser and REWROTE the fixture
+ * before asserting anything about it — which silently repaired every hand-edit the
+ * destructive controls exist to catch.
+ */
+const RUN_AS_COMMAND = process.argv[1]
+  && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
+
+async function main() {
+  const grid = await generate();
+  // A regeneration inherits the contract's migration history: the samples are
+  // rule-derived and may be rebuilt, but the record of WHY the committed grid ever
+  // changed is a human statement and is never regenerated away.
+  if (existsSync(FIXTURE)) {
+    const previous = JSON.parse(readFileSync(FIXTURE, 'utf8'));
+    grid.contract.migrations = previous.contract?.migrations ?? [];
   }
-  const committed = JSON.parse(readFileSync(FIXTURE, 'utf8'));
-  const fresh = JSON.parse(text);
-  // Migrations are a human record; everything else must reproduce exactly.
-  fresh.contract.migrations = committed.contract.migrations;
-  if (JSON.stringify(fresh) !== JSON.stringify(committed)) {
-    console.error('picking hit grid: the committed fixture is not what the declared '
-      + 'rules produce against the current render');
-    process.exit(1);
+  const text = `${JSON.stringify(grid, null, 2)}\n`;
+  if (CHECK) {
+    if (!existsSync(FIXTURE)) {
+      console.error('picking hit grid: fixture is missing');
+      process.exit(1);
+    }
+    const committed = JSON.parse(readFileSync(FIXTURE, 'utf8'));
+    const fresh = JSON.parse(text);
+    // Migrations are a human record; everything else must reproduce exactly.
+    fresh.contract.migrations = committed.contract.migrations;
+    if (JSON.stringify(fresh) !== JSON.stringify(committed)) {
+      console.error('picking hit grid: the committed fixture is not what the declared '
+        + 'rules produce against the current render');
+      process.exit(1);
+    }
+    console.log(`picking hit grid: PASS (${committed.totals.samples} samples, `
+      + `${committed.totals.intended} intended, ${committed.totals.scenes} scene cells)`);
+  } else {
+    writeFileSync(FIXTURE, text);
+    console.log(`picking hit grid written: ${grid.totals.samples} samples, `
+      + `${grid.totals.intended} intended, ${grid.totals.scenes} scene cells`);
   }
-  console.log(`picking hit grid: PASS (${committed.totals.samples} samples, `
-    + `${committed.totals.intended} intended, ${committed.totals.scenes} scene cells)`);
-} else {
-  writeFileSync(FIXTURE, text);
-  console.log(`picking hit grid written: ${grid.totals.samples} samples, `
-    + `${grid.totals.intended} intended, ${grid.totals.scenes} scene cells`);
 }
+
+if (RUN_AS_COMMAND) await main();

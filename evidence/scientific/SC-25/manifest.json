@@ -1,0 +1,86 @@
+{
+  "schema": "titin-sc25-implementation-evidence/1",
+  "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+  "captured_on": "2026-08-18",
+  "review_semantics": {
+    "decision_specific_implementation_evidence": "VERIFIED",
+    "capture_kind": "deterministic automated screenshots of the committed standalone build",
+    "visual_release_matrix": "UNREVIEWED_UNTIL_SC-27",
+    "human_specialist_review_claimed": false,
+    "physical_device_review_claimed": false
+  },
+  "files": [
+    {
+      "path": "render-audit.json",
+      "kind": "render_audit",
+      "bytes": 9973,
+      "sha256": "740b7ee85432b1bffe06675ed2eb9e9bd65d00da57a5112939b7cc0622683a5f"
+    },
+    {
+      "path": "picking-audit.json",
+      "kind": "picking_audit",
+      "bytes": 4806,
+      "sha256": "f95a593d4e335d0f63ac16ca5b24afec0adfead5f27a7b1bb33596f84a1b6bdc"
+    },
+    {
+      "path": "cold-open-1280x720.png",
+      "kind": "automated_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "",
+      "shows": "the first rendered frame identifies titin by label and colour and exposes the primary action",
+      "bytes": 129042,
+      "sha256": "779cc4b0d47e8c1a2a31bb3b47702464d1c68ffa75e503f084a778e30c9f7e0e"
+    },
+    {
+      "path": "cold-open-375x812.png",
+      "kind": "automated_capture",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url_hash": "",
+      "shows": "the same first frame at phone width",
+      "bytes": 65946,
+      "sha256": "c36c58793bbb6443149c5104b12d60ef26090283786aeee86c50a9414a5395cd"
+    },
+    {
+      "path": "route-recap-1280x720.png",
+      "kind": "automated_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=knowledge_recap&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "shows": "chapter 7: the continuous Z-disc-to-M-line route is not a hairline",
+      "bytes": 131075,
+      "sha256": "b170916fa96e2e26f65c49a93c9c5bb339d8b8be85e4196e29df0de3938e4065"
+    },
+    {
+      "path": "a-band-scaffold-1280x720.png",
+      "kind": "automated_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=scaffold_thick_filament&sl=2200&drawer=closed&scene=a_band_scaffold&confidence=0",
+      "shows": "chapter 6: the A-band route with its lattice context",
+      "bytes": 313063,
+      "sha256": "a6dca27967345acabf5bfa5da75308a24a1d378e8a40c2766ccfcf7c2ff7ec1e"
+    },
+    {
+      "path": "pinned-titin-1280x720.png",
+      "kind": "automated_capture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "",
+      "shows": "a pinned explanation clear of the header and the primary controls",
+      "bytes": 174146,
+      "sha256": "12615fc7d50b78346720c70e37af8cc9743097647d1627d84be21f191bcac63c"
+    }
+  ]
+}

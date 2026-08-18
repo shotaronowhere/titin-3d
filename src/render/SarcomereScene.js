@@ -1508,6 +1508,11 @@ export class SarcomereScene {
       if (titinPath?.segments?.length) {
         const strand = new THREE.Group();
         strand.name = `titin_strand_${off.strand_index}`;
+        // The path each region's tube was actually built along, kept so the hit
+        // proxy and the recorded pick centreline are the SAME points rather than a
+        // second call that merely ought to agree.
+        /** @type {Map<string, Array<{x:number,y:number,z:number}>>} */
+        const drawnPaths = new Map();
         for (const segment of titinPath.segments) {
           const descriptor = regionDescriptors.get(segment.region_id);
           const evidence = this._weakestEvidence([
@@ -1522,8 +1527,10 @@ export class SarcomereScene {
             && linkerRadiusNm !== null
             && foldedRegions.has(segment.region_id);
           const radiusNm = linked ? Math.min(styleRadiusNm, linkerRadiusNm) : styleRadiusNm;
+          const drawnPath = displayPath(segment, off);
+          drawnPaths.set(segment.region_id, drawnPath);
           const tube = this._titinTube(
-            displayPath(segment, off),
+            drawnPath,
             radiusNm, COMPONENT_COLOR.titin, evidence,
             `titin_region_${segment.region_id}_strand_${off.strand_index}`,
             undefined,
@@ -1555,7 +1562,11 @@ export class SarcomereScene {
           const proxies = new THREE.Group();
           proxies.name = 'titin_pick_proxies';
           for (const segment of titinPath.segments) {
-            const drawnPath = displayPath(segment, off);
+            const drawnPath = drawnPaths.get(segment.region_id);
+            if (!drawnPath) {
+              throw new Error(`build: no drawn path was recorded for titin region `
+                + `'${segment.region_id}'; a hit proxy must follow the geometry it shadows.`);
+            }
             // Recorded from the SAME points the tube was built from, so the hit
             // grid samples the molecule that is drawn rather than a second idea
             // of where it runs.

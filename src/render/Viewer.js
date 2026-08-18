@@ -444,6 +444,7 @@ export class Viewer {
     const distance = (radius / Math.sin(fov / 2)) * STAGE_LAYOUT.frame_margin_factor;
     const v = new THREE.Vector3(...dir).normalize().multiplyScalar(distance);
     this._sceneRadius = radius;
+    centre.y += this._contentCentreOffsetNm(distance, opts.contentCenterYPx, 'frame');
     this._moveCamera(centre.clone().add(v), centre, opts);
     return {
       target_nm: centre.toArray(),
@@ -527,6 +528,7 @@ export class Viewer {
     const g = closeUpLandmarks(this.model, sl);
     const target = new THREE.Vector3(...preset.at(g));
     const distance = this._distanceForSpan(preset.spanNm);
+    target.y += this._contentCentreOffsetNm(distance, opts.contentCenterYPx, 'closeUp');
     const v = new THREE.Vector3(...preset.dir).normalize().multiplyScalar(distance);
     const move = opts.move !== false;
     if (move) this._moveCamera(target.clone().add(v), target, opts);
@@ -565,6 +567,36 @@ export class Viewer {
   }
 
   /**
+   * How far the orbit target must move in Y so the framed content sits at a
+   * requested pixel row rather than at the middle of the canvas.
+   *
+   * SC-11 declared `vertical_bias_fraction` and deliberately left it unconsumed,
+   * because a fixed bias is the wrong shape for the problem: how far above centre
+   * the model belongs depends on what chrome is on the stage. SC-24 solved that
+   * for the Stretch demonstration by MEASURING the unobscured band and passing its
+   * centre; SC-25 makes the same measured band available to every framing path,
+   * because a story card that covers the I-band makes the spring the story is
+   * about unreachable — not merely off-centre.
+   *
+   * @param {number} distance orbit distance the frame will use
+   * @param {number|undefined} contentCenterYPx container-local pixel row, or
+   *   undefined to leave the target where it is
+   * @param {string} where caller name, for the error message
+   * @returns {number} nanometres to add to the target's Y
+   */
+  _contentCentreOffsetNm(distance, contentCenterYPx, where) {
+    if (contentCenterYPx === undefined) return 0;
+    const requested = Number(contentCenterYPx);
+    const heightPx = this.container.clientHeight;
+    if (!Number.isFinite(requested) || !(heightPx > 0)) {
+      throw new Error(`${where}: contentCenterYPx requires a finite pixel position `
+        + 'and a measurable viewport.');
+    }
+    const visibleHeightNm = 2 * distance * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+    return (requested - heightPx / 2) * visibleHeightNm / heightPx;
+  }
+
+  /**
    * Focus an axial span without exposing camera objects to the biological facade.
    * Used for titin-region navigation; the target and span still come from the
    * canonical backbone, while this method performs presentation math only.
@@ -586,16 +618,7 @@ export class Viewer {
     const minSpanApplied = viewSpan > margined;
     const distance = this._distanceForSpan(viewSpan);
     const target = new THREE.Vector3((startNm + endNm) / 2, 0, 0);
-    if (opts.contentCenterYPx !== undefined) {
-      const contentCenterYPx = Number(opts.contentCenterYPx);
-      const heightPx = this.container.clientHeight;
-      if (!Number.isFinite(contentCenterYPx) || !(heightPx > 0)) {
-        throw new Error('focusSpan: contentCenterYPx requires a finite pixel position '
-          + 'and a measurable viewport.');
-      }
-      const visibleHeightNm = 2 * distance * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
-      target.y = (contentCenterYPx - heightPx / 2) * visibleHeightNm / heightPx;
-    }
+    target.y += this._contentCentreOffsetNm(distance, opts.contentCenterYPx, 'focusSpan');
     const direction = new THREE.Vector3(0.12, 0.25, 1).normalize();
     this._moveCamera(target.clone().add(direction.multiplyScalar(distance)), target, opts);
     return {
