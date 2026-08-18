@@ -415,7 +415,7 @@
         "implementation_evidence": [
           {
             "path": "evidence/scientific/SC-25/manifest.json",
-            "sha256": "2f5db4b93526853e8fb7868d070954793b7fef19f9c24d4b4fbc49729e9aff98",
+            "sha256": "785644782d23f8bcdeb70a2410fcc251ea4554620f80bd468d36468c1c364038",
             "kind": "evidence_manifest"
           },
           {
@@ -445,7 +445,7 @@
           },
           {
             "path": "evidence/scientific/SC-25/a-band-scaffold-1280x720.png",
-            "sha256": "a6dca27967345acabf5bfa5da75308a24a1d378e8a40c2766ccfcf7c2ff7ec1e",
+            "sha256": "6554e15549509c7d25cc01c1df242435b90bd23332291a80c4c225000525af31",
             "kind": "automated_capture"
           },
           {
