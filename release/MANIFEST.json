@@ -1,18 +1,18 @@
 {
   "schema": "titin-release-manifest/2",
   "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-  "app_revision": "4092c6fb9f986cb2197c754c0ad8c73b1f456a3b-dirty",
+  "app_revision": "16cadeecd2bab65731ee5ce46b745e5bd90f60dc",
   "build_inputs_fingerprint": "8eeddaca1b3609716b5b89dd58f33f06e8bed59b1010fe3720cf9e78cc948bd0",
   "standalone": {
     "path": "index.html",
-    "bytes": 2116598,
-    "sha256": "27705c10ad9d08a33d889457b59c9f2f3fbdd65efa19394c5e1823352a586a74"
+    "bytes": 2116592,
+    "sha256": "b9d76b7db3d3d235f823548b19054daeba19d1e9b5e1663be14b7269c935bf20"
   },
   "artifacts": [
     {
       "path": "release/CLAIM_MATRIX.md",
-      "bytes": 14112,
-      "sha256": "083a52d874910cb03fdf5c421cd29a173a862c88fe94dfd5bc3fac546ef214bf"
+      "bytes": 14106,
+      "sha256": "ca319858c2dd6ef3272abf9d8549adab8b8a67a3521af9f96b10cd06e1cdb38e"
     },
     {
       "path": "release/fallback/architecture.svg",
@@ -46,13 +46,13 @@
     },
     {
       "path": "release/LEARN_TRANSCRIPT.md",
-      "bytes": 6775,
-      "sha256": "cfb312c5b162c1d52fad2bafd3e327526a89db6fbfe525b03d23ba9d03ea2110"
+      "bytes": 6769,
+      "sha256": "f0ce175498878e8ef4ffeaddeaf51038cb1ea0edd91f39d692d8d32979a5ab98"
     },
     {
       "path": "release/LIMITATIONS.md",
-      "bytes": 8820,
-      "sha256": "7532c7c01fab900d281b3de4df3589cfd5ccc2e8a5cb51daf75fe4aefd4f7f8f"
+      "bytes": 8814,
+      "sha256": "b6fb2fc11beb2f87fecfca90301fe5199ef9fd1e94743f4d944d2819ac86d633"
     },
     {
       "path": "release/mechanical_parameters.json",
@@ -61,28 +61,28 @@
     },
     {
       "path": "release/PREFLIGHT.md",
-      "bytes": 2124,
-      "sha256": "eec1d90aa5b8a57e7bcdd2365da83ec786df98586818d7a13fc00053f853c79a"
+      "bytes": 2112,
+      "sha256": "3a32db5f33ac6062e73c3b40bb14443b987e969f3043d58d4f910a9f12520fad"
     },
     {
       "path": "release/PRESENTER_SCRIPT.md",
-      "bytes": 10010,
-      "sha256": "d6ec58f92089187fefb69f2d39f0bc519677ec147d47aad6e60b2fbc0638ef10"
+      "bytes": 10004,
+      "sha256": "9f2f1519da601063b172a7339f0c2058ddc2cc0bc518a3ba272e863cea704010"
     },
     {
       "path": "release/SCIENTIFIC_AUTHORITY.md",
-      "bytes": 2632,
-      "sha256": "13f70d2e387449a6e91e5bdcf96496e7d89daebaa730fc96f7d6bc4ee0cd0b40"
+      "bytes": 2626,
+      "sha256": "9d555a013f0907dcf1fad4d7f13eaf0f0be5e27584b45a38daeb0442f83b9445"
     },
     {
       "path": "release/SCREEN_READER_TRANSCRIPT.md",
-      "bytes": 5749,
-      "sha256": "46ee420f637a3e11bd11c7576e02d23a7c8688f542d875c6abd7b63f16d63c81"
+      "bytes": 5743,
+      "sha256": "17590e5a912bbde7e718349fed9dbf4328f3b93252607d2ace9663c62bee0b59"
     },
     {
       "path": "release/SCREENSHOT_PACK.md",
-      "bytes": 12260,
-      "sha256": "ef2dfe15b8b75cf9649eab9a04edff5f892ee5a0855a6eca0e0579335a6c803c"
+      "bytes": 12254,
+      "sha256": "6d954410059597532770938c901210f62c55816c7466607814c520fded1bc51e"
     }
   ],
   "fallback_slides": [
