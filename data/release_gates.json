@@ -204,7 +204,7 @@
     "status": "PENDING",
     "definition": "src/presentation/VisualMatrix.js",
     "manifest_command": "node scripts/capture_visual_matrix.mjs",
-    "expected_cells": 52,
+    "expected_cells": 56,
     "checks": [
       {
         "id": "matrix_reproducible",

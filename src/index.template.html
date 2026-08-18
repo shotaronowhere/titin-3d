@@ -98,17 +98,20 @@ window.__titinBoot = { ready: false, problems: [] };
     --chrome: rgb(14 17 22 / 88%); --focus: #f2d06b; --source-link: #a9c9f2;
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
     font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif; }
   body { overflow: hidden; }
   #app { display: grid; grid-template-columns: minmax(0, 1fr); height: 100%; }
-  #app[data-mode="evidence"] { grid-template-columns: minmax(0, 1fr) minmax(320px, 370px); }
+  #app[data-mode="evidence"][data-drawer-open="true"] {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 370px);
+  }
   #canvas { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
   #canvas > canvas { display: block; position: absolute; inset: 0;
     width: 100% !important; height: 100% !important; }
   #panel { display: none; background: var(--panel); border-left: 1px solid var(--edge);
     overflow-y: auto; padding: 0 18px 24px; min-width: 0; }
-  #app[data-mode="evidence"] #panel { display: block; }
+  #app[data-mode="evidence"][data-drawer-open="true"] #panel { display: block; }
   .drawer-head { position: sticky; top: 0; z-index: 4; margin: 0 -18px; padding: 14px 18px 12px;
     background: rgb(22 27 34 / 96%); border-bottom: 1px solid var(--edge); backdrop-filter: blur(10px); }
   .drawer-head-row { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
@@ -130,6 +133,23 @@ window.__titinBoot = { ready: false, problems: [] };
   .sub { color: var(--dim); font-size: 11px; margin-bottom: 12px; }
   label { display: block; font-size: 11px; color: var(--dim); margin-bottom: 4px; }
   input[type=range] { width: 100%; accent-color: var(--accent); }
+  #sl { appearance: none; cursor: pointer;
+    --supported-start: 9.09%; --supported-end: 45.45%;
+    background: linear-gradient(to right,
+      #303946 0 var(--supported-start), #5ac8a8 var(--supported-start) var(--supported-end),
+      #303946 var(--supported-end) 100%) center / 100% 7px no-repeat; }
+  #sl::-webkit-slider-runnable-track { height: 7px; border: 1px solid #667386;
+    border-radius: 999px; background: linear-gradient(to right,
+      #303946 0 var(--supported-start), #5ac8a8 var(--supported-start) var(--supported-end),
+      #303946 var(--supported-end) 100%); }
+  #sl::-moz-range-track { height: 7px; border: 1px solid #667386;
+    border-radius: 999px; background: linear-gradient(to right,
+      #303946 0 var(--supported-start), #5ac8a8 var(--supported-start) var(--supported-end),
+      #303946 var(--supported-end) 100%); }
+  #sl::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px;
+    margin-top: -6px; border-radius: 50%; border: 2px solid #0e1116; background: var(--accent); }
+  #sl::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid #0e1116; background: var(--accent); }
   .row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
   button { background: #1f2630; color: var(--text); border: 1px solid var(--edge);
     border-radius: 4px; padding: 5px 9px; font-size: 11px; cursor: pointer; }
@@ -180,6 +200,9 @@ window.__titinBoot = { ready: false, problems: [] };
     background: linear-gradient(to top, rgb(14 17 22 / 96%), rgb(14 17 22 / 74%));
     border-top: 1px solid var(--edge); backdrop-filter: blur(10px); }
   .stage-row { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; }
+  .stage-row-primary { display: grid;
+    grid-template-columns: auto minmax(180px, 1fr) auto auto auto auto auto;
+    gap: 6px 9px; }
   .stage-row-primary #sl { flex: 1 1 220px; min-width: 160px; width: auto; }
   /* margin: 0 overrides the drawer's block-label rule, which would otherwise
      push a label 4 px off the centre line of the control it names. */
@@ -187,8 +210,9 @@ window.__titinBoot = { ready: false, problems: [] };
     letter-spacing: .08em; font-weight: 700; }
   .stage-readout { font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 650;
     min-width: 84px; }
-  .stage-presets { margin: 0; }
+  .stage-presets { display: none; margin: 0; }
   #stagePlay.on { background: var(--titin); border-color: var(--titin); color: #2a0a13; }
+  #stageReset:not(:disabled) { border-color: rgb(255 176 192 / 65%); }
   /* SC-14. The one number a muscle-mechanics audience looks for first, on the
      stage rather than behind the drawer, carrying its evidence class so it can
      never be read as a measurement. flex: none + nowrap for the same reason
@@ -200,6 +224,28 @@ window.__titinBoot = { ready: false, problems: [] };
   #stageForce b { color: var(--text); font-size: 13px; font-weight: 650; }
   #stageForce .force-class { color: #e8c16d; font-size: 9px; font-weight: 700;
     letter-spacing: .05em; }
+  .stage-row-scenes { flex-wrap: nowrap; min-width: 0; }
+  #sceneControls { flex-wrap: nowrap; margin: 0; min-width: 0; }
+  #sceneControls button, #moreSceneControls button { white-space: nowrap; }
+  #sceneControls button[aria-pressed="true"], #moreSceneControls button[aria-pressed="true"] {
+    background: var(--accent); color: #0e1116; border-color: var(--accent);
+  }
+  #sceneTruth { color: #d9b869; font-size: 10px; white-space: nowrap; }
+  #sceneDetails { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+  #sceneDetails[hidden] { display: none; }
+  #sceneDetails fieldset { display: flex; align-items: center; gap: 3px; margin: 0; padding: 2px 4px;
+    border: 1px solid var(--edge); border-radius: 5px; }
+  #sceneDetails legend { position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); }
+  #sceneDetailsToggle { display: none; }
+  #sceneRingControls button { min-width: 27px; padding-inline: 7px; }
+  #sceneRingControls button[aria-pressed="true"] { background: #4fb39f; color: #071713; }
+  #sceneMyosinToggle[aria-pressed="true"], #moreMyosinToggle[aria-pressed="true"] {
+    background: rgb(79 179 159 / 25%); border-color: #4fb39f; color: #d9fff6;
+  }
+  #stretchHint { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%);
+    padding: 5px 9px; border-radius: 999px; background: rgb(42 10 19 / 94%);
+    border: 1px solid var(--titin); color: #ffe1e8; font-weight: 700; }
   #stageLegend { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto;
     color: var(--dim); font-size: 10px; }
   #stageLegend .key { margin: 0; }
@@ -363,6 +409,8 @@ window.__titinBoot = { ready: false, problems: [] };
     overscroll-behavior: contain; border-radius: 10px; padding: 14px 15px 12px;
     border-top: 2px solid var(--titin); }
   #app[data-mode="evidence"] #guidedCard { display: none; }
+  .story-surface-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  #guidedCardToggle { flex: none; }
   .chapter-meta { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .1em;
     text-transform: uppercase; }
   #chapterTitle { font-size: 19px; line-height: 1.2; margin: 4px 0 7px; }
@@ -493,6 +541,15 @@ window.__titinBoot = { ready: false, problems: [] };
   #app[data-text-scale="large"] .object-detail,
   #app[data-text-scale="large"] .object-sources { font-size: 12px; }
   #app[data-text-scale="large"] #chapterSummary { font-size: 16px; }
+  #moreBackdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: end center;
+    background: rgb(0 0 0 / 56%); }
+  #moreBackdrop[hidden] { display: none; }
+  #moreSheet { width: min(720px, calc(100% - 24px)); max-height: min(78vh, 720px); overflow-y: auto;
+    overscroll-behavior: contain; padding: 16px 18px 20px; border: 1px solid var(--edge);
+    border-radius: 14px 14px 0 0; background: var(--panel); box-shadow: 0 -18px 54px rgb(0 0 0 / 55%); }
+  .more-head { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+  .more-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+  #moreSceneDetails { border-top: 1px solid var(--edge); margin-top: 14px; padding-top: 1px; }
   /* Tablet touch targets. The drawer's density is deliberate on a desktop, where a
      mouse can hit a 28 px control comfortably; a finger cannot. Keyed on the
      POINTER rather than on width so a small laptop keeps its compact controls and
@@ -504,9 +561,19 @@ window.__titinBoot = { ready: false, problems: [] };
     #closeEvidence, .mode-switch button { padding-left: 14px; padding-right: 14px; }
   }
   @media (max-width: 900px) {
-    #app[data-mode="evidence"] { grid-template-columns: minmax(0, 1fr) 330px; }
+    #app[data-mode="evidence"][data-drawer-open="true"] {
+      grid-template-columns: minmax(0, 1fr) 330px;
+    }
     .brand-block { min-width: 0; }
     .brand-sub { display: none; }
+  }
+  @media (min-width: 768px) and (max-width: 1100px) {
+    .stage-row-primary {
+      grid-template-columns: auto minmax(140px, 1fr) auto auto auto;
+    }
+    .stage-row-primary #stageForce { grid-column: 1 / 5; }
+    .stage-row-primary #stageForceInfo { grid-column: 5; }
+    .stage-row-scenes, #sceneControls { flex-wrap: wrap; }
   }
   /* SC-12 narrow stage. At 375 x 812 the shipped build left the sarcomere a
      ~60 px strip, and the new stage bar competes for the same space: wrapped
@@ -516,26 +583,35 @@ window.__titinBoot = { ready: false, problems: [] };
      a bottom sheet that opens on tap. */
   .card-peek-toggle { display: none; }
   @media (max-width: 767px) {
-    /* Long control strips SCROLL rather than wrap. Wrapping is what turned a
-       two-row bar into a nine-row one. */
-    .stage-row { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
-      scrollbar-width: none; }
-    .stage-row::-webkit-scrollbar { display: none; }
-    .stage-row .row { flex-wrap: nowrap; margin: 0; }
+    .stage-row { overflow: visible; }
+    .stage-row .row { margin: 0; }
     .stage-row button { white-space: nowrap; }
     /* Explicit grid placement, in reading order: the focus order must still be
        the visual order, so the play control sits at the end of the preset strip
        rather than beside the slider it follows in the DOM. */
-    .stage-row-primary { display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    .stage-row-primary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto;
       gap: 5px 8px; align-items: center; overflow: visible; }
     .stage-row-primary .stage-label { grid-area: 1 / 1; }
-    .stage-row-primary .stage-readout { grid-area: 1 / 2; text-align: right;
+    .stage-row-primary .stage-readout { grid-area: 1 / 2 / 2 / 4; text-align: right;
       min-width: 0; font-size: 13px; }
-    .stage-row-primary #sl { grid-area: 2 / 1 / 3 / 3; min-width: 0; }
-    .stage-row-primary .stage-presets { grid-area: 3 / 1; min-width: 0;
-      overflow-x: auto; scrollbar-width: none; }
-    .stage-row-primary .stage-presets::-webkit-scrollbar { display: none; }
-    .stage-row-primary #stagePlay { grid-area: 3 / 2; }
+    .stage-row-primary #sl { grid-area: 2 / 1 / 3 / 4; min-width: 0; }
+    .stage-row-primary #stagePlay { grid-area: 3 / 1; }
+    .stage-row-primary #stageReset { grid-area: 3 / 2; }
+    .stage-row-primary #stageForce { grid-area: 3 / 3; justify-self: end; }
+    .stage-row-primary #stageForce .force-class { display: none; }
+    .stage-row-primary #stageForceInfo { display: none; }
+    .stage-row-scenes { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+      gap: 5px; }
+    .stage-row-scenes > .stage-label { display: none; }
+    #sceneControls { display: contents; }
+    #sceneControls button:nth-child(1) { grid-column: 1; }
+    #sceneControls button:nth-child(2) { grid-column: 2; }
+    #sceneControls button:nth-child(n+3) { display: none; }
+    #sceneTruth { grid-column: 3; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    #sceneDetails { display: none !important; }
+    #sceneDetailsToggle { display: inline-block; grid-column: 4; justify-self: end; }
+    #sceneDetailsToggle[hidden] { display: none; }
+    #stageMore { grid-column: 5; justify-self: end; }
     /* One line, not a 90 px block of its own above the stage. */
     #scopeBadge { display: flex; align-items: baseline; gap: 8px; padding: 5px 9px; }
     #scopeBadge .scope-kicker { display: none; }
@@ -545,14 +621,13 @@ window.__titinBoot = { ready: false, problems: [] };
     .brand-block { padding: 6px 8px 6px 10px; }
     /* The bottom sheet. It sits on the stage bar, spans the stage, and in its
        peek state shows only what tells you where you are in the route. */
-    #guidedCard { position: absolute; left: 0; right: 0; width: auto; margin: 0;
+    #guidedCard { position: absolute; left: 9px; right: 9px; width: auto; margin: 0;
       bottom: var(--stage-bar-h, 114px); border-radius: 12px 12px 0 0;
-      max-height: 46vh; overflow-y: auto; overscroll-behavior: contain;
+      max-height: 24vh; overflow-y: auto; overscroll-behavior: contain;
       padding: 9px 12px 10px; }
-    #guidedCard[data-peek="true"] { max-height: none; overflow: visible; }
-    #guidedCard[data-peek="true"] #guidedCardBody { display: none; }
     #chapterTitle { font-size: 16px; margin: 2px 0 6px; }
-    .card-peek-toggle { display: block; width: 100%; text-align: left; }
+    .more-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #moreSheet { width: 100%; max-height: 78vh; border-left: 0; border-right: 0; }
     /* Two rows of three: six columns on a phone would be six words wide. The
        stage keeps the flow and its counted figures; the sentence and the record
        paths for each stage stay one tap away, in Sources & build. */
@@ -590,7 +665,7 @@ window.__titinBoot = { ready: false, problems: [] };
 </style>
 </head>
 <body>
-  <div id="app" data-mode="guided">
+  <div id="app" data-mode="guided" data-drawer-open="false">
   <div id="canvas" role="region" tabindex="0"
     aria-label="Interactive 3D titin and sarcomere model. Use the pointer to inspect a structure, or Left and Right Arrow to move through structures and Enter to pin an explanation."
     aria-describedby="interactionHelp objectAnnouncement">
@@ -630,8 +705,9 @@ window.__titinBoot = { ready: false, problems: [] };
             <div class="brand-sub">One model · two levels of explanation</div>
           </div>
           <div class="mode-switch" role="group" aria-label="Audience mode">
-            <button id="audienceGuided" class="on" aria-pressed="true">Guided</button>
-            <button id="audienceEvidence" aria-pressed="false">Evidence</button>
+            <button id="audienceGuided" class="on" aria-pressed="true">Learn</button>
+            <button id="audienceEvidence" aria-pressed="false">Explore</button>
+            <button id="storyReopen" aria-expanded="true" aria-controls="guidedCard">Story</button>
           </div>
         </div>
         <div id="scopeBadge" aria-label="Reference scope and active structural state">
@@ -649,15 +725,16 @@ window.__titinBoot = { ready: false, problems: [] };
            survives a projector. -->
       <section id="guidedPipeline" aria-label="How this model was built" hidden></section>
       <section id="guidedCard" aria-labelledby="chapterTitle">
-        <div class="chapter-meta"><span id="chapterProgress">Chapter —</span> · <span id="chapterEvidenceClass">—</span></div>
-        <h1 id="chapterTitle">Loading guided route…</h1>
+        <div class="story-surface-head">
+          <div class="chapter-meta"><span id="chapterProgress">Chapter —</span> · <span id="chapterEvidenceClass">—</span></div>
+          <button id="guidedCardToggle" aria-expanded="true" aria-controls="guidedCardBody">Hide story</button>
+        </div>
+        <h1 id="chapterTitle" tabindex="-1">Loading guided route…</h1>
         <!-- On a phone the card is a bottom sheet: the chapter number and title
              stay visible, the rest opens on tap. Without it the header, the
              card and the stage bar left the sarcomere a ~60 px strip. The
              toggle is display: none above the narrow breakpoint, where the card
              is simply always open. -->
-        <button id="guidedCardToggle" class="card-peek-toggle" aria-expanded="true"
-          aria-controls="guidedCardBody">Read this chapter</button>
         <div id="guidedCardBody">
         <p id="chapterSummary"></p>
         <p id="chapterStateAnnouncement" role="status" aria-live="polite"></p>
@@ -689,7 +766,9 @@ window.__titinBoot = { ready: false, problems: [] };
       <div id="stageBar">
         <div class="stage-row stage-row-primary">
           <label class="stage-label" for="sl">Sarcomere length</label>
-          <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres">
+          <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres"
+            aria-describedby="supportedRangeDescription">
+          <span id="supportedRangeDescription" class="sr-only">The green track segment marks the supported working range.</span>
           <!-- aria-live is off deliberately. <output> is a live region by
                default, the range input already announces its own value as it
                moves, and the sweep changes that value on every frame — the two
@@ -700,23 +779,31 @@ window.__titinBoot = { ready: false, problems: [] };
             aria-label="Reviewed sarcomere length presets"></div>
           <button id="stagePlay" aria-pressed="false"
             aria-label="Play a stretch sweep across the working range">&#9654; Stretch</button>
-        </div>
-        <div class="stage-row stage-row-secondary">
-          <!-- The drawer's <h2>View</h2> named this set for a screen reader;
-               moving the buttons to the stage bar has to keep that name. -->
-          <span class="stage-label" id="stageViewsLabel">View</span>
-          <div class="row" id="views" role="group" aria-labelledby="stageViewsLabel"></div>
-          <button id="filamentContextToggle" class="on" aria-pressed="true"
-            aria-label="Show actin and myosin filament context"
-            title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin + myosin</button>
+          <button id="stageReset" disabled aria-label="Reset the stretch demonstration">Reset</button>
           <div id="stageForce" title="Status of approximate passive-force evaluation per titin"></div>
-          <div id="stageLegend" aria-label="Colour key"></div>
-          <button id="stageMeasureLink">Measure</button>
-          <button id="stageSourcesLink">Sources</button>
+          <button id="stageForceInfo" aria-label="Information about approximate modeled force">Force info</button>
         </div>
+        <div class="stage-row stage-row-scenes">
+          <span class="stage-label" id="stageScenesLabel">Scenes</span>
+          <div class="row" id="sceneControls" role="group" aria-labelledby="stageScenesLabel"></div>
+          <span id="sceneTruth" role="status">Overview</span>
+          <div id="sceneDetails" aria-label="Controls for this scientific scene" hidden>
+            <fieldset id="sceneRingControls" hidden>
+              <legend>Lattice rings</legend>
+              <button type="button" data-scene-rings="1">1</button>
+              <button type="button" data-scene-rings="2">2</button>
+              <button type="button" data-scene-rings="3">3</button>
+            </fieldset>
+            <button id="sceneMyosinToggle" aria-pressed="false">Myosin heads + actin twist</button>
+          </div>
+          <button id="sceneDetailsToggle" hidden>Scene details</button>
+          <button id="stageMore" aria-haspopup="dialog" aria-expanded="false">More</button>
+        </div>
+        <div id="stageLegend" hidden aria-label="Colour key"></div>
+        <div id="stretchHint" role="status" hidden>Watch the I-band bracket</div>
       </div><!-- /stageBar -->
     <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
-      id="shortcutHelp">1–7 chapters · space stretch · x extension · e evidence · g guided · r restart</span></div>
+      id="shortcutHelp">1–7 chapters · space stretch · x spring · e explore · g learn · r restart</span></div>
   </div>
   <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
     <div class="drawer-head" id="drawerHead">
@@ -755,11 +842,15 @@ window.__titinBoot = { ready: false, problems: [] };
       <button id="tabSources" role="tab" aria-selected="false" aria-controls="panelSources">Sources &amp; build</button>
     </div>
 
-    <div id="panelInspect" role="tabpanel" aria-labelledby="tabInspect">
+      <div id="panelInspect" role="tabpanel" aria-labelledby="tabInspect">
       <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
       <div class="sub" id="viewDescription">Titin positioned on the thick-filament periphery beside
         one myosin thick filament and its six nearest actin thin filaments; the representative
         azimuth is schematic and the extended lattice is optional.</div>
+
+      <h2>Scene and camera</h2>
+      <div class="sub" style="margin:0 0 6px">Semantic scenes are the teaching shortcuts. Camera orientations are advanced presentation controls and show Custom when they change a complete scene.</div>
+      <div class="row" id="views" role="group" aria-label="Advanced camera orientations"></div>
 
       <h2>Scale</h2>
       <div class="row" id="scales"></div>
@@ -774,6 +865,9 @@ window.__titinBoot = { ready: false, problems: [] };
       <h2>Detail</h2>
       <div class="sub" style="margin:0 0 6px">The top control covers the immediate filament
         neighbourhood. Expand to additional lattice rings here only when transverse organization matters.</div>
+      <button id="filamentContextToggle" class="on" aria-pressed="true"
+        aria-label="Show actin and myosin filament context"
+        title="Show one central myosin thick filament and its six nearest actin thin filaments around the surface-bound representative titin">Actin and myosin context</button>
       <div class="row" id="toggles"></div>
 
       <h2>Components</h2>
@@ -878,6 +972,32 @@ window.__titinBoot = { ready: false, problems: [] };
       <div class="sub" id="copyViewStatus" aria-live="polite"></div>
     </div>
   </aside>
+  <div id="moreBackdrop" hidden>
+    <section id="moreSheet" role="dialog" aria-modal="true" aria-labelledby="moreTitle" tabindex="-1">
+      <div class="more-head">
+        <div>
+          <h1 id="moreTitle">More scenes and tools</h1>
+          <div class="sub">Choose a biological view or open deeper inspection.</div>
+        </div>
+        <button id="closeMore">Close</button>
+      </div>
+      <h2>All scenes</h2>
+      <div id="moreSceneControls" class="more-grid" role="group" aria-label="All semantic scenes"></div>
+      <div id="moreSceneDetails" hidden>
+        <h2>Scene details</h2>
+        <div id="moreRingControls" class="row" hidden aria-label="Lattice ring count"></div>
+        <button id="moreMyosinToggle" aria-pressed="false">Myosin heads + actin twist</button>
+      </div>
+      <h2>Explore</h2>
+      <div class="more-grid">
+        <button id="moreInspect">Inspect structures</button>
+        <button id="stageMeasureLink">Measure</button>
+        <button id="stageSourcesLink">Sources</button>
+        <button id="moreHelp">Keyboard help</button>
+      </div>
+      <div id="moreHelpText" class="note" hidden>1–7: chapters · space: stretch or pause · X: Spring · E: Explore · G: Learn · R: restart story</div>
+    </section>
+  </div>
 </div>
 
 <script type="module">
@@ -886,6 +1006,7 @@ import { TitinVisualization, SCALES } from './src/api/TitinVisualization.js';
 import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
 import { COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
 import { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
+import { SceneController, DEPTHS, SCENE_LAYER_KEYS, sceneMatch } from './src/presentation/SceneController.js';
 import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
 // Stage composition arithmetic. These rules decide whether the figure reads
 // correctly, so they live in a module a Node test asserts rather than inline
@@ -924,9 +1045,10 @@ const state = { showDomains: false, showFilamentContext: true,
                 // layer off by default and admits it in Evidence mode only.
                 showMyBPC: false,
                 rings: 1, mirror: true, view: 'titin_story', closeup: null,
-                scale: SCALES.context, region: null, showEvidence: false,
+                scale: SCALES.context, context: true, region: null, showEvidence: false,
                 audienceMode: AUDIENCE_MODES.guided, storyStep: null,
                 selectedTarget: null, cameraPreset: 'view.titin_story',
+                sceneId: 'overview', sceneContextId: 'overview', drawer: 'closed',
                 // SC-13. Which drawer section is open. Deliberately NOT part of
                 // the shared URL state: it is a reading position, not a claim
                 // about the model, and story.serialize() is the contract for
@@ -956,24 +1078,36 @@ const story = new StoryController(presentation, {
   minLength: min,
   maxLength: max,
 }, model.spec.scenes);
-const restored = story.parse(window.location.hash);
-state.audienceMode = restored.state.audience_mode;
+const componentIds = Object.keys(COMPONENTS);
+const sceneController = new SceneController(model.spec.scenes, {
+  views: Object.keys(VIEWS),
+  closeups: Object.keys(CLOSEUPS),
+  scales: Object.values(SCALES),
+  targets: [...regionIds, ...componentIds],
+  regionTargets: [...regionIds],
+  componentTargets: componentIds,
+  claimIds: model.spec.claimSupport.claims.map((claim) => claim.id),
+  minLength: min,
+  maxLength: max,
+}, { presentation });
+const restored = sceneController.parse(window.location.hash);
+state.audienceMode = restored.state.depth === DEPTHS.explore
+  ? AUDIENCE_MODES.evidence : AUDIENCE_MODES.guided;
 state.storyStep = restored.state.story_step;
-state.scale = restored.state.scale;
-state.selectedTarget = restored.state.selected_component_or_region;
-state.region = regionIds.has(state.selectedTarget) ? state.selectedTarget : null;
-state.showEvidence = restored.state.evidence_display;
-state.cameraPreset = restored.state.camera_preset;
-{
-  const [kind, name] = state.cameraPreset.split('.');
-  state.view = kind === 'view' ? name : 'titin_story';
-  state.closeup = kind === 'closeup' ? name : null;
-  if (state.closeup === 'mline') state.mirror = true;
-}
-applyChapterVisibility(state.storyStep);
-if (state.closeup === 'mline') state.mirror = true;
+state.showEvidence = restored.state.confidence_display;
+state.drawer = restored.state.drawer;
+if (state.drawer !== 'closed') state.drawerTab = state.drawer;
+assignSceneState(restored.state);
 const slider = $('sl');
 slider.min = min; slider.max = max; slider.value = restored.state.sarcomere_length_nm;
+{
+  const [supportedMin, supportedMax] = presentation.scope.working_range_nm;
+  const span = max - min;
+  const percent = (value) => `${Math.max(0, Math.min(100, ((value - min) / span) * 100)).toFixed(2)}%`;
+  slider.style.setProperty('--supported-start', percent(supportedMin));
+  slider.style.setProperty('--supported-end', percent(supportedMax));
+  $('supportedRangeDescription').textContent = `The green track segment marks the supported working range from ${supportedMin} to ${supportedMax} nanometres.`;
+}
 $('activationStatement').textContent = presentation.scope.activation_statement;
 // SC-18. The builder injects identity; source-mode receives the explicit unpinned
 // identity from SpecLoader. Raw artifact and manifest digests remain external.
@@ -990,6 +1124,8 @@ $('scientificDecisionStatus').textContent = `${model.scientificDecisions.badgeTe
 
 function publicPresentationState() {
   return {
+    sceneId: state.sceneId,
+    sceneContextId: state.sceneContextId,
     audience_mode: state.audienceMode,
     story_step: state.storyStep,
     sarcomere_length_nm: Number(slider.value),
@@ -998,6 +1134,49 @@ function publicPresentationState() {
     selected_component_or_region: state.selectedTarget,
     evidence_display: state.showEvidence,
   };
+}
+
+function currentSceneLayers() {
+  return Object.fromEntries(SCENE_LAYER_KEYS.map((key) => [key, ({
+    show_lattice: state.showFilamentContext,
+    show_domains: state.showDomains,
+    show_context_detail: state.showContextDetail,
+    mirror: state.mirror,
+    extended_lattice: state.extendedLattice,
+    lattice_rings_1: state.rings === 1,
+    lattice_rings_2: state.rings === 2,
+    lattice_rings_3: state.rings === 3,
+  })[key]]));
+}
+
+function publicSceneState() {
+  return {
+    version: 2,
+    depth: state.audienceMode === AUDIENCE_MODES.evidence ? DEPTHS.explore : DEPTHS.learn,
+    story_step: state.storyStep,
+    sarcomere_length_nm: Number(slider.value),
+    drawer: state.drawer,
+    scene_id: state.sceneId,
+    camera_preset: state.cameraPreset,
+    scale: state.scale,
+    context: state.context,
+    layers: currentSceneLayers(),
+    selection: state.selectedTarget === null ? null : {
+      kind: regionIds.has(state.selectedTarget) ? 'region' : 'component',
+      id: state.selectedTarget,
+    },
+    length_policy: { kind: 'preserve' },
+    confidence_display: state.showEvidence,
+  };
+}
+
+function syncSceneTruth({ infer = true } = {}) {
+  const reconciled = sceneController.reconcile(publicSceneState(), { infer });
+  state.sceneId = reconciled.scene_id;
+  state.sceneContextId = state.sceneId || sceneController.contextSceneId(reconciled);
+  syncSceneControls();
+  syncContextualSceneControls();
+  return state.sceneId;
 }
 
 function syncPublicPresentation() {
@@ -1011,6 +1190,9 @@ function syncPublicPresentation() {
   });
 }
 
+let pendingHistoryPush = false;
+function requestHistoryEntry() { pendingHistoryPush = true; }
+
 function syncUrl() {
   // The sweep rewrites the length on every frame it changes. history.replaceState
   // is rate-limited by browsers — Safari throws a SecurityError after roughly a
@@ -1018,12 +1200,14 @@ function syncUrl() {
   // it is demonstrating. The URL records the state the sweep is LEFT in, which is
   // also the only state worth sharing.
   if (sweepHandle !== null) return;
-  const hash = story.serialize(publicPresentationState());
+  const hash = sceneController.serialize(publicSceneState());
   if (window.location.hash !== hash) {
     // Hash-only replacement stays same-document under HTTP, GitHub Pages and
     // file://, whose opaque origins can reject an unnecessarily rebuilt path.
-    window.history.replaceState(null, '', hash);
+    if (pendingHistoryPush) window.history.pushState(null, '', hash);
+    else window.history.replaceState(null, '', hash);
   }
+  pendingHistoryPush = false;
 }
 
 function announceUrlIssues(issues) {
@@ -1045,13 +1229,17 @@ function announceUrlIssues(issues) {
  */
 function syncAudienceMode() {
   const evidence = state.audienceMode === AUDIENCE_MODES.evidence;
-  const reframe = $('app').dataset.mode !== state.audienceMode;
+  const drawerOpen = evidence && state.drawer !== 'closed';
+  const reframe = $('app').dataset.mode !== state.audienceMode
+    || $('app').dataset.drawerOpen !== String(drawerOpen);
   $('app').dataset.mode = state.audienceMode;
-  $('panel').setAttribute('aria-hidden', String(!evidence));
+  $('app').dataset.drawerOpen = String(drawerOpen);
+  $('panel').setAttribute('aria-hidden', String(!drawerOpen));
   $('audienceGuided').classList.toggle('on', !evidence);
   $('audienceGuided').setAttribute('aria-pressed', String(!evidence));
   $('audienceEvidence').classList.toggle('on', evidence);
   $('audienceEvidence').setAttribute('aria-pressed', String(evidence));
+  $('storyReopen').setAttribute('aria-expanded', String(storyVisible && !evidence));
   requestAnimationFrame(() => {
     visualization.resize();
     if (reframe) applyCameraPreset({ animate: false });
@@ -1062,15 +1250,20 @@ function syncAudienceMode() {
 
 let evidenceReturnFocus = $('audienceEvidence');
 
-function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {}) {
+function setAudienceMode(mode, {
+  focusDrawer = false, restoreFocus = false,
+  drawer = mode === AUDIENCE_MODES.guided ? 'closed' : state.drawer,
+} = {}) {
   stopSweep();
   state.audienceMode = mode;
+  state.drawer = mode === AUDIENCE_MODES.guided ? 'closed' : drawer;
   // Opening Evidence is the explicit request that exposes the inventory. Closing
   // it restores the Guided attention budget and removes raw evidence from the DOM flow.
   state.showEvidence = mode === AUDIENCE_MODES.evidence;
   $('evidence').hidden = !state.showEvidence;
   $('evidenceToggle').classList.toggle('on', state.showEvidence);
   $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
+  syncSceneTruth();
   syncAudienceMode();
   // Guided shows one legible representative titin path. Evidence keeps the same
   // local context unless the user explicitly enables the extended lattice, which
@@ -1086,6 +1279,7 @@ function setAudienceMode(mode, { focusDrawer = false, restoreFocus = false } = {
     });
   }
   markStageDirty();
+  syncUrl();
 }
 
 function openEvidence(trigger, targetTab) {
@@ -1102,19 +1296,36 @@ function openEvidence(trigger, targetTab) {
   // Entry points name a destination, so they must land at that destination's
   // beginning even when invoked from far down another drawer section.
   $('panel').scrollTop = 0;
-  setAudienceMode(AUDIENCE_MODES.evidence, { focusDrawer: true });
+  requestHistoryEntry();
+  setAudienceMode(AUDIENCE_MODES.evidence, { focusDrawer: true, drawer: targetTab });
 }
 
 function closeEvidence() {
-  setAudienceMode(AUDIENCE_MODES.guided, { restoreFocus: true });
+  requestHistoryEntry();
+  state.drawer = 'closed';
+  setAudienceMode(AUDIENCE_MODES.evidence, {
+    restoreFocus: true, drawer: 'closed',
+  });
 }
 
-$('audienceGuided').onclick = () => setAudienceMode(AUDIENCE_MODES.guided);
+$('audienceGuided').onclick = () => {
+  requestHistoryEntry();
+  setAudienceMode(AUDIENCE_MODES.guided);
+};
 $('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'), 'evidence');
 $('closeEvidence').onclick = closeEvidence;
 $('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'), 'evidence');
-$('stageMeasureLink').onclick = () => openEvidence($('stageMeasureLink'), 'measure');
-$('stageSourcesLink').onclick = () => openEvidence($('stageSourcesLink'), 'sources');
+$('stageMeasureLink').onclick = () => {
+  closeMore();
+  openEvidence($('stageMeasureLink'), 'measure');
+  evidenceReturnFocus = $('stageMore');
+};
+$('stageSourcesLink').onclick = () => {
+  closeMore();
+  openEvidence($('stageSourcesLink'), 'sources');
+  evidenceReturnFocus = $('stageMore');
+};
+$('stageForceInfo').onclick = () => openEvidence($('stageForceInfo'), 'measure');
 
 // SC-13 drawer sections, in the order a reader asks for them: what am I looking
 // at, what does it measure, what is the evidence, where did it come from.
@@ -1134,11 +1345,13 @@ function syncDrawerTabs() {
 for (const [id, tabId] of DRAWER_TABS) {
   $(tabId).onclick = () => {
     state.drawerTab = id;
+    state.drawer = id;
     syncDrawerTabs();
     if (id === 'sources') renderBibliography();
     // The drawer is one scroll container, so a section opened from halfway down
     // another one would start halfway down itself.
     $('panel').scrollTop = 0;
+    requestHistoryEntry(); syncUrl();
   };
 }
 syncDrawerTabs();
@@ -1186,7 +1399,10 @@ function syncStageLegend(report) {
   }));
 }
 $('filamentContextToggle').onclick = () => {
+  abandonStretchPresentation();
+  requestHistoryEntry();
   state.showFilamentContext = !state.showFilamentContext;
+  syncSceneTruth();
   rebuild();
 };
 function syncFilamentContextToggle() {
@@ -1196,7 +1412,8 @@ function syncFilamentContextToggle() {
   button.classList.toggle('on', on);
   button.setAttribute('aria-pressed', String(on));
   const requiredByAnchorDetail = ['zdisc', 'mline'].includes(state.closeup);
-  button.disabled = !available || requiredByAnchorDetail;
+  button.hidden = !available || requiredByAnchorDetail;
+  button.disabled = false;
   const action = on ? 'Hide' : 'Show';
   button.setAttribute('aria-label', `${action} actin and myosin filament context`);
   button.title = requiredByAnchorDetail
@@ -1220,14 +1437,25 @@ for (const id of unboundShortcutIds(presentation)) {
 }
 
 document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !$('moreBackdrop').hidden) {
+    event.preventDefault();
+    closeMore();
+    return;
+  }
   if (event.key === 'Escape' && pinnedPick) {
     event.preventDefault();
     clearPinnedSelection();
     return;
   }
-  if (event.key === 'Escape' && state.audienceMode === AUDIENCE_MODES.evidence) {
+  if (event.key === 'Escape' && state.drawer !== 'closed') {
     event.preventDefault();
     closeEvidence();
+    return;
+  }
+  if (event.key === 'Escape' && storyVisible
+      && state.audienceMode === AUDIENCE_MODES.guided) {
+    event.preventDefault();
+    setStoryVisible(false, { restoreFocus: true });
     return;
   }
   // Presenter shortcuts. The actions come from the validated presentation
@@ -1252,19 +1480,151 @@ document.addEventListener('keydown', (event) => {
   const action = PRESENTER_KEYS[event.key.toLowerCase()];
   if (!action) return;
   event.preventDefault();
-  if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
+  if (action === 'story.stretch_spring') applySemanticScene('spring');
+  else if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
   else if (action === 'mode.evidence') openEvidence($('audienceEvidence'), 'evidence');
   // Through closeEvidence rather than setAudienceMode, so the key that leaves
   // the drawer also returns focus the way Escape and Close do — and so pressing
   // it in Guided mode is not a scene rebuild that changes nothing.
   else if (action === 'mode.guided') {
-    if (state.audienceMode === AUDIENCE_MODES.evidence) closeEvidence();
+    if (state.audienceMode === AUDIENCE_MODES.evidence) {
+      requestHistoryEntry();
+      setAudienceMode(AUDIENCE_MODES.guided);
+    }
   } else if (action === 'sweep.toggle') toggleSweep();
 });
 announceUrlIssues(restored.issues);
 
 function activeChapter() {
   return story.chapter(state.storyStep) || story.chapters[0];
+}
+
+function sceneButton(sceneId, destination) {
+  const record = sceneController.scene(sceneId);
+  const button = document.createElement('button');
+  button.textContent = record.label;
+  button.dataset.scene = sceneId;
+  button.setAttribute('aria-pressed', 'false');
+  button.onclick = () => applySemanticScene(sceneId, { trigger: button });
+  destination.append(button);
+  return button;
+}
+for (const sceneId of sceneController.order) {
+  sceneButton(sceneId, $('sceneControls'));
+  sceneButton(sceneId, $('moreSceneControls'));
+}
+for (const ring of [1, 2, 3]) {
+  const button = document.createElement('button');
+  button.textContent = `${ring} ring${ring === 1 ? '' : 's'}`;
+  button.dataset.sceneRings = String(ring);
+  button.onclick = () => setSceneRings(ring);
+  $('moreRingControls').append(button);
+}
+
+function syncSceneControls() {
+  const label = state.sceneId ? sceneController.scene(state.sceneId)?.label : 'Custom';
+  $('sceneTruth').textContent = label || 'Custom';
+  for (const container of [$('sceneControls'), $('moreSceneControls')]) {
+    for (const button of container.children) {
+      const active = button.dataset.scene === state.sceneId;
+      button.setAttribute('aria-pressed', String(active));
+    }
+  }
+}
+
+function relevantSceneContext() {
+  const id = state.sceneId || state.sceneContextId;
+  return ['lattice', 'architecture', 'a_band_scaffold'].includes(id) ? id : null;
+}
+
+function syncContextualSceneControls() {
+  const contextId = relevantSceneContext();
+  const hasDetails = Boolean(contextId);
+  const ringsAvailable = contextId === 'lattice';
+  const myosinAvailable = ['lattice', 'architecture', 'a_band_scaffold'].includes(contextId);
+  $('sceneDetails').hidden = !hasDetails;
+  $('sceneDetailsToggle').hidden = !hasDetails;
+  $('sceneRingControls').hidden = !ringsAvailable;
+  $('sceneMyosinToggle').hidden = !myosinAvailable;
+  $('moreSceneDetails').hidden = !hasDetails;
+  $('moreRingControls').hidden = !ringsAvailable;
+  $('moreMyosinToggle').hidden = !myosinAvailable;
+  for (const container of [$('sceneRingControls'), $('moreRingControls')]) {
+    for (const button of container.querySelectorAll('[data-scene-rings]')) {
+      button.setAttribute('aria-pressed', String(Number(button.dataset.sceneRings) === state.rings));
+    }
+  }
+  for (const button of [$('sceneMyosinToggle'), $('moreMyosinToggle')]) {
+    button.setAttribute('aria-pressed', String(state.showContextDetail));
+  }
+}
+
+function assignSceneState(resolved) {
+  state.sceneId = resolved.scene_id;
+  state.sceneContextId = resolved.scene_id || sceneController.contextSceneId(resolved);
+  state.scale = resolved.scale;
+  state.context = resolved.context;
+  state.cameraPreset = resolved.camera_preset;
+  state.selectedTarget = resolved.selection?.id || null;
+  state.region = resolved.selection?.kind === 'region' ? resolved.selection.id : null;
+  state.showFilamentContext = resolved.layers.show_lattice;
+  state.showDomains = resolved.layers.show_domains;
+  state.showContextDetail = resolved.layers.show_context_detail;
+  state.mirror = resolved.layers.mirror;
+  state.extendedLattice = resolved.layers.extended_lattice;
+  state.rings = [1, 2, 3].find((ring) => resolved.layers[`lattice_rings_${ring}`]) || 1;
+  const [kind, name] = state.cameraPreset.split('.');
+  state.view = kind === 'view' ? name : 'titin_story';
+  state.closeup = kind === 'closeup' ? name : null;
+}
+
+function applySemanticScene(sceneId, { trigger = null, announce = true, push = true } = {}) {
+  if (sceneId === 'spring') stopSweep();
+  else abandonStretchPresentation();
+  const resolved = sceneController.resolveScene(sceneId, publicSceneState());
+  if (!resolved) return;
+  if (push) requestHistoryEntry();
+  assignSceneState(resolved);
+  chapterRestoreViewState = null;
+  pinnedPick = null; hoverPick = null;
+  if (visualization.scale !== state.scale) visualization.setScale(state.scale);
+  rebuild(true);
+  visualization.highlightTitinRegion(state.region);
+  applyCameraPreset({ animate: true });
+  render(visualization.currentState());
+  renderPinnedSelection();
+  syncScales(); syncRegions(); syncDepictionToggles(); syncSceneTruth();
+  if (announce) {
+    $('objectAnnouncement').textContent = `Scene changed to ${sceneController.scene(sceneId).label}.`;
+  }
+  syncPublicPresentation(); syncUrl(); markStageDirty();
+  if (!$('moreBackdrop').hidden) closeMore();
+  else if (trigger) trigger.focus({ preventScroll: true });
+}
+
+function setSceneRings(rings) {
+  if (![1, 2, 3].includes(rings) || relevantSceneContext() !== 'lattice') return;
+  abandonStretchPresentation();
+  requestHistoryEntry();
+  state.rings = rings;
+  state.extendedLattice = true;
+  syncSceneTruth();
+  rebuild();
+}
+
+function toggleSceneMyosinDetail() {
+  if (!relevantSceneContext()) return;
+  abandonStretchPresentation();
+  requestHistoryEntry();
+  state.showContextDetail = !state.showContextDetail;
+  syncSceneTruth();
+  rebuild();
+}
+for (const button of [$('sceneMyosinToggle'), $('moreMyosinToggle')]) {
+  button.onclick = toggleSceneMyosinDetail;
+}
+for (const button of $('sceneRingControls').querySelectorAll('[data-scene-rings]')) {
+  button.onclick = () => setSceneRings(Number(button.dataset.sceneRings));
 }
 
 let activeShowcaseOverlay = null;
@@ -1284,7 +1644,20 @@ function markStageDirty() { stageDirty = true; }
 // because syncUrl() consults it and syncUrl runs during start-up — before the
 // controller further down has executed.
 let sweepHandle = null;
-let sweepStartedAt = 0;
+let sweepElapsedMs = 0;
+let sweepLastFrameAt = null;
+let sweepResetLength = null;
+// True while Stretch owns the teaching frame, including paused, completed and
+// reset states, and any Custom state the reader reaches from Spring — the
+// framing still applies even when the semantic label no longer does.
+let sweepPresentationActive = false;
+
+function abandonStretchPresentation({ synchronize = true } = {}) {
+  stopSweep({ synchronize });
+  sweepPresentationActive = false;
+  sweepResetLength = null;
+  $('stageReset').disabled = true;
+}
 // SC-12. The stage bar wraps to more rows as the stage narrows — 114 px at
 // 1280 px wide, more on a phone — so everything that has to stay clear of it is
 // offset by its MEASURED height. A constant was wrong at the first viewport
@@ -1295,13 +1668,19 @@ let sweepStartedAt = 0;
 // what the narrow layout changes is whether it is open by DEFAULT, which is the
 // only way the stage below it is more than a strip. Above the breakpoint there
 // is no peek state at all and the toggle is not rendered.
-let guidedCardPeek = true;
-function narrowStage() { return window.matchMedia('(max-width: 767px)').matches; }
-function syncGuidedCardPeek() {
-  const peek = narrowStage() && guidedCardPeek;
-  $('guidedCard').dataset.peek = String(peek);
-  $('guidedCardToggle').setAttribute('aria-expanded', String(!peek));
-  $('guidedCardToggle').textContent = peek ? 'Read this chapter' : 'Hide this chapter';
+const STORY_SESSION_KEY = 'titin.sc24.story-visible';
+let storyVisible = true;
+try { storyVisible = sessionStorage.getItem(STORY_SESSION_KEY) !== 'false'; } catch {}
+
+function setStoryVisible(visible, { focusHeading = false, restoreFocus = false } = {}) {
+  storyVisible = Boolean(visible);
+  $('guidedCard').hidden = !storyVisible;
+  const actuallyVisible = storyVisible && state.audienceMode === AUDIENCE_MODES.guided;
+  $('storyReopen').setAttribute('aria-expanded', String(actuallyVisible));
+  $('guidedCardToggle').setAttribute('aria-expanded', String(storyVisible));
+  try { sessionStorage.setItem(STORY_SESSION_KEY, String(storyVisible)); } catch {}
+  if (focusHeading && storyVisible) requestAnimationFrame(() => $('chapterTitle').focus());
+  if (restoreFocus && !storyVisible) requestAnimationFrame(() => $('storyReopen').focus());
   markStageDirty();
 }
 
@@ -1319,17 +1698,70 @@ function publishDrawerHeadHeight() {
   if (height > 0) $('app').style.setProperty('--drawer-head-h', `${height}px`);
 }
 new ResizeObserver(publishDrawerHeadHeight).observe($('drawerHead'));
-$('guidedCardToggle').onclick = () => {
-  guidedCardPeek = !guidedCardPeek;
-  syncGuidedCardPeek();
+$('guidedCardToggle').onclick = () => setStoryVisible(false, { restoreFocus: true });
+$('storyReopen').onclick = () => {
+  if (state.audienceMode === AUDIENCE_MODES.evidence) {
+    requestHistoryEntry();
+    setAudienceMode(AUDIENCE_MODES.guided);
+  }
+  setStoryVisible(true, { focusHeading: true });
 };
-// A viewport that crosses the breakpoint changes whether a peek state exists.
-window.matchMedia('(max-width: 767px)').addEventListener('change', syncGuidedCardPeek);
-syncGuidedCardPeek();
+setStoryVisible(storyVisible);
+
+let moreReturnFocus = $('stageMore');
+function focusableMoreControls() {
+  return [...$('moreSheet').querySelectorAll(
+    'button:not([disabled]):not([hidden]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+  )].filter((node) => node.getClientRects().length);
+}
+function openMore(trigger = $('stageMore'), { focusSceneDetails = false } = {}) {
+  moreReturnFocus = trigger;
+  $('moreBackdrop').hidden = false;
+  $('stageMore').setAttribute('aria-expanded', 'true');
+  syncContextualSceneControls();
+  requestAnimationFrame(() => {
+    const target = focusSceneDetails
+      ? ($('moreRingControls').querySelector('button') || $('moreMyosinToggle'))
+      : $('closeMore');
+    target.focus();
+  });
+}
+function closeMore() {
+  if ($('moreBackdrop').hidden) return;
+  $('moreBackdrop').hidden = true;
+  $('stageMore').setAttribute('aria-expanded', 'false');
+  requestAnimationFrame(() => moreReturnFocus?.focus());
+}
+$('stageMore').onclick = () => openMore($('stageMore'));
+$('sceneDetailsToggle').onclick = () => openMore($('sceneDetailsToggle'), { focusSceneDetails: true });
+$('closeMore').onclick = closeMore;
+$('moreBackdrop').addEventListener('pointerdown', (event) => {
+  if (event.target === $('moreBackdrop')) closeMore();
+});
+$('moreSheet').addEventListener('keydown', (event) => {
+  if (event.key !== 'Tab') return;
+  const controls = focusableMoreControls();
+  if (!controls.length) return;
+  const first = controls[0]; const last = controls[controls.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault(); last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault(); first.focus();
+  }
+});
+$('moreInspect').onclick = () => { closeMore(); openEvidence($('stageMore'), 'inspect'); };
+$('moreHelp').onclick = () => {
+  $('moreHelpText').hidden = !$('moreHelpText').hidden;
+};
 const svgNS = 'http://www.w3.org/2000/svg';
 
 function activeFeatures() {
-  return new Set(activeChapter()?.presentation_features || []);
+  const features = new Set(activeChapter()?.presentation_features || []);
+  // Stretch is itself a teaching state. Its promised visual cue cannot depend
+  // on whether the chapter the user happened to start from normally draws band
+  // brackets (the architecture chapter, for example, intentionally does not).
+  if (state.sceneId === 'spring' || sweepPresentationActive) features.add('band_brackets');
+  return features;
 }
 
 // SC-12. The label_priority list in data/showcase_claims.json reads: selected
@@ -1826,9 +2258,10 @@ function latticePanelNode(view, panel) {
   caption.className = 'lattice-caption';
   const heading = document.createElement('div');
   const name = document.createElement('b');
+  const statePreset = presentationPresets.get(panel.state_id);
   name.textContent = panel.id === 'current'
     ? `Current · ${panel.sarcomere_length_nm.toLocaleString()} nm`
-    : `${panel.state_id} · ${panel.sarcomere_length_nm.toLocaleString()} nm`;
+    : `${statePreset?.label || identifierWords(panel.state_id)} · ${panel.sarcomere_length_nm.toLocaleString()} nm`;
   heading.append(name);
   const d10 = document.createElement('div');
   d10.className = 'lattice-d10';
@@ -2023,6 +2456,7 @@ function renderForceCurve() {
   contributionHeading.textContent = 'Added regional length is shown separately from incremental '
     + 'compliance. Absolute regional length is not a compliance share.';
   const contributionTable = document.createElement('table');
+  contributionTable.className = 'force-contributions';
   const contributionHead = document.createElement('tr');
   for (const label of ['Region', 'Added length from shortest state', 'Incremental compliance']) {
     const cell = document.createElement('th'); cell.textContent = label; contributionHead.append(cell);
@@ -2031,7 +2465,7 @@ function renderForceCurve() {
   for (const [id, added] of Object.entries(curve.current.added_length_contribution_nm)) {
     if (id === 'post_N2A_unknown') continue;
     const row = document.createElement('tr');
-    const region = document.createElement('td'); region.textContent = id;
+    const region = document.createElement('td'); region.textContent = regionDisplayName(id);
     const length = document.createElement('td'); length.textContent = `${added.toFixed(1)} nm`;
     const compliance = document.createElement('td');
     compliance.textContent = curve.current.incremental_compliance_nm_per_pN
@@ -2055,6 +2489,7 @@ function renderForceCurve() {
     item.append(code); equations.append(item);
   }
   const parameterTable = document.createElement('table');
+  parameterTable.className = 'force-parameters';
   const parameterHead = document.createElement('tr');
   for (const label of ['Parameter', 'Value / binding', 'Source preparation', 'Applicability / validity']) {
     const cell = document.createElement('th'); cell.textContent = label; parameterHead.append(cell);
@@ -2062,7 +2497,8 @@ function renderForceCurve() {
   parameterTable.append(parameterHead);
   for (const parameter of curve.parameters) {
     const row = document.createElement('tr');
-    const name = document.createElement('td'); name.textContent = parameter.id;
+    const parameterLabel = parameterDisplayName(parameter);
+    const name = document.createElement('td'); name.textContent = parameterLabel;
     const value = document.createElement('td');
     const valueText = parameter.value === null
       ? parameter.value_from_spec
@@ -2073,7 +2509,7 @@ function renderForceCurve() {
     parameterSource.className = 'parameter-source-link';
     parameterSource.onclick = () => {
       state.selectedSourceValue = {
-        label: `${parameter.id}: ${valueText}`,
+        label: `${parameterLabel}: ${valueText}`,
         sourceRows: [parameter.source_context],
       };
       state.sourceFilter = 'value';
@@ -2205,11 +2641,12 @@ function applyCameraPreset({ animate = false } = {}) {
     syncViews(); syncCloseups(null);
   } else if (kind === 'closeup') {
     state.closeup = name;
-    // Same reason as the close-up buttons below — a close-up with the
-    // context-detail layer off is a bare cylinder and reads as a rendering
-    // failure. The chapter's declared visibility supplies the rest; these are
-    // the two fields a close-up implies whoever asked for it.
-    state.showContextDetail = true;
+    // Only the invariants a close-up genuinely implies. The filaments are what
+    // the close-up is framed against, and the M-band relationship needs both
+    // half-sarcomeres. The myosin-head/actin-twist layer is a reviewed DEFAULT
+    // of whatever selected the close-up, not a property of the camera: re-
+    // applying the camera on a mode reframe, a history restore, or a shared
+    // link must not switch a layer the reader turned off back on.
     state.showFilamentContext = true;
     if (name === 'mline') state.mirror = true;
     visualization.closeUp(name, { animate });
@@ -2231,6 +2668,7 @@ function applyCameraPreset({ animate = false } = {}) {
 function captureChapterViewState() {
   return {
     scale: state.scale,
+    context: state.context,
     cameraPreset: state.cameraPreset,
     selectedTarget: state.selectedTarget,
     region: state.region,
@@ -2239,6 +2677,7 @@ function captureChapterViewState() {
     showFilamentContext: state.showFilamentContext,
     showDomains: state.showDomains,
     showContextDetail: state.showContextDetail,
+    extendedLattice: state.extendedLattice,
     mirror: state.mirror,
     rings: state.rings,
   };
@@ -2246,10 +2685,12 @@ function captureChapterViewState() {
 
 function restorePreviousChapterView() {
   if (chapterRestoreViewState === null) return;
-  stopSweep();
+  abandonStretchPresentation();
   const previous = chapterRestoreViewState;
   chapterRestoreViewState = null;
   Object.assign(state, previous);
+  requestHistoryEntry();
+  syncSceneTruth();
   chapterViewAnnouncement = 'Previous view restored; the current chapter and sarcomere length are unchanged.';
   pinnedPick = null; hoverPick = null;
   if (visualization.scale !== state.scale) visualization.setScale(state.scale);
@@ -2265,15 +2706,18 @@ function restorePreviousChapterView() {
 }
 
 function applyChapter(chapterId) {
-  stopSweep();
+  abandonStretchPresentation();
   const chapter = story.chapter(chapterId);
   if (!chapter) return;
   chapterRestoreViewState = captureChapterViewState();
+  requestHistoryEntry();
   const scene = chapter.recommended_state;
   state.audienceMode = AUDIENCE_MODES.guided;
+  state.drawer = 'closed';
   state.storyStep = chapter.id;
   state.showEvidence = false;
   state.scale = scene.scale;
+  state.context = scene.scale === SCALES.context;
   state.cameraPreset = scene.camera_preset;
   state.selectedTarget = scene.selected_component_or_region;
   state.region = chapter.target.kind === 'region' ? chapter.target.id : null;
@@ -2282,6 +2726,8 @@ function applyChapter(chapterId) {
     + 'Restore previous view is available; it restores framing, layers, and selection only.';
   pinnedPick = null; hoverPick = null;
   applyChapterVisibility(chapter.id);
+  state.extendedLattice = false;
+  syncSceneTruth();
   // SC-23 scenes recommend framing and visibility but preserve the user's
   // sarcomere length. A chapter may offer an explicit, reversible demonstration
   // start action; navigation itself never overwrites the slider.
@@ -2318,19 +2764,25 @@ for (const scale of Object.values(SCALES)) {
     // Close-ups describe sarcomere-context landmarks and context-only detail.
     // Carrying one into the isolated-titin scale leaves a highlighted control
     // and a biological readout for geometry that is no longer on screen.
-    state.scale = scale; state.closeup = null; state.cameraPreset = `view.${state.view}`;
+    abandonStretchPresentation();
+    requestHistoryEntry();
+    state.scale = scale; state.context = scale === SCALES.context;
+    state.closeup = null; state.cameraPreset = `view.${state.view}`;
+    state.sceneContextId = null;
     if (scale === SCALES.context) state.showFilamentContext = true;
     if (scale === SCALES.detail
         && TitinVisualization.DETAIL_HIDDEN.includes(state.selectedTarget)) {
       state.selectedTarget = null;
+      state.region = null;
     }
+    if (state.region) state.cameraPreset = `region.${state.region}`;
     // Update the persistent options before setScale builds the target view. This
     // keeps the scale transition to one scene construction; rebuilding again here
     // is unnecessary work at exactly the moment the camera is also moving.
+    syncSceneTruth();
     visualization.setDisplayOptions(currentDisplayOptions());
     const report = visualization.setScale(scale);
     if (state.region) {
-      state.cameraPreset = `region.${state.region}`;
       visualization.focusTitinRegion(state.region, { animate: true });
     } else visualization.frame(state.view, { animate: true });
     render(report);
@@ -2347,10 +2799,12 @@ function syncScales() {
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   }
   const detail = state.scale === SCALES.detail;
-  // The named close-ups all target context geometry (crowns, actin twist,
-  // junction, Z-disc, M-line, or lattice). Disabling them is more honest than
-  // accepting a click whose target is hidden by the isolated-titin scale.
-  for (const b of $('closeups').children) b.disabled = detail;
+  // Context-only actions are omitted at the isolated-titin scale. An unexplained
+  // disabled inventory is not an invitation a reader can act on.
+  for (const b of $('closeups').children) {
+    b.hidden = detail;
+    b.disabled = false;
+  }
   $('viewTitle').textContent = detail ? 'Isolated titin detail view' : 'Sarcomere context view';
   $('viewDescription').textContent = detail
     ? 'Titin alone, retaining the same model-derived Z-disc and M-line anchor positions.'
@@ -2370,7 +2824,7 @@ for (const p of model.presets()) {
   b.dataset.state = p.name;
   b.classList.toggle('preset-outside', display.outside_working_range);
   b.setAttribute('aria-pressed', 'false');
-  b.onclick = () => { slider.value = p.sarcomere_length_nm; rebuild(); };
+  b.onclick = () => { stopSweep(); slider.value = p.sarcomere_length_nm; rebuild(); };
   $('presets').append(b);
 }
 function syncPresets(sl) {
@@ -2381,12 +2835,16 @@ function syncPresets(sl) {
 }
 for (const [k, v] of Object.entries(VIEWS)) {
   const b = document.createElement('button');
-  b.textContent = k; b.title = v.label; b.dataset.view = k;
+  b.textContent = v.label; b.title = v.label; b.dataset.view = k;
   b.onclick = () => {
     // A wide framing invalidates the close-up selection; leaving it highlighted
     // would claim the camera is somewhere it is not.
+    abandonStretchPresentation();
     const hadAnchorDetail = ['zdisc', 'mline'].includes(state.closeup);
+    requestHistoryEntry();
     state.view = k; state.closeup = null; state.cameraPreset = `view.${k}`;
+    state.sceneContextId = null;
+    syncSceneTruth();
     visualization.frame(k, { animate: true });
     if (hadAnchorDetail) rebuild();
     syncViews(); syncCloseups(null);
@@ -2409,12 +2867,14 @@ function syncViews() {
 // the close-up span; animated moves are reevaluated by the live LOD gate as they cross it.
 for (const [k, v] of Object.entries(CLOSEUPS)) {
   const b = document.createElement('button');
-  b.textContent = k;
+  b.textContent = v.label;
   b.title = `${v.label} — ${v.shows} (fills view with ~${v.spanNm} nm)`;
   b.dataset.closeup = k;
   b.onclick = () => {
     // Close-ups and region focus are two distinct navigation modes. Clear the
     // biological selection so the active controls always describe the camera.
+    abandonStretchPresentation();
+    requestHistoryEntry();
     state.region = null;
     state.selectedTarget = null;
     visualization.highlightTitinRegion(null);
@@ -2422,11 +2882,13 @@ for (const [k, v] of Object.entries(CLOSEUPS)) {
     state.showContextDetail = true;
     state.showFilamentContext = true;
     state.closeup = k; state.cameraPreset = `closeup.${k}`;
+    state.sceneContextId = null;
     // The M-band relationship is defined by titin arriving from both opposing
     // half-sarcomeres. Refuse the single-half presentation for this target.
     if (k === 'mline') state.mirror = true;
     // Move first so every LOD decision reads the close-up span, then rebuild once.
     // This avoids the previous two consecutive full scene builds on every click.
+    syncSceneTruth();
     visualization.closeUp(k);
     rebuild();
     syncCloseups(visualization.closeUp(k, { move: false }));
@@ -2464,7 +2926,7 @@ const TOGGLES = [
   // Phase 7b. Off by default: it is context DETAIL, and the plan's objective makes
   // titin the subject. The user turns it on when they want to see why titin sits
   // where it does on the filament surface.
-  ['showContextDetail', 'myosin heads + twist'],
+  ['showContextDetail', 'Myosin heads + actin twist'],
   // SC-5. Accessory C-zone context, not part of titin. Evidence-only and off by
   // default, so the A-band titin story has to stand on its own before it appears.
   ['showMyBPC', 'MyBP-C context (schematic)'],
@@ -2475,7 +2937,11 @@ for (const [key, label] of TOGGLES) {
   b.textContent = label; b.dataset.key = key;
   b.onclick = () => {
     if (key === 'mirror' && state.closeup === 'mline') return;
-    state[key] = !state[key]; rebuild();
+    abandonStretchPresentation();
+    requestHistoryEntry();
+    state[key] = !state[key];
+    syncSceneTruth();
+    rebuild();
   };
   $('toggles').append(b);
 }
@@ -2497,15 +2963,13 @@ function syncDepictionToggles() {
       const requiredByMband = b.dataset.key === 'mirror' && state.closeup === 'mline';
       const audienceUnavailable = evidenceOnly && guided;
       b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
-      b.disabled = detail || contextUnavailable || requiredByMband || audienceUnavailable;
+      b.hidden = detail || contextUnavailable || requiredByMband || audienceUnavailable;
+      b.disabled = false;
       b.title = detail ? 'Fixed by the isolated-titin view'
         : audienceUnavailable
           ? 'Accessory C-zone context is admitted for Evidence mode only'
           : requiredByMband ? 'M-band detail requires titin from both half-sarcomeres'
             : (contextUnavailable ? 'Turn on Actin + myosin context first' : '');
-    }
-    if (b.dataset.rings) {
-      b.disabled = detail || !state.showFilamentContext || !state.extendedLattice;
     }
   }
   syncFilamentContextToggle();
@@ -2513,20 +2977,53 @@ function syncDepictionToggles() {
 
 // ---- titin-region highlighting and navigation (Phase 10) -----------------
 const regionMetadata = new Map(visualization.titinRegions().map((region) => [region.id, region]));
+const MECHANICAL_CLASS_LABELS = Object.freeze({
+  anchored: 'anchored',
+  extensible_straighten: 'extends by folded-domain straightening',
+  extensible_spring: 'extensible molecular spring',
+  excluded_unknown: 'excluded because its mechanical behavior is unresolved',
+});
+const PARAMETER_LABELS = Object.freeze({
+  boltzmann_constant: 'Boltzmann constant',
+  temperature: 'Temperature',
+  persistence_length: 'persistence length',
+  contour_length: 'contour length',
+  rigid_folded_length: 'rigid folded length',
+  stretch_modulus: 'stretch modulus',
+  residue_rise: 'residue rise',
+});
+function identifierWords(value) {
+  return String(value || '').replaceAll('_', ' ');
+}
+function regionDisplayName(id) {
+  return regionMetadata.get(id)?.name || identifierWords(id);
+}
+function mechanicalClassDisplayName(value) {
+  return MECHANICAL_CLASS_LABELS[value] || identifierWords(value);
+}
+function parameterDisplayName(parameter) {
+  const [owner, field] = String(parameter.id).split('.');
+  const fieldLabel = PARAMETER_LABELS[field] || identifierWords(field);
+  if (owner === 'physical_constants') return fieldLabel;
+  return `${regionDisplayName(owner)} — ${fieldLabel}`;
+}
 for (const region of regionMetadata.values()) {
   const b = document.createElement('button');
-  b.textContent = region.id.replace(/_/g, ' ');
-  b.title = `${region.name} — ${region.band}; ${region.mechanical_class}`;
+  b.textContent = region.name;
+  b.title = `${region.name} — ${region.band}; ${mechanicalClassDisplayName(region.mechanical_class)}`;
   b.dataset.region = region.id;
   b.classList.add('region-chip');
   b.onclick = () => selectRegion(state.region === region.id ? null : region.id);
   $('regions').append(b);
 }
 function selectRegion(regionId) {
+  abandonStretchPresentation();
+  requestHistoryEntry();
   const hadAnchorDetail = ['zdisc', 'mline'].includes(state.closeup);
   state.region = regionId;
   state.selectedTarget = regionId;
   state.closeup = null;
+  state.sceneContextId = null;
   visualization.highlightTitinRegion(regionId);
   if (regionId) {
     state.cameraPreset = `region.${regionId}`;
@@ -2535,6 +3032,7 @@ function selectRegion(regionId) {
     state.cameraPreset = `view.${state.view}`;
     visualization.frame(state.view, { animate: true });
   }
+  syncSceneTruth();
   if (hadAnchorDetail) rebuild();
   syncRegions(); syncExtensionRows(); syncCloseups(null); syncViews(); refreshRegionReadout();
   if (regionId) {
@@ -2601,6 +3099,12 @@ function sourceChapterDescriptor() {
 
 function sourceSceneDescriptor() {
   const chapter = activeChapter();
+  const controlSceneId = state.sceneId || state.sceneContextId;
+  const controlScene = controlSceneId ? sceneController.scene(controlSceneId) : null;
+  if (controlScene) return {
+    label: controlScene.label,
+    claimIds: controlScene.claim_ids,
+  };
   const scene = chapter ? story.scene(chapter.semantic_scene_id) : null;
   return scene ? {
     label: scene.label,
@@ -2803,11 +3307,13 @@ function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
   state.selectedSourceValue = null;
   state.sourceFilter = 'auto';
   if (synchronizeBiology) {
+    abandonStretchPresentation();
     state.selectedTarget = annotation.target_id;
     state.region = annotation.target_type === 'titin_region' ? annotation.target_id : null;
     visualization.highlightTitinRegion(state.region);
     syncRegions(); syncExtensionRows(); refreshRegionReadout();
     syncComponentButtons(visualization.currentState());
+    syncSceneTruth();
     syncPublicPresentation(); syncUrl();
   }
   renderPinnedSelection();
@@ -2818,11 +3324,13 @@ function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
 function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
   pinnedPick = null; hoverPick = null; keyboardAnnotationIndex = -1;
   if (!preserveBiologicalSelection) {
+    abandonStretchPresentation();
     state.selectedTarget = null; state.region = null;
     state.selectedSourceValue = null; state.sourceFilter = 'auto';
     visualization.highlightTitinRegion(null);
     syncRegions(); syncExtensionRows(); refreshRegionReadout();
     syncComponentButtons(visualization.currentState());
+    syncSceneTruth();
     syncPublicPresentation(); syncUrl();
   }
   $('objectTooltip').hidden = true;
@@ -3000,40 +3508,25 @@ function refreshRegionReadout() {
   out.textContent = `${region.name} · ${region.band} · ${chain.span_nm.toFixed(1)} nm at `
     + `${visualization.currentState().sarcomere_length_nm} nm sarcomere length · `
     + `${foldedCount} declared folded domain${foldedCount === 1 ? '' : 's'} · `
-    + `${region.mechanical_class} · ${region.evidence.top}`;
+    + `${mechanicalClassDisplayName(region.mechanical_class)} · ${region.evidence.top}`;
 }
 
 $('evidenceToggle').onclick = () => {
+  requestHistoryEntry();
   state.showEvidence = !state.showEvidence;
   $('evidence').hidden = !state.showEvidence;
   $('evidenceToggle').classList.toggle('on', state.showEvidence);
   $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
-  syncPublicPresentation(); syncUrl();
+  syncSceneTruth(); syncPublicPresentation(); syncUrl();
 };
-{
-  const b = document.createElement('button');
-  b.dataset.rings = 'true';
-  b.onclick = () => {
-    state.rings = state.rings >= 3 ? 1 : state.rings + 1;
-    syncNeighbourControl(); rebuild();
-  };
-  $('toggles').append(b);
-  syncNeighbourControl();
-}
 function syncNeighbourControl() {
-  const button = $('toggles').querySelector('[data-rings="true"]');
-  if (!button) return;
-  button.textContent = `extended lattice · ${state.rings} ring${state.rings === 1 ? '' : 's'}`;
-  button.setAttribute('aria-label', `Use ${state.rings} ring${state.rings === 1 ? '' : 's'} in the extended lattice patch`);
-  button.disabled = state.scale === SCALES.detail
-    || !state.showFilamentContext || !state.extendedLattice;
+  syncContextualSceneControls();
 }
 
 // ---- rebuild --------------------------------------------------------------
 function currentDisplayOptions() {
-  const contextScale = state.scale === SCALES.context;
+  const contextScale = state.context && state.scale === SCALES.context;
   const useExtendedLattice = contextScale
-    && state.audienceMode === AUDIENCE_MODES.evidence
     && state.showFilamentContext
     && state.extendedLattice;
   return {
@@ -3077,9 +3570,9 @@ function rebuild(refit = false) {
     if (!refit && state.closeup) {
       state.cameraPreset = `closeup.${state.closeup}`;
       visualization.closeUp(state.closeup);
-    } else if (!refit && state.region) {
-      state.cameraPreset = `region.${state.region}`;
-      visualization.focusTitinRegion(state.region);
+    } else if (!refit && state.cameraPreset.startsWith('region.')) {
+      const cameraRegion = state.cameraPreset.slice('region.'.length);
+      visualization.focusTitinRegion(cameraRegion);
     }
     render(report);
     refreshRegionReadout();
@@ -3340,14 +3833,21 @@ function render(report) {
 // re-deriving the scene without it could move titin. Hiding must be a change of
 // what is drawn, never of what is claimed.
 const hidden = new Set();
+const COMPONENT_SCENE = Object.freeze({
+  thick_filament: 'lattice', thin_filament: 'lattice', thin_filament_twist: 'lattice',
+  myosin_heads: 'lattice', zdisc: 'z_anchor', alpha_actinin: 'z_anchor',
+  telethonin: 'z_anchor', mline: 'overview', mband_crosslinks: 'overview',
+  mybpc: 'a_band_scaffold', titin_domains: 'architecture', titin: 'titin_alone',
+});
+const componentLabels = new Map(model.spec.annotations.components
+  .map((annotation) => [annotation.target_id, annotation.label]));
 for (const c of Object.keys(COMPONENTS)) {
   const b = document.createElement('button');
-  b.textContent = c.replace(/_/g, ' ');
+  b.textContent = componentLabels.get(c) || c.replace(/_/g, ' ');
   b.dataset.component = c;
-  b.classList.add('on');
   b.onclick = () => {
-    if (hidden.has(c)) hidden.delete(c); else hidden.add(c);
-    applyVisibility();
+    const sceneId = COMPONENT_SCENE[c];
+    if (sceneId) applySemanticScene(sceneId, { trigger: b });
   };
   $('components').append(b);
 }
@@ -3361,33 +3861,16 @@ function applyVisibility() {
   if (report) render(report);
 }
 function syncComponentButtons(report) {
-  const effectivelyHidden = new Set(report?.hidden_components || []);
-  const man = report?.manifest || {};
-  const absent = new Set();
-  if (!man.domains) absent.add('titin_domains');
-  if (!man.context_detail?.heads_drawn) absent.add('myosin_heads');
-  if (!man.context_detail?.twist_drawn) absent.add('thin_filament_twist');
-  if (!(man.anchor_detail?.target === 'zdisc' && man.anchor_detail.drawn)) {
-    absent.add('alpha_actinin');
-    absent.add('telethonin');
-  }
-  if (!(man.anchor_detail?.target === 'mline' && man.anchor_detail.drawn)) {
-    absent.add('mband_crosslinks');
-  }
   for (const b of $('components').children) {
     const component = b.dataset.component;
-    const unavailableAtScale = state.scale === SCALES.detail
-      && TitinVisualization.DETAIL_HIDDEN.includes(component);
-    const unavailable = unavailableAtScale || absent.has(component);
-    const on = !unavailable && !effectivelyHidden.has(component);
-    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    const destination = COMPONENT_SCENE[component];
+    b.hidden = !destination;
+    b.disabled = false;
     const selected = state.selectedTarget === component;
     b.classList.toggle('selected-target', selected);
     if (selected) b.setAttribute('aria-current', 'true');
     else b.removeAttribute('aria-current');
-    b.disabled = unavailable;
-    b.title = unavailableAtScale ? 'Not part of the isolated-titin view'
-      : (absent.has(component) ? 'This layer is not currently built at this zoom' : '');
+    b.title = destination ? `Go to ${sceneController.scene(destination).label}` : '';
   }
   const selectedButton = [...$('components').children]
     .find((button) => button.dataset.component === state.selectedTarget);
@@ -3395,7 +3878,7 @@ function syncComponentButtons(report) {
   targetReadout.hidden = !selectedButton;
   targetReadout.textContent = selectedButton
     ? `Selected presentation target: ${selectedButton.textContent}. `
-      + 'Its pressed state continues to report visibility.'
+      + 'Choose it again to navigate to the scene where it is meaningful.'
     : '';
 }
 
@@ -3409,35 +3892,32 @@ slider.oninput = () => {
 };
 
 function restorePresentationFromHash() {
-  const decoded = story.parse(window.location.hash);
+  abandonStretchPresentation({ synchronize: false });
+  const decoded = sceneController.parse(window.location.hash);
   const incoming = decoded.state;
-  state.audienceMode = incoming.audience_mode;
+  state.audienceMode = incoming.depth === DEPTHS.explore
+    ? AUDIENCE_MODES.evidence : AUDIENCE_MODES.guided;
   state.storyStep = incoming.story_step;
-  state.scale = incoming.scale;
-  state.selectedTarget = incoming.selected_component_or_region;
-  state.region = regionIds.has(state.selectedTarget) ? state.selectedTarget : null;
-  state.showEvidence = incoming.evidence_display;
-  state.cameraPreset = incoming.camera_preset;
+  state.drawer = incoming.drawer;
+  state.showEvidence = incoming.confidence_display;
+  assignSceneState(incoming);
+  if (state.drawer !== 'closed') state.drawerTab = state.drawer;
   state.selectedSourceValue = null;
   state.sourceFilter = 'auto';
   chapterRestoreViewState = null;
   chapterViewAnnouncement = '';
   pinnedPick = null; hoverPick = null;
-  const [cameraKind, cameraName] = state.cameraPreset.split('.');
-  state.view = cameraKind === 'view' ? cameraName : 'titin_story';
-  state.closeup = cameraKind === 'closeup' ? cameraName : null;
-  applyChapterVisibility(state.storyStep);
   slider.value = incoming.sarcomere_length_nm;
   if (visualization.scale !== state.scale) visualization.setScale(state.scale);
   $('evidence').hidden = !state.showEvidence;
   $('evidenceToggle').classList.toggle('on', state.showEvidence);
   $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
-  syncAudienceMode(); renderChapter();
+  syncDrawerTabs(); syncAudienceMode(); renderChapter();
   rebuild(true);
   visualization.highlightTitinRegion(state.region);
   applyCameraPreset();
   render(visualization.currentState());
-  syncViews(); syncScales(); syncRegions(); syncDepictionToggles();
+  syncViews(); syncScales(); syncRegions(); syncDepictionToggles(); syncSceneTruth();
   announceUrlIssues(decoded.issues);
   syncPublicPresentation(); syncUrl();
 }
@@ -3447,6 +3927,16 @@ const renderSurface = $('canvas').querySelector('canvas');
 let pointerStart = null;
 let pendingHoverFrame = null;
 let pendingHoverEvent = null;
+
+$('canvas').addEventListener('titin:manual-camera-change', () => {
+  if (state.sceneId === null && !sweepPresentationActive) return;
+  abandonStretchPresentation();
+  requestHistoryEntry();
+  state.sceneId = null;
+  state.sceneContextId = null;
+  syncSceneControls(); syncContextualSceneControls(); syncUrl();
+  $('objectAnnouncement').textContent = 'Camera adjusted manually. Scene is now Custom.';
+});
 
 function pickAt(clientX, clientY) {
   try { return visualization.pickObject(clientX, clientY); }
@@ -3492,32 +3982,50 @@ renderSurface.addEventListener('pointercancel', () => { pointerStart = null; });
 // mid-session is asking for it to apply now, not at the next reload.
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function stopSweep() {
-  if (sweepHandle === null) return;
-  cancelAnimationFrame(sweepHandle);
+function stopSweep({ completed = false, synchronize = true } = {}) {
+  if (sweepHandle !== null) cancelAnimationFrame(sweepHandle);
   sweepHandle = null;
+  sweepLastFrameAt = null;
   $('stagePlay').classList.remove('on');
   $('stagePlay').setAttribute('aria-pressed', 'false');
+  $('stagePlay').textContent = '\u25b6 Stretch';
+  $('stagePlay').setAttribute('aria-label', 'Play a stretch sweep across the working range');
+  $('stretchHint').hidden = true;
+  $('stageReset').disabled = sweepResetLength === null;
+  if (completed) {
+    $('objectAnnouncement').textContent = 'Stretch complete at the supported maximum. '
+      + 'The full half-sarcomere and I-band bracket remain framed.';
+  }
   // Suppressed while the sweep ran; the length it settled on is the one worth
   // putting in the URL.
-  syncPublicPresentation(); syncUrl();
+  if (synchronize) { syncPublicPresentation(); syncUrl(); }
 }
 
 function stepSweep(now) {
   const reduced = prefersReducedMotion();
-  const raw = sweepLength(now - sweepStartedAt, {
+  if (reduced) {
+    if (Number(slider.value) !== sweepRange.max) {
+      slider.value = String(sweepRange.max); rebuild();
+    }
+    stopSweep({ completed: true });
+    return;
+  }
+  if (sweepLastFrameAt === null) sweepLastFrameAt = now;
+  else {
+    // A software-rendered or backgrounded frame can arrive seconds late. Cap
+    // each visual step so the demonstration cannot jump from start to finish
+    // without ever showing the bracket changing.
+    sweepElapsedMs += Math.min(100, Math.max(0, now - sweepLastFrameAt));
+    sweepLastFrameAt = now;
+  }
+  const raw = sweepLength(sweepElapsedMs, {
     minNm: sweepRange.min,
     maxNm: sweepRange.max,
-    periodMs: reduced ? SWEEP.reduced_motion_period_ms : SWEEP.period_ms,
+    periodMs: SWEEP.period_ms,
   });
-  // Reduced motion gets the two ENDPOINTS and not the travel between them, which
-  // is what data/showcase_claims.json's motion_rule requires: "reduced-motion
-  // mode jumps to the identical scientific state". Shortening the period alone
-  // would have made the animation faster, which is the opposite of the request.
-  const value = reduced
-    ? (raw - sweepRange.min < sweepRange.max - raw ? sweepRange.min : sweepRange.max)
-    : raw;
+  const value = sweepElapsedMs >= SWEEP.period_ms / 2 ? sweepRange.max : raw;
   if (Number(slider.value) !== value) { slider.value = String(value); rebuild(); }
+  if (value === sweepRange.max) { stopSweep({ completed: true }); return; }
   sweepHandle = requestAnimationFrame(stepSweep);
 }
 
@@ -3528,6 +4036,26 @@ const sweepRange = {
   min: presentation.scope.working_range_nm[0],
   max: presentation.scope.working_range_nm[1],
 };
+
+function stretchFrameOptions() {
+  const canvasBox = $('canvas').getBoundingClientRect();
+  const headerBox = $('stageHeader').getBoundingClientRect();
+  const barBox = $('stageBar').getBoundingClientRect();
+  const storyCard = $('guidedCard');
+  const storyBox = storyVisible && !storyCard.hidden && storyCard.getClientRects().length
+    ? storyCard.getBoundingClientRect() : null;
+  const safeTop = Math.max(0, headerBox.bottom - canvasBox.top);
+  const safeBottom = Math.min(
+    canvasBox.height,
+    barBox.top - canvasBox.top,
+    storyBox ? storyBox.top - canvasBox.top : Infinity,
+  );
+  return {
+    animate: false,
+    contentCenterYPx: safeBottom > safeTop
+      ? (safeTop + safeBottom) / 2 : canvasBox.height / 2,
+  };
+}
 
 // A control that cannot do anything says so, rather than looking available and
 // then dying inside a frame callback where nothing surfaces the reason.
@@ -3551,15 +4079,49 @@ function toggleSweep() {
       + 'the supported range; in Stretch the spring, choose Set demonstration start first.';
     return;
   }
+  const needsSpringScene = !sceneMatch(sceneController.scene('spring'), publicSceneState());
+  if (sweepResetLength === null) sweepResetLength = current;
+  sweepPresentationActive = true;
+  if (needsSpringScene) {
+    applySemanticScene('spring', { announce: false });
+    $('objectAnnouncement').textContent = 'Changed to the Spring scene so the complete '
+      + 'half-sarcomere and I-band bracket stay visible during Stretch.';
+  }
+  const start = Number(slider.value);
+  // The sweep must not outrun its own camera transition. Resolve the semantic
+  // Spring action normally, then establish the reviewed maximum-extent frame
+  // synchronously before the first length frame is allowed to run.
+  visualization.frameStretchSweep(sweepRange.max, stretchFrameOptions());
   const periodMs = prefersReducedMotion() ? SWEEP.reduced_motion_period_ms : SWEEP.period_ms;
-  sweepStartedAt = performance.now() - sweepElapsedAtLength(current, {
+  sweepElapsedMs = sweepElapsedAtLength(start, {
     minNm: sweepRange.min, maxNm: sweepRange.max, periodMs,
   });
+  sweepLastFrameAt = null;
   $('stagePlay').classList.add('on');
   $('stagePlay').setAttribute('aria-pressed', 'true');
+  $('stagePlay').textContent = 'Pause';
+  $('stagePlay').setAttribute('aria-label', 'Pause the stretch demonstration');
+  $('stretchHint').hidden = false;
+  $('stageReset').disabled = false;
   sweepHandle = requestAnimationFrame(stepSweep);
 }
 $('stagePlay').onclick = toggleSweep;
+$('stageReset').onclick = () => {
+  if (sweepResetLength === null) return;
+  const resetLength = sweepResetLength;
+  stopSweep();
+  sweepPresentationActive = true;
+  // Reset is a complete semantic action, not just a slider write. Re-resolving
+  // Spring makes it impossible for a stale enabled button to leave the camera,
+  // layers, scene truth, and URL describing different presentations.
+  applySemanticScene('spring', { announce: false });
+  slider.value = String(resetLength);
+  sweepResetLength = null;
+  rebuild();
+  visualization.frameStretchSweep(sweepRange.max, stretchFrameOptions());
+  $('stageReset').disabled = true;
+  $('objectAnnouncement').textContent = 'Stretch reset to its starting length; the Spring scene remains framed.';
+};
 slider.addEventListener('pointerdown', stopSweep);
 slider.addEventListener('keydown', stopSweep);
 // The 3-D surface, not the #canvas container: the container also holds the stage
@@ -3586,7 +4148,16 @@ $('canvas').addEventListener('keydown', (event) => {
   });
 });
 
-window.addEventListener('hashchange', restorePresentationFromHash);
+let pendingHistoryRestore = null;
+function scheduleHistoryRestore() {
+  if (pendingHistoryRestore !== null) return;
+  pendingHistoryRestore = requestAnimationFrame(() => {
+    pendingHistoryRestore = null;
+    restorePresentationFromHash();
+  });
+}
+window.addEventListener('hashchange', scheduleHistoryRestore);
+window.addEventListener('popstate', scheduleHistoryRestore);
 // A viewport resize moves every projected anchor and is not visible to the frame
 // callback as camera motion, so it marks the stage explicitly.
 window.addEventListener('resize', markStageDirty);
@@ -3605,6 +4176,7 @@ syncViews();
 syncScales();
 syncRegions();
 syncDepictionToggles();
+syncSceneTruth();
 syncPublicPresentation(); syncUrl();
 // The LOD callback fires ONLY when zooming crosses the aliasing threshold, so the
 // crown array appears and withdraws as the user zooms without a per-frame rebuild.

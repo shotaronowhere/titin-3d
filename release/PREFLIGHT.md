@@ -1,6 +1,6 @@
 # Demo-day preflight
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `744924078f0de8249ac3564466d9526e90ba3628`; build inputs `53667a76bdb43f94d9e013c3b05dd23ffc75e82698b4d717442f84943b0b47c0`.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `744924078f0de8249ac3564466d9526e90ba3628-dirty`; build inputs `2b15a893e5974ec19a48ca926e94afba61c7cda0b6022b595b636b6f2d6a6d72`.
 
 Run this on the presenting machine, on the presenting display.
 
@@ -28,10 +28,10 @@ Run this on the presenting machine, on the presenting display.
 ## Fallback package
 
 - `release/fallback/` — 6 static SVG slides generated from this build. They need no GPU, no browser engine, and no network.
-- `release/SCREENSHOT_PACK.md` — the 52-cell review set, if you need to show a specific state you cannot reach live.
+- `release/SCREENSHOT_PACK.md` — the 56-cell review set, if you need to show a specific state you cannot reach live.
 
 ## Candidate identity
 
-The Evidence drawer of both the hosted page and the offline file must report model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `744924078f0de8249ac3564466d9526e90ba3628`; build inputs `53667a76bdb43f94d9e013c3b05dd23ffc75e82698b4d717442f84943b0b47c0`.
+The Evidence drawer of both the hosted page and the offline file must report model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `744924078f0de8249ac3564466d9526e90ba3628-dirty`; build inputs `2b15a893e5974ec19a48ca926e94afba61c7cda0b6022b595b636b6f2d6a6d72`.
 A mismatch in any field means the candidates differ. Prefer the manifest-verified offline file; production parity is proved only at final release.
 

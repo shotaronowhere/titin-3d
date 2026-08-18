@@ -435,6 +435,10 @@ function screenshotDoc(pack, matrix) {
     '## Capture rules', '',
   ];
   for (const rule of matrix.capture_rules) lines.push(`- ${rule}`);
+  lines.push('', '## Legacy cell disposition', '');
+  for (const row of matrix.legacy_disposition) {
+    lines.push(`- \`${row.old_cell_id}\` → \`${row.new_cell_id}\` — ${row.reason}`);
+  }
   let group = null;
   for (const cell of matrix.cells) {
     if (cell.group !== group) {
@@ -459,11 +463,15 @@ const identity = readEmbeddedBuildIdentity(standaloneBytes);
 const model = await TitinModel.create(nodeReader(), { identity });
 const pack = createReleasePack(model, { identity });
 const { min, max } = model.slRange();
+const regionTargets = model.titinRegions().map((region) => region.id);
+const componentTargets = Object.keys(COMPONENTS);
 const matrix = createVisualMatrix(model, {
   views: Object.keys(VIEWS),
   closeups: Object.keys(CLOSEUPS),
   scales: Object.values(SCALES),
-  targets: [...model.titinRegions().map((region) => region.id), ...Object.keys(COMPONENTS)],
+  targets: [...regionTargets, ...componentTargets],
+  regionTargets,
+  componentTargets,
   hiddenTargetsByScale: { [SCALES.detail]: TitinVisualization.DETAIL_HIDDEN },
   minLength: min,
   maxLength: max,

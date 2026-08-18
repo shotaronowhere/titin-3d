@@ -231,15 +231,38 @@ export class Viewer {
       }
     };
     this._motionQuery?.addEventListener?.('change', this._onMotionPreferenceChange);
-    this._onControlStart = () => { this._cameraTransition = null; };
+    // SC-24 state truth. Direct orbit/pan/zoom is not a named semantic camera
+    // any more, even though the last named preset remains the stable URL
+    // fallback. The page listens at the container boundary and marks Custom.
+    //
+    // OrbitControls fires 'start' on pointerdown, before it knows whether the
+    // pointer will move, so announcing there reported a manual camera change
+    // for an ordinary click that moved nothing — and threw away a shareable
+    // semantic link. The gesture is bracketed instead: the announcement waits
+    // for the first real camera change between 'start' and 'end'.
+    this._gestureActive = false;
+    this._gestureAnnounced = false;
+    this._onControlStart = () => {
+      this._cameraTransition = null;
+      this._gestureActive = true;
+      this._gestureAnnounced = false;
+    };
+    this._onControlEnd = () => { this._gestureActive = false; };
     // Direct manipulation always wins over an automated move. Otherwise a user
     // beginning to orbit mid-transition would fight the interpolation every frame.
     this.controls.addEventListener('start', this._onControlStart);
+    this.controls.addEventListener('end', this._onControlEnd);
     // Screen-space overlays must keep up while the camera moves, and must not run
     // when it is still. OrbitControls fires 'change' for direct input and for
     // damped settling, so this one flag covers every camera move it can cause.
     this._controlsMoved = false;
-    this._onControlChange = () => { this._controlsMoved = true; };
+    this._onControlChange = () => {
+      this._controlsMoved = true;
+      if (this._gestureActive && !this._gestureAnnounced) {
+        this._gestureAnnounced = true;
+        this.container.dispatchEvent(new CustomEvent('titin:manual-camera-change'));
+      }
+    };
     this.controls.addEventListener('change', this._onControlChange);
 
     // Three lights, no shadows: shadows would imply an illumination geometry that
@@ -534,14 +557,28 @@ export class Viewer {
       throw new Error(`focusSpan: expected a positive finite range, got ${startNm}..${endNm}`);
     }
     const physicalSpan = endNm - startNm;
-    const margined = physicalSpan * STAGE_LAYOUT.frame_margin_factor;
+    const marginFactor = opts.marginFactor ?? STAGE_LAYOUT.frame_margin_factor;
+    if (!Number.isFinite(marginFactor) || marginFactor < 1) {
+      throw new Error(`focusSpan: marginFactor must be finite and at least 1, got ${marginFactor}`);
+    }
+    const margined = physicalSpan * marginFactor;
     // A 6.8 nm region framed at 1.12x puts the camera INSIDE the tube and shows a
     // featureless wall. A region is only meaningful in series with its
     // neighbours, so a floor keeps that context in frame.
     const viewSpan = Math.max(margined, STAGE_LAYOUT.min_region_view_span_nm);
     const minSpanApplied = viewSpan > margined;
-    const target = new THREE.Vector3((startNm + endNm) / 2, 0, 0);
     const distance = this._distanceForSpan(viewSpan);
+    const target = new THREE.Vector3((startNm + endNm) / 2, 0, 0);
+    if (opts.contentCenterYPx !== undefined) {
+      const contentCenterYPx = Number(opts.contentCenterYPx);
+      const heightPx = this.container.clientHeight;
+      if (!Number.isFinite(contentCenterYPx) || !(heightPx > 0)) {
+        throw new Error('focusSpan: contentCenterYPx requires a finite pixel position '
+          + 'and a measurable viewport.');
+      }
+      const visibleHeightNm = 2 * distance * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+      target.y = (contentCenterYPx - heightPx / 2) * visibleHeightNm / heightPx;
+    }
     const direction = new THREE.Vector3(0.12, 0.25, 1).normalize();
     this._moveCamera(target.clone().add(direction.multiplyScalar(distance)), target, opts);
     return {
@@ -551,6 +588,30 @@ export class Viewer {
       distance_nm: Number(distance.toFixed(1)),
       min_span_applied: minSpanApplied,
       animated: Boolean(opts.animate && !this.prefersReducedMotion),
+    };
+  }
+
+  /**
+   * SC-24 demonstration framing. Solve the camera against the MAXIMUM sweep
+   * extent, not the geometry currently drawn, so length changes cannot grow the
+   * half-sarcomere or its I-band bracket off stage mid-demonstration.
+   */
+  frameSweepBounds(maxSarcomereLengthNm, opts = {}) {
+    if (!Number.isFinite(maxSarcomereLengthNm)) {
+      throw new Error('frameSweepBounds: expected a finite maximum sarcomere length.');
+    }
+    const geometry = this.model.geometryAt(maxSarcomereLengthNm);
+    const path = this.model.backboneAt(maxSarcomereLengthNm);
+    const xs = path.points.map((point) => point.x).filter(Number.isFinite);
+    if (Number.isFinite(geometry?.mline?.X)) xs.push(geometry.mline.X);
+    const start = Math.min(...xs);
+    const end = Math.max(...xs);
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
+      throw new Error('frameSweepBounds: maximum sweep geometry has no positive axial span.');
+    }
+    return {
+      maximum_sarcomere_length_nm: maxSarcomereLengthNm,
+      ...this.focusSpan(start, end, { marginFactor: 1.28, ...opts }),
     };
   }
 
@@ -806,6 +867,7 @@ export class Viewer {
     window.removeEventListener('resize', this._onResize);
     this.sarcomere.clear();
     this.controls.removeEventListener('start', this._onControlStart);
+    this.controls.removeEventListener('end', this._onControlEnd);
     this.controls.removeEventListener('change', this._onControlChange);
     this._motionQuery?.removeEventListener?.('change', this._onMotionPreferenceChange);
     this.controls.dispose();

@@ -182,7 +182,7 @@ test('SC11: brackets drop a tick to the axis they measure', () => {
 });
 
 test('SC11: changing audience mode reframes the camera', () => {
-  assert.match(page, /function syncAudienceMode[\s\S]{0,600}applyCameraPreset\(/,
+  assert.match(page, /function syncAudienceMode[\s\S]{0,1000}applyCameraPreset\(/,
     'the canvas changes width on mode switch, so the framing must be recomputed');
 });
 

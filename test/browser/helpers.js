@@ -58,6 +58,24 @@ export async function boxesCollide(first, second) {
     && a.y < b.y + b.height && a.y + a.height > b.y;
 }
 
+/**
+ * SC-24. A thrown module error paints #err over the whole stage and is never
+ * cleared, so any assertion made after one is worthless. The full suite once
+ * passed while a primary control was killing the page on its first click, which
+ * is why the runtime-error channel is now a standing gate rather than something
+ * an individual test has to remember to check.
+ */
+export function failOnPageErrors(test) {
+  const errors = [];
+  test.beforeEach(({ page }) => {
+    errors.length = 0;
+    page.on('pageerror', (error) => errors.push(error.message));
+  });
+  test.afterEach(() => {
+    expect(errors, 'the page must raise no runtime error').toEqual([]);
+  });
+}
+
 export async function waitForReady(page) {
   await page.waitForFunction(() => window.__titinBoot?.ready === true);
   await expect(page.locator('#err')).toBeHidden();

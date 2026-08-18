@@ -24,9 +24,11 @@ const between = (startId, endMarker) => {
   return [start, end];
 };
 
-test('SC12: the primary controls live on the stage, not in the drawer', () => {
+test('SC12/SC24: compact semantic primary controls live on the stage', () => {
   const [barStart, barEnd] = between('stageBar', '</div><!-- /stageBar -->');
-  for (const id of ['sl', 'presets', 'views', 'stagePlay', 'filamentContextToggle']) {
+  for (const id of [
+    'sl', 'stagePlay', 'stageReset', 'sceneControls', 'sceneDetailsToggle', 'stageMore',
+  ]) {
     const at = page.indexOf(`id="${id}"`);
     assert.ok(at > barStart && at < barEnd, `${id} must be inside the stage bar`);
   }
@@ -42,7 +44,7 @@ test('SC12: the stage bar is visible in both audience modes', () => {
 test('SC12: the readouts stay in the Evidence drawer', () => {
   const drawerStart = page.indexOf('id="panel"');
   const drawerEnd = page.indexOf('</aside>', drawerStart);
-  for (const id of ['scales', 'closeups', 'toggles', 'components', 'regions',
+  for (const id of ['scales', 'views', 'closeups', 'toggles', 'components', 'regions',
     'metrics', 'legend', 'evidence', 'annotations', 'notClaimed', 'notes']) {
     const at = page.indexOf(`id="${id}"`);
     assert.ok(at > drawerStart && at < drawerEnd, `${id} must remain in the drawer`);

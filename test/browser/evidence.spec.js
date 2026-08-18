@@ -50,6 +50,7 @@ test('SC22 Guided inspector stays compact and clear of the stage controls', asyn
 
 test('SC22 contextual source controls select object, chapter, all, and exact value', async ({ page }) => {
   await boot(page);
+  await page.locator('#stageMore').click();
   await page.locator('#stageSourcesLink').click();
   await expect(page.locator('#tabSources')).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#sourceContextLabel')).toContainText('Sources for this object');
@@ -77,6 +78,7 @@ test('SC22 contextual source controls select object, chapter, all, and exact val
 
 test('SC22 value clearing falls back instead of rendering an empty source list', async ({ page }) => {
   await boot(page, 'responsive');
+  await page.locator('#stageMore').click();
   await page.locator('#stageMeasureLink').click();
   await page.locator('#forceCurve details > summary').click();
   await page.locator('#forceCurve .parameter-source-link').first().click();
@@ -90,22 +92,24 @@ test('SC22 value clearing falls back instead of rendering an empty source list',
 
 test('SC22 selectable current chart point filters sources and restores the outer invoker', async ({ page }) => {
   await boot(page);
+  await page.locator('#stageMore').click();
   await page.locator('#stageMeasureLink').click();
   await page.locator('#forceCurve .force-current-point').focus();
   await page.locator('#forceCurve .force-current-point').press('Enter');
   await expect(page.locator('#bibliography')).toHaveAttribute('data-source-scope', 'value');
   await expect(page.locator('#sourceContextLabel')).toContainText('Modeled chart point at');
   await page.locator('#closeEvidence').click();
-  await expect(page.locator('#stageMeasureLink')).toBeFocused();
+  await expect(page.locator('#stageMore')).toBeFocused();
 });
 
 test('SC22 parameter source routing keeps a visible close-focus target', async ({ page }) => {
   await boot(page);
+  await page.locator('#stageMore').click();
   await page.locator('#stageMeasureLink').click();
   await page.locator('#forceCurve details > summary').click();
   await page.locator('#forceCurve .parameter-source-link').first().click();
   await page.locator('#closeEvidence').click();
-  await expect(page.locator('#stageMeasureLink')).toBeFocused();
+  await expect(page.locator('#stageMore')).toBeFocused();
 });
 
 test('SC22 ClaimView DOM keeps citations after copy, fields, and limitations', async ({ page }) => {

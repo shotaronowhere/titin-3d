@@ -516,12 +516,13 @@ test('PHASE9: the page source visibly consumes the interpolation caveat', () => 
 
 test('PHASE9: isolated-titin scale cannot retain a context-only close-up claim', () => {
   const html = PAGE_SOURCE;
-  assert.match(html, /state\.scale\s*=\s*scale;\s*state\.closeup\s*=\s*null/,
+  assert.match(html, /state\.scale\s*=\s*scale;[\s\S]{0,120}?state\.closeup\s*=\s*null/,
     'switching scale must clear the selected context landmark');
   assert.match(html, /syncCloseups\(null\)/,
     'switching scale must also clear the visible close-up readout');
-  assert.match(html, /\$\('closeups'\)\.children\)\s*b\.disabled\s*=\s*detail/,
-    'context-only close-up controls must be disabled in isolated-titin scale');
+  assert.match(html,
+    /\$\('closeups'\)\.children\)[\s\S]{0,260}?b\.hidden\s*=\s*detail[\s\S]{0,100}?b\.disabled\s*=\s*false/,
+    'context-only close-up controls must be omitted, not cryptically disabled, in isolated-titin scale');
   assert.match(html, /hiddenComponents[\s\S]*?k\.startsWith\(`\$\{component\}\.\`\)/,
     'the evidence panel must omit components hidden by the active scale');
   assert.match(html, /state\.scale\s*===\s*SCALES\.detail[\s\S]*?titin\|domain\|catmullrom/i,

@@ -116,7 +116,7 @@ test('SC1: public facade reports audience/story/selection without adding activat
     /not visible.*detail scale/i);
 });
 
-test('SC1: Guided has a full stage and Evidence owns the complete legacy inspector', () => {
+test('SC1/SC24: Learn has semantic stage controls and Explore owns the raw inspector', () => {
   assert.match(page, /id="app" data-mode="guided"/);
   assert.match(page, /id="scopeBadge"[\s\S]*?id="scopeIdentity"[\s\S]*?id="scopeState"/);
   assert.match(page, /id="guidedCard"[\s\S]*?id="chapterSummary"[\s\S]*?id="chapterEvidenceLink"/);
@@ -130,7 +130,7 @@ test('SC1: Guided has a full stage and Evidence owns the complete legacy inspect
   // deliberately moved to the stage bar, because a length control a novice
   // cannot reach cannot teach what changes with sarcomere length.
   for (const id of [
-    'scales', 'closeups', 'toggles', 'components', 'regions',
+    'scales', 'views', 'closeups', 'toggles', 'components', 'regions',
     'metrics', 'legend', 'evidence', 'annotations', 'notClaimed', 'notes',
   ]) {
     const location = page.indexOf(`id="${id}"`);
@@ -139,19 +139,21 @@ test('SC1: Guided has a full stage and Evidence owns the complete legacy inspect
   }
   const barStart = page.indexOf('id="stageBar"');
   const barEnd = page.indexOf('</div><!-- /stageBar -->', barStart);
-  for (const id of ['sl', 'presets', 'views']) {
+  for (const id of ['sl', 'stagePlay', 'stageReset', 'sceneControls', 'stageMore']) {
     const location = page.indexOf(`id="${id}"`);
     assert.ok(location > barStart && location < barEnd,
       `primary control '${id}' must be on the stage bar`);
   }
-  assert.match(page, /#app\[data-mode="evidence"\] #panel \{ display: block; \}/);
+  assert.match(page,
+    /#app\[data-mode="evidence"\]\[data-drawer-open="true"\] #panel \{ display: block; \}/);
   assert.match(page, /@media \(max-width: 700px\)[\s\S]*?#panel \{ position: fixed;/);
-  assert.match(page, /addEventListener\('hashchange', restorePresentationFromHash\)/,
+  assert.match(page, /addEventListener\('hashchange', scheduleHistoryRestore\)/,
     'pasting a shared hash into an already-open page must restore it immediately');
   assert.match(page, /function applyChapterVisibility[\s\S]*?recommended_state\?\.visibility/,
     'chapter visibility must have one restoration path');
-  assert.ok((page.match(/applyChapterVisibility\(state\.storyStep\)/g) || []).length >= 2,
-    'initial and live URL restoration must apply deterministic chapter visibility');
+  assert.match(page,
+    /function renderChapter[\s\S]*?applyChapterVisibility\(chapter\.id\)[\s\S]*?function restorePresentationFromHash[\s\S]*?renderChapter\(\)/,
+    'initial and live URL restoration must share deterministic chapter rendering');
   assert.match(page, /function openEvidence[\s\S]*?closeEvidence[\s\S]*?event\.key === 'Escape'/,
     'the responsive Evidence drawer must manage entry, return, and Escape focus paths');
   assert.match(page, /id="componentTargetReadout"[\s\S]*?function syncComponentButtons/,
