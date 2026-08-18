@@ -98,12 +98,15 @@ test('SC4: negative catalog mutations fail closed', () => {
 test('SC4: tubes, instanced domains, and ordinary components resolve to biological IDs', () => {
   const scene = build();
   const regionTube = scene.root.getObjectByName('titin_region_PEVK_strand_0');
+  // SC-25 added `pick_proxy` to every resolved target: the hit-priority resolver
+  // has to know whether a hit was the drawn molecule or its non-rendering hit
+  // area, and a record that omitted it would make the two indistinguishable.
   assert.deepEqual(scene.pickTarget(regionTube), {
-    target_type: 'titin_region', target_id: 'PEVK', mirrored: false,
+    target_type: 'titin_region', target_id: 'PEVK', mirrored: false, pick_proxy: false,
   });
   const thick = scene.root.getObjectByName('thick_filament_central');
   assert.deepEqual(scene.pickTarget(thick), {
-    target_type: 'component', target_id: 'thick_filament', mirrored: false,
+    target_type: 'component', target_id: 'thick_filament', mirrored: false, pick_proxy: false,
   });
   let domainMesh = null;
   scene.root.traverse((object) => {
@@ -158,19 +161,23 @@ test('SC4: Viewer raycasting rejects off-canvas input and returns no Three.js ob
   const thick = scene.root.getObjectByName('thick_filament_central');
   const camera = new THREE.PerspectiveCamera(35, 1, 1, 10000);
   const recorded = {};
-  const fake = {
+  // Built on the prototype rather than as a bare literal: SC-25's pick() measures
+  // screen distance with its own helpers and enforces the reviewed tolerance, so
+  // the double has to be a Viewer with stubbed collaborators, not a lookalike.
+  const fake = Object.assign(Object.create(Viewer.prototype), {
     renderer: { domElement: { getBoundingClientRect: () => ({
       left: 10, top: 20, right: 210, bottom: 120, width: 200, height: 100,
     }) } },
     camera,
     sarcomere: scene,
+    pickPolicy: model.spec.renderStyle.titin.picking,
     raycaster: {
       setFromCamera: (pointer) => { recorded.pointer = pointer.clone(); },
       intersectObject: () => [{
         object: thick, point: new THREE.Vector3(500, 0, 0), distance: 25,
       }],
     },
-  };
+  });
   assert.equal(Viewer.prototype.pick.call(fake, 5, 30), null);
   const picked = Viewer.prototype.pick.call(fake, 110, 70);
   assert.equal(recorded.pointer.x, 0); assert.equal(recorded.pointer.y, 0);

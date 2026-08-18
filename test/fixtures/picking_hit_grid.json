@@ -1,0 +1,2158 @@
+{
+  "schema": "titin-picking-hit-grid/1",
+  "purpose": "Immutable SC-25 picking coverage grid. Samples are generated from the declared rules against the projected visible titin paths of fixed release scenes; no screen coordinate is stored and none was hand-selected.",
+  "generated_by": "scripts/build_picking_hit_grid.mjs",
+  "depth": "learn",
+  "contract": {
+    "immutability": "Committed before the hit-priority resolver was exercised against it. Editing a sample, a rule, or a scene after implementation requires an entry in `migrations` stating what changed and why; the fixture may never be edited merely to make the resolver pass.",
+    "denominator": "every sample marked intended_titin_hit, across the complete fixture",
+    "migrations": []
+  },
+  "rules": {
+    "path_sample_spacing_nm": 30,
+    "ring_radii_px": [
+      0,
+      4,
+      8,
+      14
+    ],
+    "directions_per_ring": 6,
+    "first_direction_deg": 0,
+    "intended_hit_max_ring_px": 8,
+    "edge_margin_px": 24,
+    "sample_origin": "renderer titin pick centreline for the representative strand",
+    "offset_measure": "cumulative arc length along the drawn polyline",
+    "intended_hit_rule": "ring_px <= intended_hit_max_ring_px",
+    "visibility_rule": "an offset is sampled only when its projection is visible and at least edge_margin_px inside the canvas"
+  },
+  "ring_samples": [
+    {
+      "ring_px": 0,
+      "direction_deg": 0,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 4,
+      "direction_deg": 0,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 4,
+      "direction_deg": 60,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 4,
+      "direction_deg": 120,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 4,
+      "direction_deg": 180,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 4,
+      "direction_deg": 240,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 4,
+      "direction_deg": 300,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 8,
+      "direction_deg": 0,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 8,
+      "direction_deg": 60,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 8,
+      "direction_deg": 120,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 8,
+      "direction_deg": 180,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 8,
+      "direction_deg": 240,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 8,
+      "direction_deg": 300,
+      "intended_titin_hit": true
+    },
+    {
+      "ring_px": 14,
+      "direction_deg": 0,
+      "intended_titin_hit": false
+    },
+    {
+      "ring_px": 14,
+      "direction_deg": 60,
+      "intended_titin_hit": false
+    },
+    {
+      "ring_px": 14,
+      "direction_deg": 120,
+      "intended_titin_hit": false
+    },
+    {
+      "ring_px": 14,
+      "direction_deg": 180,
+      "intended_titin_hit": false
+    },
+    {
+      "ring_px": 14,
+      "direction_deg": 240,
+      "intended_titin_hit": false
+    },
+    {
+      "ring_px": 14,
+      "direction_deg": 300,
+      "intended_titin_hit": false
+    }
+  ],
+  "viewports": [
+    {
+      "id": "laptop",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "id": "mobile",
+      "width": 375,
+      "height": 812
+    }
+  ],
+  "totals": {
+    "scenes": 14,
+    "path_offsets": 398,
+    "samples_per_offset": 19,
+    "samples": 7562,
+    "intended": 5174
+  },
+  "scenes": [
+    {
+      "id": "overview@laptop",
+      "scene_id": "overview",
+      "scene_label": "Overview",
+      "viewport_id": "laptop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "view.titin_story",
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Z1Z2",
+          0
+        ],
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ],
+        [
+          "prox_Ig",
+          90
+        ],
+        [
+          "prox_Ig",
+          120
+        ],
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ],
+        [
+          "Aband_super",
+          120
+        ],
+        [
+          "Aband_super",
+          150
+        ],
+        [
+          "Aband_super",
+          180
+        ],
+        [
+          "Aband_super",
+          210
+        ],
+        [
+          "Aband_super",
+          240
+        ],
+        [
+          "Aband_super",
+          270
+        ],
+        [
+          "Aband_super",
+          300
+        ],
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ],
+        [
+          "Aband_super",
+          600
+        ],
+        [
+          "Aband_super",
+          630
+        ],
+        [
+          "Aband_super",
+          660
+        ],
+        [
+          "Aband_super",
+          690
+        ],
+        [
+          "kinase",
+          0
+        ],
+        [
+          "kinase",
+          30
+        ],
+        [
+          "Mline",
+          0
+        ],
+        [
+          "Mline",
+          30
+        ],
+        [
+          "Mline",
+          60
+        ]
+      ]
+    },
+    {
+      "id": "titin_alone@laptop",
+      "scene_id": "titin_alone",
+      "scene_label": "Titin alone",
+      "viewport_id": "laptop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=titin_alone&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "view.titin_story",
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Z1Z2",
+          0
+        ],
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ],
+        [
+          "prox_Ig",
+          90
+        ],
+        [
+          "prox_Ig",
+          120
+        ],
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ],
+        [
+          "Aband_super",
+          120
+        ],
+        [
+          "Aband_super",
+          150
+        ],
+        [
+          "Aband_super",
+          180
+        ],
+        [
+          "Aband_super",
+          210
+        ],
+        [
+          "Aband_super",
+          240
+        ],
+        [
+          "Aband_super",
+          270
+        ],
+        [
+          "Aband_super",
+          300
+        ],
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ],
+        [
+          "Aband_super",
+          600
+        ],
+        [
+          "Aband_super",
+          630
+        ],
+        [
+          "Aband_super",
+          660
+        ],
+        [
+          "Aband_super",
+          690
+        ],
+        [
+          "kinase",
+          0
+        ],
+        [
+          "kinase",
+          30
+        ],
+        [
+          "Mline",
+          0
+        ],
+        [
+          "Mline",
+          30
+        ],
+        [
+          "Mline",
+          60
+        ]
+      ]
+    },
+    {
+      "id": "spring@laptop",
+      "scene_id": "spring",
+      "scene_label": "Spring",
+      "viewport_id": "laptop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=spring&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "view.titin_story",
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Z1Z2",
+          0
+        ],
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ],
+        [
+          "prox_Ig",
+          90
+        ],
+        [
+          "prox_Ig",
+          120
+        ],
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ],
+        [
+          "Aband_super",
+          120
+        ],
+        [
+          "Aband_super",
+          150
+        ],
+        [
+          "Aband_super",
+          180
+        ],
+        [
+          "Aband_super",
+          210
+        ],
+        [
+          "Aband_super",
+          240
+        ],
+        [
+          "Aband_super",
+          270
+        ],
+        [
+          "Aband_super",
+          300
+        ],
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ],
+        [
+          "Aband_super",
+          600
+        ],
+        [
+          "Aband_super",
+          630
+        ],
+        [
+          "Aband_super",
+          660
+        ],
+        [
+          "Aband_super",
+          690
+        ],
+        [
+          "kinase",
+          0
+        ],
+        [
+          "kinase",
+          30
+        ],
+        [
+          "Mline",
+          0
+        ],
+        [
+          "Mline",
+          30
+        ],
+        [
+          "Mline",
+          60
+        ]
+      ]
+    },
+    {
+      "id": "architecture@laptop",
+      "scene_id": "architecture",
+      "scene_label": "Architecture",
+      "viewport_id": "laptop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=architecture&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "closeup.junction",
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ]
+      ]
+    },
+    {
+      "id": "z_anchor@laptop",
+      "scene_id": "z_anchor",
+      "scene_label": "Z-anchor",
+      "viewport_id": "laptop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=z_anchor&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "closeup.zdisc",
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Z1Z2",
+          0
+        ],
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ]
+      ]
+    },
+    {
+      "id": "a_band_scaffold@laptop",
+      "scene_id": "a_band_scaffold",
+      "scene_label": "A-band scaffold",
+      "viewport_id": "laptop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=a_band_scaffold&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "closeup.czone",
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ]
+      ]
+    },
+    {
+      "id": "lattice@laptop",
+      "scene_id": "lattice",
+      "scene_label": "Lattice",
+      "viewport_id": "laptop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=lattice&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "closeup.lattice",
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Z1Z2",
+          0
+        ],
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ],
+        [
+          "prox_Ig",
+          90
+        ],
+        [
+          "prox_Ig",
+          120
+        ],
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ],
+        [
+          "Aband_super",
+          120
+        ],
+        [
+          "Aband_super",
+          150
+        ],
+        [
+          "Aband_super",
+          180
+        ],
+        [
+          "Aband_super",
+          210
+        ],
+        [
+          "Aband_super",
+          240
+        ],
+        [
+          "Aband_super",
+          270
+        ],
+        [
+          "Aband_super",
+          300
+        ],
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ]
+      ]
+    },
+    {
+      "id": "overview@mobile",
+      "scene_id": "overview",
+      "scene_label": "Overview",
+      "viewport_id": "mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "view.titin_story",
+      "canvas": {
+        "width": 375,
+        "height": 812
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ],
+        [
+          "prox_Ig",
+          90
+        ],
+        [
+          "prox_Ig",
+          120
+        ],
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ],
+        [
+          "Aband_super",
+          120
+        ],
+        [
+          "Aband_super",
+          150
+        ],
+        [
+          "Aband_super",
+          180
+        ],
+        [
+          "Aband_super",
+          210
+        ],
+        [
+          "Aband_super",
+          240
+        ],
+        [
+          "Aband_super",
+          270
+        ],
+        [
+          "Aband_super",
+          300
+        ],
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ],
+        [
+          "Aband_super",
+          600
+        ],
+        [
+          "Aband_super",
+          630
+        ],
+        [
+          "Aband_super",
+          660
+        ],
+        [
+          "Aband_super",
+          690
+        ],
+        [
+          "kinase",
+          0
+        ],
+        [
+          "kinase",
+          30
+        ],
+        [
+          "Mline",
+          0
+        ],
+        [
+          "Mline",
+          30
+        ]
+      ]
+    },
+    {
+      "id": "titin_alone@mobile",
+      "scene_id": "titin_alone",
+      "scene_label": "Titin alone",
+      "viewport_id": "mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=titin_alone&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "view.titin_story",
+      "canvas": {
+        "width": 375,
+        "height": 812
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ],
+        [
+          "prox_Ig",
+          90
+        ],
+        [
+          "prox_Ig",
+          120
+        ],
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ],
+        [
+          "Aband_super",
+          120
+        ],
+        [
+          "Aband_super",
+          150
+        ],
+        [
+          "Aband_super",
+          180
+        ],
+        [
+          "Aband_super",
+          210
+        ],
+        [
+          "Aband_super",
+          240
+        ],
+        [
+          "Aband_super",
+          270
+        ],
+        [
+          "Aband_super",
+          300
+        ],
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ],
+        [
+          "Aband_super",
+          600
+        ],
+        [
+          "Aband_super",
+          630
+        ],
+        [
+          "Aband_super",
+          660
+        ],
+        [
+          "Aband_super",
+          690
+        ],
+        [
+          "kinase",
+          0
+        ],
+        [
+          "kinase",
+          30
+        ],
+        [
+          "Mline",
+          0
+        ],
+        [
+          "Mline",
+          30
+        ]
+      ]
+    },
+    {
+      "id": "spring@mobile",
+      "scene_id": "spring",
+      "scene_label": "Spring",
+      "viewport_id": "mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=spring&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "view.titin_story",
+      "canvas": {
+        "width": 375,
+        "height": 812
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ],
+        [
+          "prox_Ig",
+          90
+        ],
+        [
+          "prox_Ig",
+          120
+        ],
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ],
+        [
+          "Aband_super",
+          120
+        ],
+        [
+          "Aband_super",
+          150
+        ],
+        [
+          "Aband_super",
+          180
+        ],
+        [
+          "Aband_super",
+          210
+        ],
+        [
+          "Aband_super",
+          240
+        ],
+        [
+          "Aband_super",
+          270
+        ],
+        [
+          "Aband_super",
+          300
+        ],
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ],
+        [
+          "Aband_super",
+          600
+        ],
+        [
+          "Aband_super",
+          630
+        ],
+        [
+          "Aband_super",
+          660
+        ],
+        [
+          "Aband_super",
+          690
+        ],
+        [
+          "kinase",
+          0
+        ],
+        [
+          "kinase",
+          30
+        ],
+        [
+          "Mline",
+          0
+        ],
+        [
+          "Mline",
+          30
+        ]
+      ]
+    },
+    {
+      "id": "architecture@mobile",
+      "scene_id": "architecture",
+      "scene_label": "Architecture",
+      "viewport_id": "mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=architecture&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "closeup.junction",
+      "canvas": {
+        "width": 375,
+        "height": 812
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ]
+      ]
+    },
+    {
+      "id": "z_anchor@mobile",
+      "scene_id": "z_anchor",
+      "scene_label": "Z-anchor",
+      "viewport_id": "mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=z_anchor&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "closeup.zdisc",
+      "canvas": {
+        "width": 375,
+        "height": 812
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Z1Z2",
+          0
+        ],
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ]
+      ]
+    },
+    {
+      "id": "a_band_scaffold@mobile",
+      "scene_id": "a_band_scaffold",
+      "scene_label": "A-band scaffold",
+      "viewport_id": "mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=a_band_scaffold&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "closeup.czone",
+      "canvas": {
+        "width": 375,
+        "height": 812
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ]
+      ]
+    },
+    {
+      "id": "lattice@mobile",
+      "scene_id": "lattice",
+      "scene_label": "Lattice",
+      "viewport_id": "mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=lattice&confidence=0",
+      "sarcomere_length_nm": 2200,
+      "camera_preset": "closeup.lattice",
+      "canvas": {
+        "width": 375,
+        "height": 812
+      },
+      "target_path_ids": [
+        "Z1Z2",
+        "prox_Ig",
+        "N2A",
+        "post_N2A_unknown",
+        "PEVK",
+        "dist_Ig",
+        "Aband_super",
+        "kinase",
+        "Mline"
+      ],
+      "path_offsets": [
+        [
+          "Z1Z2",
+          0
+        ],
+        [
+          "prox_Ig",
+          0
+        ],
+        [
+          "prox_Ig",
+          30
+        ],
+        [
+          "prox_Ig",
+          60
+        ],
+        [
+          "prox_Ig",
+          90
+        ],
+        [
+          "prox_Ig",
+          120
+        ],
+        [
+          "prox_Ig",
+          150
+        ],
+        [
+          "prox_Ig",
+          180
+        ],
+        [
+          "N2A",
+          0
+        ],
+        [
+          "N2A",
+          30
+        ],
+        [
+          "post_N2A_unknown",
+          0
+        ],
+        [
+          "post_N2A_unknown",
+          30
+        ],
+        [
+          "PEVK",
+          0
+        ],
+        [
+          "PEVK",
+          30
+        ],
+        [
+          "PEVK",
+          60
+        ],
+        [
+          "dist_Ig",
+          0
+        ],
+        [
+          "dist_Ig",
+          30
+        ],
+        [
+          "Aband_super",
+          0
+        ],
+        [
+          "Aband_super",
+          30
+        ],
+        [
+          "Aband_super",
+          60
+        ],
+        [
+          "Aband_super",
+          90
+        ],
+        [
+          "Aband_super",
+          120
+        ],
+        [
+          "Aband_super",
+          150
+        ],
+        [
+          "Aband_super",
+          180
+        ],
+        [
+          "Aband_super",
+          210
+        ],
+        [
+          "Aband_super",
+          240
+        ],
+        [
+          "Aband_super",
+          270
+        ],
+        [
+          "Aband_super",
+          300
+        ],
+        [
+          "Aband_super",
+          330
+        ],
+        [
+          "Aband_super",
+          360
+        ],
+        [
+          "Aband_super",
+          390
+        ],
+        [
+          "Aband_super",
+          420
+        ],
+        [
+          "Aband_super",
+          450
+        ],
+        [
+          "Aband_super",
+          480
+        ],
+        [
+          "Aband_super",
+          510
+        ],
+        [
+          "Aband_super",
+          540
+        ],
+        [
+          "Aband_super",
+          570
+        ],
+        [
+          "Aband_super",
+          600
+        ],
+        [
+          "Aband_super",
+          630
+        ],
+        [
+          "Aband_super",
+          660
+        ]
+      ]
+    }
+  ]
+}

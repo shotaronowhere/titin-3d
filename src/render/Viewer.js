@@ -12,7 +12,8 @@
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { SarcomereScene } from './SarcomereScene.js';
+import { PICK_PROXY_LAYER, SarcomereScene } from './SarcomereScene.js';
+import { PICK_CLASS, PICK_REASON, resolvePick } from './PickPriority.js';
 import { STAGE_LAYOUT } from '../presentation/StageLayout.js';
 
 /** @typedef {import('../model/TitinModel.js').TitinModel} TitinModel */
@@ -291,8 +292,20 @@ export class Viewer {
     this.raycaster.params.Line.threshold = 3;
     // Line2 has its own raycast path and reads its own params entry, which the
     // stock Raycaster does not define. Without it the titin ribbon is drawn but
-    // unpickable at the edges.
-    this.raycaster.params.Line2 = { threshold: 6 };
+    // unpickable at the edges. SC-25 moved the number itself into the reviewed
+    // picking policy, so the raycaster and the tolerance the resolver enforces
+    // cannot drift apart.
+    this.pickPolicy = model.spec?.renderStyle?.titin?.picking ?? null;
+    if (!this.pickPolicy || !(this.pickPolicy.line_pick_threshold_px > 0)
+        || !(this.pickPolicy.emphasized_titin_tolerance_px > 0)
+        || this.pickPolicy.pick_proxy_layer !== PICK_PROXY_LAYER) {
+      throw new Error('Viewer: the reviewed SC-25 titin picking policy is unavailable.');
+    }
+    this.raycaster.params.Line2 = { threshold: this.pickPolicy.line_pick_threshold_px };
+    // The camera's default mask renders layer 0 only, so enabling the proxy layer
+    // HERE — and only here — is what makes a hit area reachable by a ray and
+    // invisible to every render, screenshot, and bounding box.
+    this.raycaster.layers.enable(PICK_PROXY_LAYER);
   }
 
   /** Rebuild the scene at a sarcomere length. Returns the render manifest. */
@@ -450,6 +463,10 @@ export class Viewer {
     this.sarcomere.root.updateWorldMatrix(true, true);
     this.sarcomere.root.traverse((object) => {
       if (!(object.isMesh || object.isLine || object.isSprite || object.isInstancedMesh)) return;
+      // SC-25. A pick proxy is a hit area, not a structure: it must not move the
+      // camera, widen a close-up, or appear in any framing measurement. It is a
+      // Line2 — which extends Mesh — so the layer, not the type, is the test.
+      if (object.layers.isEnabled(PICK_PROXY_LAYER)) return;
       let cursor = object;
       while (cursor) {
         if (!cursor.visible) return;
@@ -643,10 +660,111 @@ export class Viewer {
   }
 
   /**
+   * Project a world point to container-local CSS pixels, honouring the near
+   * plane. A point behind the camera has a negative `w`, and dividing by it
+   * mirrors the position through the origin — which would report a pointer
+   * "close to" a segment that is behind the viewer's head.
+   *
+   * @returns {{x:number, y:number, z:number}} `z` is camera-space depth (negative
+   *   in front of the camera), so a caller can clip a segment before measuring it
+   */
+  _toCameraSpace(x, y, z) {
+    const v = new THREE.Vector4(x, y, z, 1).applyMatrix4(this.camera.matrixWorldInverse);
+    return { x: v.x, y: v.y, z: v.z };
+  }
+
+  _cameraSpaceToPixels(point, width, height) {
+    const v = new THREE.Vector4(point.x, point.y, point.z, 1)
+      .applyMatrix4(this.camera.projectionMatrix);
+    if (!(Math.abs(v.w) > 1e-9)) return null;
+    return {
+      x: (v.x / v.w + 1) * width / 2,
+      y: (1 - v.y / v.w) * height / 2,
+    };
+  }
+
+  /**
+   * Shortest CSS-pixel distance from the pointer to a screen-space line object.
+   *
+   * Measured in the SAME space the pick width is declared in, rather than by
+   * projecting three's world-space closest point: the two disagree wherever the
+   * line runs away from the camera, and the reviewed tolerance is a screen-space
+   * number. Returns null when no segment is in front of the near plane.
+   */
+  _screenDistanceToLine2(object, pointerPx, width, height) {
+    const start = object.geometry?.attributes?.instanceStart;
+    const end = object.geometry?.attributes?.instanceEnd;
+    if (!start || !end) return null;
+    const count = Math.min(object.geometry.instanceCount ?? start.count, start.count);
+    const near = -this.camera.near;
+    const world = new THREE.Vector3();
+    let bestDistance = null;
+    for (let i = 0; i < count; i += 1) {
+      world.set(start.getX(i), start.getY(i), start.getZ(i)).applyMatrix4(object.matrixWorld);
+      let a = this._toCameraSpace(world.x, world.y, world.z);
+      world.set(end.getX(i), end.getY(i), end.getZ(i)).applyMatrix4(object.matrixWorld);
+      let b = this._toCameraSpace(world.x, world.y, world.z);
+      if (a.z > near && b.z > near) continue;
+      // Trim to the near plane exactly as three's own screen-space line raycast
+      // does, so a segment that starts behind the camera is measured over the
+      // part of it that is actually on screen.
+      if (a.z > near) {
+        const t = (a.z - near) / (a.z - b.z);
+        a = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, z: near };
+      } else if (b.z > near) {
+        const t = (b.z - near) / (b.z - a.z);
+        b = { x: b.x + (a.x - b.x) * t, y: b.y + (a.y - b.y) * t, z: near };
+      }
+      const p = this._cameraSpaceToPixels(a, width, height);
+      const q = this._cameraSpaceToPixels(b, width, height);
+      if (!p || !q) continue;
+      const dx = q.x - p.x; const dy = q.y - p.y;
+      const lengthSq = dx * dx + dy * dy;
+      const t = lengthSq > 0
+        ? THREE.MathUtils.clamp(((pointerPx.x - p.x) * dx + (pointerPx.y - p.y) * dy) / lengthSq, 0, 1)
+        : 0;
+      const distance = Math.hypot(p.x + dx * t - pointerPx.x, p.y + dy * t - pointerPx.y);
+      if (bestDistance === null || distance < bestDistance) bestDistance = distance;
+    }
+    return bestDistance;
+  }
+
+  /**
+   * How far, in CSS pixels, the pointer was from the thing it hit.
+   *
+   * A surface hit is exact by construction — the intersection lies ON the ray, so
+   * it projects back to the pointer. Only tolerance-bearing geometry (the
+   * screen-space continuity trace and its hit proxy, and the world-space line
+   * marker) can be hit from a distance, and only those need measuring.
+   */
+  _hitScreenDistancePx(hit, pointerPx, width, height) {
+    if (hit.object?.isLineSegments2 || hit.object?.isLine2) {
+      const measured = this._screenDistanceToLine2(hit.object, pointerPx, width, height);
+      if (measured !== null) return measured;
+    }
+    if (hit.object?.isLine || hit.object?.isLineSegments) {
+      const point = hit.pointOnLine ?? hit.point;
+      const camera = this._toCameraSpace(point.x, point.y, point.z);
+      const projected = this._cameraSpaceToPixels(camera, width, height);
+      if (projected) return Math.hypot(projected.x - pointerPx.x, projected.y - pointerPx.y);
+    }
+    return 0;
+  }
+
+  /**
    * Raycast a browser client coordinate and return biological metadata only.
    * Three.js objects never cross the public facade boundary.
+   *
+   * SC-25: the loop MEASURES and the reviewed resolver DECIDES. Returning the
+   * first hit — which is what this did — is the rule "nearest along the ray
+   * wins", and that rule is wrong for a Learn stage whose titin trace is
+   * deliberately drawn in front of the occluders it is geometrically behind.
+   *
+   * @param {number} clientX
+   * @param {number} clientY
+   * @param {import('./PickPriority.js').PickIntent} [intent]
    */
-  pick(clientX, clientY) {
+  pick(clientX, clientY, intent = {}) {
     if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) {
       throw new Error('pick: clientX and clientY must be finite numbers.');
     }
@@ -654,30 +772,71 @@ export class Viewer {
     if (rect.width <= 0 || rect.height <= 0
         || clientX < rect.left || clientX > rect.right
         || clientY < rect.top || clientY > rect.bottom) return null;
+    const pointerPx = { x: clientX - rect.left, y: clientY - rect.top };
     const pointer = new THREE.Vector2(
-      ((clientX - rect.left) / rect.width) * 2 - 1,
-      -((clientY - rect.top) / rect.height) * 2 + 1,
+      (pointerPx.x / rect.width) * 2 - 1,
+      -(pointerPx.y / rect.height) * 2 + 1,
     );
     this.camera.updateMatrixWorld();
     this.sarcomere.root.updateWorldMatrix(true, true);
     this.raycaster.setFromCamera(pointer, this.camera);
-    const visible = (object) => {
+    const drawn = (object) => {
       for (let cursor = object; cursor; cursor = cursor.parent) {
         if (!cursor.visible) return false;
       }
       return true;
     };
+    const decorative = (object) => {
+      for (let cursor = object; cursor; cursor = cursor.parent) {
+        if (cursor.userData?.emphasis_channel === 'presentation') return true;
+      }
+      return false;
+    };
+    const candidates = [];
+    const hits = [];
     for (const hit of this.raycaster.intersectObject(this.sarcomere.root, true)) {
-      if (!visible(hit.object)) continue;
       const target = this.sarcomere.pickTarget(hit.object, hit.instanceId ?? null);
       if (!target) continue;
-      return {
+      candidates.push({
         ...target,
-        anchor_nm: { x: hit.point.x, y: hit.point.y, z: hit.point.z },
-        distance_nm: hit.distance,
-      };
+        biological_class: decorative(hit.object)
+          ? PICK_CLASS.decorative
+          : (target.target_type === 'titin_region' ? PICK_CLASS.titin : PICK_CLASS.context),
+        pick_proxy: Boolean(target.pick_proxy),
+        visible: drawn(hit.object),
+        screen_distance_px: this._hitScreenDistancePx(hit, pointerPx, rect.width, rect.height),
+        ray_distance_nm: hit.distance,
+        // Named by the plan's candidate record and read by nothing: see
+        // PickPriority. Carried so the inertness is observable rather than
+        // asserted.
+        selected: intent.selection?.target_type === target.target_type
+          && intent.selection?.target_id === target.target_id,
+      });
+      hits.push(hit);
     }
-    return null;
+    const resolved = resolvePick(candidates, {
+      explicit_target: intent.explicit_target ?? null,
+      emphasis: intent.emphasis ?? null,
+      selection: intent.selection ?? null,
+      tolerance_px: this.pickPolicy.emphasized_titin_tolerance_px,
+    });
+    if (!resolved.target) return null;
+    const index = candidates.findIndex((candidate) => candidate === resolved.target);
+    const hit = index >= 0 ? hits[index] : null;
+    const {
+      biological_class: biologicalClass, selected: _selected, visible: _visible, ...target
+    } = resolved.target;
+    return {
+      ...target,
+      anchor_nm: hit
+        ? { x: hit.point.x, y: hit.point.y, z: hit.point.z }
+        : null,
+      distance_nm: hit ? hit.distance : null,
+      pick_reason: resolved.reason,
+      biological_class: biologicalClass,
+      candidates_considered: resolved.considered,
+      decorative_candidates_dropped: resolved.dropped_decorative,
+    };
   }
 
   /**

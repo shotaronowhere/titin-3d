@@ -493,15 +493,46 @@ export class TitinVisualization {
     return createAnnotations(this.model, sl, { scale: this.scale });
   }
 
-  /** Pick visible geometry at a browser client coordinate. */
-  pickObject(clientX, clientY) {
-    const picked = this.viewer.pick(clientX, clientY);
+  /**
+   * Pick visible geometry at a browser client coordinate.
+   *
+   * `intent` is the SC-25 resolution context: which class the current depth
+   * emphasises, an explicitly named target when the pick came from a label or the
+   * keyboard, and the current selection — which the resolver is required to
+   * ignore. Omitting it resolves by nearest visible surface, which is the
+   * pre-SC-25 behaviour.
+   *
+   * @param {number} clientX
+   * @param {number} clientY
+   * @param {{emphasis?: 'titin'|null,
+   *   explicit_target?: {target_type:string, target_id:string}|null,
+   *   selection?: {target_type:string, target_id:string}|null}} [intent]
+   */
+  pickObject(clientX, clientY, intent = {}) {
+    const picked = this.viewer.pick(clientX, clientY, intent);
     if (!picked) return null;
     return Object.freeze({
       ...picked,
-      anchor_nm: Object.freeze({ ...picked.anchor_nm }),
+      anchor_nm: picked.anchor_nm ? Object.freeze({ ...picked.anchor_nm }) : null,
       sarcomere_length_nm: this._state?.sarcomere_length_nm ?? null,
       scale: this.scale,
+    });
+  }
+
+  /**
+   * The polylines the representative titin is currently DRAWN along, in model
+   * nanometres, together with the reviewed picking policy they are shadowed by.
+   *
+   * Exposed for the SC-25 hit grid: a fixture that samples the canonical backbone
+   * would be sampling coordinates rather than the render, and the render is what
+   * a pointer has to hit. Plain numbers only — no Three.js object crosses here.
+   */
+  titinPickPaths() {
+    return Object.freeze({
+      policy: this.model.spec.renderStyle.titin.picking,
+      sarcomere_length_nm: this._state?.sarcomere_length_nm ?? null,
+      scale: this.scale,
+      paths: this.viewer.sarcomere.titinPickPaths(),
     });
   }
 

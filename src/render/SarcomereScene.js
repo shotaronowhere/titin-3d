@@ -189,6 +189,21 @@ export const COMPONENTS = Object.freeze({
   titin: (n) => n.startsWith('titin') && !n.startsWith('titin_domains'),
 });
 
+/**
+ * SC-25. The layer pick proxies live on.
+ *
+ * A camera renders layer 0 only, while `Raycaster.layers` is a separate mask, so
+ * an object placed here is genuinely NON-RENDERING and still answers a ray. That
+ * is the whole reason for using a layer rather than `visible = false`: three's
+ * raycaster does not consult `visible` at all (the Viewer filters it afterwards),
+ * so an invisible proxy would be a drawn-nothing object the pick filter then
+ * discards — the opposite of what a hit proxy is for.
+ *
+ * The value itself is read from `data/render_style.json` at build time; this
+ * constant is the renderer's name for it and the two are asserted equal.
+ */
+export const PICK_PROXY_LAYER = 1;
+
 export const COMPONENT_COLOR = Object.freeze({
   thick_filament: 0x4e79a7,
   // Phase 7b: heads share the thick filament's hue family so they read as part of
@@ -311,6 +326,12 @@ export class SarcomereScene {
     this.screenSpaceLineMaterials = new Set();
     /** Populated by build(): a machine-readable audit of what was drawn. */
     this.manifest = null;
+    /**
+     * SC-25: the polylines the representative titin was drawn along. Populated by
+     * build() and cleared with everything else.
+     * @type {Array<{region_id:string, points:Array<{x:number,y:number,z:number}>}>}
+     */
+    this._titinPickPaths = [];
     this._built = false;
   }
 
@@ -646,6 +667,56 @@ export class SarcomereScene {
   _unpickable(object) {
     object.raycast = THREE.Object3D.prototype.raycast;
     return object;
+  }
+
+  /**
+   * SC-25 titin hit proxy: a screen-space-wide, never-drawn line along the path
+   * the molecule is actually drawn on.
+   *
+   * A world-space tube would be a hit area that shrinks with the molecule as the
+   * camera pulls back, which is precisely the state in which titin is hardest to
+   * hit. `LineMaterial` with `worldUnits` left false measures its width in CSS
+   * pixels, so this proxy keeps the SAME reach at every camera distance.
+   *
+   * It renders nothing: it sits alone on {@link PICK_PROXY_LAYER}, which the
+   * camera's default layer mask excludes and the Viewer's raycaster mask
+   * includes. It carries its own userData key rather than `titin_region`, so no
+   * selection, emphasis, or evidence pass can reach it by accident — the
+   * canonical visible target keeps every styling channel.
+   *
+   * @param {Array<{x:number,y?:number,z?:number}>} points the drawn chain
+   * @param {string} regionId canonical region the proxy resolves to
+   * @param {number} widthPx declared screen-space pick width
+   */
+  _titinPickProxy(points, regionId, widthPx) {
+    const positions = [];
+    for (const point of points) positions.push(point.x, point.y ?? 0, point.z ?? 0);
+    const geometry = new LineGeometry();
+    geometry.setPositions(positions);
+    this.disposables.add(geometry);
+    const material = new LineMaterial({
+      color: COMPONENT_COLOR.titin,
+      linewidth: widthPx,
+      // Never drawn, but stated rather than left to a default: a proxy that ever
+      // reached the render list must not also paint over the molecule.
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+    });
+    this.disposables.add(material);
+    // Screen-space raycasting reads the same resolution the width does; without
+    // this the proxy silently refuses every hit.
+    this.screenSpaceLineMaterials.add(material);
+    const line = new Line2(geometry, material);
+    line.name = `titin_pick_proxy_${regionId}`;
+    // Layer, not visibility: see PICK_PROXY_LAYER.
+    line.layers.set(PICK_PROXY_LAYER);
+    line.userData.pick_proxy = true;
+    line.userData.pick_proxy_region = regionId;
+    line.userData.pick_proxy_width_px = widthPx;
+    line.userData.render_meaning = 'non-rendering screen-space hit area for the titin path; '
+      + 'not a molecular envelope, surface, or width';
+    return line;
   }
 
   /**
@@ -1268,6 +1339,18 @@ export class SarcomereScene {
     // ---- representative titin paths as tubes ----
     const titinGroup = new THREE.Group();
     titinGroup.name = 'titin';
+    // SC-25 pick policy. Read from the reviewed record rather than restated, and
+    // asserted against the renderer's own name for the layer so a record edit
+    // cannot silently move proxies onto the rendered layer.
+    const pickPolicy = this.titinRenderStyle.picking;
+    if (!pickPolicy || pickPolicy.pick_proxy_layer !== PICK_PROXY_LAYER
+        || !(pickPolicy.pick_proxy_line_width_px > 0)) {
+      throw new Error('build: the reviewed titin pick policy is unavailable or names a '
+        + `layer other than ${PICK_PROXY_LAYER}.`);
+    }
+    const pickProxyWidthPx = pickPolicy.pick_proxy_line_width_px;
+    /** @type {Array<{region_id:string, points:Array<{x:number,y:number,z:number}>}>} */
+    const titinPickPaths = [];
     const axialFallback = {
       strand_index: 0, y: 0, z: 0, radius_nm: 0, azimuth_deg: null,
       evidence_class: 'SCHEMATIC — isolated axial presentation',
@@ -1466,7 +1549,27 @@ export class SarcomereScene {
         if (off.strand_index === 0) {
           const traces = new THREE.Group();
           traces.name = 'titin_continuity_traces';
+          // SC-25. The hit proxies follow the representative strand only, for the
+          // same reason the traces do: six copies of a 14 px hit area would be a
+          // hit area for the whole lattice, not for the molecule.
+          const proxies = new THREE.Group();
+          proxies.name = 'titin_pick_proxies';
           for (const segment of titinPath.segments) {
+            const drawnPath = displayPath(segment, off);
+            // Recorded from the SAME points the tube was built from, so the hit
+            // grid samples the molecule that is drawn rather than a second idea
+            // of where it runs.
+            titinPickPaths.push({
+              region_id: segment.region_id,
+              points: drawnPath.map((point) => ({
+                x: point.x, y: point.y ?? 0, z: point.z ?? 0,
+              })),
+            });
+            if (drawnPath.length > 1) {
+              proxies.add(this._titinPickProxy(
+                drawnPath, segment.region_id, pickProxyWidthPx,
+              ));
+            }
             traces.add(this._titinContinuityTrace(segment, off, aBandStart, presentationMode));
             // The halo follows the CANONICAL path, not the coil. It is a "the
             // molecule runs through here" reading aid, and a 3.2x shell swept
@@ -1481,6 +1584,7 @@ export class SarcomereScene {
             }
           }
           titinGroup.add(traces);
+          titinGroup.add(proxies);
         }
         titinGroup.add(strand);
       } else {
@@ -1892,6 +1996,24 @@ export class SarcomereScene {
         evidence_opacity_unchanged: true,
         meaning: 'screen-space reading width and an additive halo; neither is a molecular dimension',
       },
+      // SC-25. Reported so the hit proxies are auditable as an interaction
+      // channel: how many exist, where they live, and — the part that matters
+      // scientifically — that none of them is drawn, bounded, counted, or
+      // capable of resolving to anything but the canonical visible region.
+      titin_pick_proxies: {
+        channel: 'interaction',
+        policy_id: pickPolicy.policy_id,
+        count: titinPickPaths.length,
+        layer: PICK_PROXY_LAYER,
+        rendered: false,
+        counted_in_geometry: false,
+        screen_space_width_px: pickProxyWidthPx,
+        resolves_to: 'the canonical visible titin region of the same identifier',
+        region_ids: titinPickPaths.map((path) => path.region_id),
+        evidence_opacity_unchanged: true,
+        meaning: 'non-rendering screen-space hit area for the titin path; not a molecular '
+          + 'envelope, surface, width, or a second copy of the molecule',
+      },
       titin_regions: scene.titin.map((region) => ({
         id: region.id,
         band: region.band,
@@ -2025,8 +2147,26 @@ export class SarcomereScene {
         ] : []),
       ],
     };
+    this._titinPickPaths = titinPickPaths;
     this._built = true;
     return this.root;
+  }
+
+  /**
+   * The polylines the representative titin was DRAWN along, in model nanometres.
+   *
+   * Plain numbers, never Three.js objects, so the picking hit grid can sample the
+   * molecule the viewer actually sees rather than a second idea of where it runs.
+   * The proxies are built from exactly these points, which is what makes the
+   * committed fixture a statement about the render and not about the fixture.
+   *
+   * @returns {Array<{region_id:string, points:Array<{x:number,y:number,z:number}>}>}
+   */
+  titinPickPaths() {
+    return (this._titinPickPaths || []).map((path) => ({
+      region_id: path.region_id,
+      points: path.points.map((point) => ({ x: point.x, y: point.y, z: point.z })),
+    }));
   }
 
   /**
@@ -2050,7 +2190,15 @@ export class SarcomereScene {
     return this.annotationRecords;
   }
 
-  /** Resolve one raycast leaf/instance to stable biological vocabulary. */
+  /**
+   * Resolve one raycast leaf/instance to stable biological vocabulary.
+   *
+   * @param {THREE.Object3D|null} object
+   * @param {number|null} [instanceId]
+   * @returns {{target_type:'titin_region'|'component', target_id:string,
+   *   mirrored:boolean, pick_proxy:boolean, domain_id?:string|null,
+   *   instance_id?:number|null, archetype?:string|null}|null}
+   */
   pickTarget(object, instanceId = null) {
     if (!object) return null;
     const ancestors = [];
@@ -2069,19 +2217,33 @@ export class SarcomereScene {
           instance_id: instanceIndex,
           archetype: candidate.userData.archetype || null,
           mirrored,
+          pick_proxy: false,
+        };
+      }
+      // SC-25. A proxy resolves to the SAME canonical annotation as the geometry
+      // it shadows, and says so. It is a separate userData key rather than a
+      // second `titin_region`, so every selection, emphasis, and evidence pass
+      // keeps reaching the visible target and never the hit area.
+      const proxyRegion = candidate.userData?.pick_proxy_region;
+      if (proxyRegion) {
+        return {
+          target_type: 'titin_region', target_id: proxyRegion, mirrored, pick_proxy: true,
         };
       }
       const region = candidate.userData?.titin_region
         || candidate.userData?.titin_trace_region;
-      if (region) return { target_type: 'titin_region', target_id: region, mirrored };
+      if (region) {
+        return { target_type: 'titin_region', target_id: region, mirrored, pick_proxy: false };
+      }
     }
 
     const names = ancestors.map((candidate) => candidate.name || '');
     const has = (predicate) => names.some(predicate);
     if (has((name) => name.startsWith('titin_zdisc_')
       || name.startsWith('titin_zdisc_direction_'))) {
-      return { target_type: 'titin_region', target_id: 'Z1Z2', mirrored };
+      return { target_type: 'titin_region', target_id: 'Z1Z2', mirrored, pick_proxy: false };
     }
+    /** @type {Array<[string, (name: string) => boolean]>} */
     const mappings = [
       // Before the thick-filament rule: MyBP-C decorates that filament but is a
       // separate accessory protein, and resolving it to 'thick_filament' would
@@ -2098,7 +2260,9 @@ export class SarcomereScene {
       ['mline', (name) => name === 'mline'],
     ];
     for (const [targetId, predicate] of mappings) {
-      if (has(predicate)) return { target_type: 'component', target_id: targetId, mirrored };
+      if (has(predicate)) {
+        return { target_type: 'component', target_id: targetId, mirrored, pick_proxy: false };
+      }
     }
     return null;
   }
@@ -2616,6 +2780,9 @@ export class SarcomereScene {
     this.screenSpaceLineMaterials.clear();
     this.manifest = null;
     this._built = false;
+    // Rebuilt and disposed with the visible target they follow; a stale proxy
+    // path would describe a molecule that is no longer on stage.
+    this._titinPickPaths = [];
     this.highlightedTitinRegion = null;
     this.presentationEmphasis = null;
     this.annotationRecords = new Map();

@@ -14,10 +14,10 @@
     "guided_radius_scale": 1.65,
     "disordered_radius_scale": 0.58,
     "continuity_opacity": 0.96,
-    "trace_px": 4.0,
-    "trace_px_evidence": 3.0,
+    "trace_px": 5.0,
+    "trace_px_evidence": 3.5,
     "halo_radius_scale": 3.2,
-    "halo_opacity": 0.16,
+    "halo_opacity": 0.2,
     "linker_radius_fraction": 0.5,
     "irregular_ribbon": {
       "amplitude_scale": 2.6,
@@ -52,6 +52,32 @@
         "contour_source": "data/titin.json#/regions/4/extension_model/max_end2end_nm",
         "fallback_slack_fraction": null
       }
-    ]
+    ],
+    "picking": {
+      "policy_id": "titin-first-within-tolerance/1",
+      "purpose": "Deterministic resolution of an ambiguous ray hit. Screen-space pick widths are reading affordances; none of them is a molecular dimension, an envelope, or a measured width.",
+      "priority_order": [
+        "explicit_target",
+        "emphasized_titin_within_tolerance",
+        "nearest_visible_surface",
+        "pick_proxy_only"
+      ],
+      "emphasis_depth": "learn",
+      "line_pick_threshold_px": 6.0,
+      "pick_proxy_line_width_px": 14.0,
+      "emphasized_titin_tolerance_px": 10.0,
+      "tolerance_derivation": "(pick_proxy_line_width_px + line_pick_threshold_px) / 2",
+      "pick_proxy_layer": 1,
+      "pick_proxy_rendered": false,
+      "pick_proxy_counted_in_geometry": false,
+      "selection_influences_resolution": false,
+      "decorative_channels_pickable": false,
+      "not_claimed": [
+        "that the pick proxy is a molecular envelope, surface, or transverse dimension",
+        "that any screen-space pick width encodes a measured titin width",
+        "that the current selection influences which object a ray resolves to",
+        "that a proxy hit is a second copy of the molecule"
+      ]
+    }
   }
 }
