@@ -1818,6 +1818,21 @@ function startInspectionOnboarding() {
  * annotation index — rather than from the pointer handler alone, because the
  * lesson is "structures explain themselves", not "the mouse works".
  */
+/**
+ * End the pulse without spending the invitation.
+ *
+ * The pulse costs a scene traverse per frame, and SC-24's sweep deliberately caps
+ * its visual time step when frames are slow — so an invitation still breathing
+ * while a demonstration runs makes the demonstration take longer. Starting Stretch
+ * is not "inspecting a structure", so the sentence stays; only the motion stops.
+ */
+function stopInspectionPulse() {
+  if (inspectPulseStartedAt === null) return;
+  inspectPulseStartedAt = null;
+  visualization.pulseTitinIdentity(0);
+  markStageDirty();
+}
+
 function completeInspectionOnboarding() {
   if ($('inspectHint').hidden && inspectOnboardingDone) return;
   // Always restore the base identity colour, whether the pulse was animating or
@@ -4477,6 +4492,7 @@ function toggleSweep() {
   const needsSpringScene = !sceneMatch(sceneController.scene('spring'), publicSceneState());
   if (sweepResetLength === null) sweepResetLength = current;
   sweepPresentationActive = true;
+  stopInspectionPulse();
   if (needsSpringScene) {
     applySemanticScene('spring', { announce: false });
     $('objectAnnouncement').textContent = 'Changed to the Spring scene so the complete '
