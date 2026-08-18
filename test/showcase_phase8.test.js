@@ -10,6 +10,7 @@ import { TitinVisualization, SCALES } from '../src/api/TitinVisualization.js';
 import { COMPONENTS, SarcomereScene } from '../src/render/SarcomereScene.js';
 import { Viewer, VIEWS, CLOSEUPS } from '../src/render/Viewer.js';
 import { StoryController } from '../src/presentation/StoryController.js';
+import { SceneController } from '../src/presentation/SceneController.js';
 import { baseEvidence } from '../src/presentation/AnnotationCatalog.js';
 import { createVisualMatrix, VIEWPORTS } from '../src/presentation/VisualMatrix.js';
 import { RADIAL_TITIN_POLICY } from '../src/geometry/LatticeGeometry.js';
@@ -21,16 +22,23 @@ const gates = JSON.parse(
 );
 const SL = 2200;
 const { min, max } = model.slRange();
+const regionTargets = model.titinRegions().map((region) => region.id);
+const componentTargets = Object.keys(COMPONENTS);
 const capabilities = {
   views: Object.keys(VIEWS),
   closeups: Object.keys(CLOSEUPS),
   scales: Object.values(SCALES),
-  targets: [...model.titinRegions().map((region) => region.id), ...Object.keys(COMPONENTS)],
+  targets: [...regionTargets, ...componentTargets],
+  regionTargets,
+  componentTargets,
   hiddenTargetsByScale: { [SCALES.detail]: TitinVisualization.DETAIL_HIDDEN },
   minLength: min,
   maxLength: max,
 };
 const controller = new StoryController(model.spec.presentation, capabilities, model.spec.scenes);
+const sceneController = new SceneController(model.spec.scenes, capabilities, {
+  presentation: model.spec.presentation,
+});
 
 /** The presentation option space SC-8 has to sweep. */
 const MODES = ['guided', 'evidence'];
@@ -218,6 +226,13 @@ test('SC8: the visual matrix covers the plan and every cell is reproducible', ()
   for (const viewport of VIEWPORTS) {
     assert.ok(matrix.cells.some((cell) => cell.viewport_id === viewport.id), viewport.id);
   }
+  assert.deepEqual(
+    matrix.cells.filter((cell) => cell.group === 'semantic_scenes')
+      .map((cell) => cell.id),
+    sceneController.order.map((id) => `scene_${id}`),
+  );
+  assert.deepEqual(matrix.legacy_disposition.map((row) => row.old_cell_id),
+    ['closeup_zdisc', 'closeup_lattice', 'closeup_czone']);
   // Every guided chapter at every viewport, which is the part a first-time viewer sees.
   for (const chapter of controller.chapters) {
     for (const viewport of VIEWPORTS) {
@@ -235,7 +250,7 @@ test('SC8: the visual matrix covers the plan and every cell is reproducible', ()
   // Reproducibility is the property that makes the matrix a control rather than
   // a gallery: each hash must decode back to the state the cell names.
   for (const cell of matrix.cells) {
-    const decoded = controller.parse(cell.url_hash);
+    const decoded = sceneController.parse(cell.url_hash);
     assert.deepEqual(decoded.issues, [], `${cell.id}: ${decoded.issues.join(' ')}`);
     assert.deepEqual(decoded.state, cell.state, `${cell.id}: decoded to another state`);
   }

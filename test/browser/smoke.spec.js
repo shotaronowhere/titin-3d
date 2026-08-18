@@ -53,15 +53,16 @@ for (const viewport of Object.keys(VIEWPORTS)) {
   test(`${viewport}: Evidence, Measure, and Sources open their named tab and return focus`, async ({ page }) => {
     await setReviewViewport(page, viewport);
     await cleanBoot(page, '/index.html');
-    for (const [entry, tab] of [
-      ['audienceEvidence', 'tabEvidence'],
-      ['stageMeasureLink', 'tabMeasure'],
-      ['stageSourcesLink', 'tabSources'],
+    for (const [entry, tab, fromMore] of [
+      ['audienceEvidence', 'tabEvidence', false],
+      ['stageMeasureLink', 'tabMeasure', true],
+      ['stageSourcesLink', 'tabSources', true],
     ]) {
+      if (fromMore) await page.locator('#stageMore').click();
       await page.locator(`#${entry}`).click();
       await expect(page.locator(`#${tab}`)).toHaveAttribute('aria-selected', 'true');
       await page.locator('#closeEvidence').click();
-      await expect(page.locator(`#${entry}`)).toBeFocused();
+      await expect(page.locator(fromMore ? '#stageMore' : `#${entry}`)).toBeFocused();
     }
   });
 }
@@ -69,6 +70,7 @@ for (const viewport of Object.keys(VIEWPORTS)) {
 test('visible source links and every selected-row state use declared readable foregrounds', async ({ page }) => {
   await setReviewViewport(page, 'desktop');
   await cleanBoot(page, '/index.html');
+  await page.locator('#stageMore').click();
   await page.locator('#stageSourcesLink').click();
   const foregrounds = await page.locator('#bibliography a').evaluateAll((nodes) => nodes
     .filter((node) => node.getClientRects().length > 0)
@@ -81,6 +83,7 @@ test('visible source links and every selected-row state use declared readable fo
   }
 
   await page.locator('#closeEvidence').click();
+  await page.locator('#audienceGuided').click();
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();

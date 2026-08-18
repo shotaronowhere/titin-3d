@@ -1,32 +1,14 @@
 /**
- * SC-8 deterministic visual matrix.
+ * Deterministic visual-review matrix, regenerated for SC-24 semantic scenes.
  *
- * The plan asks for a screenshot set that covers every guided chapter, Evidence
- * mode, the reference keyframes and working-range endpoints, the close-ups, the
- * optional MyBP-C layer both ways, selection, reduced motion, and a colour-vision
- * review — captured at four declared viewports.
- *
- * The thing that makes such a matrix worth anything is REPRODUCIBILITY: a cell
- * nobody can return to is a screenshot, not a control. Every cell here is
- * therefore expressed as a viewport plus the SC-1 URL hash, and each hash is
- * round-tripped through the same StoryController the browser uses. A cell that
- * cannot be decoded back to the state it names is rejected at construction, so
- * the matrix cannot drift away from the application it is supposed to audit.
- *
- * Two axes are deliberately NOT URL state, because neither is a biological or
- * presentation state the application owns: the optional MyBP-C display option and
- * the viewer's reduced-motion preference. They travel beside the hash as capture
- * options, and the colour-vision axis is a post-capture filter over an ordinary
- * cell rather than a different application state.
- *
- * This module renders nothing. It emits a manifest; capture is a separate step
- * that needs a browser, and the plan is explicit that pixel comparison
- * supplements human review rather than determining scientific correctness.
+ * Every cell is a viewport plus a canonical SceneController URL v2 hash. The
+ * manifest retains the broad SC-8 coverage while making the seven biological
+ * scene intentions first-class capture cells. Retired camera-inventory cells
+ * carry an explicit old→new disposition instead of silently disappearing.
  */
 
-import { StoryController } from './StoryController.js';
+import { SceneController } from './SceneController.js';
 
-/** The four capture viewports the plan names, in descending width. */
 export const VIEWPORTS = Object.freeze([
   Object.freeze({ id: 'projector', width: 1920, height: 1080, label: 'Presentation / projector' }),
   Object.freeze({ id: 'desktop', width: 1440, height: 900, label: 'Desktop' }),
@@ -34,22 +16,41 @@ export const VIEWPORTS = Object.freeze([
   Object.freeze({ id: 'mobile', width: 390, height: 844, label: 'Mobile' }),
 ]);
 
-/** Post-capture review filters. These re-render no state; they re-read one. */
 export const COLOR_FILTERS = Object.freeze([
   'protanopia', 'deuteranopia', 'tritanopia', 'grayscale',
 ]);
 
-/** The viewport every single-viewport group is captured at. */
 const PRIMARY_VIEWPORT = 'projector';
-
 const defaultOptions = Object.freeze({
   mybpc: false,
   reduced_motion: false,
   color_filter: null,
 });
 
+const clone = (value) => structuredClone(value);
+const stable = (value) => {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  }
+  return value;
+};
+
+function chapterLayers(visibility = {}) {
+  return {
+    show_lattice: Boolean(visibility.show_lattice),
+    show_domains: Boolean(visibility.show_domains),
+    show_context_detail: Boolean(visibility.show_context_detail),
+    mirror: visibility.mirror !== false,
+    extended_lattice: false,
+    lattice_rings_1: true,
+    lattice_rings_2: false,
+    lattice_rings_3: false,
+  };
+}
+
 export function validateVisualMatrix(matrix) {
-  if (!matrix || matrix.schema !== 'titin-visual-matrix/1') {
+  if (!matrix || matrix.schema !== 'titin-visual-matrix/2') {
     throw new Error('validateVisualMatrix: unsupported record.');
   }
   const ids = new Set();
@@ -59,8 +60,8 @@ export function validateVisualMatrix(matrix) {
     if (!matrix.viewports.some((viewport) => viewport.id === cell.viewport_id)) {
       throw new Error(`validateVisualMatrix: cell '${cell.id}' uses an undeclared viewport.`);
     }
-    if (!cell.url_hash?.startsWith('#') || !cell.label?.trim() || !cell.group?.trim()) {
-      throw new Error(`validateVisualMatrix: cell '${cell.id}' is incomplete.`);
+    if (!cell.url_hash?.startsWith('#v=2&') || !cell.label?.trim() || !cell.group?.trim()) {
+      throw new Error(`validateVisualMatrix: cell '${cell.id}' is incomplete or is not URL v2.`);
     }
     if (cell.options.color_filter !== null
         && !COLOR_FILTERS.includes(cell.options.color_filter)) {
@@ -72,11 +73,19 @@ export function validateVisualMatrix(matrix) {
       throw new Error(`validateVisualMatrix: no cell covers the required group '${required}'.`);
     }
   }
-  // Every declared viewport must actually be captured, or "at minimum these four"
-  // would be a list rather than a requirement.
   for (const viewport of matrix.viewports) {
     if (!matrix.cells.some((cell) => cell.viewport_id === viewport.id)) {
       throw new Error(`validateVisualMatrix: viewport '${viewport.id}' is never captured.`);
+    }
+  }
+  const retired = new Set();
+  for (const row of matrix.legacy_disposition || []) {
+    if (!row.old_cell_id || retired.has(row.old_cell_id) || ids.has(row.old_cell_id)) {
+      throw new Error(`validateVisualMatrix: invalid retired cell '${row.old_cell_id}'.`);
+    }
+    retired.add(row.old_cell_id);
+    if (row.disposition !== 'replaced' || !ids.has(row.new_cell_id) || !row.reason?.trim()) {
+      throw new Error(`validateVisualMatrix: incomplete disposition for '${row.old_cell_id}'.`);
     }
   }
   return matrix;
@@ -85,64 +94,81 @@ export function validateVisualMatrix(matrix) {
 /**
  * @param {import('../model/TitinModel.js').TitinModel} model
  * @param {{views: string[], closeups: string[], scales: string[], targets: string[],
- *   hiddenTargetsByScale: Record<string, string[]>, minLength: number, maxLength: number}} capabilities
+ *   minLength: number, maxLength: number}} capabilities
  */
 export function createVisualMatrix(model, capabilities) {
   const presentation = model.spec.presentation;
-  const controller = new StoryController(presentation, capabilities, model.spec.scenes);
+  const controller = new SceneController(model.spec.scenes, {
+    ...capabilities,
+    claimIds: model.spec.claimSupport.claims.map((claim) => claim.id),
+  }, { presentation });
+  const chapters = presentation.guided_chapters;
   const cells = [];
 
-  /**
-   * Build one cell and prove it is reachable. `serialize` already refuses to
-   * encode an unsupported state, and the decode check catches the subtler failure
-   * where a hash encodes cleanly but decodes to something else.
-   */
+  const chapterState = (chapterId) => {
+    const chapter = chapters.find((entry) => entry.id === chapterId);
+    if (!chapter) throw new Error(`createVisualMatrix: unknown chapter '${chapterId}'.`);
+    const recommended = chapter.recommended_state;
+    const selectionId = recommended.selected_component_or_region ?? chapter.target?.id ?? null;
+    const state = {
+      ...controller.defaultState({ story_step: chapter.id }),
+      story_step: chapter.id,
+      camera_preset: recommended.camera_preset,
+      scale: recommended.scale,
+      context: recommended.scale === 'context',
+      layers: chapterLayers(recommended.visibility),
+      selection: selectionId === null ? null : {
+        kind: chapter.target?.kind || 'component', id: selectionId,
+      },
+    };
+    return controller.reconcile(state);
+  };
+
+  const custom = (state, patch = {}) => controller.update(
+    { ...clone(state), ...clone(patch), scene_id: null }, {}, { infer: false },
+  );
+
   const cell = (id, group, viewportId, state, label, options = {}) => {
     const hash = controller.serialize(state);
     const decoded = controller.parse(hash);
-    if (decoded.issues.length) {
-      throw new Error(`createVisualMatrix: cell '${id}' is not reproducible: ${decoded.issues.join(' ')}`);
-    }
-    for (const [key, value] of Object.entries(state)) {
-      if (decoded.state[key] !== value) {
-        throw new Error(`createVisualMatrix: cell '${id}' decodes '${key}' as '${decoded.state[key]}', not '${value}'.`);
-      }
+    if (decoded.issues.length
+        || JSON.stringify(stable(decoded.state)) !== JSON.stringify(stable(state))) {
+      throw new Error(`createVisualMatrix: cell '${id}' is not reproducible: `
+        + `${decoded.issues.join(' ') || 'decoded state differs'}`);
     }
     cells.push({
       id,
       group,
       viewport_id: viewportId,
       url_hash: hash,
-      state: { ...state },
+      state: clone(state),
       options: { ...defaultOptions, ...options },
       label,
     });
   };
 
-  // Every guided chapter, at every declared viewport: the guided route is what a
-  // first-time viewer sees, so it is the part that has to survive every screen.
-  for (const chapter of controller.chapters) {
+  const opening = chapterState(chapters[0].id);
+  for (const sceneId of controller.order) {
+    const scene = controller.scene(sceneId);
+    cell(`scene_${sceneId}`, 'semantic_scenes', PRIMARY_VIEWPORT,
+      controller.resolveScene(sceneId, opening), `Semantic scene: ${scene.label}`);
+  }
+
+  for (const chapter of chapters) {
     for (const viewport of VIEWPORTS) {
       cell(`chapter_${chapter.id}_${viewport.id}`, 'guided_chapters', viewport.id,
-        controller.stateForChapter(chapter.id),
-        `${chapter.title} — ${viewport.label}`);
+        chapterState(chapter.id), `${chapter.title} — ${viewport.label}`);
     }
   }
 
-  // Evidence mode at every viewport: the drawer is the layout most at risk on a
-  // narrow screen, where it becomes a bottom sheet.
-  const evidenceBase = {
-    ...controller.stateForChapter(controller.chapters[0].id),
-    audience_mode: 'evidence',
-    evidence_display: true,
-  };
+  const evidenceBase = custom(opening, {
+    depth: 'explore', drawer: 'inspect', confidence_display: true,
+  });
   for (const viewport of VIEWPORTS) {
     cell(`evidence_${viewport.id}`, 'evidence_mode', viewport.id,
-      evidenceBase, `Evidence mode — ${viewport.label}`);
+      evidenceBase, `Explore / Inspect — ${viewport.label}`);
   }
 
-  // Reference keyframes and the lower working-range endpoint. 2,400 nm is already
-  // the `stretched` keyframe, so only 2,000 nm is additional.
   const states = model.spec.states.states;
   const workingRange = presentation.scope.working_range_nm;
   const lengths = [
@@ -150,78 +176,92 @@ export function createVisualMatrix(model, capabilities) {
     ['working_range_low', workingRange[0]],
   ];
   for (const [id, sarcomereLengthNm] of lengths) {
-    if (cells.some((existing) => existing.state.sarcomere_length_nm === sarcomereLengthNm
-        && existing.group === 'length_states')) continue;
+    if (cells.some((entry) => entry.group === 'length_states'
+        && entry.state.sarcomere_length_nm === sarcomereLengthNm)) continue;
     cell(`length_${id}`, 'length_states', PRIMARY_VIEWPORT,
-      { ...evidenceBase, sarcomere_length_nm: sarcomereLengthNm },
-      `Evidence at ${sarcomereLengthNm} nm (${id})`);
+      custom(evidenceBase, { sarcomere_length_nm: sarcomereLengthNm }),
+      `Inspect at ${sarcomereLengthNm} nm (${id})`);
   }
 
-  // Close-ups: the anchors, the lattice, the C-zone, and the two disordered
-  // I-band regions the extension story turns on.
-  for (const name of ['zdisc', 'mline', 'lattice', 'czone']) {
-    cell(`closeup_${name}`, 'closeups', PRIMARY_VIEWPORT,
-      { ...evidenceBase, camera_preset: `closeup.${name}`, selected_component_or_region: null },
-      `Close-up: ${name}`);
-  }
+  // The Z-disc, lattice, and C-zone raw close-up cells are retired below in
+  // favour of semantic captures. M-line and exact-region states have no compact
+  // equivalent and remain explicit Custom cells.
+  cell('closeup_mline', 'closeups', PRIMARY_VIEWPORT,
+    custom(evidenceBase, {
+      camera_preset: 'closeup.mline', selection: null,
+      layers: {
+        ...evidenceBase.layers,
+        show_lattice: true,
+        show_context_detail: true,
+        mirror: true,
+      },
+    }),
+    'Custom close-up: M-line');
   for (const region of ['PEVK', 'N2A']) {
     cell(`region_${region}`, 'closeups', PRIMARY_VIEWPORT,
-      {
-        ...evidenceBase,
-        scale: 'detail',
-        camera_preset: `region.${region}`,
-        selected_component_or_region: region,
-      },
-      `Region close-up: ${region}`);
+      custom(evidenceBase, {
+        scale: 'detail', context: false, camera_preset: `region.${region}`,
+        selection: { kind: 'region', id: region },
+      }), `Custom region close-up: ${region}`);
   }
 
-  // The optional MyBP-C layer, both ways, on the view that carries it. The two
-  // cells are the same application state; only the display option differs, which
-  // is what makes them a usable before/after pair.
-  const scaffold = controller.stateForChapter('scaffold_thick_filament');
-  const scaffoldEvidence = { ...scaffold, audience_mode: 'evidence', evidence_display: true };
+  const scaffold = controller.resolveScene(
+    'a_band_scaffold', chapterState('scaffold_thick_filament'),
+  );
+  const scaffoldEvidence = custom(scaffold, {
+    depth: 'explore', drawer: 'inspect', confidence_display: true,
+  });
   for (const enabled of [false, true]) {
     cell(`mybpc_${enabled ? 'on' : 'off'}`, 'mybpc_context', PRIMARY_VIEWPORT,
       scaffoldEvidence, `A-band scaffold — MyBP-C ${enabled ? 'enabled' : 'disabled'}`,
       { mybpc: enabled });
   }
 
-  // Selected versus unselected, so the selection channel can be reviewed against
-  // the identity and evidence channels it must stay separate from.
   cell('selection_none', 'selection', PRIMARY_VIEWPORT,
-    { ...evidenceBase, selected_component_or_region: null }, 'No selection');
+    custom(evidenceBase, { selection: null }), 'No selection');
   cell('selection_region', 'selection', PRIMARY_VIEWPORT,
-    { ...evidenceBase, selected_component_or_region: 'PEVK', camera_preset: 'region.PEVK' },
-    'Selected titin region');
+    custom(evidenceBase, {
+      selection: { kind: 'region', id: 'PEVK' }, camera_preset: 'region.PEVK',
+    }), 'Selected titin region');
 
-  // Reduced motion is a viewer preference, not application state: the same cell,
-  // captured with the preference on, must be scientifically identical.
   cell('reduced_motion', 'reduced_motion', PRIMARY_VIEWPORT,
-    controller.stateForChapter(controller.chapters[0].id),
-    'Opening chapter under prefers-reduced-motion', { reduced_motion: true });
+    opening, 'Opening chapter under prefers-reduced-motion', { reduced_motion: true });
 
-  // Colour-vision and grayscale review filters over the densest identity scene.
   for (const filter of COLOR_FILTERS) {
     cell(`vision_${filter}`, 'colour_vision', PRIMARY_VIEWPORT,
       evidenceBase, `Identity palette under ${filter}`, { color_filter: filter });
   }
 
   return validateVisualMatrix({
-    schema: 'titin-visual-matrix/1',
-    purpose: 'Deterministic capture set for the SC-8 visual review. Each cell is a '
-      + 'viewport plus a reproducible URL state; pixel comparison supplements human '
-      + 'review and does not determine scientific correctness.',
+    schema: 'titin-visual-matrix/2',
+    purpose: 'Deterministic SC-24 capture set generated from semantic scenes and '
+      + 'canonical URL v2 state. Pixel comparison supplements human review and does '
+      + 'not determine scientific correctness.',
     viewports: VIEWPORTS.map((viewport) => ({ ...viewport })),
     color_filters: [...COLOR_FILTERS],
     required_groups: [
-      'guided_chapters', 'evidence_mode', 'length_states', 'closeups',
-      'mybpc_context', 'selection', 'reduced_motion', 'colour_vision',
+      'semantic_scenes', 'guided_chapters', 'evidence_mode', 'length_states',
+      'closeups', 'mybpc_context', 'selection', 'reduced_motion', 'colour_vision',
     ],
     capture_rules: [
-      'fixed camera state from the named preset in each cell',
+      'fixed camera state from the semantic scene or documented Custom state',
       'device pixel ratio pinned to 1',
       'animation disabled for capture',
       'the standalone build, not a development server',
+    ],
+    legacy_disposition: [
+      {
+        old_cell_id: 'closeup_zdisc', disposition: 'replaced', new_cell_id: 'scene_z_anchor',
+        reason: 'The reviewed Z-anchor scene supersedes the raw Z-disc camera inventory cell.',
+      },
+      {
+        old_cell_id: 'closeup_lattice', disposition: 'replaced', new_cell_id: 'scene_lattice',
+        reason: 'The reviewed Lattice scene supersedes the raw lattice camera inventory cell.',
+      },
+      {
+        old_cell_id: 'closeup_czone', disposition: 'replaced', new_cell_id: 'scene_a_band_scaffold',
+        reason: 'The reviewed A-band scaffold scene supersedes the raw C-zone camera inventory cell.',
+      },
     ],
     cells,
   });

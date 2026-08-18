@@ -28,6 +28,19 @@ CHAPTER_REQUIRED_FIELDS = {
     "recommended_state", "next_actions",
 }
 SCENE_LAYERS = {"show_lattice", "show_domains", "show_context_detail", "mirror"}
+CONTROL_SCENE_LAYERS = SCENE_LAYERS | {
+    "extended_lattice", "lattice_rings_1", "lattice_rings_2", "lattice_rings_3",
+}
+CONTROL_SCENE_FIELDS = {
+    "label", "camera_preset", "scale", "context", "layers", "selection",
+    "length_policy", "claim_ids",
+}
+CONTROL_SCENE_IDS = [
+    "overview", "titin_alone", "spring", "architecture", "z_anchor",
+    "a_band_scaffold", "lattice",
+]
+KNOWN_VIEWS = {"longitudinal", "titin_story", "side", "transverse", "oblique"}
+KNOWN_CLOSEUPS = {"crowns", "twist", "junction", "zdisc", "mline", "czone", "lattice"}
 SCENE_FIELDS = {
     "label", "available_in", "camera_preset", "scale", "context", "layers",
     "selection", "length_policy", "claim_ids", "source_filter",
@@ -412,6 +425,77 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
                 and scene_claims == chapter.get("claim_ids"),
                 f"semantic scene '{scene_id}' drifts from its chapter")
         validate_scene_values(scene_record, scene_id)
+
+    # SC-24 compact teaching controls are a second, deliberately smaller scene
+    # vocabulary in the same catalog. They are cross-file scientific records too:
+    # runtime validation alone cannot prove their claim IDs resolve in the source
+    # ledger, so the independent presentation gate validates the complete shape.
+    control_records = scenes.get("control_scenes") or {}
+    control_order = scenes.get("control_scene_order")
+    require(isinstance(control_order, list)
+            and control_order == CONTROL_SCENE_IDS
+            and set(control_records) == set(CONTROL_SCENE_IDS),
+            "SC-24 control_scene_order must contain every required control scene exactly once")
+    for scene_id, scene_record in control_records.items():
+        if not isinstance(scene_record, dict):
+            require(False, f"control scene '{scene_id}' must be an object")
+            continue
+        missing = CONTROL_SCENE_FIELDS - set(scene_record)
+        unexpected = set(scene_record) - CONTROL_SCENE_FIELDS
+        require(not missing and not unexpected,
+                f"control scene '{scene_id}' has incomplete or unexpected fields "
+                f"(missing {sorted(missing)}, unexpected {sorted(unexpected)})")
+        require(isinstance(scene_record.get("label"), str)
+                and bool(scene_record.get("label", "").strip()),
+                f"control scene '{scene_id}' needs a human label")
+        camera = scene_record.get("camera_preset")
+        camera_parts = camera.split(".") if isinstance(camera, str) else []
+        camera_known = (len(camera_parts) == 2 and (
+            (camera_parts[0] == "view" and camera_parts[1] in KNOWN_VIEWS)
+            or (camera_parts[0] == "closeup" and camera_parts[1] in KNOWN_CLOSEUPS)
+            or (camera_parts[0] == "region" and camera_parts[1] in region_ids)
+        ))
+        require(camera_known, f"control scene '{scene_id}' has an unavailable camera preset")
+        scale = scene_record.get("scale")
+        context = scene_record.get("context")
+        require(scale in {"context", "detail"} and type(context) is bool
+                and context is (scale == "context"),
+                f"control scene '{scene_id}' has inconsistent scale/context")
+        layers = scene_record.get("layers")
+        layers_shape = isinstance(layers, dict) and set(layers) == CONTROL_SCENE_LAYERS
+        require(layers_shape and all(type(value) is bool for value in (layers or {}).values()),
+                f"control scene '{scene_id}' has invalid layers")
+        if layers_shape:
+            ring_count = sum(bool(layers[f"lattice_rings_{ring}"]) for ring in (1, 2, 3))
+            require(ring_count == 1,
+                    f"control scene '{scene_id}' must select exactly one lattice ring count")
+            if isinstance(camera, str) and camera.startswith("closeup."):
+                require(layers["show_lattice"] and layers["show_context_detail"],
+                        f"control scene '{scene_id}' close-up requires lattice and context detail")
+            if camera == "closeup.mline":
+                require(layers["mirror"],
+                        f"control scene '{scene_id}' M-line close-up requires full sarcomere")
+        selection = scene_record.get("selection")
+        selection_shape = (selection is None or (
+            isinstance(selection, dict) and set(selection) == {"kind", "id"}))
+        selection_kind = selection.get("kind") if isinstance(selection, dict) else None
+        known_targets = region_ids if selection_kind == "region" else (
+            component_ids if selection_kind == "component" else set())
+        require(selection_shape and (selection is None
+                or (isinstance(selection.get("id"), str)
+                    and selection.get("id") in known_targets)),
+                f"control scene '{scene_id}' has unknown selection")
+        length_policy = scene_record.get("length_policy")
+        require(isinstance(length_policy, dict) and set(length_policy) == {"kind"}
+                and length_policy.get("kind") == "preserve",
+                f"control scene '{scene_id}' must preserve length")
+        scene_claims = scene_record.get("claim_ids")
+        require(isinstance(scene_claims, list) and bool(scene_claims)
+                and all(isinstance(claim_id, str) for claim_id in scene_claims)
+                and len(scene_claims) == len(set(scene_claims))
+                and all(claim_id in support_ids for claim_id in scene_claims),
+                f"control scene '{scene_id}' has unresolved or duplicate claim_ids")
+        validate_scene_values(scene_record, f"control:{scene_id}")
 
     for card in p.get("expert_cards", []):
         validate_scientific(card, "expert card")

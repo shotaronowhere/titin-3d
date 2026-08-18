@@ -4,6 +4,211 @@
     "purpose": "Declarative SC-23 scene intent. Records may select admitted scientific objects and presentation state, but contain no coordinates, biological constants, evidence classes, or force values.",
     "controller_owner": "SC-24"
   },
+  "control_scene_order": [
+    "overview",
+    "titin_alone",
+    "spring",
+    "architecture",
+    "z_anchor",
+    "a_band_scaffold",
+    "lattice"
+  ],
+  "control_scenes": {
+    "overview": {
+      "label": "Overview",
+      "camera_preset": "view.titin_story",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": false,
+        "show_context_detail": false,
+        "mirror": true,
+        "extended_lattice": false,
+        "lattice_rings_1": true,
+        "lattice_rings_2": false,
+        "lattice_rings_3": false
+      },
+      "selection": {
+        "kind": "component",
+        "id": "titin"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "sarcomere_definition",
+        "actomyosin_motor_function",
+        "titin_continuity_trace",
+        "titin_region_architecture"
+      ]
+    },
+    "titin_alone": {
+      "label": "Titin alone",
+      "camera_preset": "view.titin_story",
+      "scale": "detail",
+      "context": false,
+      "layers": {
+        "show_lattice": false,
+        "show_domains": true,
+        "show_context_detail": false,
+        "mirror": false,
+        "extended_lattice": false,
+        "lattice_rings_1": true,
+        "lattice_rings_2": false,
+        "lattice_rings_3": false
+      },
+      "selection": {
+        "kind": "component",
+        "id": "titin"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "titin_continuity_trace",
+        "titin_region_architecture",
+        "sequence_region_partition"
+      ]
+    },
+    "spring": {
+      "label": "Spring",
+      "camera_preset": "view.titin_story",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": false,
+        "show_context_detail": false,
+        "mirror": false,
+        "extended_lattice": false,
+        "lattice_rings_1": true,
+        "lattice_rings_2": false,
+        "lattice_rings_3": false
+      },
+      "selection": {
+        "kind": "region",
+        "id": "PEVK"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "regional_extension_story",
+        "force_law_parameter_set",
+        "titin_region_architecture"
+      ]
+    },
+    "architecture": {
+      "label": "Architecture",
+      "camera_preset": "closeup.junction",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": true,
+        "show_context_detail": true,
+        "mirror": false,
+        "extended_lattice": false,
+        "lattice_rings_1": true,
+        "lattice_rings_2": false,
+        "lattice_rings_3": false
+      },
+      "selection": {
+        "kind": "component",
+        "id": "titin_domains"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "titin_region_architecture",
+        "sequence_region_partition",
+        "lattice_cross_section"
+      ]
+    },
+    "z_anchor": {
+      "label": "Z-anchor",
+      "camera_preset": "closeup.zdisc",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": false,
+        "show_context_detail": true,
+        "mirror": true,
+        "extended_lattice": false,
+        "lattice_rings_1": true,
+        "lattice_rings_2": false,
+        "lattice_rings_3": false
+      },
+      "selection": {
+        "kind": "region",
+        "id": "Z1Z2"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "zdisc_local_network",
+        "zdisc_telethonin_sandwich",
+        "mband_midpoint_and_crosslinks"
+      ]
+    },
+    "a_band_scaffold": {
+      "label": "A-band scaffold",
+      "camera_preset": "closeup.czone",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": true,
+        "show_context_detail": true,
+        "mirror": true,
+        "extended_lattice": false,
+        "lattice_rings_1": true,
+        "lattice_rings_2": false,
+        "lattice_rings_3": false
+      },
+      "selection": {
+        "kind": "region",
+        "id": "Aband_super"
+      },
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "titin_region_architecture",
+        "aband_periodicity_relation",
+        "lattice_cross_section"
+      ]
+    },
+    "lattice": {
+      "label": "Lattice",
+      "camera_preset": "closeup.lattice",
+      "scale": "context",
+      "context": true,
+      "layers": {
+        "show_lattice": true,
+        "show_domains": false,
+        "show_context_detail": true,
+        "mirror": false,
+        "extended_lattice": true,
+        "lattice_rings_1": true,
+        "lattice_rings_2": false,
+        "lattice_rings_3": false
+      },
+      "selection": null,
+      "length_policy": {
+        "kind": "preserve"
+      },
+      "claim_ids": [
+        "lattice_cross_section",
+        "titin_continuity_trace",
+        "actomyosin_motor_function"
+      ]
+    }
+  },
   "primary_presenter_scene_id": "meet_sarcomere",
   "scenes": {
     "meet_sarcomere": {

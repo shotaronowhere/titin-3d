@@ -1,6 +1,6 @@
 # Presenter script
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `744924078f0de8249ac3564466d9526e90ba3628`; build inputs `53667a76bdb43f94d9e013c3b05dd23ffc75e82698b4d717442f84943b0b47c0`. Estimated 181.4 s (3 min 1 s), target 110–190 s.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `744924078f0de8249ac3564466d9526e90ba3628-dirty`; build inputs `2b15a893e5974ec19a48ca926e94afba61c7cda0b6022b595b636b6f2d6a6d72`. Estimated 181.4 s (3 min 1 s), target 110–190 s.
 
 Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in the Evidence drawer — you do not need to open it to finish the tour.
 

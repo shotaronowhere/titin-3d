@@ -267,22 +267,24 @@ test('SC2: hierarchy and selection preserve geometry and evidence opacity', () =
   scene.clear();
 });
 
-test('SC2: the opening and mechanics story are present in the accessible shell', () => {
+test('SC2/SC24: the opening and mechanics story are present in the accessible shell', () => {
   assert.equal(VIEWS.titin_story.focus, 'titin_half');
   assert.equal(model.spec.presentation.initial_state.camera_preset, 'view.titin_story');
   assert.equal(model.spec.presentation.initial_state.selected_component_or_region, 'titin');
   assert.match(page, /id="scienceOverlay"/);
-  // SC-12 moved this control to the stage bar, which is inserted after
-  // #stageChrome — so the positional proxy this line used would now fail while
-  // its stated intent still holds. The intent is asserted directly instead.
+  // SC-24 returns raw visibility switches to Explore and promotes biological
+  // scene intentions plus contextual detail to the primary hierarchy.
   const drawerOpen = page.indexOf('id="panel"');
   const drawerClose = page.indexOf('</aside>', drawerOpen);
   const toggleAt = page.indexOf('id="filamentContextToggle"');
-  assert.ok(toggleAt > -1 && !(toggleAt > drawerOpen && toggleAt < drawerClose),
-    'the immediate actin/myosin control must be on the stage, not in the Evidence drawer');
-  assert.match(page, /id="filamentContextToggle"[\s\S]*?>Actin \+ myosin<\/button>/);
+  assert.ok(toggleAt > drawerOpen && toggleAt < drawerClose,
+    'the raw actin/myosin visibility switch belongs in Explore');
+  assert.match(page, /id="sceneControls"/);
+  assert.match(page, /id="sceneMyosinToggle"[^>]*>Myosin heads \+ actin twist<\/button>/);
+  assert.match(page,
+    /id="filamentContextToggle"[\s\S]*?>Actin and myosin context<\/button>/);
   assert.match(page, /const action = on \? 'Hide' : 'Show';[\s\S]*?aria-label/,
-    'the promoted toggle must announce the action its next click will perform');
+    'the Explore toggle must announce the action its next click will perform');
   assert.match(page, /latticeScope:\s*useExtendedLattice \? 'patch' : 'local'/);
   assert.match(page, /activeShowcaseOverlay\.termini\.map\(renderedTitinAnchor\)/,
     'terminus labels must project onto the rendered representative strand');

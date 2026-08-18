@@ -848,6 +848,17 @@ export class TitinVisualization {
     return this;
   }
 
+  /** Frame one complete half-sarcomere against the maximum stretch extent. */
+  frameStretchSweep(maxSarcomereLengthNm, opts = {}) {
+    const result = this.viewer.frameSweepBounds(maxSarcomereLengthNm, opts);
+    this._presentationState = {
+      ...this._presentationState,
+      camera_preset: 'view.titin_story',
+    };
+    if (this._state) this._state = { ...this._state, camera_preset: 'view.titin_story' };
+    return result;
+  }
+
   /** Move to a named biological close-up without exposing the camera. */
   closeUp(name, opts = {}) {
     const sl = this._state?.sarcomere_length_nm;

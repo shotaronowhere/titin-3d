@@ -151,7 +151,7 @@ rejected("visual matrix PASS has no captures",
          lambda record: (record["visual_matrix"].__setitem__("status", "PASS"),
                          [row.__setitem__("status", "PASS")
                           for row in record["visual_matrix"]["checks"]]),
-         "records all 52 expected cells")
+         "records all 56 expected cells")
 rejected("final condition deleted",
          lambda record: record["final_release_definition"].__setitem__(
              "conditions", record["final_release_definition"]["conditions"][:-1]),

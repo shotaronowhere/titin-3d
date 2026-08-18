@@ -15,7 +15,7 @@
     "validate:presentation": "python3 scripts/validate_presentation.py",
     "validate:annotations": "python3 scripts/validate_annotations.py",
     "validate:python": ".venv/bin/python scripts/smoke_structure_pipeline.py",
-    "test:negative": "node scripts/neg_control_phase5.mjs && node scripts/neg_control_phase6.mjs && python3 scripts/neg_control_phase6_spec.py && python3 scripts/neg_control_phase6_review.py && python3 scripts/neg_control_showcase_claims.py && python3 scripts/neg_control_presentation.py && node scripts/neg_control_showcase_release.mjs && python3 scripts/neg_control_release_gates.py && python3 scripts/neg_control_sc19.py && python3 scripts/neg_control_sc20.py && python3 scripts/neg_control_mechanical_parameters.py && python3 scripts/neg_control_sc22.py && python3 scripts/neg_control_sc23.py",
+    "test:negative": "node scripts/neg_control_phase5.mjs && node scripts/neg_control_phase6.mjs && python3 scripts/neg_control_phase6_spec.py && python3 scripts/neg_control_phase6_review.py && python3 scripts/neg_control_showcase_claims.py && python3 scripts/neg_control_presentation.py && node scripts/neg_control_showcase_release.mjs && python3 scripts/neg_control_release_gates.py && python3 scripts/neg_control_sc19.py && python3 scripts/neg_control_sc20.py && python3 scripts/neg_control_mechanical_parameters.py && python3 scripts/neg_control_sc22.py && python3 scripts/neg_control_sc23.py && python3 scripts/neg_control_sc24.py",
     "fetch:structures": ".venv/bin/python scripts/fetch_structures.py",
     "check:structures": ".venv/bin/python scripts/fetch_structures.py --check",
     "typecheck": "tsc -p tsconfig.json",
@@ -87,7 +87,10 @@
     "test:browser:evidence": "playwright test test/browser/evidence.spec.js --project=chromium",
     "test:sc23": "node --test --test-concurrency=1 test/showcase_phase23.test.js test/presentation.test.js test/showcase_phase7.test.js test/showcase_phase17.test.js test/showcase_phase22.test.js test/standalone.test.js",
     "verify:sc23": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc23 && npm run validate:spec && npm run validate:presentation && npm run validate:claims && python3 scripts/neg_control_sc23.py",
-    "test:browser:sc23": "playwright test test/browser/learn.spec.js --project=chromium"
+    "test:browser:sc23": "playwright test test/browser/learn.spec.js --project=chromium",
+    "test:sc24": "node --test --test-concurrency=1 test/showcase_phase24.test.js test/presentation.test.js test/showcase_phase12.test.js test/standalone.test.js",
+    "verify:sc24": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc24 && npm run validate:presentation && python3 scripts/neg_control_sc24.py && npm run check:matrix",
+    "test:browser:sc24": "playwright test test/browser/controls.spec.js test/browser/stretch.spec.js --project=chromium"
   },
   "license": "CC-BY-4.0",
   "dependencies": {

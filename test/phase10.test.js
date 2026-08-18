@@ -318,8 +318,8 @@ test('PHASE10: the page wires smooth scale/region navigation and accessible cont
   // one if/else-if chain. The behaviour being gated is unchanged: a rebuild that
   // is not a refit still re-frames a selected region as the length changes.
   assert.match(PAGE_SOURCE,
-    /!refit && state\.region\)[\s\S]{0,160}?visualization\.focusTitinRegion\(state\.region\)/,
-    'length changes must keep a selected region in frame');
+    /!refit && state\.cameraPreset\.startsWith\('region\.'\)[\s\S]{0,220}?visualization\.focusTitinRegion\(cameraRegion\)/,
+    'length changes must keep an active region camera in frame without overriding semantic scenes');
   assert.match(PAGE_SOURCE, /syncComponentButtons\(report\)/,
     'component controls must reflect effective scene visibility');
   assert.match(PAGE_SOURCE, /visualization\.start\(\(report\)\s*=>[\s\S]*?render\(report\)/,

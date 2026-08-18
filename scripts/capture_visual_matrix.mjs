@@ -1,5 +1,5 @@
 /**
- * capture_visual_matrix.mjs — emit the SC-8 screenshot manifest.
+ * capture_visual_matrix.mjs — emit the SC-24 semantic screenshot manifest.
  *
  * This environment has no browser, so this script does not take screenshots. It
  * produces the thing that makes the capture reproducible by anyone who does have
@@ -26,11 +26,15 @@ import { createVisualMatrix } from '../src/presentation/VisualMatrix.js';
 
 const model = await TitinModel.create(nodeReader());
 const { min, max } = model.slRange();
+const regionTargets = model.titinRegions().map((region) => region.id);
+const componentTargets = Object.keys(COMPONENTS);
 const matrix = createVisualMatrix(model, {
   views: Object.keys(VIEWS),
   closeups: Object.keys(CLOSEUPS),
   scales: Object.values(SCALES),
-  targets: [...model.titinRegions().map((region) => region.id), ...Object.keys(COMPONENTS)],
+  targets: [...regionTargets, ...componentTargets],
+  regionTargets,
+  componentTargets,
   hiddenTargetsByScale: { [SCALES.detail]: TitinVisualization.DETAIL_HIDDEN },
   minLength: min,
   maxLength: max,
@@ -57,6 +61,10 @@ if (args.includes('--check')) {
   console.log(`${matrix.cells.length} cells. ${matrix.purpose}\n`);
   console.log('Capture rules:');
   for (const rule of matrix.capture_rules) console.log(`  - ${rule}`);
+  console.log('\nLegacy cell disposition:');
+  for (const row of matrix.legacy_disposition) {
+    console.log(`  - ${row.old_cell_id} -> ${row.new_cell_id}: ${row.reason}`);
+  }
   let group = null;
   for (const cell of matrix.cells) {
     if (cell.group !== group) {
