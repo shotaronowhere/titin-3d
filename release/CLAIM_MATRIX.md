@@ -1,6 +1,6 @@
 # Claim and evidence matrix
 
-Generated from `data/showcase_claims.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `5030b3fe50e0fa227e1894579ef8d94cbc90fb51-dirty`; build inputs `727df76a4542ca43b20ec61219087bc05557254392b09a61290ea26da85247ae`.
+Generated from `data/showcase_claims.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `4092c6fb9f986cb2197c754c0ad8c73b1f456a3b`; build inputs `727df76a4542ca43b20ec61219087bc05557254392b09a61290ea26da85247ae`.
 Do not edit by hand: run `npm run pack`.
 
 | Object | Decision | Tier | Claim evidence | Render evidence | Sources |
