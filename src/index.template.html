@@ -507,6 +507,59 @@ window.__titinBoot = { ready: false, problems: [] };
   .mechanics-audit .force-current-point:focus { stroke: var(--focus); stroke-width: 4; }
   .mechanics-audit .force-readout { margin-top: 7px; color: #ffd7e0;
     font-variant-numeric: tabular-nums; font-weight: 650; }
+  /* SC-26 expert workbench. Labels and patterns carry status even when colour or
+     opacity is unavailable; all of these surfaces live inside Explore's drawer. */
+  .reference-strip { position: relative; height: 42px; margin: 8px 0 6px;
+    border: 1px solid var(--edge); border-radius: 5px; background: #11161d; overflow: hidden; }
+  .reference-strip-region { position: absolute; top: 0; bottom: 0; min-width: 2px;
+    border: 0; border-right: 1px solid rgb(14 17 22 / 65%); border-radius: 0;
+    padding: 0 3px; overflow: hidden; text-overflow: clip; white-space: nowrap;
+    background: repeating-linear-gradient(135deg, rgb(255 93 125 / 88%) 0 5px,
+      rgb(255 176 192 / 68%) 5px 9px); color: #270812; font-size: 9px; font-weight: 750; }
+  .reference-strip-region:nth-child(even) { background: repeating-linear-gradient(45deg,
+    rgb(122 162 216 / 82%) 0 5px, rgb(169 201 242 / 58%) 5px 9px); color: #07111e; }
+  .reference-region-table td:last-child { text-align: left; }
+  .inspection-audit { border: 1px solid var(--edge); border-radius: 5px; padding: 8px; }
+  .inspection-audit dl, .reproduction-sheet dl { display: grid;
+    grid-template-columns: minmax(96px, auto) minmax(0, 1fr); gap: 3px 8px; margin: 0; }
+  .inspection-audit dt, .reproduction-sheet dt { color: var(--dim); }
+  .inspection-audit dd, .reproduction-sheet dd { margin: 0; overflow-wrap: anywhere; }
+  .domain-feature-list { max-height: 180px; overflow-y: auto; margin-top: 5px;
+    border-top: 1px solid var(--edge); padding-top: 5px; }
+  .domain-feature { display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px; font-size: 9px; color: var(--dim); padding: 2px 0; }
+  #compliancePlot svg { display: block; width: 100%; height: auto; margin-top: 7px;
+    border: 1px solid var(--edge); border-radius: 5px; background: #11161d; }
+  #compliancePlot svg text { fill: #aeb9c7; font: 10px system-ui, sans-serif; }
+  .compliance-current { margin-top: 7px; }
+  .compliance-share { display: grid; grid-template-columns: minmax(90px, 1fr) 2fr auto;
+    gap: 6px; align-items: center; margin-top: 4px; font-size: 10px; }
+  .compliance-share-track { height: 8px; background: #252d38; border-radius: 999px; overflow: hidden; }
+  .compliance-share-fill { height: 100%; background: var(--titin); }
+  .claim-evidence-group { margin-top: 7px; border: 1px solid var(--edge);
+    border-radius: 5px; padding: 7px 8px; }
+  .claim-evidence-group summary { cursor: pointer; font-weight: 650; }
+  .evidence-pattern { display: inline-block; width: 22px; height: 10px; margin-right: 6px;
+    border: 1px solid rgb(230 235 241 / 55%); vertical-align: -1px; }
+  .evidence-pattern-measured_source_direct { background: #dfe7f2; }
+  .evidence-pattern-strongly_inferred { background: repeating-linear-gradient(90deg,
+    #b7c3d2 0 5px, #384555 5px 7px); }
+  .evidence-pattern-modeled { background: repeating-linear-gradient(135deg,
+    #e8c16d 0 4px, #463a20 4px 8px); }
+  .evidence-pattern-inferred { background: repeating-linear-gradient(45deg,
+    #7f8b9c 0 3px, #252d38 3px 7px); }
+  .evidence-pattern-unknown { background: repeating-linear-gradient(90deg,
+    transparent 0 3px, #7f8b9c 3px 4px); }
+  .atomic-claim-row { margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--edge);
+    color: var(--dim); font-size: 9px; }
+  .atomic-claim-row b { color: var(--text); }
+  .render-status { display: inline-block; margin-left: 4px; border: 1px solid #657184;
+    border-radius: 999px; padding: 0 4px; color: #c5cfdb; font-size: 9px; }
+  .research-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .research-actions button { text-align: left; }
+  .reproduction-sheet { margin-top: 7px; }
+  .reproduction-sheet code { overflow-wrap: anywhere; }
+  .export-identity { overflow-wrap: anywhere; font-size: 9px; color: var(--dim); }
   @media (max-width: 460px) { .lattice-pair { grid-template-columns: 1fr; } }
   /* SC-7. A vertical flow: one counted, inspectable stage per row. */
   .pipeline { margin: 10px 0 2px; border-top: 1px solid var(--edge); padding-top: 9px; }
@@ -942,6 +995,13 @@ window.__titinBoot = { ready: false, problems: [] };
       <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
         choose a visible object here or directly in the 3D view. Every explanation resolves its bibliography from the canonical source registry.</div>
       <div class="row" id="annotations"></div>
+
+      <h2>Selected target audit</h2>
+      <div id="inspectionWorkbench" aria-live="polite"></div>
+
+      <h2>Approved reference construct</h2>
+      <div class="sub" id="referenceDomainSummary"></div>
+      <div id="referenceDomainStrip"></div>
     </div>
 
     <div id="panelMeasure" role="tabpanel" aria-labelledby="tabMeasure" hidden>
@@ -960,6 +1020,11 @@ window.__titinBoot = { ready: false, problems: [] };
         SD-04 decision explicitly authorizes its regime and sensitivity policy.</div>
       <div class="sub" id="mechanicsScope"></div>
       <div id="forceCurve"></div>
+
+      <h2>Incremental compliance</h2>
+      <div class="sub" style="margin:0 0 6px">Local slope contribution at the evaluated
+        force. This is distinct from absolute regional extension and added length.</div>
+      <div id="compliancePlot"></div>
 
       <h2>Lattice cross-section</h2>
       <div class="sub" style="margin:0 0 6px">Looking down the filament axis, drawn
@@ -991,9 +1056,14 @@ window.__titinBoot = { ready: false, problems: [] };
         context layers. These are Evidence-mode only.</div>
       <div id="expertCards"></div>
 
-      <h2>Evidence</h2>
+      <h2>Atomic claim evidence</h2>
+      <div class="sub" style="margin:0 0 6px">Scientific status is grouped independently
+        from depiction status. Labels and patterns repeat the visual coding.</div>
+      <div id="claimEvidenceGroups"></div>
+
+      <h2>Rendered scene evidence</h2>
       <div class="sub" style="margin:0 0 6px">Transparency encodes confidence;
-        colour encodes identity.</div>
+        colour encodes identity; the inventory below names each class in text.</div>
       <button id="evidenceToggle" class="on" aria-pressed="true">confidence display</button>
       <div id="evidence" style="margin-top:8px"></div>
 
@@ -1020,6 +1090,22 @@ window.__titinBoot = { ready: false, problems: [] };
       <div class="sub" style="margin:0 0 6px">Every figure below is counted from the
         loaded records when this page renders, not written into the copy.</div>
       <div id="provenancePipeline"></div>
+
+      <h2>Research handoff</h2>
+      <div class="sub" style="margin:0 0 6px">Download deterministic, offline-capable
+        UTF-8 payloads for this exact state and selected scientific context.</div>
+      <div class="research-actions" role="group" aria-label="Download research handoff files">
+        <button id="downloadStateExport">titin-state.json</button>
+        <button id="downloadForceExport">force-curve.csv</button>
+        <button id="downloadRegionalExport">regional-extension.csv</button>
+        <button id="downloadClaimsExport">claim-support.json</button>
+      </div>
+      <button id="reproductionToggle" style="margin-top:7px" aria-expanded="false"
+        aria-controls="reproductionWorksheet">How to reproduce this value</button>
+      <div id="reproductionWorksheet" class="reproduction-sheet note" hidden></div>
+      <div class="export-identity" style="margin-top:6px">Export contract
+        <code id="exportContractFingerprint">—</code></div>
+      <div class="sub" id="researchExportStatus" aria-live="polite"></div>
 
       <h2>Cite this view</h2>
       <div class="sub" style="margin:0 0 6px">The link restores this exact state; the
@@ -2728,6 +2814,112 @@ function numericForceChart(curve, selectCurrentPoint) {
   return svg;
 }
 
+function renderCompliancePlot() {
+  const plot = visualization.compliancePlot();
+  const wrapper = document.createElement('div');
+  const width = 620; const height = 280;
+  const margin = { left: 62, right: 22, top: 20, bottom: 52 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const xMin = plot.axes.x.min; const xMax = plot.axes.x.max;
+  const yMin = 0; const yMax = Math.max(plot.axes.y.max || 0, 1);
+  const x = (value) => margin.left + ((value - xMin) / (xMax - xMin)) * plotWidth;
+  const y = (value) => margin.top + (1 - (value - yMin) / (yMax - yMin)) * plotHeight;
+  const svg = svgElement('svg', {
+    viewBox: `0 0 ${width} ${height}`, role: 'img',
+    'aria-label': 'Regional incremental compliance across sarcomere length, with unsupported regimes left blank.',
+  });
+  const [supportedMin, supportedMax] = plot.supported_range_nm;
+  svg.append(svgElement('rect', {
+    x: x(supportedMin), y: margin.top, width: x(supportedMax) - x(supportedMin),
+    height: plotHeight, fill: '#4fb39f', opacity: 0.10,
+  }));
+  for (let index = 0; index <= 5; index += 1) {
+    const xValue = xMin + ((xMax - xMin) * index) / 5;
+    const xPosition = x(xValue);
+    svg.append(svgElement('line', {
+      x1: xPosition, y1: margin.top, x2: xPosition, y2: margin.top + plotHeight,
+      stroke: '#2b3440', 'stroke-width': 1,
+    }));
+    svg.append(svgElement('text', {
+      x: xPosition, y: margin.top + plotHeight + 18, 'text-anchor': 'middle',
+    }, Math.round(xValue).toLocaleString()));
+    const yValue = yMin + ((yMax - yMin) * index) / 5;
+    const yPosition = y(yValue);
+    svg.append(svgElement('line', {
+      x1: margin.left, y1: yPosition, x2: margin.left + plotWidth, y2: yPosition,
+      stroke: '#2b3440', 'stroke-width': 1,
+    }));
+    svg.append(svgElement('text', {
+      x: margin.left - 8, y: yPosition + 3, 'text-anchor': 'end',
+    }, yValue.toPrecision(2)));
+  }
+  const colours = ['#ff7892', '#7aa2d8', '#e8c16d', '#4fb39f'];
+  plot.region_ids.forEach((regionId, regionIndex) => {
+    const segments = []; let active = [];
+    for (const point of plot.points) {
+      const value = point.incremental_compliance_nm_per_pN?.[regionId];
+      if (Number.isFinite(value)) active.push([point.sarcomere_length_nm, value]);
+      else if (active.length) { segments.push(active); active = []; }
+    }
+    if (active.length) segments.push(active);
+    for (const segment of segments) {
+      svg.append(svgElement('path', {
+        d: segment.map(([sl, value], index) => `${index ? 'L' : 'M'}${x(sl)},${y(value)}`).join(' '),
+        fill: 'none', stroke: colours[regionIndex], 'stroke-width': 2.2,
+      }));
+    }
+  });
+  if (plot.current) {
+    const markerX = x(plot.current.sarcomere_length_nm);
+    svg.append(svgElement('line', {
+      x1: markerX, y1: margin.top, x2: markerX, y2: margin.top + plotHeight,
+      stroke: '#f5f7fa', 'stroke-width': 1.5, 'stroke-dasharray': '3 3',
+    }));
+  }
+  svg.append(svgElement('text', {
+    x: margin.left + plotWidth / 2, y: height - 8, 'text-anchor': 'middle',
+  }, plot.axes.x.label));
+  const yTitle = svgElement('text', {
+    x: 14, y: margin.top + plotHeight / 2, 'text-anchor': 'middle',
+    transform: `rotate(-90 14 ${margin.top + plotHeight / 2})`,
+  }, plot.axes.y.label);
+  svg.append(yTitle); wrapper.append(svg);
+  const legend = document.createElement('div'); legend.className = 'row compliance-current';
+  plot.region_ids.forEach((regionId, index) => {
+    const key = document.createElement('span'); key.className = 'key';
+    const swatch = document.createElement('span'); swatch.className = 'sw';
+    swatch.style.background = colours[index];
+    key.append(swatch, document.createTextNode(regionDisplayName(regionId))); legend.append(key);
+  });
+  wrapper.append(legend);
+  const status = document.createElement('div'); status.className = 'sub';
+  status.textContent = `${plot.current.status.replaceAll('_', ' ')} · ${plot.current.reason}`;
+  wrapper.append(status);
+  if (plot.current.incremental_compliance_share) {
+    for (const regionId of plot.region_ids) {
+      const share = plot.current.incremental_compliance_share[regionId];
+      const row = document.createElement('div'); row.className = 'compliance-share';
+      const label = document.createElement('span'); label.textContent = regionDisplayName(regionId);
+      const track = document.createElement('span'); track.className = 'compliance-share-track';
+      const fill = document.createElement('span'); fill.className = 'compliance-share-fill';
+      fill.style.width = `${(share * 100).toFixed(3)}%`; track.append(fill);
+      const value = document.createElement('span');
+      value.textContent = `${(share * 100).toFixed(1)}% · `
+        + `${plot.current.incremental_compliance_nm_per_pN[regionId].toPrecision(3)} nm/pN`;
+      row.append(label, track, value); wrapper.append(row);
+    }
+  } else {
+    const omitted = document.createElement('div'); omitted.className = 'note warn';
+    omitted.textContent = 'Incremental compliance is blank because force is not evaluated in this regime; it is not zero.';
+    wrapper.append(omitted);
+  }
+  const interpretation = document.createElement('div'); interpretation.className = 'note';
+  interpretation.textContent = `${plot.interpretation} Not claimed: ${plot.not_claimed.join('; ')}.`;
+  wrapper.append(interpretation);
+  $('compliancePlot').replaceChildren(wrapper);
+}
+
 /** SC-21 status-bearing mechanics surface. Omission regimes have no numeric force plot. */
 function renderForceCurve() {
   const curve = visualization.forceCurve();
@@ -2752,6 +2944,9 @@ function renderForceCurve() {
   scope.textContent = chart
     ? `${curve.current.reason} Approximate passive force per titin only; active force and non-titin passive contributions are excluded.`
     : `${curve.current?.reason || curve.caveat} No absolute force magnitude, supported validity range, or human-construct prediction is claimed.`;
+  const limitations = document.createElement('div');
+  limitations.className = 'note';
+  limitations.textContent = `${curve.caveat} Not claimed: ${curve.not_claimed.join('; ')}.`;
   const readout = document.createElement('div');
   readout.className = 'force-readout';
   readout.textContent = Number.isFinite(curve.current?.force_pN)
@@ -2765,7 +2960,7 @@ function renderForceCurve() {
   const contributionTable = document.createElement('table');
   contributionTable.className = 'force-contributions';
   const contributionHead = document.createElement('tr');
-  for (const label of ['Region', 'Added length from shortest state', 'Incremental compliance']) {
+  for (const label of ['Region', 'Current extension', 'Added length from shortest state', 'Incremental compliance']) {
     const cell = document.createElement('th'); cell.textContent = label; contributionHead.append(cell);
   }
   contributionTable.append(contributionHead);
@@ -2773,12 +2968,14 @@ function renderForceCurve() {
     if (id === 'post_N2A_unknown') continue;
     const row = document.createElement('tr');
     const region = document.createElement('td'); region.textContent = regionDisplayName(id);
+    const extension = document.createElement('td');
+    extension.textContent = `${curve.current.regional_extension_nm[id].toFixed(1)} nm`;
     const length = document.createElement('td'); length.textContent = `${added.toFixed(1)} nm`;
     const compliance = document.createElement('td');
     compliance.textContent = curve.current.incremental_compliance_nm_per_pN
       ? `${curve.current.incremental_compliance_nm_per_pN[id].toPrecision(2)} nm/pN`
       : 'not evaluated — no approved parameter range';
-    row.append(region, length, compliance); contributionTable.append(row);
+    row.append(region, extension, length, compliance); contributionTable.append(row);
   }
 
   const details = document.createElement('details');
@@ -2824,7 +3021,11 @@ function renderForceCurve() {
     };
     value.append(document.createTextNode(' '), parameterSource);
     const preparation = document.createElement('td');
-    preparation.textContent = `${parameter.species} · ${parameter.preparation} · ${parameter.source_id}`;
+    const temperature = parameter.temperature_K === null
+      ? 'temperature not specified in the parameter record'
+      : `${parameter.temperature_K} K`;
+    preparation.textContent = `${parameter.species} · ${parameter.muscle_or_tissue} · `
+      + `${parameter.preparation} · ${temperature} · ${parameter.source_id}`;
     preparation.title = parameter.source_locator;
     const applicability = document.createElement('td');
     const decisionAuthority = parameter.approved_reviewer
@@ -2847,9 +3048,10 @@ function renderForceCurve() {
   outputSourcesLink.onclick = () => selectModeledPointSources(outputSourcesLink);
   auditLinks.append(parametersLink, outputSourcesLink);
   details.append(summary, identity, equations, parameterTable);
-  wrapper.append(status, scope, ...(chart ? [chart] : []), readout,
+  wrapper.append(status, scope, limitations, ...(chart ? [chart] : []), readout,
     contributionHeading, contributionTable, auditLinks, details);
   $('forceCurve').replaceChildren(wrapper);
+  renderCompliancePlot();
 }
 
 function renderChapter() {
@@ -3320,6 +3522,140 @@ function parameterDisplayName(parameter) {
   if (owner === 'physical_constants') return fieldLabel;
   return `${regionDisplayName(owner)} — ${fieldLabel}`;
 }
+
+function appendAuditField(list, label, value) {
+  const term = document.createElement('dt'); term.textContent = label;
+  const detail = document.createElement('dd'); detail.textContent = value ?? 'Not applicable';
+  list.append(term, detail);
+}
+
+function renderReferenceDomainStrip() {
+  const view = visualization.referenceDomainStrip();
+  $('referenceDomainSummary').textContent = `${view.construct} · ${view.sequence_length_aa.toLocaleString()} aa · `
+    + `${view.domain_feature_count} pinned UniProt DOMAIN features · ${view.coordinate_frame} coordinates`;
+  const wrapper = document.createElement('div');
+  const strip = document.createElement('div'); strip.className = 'reference-strip';
+  strip.setAttribute('role', 'img');
+  strip.setAttribute('aria-label', `Exact region map for ${view.isoform_id}, ${view.sequence_length_aa} amino acids`);
+  for (const region of view.regions) {
+    const segment = document.createElement('button');
+    segment.className = 'reference-strip-region';
+    segment.style.left = `${(region.start_fraction * 100).toFixed(5)}%`;
+    segment.style.width = `${((region.end_fraction - region.start_fraction) * 100).toFixed(5)}%`;
+    segment.textContent = region.id;
+    segment.title = `${region.name}: residues ${region.start}-${region.end}; ${region.feature_count} contained domain features`;
+    segment.setAttribute('aria-label', segment.title);
+    segment.onclick = () => selectRegion(region.id);
+    strip.append(segment);
+  }
+  const table = document.createElement('table'); table.className = 'reference-region-table';
+  const head = document.createElement('tr');
+  for (const label of ['Region', 'Inclusive residues', 'Contained domains']) {
+    const cell = document.createElement('th'); cell.textContent = label; head.append(cell);
+  }
+  table.append(head);
+  for (const region of view.regions) {
+    const row = document.createElement('tr');
+    for (const value of [region.id, `${region.start}-${region.end} (${region.length_aa} aa)`, region.feature_count]) {
+      const cell = document.createElement('td'); cell.textContent = String(value); row.append(cell);
+    }
+    table.append(row);
+  }
+  wrapper.append(strip, table);
+  $('referenceDomainStrip').replaceChildren(wrapper);
+}
+
+function renderInspectionWorkbench() {
+  const selectedAnnotation = resolvedAnnotation(pinnedPick)
+    || activeAnnotations.find((annotation) => annotation.target_id === state.selectedTarget)
+    || null;
+  const view = selectedAnnotation ? visualization.inspectionView(selectedAnnotation) : null;
+  if (!view) {
+    const prompt = document.createElement('div'); prompt.className = 'note';
+    prompt.textContent = 'Select a named structure or titin region to inspect its exact construct, coordinates, render semantics, and claim-level sources.';
+    $('inspectionWorkbench').replaceChildren(prompt);
+    return;
+  }
+  const wrapper = document.createElement('div'); wrapper.className = 'inspection-audit';
+  const title = document.createElement('b'); title.textContent = view.label;
+  const fields = document.createElement('dl');
+  appendAuditField(fields, 'Accession / construct', view.accession
+    ? `${view.accession} / ${view.isoform_id} · ${view.construct}`
+    : `Not applicable to ${view.label}; Q8WZ42-1 sequence metadata is restricted to titin targets.`);
+  appendAuditField(fields, 'Coordinate frame', view.coordinate_frame || 'Not applicable to this non-titin target.');
+  appendAuditField(fields, 'Residue interval', view.residue_interval
+    ? `${view.residue_interval.start}-${view.residue_interval.end} inclusive (${view.residue_interval.length_aa} aa)` : null);
+  appendAuditField(fields, 'Domain count', view.sequence_domain_count === null
+    ? 'Not applicable to this non-titin target.'
+    : (view.residue_interval
+      ? `${view.region_domain_count} contained source features; ${view.sequence_domain_count} in the full reference`
+      : `${view.sequence_domain_count} in the full reference`));
+  appendAuditField(fields, 'Region role', view.region_role);
+  appendAuditField(fields, 'Placement confidence', view.placement_confidence);
+  appendAuditField(fields, 'Render status', view.render_status);
+  appendAuditField(fields, 'Render semantics', view.render_semantics);
+  wrapper.append(title, fields);
+  if (view.residue_interval) {
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = `${view.contained_domain_features.length} contained domain feature(s)`;
+    const list = document.createElement('div'); list.className = 'domain-feature-list';
+    if (!view.contained_domain_features.length) {
+      const none = document.createElement('div'); none.className = 'sub';
+      none.textContent = 'No pinned UniProt DOMAIN feature lies wholly inside this interval.';
+      list.append(none);
+    }
+    for (const feature of view.contained_domain_features) {
+      const row = document.createElement('div'); row.className = 'domain-feature';
+      const label = document.createElement('span'); label.textContent = `${feature.label} · ${feature.id}`;
+      const span = document.createElement('span'); span.textContent = `${feature.start}-${feature.end}`;
+      row.append(label, span); list.append(row);
+    }
+    details.append(summary, list); wrapper.append(details);
+  }
+  const claims = document.createElement('details');
+  const claimSummary = document.createElement('summary');
+  claimSummary.textContent = `${view.claims.length} claim record(s) and exact source locators`;
+  claims.append(claimSummary);
+  for (const claim of view.claims) {
+    const block = document.createElement('div'); block.className = 'atomic-claim-row';
+    const heading = document.createElement('b');
+    heading.textContent = `${claim.id} · claim ${claim.claim_class} · render ${claim.render_class}`;
+    const statement = document.createElement('div'); statement.textContent = claim.statement;
+    const sources = document.createElement('ul');
+    for (const source of claim.sources) {
+      const item = document.createElement('li');
+      item.textContent = `${source.id} · ${source.locator} · ${source.relationship}`;
+      sources.append(item);
+    }
+    block.append(heading, statement, sources); claims.append(block);
+  }
+  wrapper.append(claims);
+  $('inspectionWorkbench').replaceChildren(wrapper);
+}
+
+function renderClaimEvidenceGroups() {
+  const view = visualization.evidenceGroups();
+  $('claimEvidenceGroups').replaceChildren(...view.groups.map((group) => {
+    const details = document.createElement('details'); details.className = 'claim-evidence-group';
+    details.dataset.evidenceGroup = group.id;
+    const summary = document.createElement('summary');
+    const pattern = document.createElement('span');
+    pattern.className = `evidence-pattern evidence-pattern-${group.id}`;
+    pattern.setAttribute('aria-hidden', 'true');
+    summary.append(pattern, document.createTextNode(`${group.label} · ${group.claims.length}`));
+    details.append(summary);
+    for (const claim of group.claims) {
+      const row = document.createElement('div'); row.className = 'atomic-claim-row';
+      const name = document.createElement('b'); name.textContent = claim.id;
+      const render = document.createElement('span'); render.className = 'render-status';
+      render.textContent = `render ${claim.render_status}`;
+      const statement = document.createElement('div'); statement.textContent = claim.statement;
+      row.append(name, render, statement); details.append(row);
+    }
+    return details;
+  }));
+}
 for (const region of regionMetadata.values()) {
   const b = document.createElement('button');
   b.textContent = region.name;
@@ -3505,11 +3841,115 @@ for (const button of $('sourceFilters').children) {
 }
 renderBibliography();
 
+function renderReproductionWorksheet() {
+  const inputManifest = window.__titinInputManifest || null;
+  if (!inputManifest) {
+    const unavailable = document.createElement('div');
+    unavailable.className = 'note warn';
+    unavailable.textContent = 'Candidate-pinned reproduction and research exports are available in the generated standalone. Source mode has no candidate manifest and will not invent input checksums.';
+    $('reproductionWorksheet').replaceChildren(unavailable);
+    $('exportContractFingerprint').textContent = visualization.exportContractFingerprint();
+    return;
+  }
+  const worksheet = visualization.reproductionWorksheet({
+    inputManifest,
+  });
+  const wrapper = document.createElement('div');
+  const fields = document.createElement('dl');
+  appendAuditField(fields, 'Generator', worksheet.generator);
+  appendAuditField(fields, 'Command', worksheet.command);
+  appendAuditField(fields, 'Parameter set', worksheet.parameter_set_id);
+  appendAuditField(fields, 'Model fingerprint', worksheet.model_fingerprint);
+  appendAuditField(fields, 'Supported regime',
+    `${worksheet.supported_regime.min_nm}-${worksheet.supported_regime.max_nm} nm inclusive`);
+  appendAuditField(fields, 'Runtime',
+    `Python ${worksheet.runtime.python}; Node ${worksheet.runtime.node}; npm ${worksheet.runtime.npm}`);
+  appendAuditField(fields, 'Comparison tolerance',
+    `${worksheet.comparison_tolerance.force_pN} pN force; `
+      + `${worksheet.comparison_tolerance.extension_nm} nm extension`);
+  appendAuditField(fields, 'Feature snapshot SHA-256',
+    worksheet.feature_source_checksums.candidate_sha256);
+  appendAuditField(fields, 'Upstream source SHA-256',
+    worksheet.feature_source_checksums.upstream_sha256);
+  appendAuditField(fields, 'Reference sequence SHA-256',
+    worksheet.feature_source_checksums.sequence_sha256);
+  wrapper.append(fields);
+  const inputHeading = document.createElement('b');
+  inputHeading.textContent = 'Candidate-manifest input checksums';
+  const inputs = document.createElement('ul');
+  for (const input of worksheet.pinned_inputs) {
+    const item = document.createElement('li');
+    const path = document.createElement('code'); path.textContent = input.path;
+    const checksum = document.createElement('code'); checksum.textContent = input.sha256;
+    item.append(path, document.createTextNode(' · '), checksum,
+      document.createTextNode(` · ${input.checksum_scope}`));
+    inputs.append(item);
+  }
+  const instructions = document.createElement('ol');
+  for (const instruction of worksheet.instructions) {
+    const item = document.createElement('li'); item.textContent = instruction; instructions.append(item);
+  }
+  wrapper.append(inputHeading, inputs, instructions);
+  $('reproductionWorksheet').replaceChildren(wrapper);
+  $('exportContractFingerprint').textContent = visualization.exportContractFingerprint();
+}
+
+$('reproductionToggle').onclick = () => {
+  const expanded = $('reproductionToggle').getAttribute('aria-expanded') !== 'true';
+  $('reproductionToggle').setAttribute('aria-expanded', String(expanded));
+  $('reproductionWorksheet').hidden = !expanded;
+};
+
+function currentResearchExport() {
+  const sceneState = publicSceneState();
+  const deepLink = sceneController.serialize(sceneState);
+  const annotation = resolvedAnnotation(pinnedPick)
+    || activeAnnotations.find((candidate) => candidate.target_id === state.selectedTarget)
+    || sceneState.selection;
+  return visualization.researchExport({
+    presentationState: { ...sceneState, deepLink },
+    selection: annotation,
+    buildIdentity: candidateIdentity,
+    inputManifest: window.__titinInputManifest || null,
+  });
+}
+
+function downloadResearchFile(filename, text, mime) {
+  const blob = new Blob([text], { type: `${mime};charset=utf-8` });
+  const href = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = href; link.download = filename; link.hidden = true;
+  document.body.append(link); link.click(); link.remove(); URL.revokeObjectURL(href);
+  $('researchExportStatus').textContent = `${filename} downloaded · deterministic UTF-8/LF export.`;
+}
+
+for (const [id, filename, field, mime] of [
+  ['downloadStateExport', 'titin-state.json', 'stateJson', 'application/json'],
+  ['downloadForceExport', 'force-curve.csv', 'forceCsv', 'text/csv'],
+  ['downloadRegionalExport', 'regional-extension.csv', 'regionalCsv', 'text/csv'],
+  ['downloadClaimsExport', 'claim-support.json', 'claimsJson', 'application/json'],
+]) {
+  const button = $(id);
+  if (!window.__titinInputManifest) {
+    button.disabled = true;
+    button.title = 'Candidate-pinned exports are available in the generated standalone.';
+    $('researchExportStatus').textContent = 'Candidate-pinned exports are unavailable in source mode because no candidate input manifest is embedded.';
+  } else {
+    button.onclick = () => {
+      try {
+        const output = currentResearchExport();
+        downloadResearchFile(filename, output[field], mime);
+      } catch (error) { fail(error); }
+    };
+  }
+}
+
 // A screenshot in a talk is only reproducible if the reader can get back to the
 // exact state it came from, in the exact build it came from.
 $('copyViewLink').onclick = async () => {
   const identity = model.spec.identity;
-  const text = `${window.location.href}\n(model ${identity.model_fingerprint})`
+  const deepLink = sceneController.serialize(publicSceneState());
+  const text = `${new URL(deepLink, window.location.href).href}\n(model ${identity.model_fingerprint})`
     + `\n(app ${identity.app_revision})\n(build inputs ${identity.build_inputs_fingerprint})`;
   try {
     await navigator.clipboard.writeText(text);
@@ -3635,6 +4075,7 @@ function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
     syncPublicPresentation(); syncUrl();
   }
   renderPinnedSelection();
+  renderInspectionWorkbench();
   markStageDirty();
   return true;
 }
@@ -3654,6 +4095,7 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
   $('objectTooltip').hidden = true;
   $('objectLeader').replaceChildren();
   renderPinnedSelection();
+  renderInspectionWorkbench();
   if (state.drawerTab === 'sources') renderBibliography();
   markStageDirty();
   $('canvas').focus();
@@ -4173,6 +4615,7 @@ function render(report) {
 
   renderAnnotationIndex();
   renderPinnedSelection();
+  renderInspectionWorkbench();
 
   // Deduplicated: the scaffold and MyBP-C records intentionally restate the
   // boundaries of the claims they extend, and listing one twice would read as
@@ -4579,6 +5022,9 @@ $('evidenceToggle').classList.toggle('on', state.showEvidence);
 $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
 renderChapter();
 renderExpertCards();
+renderReferenceDomainStrip();
+renderClaimEvidenceGroups();
+renderReproductionWorksheet();
 rebuild(true);
 visualization.highlightTitinRegion(state.region);
 applyCameraPreset();

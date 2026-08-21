@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "titin-state-export/1",
+  "title": "Titin reproducible state export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "build", "state", "mechanics", "reproduction"],
+  "properties": {
+    "schema": { "const": "titin-state-export/1" },
+    "build": { "$ref": "#/$defs/build" },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url_version", "depth", "scene", "sarcomere_length_nm", "drawer", "selection", "story_step", "confidence_display", "custom"],
+      "properties": {
+        "url_version": { "const": 2 },
+        "depth": { "enum": ["learn", "explore"] },
+        "scene": { "type": "string" },
+        "sarcomere_length_nm": { "type": "integer" },
+        "drawer": { "enum": ["closed", "inspect", "measure", "evidence", "sources"] },
+        "selection": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "id"],
+              "properties": {
+                "kind": { "enum": ["component", "region"] },
+                "id": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        },
+        "story_step": { "type": "string", "minLength": 1 },
+        "confidence_display": { "type": "boolean" },
+        "custom": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["camera_preset", "scale", "context", "layers"],
+              "properties": {
+                "camera_preset": { "type": "string", "minLength": 1 },
+                "scale": { "type": "string", "minLength": 1 },
+                "context": { "type": "boolean" },
+                "layers": {
+                  "type": "object",
+                  "additionalProperties": { "type": "boolean" }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "mechanics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameter_set_id", "status"],
+      "properties": {
+        "parameter_set_id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["supported", "extrapolated", "not_evaluated"] }
+      }
+    },
+    "reproduction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "command", "generator", "parameter_set_id", "model_fingerprint", "supported_regime", "runtime", "comparison_tolerance", "feature_source_checksums", "pinned_inputs", "candidate_manifest_verified", "instructions"],
+      "properties": {
+        "schema": { "const": "titin-reproduction-worksheet/1" },
+        "command": { "const": "python3 scripts/mechanical_model.py --parity-json" },
+        "generator": { "const": "python3 scripts/mechanical_model.py" },
+        "parameter_set_id": { "type": "string", "minLength": 1 },
+        "model_fingerprint": { "type": "string", "minLength": 1 },
+        "supported_regime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "min_nm", "max_nm", "lower_inclusive", "upper_inclusive"],
+          "properties": {
+            "status": { "const": "supported" },
+            "min_nm": { "type": "number" },
+            "max_nm": { "type": "number" },
+            "lower_inclusive": { "const": true },
+            "upper_inclusive": { "const": true }
+          }
+        },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["python", "node", "npm"],
+          "properties": {
+            "python": { "type": "string", "minLength": 1 },
+            "node": { "type": "string", "minLength": 1 },
+            "npm": { "type": "string", "minLength": 1 }
+          }
+        },
+        "comparison_tolerance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["force_pN", "extension_nm"],
+          "properties": {
+            "force_pN": { "type": "number" },
+            "extension_nm": { "type": "number" }
+          }
+        },
+        "feature_source_checksums": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "candidate_sha256", "upstream_sha256", "sequence_sha256"],
+          "properties": {
+            "path": { "const": "data/titin_sequence_features.json" },
+            "candidate_sha256": { "$ref": "#/$defs/sha256" },
+            "upstream_sha256": { "$ref": "#/$defs/sha256" },
+            "sequence_sha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "pinned_inputs": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256", "checksum_scope"],
+            "properties": {
+              "path": { "enum": ["data/sarcomere.json", "data/titin.json", "data/titin_sequence_features.json", "data/structural_states.json", "data/geometry_sources.json", "data/geometry_strategy.json", "data/context_measurements.json", "data/domain_backbones.json", "data/mechanical_parameters.json"] },
+              "sha256": { "$ref": "#/$defs/sha256" },
+              "checksum_scope": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "candidate_manifest_verified": { "const": true },
+        "instructions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_fingerprint", "app_revision", "build_inputs_fingerprint", "export_contract_fingerprint"],
+      "properties": {
+        "model_fingerprint": { "type": "string", "minLength": 1 },
+        "app_revision": { "type": "string", "minLength": 1 },
+        "build_inputs_fingerprint": { "type": "string", "minLength": 1 },
+        "export_contract_fingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

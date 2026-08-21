@@ -36,6 +36,18 @@ import { resolveSources } from '../presentation/AnnotationCatalog.js';
 import { createBibliography, resolveSourceContext } from '../presentation/Bibliography.js';
 import { claimViewModel } from '../presentation/ClaimView.js';
 import { createForceCurve } from '../presentation/ForceCurve.js';
+import { createCompliancePlot } from '../presentation/CompliancePlot.js';
+import {
+  createBoundaryWorksheet,
+  createEvidenceGroups,
+  createInspectionView,
+  createParameterTable,
+  createReferenceDomainStrip,
+  createReproductionWorksheet,
+} from '../presentation/ParameterTable.js';
+import {
+  EXPORT_CONTRACT_FINGERPRINT, researchExport,
+} from '../presentation/ResearchExport.js';
 import {
   createSarcomere, createTitin, createTitinPath, createDomainChain,
   placeDomainsAlongPath, regionOfDomain, describeLength, IBAND_REGIONS,
@@ -643,6 +655,56 @@ export class TitinVisualization {
     return createForceCurve(this.model, {
       currentLengthNm: this._state?.sarcomere_length_nm ?? null,
       ...opts,
+    });
+  }
+
+  /** SC-26 complete parameter authority as a pure table model. */
+  parameterTable() { return createParameterTable(this.model); }
+
+  /** SC-26 status-bearing regional incremental-compliance series. */
+  compliancePlot(opts = {}) {
+    return createCompliancePlot(this.model, {
+      currentLengthNm: this._state?.sarcomere_length_nm ?? null,
+      ...opts,
+    });
+  }
+
+  /** SC-26 exact inspection record for a biological target. */
+  inspectionView(selection, opts = {}) {
+    return createInspectionView(this.model, {
+      selection,
+      sarcomereLengthNm: this._state?.sarcomere_length_nm ?? opts.sarcomereLengthNm,
+      scale: this.scale,
+      ...opts,
+    });
+  }
+
+  /** SC-26 full approved-reference residue/domain strip. */
+  referenceDomainStrip() { return createReferenceDomainStrip(this.model); }
+
+  /** SC-26 checksum-pinned sequence-boundary worksheet. */
+  boundaryWorksheet(opts = {}) { return createBoundaryWorksheet(this.model, opts); }
+
+  /** SC-26 atomic evidence groups with orthogonal render status. */
+  evidenceGroups(opts = {}) { return createEvidenceGroups(this.model, opts); }
+
+  /** SC-26 independently executable reproduction instructions. */
+  reproductionWorksheet(opts = {}) { return createReproductionWorksheet(this.model, opts); }
+
+  /** Non-self-referential identity of the deterministic export contract. */
+  exportContractFingerprint() { return EXPORT_CONTRACT_FINGERPRINT; }
+
+  /** SC-26 deterministic JSON/CSV handoff facade.
+   * @param {{presentationState?:any, selection?:any, buildIdentity?:any,
+   *   inputManifest?:any, samples?:number}} [opts] */
+  researchExport({ presentationState, selection, buildIdentity, inputManifest, samples } = {}) {
+    return researchExport({
+      model: this.model,
+      presentationState,
+      selection,
+      buildIdentity,
+      inputManifest,
+      samples,
     });
   }
 

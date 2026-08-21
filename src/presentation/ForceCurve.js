@@ -6,6 +6,8 @@
  * null force while regional geometry and the audit trail remain usable.
  */
 
+import { createParameterTable } from './ParameterTable.js';
+
 export const FORCE_CURVE = Object.freeze({
   samples: 33,
   evidence_class: 'MODELED',
@@ -34,74 +36,6 @@ export const FORCE_CURVE = Object.freeze({
 /** @type {Map<string, any>} */
 const memo = new Map();
 
-function parameterSourceContext(parameter) {
-  const direct = String(parameter.source_id || '').startsWith('data/')
-    || parameter.validity?.target_status === 'UNIVERSAL_EXACT';
-  return Object.freeze({
-    claim_id: 'force_law_parameter_set',
-    source_id: parameter.source_id,
-    locator: parameter.source_locator,
-    relationship: direct ? 'direct' : 'transfer',
-    source_subject: Object.freeze({
-      species: parameter.species,
-      muscle_or_tissue: parameter.muscle_or_tissue,
-      preparation: parameter.preparation,
-    }),
-    extraction_note: `${parameter.applicability} ${parameter.transfer_rationale}`,
-  });
-}
-
-function parameterRows(record) {
-  const rows = [];
-  for (const [id, parameter] of Object.entries(record.physical_constants)) {
-    rows.push(Object.freeze({
-      id: `physical_constants.${id}`,
-      region_id: null,
-      law: 'physical_constant',
-      value: parameter.value,
-      value_from_spec: null,
-      unit: parameter.unit,
-      uncertainty: Object.freeze({ ...parameter.uncertainty }),
-      source_id: parameter.source_id,
-      source_locator: parameter.source_locator,
-      species: parameter.species,
-      preparation: parameter.preparation,
-      applicability: parameter.applicability,
-      transfer_rationale: parameter.transfer_rationale,
-      validity: Object.freeze({ ...parameter.validity }),
-      approved_reviewer: parameter.approved_reviewer,
-      approved_authority: parameter.approved_authority,
-      decision_status: parameter.decision_status,
-      source_context: parameterSourceContext(parameter),
-    }));
-  }
-  for (const region of record.regions) {
-    for (const [id, parameter] of Object.entries(region.parameters)) {
-      rows.push(Object.freeze({
-        id: `${region.id}.${id}`,
-        region_id: region.id,
-        law: region.law,
-        value: Object.hasOwn(parameter, 'value') ? parameter.value : null,
-        value_from_spec: parameter.value_from_spec || null,
-        unit: parameter.unit,
-        uncertainty: Object.freeze({ ...parameter.uncertainty }),
-        source_id: parameter.source_id,
-        source_locator: parameter.source_locator,
-        species: parameter.species,
-        preparation: parameter.preparation,
-        applicability: parameter.applicability,
-        transfer_rationale: parameter.transfer_rationale,
-        validity: Object.freeze({ ...parameter.validity }),
-        approved_reviewer: parameter.approved_reviewer,
-        approved_authority: parameter.approved_authority,
-        decision_status: parameter.decision_status,
-        source_context: parameterSourceContext(parameter),
-      }));
-    }
-  }
-  return Object.freeze(rows);
-}
-
 /**
  * @param {any} model loaded TitinModel
  * @param {{samples?: number, currentLengthNm?: number|null}} [opts]
@@ -128,14 +62,21 @@ export function createForceCurve(
     for (let i = 0; i < samples; i += 1) {
       const sl = Math.round(min + ((max - min) * i) / (samples - 1));
       const geometry = model.geometryAt(sl);
+      const evaluation = model.geometry.mechanicalModel.evaluateSarcomereLength(sl, {
+        totalNm: geometry.titin_iband_total_nm,
+        regionExtensionNm: geometry.titin_iband_extension_nm,
+      });
       points.push(Object.freeze({
         sarcomere_length_nm: geometry.sarcomere_length_nm,
         status: geometry.titin_force_status,
+        reason: geometry.titin_force_reason,
         force_pN: geometry.titin_chain_force_pN,
         sensitivity: geometry.titin_force_sensitivity,
         precision: geometry.titin_force_precision,
         iband_total_nm: geometry.titin_iband_total_nm,
         regional_extension_nm: Object.freeze({ ...geometry.titin_iband_extension_nm }),
+        incremental_compliance_share: evaluation.incremental_compliance_share,
+        incremental_compliance_nm_per_pN: evaluation.incremental_compliance_nm_per_pN,
         parameter_set_id: geometry.mechanical_parameter_set_id,
         model_fingerprint: geometry.mechanical_model_fingerprint,
       }));
@@ -163,6 +104,7 @@ export function createForceCurve(
       precision: geometry.titin_force_precision,
       incremental_compliance_nm_per_pN: incremental
         ? Object.freeze({ ...incremental }) : null,
+      regional_extension_nm: Object.freeze({ ...geometry.titin_iband_extension_nm }),
       added_length_contribution_nm: Object.freeze(Object.fromEntries(
         Object.entries(geometry.titin_iband_extension_nm).map(([id, value]) => [
           id, value - first.titin_iband_extension_nm[id],
@@ -174,6 +116,7 @@ export function createForceCurve(
   }
 
   const supported = parameterRecord.regime_policy.approved_supported_range_nm;
+  const parameterTable = createParameterTable(model);
   const numericForces = points.flatMap((point) => [
     point.force_pN,
     point.sensitivity?.force_pN?.min,
@@ -199,7 +142,7 @@ export function createForceCurve(
     sensitivity_label: parameterRecord.sensitivity_policy.label,
     sensitivity_interpretation: parameterRecord.sensitivity_policy.reason,
     equations: Object.freeze({ ...parameterRecord.equations }),
-    parameters: parameterRows(parameterRecord),
+    parameters: parameterTable.rows,
     parameter_set_id: parameterRecord.parameter_set_id,
     model_fingerprint: model.spec.identity.model_fingerprint,
     decision: Object.freeze({ ...parameterRecord.decision }),

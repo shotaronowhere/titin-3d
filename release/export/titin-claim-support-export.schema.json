@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "titin-claim-support-export/1",
+  "title": "Contextual titin claim-support export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "build", "context", "claims", "references"],
+  "properties": {
+    "schema": { "const": "titin-claim-support-export/1" },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_fingerprint", "app_revision", "build_inputs_fingerprint", "export_contract_fingerprint"],
+      "properties": {
+        "model_fingerprint": { "type": "string", "minLength": 1 },
+        "app_revision": { "type": "string", "minLength": 1 },
+        "build_inputs_fingerprint": { "type": "string", "minLength": 1 },
+        "export_contract_fingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["depth", "scene", "selection"],
+      "properties": {
+        "depth": { "enum": ["learn", "explore"] },
+        "scene": { "type": "string" },
+        "selection": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "id"],
+              "properties": {
+                "kind": { "enum": ["component", "region"] },
+                "id": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "claim_class", "render_class", "support", "limitations", "not_claimed"]
+      }
+    },
+    "references": {
+      "type": "object",
+      "additionalProperties": { "type": "object" }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema": "titin-research-export-contract/1",
+  "serializer_version": "titin-research-export-js/1",
+  "encoding": "UTF-8",
+  "line_endings": "LF (U+000A)",
+  "json": {
+    "indentation_spaces": 2,
+    "trailing_newline": true,
+    "state_schema": "titin-state-export/1",
+    "state_root_key_order": [
+      "schema",
+      "build",
+      "state",
+      "mechanics",
+      "reproduction"
+    ],
+    "build_key_order": [
+      "model_fingerprint",
+      "app_revision",
+      "build_inputs_fingerprint",
+      "export_contract_fingerprint"
+    ],
+    "state_key_order": [
+      "url_version",
+      "depth",
+      "scene",
+      "sarcomere_length_nm",
+      "drawer",
+      "selection",
+      "story_step",
+      "confidence_display",
+      "custom"
+    ],
+    "mechanics_key_order": [
+      "parameter_set_id",
+      "status"
+    ],
+    "claims_schema": "titin-claim-support-export/1",
+    "claims_root_key_order": [
+      "schema",
+      "build",
+      "context",
+      "claims",
+      "references"
+    ],
+    "nested_canonical_order": "lexicographic Unicode code-point order"
+  },
+  "csv": {
+    "delimiter": ",",
+    "quoting": "RFC 4180 double-quote escaping; quote fields containing comma, quote, CR, or LF",
+    "trailing_newline": true,
+    "force_columns": [
+      "sarcomere_length_nm",
+      "force_pN_min",
+      "force_pN_central",
+      "force_pN_max",
+      "status",
+      "reason",
+      "parameter_set_id",
+      "model_fingerprint",
+      "app_revision",
+      "build_inputs_fingerprint",
+      "export_contract_fingerprint"
+    ],
+    "regional_columns": [
+      "sarcomere_length_nm",
+      "region_id",
+      "extension_nm",
+      "added_length_nm",
+      "incremental_compliance_share",
+      "status",
+      "parameter_set_id",
+      "model_fingerprint",
+      "app_revision",
+      "build_inputs_fingerprint",
+      "export_contract_fingerprint"
+    ]
+  },
+  "units": {
+    "sarcomere_length_nm": "nm",
+    "force_pN_min": "pN",
+    "force_pN_central": "pN",
+    "force_pN_max": "pN",
+    "extension_nm": "nm",
+    "added_length_nm": "nm",
+    "incremental_compliance_share": "dimensionless"
+  },
+  "numbers": "Finite ECMAScript shortest round-trip decimal; negative zero is serialized as 0; no locale formatting.",
+  "nulls": "JSON uses null. CSV uses an empty field. A not_evaluated force is empty, never zero.",
+  "exclusions": [
+    "generation timestamp",
+    "random identifier",
+    "locale-formatted number",
+    "generated payload checksum",
+    "raw artifact self-checksum"
+  ],
+  "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843"
+}

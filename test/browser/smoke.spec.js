@@ -21,6 +21,16 @@ async function cleanBoot(page, url) {
 
 test('source and standalone pages boot without module, console, or WebGL errors', async ({ page }) => {
   await cleanBoot(page, '/source.html');
+  for (const button of await page.locator('.research-actions button').all()) {
+    await expect(button).toBeDisabled();
+  }
+  await expect(page.locator('#researchExportStatus')).toContainText(
+    'unavailable in source mode because no candidate input manifest is embedded',
+  );
+  await expect(page.locator('#reproductionWorksheet')).toContainText(
+    'Source mode has no candidate manifest and will not invent input checksums',
+  );
+  await expect(page.locator('#copyViewLink')).toBeEnabled();
   await cleanBoot(page, '/index.html');
   for (const id of ['modelFingerprint', 'appRevision', 'buildInputsFingerprint']) {
     await expect(page.locator(`#${id}`)).not.toHaveText('—');

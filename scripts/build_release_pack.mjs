@@ -26,7 +26,15 @@ import { COMPONENTS } from '../src/render/SarcomereScene.js';
 import { VIEWS, CLOSEUPS } from '../src/render/Viewer.js';
 import { createReleasePack, SLIDE } from '../src/presentation/ReleasePack.js';
 import { createVisualMatrix } from '../src/presentation/VisualMatrix.js';
-import { readEmbeddedBuildIdentity } from './build_identity.mjs';
+import {
+  createBoundaryWorksheet, createReproductionWorksheet,
+} from '../src/presentation/ParameterTable.js';
+import {
+  EXPORT_CONTRACT, EXPORT_CONTRACT_FINGERPRINT, researchExport,
+} from '../src/presentation/ResearchExport.js';
+import {
+  readEmbeddedBuildIdentity, readEmbeddedInputManifest, readEmbeddedResearchIdentity,
+} from './build_identity.mjs';
 
 const ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const OUT = join(ROOT, 'release');
@@ -457,10 +465,99 @@ function screenshotDoc(pack, matrix) {
   return `${lines.join('\n')}\n`;
 }
 
+function reproductionDoc(worksheet) {
+  const lines = [
+    '# Reproduce the mechanical value',
+    '',
+    'Generated from the candidate input manifest and the canonical mechanical-parameter record.',
+    'Do not edit by hand: run `npm run pack`.',
+    '',
+    `- Generator: \`${worksheet.generator}\``,
+    `- Command: \`${worksheet.command}\``,
+    `- Parameter set: \`${worksheet.parameter_set_id}\``,
+    `- Model fingerprint: \`${worksheet.model_fingerprint}\``,
+    `- Supported regime: ${worksheet.supported_regime.min_nm}-${worksheet.supported_regime.max_nm} nm inclusive`,
+    `- Runtime: Python ${worksheet.runtime.python}; Node ${worksheet.runtime.node}; npm ${worksheet.runtime.npm}`,
+    `- Comparison tolerance: ${worksheet.comparison_tolerance.force_pN} pN force; ${worksheet.comparison_tolerance.extension_nm} nm extension`,
+    `- Feature snapshot SHA-256: \`${worksheet.feature_source_checksums.candidate_sha256}\``,
+    `- Upstream feature-source SHA-256: \`${worksheet.feature_source_checksums.upstream_sha256}\``,
+    `- Reference sequence SHA-256: \`${worksheet.feature_source_checksums.sequence_sha256}\``,
+    '',
+    '## Pinned inputs',
+    '',
+    '| Path | SHA-256 | Scope |',
+    '|---|---|---|',
+    ...worksheet.pinned_inputs.map((input) => (
+      `| \`${input.path}\` | \`${input.sha256}\` | ${input.checksum_scope} |`
+    )),
+    '',
+    '## Procedure',
+    '',
+    ...worksheet.instructions.map((instruction, index) => `${index + 1}. ${instruction}`),
+    '',
+    'The human execution and sign-off of this worksheet remains an SC-27 gate.',
+    '',
+  ];
+  return lines.join('\n');
+}
+
+function boundaryWorksheetDoc(worksheet) {
+  const lines = [
+    '# Sequence-boundary verification worksheet',
+    '',
+    'Generated from the checksum-pinned candidate sequence-feature record for independent SC-27 execution.',
+    'Do not edit by hand: run `npm run pack`.',
+    '',
+    `- Accession / isoform: ${worksheet.accession} / ${worksheet.isoform_id}`,
+    `- Construct: ${worksheet.construct}`,
+    `- Coordinate frame: ${worksheet.coordinate_frame}`,
+    `- Reference length: ${worksheet.sequence_length_aa} aa`,
+    `- Domain features: ${worksheet.domain_feature_count}`,
+    `- Candidate source: \`${worksheet.source.path}\``,
+    `- Candidate SHA-256: \`${worksheet.source.candidate_sha256}\``,
+    `- Upstream SHA-256: \`${worksheet.source.upstream_sha256}\``,
+    `- Reference sequence SHA-256: \`${worksheet.source.sequence_sha256}\``,
+    `- Source release: ${worksheet.source.release}`,
+    `- Validation command: \`${worksheet.command}\``,
+    '',
+    '## Procedure',
+    '',
+    ...worksheet.instructions.map((instruction, index) => `${index + 1}. ${instruction}`),
+    '',
+    '## Region partition',
+    '',
+    '| Region | Inclusive residues | Length (aa) | Contained domain features |',
+    '|---|---:|---:|---:|',
+    ...worksheet.regions.map((region) => (
+      `| \`${region.id}\` | ${region.start}-${region.end} | ${region.length_aa} | ${region.feature_count} |`
+    )),
+    '',
+    `Automated boundary findings: ${worksheet.boundary_problems.length
+      ? worksheet.boundary_problems.join('; ') : 'none'}.`,
+    '',
+    '## Exact contained features by region',
+    '',
+  ];
+  for (const region of worksheet.regions) {
+    lines.push(`### ${region.name} (\`${region.id}\`)`, '',
+      '| Feature ID | Label | Type | Inclusive residues | Length (aa) |',
+      '|---|---|---|---:|---:|');
+    if (!region.features.length) lines.push('| — | No wholly contained DOMAIN feature | — | — | — |');
+    for (const feature of region.features) {
+      lines.push(`| \`${feature.id}\` | ${feature.label} | ${feature.type} | ${feature.start}-${feature.end} | ${feature.length_aa} |`);
+    }
+    lines.push('');
+  }
+  lines.push('Human execution, finding disposition, and sign-off remain SC-27 gates.', '');
+  return lines.join('\n');
+}
+
 // --- assemble ---------------------------------------------------------------
 const standaloneBytes = readBytes('index.html');
 const identity = readEmbeddedBuildIdentity(standaloneBytes);
-const model = await TitinModel.create(nodeReader(), { identity });
+const researchIdentity = readEmbeddedResearchIdentity(standaloneBytes);
+const inputManifest = readEmbeddedInputManifest(standaloneBytes);
+const model = await TitinModel.create(nodeReader(), { identity: researchIdentity });
 const pack = createReleasePack(model, { identity });
 const { min, max } = model.slRange();
 const regionTargets = model.titinRegions().map((region) => region.id);
@@ -476,6 +573,8 @@ const matrix = createVisualMatrix(model, {
   minLength: min,
   maxLength: max,
 });
+const reproduction = createReproductionWorksheet(model, { inputManifest });
+const boundaryWorksheet = createBoundaryWorksheet(model, { inputManifest });
 
 const files = new Map([
   ['CLAIM_MATRIX.md', claimMatrixDoc(pack)],
@@ -487,6 +586,16 @@ const files = new Map([
   ['PREFLIGHT.md', preflightDoc(pack, matrix)],
   ['SCREENSHOT_PACK.md', screenshotDoc(pack, matrix)],
   ['mechanical_parameters.json', readFileSync(join(ROOT, 'data/mechanical_parameters.json'), 'utf8')],
+  ['REPRODUCTION.md', reproductionDoc(reproduction)],
+  ['BOUNDARY_WORKSHEET.md', boundaryWorksheetDoc(boundaryWorksheet)],
+  ['export/EXPORT_CONTRACT.json', `${JSON.stringify({
+    ...EXPORT_CONTRACT,
+    export_contract_fingerprint: EXPORT_CONTRACT_FINGERPRINT,
+  }, null, 2)}\n`],
+  ['export/titin-state-export.schema.json',
+    readFileSync(join(ROOT, 'schemas/titin-state-export.schema.json'), 'utf8')],
+  ['export/titin-claim-support-export.schema.json',
+    readFileSync(join(ROOT, 'schemas/titin-claim-support-export.schema.json'), 'utf8')],
 ]);
 for (const slide of pack.fallback_slides) {
   const draw = DRAW[slide.kind];
@@ -499,9 +608,32 @@ const artifacts = [...files.entries()]
     return { path: `release/${name}`, bytes: bytes.byteLength, sha256: sha256(bytes) };
   })
   .sort((a, b) => a.path.localeCompare(b.path));
+const sampleExports = [2000, 2200, 2400, 1900].map((sarcomereLengthNm) => {
+  const payload = researchExport({
+    model,
+    presentationState: {
+      depth: 'explore', story_step: 'meet_sarcomere',
+      sarcomere_length_nm: sarcomereLengthNm, drawer: 'sources',
+      scene_id: 'spring', scale: 'context', confidence_display: true,
+      deepLink: `#v=2&depth=explore&step=meet_sarcomere&sl=${sarcomereLengthNm}&drawer=sources&scene=spring&confidence=1`,
+    },
+    selection: { kind: 'region', id: 'PEVK' },
+    buildIdentity: identity,
+    inputManifest,
+  });
+  return {
+    sarcomere_length_nm: sarcomereLengthNm,
+    status: model.geometryAt(sarcomereLengthNm).titin_force_status,
+    state_json_sha256: sha256(Buffer.from(payload.stateJson)),
+    force_csv_sha256: sha256(Buffer.from(payload.forceCsv)),
+    regional_csv_sha256: sha256(Buffer.from(payload.regionalCsv)),
+    claims_json_sha256: sha256(Buffer.from(payload.claimsJson)),
+  };
+});
 const manifestText = `${JSON.stringify({
   schema: 'titin-release-manifest/2',
   ...identity,
+  model_input_manifest_fingerprint: researchIdentity.model_input_manifest_fingerprint,
   standalone: {
     path: 'index.html',
     bytes: standaloneBytes.byteLength,
@@ -511,6 +643,8 @@ const manifestText = `${JSON.stringify({
   fallback_slides: pack.fallback_slides.map((slide) => slide.id),
   screenshot_cells: matrix.cells.length,
   presenter_seconds: pack.presenter_script.estimated_seconds,
+  export_contract_fingerprint: EXPORT_CONTRACT_FINGERPRINT,
+  sample_exports: sampleExports,
   generated_by: 'scripts/build_release_pack.mjs',
 }, null, 2)}\n`;
 files.set('MANIFEST.json', manifestText);
@@ -540,6 +674,7 @@ if (check) {
 } else {
   if (existsSync(OUT)) rmSync(OUT, { recursive: true });
   mkdirSync(join(OUT, 'fallback'), { recursive: true });
+  mkdirSync(join(OUT, 'export'), { recursive: true });
   for (const [name, content] of files) writeFileSync(join(OUT, name), content);
   console.log(`wrote release/  ${files.size} generated outputs, build inputs ${identity.build_inputs_fingerprint.slice(0, 12)}`);
   console.log(`  ${pack.claim_matrix.length} claims, `

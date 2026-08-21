@@ -1,18 +1,39 @@
 {
   "schema": "titin-release-manifest/2",
   "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-  "app_revision": "16cadeecd2bab65731ee5ce46b745e5bd90f60dc",
-  "build_inputs_fingerprint": "8eeddaca1b3609716b5b89dd58f33f06e8bed59b1010fe3720cf9e78cc948bd0",
+  "app_revision": "16cadeecd2bab65731ee5ce46b745e5bd90f60dc-dirty",
+  "build_inputs_fingerprint": "2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09",
+  "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25",
   "standalone": {
     "path": "index.html",
-    "bytes": 2116592,
-    "sha256": "b9d76b7db3d3d235f823548b19054daeba19d1e9b5e1663be14b7269c935bf20"
+    "bytes": 2199103,
+    "sha256": "8254bacc4a7230706598a53b05d3afeba7b30a3c138960c4cad44555fa9d4e34"
   },
   "artifacts": [
     {
+      "path": "release/BOUNDARY_WORKSHEET.md",
+      "bytes": 28352,
+      "sha256": "eae51593bf6ff08aaf0f5d4b2175c4596c73d5c8a4820a78ba4fc608c20e7284"
+    },
+    {
       "path": "release/CLAIM_MATRIX.md",
-      "bytes": 14106,
-      "sha256": "ca319858c2dd6ef3272abf9d8549adab8b8a67a3521af9f96b10cd06e1cdb38e"
+      "bytes": 14112,
+      "sha256": "2e67cb9155d7cff9a1c9def4eca921178268e388d67ffb48ec93e8f2697b7115"
+    },
+    {
+      "path": "release/export/EXPORT_CONTRACT.json",
+      "bytes": 2618,
+      "sha256": "2e60ead5236281a4ec930e5cd7591a0fd2ccb6bc46fcd644f3f7c41b10d15dec"
+    },
+    {
+      "path": "release/export/titin-claim-support-export.schema.json",
+      "bytes": 1860,
+      "sha256": "a7db19fbf9a0b132db189b38db6829154104ff67e25f5136b113e050f754eee5"
+    },
+    {
+      "path": "release/export/titin-state-export.schema.json",
+      "bytes": 6289,
+      "sha256": "a9c9acf91005c79078c52da69cbab55f413052f0bea3363ebe014404adfdf0dc"
     },
     {
       "path": "release/fallback/architecture.svg",
@@ -46,13 +67,13 @@
     },
     {
       "path": "release/LEARN_TRANSCRIPT.md",
-      "bytes": 6769,
-      "sha256": "f0ce175498878e8ef4ffeaddeaf51038cb1ea0edd91f39d692d8d32979a5ab98"
+      "bytes": 6775,
+      "sha256": "de96eff58399ad1d76617d13e2a34e647a7e432f26d7eb9497c2745c7ebe1782"
     },
     {
       "path": "release/LIMITATIONS.md",
-      "bytes": 8814,
-      "sha256": "b6fb2fc11beb2f87fecfca90301fe5199ef9fd1e94743f4d944d2819ac86d633"
+      "bytes": 8820,
+      "sha256": "034c2e4ec93c6adf032671b3380b3c2e0c0b265cc9b8d950b3e1ad421b9d0217"
     },
     {
       "path": "release/mechanical_parameters.json",
@@ -61,28 +82,33 @@
     },
     {
       "path": "release/PREFLIGHT.md",
-      "bytes": 2112,
-      "sha256": "3a32db5f33ac6062e73c3b40bb14443b987e969f3043d58d4f910a9f12520fad"
+      "bytes": 2124,
+      "sha256": "fd6eafac1d9c45fa5b34bf3c74ec72d8bf855bf25241fe28d08ae782a805e187"
     },
     {
       "path": "release/PRESENTER_SCRIPT.md",
-      "bytes": 10004,
-      "sha256": "9f2f1519da601063b172a7339f0c2058ddc2cc0bc518a3ba272e863cea704010"
+      "bytes": 10010,
+      "sha256": "29eb5ae269462c7e94328d509c6e8fbd0b7d4631e1b235152eaa68c00187734b"
+    },
+    {
+      "path": "release/REPRODUCTION.md",
+      "bytes": 2522,
+      "sha256": "9fffdda2794c7b77a74eee19a93cc8efabae41bc17d8b629053473ac4f477240"
     },
     {
       "path": "release/SCIENTIFIC_AUTHORITY.md",
-      "bytes": 2626,
-      "sha256": "9d555a013f0907dcf1fad4d7f13eaf0f0be5e27584b45a38daeb0442f83b9445"
+      "bytes": 2632,
+      "sha256": "ed384fc04cc8bb8b8e7ad265a14c594152d781ed664fa27001206f9acb80cd6b"
     },
     {
       "path": "release/SCREEN_READER_TRANSCRIPT.md",
-      "bytes": 5743,
-      "sha256": "17590e5a912bbde7e718349fed9dbf4328f3b93252607d2ace9663c62bee0b59"
+      "bytes": 5749,
+      "sha256": "a7e40811568a8c12e44542d10b98d3676afee2e398a1d56884914d9f2b1fc8a0"
     },
     {
       "path": "release/SCREENSHOT_PACK.md",
-      "bytes": 12254,
-      "sha256": "6d954410059597532770938c901210f62c55816c7466607814c520fded1bc51e"
+      "bytes": 12260,
+      "sha256": "da5f8225ced36402917c3cf03d98dda72023148623ccc291001a74adc5af1304"
     }
   ],
   "fallback_slides": [
@@ -95,5 +121,40 @@
   ],
   "screenshot_cells": 56,
   "presenter_seconds": 181.4,
+  "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+  "sample_exports": [
+    {
+      "sarcomere_length_nm": 2000,
+      "status": "supported",
+      "state_json_sha256": "660bdd3a2c2ecbd3f3c6c8a9a8700cd705ab86517e43666af65dd4bac0614714",
+      "force_csv_sha256": "0f664425e6a0b17576c714b72020a14d5d707739e907561501262e51d07b946a",
+      "regional_csv_sha256": "d7953ac3b63ef660c75d84ee78a18e902b71cb9c3cd95a8966b8312003fdb8ce",
+      "claims_json_sha256": "9967ba9db522d16e427035569241afef2be1cf28d83fb2e4a409994faade1197"
+    },
+    {
+      "sarcomere_length_nm": 2200,
+      "status": "supported",
+      "state_json_sha256": "67fb141b349ceab4ff635bb500a2fcfc793b59d44491f730d50a55ced1a60a5f",
+      "force_csv_sha256": "4c7ea1f7f2069d032678b6d60625af60dc981af48bd8dbf96e1beb1b525082d0",
+      "regional_csv_sha256": "3c88d0f336e6e919094f1682c9b536072201814ca3b5508d89e754cb00aed878",
+      "claims_json_sha256": "9967ba9db522d16e427035569241afef2be1cf28d83fb2e4a409994faade1197"
+    },
+    {
+      "sarcomere_length_nm": 2400,
+      "status": "supported",
+      "state_json_sha256": "070a164a8dafff31da861cbcbe42cfbb0c70fffcca88c1fdc21f153e4fa1b3a1",
+      "force_csv_sha256": "d0b3b5923e2d8036745ffff9e251f4a98e4eb42a56213d378310e8a01ae8531c",
+      "regional_csv_sha256": "878f75cb521add46cb92ea8345a37cd11925543aeaa341b6780b8c255d46de82",
+      "claims_json_sha256": "9967ba9db522d16e427035569241afef2be1cf28d83fb2e4a409994faade1197"
+    },
+    {
+      "sarcomere_length_nm": 1900,
+      "status": "not_evaluated",
+      "state_json_sha256": "2507110d2d0e28e117512c5c13bcca66e220b08274de8450933232cd9df93709",
+      "force_csv_sha256": "e3e139cf2ee81def663b99d056afd9143a70c4141db24b345a9ef94b21b2d29b",
+      "regional_csv_sha256": "e69672447e0967399e5c9ffe512090e313c64be930880c42cbf4500441524260",
+      "claims_json_sha256": "9967ba9db522d16e427035569241afef2be1cf28d83fb2e4a409994faade1197"
+    }
+  ],
   "generated_by": "scripts/build_release_pack.mjs"
 }

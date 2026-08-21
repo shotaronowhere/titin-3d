@@ -1,13 +1,15 @@
 /**
  * SC-18 release identity and candidate/evidence classification.
  *
- * There are four deliberately different identities:
+ * There are five deliberately different identities:
  *   - model_fingerprint: primary quantitative/geometry inputs only;
  *   - app_revision: newest Git commit that changed a discovered application input;
  *   - build_inputs_fingerprint: every deterministic input used to emit index.html;
+ *   - model_input_manifest_fingerprint: browser-verifiable binding to the ordered
+ *     model-input path/SHA-256 rows embedded in the candidate;
  *   - index_html_sha256: raw output bytes, recorded only in the external manifest.
  *
- * The first three can be embedded because none hashes the generated HTML. The raw
+ * The first four can be embedded because none hashes the generated HTML. The raw
  * HTML digest cannot be embedded without self-reference and therefore lives only
  * in release/MANIFEST.json.
  */
@@ -203,6 +205,25 @@ export function buildInputsFingerprint(manifest, {
   return hash.digest('hex');
 }
 
+/** Browser-recomputable binding between candidate identity and its model-input rows. */
+export function modelInputManifestFingerprint(manifest) {
+  if (manifest?.schema !== 'titin-build-input-manifest/1'
+      || !Array.isArray(manifest.model_inputs) || !Array.isArray(manifest.inputs)) {
+    throw new Error('modelInputManifestFingerprint requires titin-build-input-manifest/1');
+  }
+  const byPath = new Map(manifest.inputs.map((row) => [row.path, row.sha256]));
+  const inputs = MODEL_INPUTS.map((path) => {
+    const sha256 = byPath.get(path);
+    if (!manifest.model_inputs.includes(path) || !/^[0-9a-f]{64}$/.test(sha256 || '')) {
+      throw new Error(`modelInputManifestFingerprint: '${path}' is not checksum-pinned`);
+    }
+    return { path, sha256 };
+  });
+  return createHash('sha256').update(JSON.stringify({
+    schema: 'titin-model-input-manifest/1', inputs,
+  })).digest('hex');
+}
+
 function runGit(root, args, { allowFailure = false } = {}) {
   const result = spawnSync('git', args, { cwd: root, encoding: 'utf8' });
   if (result.status !== 0 && !allowFailure) {
@@ -253,6 +274,7 @@ export function buildIdentity(inputManifest, { root = DEFAULT_ROOT, release = fa
     model_fingerprint: modelFingerprint({ root }),
     app_revision: appRevision,
     build_inputs_fingerprint: buildInputsFingerprint(inputManifest, { root }),
+    model_input_manifest_fingerprint: modelInputManifestFingerprint(inputManifest),
   });
 }
 
@@ -279,14 +301,28 @@ function embeddedJson(bytes, marker) {
   throw new Error(`unbalanced embedded payload: ${marker}`);
 }
 
-export function readEmbeddedBuildIdentity(bytes) {
+/** Full internal identity used to authenticate SC-26 model-input manifest rows. */
+export function readEmbeddedResearchIdentity(bytes) {
   const value = embeddedJson(bytes, 'window.__titinBuild = Object.freeze(');
-  for (const field of ['model_fingerprint', 'app_revision', 'build_inputs_fingerprint']) {
+  for (const field of [
+    'model_fingerprint', 'app_revision', 'build_inputs_fingerprint',
+    'model_input_manifest_fingerprint',
+  ]) {
     if (typeof value[field] !== 'string' || !value[field]) {
       throw new Error(`embedded build identity is missing ${field}`);
     }
   }
   return value;
+}
+
+/** Stable three-field public candidate identity retained from SC-18. */
+export function readEmbeddedBuildIdentity(bytes) {
+  const value = readEmbeddedResearchIdentity(bytes);
+  return {
+    model_fingerprint: value.model_fingerprint,
+    app_revision: value.app_revision,
+    build_inputs_fingerprint: value.build_inputs_fingerprint,
+  };
 }
 
 export function readEmbeddedInputManifest(bytes) {

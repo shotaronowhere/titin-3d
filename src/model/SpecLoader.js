@@ -73,6 +73,7 @@ export const UNPINNED_IDENTITY = Object.freeze({
   model_fingerprint: 'unpinned-development-model',
   app_revision: 'unpinned-development-source',
   build_inputs_fingerprint: 'unpinned-development-inputs',
+  model_input_manifest_fingerprint: 'unpinned-development-model-inputs',
 });
 
 function checkedIdentity(identity) {
@@ -86,6 +87,9 @@ function checkedIdentity(identity) {
     model_fingerprint: value.model_fingerprint,
     app_revision: value.app_revision,
     build_inputs_fingerprint: value.build_inputs_fingerprint,
+    model_input_manifest_fingerprint: typeof value.model_input_manifest_fingerprint === 'string'
+      && value.model_input_manifest_fingerprint.trim()
+      ? value.model_input_manifest_fingerprint : UNPINNED_IDENTITY.model_input_manifest_fingerprint,
   });
 }
 
