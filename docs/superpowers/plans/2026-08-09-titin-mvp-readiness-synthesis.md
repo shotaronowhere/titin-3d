@@ -323,13 +323,16 @@ flowchart TD
   F --> G["SC-24: Controls and responsive state model"]
   G --> H["SC-25: Titin prominence and inspection"]
   H --> I["SC-26: Expert workbench and export"]
-  I --> J["SC-27: Human validation and release"]
+  I --> J["SC-27A: Final UX and visual overhaul"]
+  J --> K["SC-27B: Human validation and release"]
 ```
 
 Implementation PRs merge in this order. That is deliberate: `SpecLoader.js`, the standalone
 builder, fingerprint inputs, generated pack, presentation record, and HTML template are shared
-integration surfaces. Evidence packets and human reviews may proceed concurrently, but a later
-sprint does not merge against an earlier scientific schema or geometry. All arrows are load-bearing.
+integration surfaces. Non-candidate preparation may proceed concurrently; SC-27A formative reviews
+follow its design contract, while SC-27B release evidence begins only after the final candidate is
+frozen. A later sprint does not merge against an earlier scientific schema or geometry. All arrows
+are load-bearing.
 
 ## Global implementation rules
 
@@ -2001,7 +2004,16 @@ report.
 
 ---
 
-# SC-27 — Accessibility, human validation, expert sign-off, and release
+# SC-27B — Accessibility, human validation, expert sign-off, and release
+
+> **2026-08-24 sequencing amendment:** the independent final UX review inserted SC-27A before this
+> validation/release sprint. SC-27A is governed by
+> `docs/superpowers/specs/2026-08-24-sc27a-ux-overhaul-design.md` and
+> `docs/superpowers/plans/2026-08-24-sc27a-ux-overhaul-implementation.md`. The historical task IDs
+> `27.1`–`27.7` below are intentionally retained because release-gate records and evidence paths
+> already reference them. They now execute as SC-27B only after the SC-27A candidate is complete,
+> fully verified, and frozen. Earlier prose references to “SC-27” in this historical synthesis mean
+> the SC-27B validation/release work unless they explicitly refer to the new SC-27A design documents.
 
 ## Goal
 
@@ -2012,10 +2024,10 @@ the MVP definition.
 
 | Field | Contract |
 |---|---|
-| Prerequisite | SC-26 `COMPLETE`; every prior handoff complete; no known unresolved code blocker; independent release reviewers, named accessibility reviewer, lay cohort, and target hardware confirmed in the human-evidence pipeline |
+| Prerequisite | SC-26 `COMPLETE`; SC-27A `COMPLETE` with an unchanged model fingerprint and one frozen UX candidate; every prior handoff complete; no known unresolved code blocker; independent release reviewers, named accessibility reviewer, lay cohort, and target hardware confirmed in the human-evidence pipeline |
 | Background to retain | Existing automated gates pass while human, expert, visual, text-zoom, target-hardware, and deployed-parity gates remain pending; this sprint gathers evidence and routes failures back rather than adding features |
 | Consumes | Final standalone candidate, release pack, decision/claim records, browser matrix, lay/expert protocols, target hardware |
-| Produces | Offline `verify:mvp`, captured/reviewed matrix, append-only accessibility/lay/expert/rehearsal evidence outside build inputs, finalized candidate manifest/tag/deployment parity, SC-27 handoff and release decision |
+| Produces | Offline `verify:mvp`, captured/reviewed matrix, append-only accessibility/lay/expert/rehearsal evidence outside build inputs, finalized candidate manifest/tag/deployment parity, SC-27B handoff and release decision |
 | Human decision blocker | Real participants, real named experts, actual devices/display; agent personas cannot satisfy any of these gates |
 | Explicitly out of scope | New features. Any substantive defect returns to the owning sprint and creates a new candidate |
 | Required order | 27.1 clean-checkout automation → 27.2 browser/accessibility → 27.3 lay study → 27.4 expert review → remediation loop if needed → 27.5 rehearsal → 27.6 immutable build/deploy parity → 27.7 release record |
@@ -2305,7 +2317,7 @@ biomechanics whose uncertainty is as carefully visualized as its conclusions.
 
 ## Final handoff checklist
 
-- [ ] SC-18 through SC-27 completed in dependency order.
+- [ ] SC-18 through SC-26, SC-27A, and SC-27B completed in dependency order.
 - [ ] SD-01 and SD-04 are approved; SD-02, SD-03, and SD-05 are approved or deferred only with the
   exact public caveat/representation allowed by their consumption policy.
 - [ ] All generated artifacts rebuilt from reviewed inputs.
