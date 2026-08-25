@@ -78,7 +78,10 @@ async function assertSemanticCameraContract(page, viewport, beat) {
         width: rect.width,
       } : null;
     };
-    const rule = relativeBox(document.querySelector('#scienceOverlay .locator-rule'));
+    const ruleNode = document.querySelector('#scienceOverlay .locator-rule');
+    const rule = relativeBox(ruleNode);
+    const ruleCoordinates = [...ruleNode.getAttribute('d').matchAll(/-?[\d.]+/g)]
+      .map((match) => Number(match[0]));
     const extentNode = document.querySelector('#scienceOverlay .locator-extent');
     const extent = relativeBox(extentNode);
     const locatorLabels = [...document.querySelectorAll('#scienceOverlay .science-label')]
@@ -137,6 +140,12 @@ async function assertSemanticCameraContract(page, viewport, beat) {
       locatorLabels: locatorLabels.map((node) => node.textContent.trim()),
       rule,
       extent: extent && { ...extent, span: extentNode.dataset.visibleSpan },
+      locatorMath: {
+        ruleLeft: ruleCoordinates[0],
+        ruleWidth: ruleCoordinates[2] - ruleCoordinates[0],
+        extentLeft: Number(extentNode.getAttribute('x')),
+        extentWidth: Number(extentNode.getAttribute('width')),
+      },
       semanticLabels,
       termini,
       reachablePathPoints,
@@ -175,9 +184,10 @@ async function assertSemanticCameraContract(page, viewport, beat) {
   expect(from).toBeGreaterThanOrEqual(0);
   expect(to).toBeLessThanOrEqual(1);
   expect(to).toBeGreaterThanOrEqual(from);
-  expect(audit.extent.left).toBeCloseTo(audit.rule.left + audit.rule.width * from * 0.5, 0);
-  expect(audit.extent.width)
-    .toBeCloseTo(Math.max(2, audit.rule.width * (to - from) * 0.5), 0);
+  expect(audit.locatorMath.extentLeft)
+    .toBeCloseTo(audit.locatorMath.ruleLeft + audit.locatorMath.ruleWidth * from * 0.5, 5);
+  expect(audit.locatorMath.extentWidth)
+    .toBeCloseTo(Math.max(2, audit.locatorMath.ruleWidth * (to - from) * 0.5), 5);
 }
 
 for (const viewport of SC27A_VIEWPORTS) {
