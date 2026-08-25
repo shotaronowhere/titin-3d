@@ -179,10 +179,15 @@ rejected("declared source-link colour does not ship",
                              if row["id"] == "source_link").__setitem__(
                                  "foreground", "#abcdef"),
          "ships in src/index.template.html")
+rejected("declared object colour does not ship from the data-owned palette",
+         lambda record: next(row for row in record["accessibility"]["object_contrast_pairs"]
+                             if row["id"] == "actin_vs_myosin_guided").__setitem__(
+                                 "foreground", "#888888"),
+         "ships in data/render_style.json")
 rejected("release artifact points at missing generator",
          lambda record: section_check(record, "release_artifacts", "fallback_pack").__setitem__(
              "verified_by", "scripts/does_not_exist.mjs"),
          "automated pass names a real verifier")
 
 assert json.loads(SOURCE.read_text(encoding="utf-8")) == BASE, "source record changed"
-print("RELEASE-GATE V2 NEGATIVE CONTROLS PASSED (25 mutations)")
+print("RELEASE-GATE V2 NEGATIVE CONTROLS PASSED (26 mutations)")

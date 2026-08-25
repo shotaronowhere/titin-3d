@@ -49,7 +49,9 @@ FINAL_IDS = {
 }
 CONTRAST_BLOCKS = (
     ("contrast_pairs", "src/index.template.html"),
-    ("object_contrast_pairs", "src/render/SarcomereScene.js"),
+    # Guided component colours are data-owned; SarcomereScene only converts the
+    # canonical #rrggbb values to Three.js integers at runtime.
+    ("object_contrast_pairs", "data/render_style.json"),
 )
 
 
