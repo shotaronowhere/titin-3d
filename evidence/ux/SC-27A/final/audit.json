@@ -1,0 +1,772 @@
+{
+  "schema": "sc27a-ux-audit/1",
+  "purpose": "Automated diagnostics only; this record does not claim human comprehension or visual quality.",
+  "candidate_identity": {
+    "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+    "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
+    "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+    "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
+  },
+  "viewports": [
+    {
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "state_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "visible_chrome_count": 4,
+      "tabbable_chrome_count": 3,
+      "visible_chrome_ids": [
+        "scopeBadge",
+        "audienceEvidence",
+        "chapterPrevious",
+        "chapterNext"
+      ],
+      "visible_word_count": 91,
+      "bounds": {
+        "header": {
+          "left": 9,
+          "top": 9,
+          "right": 366,
+          "bottom": 88,
+          "width": 357,
+          "height": 79
+        },
+        "story": {
+          "left": 9,
+          "top": 586.4375,
+          "right": 366,
+          "bottom": 803,
+          "width": 357,
+          "height": 216.5625
+        }
+      },
+      "overlap_findings": {
+        "header_story": false
+      },
+      "scroll": {
+        "document_width": 375,
+        "viewport_width": 375,
+        "document_horizontal_overflow": 0,
+        "canvas_scroll_left": 0,
+        "story_scroll_height": 112,
+        "story_client_height": 112
+      },
+      "unobscured_stage_area_share_diagnostic": 0.6535,
+      "candidate_identity": {
+        "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
+        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
+      },
+      "composed_geometry_share_diagnostic": {
+        "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
+        "channel_difference_threshold_8bit": 12,
+        "pixel_share": 0.0488,
+        "bounding_box_share": 0.5666,
+        "changed_pixels": 14849,
+        "total_pixels": 304500
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "visible_chrome_count": 4,
+      "tabbable_chrome_count": 3,
+      "visible_chrome_ids": [
+        "scopeBadge",
+        "audienceEvidence",
+        "chapterPrevious",
+        "chapterNext"
+      ],
+      "visible_word_count": 91,
+      "bounds": {
+        "header": {
+          "left": 9,
+          "top": 9,
+          "right": 381,
+          "bottom": 88,
+          "width": 372,
+          "height": 79
+        },
+        "story": {
+          "left": 9,
+          "top": 618.4375,
+          "right": 381,
+          "bottom": 835,
+          "width": 372,
+          "height": 216.5625
+        }
+      },
+      "overlap_findings": {
+        "header_story": false
+      },
+      "scroll": {
+        "document_width": 390,
+        "viewport_width": 390,
+        "document_horizontal_overflow": 0,
+        "canvas_scroll_left": 0,
+        "story_scroll_height": 112,
+        "story_client_height": 112
+      },
+      "unobscured_stage_area_share_diagnostic": 0.666,
+      "candidate_identity": {
+        "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
+        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
+      },
+      "composed_geometry_share_diagnostic": {
+        "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
+        "channel_difference_threshold_8bit": 12,
+        "pixel_share": 0.0464,
+        "bounding_box_share": 0.5826,
+        "changed_pixels": 15285,
+        "total_pixels": 329160
+      }
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "visible_chrome_count": 4,
+      "tabbable_chrome_count": 3,
+      "visible_chrome_ids": [
+        "scopeBadge",
+        "audienceEvidence",
+        "chapterPrevious",
+        "chapterNext"
+      ],
+      "visible_word_count": 92,
+      "bounds": {
+        "header": {
+          "left": 9,
+          "top": 9,
+          "right": 759,
+          "bottom": 46,
+          "width": 750,
+          "height": 37
+        },
+        "story": {
+          "left": 9,
+          "top": 820.828125,
+          "right": 759,
+          "bottom": 1015,
+          "width": 750,
+          "height": 194.171875
+        }
+      },
+      "overlap_findings": {
+        "header_story": false
+      },
+      "scroll": {
+        "document_width": 768,
+        "viewport_width": 768,
+        "document_horizontal_overflow": 0,
+        "canvas_scroll_left": 0,
+        "story_scroll_height": 90,
+        "story_client_height": 90
+      },
+      "unobscured_stage_area_share_diagnostic": 0.7795,
+      "candidate_identity": {
+        "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
+        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
+      },
+      "composed_geometry_share_diagnostic": {
+        "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
+        "channel_difference_threshold_8bit": 12,
+        "pixel_share": 0.0462,
+        "bounding_box_share": 0.7229,
+        "changed_pixels": 36317,
+        "total_pixels": 786432
+      }
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "visible_chrome_count": 4,
+      "tabbable_chrome_count": 3,
+      "visible_chrome_ids": [
+        "scopeBadge",
+        "audienceEvidence",
+        "chapterPrevious",
+        "chapterNext"
+      ],
+      "visible_word_count": 104,
+      "bounds": {
+        "header": {
+          "left": 14,
+          "top": 14,
+          "right": 1010,
+          "bottom": 76,
+          "width": 996,
+          "height": 62
+        },
+        "story": {
+          "left": 14,
+          "top": 458.125,
+          "right": 321.1875,
+          "bottom": 740,
+          "width": 307.1875,
+          "height": 281.875
+        }
+      },
+      "overlap_findings": {
+        "header_story": false
+      },
+      "scroll": {
+        "document_width": 1024,
+        "viewport_width": 1024,
+        "document_horizontal_overflow": 0,
+        "canvas_scroll_left": 0,
+        "story_scroll_height": 139,
+        "story_client_height": 139
+      },
+      "unobscured_stage_area_share_diagnostic": 0.8114,
+      "candidate_identity": {
+        "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
+        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
+      },
+      "composed_geometry_share_diagnostic": {
+        "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
+        "channel_difference_threshold_8bit": 12,
+        "pixel_share": 0.0698,
+        "bounding_box_share": 0.8081,
+        "changed_pixels": 54869,
+        "total_pixels": 786432
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "state_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "visible_chrome_count": 4,
+      "tabbable_chrome_count": 3,
+      "visible_chrome_ids": [
+        "scopeBadge",
+        "audienceEvidence",
+        "chapterPrevious",
+        "chapterNext"
+      ],
+      "visible_word_count": 104,
+      "bounds": {
+        "header": {
+          "left": 14,
+          "top": 14,
+          "right": 1266,
+          "bottom": 76,
+          "width": 1252,
+          "height": 62
+        },
+        "story": {
+          "left": 14,
+          "top": 450.625,
+          "right": 398,
+          "bottom": 692,
+          "width": 384,
+          "height": 241.375
+        }
+      },
+      "overlap_findings": {
+        "header_story": false
+      },
+      "scroll": {
+        "document_width": 1280,
+        "viewport_width": 1280,
+        "document_horizontal_overflow": 0,
+        "canvas_scroll_left": 0,
+        "story_scroll_height": 117,
+        "story_client_height": 117
+      },
+      "unobscured_stage_area_share_diagnostic": 0.8152,
+      "candidate_identity": {
+        "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
+        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
+      },
+      "composed_geometry_share_diagnostic": {
+        "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
+        "channel_difference_threshold_8bit": 12,
+        "pixel_share": 0.0866,
+        "bounding_box_share": 0.7946,
+        "changed_pixels": 79795,
+        "total_pixels": 921600
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "visible_chrome_count": 4,
+      "tabbable_chrome_count": 3,
+      "visible_chrome_ids": [
+        "scopeBadge",
+        "audienceEvidence",
+        "chapterPrevious",
+        "chapterNext"
+      ],
+      "visible_word_count": 104,
+      "bounds": {
+        "header": {
+          "left": 14,
+          "top": 14,
+          "right": 1426,
+          "bottom": 76,
+          "width": 1412,
+          "height": 62
+        },
+        "story": {
+          "left": 14,
+          "top": 630.625,
+          "right": 434,
+          "bottom": 872,
+          "width": 420,
+          "height": 241.375
+        }
+      },
+      "overlap_findings": {
+        "header_story": false
+      },
+      "scroll": {
+        "document_width": 1440,
+        "viewport_width": 1440,
+        "document_horizontal_overflow": 0,
+        "canvas_scroll_left": 0,
+        "story_scroll_height": 117,
+        "story_client_height": 117
+      },
+      "unobscured_stage_area_share_diagnostic": 0.8542,
+      "candidate_identity": {
+        "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
+        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
+      },
+      "composed_geometry_share_diagnostic": {
+        "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
+        "channel_difference_threshold_8bit": 12,
+        "pixel_share": 0.0764,
+        "bounding_box_share": 0.828,
+        "changed_pixels": 99004,
+        "total_pixels": 1296000
+      }
+    }
+  ],
+  "declared_contrast_results": {
+    "titin_to_lightest_background": 6.406,
+    "thick_filament_to_lightest_background": 1.951,
+    "myosin_head_to_lightest_background": 1.986,
+    "thin_filament_to_lightest_background": 3.449,
+    "thin_to_thick_filament": 1.767,
+    "thin_filament_to_myosin_head": 1.737,
+    "titin_dominance_margin": 1.858
+  },
+  "presentation_titin_emphasis": {
+    "identity_color": "#ff5d7d",
+    "halo_opacity_max": 0.32,
+    "contour": {
+      "color": "#090c10",
+      "width_px": 1.5,
+      "meaning": "dark screen-space separation edge following the exact presentation trace"
+    },
+    "meaning": "halo and contour are screen-space reading aids, not molecular envelopes or evidence classes",
+    "live_trace_px": 5,
+    "live_halo_radius_scale": 3.2,
+    "live_halo_opacity": 0.28,
+    "evidence_opacity_unchanged": true,
+    "historical_sc25_audit_note": "SC-25 remains pinned to its reviewed 0.20 halo; this SC-27A presentation candidate uses the live declaration above."
+  },
+  "color_vision_diagnostics": {
+    "kind": "linear-RGB software-composition matrices",
+    "matrices": {
+      "protanopia": [
+        0.567,
+        0.433,
+        0,
+        0,
+        0,
+        0.558,
+        0.442,
+        0,
+        0,
+        0,
+        0,
+        0.242,
+        0.758,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "deuteranopia": [
+        0.625,
+        0.375,
+        0,
+        0,
+        0,
+        0.7,
+        0.3,
+        0,
+        0,
+        0,
+        0,
+        0.3,
+        0.7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "tritanopia": [
+        0.95,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.433,
+        0.567,
+        0,
+        0,
+        0,
+        0.475,
+        0.525,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ]
+    },
+    "limitation": "Diagnostic review aids only; no human colour-vision review is claimed."
+  },
+  "capture_count": 25,
+  "captures": [
+    {
+      "id": "cold-375x812",
+      "state": "cold open",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-375x812.png",
+      "sha256": "0b6c8c67e245143b60abdaa2b4d49c818433adbf875a8590b1d3567b727e05e1",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-390x844",
+      "state": "cold open",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-390x844.png",
+      "sha256": "aceccc12a00921d228da2689da07ce8150cf863a67493a4835b818903c387fce",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-768x1024",
+      "state": "cold open",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-768x1024.png",
+      "sha256": "0cdd190a165816ce201dea93bb0c1fb0e0bfaedbcaf46bd62be402b292bc1b04",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-1024x768",
+      "state": "cold open",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-1024x768.png",
+      "sha256": "fded17cb79f848830fbad721535e2c83e3ef2cdf89838e1fb0572af520e7fe1a",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-1280x720",
+      "state": "cold open",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-1280x720.png",
+      "sha256": "13504f5d49616b6d0365b4fae7c917f6de79b69ce3e0610141fb018ba24696a7",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-1440x900",
+      "state": "cold open",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-1440x900.png",
+      "sha256": "b23c56e3844f7ae07581d4aeb0912dcb44ef6e8fdd9fcb23711fb064387693d6",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "beat-1-1280x720",
+      "state": "Tour beat 1",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/beat-1-1280x720.png",
+      "sha256": "e73e5d7c63fb40c924cbc4d2fe3dad0ffd78b7316aa2ac9c65087eee9d9c5943",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "beat-2-1280x720",
+      "state": "Tour beat 2",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/beat-2-1280x720.png",
+      "sha256": "6367349b9e9752c14d873fe74c0a2a98bc2c34ab0217123cc1a2495d6304c947",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "beat-3-1280x720",
+      "state": "Tour beat 3",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/beat-3-1280x720.png",
+      "sha256": "a2d5303b95f6b5e71c9482dbc035b6710a8b29d5236b20370a72d60f21204847",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "beat-4-1280x720",
+      "state": "Tour beat 4",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/beat-4-1280x720.png",
+      "sha256": "22ab5268959f4a3137ff260f906d5bc6125bb7a10084bcb76ab908f23b4ca9c8",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "beat-5-1280x720",
+      "state": "Tour beat 5",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/beat-5-1280x720.png",
+      "sha256": "87d3ff642481904b523ed090ffbc0ed3c08ef1b626d65813a2ed1d42dd04f820",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "beat-3-stretched-1280x720",
+      "state": "Tour beat 3 at 2,400 nm",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/beat-3-stretched-1280x720.png",
+      "sha256": "efcc82f78de772c46f3c63bd87b39267a9b876068b5488891ce969c4e3317c38",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "selected-titin-1280x720",
+      "state": "selected-object explanation",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/selected-titin-1280x720.png",
+      "sha256": "483af47fd6535bdbf3d494840d1c77ee424355a3c5d82791e6b3c3e191b3b90c",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "research-evidence-1280x720",
+      "state": "Research Evidence, selected titin",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/research-evidence-1280x720.png",
+      "sha256": "409814cae1c325e78dfee8775e4a9da79b77115416a2d8991c0bc6ead25655fd",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "research-inspect-1280x720",
+      "state": "Research inspect",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/research-inspect-1280x720.png",
+      "sha256": "e4631bd0bcdba18a0d4a706bcdc9ae448d4a437cac959c841c3b31f3e52ca472",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "research-measure-1280x720",
+      "state": "Research measure",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/research-measure-1280x720.png",
+      "sha256": "e95721e778f033c768c731bbce19a301c1f93b02b6dd99ff2bda549f083402ea",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "research-sources-build-1280x720",
+      "state": "Research sources-build",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/research-sources-build-1280x720.png",
+      "sha256": "0c46d92102ef08c94703b8d90000d50215d48e3eaf1a4536556c3cc3fa0921f3",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "research-inspect-375x812",
+      "state": "mobile Research Inspect",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/research-inspect-375x812.png",
+      "sha256": "5ec2c9fc14c741515e82a99617b1d2b9c9d938fb2c979519766b31891988cb9d",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-200-percent-1280x720",
+      "state": "cold open in a 640x360 CSS viewport at device scale 2, equivalent to 200% browser zoom on 1280x720",
+      "viewport": {
+        "width": 640,
+        "height": 360
+      },
+      "device_scale_factor": 2,
+      "path": "evidence/ux/SC-27A/final/cold-200-percent-1280x720.png",
+      "sha256": "98ef2349f705ace2a8b4ec3817db263222641bdf722126e81ddf8e399307a5de",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-reduced-motion-1280x720",
+      "state": "cold open, reduced motion",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-reduced-motion-1280x720.png",
+      "sha256": "13504f5d49616b6d0365b4fae7c917f6de79b69ce3e0610141fb018ba24696a7",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-grayscale-1280x720",
+      "state": "cold open, grayscale diagnostic",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-grayscale-1280x720.png",
+      "sha256": "b5fe1367e0a54eba77befb98f2afea22407778f08d9fe7579b54932a6f7798ce",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-protanopia-1280x720",
+      "state": "cold open, protanopia software-composition diagnostic",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-protanopia-1280x720.png",
+      "sha256": "2a8ba6bb61e899a53487c430bb7e2e26dbc82ea9647eaec6c01d8af2f9ca843b",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-deuteranopia-1280x720",
+      "state": "cold open, deuteranopia software-composition diagnostic",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-deuteranopia-1280x720.png",
+      "sha256": "494a3408994c237d1b3ad2d9233308bdb7a6a083dbc1b305e9106feb32b0ebbd",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-tritanopia-1280x720",
+      "state": "cold open, tritanopia software-composition diagnostic",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-tritanopia-1280x720.png",
+      "sha256": "c47cf6393500b705092294b7e0e64b4d190602526fea4d274db79b5e4a127ddf",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    },
+    {
+      "id": "cold-projector-1536x864",
+      "state": "projector software composition",
+      "viewport": {
+        "width": 1536,
+        "height": 864
+      },
+      "device_scale_factor": 1,
+      "path": "evidence/ux/SC-27A/final/cold-projector-1536x864.png",
+      "sha256": "90bae25dd6c9f03b4dfb0a06ec79462f85942001cdfe170b8e8be6e89af3d4d5",
+      "reviewer_disposition": "PENDING — human visual review not performed"
+    }
+  ],
+  "human_review_status": "PENDING"
+}

@@ -1,6 +1,6 @@
 # Standard screenshot review pack
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `5bae463fa933662cc215e7eb994165694236aa4b`; build inputs `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09`. 56 cells.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `1b72ba022a16aaceb19d209d97e81f3074862c8d`; build inputs `2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907`. 48 cells.
 
 Deterministic SC-24 capture set generated from semantic scenes and canonical URL v2 state. Pixel comparison supplements human review and does not determine scientific correctness.
 
@@ -52,14 +52,6 @@ Deterministic SC-24 capture set generated from semantic scenes and canonical URL
       `#v=2&depth=learn&step=follow_titin&sl=2200&drawer=closed&scene=overview&confidence=0`
 - [ ] `chapter_follow_titin_mobile` — 390×844
       `#v=2&depth=learn&step=follow_titin&sl=2200&drawer=closed&scene=overview&confidence=0`
-- [ ] `chapter_molecular_architecture_projector` — 1920×1080
-      `#v=2&depth=learn&step=molecular_architecture&sl=2200&drawer=closed&camera=region.prox_Ig&scale=detail&target=titin_domains&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
-- [ ] `chapter_molecular_architecture_desktop` — 1440×900
-      `#v=2&depth=learn&step=molecular_architecture&sl=2200&drawer=closed&camera=region.prox_Ig&scale=detail&target=titin_domains&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
-- [ ] `chapter_molecular_architecture_laptop` — 1280×720
-      `#v=2&depth=learn&step=molecular_architecture&sl=2200&drawer=closed&camera=region.prox_Ig&scale=detail&target=titin_domains&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
-- [ ] `chapter_molecular_architecture_mobile` — 390×844
-      `#v=2&depth=learn&step=molecular_architecture&sl=2200&drawer=closed&camera=region.prox_Ig&scale=detail&target=titin_domains&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
 - [ ] `chapter_stretch_spring_projector` — 1920×1080
       `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&camera=region.PEVK&scale=detail&target=PEVK&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
 - [ ] `chapter_stretch_spring_desktop` — 1440×900
@@ -68,14 +60,6 @@ Deterministic SC-24 capture set generated from semantic scenes and canonical URL
       `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&camera=region.PEVK&scale=detail&target=PEVK&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
 - [ ] `chapter_stretch_spring_mobile` — 390×844
       `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&camera=region.PEVK&scale=detail&target=PEVK&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
-- [ ] `chapter_inspect_anchors_projector` — 1920×1080
-      `#v=2&depth=learn&step=inspect_anchors&sl=2200&drawer=closed&scene=z_anchor&confidence=0`
-- [ ] `chapter_inspect_anchors_desktop` — 1440×900
-      `#v=2&depth=learn&step=inspect_anchors&sl=2200&drawer=closed&scene=z_anchor&confidence=0`
-- [ ] `chapter_inspect_anchors_laptop` — 1280×720
-      `#v=2&depth=learn&step=inspect_anchors&sl=2200&drawer=closed&scene=z_anchor&confidence=0`
-- [ ] `chapter_inspect_anchors_mobile` — 390×844
-      `#v=2&depth=learn&step=inspect_anchors&sl=2200&drawer=closed&scene=z_anchor&confidence=0`
 - [ ] `chapter_scaffold_thick_filament_projector` — 1920×1080
       `#v=2&depth=learn&step=scaffold_thick_filament&sl=2200&drawer=closed&scene=a_band_scaffold&confidence=0`
 - [ ] `chapter_scaffold_thick_filament_desktop` — 1440×900
@@ -96,26 +80,26 @@ Deterministic SC-24 capture set generated from semantic scenes and canonical URL
 ## evidence mode
 
 - [ ] `evidence_projector` — 1920×1080
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `evidence_desktop` — 1440×900
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `evidence_laptop` — 1280×720
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `evidence_mobile` — 390×844
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 
 ## length states
 
 - [ ] `length_contracted` — 1920×1080
-      `#v=2&depth=explore&step=meet_sarcomere&sl=1900&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=1900&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `length_resting` — 1920×1080
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `length_stretched` — 1920×1080
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2400&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2400&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `length_extended_reference` — 1920×1080
-      `#v=2&depth=explore&step=meet_sarcomere&sl=3000&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=3000&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `length_working_range_low` — 1920×1080
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2000&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2000&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 
 ## closeups
 
@@ -136,7 +120,7 @@ Deterministic SC-24 capture set generated from semantic scenes and canonical URL
 ## selection
 
 - [ ] `selection_none` — 1920×1080
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=none&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=none&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `selection_region` — 1920×1080
       `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=region.PEVK&scale=context&target=PEVK&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 
@@ -148,13 +132,13 @@ Deterministic SC-24 capture set generated from semantic scenes and canonical URL
 ## colour vision
 
 - [ ] `vision_protanopia` — 1920×1080 · color_filter=protanopia
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `vision_deuteranopia` — 1920×1080 · color_filter=deuteranopia
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `vision_tritanopia` — 1920×1080 · color_filter=tritanopia
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 - [ ] `vision_grayscale` — 1920×1080 · color_filter=grayscale
-      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_story&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
+      `#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&camera=view.titin_hero&scale=context&target=titin&context=1&layers=lattice_rings_1%2Cmirror%2Cshow_lattice&confidence=1`
 
 Record captured cell IDs, a reviewer, and a date in
 `data/release_gates.json:visual_matrix` before that gate may be marked PASS.

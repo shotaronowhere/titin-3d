@@ -1,6 +1,6 @@
 # Scientific limitations and non-claims
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `5bae463fa933662cc215e7eb994165694236aa4b`; build inputs `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09`. Run `npm run pack` to refresh.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `1b72ba022a16aaceb19d209d97e81f3074862c8d`; build inputs `2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907`. Run `npm run pack` to refresh.
 
 Every statement below is recorded in the repository, not written for this sheet.
 
@@ -169,6 +169,7 @@ Source: `data/presentation.json`
 - known transverse azimuth along the entire chain
 - one universal downstream pathway
 - resolved partner coordinates
+- resolved partner coordinates or a settled signaling pathway
 - settled causality
 - telethonin as the sole path carrying titin tension
 - that AI is a scientific authority

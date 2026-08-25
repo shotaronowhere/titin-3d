@@ -1,0 +1,50 @@
+{
+  "schema": "sc27a-ux-baseline/1",
+  "source_revision": "914a3940b276865722396ab29cb9719bc0c88bc3",
+  "candidate_identity": {
+    "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+    "app_revision": "5bae463fa933662cc215e7eb994165694236aa4b",
+    "build_inputs_fingerprint": "2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09",
+    "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
+  },
+  "measurement_note": "Captured from the committed pre-SC-27A standalone before source edits. Tabbable counts use rendered, enabled targets with effective tabIndex >= 0. Overflow lists elements whose boxes exceeded the viewport.",
+  "viewports": [
+    {
+      "viewport": "1280x720",
+      "guided_card": { "x": 14, "y": 288.828, "width": 500, "height": 294.172, "bottom": 583 },
+      "tabbable_chrome_targets": 27,
+      "overflow_elements": ["objectAnnouncement (screen-reader-only)"]
+    },
+    {
+      "viewport": "1440x900",
+      "guided_card": { "x": 14, "y": 468.828, "width": 500, "height": 294.172, "bottom": 763 },
+      "tabbable_chrome_targets": 27,
+      "overflow_elements": ["objectAnnouncement (screen-reader-only)"]
+    },
+    {
+      "viewport": "1536x864",
+      "guided_card": { "x": 14, "y": 432.828, "width": 500, "height": 294.172, "bottom": 727 },
+      "tabbable_chrome_targets": 27,
+      "overflow_elements": ["objectAnnouncement (screen-reader-only)"]
+    },
+    {
+      "viewport": "375x812",
+      "guided_card": { "x": 9, "y": 467.125, "width": 357, "height": 194.875, "bottom": 662 },
+      "tabbable_chrome_targets": 20,
+      "overflow_elements": ["stage header", "stage controls"]
+    },
+    {
+      "viewport": "390x844",
+      "guided_card": { "x": 9, "y": 491.453, "width": 372, "height": 202.547, "bottom": 694 },
+      "tabbable_chrome_targets": 20,
+      "overflow_elements": ["stage header", "stage controls"]
+    },
+    {
+      "viewport": "412x915",
+      "guided_card": { "x": 9, "y": 545.406, "width": 394, "height": 219.594, "bottom": 765 },
+      "tabbable_chrome_targets": 20,
+      "overflow_elements": ["stage header", "stage controls"]
+    }
+  ],
+  "human_visual_disposition": "PENDING — baseline capture is diagnostic, not a human quality judgment"
+}
