@@ -151,6 +151,7 @@ test('a missing WebGL context produces an actionable static-fallback message', a
 
 test('the pinned axe foundation reports no critical WCAG A/AA violation', async ({ page }) => {
   await cleanBoot(page, '/index.html');
-  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   expect(results.violations.filter((violation) => violation.impact === 'critical')).toEqual([]);
 });

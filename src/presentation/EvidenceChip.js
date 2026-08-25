@@ -28,14 +28,15 @@ export function evidenceLanguage(presentation, evidenceClass) {
  * One component shared by Tour cards and Research headers.
  * @param {Document} ownerDocument
  * @param {{canonical: string, label: string, definition: string}} language
- * @param {{research?: boolean, interactive?: boolean}} options
+ * @param {{research?: boolean, canonicalDisclosure?: boolean, interactive?: boolean}} options
  */
 export function createEvidenceChip(ownerDocument, language, options = {}) {
   const node = ownerDocument.createElement(options.interactive ? 'button' : 'span');
   node.className = 'evidence-chip';
   node.dataset.evidenceClass = language.canonical;
   node.title = language.definition;
-  const raw = options.research && language.canonical !== language.label.toUpperCase()
+  const raw = (options.research || options.canonicalDisclosure)
+      && language.canonical !== language.label.toUpperCase()
     ? ` · scientific class: ${language.canonical.toLowerCase()}` : '';
   node.textContent = `${language.label}${raw}`;
   return node;

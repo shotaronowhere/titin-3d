@@ -59,6 +59,127 @@ async function assertContainedBy(child, parent) {
   expect(inside.y + inside.height).toBeLessThanOrEqual(outside.y + outside.height + 1);
 }
 
+async function assertSemanticCameraContract(page, viewport, beat) {
+  await expect(page.locator('#scienceOverlay [data-full-sarcomere-locator]')).toHaveCount(1);
+  const audit = await page.evaluate(() => {
+    const vis = window.titinVisualization;
+    const canvasNode = document.querySelector('#canvas');
+    const overlayNode = document.querySelector('#scienceOverlay');
+    const canvas = canvasNode.getBoundingClientRect();
+    const header = document.querySelector('#stageHeader').getBoundingClientRect();
+    const story = document.querySelector('#guidedCard').getBoundingClientRect();
+    const relativeBox = (node) => {
+      const rect = node?.getBoundingClientRect();
+      return rect ? {
+        left: rect.left - canvas.left,
+        right: rect.right - canvas.left,
+        top: rect.top - canvas.top,
+        bottom: rect.bottom - canvas.top,
+        width: rect.width,
+      } : null;
+    };
+    const rule = relativeBox(document.querySelector('#scienceOverlay .locator-rule'));
+    const extentNode = document.querySelector('#scienceOverlay .locator-extent');
+    const extent = relativeBox(extentNode);
+    const locatorLabels = [...document.querySelectorAll('#scienceOverlay .science-label')]
+      .filter((node) => {
+        if (!rule) return false;
+        const box = relativeBox(node);
+        return box && box.top >= rule.top - 30 && box.bottom <= rule.bottom + 38;
+      });
+    const semanticLabels = [
+      ...locatorLabels,
+      ...document.querySelectorAll('#scienceOverlay .terminus-label'),
+    ].map((node) => {
+      const box = relativeBox(node);
+      const hit = document.elementFromPoint(
+        canvas.left + (box.left + box.right) / 2,
+        canvas.top + (box.top + box.bottom) / 2,
+      );
+      const intersects = (obstacle) => (
+        box.left < obstacle.right - canvas.left
+        && box.right > obstacle.left - canvas.left
+        && box.top < obstacle.bottom - canvas.top
+        && box.bottom > obstacle.top - canvas.top
+      );
+      return {
+        text: node.textContent.trim(),
+        box,
+        coveredByChrome: !hit || (!overlayNode.contains(hit) && hit.tagName !== 'CANVAS'),
+        intersectsHeader: intersects(header),
+        intersectsStory: intersects(story),
+      };
+    });
+    const termini = vis.projectPresentationAnchors(vis.showcaseOverlay().termini)
+      .map((point) => {
+        const hit = document.elementFromPoint(
+          canvas.left + point.x_px, canvas.top + point.y_px,
+        );
+        return {
+          ...point,
+          coveredByChrome: !hit || (!overlayNode.contains(hit) && hit.tagName !== 'CANVAS'),
+        };
+      });
+    const pathPoints = vis.titinPickPaths().paths.flatMap((path) => path.points)
+      .map((point, index) => ({ id: `path:${index}`, ...point }));
+    const reachablePathPoints = vis.projectPresentationAnchors(pathPoints)
+      .filter((point) => {
+        if (!point.visible) return false;
+        const hit = document.elementFromPoint(
+          canvas.left + point.x_px, canvas.top + point.y_px,
+        );
+        return hit && (hit.tagName === 'CANVAS' || overlayNode.contains(hit));
+      }).length;
+    return {
+      canvas: { width: canvas.width, height: canvas.height },
+      locatorTicks: document.querySelectorAll('#scienceOverlay .locator-tick').length,
+      locatorAnchors: document.querySelectorAll('#scienceOverlay .locator-anchor').length,
+      locatorLabels: locatorLabels.map((node) => node.textContent.trim()),
+      rule,
+      extent: extent && { ...extent, span: extentNode.dataset.visibleSpan },
+      semanticLabels,
+      termini,
+      reachablePathPoints,
+    };
+  });
+
+  expect(audit.locatorTicks, `beat ${beat} has two Z boundaries and one M-line`).toBe(3);
+  expect(audit.locatorAnchors, `beat ${beat} locator has both titin termini`).toBe(2);
+  const expectedLocatorLabels = viewport.width < 520
+    ? ['Z · N', 'M · C', 'Z', 'I-band', 'A-band']
+    : ['Z-disc · N-terminus', 'M-line · C-terminus', 'Z-disc', 'I-band', 'A-band'];
+  expect(audit.locatorLabels, `beat ${beat} locator vocabulary`)
+    .toEqual(expect.arrayContaining(expectedLocatorLabels));
+  expect(audit.semanticLabels.length, `beat ${beat} paints locator and termini labels`)
+    .toBeGreaterThanOrEqual(7);
+  for (const label of audit.semanticLabels) {
+    expect(label.box.left, `${label.text} begins in the viewport`).toBeGreaterThanOrEqual(0);
+    expect(label.box.right, `${label.text} ends in the viewport`).toBeLessThanOrEqual(audit.canvas.width);
+    expect(label.box.top, `${label.text} begins in the viewport`).toBeGreaterThanOrEqual(0);
+    expect(label.box.bottom, `${label.text} ends in the viewport`).toBeLessThanOrEqual(audit.canvas.height);
+    expect(label.coveredByChrome, `${label.text} is not covered by chrome`).toBe(false);
+    expect(label.intersectsHeader, `${label.text} clears the header`).toBe(false);
+    expect(label.intersectsStory, `${label.text} clears the Tour card`).toBe(false);
+  }
+  for (const terminus of audit.termini) {
+    expect(terminus.visible, `${terminus.id} is projected`).toBe(true);
+    expect(terminus.x_px, `${terminus.id} x`).toBeGreaterThanOrEqual(0);
+    expect(terminus.x_px, `${terminus.id} x`).toBeLessThanOrEqual(audit.canvas.width);
+    expect(terminus.y_px, `${terminus.id} y`).toBeGreaterThanOrEqual(0);
+    expect(terminus.y_px, `${terminus.id} y`).toBeLessThanOrEqual(audit.canvas.height);
+    expect(terminus.coveredByChrome, `${terminus.id} is not behind chrome`).toBe(false);
+  }
+  expect(audit.reachablePathPoints, `beat ${beat} leaves titin visible and reachable`)
+    .toBeGreaterThan(0);
+  const [from, to] = audit.extent.span.split(':').map(Number);
+  expect(from).toBeGreaterThanOrEqual(0);
+  expect(to).toBeLessThanOrEqual(1);
+  expect(to).toBeGreaterThanOrEqual(from);
+  expect(audit.extent.left).toBeCloseTo(audit.rule.left + audit.rule.width * from * 0.5, 0);
+  expect(audit.extent.width)
+    .toBeCloseTo(Math.max(2, audit.rule.width * (to - from) * 0.5), 0);
+}
+
 for (const viewport of SC27A_VIEWPORTS) {
   test(`SC27A Tour shell obeys its viewport contract at ${viewport.width}x${viewport.height}`, async ({ page }) => {
     await openTour(page, viewport);
@@ -124,6 +245,25 @@ for (const viewport of SC27A_VIEWPORTS) {
       expect((await horizontalOverflow(page)).document).toBeLessThanOrEqual(1);
       expect((await horizontalOverflow(page)).canvas).toBe(0);
     }
+  });
+}
+
+for (const viewport of SC27A_VIEWPORTS) {
+  test(`SC27A semantic cameras clear chrome at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('titin.sc25.inspect-hint-seen', 'seen');
+    });
+    await setReducedMotion(page, true);
+    await openTour(page, viewport);
+    await assertSemanticCameraContract(page, viewport, 1);
+    await page.locator('#chapterNext').click();
+    await expect(page.locator('#chapterProgress')).toHaveText('Beat 2 of 5');
+    await assertSemanticCameraContract(page, viewport, 2);
+    for (let beat = 3; beat <= 5; beat += 1) {
+      await page.locator('#chapterNext').click();
+      await expect(page.locator('#chapterProgress')).toHaveText(`Beat ${beat} of 5`);
+    }
+    await assertSemanticCameraContract(page, viewport, 5);
   });
 }
 
@@ -217,10 +357,13 @@ test('SC27A object explanation reaches contextual Evidence and Sources', async (
   await expect(page.locator('#objectInspectorName')).not.toBeEmpty();
   await expect(page.locator('#objectInspectorLay')).not.toBeEmpty();
   await expect(page.locator('#objectInspectorEvidence .evidence-chip')).toHaveCount(1);
+  await expect(page.locator('#objectInspectorEvidence .evidence-chip'))
+    .toContainText('scientific class: strongly inferred');
   await page.locator('#objectInspectorDetailLink').click();
   await expect(page.locator('#tabEvidence')).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#selectedEvidence')).toBeVisible();
-  await expect(page.locator('#selectedEvidence .evidence-chip')).toContainText('scientific class:');
+  await expect(page.locator('#selectedEvidence .evidence-chip'))
+    .toContainText('scientific class: strongly inferred');
   await page.locator('#selectedEvidenceSourcesLink').click();
   await expect(page.locator('#tabSources')).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#bibliography')).not.toBeEmpty();
@@ -278,7 +421,8 @@ for (const viewport of [{ width: 375, height: 812 }, { width: 1280, height: 720 
     await setReducedMotion(page, true);
     await openTour(page, viewport);
     const scan = async (state) => {
-      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
       expect(results.violations, state).toEqual([]);
     };
     await scan('cold open');

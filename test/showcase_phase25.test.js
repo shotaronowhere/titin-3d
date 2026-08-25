@@ -404,10 +404,10 @@ test('SC25: the pick centreline is the path the molecule is drawn on', () => {
 // 25.3 — teaching and exposing inspection
 
 test('SC25: labels, legends, and the one-time invitation are wired in the page', () => {
-  for (const id of ['inspectHint', 'inspectHintText', 'inspectHintDismiss',
-    'objectInspectorDetailLink']) {
+  for (const id of ['inspectHint', 'inspectHintText', 'objectInspectorDetailLink']) {
     assert.match(page, new RegExp(`id="${id}"`), id);
   }
+  assert.doesNotMatch(page, /id="inspectHintDismiss"/);
   assert.match(page, /Click or tap a structure to explain it/);
   assert.match(page, /function selectNamedTarget/);
   assert.match(page, /function selectableLabel/);

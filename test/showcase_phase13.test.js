@@ -155,10 +155,10 @@ test('SC13: an unknown related target is rejected by the contract', () => {
     `the validator must reject an unknown related target; got ${JSON.stringify(problems)}`);
 });
 
-test('SC13: selecting a structure surfaces its expert card', () => {
-  assert.match(page, /function relatedExpertCards\(/);
-  assert.match(page, /related_target_ids/);
-  assert.match(page, /id="objectInspectorExpertLink"/);
+test('SC13/SC27A: expert cards remain in Research after the compact shortcut removal', () => {
+  assert.match(page, /function renderExpertCards\(/);
+  assert.match(page, /id="expertCards"/);
+  assert.doesNotMatch(page, /id="objectInspectorExpertLink"/);
 });
 
 test('SC13-5: no pipeline figure is written into the page', () => {

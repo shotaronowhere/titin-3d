@@ -37,6 +37,11 @@ try {
       deviceScaleFactor: 1,
       reducedMotion: 'reduce',
     });
+    if (!name.startsWith('pinned-titin')) {
+      await context.addInitScript(() => {
+        localStorage.setItem('titin.sc25.inspect-hint-seen', 'seen');
+      });
+    }
     const page = await context.newPage();
     await page.goto(`http://127.0.0.1:${PORT}/index.html${hash}`);
     await page.waitForFunction(() => window.__titinBoot?.ready === true);
@@ -44,15 +49,7 @@ try {
     if (name.startsWith('pinned-titin')) {
       await page.locator('#stageLegend button[data-component="titin"]').click();
       await page.waitForTimeout(400);
-    } else {
-      // The one-time invitation is a first-run state, not a property of the
-      // render, so it is dismissed before every capture except its own.
-      await page.evaluate(() => {
-        const dismiss = document.getElementById('inspectHintDismiss');
-        if (dismiss && !document.getElementById('inspectHint').hidden) dismiss.click();
-      });
-      await page.waitForTimeout(300);
-    }
+    } else await page.waitForTimeout(300);
     await page.screenshot({ path: join(OUT, name), animations: 'disabled' });
     console.log(`captured ${name} (${width}x${height})`);
     await context.close();

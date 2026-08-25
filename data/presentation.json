@@ -47,27 +47,27 @@
     "classes": {
       "MEASURED": {
         "label": "Measured",
-        "definition": "Reported directly from an observation or deposited structure."
+        "definition": "Direct observation or deposited structure."
       },
       "MODELED": {
         "label": "Modeled",
-        "definition": "Calculated from the declared model and its source-bounded parameters."
+        "definition": "Declared model with source-bounded parameters."
       },
       "STRONGLY INFERRED": {
         "label": "Inferred",
-        "definition": "Supported by converging evidence, but not directly measured here."
+        "definition": "Converging evidence; not directly measured here."
       },
       "INFERRED": {
         "label": "Inferred",
-        "definition": "Interpreted from cited evidence rather than directly measured here."
+        "definition": "Cited interpretation; not directly measured here."
       },
       "SCHEMATIC": {
         "label": "Schematic",
-        "definition": "Drawn to explain an admitted relationship, not as measured geometry."
+        "definition": "Drawn relationship; not measured geometry."
       },
       "UNKNOWN": {
         "label": "Not known",
-        "definition": "The current evidence does not settle this feature."
+        "definition": "Evidence does not settle this feature."
       }
     }
   },
@@ -390,7 +390,7 @@
         "a universal constant-volume lattice response",
         "resolved partner coordinates or a settled signaling pathway"
       ],
-      "presentation_features": ["band_brackets", "continuity_trace", "termini", "lattice_cross_section"],
+      "presentation_features": ["continuity_trace", "termini", "lattice_cross_section"],
       "recommended_state": {
         "sarcomere_length_nm": 2200,
         "scale": "context",
