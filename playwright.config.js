@@ -1,6 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
+const configuredWebKitLaunchTimeout = Number(
+  process.env.PLAYWRIGHT_WEBKIT_LAUNCH_TIMEOUT_MS || 180_000,
+);
+if (!Number.isFinite(configuredWebKitLaunchTimeout) || configuredWebKitLaunchTimeout <= 0) {
+  throw new Error('PLAYWRIGHT_WEBKIT_LAUNCH_TIMEOUT_MS must be a positive number');
+}
 
 export default defineConfig({
   testDir: './test/browser',
@@ -28,6 +34,15 @@ export default defineConfig({
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
     { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+        // WebKit can be slow to establish its inspector pipe on constrained
+        // review hosts. Keep that exception out of Chromium and Firefox, and
+        // allow CI to tune it without weakening test/assertion timeouts.
+        launchOptions: { timeout: configuredWebKitLaunchTimeout },
+      },
+    },
   ],
 });

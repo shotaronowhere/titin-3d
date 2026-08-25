@@ -193,6 +193,66 @@ def claim_subject(object_id: str) -> dict[str, Any]:
     }
 
 
+def canonical_public_bindings(
+    claim_id: str, binding: str, presentation: dict[str, Any]
+) -> list[str]:
+    """Mirror SpecLoader's claim-specific v2-to-v3 presentation aliases."""
+    migrations = presentation.get("public_binding_migrations") or {}
+    additions = ((migrations.get("claim_specific_additions") or {})
+                 .get(claim_id, {}).get(binding, []))
+    defaults = (migrations.get("default_targets") or {}).get(binding, [binding])
+    return list(dict.fromkeys([*additions, *defaults]))
+
+
+def preserve_alias_equivalent_bindings(
+    claim_id: str,
+    discovered: list[str],
+    previous: list[str],
+    presentation: dict[str, Any],
+) -> list[str]:
+    """Keep protected v2 pointers when they resolve exactly to discovered v3 routes.
+
+    SC-27A changes only the presentation vocabulary. The claim-support ledger is a
+    protected scientific input, so the generator must retain its legacy Guided and
+    semantic-scene pointers when (and only when) their canonical claim-specific
+    targets exactly equal the routes discovered from the current presentation.
+    Other binding families continue to regenerate normally, so genuine drift is
+    still reported by ``--check``.
+    """
+    if presentation.get("schema") != "titin-presentation/3":
+        return discovered
+
+    families = (
+        "data/presentation.json#/guided_chapters/",
+        "data/scenes.json#/scenes/",
+    )
+    result = list(discovered)
+    for prefix in families:
+        current_group = [binding for binding in result if binding.startswith(prefix)]
+        legacy_group = [binding for binding in previous if binding.startswith(prefix)]
+        if not current_group or not legacy_group:
+            continue
+        canonical_legacy = {
+            canonical
+            for binding in legacy_group
+            for canonical in canonical_public_bindings(claim_id, binding, presentation)
+        }
+        if canonical_legacy != set(current_group):
+            continue
+
+        replaced: list[str] = []
+        inserted = False
+        for binding in result:
+            if binding.startswith(prefix):
+                if not inserted:
+                    replaced.extend(legacy_group)
+                    inserted = True
+                continue
+            replaced.append(binding)
+        result = replaced
+    return result
+
+
 def public_bindings(claim_id: str, presentation: dict[str, Any], annotations: dict[str, Any]) -> list[str]:
     showcase = load_json(ROOT / "data" / "showcase_claims.json")
     scenes = load_json(ROOT / "data" / "scenes.json")
@@ -476,6 +536,13 @@ def build(previous: dict[str, Any] | None = None) -> dict[str, Any]:
             "review": pending_review(),
         }
         old = previous_by_id.get(record["id"])
+        if old:
+            record["public_bindings"] = preserve_alias_equivalent_bindings(
+                record["id"],
+                record["public_bindings"],
+                old.get("public_bindings") or [],
+                presentation,
+            )
         if old and (old.get("review") or {}).get("status") in {"APPROVED", "DEFERRED"}:
             if old["review"].get("reviewed_payload_sha256") == claim_payload_sha256(record):
                 record["review"] = copy.deepcopy(old["review"])
@@ -486,6 +553,13 @@ def build(previous: dict[str, Any] | None = None) -> dict[str, Any]:
             [*(record.get("public_bindings") or []), *discovered]
         ))
         old = previous_by_id.get(record["id"])
+        if old:
+            record["public_bindings"] = preserve_alias_equivalent_bindings(
+                record["id"],
+                record["public_bindings"],
+                old.get("public_bindings") or [],
+                presentation,
+            )
         if old and (old.get("review") or {}).get("status") in {"APPROVED", "DEFERRED"}:
             if old["review"].get("reviewed_payload_sha256") == claim_payload_sha256(record):
                 record["review"] = copy.deepcopy(old["review"])

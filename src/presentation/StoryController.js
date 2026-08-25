@@ -9,7 +9,7 @@
 
 export const AUDIENCE_MODES = Object.freeze({ guided: 'guided', evidence: 'evidence' });
 
-const PRESENTATION_SCHEMA = 'titin-presentation/2';
+const PRESENTATION_SCHEMA = 'titin-presentation/3';
 const SCENES_SCHEMA = 'titin-semantic-scenes/1';
 
 const EVIDENCE_RANK = Object.freeze({
@@ -46,43 +46,76 @@ const SCENE_FIELDS = new Set([
 const SCENE_EVIDENCE_VALUES = new Set(Object.keys(EVIDENCE_RANK));
 
 const CHAPTER_REQUIRED_FIELDS = Object.freeze([
-  'id', 'legacy_ids', 'title', 'learning_objective', 'lay_summary', 'claim_ids',
+  'id', 'legacy_ids', 'title', 'visual_question', 'learning_objective', 'lay_summary',
+  'narration', 'claim_ids',
   'semantic_scene_id', 'source_filter', 'state_change_announcement',
   'recommended_state', 'next_actions',
 ]);
 
-const SC23_CHAPTER_IDS = Object.freeze([
-  'meet_sarcomere', 'follow_titin', 'molecular_architecture', 'stretch_spring',
-  'inspect_anchors', 'scaffold_thick_filament', 'knowledge_recap',
+const SC27A_CHAPTER_IDS = Object.freeze([
+  'meet_sarcomere', 'follow_titin', 'stretch_spring',
+  'scaffold_thick_filament', 'knowledge_recap',
 ]);
 
-const SC23_CONCEPT_PATTERNS = Object.freeze({
+const SC27A_CONCEPT_PATTERNS = Object.freeze({
   meet_sarcomere: [
     /repeating contractile unit.*Z-discs/is,
     /adenosine triphosphate \(ATP\).*myosin.*actin/is,
     /titin.*passive spring.*scaffold.*not the motor/is,
   ],
-  follow_titin: [/Z-disc.*M-line/is, /I-band.*elastic.*A-band.*thick filament/is],
-  molecular_architecture: [
-    /immunoglobulin-like \(Ig\)/i, /fibronectin type III \(Fn3\)/i,
-    /disordered PEVK spring/i, /does not place Fn3.*elastic I-band/is,
+  follow_titin: [
+    /Z-disc.*M-line/is, /I-band.*elastic.*A-band.*thick filament/is,
+    /telethonin.*not the sole force path/is, /M-line.*unresolved/is,
   ],
   stretch_spring: [
-    /I-band lengthens.*A-band.*approximately fixed/is,
-    /model predicts rising passive force/is,
+    /immunoglobulin-like \(Ig\)/i, /fibronectin type III \(Fn3\)/i,
+    /N2A.*disordered PEVK spring/is, /does not place Fn3.*modeled elastic I-band/is,
+    /I-band lengthens.*A-band.*approximately fixed/is, /model predicts approximate rising passive force/is,
     /added length.*incremental compliance.*how readily/is,
   ],
-  inspect_anchors: [/telethonin.*not the sole force path/is, /M-line.*unresolved/is],
   scaffold_thick_filament: [
-    /A-band.*thick filament.*scaffold/is, /copy number.*azimuth.*register.*not encoded/is,
+    /A-band.*thick filament.*scaffold/is, /interaction and signaling sites/is,
+    /without placing partner coordinates/is, /copy number.*azimuth.*register.*not encoded/is,
   ],
   knowledge_recap: [
     /full Z-disc-to-M-line route/is,
     /passive spring.*scaffold.*interaction\/signaling platform/is,
-    /Measured comes from observations.*inferred from interpretation.*modeled from equations.*schematic means illustrative/is,
-    /Replay the stretch.*inspect a region.*open its evidence/is,
+    /Measured comes directly.*Modeled comes from.*Inferred comes from.*Schematic means.*Not known/is,
+    /reading and verification aids, not new biological evidence/is,
+    /Why we know this.*exact claim.*limitations.*sources/is,
   ],
 });
+
+const GUIDED_EVIDENCE_LABELS = Object.freeze([
+  'Measured', 'Modeled', 'Inferred', 'Schematic', 'Not known',
+]);
+const GUIDED_RECAP_CLASSES = Object.freeze([
+  'MEASURED', 'MODELED', 'STRONGLY INFERRED', 'SCHEMATIC', 'UNKNOWN',
+]);
+const SC27A_V2_NOT_CLAIMED = Object.freeze([
+  'a resolved atom-by-atom path',
+  'known transverse azimuth along the entire chain',
+  'atom-resolved surfaces for every domain',
+  'a known azimuth for every folded domain',
+  'that domain spacing is measured everywhere along the molecule',
+  'that Fn3 domains occur in the modeled elastic I-band',
+  'uniform scaling of titin regions',
+  'widespread physiological Ig-domain unfolding',
+  'a measured molecular trajectory',
+  'tissue-specific human force',
+  'telethonin as the sole path carrying titin tension',
+  'a resolved complete lateral route through the Z-disc',
+  'a complete M-band molecular structure',
+  'exact in-situ crosslink coordinates',
+  'whole-path titin copy number',
+  'a resolved universal titin azimuth',
+  'exact register between titin sequence repeats and myosin periodicities',
+  'a universal constant-volume lattice response',
+  'that AI is a scientific authority',
+  'that passing tests proves every biological interpretation',
+  'that procedural geometry is experimental density',
+  'a settled causal signaling mechanism',
+]);
 
 /**
  * SC-7. Expert cards must separate what is established from what is proposed and
@@ -123,7 +156,7 @@ export function checkPresentationSpec(presentation, context = {}) {
   if (!presentation || typeof presentation !== 'object') {
     return ['presentation.json missing or not an object'];
   }
-  if (presentation.schema !== PRESENTATION_SCHEMA || presentation.version !== 2) {
+  if (presentation.schema !== PRESENTATION_SCHEMA || presentation.version !== 3) {
     problems.push(`presentation schema '${presentation.schema}' is unsupported`);
   }
   const collections = [
@@ -162,6 +195,35 @@ export function checkPresentationSpec(presentation, context = {}) {
   const modeIds = new Set((presentation.audience_modes || []).map((record) => record.id));
   for (const required of Object.values(AUDIENCE_MODES)) {
     if (!modeIds.has(required)) problems.push(`presentation audience mode '${required}' is missing`);
+  }
+
+  const language = presentation.evidence_language;
+  const languageClasses = language?.classes;
+  const canonicalEvidenceClasses = Object.keys(EVIDENCE_RANK);
+  if (language?.schema !== 'titin-evidence-language/1'
+      || !languageClasses || typeof languageClasses !== 'object'
+      || Array.isArray(languageClasses)) {
+    problems.push('presentation needs a titin-evidence-language/1 mapping');
+  } else {
+    const actualClasses = Object.keys(languageClasses);
+    if (actualClasses.length !== canonicalEvidenceClasses.length
+        || canonicalEvidenceClasses.some((id) => !Object.hasOwn(languageClasses, id))) {
+      problems.push('presentation evidence language must map all six canonical classes exactly once');
+    }
+    const labels = new Set();
+    for (const [id, record] of Object.entries(languageClasses)) {
+      if (!String(record?.label || '').trim() || !String(record?.definition || '').trim()) {
+        problems.push(`presentation evidence language '${id}' needs a label and definition`);
+      } else labels.add(record.label);
+    }
+    if (JSON.stringify([...labels].sort())
+        !== JSON.stringify([...GUIDED_EVIDENCE_LABELS].sort())) {
+      problems.push('presentation evidence language must use only the five approved Guided labels');
+    }
+    if (JSON.stringify(language.guided_recap_classes)
+        !== JSON.stringify(GUIDED_RECAP_CLASSES)) {
+      problems.push('presentation evidence recap must declare the five canonical Guided classes in order');
+    }
   }
 
   const claimMap = new Map((claims?.objects || []).map((claim) => [claim.id, claim]));
@@ -267,6 +329,7 @@ export function checkPresentationSpec(presentation, context = {}) {
   }
 
   const chapterOrders = new Set();
+  const primaryActionLabels = new Set();
   for (const chapter of presentation.guided_chapters || []) {
     for (const field of CHAPTER_REQUIRED_FIELDS) {
       if (!Object.hasOwn(chapter, field)) {
@@ -287,8 +350,12 @@ export function checkPresentationSpec(presentation, context = {}) {
     if (!String(chapter.expected_learner_takeaway || '').trim()) {
       problems.push(`guided chapter '${chapter.id}' needs an expected learner takeaway`);
     }
-    if (chapter.narration !== chapter.lay_summary) {
-      problems.push(`guided chapter '${chapter.id}' narration must be the canonical lay summary`);
+    if (!String(chapter.visual_question || '').trim()
+        || sentences(chapter.visual_question).length !== 1) {
+      problems.push(`guided chapter '${chapter.id}' needs one visual question`);
+    }
+    if (!String(chapter.narration || '').trim()) {
+      problems.push(`guided chapter '${chapter.id}' needs complete narration`);
     }
     if (!Array.isArray(chapter.claim_ids) || !chapter.claim_ids.length
         || new Set(chapter.claim_ids).size !== chapter.claim_ids.length) {
@@ -312,8 +379,8 @@ export function checkPresentationSpec(presentation, context = {}) {
         || !/length/i.test(chapter.state_change_announcement)) {
       problems.push(`guided chapter '${chapter.id}' must announce its length policy`);
     }
-    if (!Array.isArray(chapter.next_actions) || !chapter.next_actions.length) {
-      problems.push(`guided chapter '${chapter.id}' needs at least one next action`);
+    if (!Array.isArray(chapter.next_actions) || chapter.next_actions.length !== 1) {
+      problems.push(`guided chapter '${chapter.id}' needs exactly one primary next action`);
     } else {
       const actionIds = new Set();
       for (const action of chapter.next_actions) {
@@ -322,6 +389,10 @@ export function checkPresentationSpec(presentation, context = {}) {
           problems.push(`guided chapter '${chapter.id}' has an invalid or duplicate next action`);
         }
         actionIds.add(action?.id);
+        if (primaryActionLabels.has(action?.label)) {
+          problems.push(`guided chapter '${chapter.id}' duplicates primary action label '${action?.label}'`);
+        }
+        primaryActionLabels.add(action?.label);
       }
     }
     const targetSet = chapter.target?.kind === 'region' ? regionIds
@@ -331,19 +402,15 @@ export function checkPresentationSpec(presentation, context = {}) {
       problems.push(`guided chapter '${chapter.id}' targets unknown ${chapter.target.kind} '${chapter.target?.id}'`);
     }
     const words = String(chapter.lay_summary || '').trim().split(/\s+/).filter(Boolean).length;
-    if (words < 25 || words > 45) {
-      problems.push(`guided chapter '${chapter.id}' lay summary has ${words} words; expected 25–45`);
+    if (words < 1 || words > 30) {
+      problems.push(`guided chapter '${chapter.id}' lay summary has ${words} words; expected at most 30`);
     }
     // "One main idea; no chapter depends on reading a dense paragraph." A word cap
     // alone permits one 45-word sentence, which is exactly the density the gate is
     // about, so sentence structure is checked too.
     const parts = sentences(chapter.lay_summary);
-    if (parts.length < 2 || parts.length > 3) {
-      problems.push(`guided chapter '${chapter.id}' lay summary has ${parts.length} sentences; expected 2–3`);
-    }
-    const longest = Math.max(0, ...parts.map((part) => part.split(/\s+/).filter(Boolean).length));
-    if (longest > 30) {
-      problems.push(`guided chapter '${chapter.id}' has a ${longest}-word sentence; expected at most 30`);
+    if (parts.length !== 1) {
+      problems.push(`guided chapter '${chapter.id}' lay summary has ${parts.length} sentences; expected exactly one`);
     }
     if (!chapter.expert_expansion || !(chapter.not_claimed || []).length) {
       problems.push(`guided chapter '${chapter.id}' needs expert expansion and not-claimed text`);
@@ -382,15 +449,19 @@ export function checkPresentationSpec(presentation, context = {}) {
   const chapterIds = new Set((presentation.guided_chapters || []).map((chapter) => chapter.id));
   const orderedChapters = [...(presentation.guided_chapters || [])].sort((a, b) => a.order - b.order);
   if (JSON.stringify(orderedChapters.map((chapter) => chapter.id))
-      !== JSON.stringify(SC23_CHAPTER_IDS)) {
-    problems.push('guided chapters must implement the ordered seven-outcome SC-23 curriculum');
+      !== JSON.stringify(SC27A_CHAPTER_IDS)) {
+    problems.push('guided chapters must implement the ordered five-beat SC-27A Tour');
   }
-  for (const chapter of orderedChapters) {
+  for (const [index, chapter] of orderedChapters.entries()) {
     const text = chapter.narration || '';
-    for (const pattern of SC23_CONCEPT_PATTERNS[chapter.id] || []) {
+    for (const pattern of SC27A_CONCEPT_PATTERNS[chapter.id] || []) {
       if (!pattern.test(text)) {
-        problems.push(`guided chapter '${chapter.id}' misses required SC-23 concept ${pattern}`);
+        problems.push(`guided chapter '${chapter.id}' misses required SC-27A concept ${pattern}`);
       }
+    }
+    const expectedDestination = orderedChapters[index + 1]?.id || orderedChapters[0]?.id;
+    if (chapter.next_actions?.[0]?.action !== `story.${expectedDestination}`) {
+      problems.push(`guided chapter '${chapter.id}' primary action must target '${expectedDestination}'`);
     }
   }
   const aliases = presentation.chapter_aliases;
@@ -420,6 +491,22 @@ export function checkPresentationSpec(presentation, context = {}) {
     if (declaredLegacy.size !== Object.keys(aliases.aliases).length) {
       problems.push('chapter legacy_ids and the v1 alias table are not one-to-one');
     }
+  }
+  const migrations = presentation.public_binding_migrations;
+  if (migrations?.schema !== 'titin-public-binding-migrations/1'
+      || migrations.source_presentation_schema !== 'titin-presentation/2'
+      || !migrations.default_targets || typeof migrations.default_targets !== 'object'
+      || Array.isArray(migrations.default_targets)
+      || !migrations.claim_specific_additions
+      || typeof migrations.claim_specific_additions !== 'object'
+      || Array.isArray(migrations.claim_specific_additions)) {
+    problems.push('presentation needs a data-owned titin-public-binding-migrations/1 record');
+  }
+  const currentNotClaimed = new Set((presentation.guided_chapters || [])
+    .flatMap((chapter) => chapter.not_claimed || []));
+  const lostNotClaimed = SC27A_V2_NOT_CLAIMED.filter((statement) => !currentNotClaimed.has(statement));
+  if (lostNotClaimed.length) {
+    problems.push(`five-beat merge silently dropped v2 not-claimed statements: ${lostNotClaimed.join(', ')}`);
   }
 
   for (const card of presentation.expert_cards || []) {
@@ -846,9 +933,6 @@ export class StoryController {
       if (canonical === null || this.chapterMap.has(canonical)) {
         state.story_step = canonical;
         if (canonical !== null) resolvedStepChapter = this.chapterMap.get(canonical);
-        if (value !== null && canonical !== value) {
-          issues.push(`Legacy chapter '${value}' resolved to '${canonical}'.`);
-        }
       } else fallback('step', value, 'unknown guided chapter', state.story_step);
     }
     // A chapter-bearing hash adopts the complete declared scene wherever the

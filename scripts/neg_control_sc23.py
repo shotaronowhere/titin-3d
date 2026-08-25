@@ -99,7 +99,7 @@ rejected(
     "opening motor concept removed",
     lambda presentation, _scenes: chapter(presentation, "meet_sarcomere").__setitem__(
         "narration", "A sarcomere is a repeating contractile unit between Z-discs. Titin is shown."),
-    "misses required SC-23 concept",
+    "misses required SC-27A concept",
 )
 rejected(
     "approved content falsely marked blocked",

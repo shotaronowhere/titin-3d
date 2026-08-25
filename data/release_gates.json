@@ -204,7 +204,7 @@
     "status": "PENDING",
     "definition": "src/presentation/VisualMatrix.js",
     "manifest_command": "node scripts/capture_visual_matrix.mjs",
-    "expected_cells": 56,
+    "expected_cells": 48,
     "checks": [
       {
         "id": "matrix_reproducible",
@@ -567,21 +567,21 @@
     "object_contrast_pairs": [
       {
         "id": "actin_vs_myosin_guided",
-        "foreground": "#337467",
-        "background": "#2d4661",
+        "foreground": "#636b67",
+        "background": "#3f454c",
         "min_ratio": 1.7,
         "where": "guided actin thin filament against the myosin thick filament"
       },
       {
         "id": "actin_vs_crowns_guided",
-        "foreground": "#337467",
-        "background": "#33475d",
+        "foreground": "#636b67",
+        "background": "#41464c",
         "min_ratio": 1.7,
         "where": "guided actin thin filament against the myosin head array"
       },
       {
         "id": "myosin_vs_stage_guided",
-        "foreground": "#2d4661",
+        "foreground": "#3f454c",
         "background": "#0e1116",
         "min_ratio": 1.9,
         "where": "guided myosin thick filament against the stage, on a projector"
@@ -596,14 +596,14 @@
       {
         "id": "titin_vs_myosin_guided",
         "foreground": "#ff5d7d",
-        "background": "#2d4661",
+        "background": "#3f454c",
         "min_ratio": 2.6,
         "where": "SC-25: titin against the guided myosin thick filament it lies on in the A-band"
       },
       {
         "id": "titin_vs_actin_guided",
         "foreground": "#ff5d7d",
-        "background": "#337467",
+        "background": "#636b67",
         "min_ratio": 1.7,
         "where": "SC-25: titin against the guided actin thin filament that crosses it in the I-band"
       }

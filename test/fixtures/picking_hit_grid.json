@@ -167,7 +167,7 @@
       },
       "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
       "sarcomere_length_nm": 2200,
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "canvas": {
         "width": 1280,
         "height": 720
@@ -381,7 +381,7 @@
       },
       "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=titin_alone&confidence=0",
       "sarcomere_length_nm": 2200,
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "canvas": {
         "width": 1280,
         "height": 720
@@ -595,7 +595,7 @@
       },
       "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=spring&confidence=0",
       "sarcomere_length_nm": 2200,
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "canvas": {
         "width": 1280,
         "height": 720
@@ -1173,7 +1173,7 @@
       },
       "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
       "sarcomere_length_nm": 2200,
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "canvas": {
         "width": 375,
         "height": 812
@@ -1379,7 +1379,7 @@
       },
       "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=titin_alone&confidence=0",
       "sarcomere_length_nm": 2200,
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "canvas": {
         "width": 375,
         "height": 812
@@ -1585,7 +1585,7 @@
       },
       "url_hash": "#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=spring&confidence=0",
       "sarcomere_length_nm": 2200,
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "canvas": {
         "width": 375,
         "height": 812

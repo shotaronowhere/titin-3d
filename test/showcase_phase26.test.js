@@ -332,6 +332,16 @@ test('SC26: selected claim subset includes local metadata and exact source locat
   assert.deepEqual(Object.keys(claims.references), [...sourceIds].sort());
   assert.ok(claims.claims.every((claim) => claim.support.every((row) => row.locator)));
   assert.match(claims.references['data/mechanical_model.json'].availability, /no network/);
+  for (const binding of claims.claims.flatMap((claim) => claim.public_bindings || [])) {
+    const match = binding.match(/^(data\/[^#]+\.json)#(\/.*)$/);
+    if (!match) continue;
+    const record = JSON.parse(readFileSync(new URL(`../${match[1]}`, import.meta.url), 'utf8'));
+    const resolved = match[2].split('/').slice(1).reduce((node, raw) => {
+      const key = raw.replaceAll('~1', '/').replaceAll('~0', '~');
+      return Array.isArray(node) ? node[Number(key)] : node?.[key];
+    }, record);
+    assert.notEqual(resolved, undefined, `exported public binding is stale: ${binding}`);
+  }
 });
 
 test('SC26: validators reject malformed, forged, drifted, and non-canonical payloads', () => {

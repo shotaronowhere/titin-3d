@@ -24,12 +24,12 @@ const controller = new StoryController(model.spec.presentation, {
 }, model.spec.scenes);
 
 test('SC1: presentation.json is required and cross-file validated at runtime', () => {
-  assert.equal(model.spec.presentation.schema, 'titin-presentation/2');
+  assert.equal(model.spec.presentation.schema, 'titin-presentation/3');
   assert.equal(model.spec.scenes.schema, 'titin-semantic-scenes/1');
   assert.equal(model.spec.showcaseClaims.schema, 'titin-showcase-claim-audit/2');
   assert.deepEqual(controller.chapters.map((chapter) => chapter.id),
-    ['meet_sarcomere', 'follow_titin', 'molecular_architecture', 'stretch_spring',
-      'inspect_anchors', 'scaffold_thick_filament', 'knowledge_recap']);
+    ['meet_sarcomere', 'follow_titin', 'stretch_spring',
+      'scaffold_thick_filament', 'knowledge_recap']);
 });
 
 test('SC1: every supported public URL state round-trips exactly', () => {
@@ -116,7 +116,7 @@ test('SC1: public facade reports audience/story/selection without adding activat
     /not visible.*detail scale/i);
 });
 
-test('SC1/SC24: Learn has semantic stage controls and Explore owns the raw inspector', () => {
+test('SC1/SC27A: Tour owns contextual mechanics and Research owns the raw inspector', () => {
   assert.match(page, /id="app" data-mode="guided"/);
   assert.match(page, /id="scopeBadge"[\s\S]*?id="scopeIdentity"[\s\S]*?id="scopeState"/);
   assert.match(page, /id="guidedCard"[\s\S]*?id="chapterSummary"[\s\S]*?id="chapterEvidenceLink"/);
@@ -125,10 +125,7 @@ test('SC1/SC24: Learn has semantic stage controls and Explore owns the raw inspe
   assert.ok(rawEvidence > guidedEnd, 'raw evidence inventory must not be inside the Guided card');
   const drawerStart = page.indexOf('id="panel"');
   const drawerEnd = page.indexOf('</aside>', drawerStart);
-  // SC-12 split this gate. Raw EVIDENCE must stay out of the Guided card — that
-  // was the original intent and it still holds. The primary didactic CONTROLS
-  // deliberately moved to the stage bar, because a length control a novice
-  // cannot reach cannot teach what changes with sarcomere length.
+  // Raw research inventory stays out of the compact Tour surface.
   for (const id of [
     'scales', 'views', 'closeups', 'toggles', 'components', 'regions',
     'metrics', 'legend', 'evidence', 'annotations', 'notClaimed', 'notes',
@@ -137,16 +134,18 @@ test('SC1/SC24: Learn has semantic stage controls and Explore owns the raw inspe
     assert.ok(location > drawerStart && location < drawerEnd,
       `existing readout/control '${id}' must remain in the Evidence drawer`);
   }
-  const barStart = page.indexOf('id="stageBar"');
-  const barEnd = page.indexOf('</div><!-- /stageBar -->', barStart);
-  for (const id of ['sl', 'stagePlay', 'stageReset', 'sceneControls', 'stageMore']) {
+  for (const id of ['sl', 'stagePlay']) {
     const location = page.indexOf(`id="${id}"`);
-    assert.ok(location > barStart && location < barEnd,
-      `primary control '${id}' must be on the stage bar`);
+    assert.ok(location > page.indexOf('id="guidedCard"') && location < guidedEnd,
+      `contextual control '${id}' must be inside the Tour card`);
   }
-  assert.match(page,
-    /#app\[data-mode="evidence"\]\[data-drawer-open="true"\] #panel \{ display: block; \}/);
-  assert.match(page, /@media \(max-width: 700px\)[\s\S]*?#panel \{ position: fixed;/);
+  for (const id of ['sceneControls', 'stageReset', 'stageMore']) {
+    const location = page.indexOf(`id="${id}"`);
+    assert.ok(location < 0 || !(location > page.indexOf('id="guidedCard"') && location < guidedEnd),
+      `nonessential control '${id}' must stay out of the Tour card`);
+  }
+  assert.match(page, /#app\[data-mode="evidence"\][\s\S]*?#panel/);
+  assert.match(page, /@media \(max-width: 767px\), \(orientation: portrait\) and \(max-width: 1024px\)[\s\S]*?#panel/);
   assert.match(page, /addEventListener\('hashchange', scheduleHistoryRestore\)/,
     'pasting a shared hash into an already-open page must restore it immediately');
   assert.match(page, /function applyChapterVisibility[\s\S]*?recommended_state\?\.visibility/,

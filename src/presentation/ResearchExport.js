@@ -8,6 +8,7 @@
  */
 
 import { createAnnotations } from '../api/TitinAnnotations.js';
+import { canonicalPublicBindings } from '../model/SpecLoader.js';
 import { sha256Text } from './DeterministicHash.js';
 import {
   createReproductionWorksheet, REPRODUCTION_INPUT_PATHS,
@@ -24,7 +25,7 @@ export const RESEARCH_LAYER_KEYS = Object.freeze([
   'mirror', 'show_context_detail', 'show_domains', 'show_lattice',
 ]);
 export const RESEARCH_CAMERA_PRESETS = Object.freeze([
-  'view.longitudinal', 'view.titin_story', 'view.side', 'view.transverse', 'view.oblique',
+  'view.longitudinal', 'view.titin_hero', 'view.titin_story', 'view.side', 'view.transverse', 'view.oblique',
   'closeup.crowns', 'closeup.twist', 'closeup.junction', 'closeup.zdisc',
   'closeup.mline', 'closeup.czone', 'closeup.lattice',
 ]);
@@ -431,7 +432,13 @@ function claimsPayload(model, build, state) {
   const claims = ids.map((id) => {
     const claim = byId.get(id);
     if (!claim) throw new Error(`researchExport: contextual claim '${id}' is unresolved.`);
-    return canonicalClone(claim);
+    const exported = canonicalClone(claim);
+    exported.public_bindings = [...new Set((claim.public_bindings || []).flatMap((binding) => (
+      canonicalPublicBindings(
+        claim.id, binding, model.spec.presentation.public_binding_migrations,
+      )
+    )))];
+    return canonicalClone(exported);
   });
   const sourceIds = [...new Set(claims.flatMap((claim) => (
     (claim.support || []).map((row) => row.source_id)

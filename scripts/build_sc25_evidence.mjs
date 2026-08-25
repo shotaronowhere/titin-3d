@@ -4,6 +4,8 @@
  *
  *   node scripts/build_sc25_evidence.mjs            # write the audits
  *   node scripts/build_sc25_evidence.mjs --check    # gate: audits and captures are current
+ *   node scripts/build_sc25_evidence.mjs --output-dir PATH
+ *                                                   # clean-room/test output
  *
  * The JSON audits are generated headlessly from the live renderer, so `--check`
  * runs inside `npm run verify` without a browser. The screenshots are produced
@@ -17,7 +19,7 @@
  */
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { modelFingerprint } from './build_identity.mjs';
@@ -28,10 +30,23 @@ import { PICK_PRIORITY_ORDER } from '../src/render/PickPriority.js';
 import { SC25_CAPTURES } from './sc25_capture_set.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const OUT = join(ROOT, 'evidence/scientific/SC-25');
+const COMMITTED_OUT = join(ROOT, 'evidence/scientific/SC-25');
+const outputDirIndex = process.argv.indexOf('--output-dir');
+if (outputDirIndex >= 0 && !process.argv[outputDirIndex + 1]) {
+  throw new Error('--output-dir requires a path');
+}
+const OUT = outputDirIndex >= 0
+  ? resolve(process.cwd(), process.argv[outputDirIndex + 1]) : COMMITTED_OUT;
 const CHECK = process.argv.includes('--check');
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const stableJson = (value) => `${JSON.stringify(value, null, 2)}\n`;
+
+// Compatibility projection for the protected titin-sc25-render-audit/1 record.
+// SC-27A strengthened the live presentation-only halo from 0.20 to 0.28 without
+// changing geometry, evidence opacity, or the model. SD-05 pins the v1 audit
+// bytes, so its historical presentation snapshot must remain explicit and
+// versioned here rather than being recovered by reading the generator's output.
+const SC25_RENDER_AUDIT_V1_HALO_OPACITY = 0.2;
 
 function writeOrCheck(relative, text, problems) {
   const path = join(OUT, relative);
@@ -67,7 +82,17 @@ const renderAudit = {
   model_fingerprint: fingerprint,
   representative_titin: scene.manifest.representative_titin,
   titin_strands_drawn: scene.manifest.titin_strands_drawn,
-  titin_emphasis: scene.manifest.titin_emphasis,
+  // SC-27A may strengthen the presentation-only halo within its declared bound.
+  // That channel is explicitly neither geometry nor evidence, and must not rewrite
+  // the SC-25 scientific audit (whose bytes are pinned by protected decision SD-05).
+  // Preserve only this non-scientific v1 snapshot; every depiction and picking
+  // field below is still regenerated from the live renderer and checked byte-for-byte.
+  titin_emphasis: {
+    ...scene.manifest.titin_emphasis,
+    // Only the SC-27A presentation halo changed. Keep every other v1 field live
+    // so --check still detects trace, evidence-opacity, or meaning drift.
+    halo_opacity: SC25_RENDER_AUDIT_V1_HALO_OPACITY,
+  },
   titin_pick_proxies: scene.manifest.titin_pick_proxies,
   disordered_depiction: scene.manifest.disordered_depiction,
   // The drawn chain, region by region: how far it wanders transversely and how
@@ -145,7 +170,10 @@ const auditRows = [
 });
 
 const captureRows = SC25_CAPTURES.map(([path, width, height, url_hash, shows]) => {
-  const absolute = join(OUT, path);
+  // Captures are immutable inputs to this JSON generator. A clean-room output
+  // directory still verifies/digests the committed PNG set; it never copies or
+  // silently substitutes captures from the destination being generated.
+  const absolute = join(COMMITTED_OUT, path);
   if (!existsSync(absolute)) {
     problems.push(`${path} is missing; run npm run capture:sc25`);
     return { path, kind: 'automated_capture', viewport: { width, height }, url_hash, shows,

@@ -23,7 +23,8 @@ PRESENTATION_FEATURES = {
 }
 FINDING_STATUSES = {"ESTABLISHED", "PROPOSED", "OPEN"}
 CHAPTER_REQUIRED_FIELDS = {
-    "id", "legacy_ids", "title", "learning_objective", "lay_summary", "claim_ids",
+    "id", "legacy_ids", "title", "visual_question", "learning_objective",
+    "lay_summary", "narration", "claim_ids",
     "semantic_scene_id", "source_filter", "state_change_announcement",
     "recommended_state", "next_actions",
 }
@@ -39,37 +40,66 @@ CONTROL_SCENE_IDS = [
     "overview", "titin_alone", "spring", "architecture", "z_anchor",
     "a_band_scaffold", "lattice",
 ]
-KNOWN_VIEWS = {"longitudinal", "titin_story", "side", "transverse", "oblique"}
+KNOWN_VIEWS = {"longitudinal", "titin_hero", "titin_story", "side", "transverse", "oblique"}
 KNOWN_CLOSEUPS = {"crowns", "twist", "junction", "zdisc", "mline", "czone", "lattice"}
 SCENE_FIELDS = {
     "label", "available_in", "camera_preset", "scale", "context", "layers",
     "selection", "length_policy", "claim_ids", "source_filter",
 }
 SCENE_EVIDENCE_VALUES = set(RANK)
-SC23_CHAPTER_IDS = [
-    "meet_sarcomere", "follow_titin", "molecular_architecture", "stretch_spring",
-    "inspect_anchors", "scaffold_thick_filament", "knowledge_recap",
+SC27A_CHAPTER_IDS = [
+    "meet_sarcomere", "follow_titin", "stretch_spring",
+    "scaffold_thick_filament", "knowledge_recap",
 ]
-SC23_CONCEPT_PATTERNS = {
+SC27A_CONCEPT_PATTERNS = {
     "meet_sarcomere": [r"repeating contractile unit.*Z-discs",
                         r"adenosine triphosphate \(ATP\).*myosin.*actin",
                         r"titin.*passive spring.*scaffold.*not the motor"],
-    "follow_titin": [r"Z-disc.*M-line", r"I-band.*elastic.*A-band.*thick filament"],
-    "molecular_architecture": [r"immunoglobulin-like \(Ig\)",
-                               r"fibronectin type III \(Fn3\)",
-                               r"disordered PEVK spring",
-                               r"does not place Fn3.*elastic I-band"],
-    "stretch_spring": [r"I-band lengthens.*A-band.*approximately fixed",
-                       r"model predicts rising passive force",
+    "follow_titin": [r"Z-disc.*M-line", r"I-band.*elastic.*A-band.*thick filament",
+                     r"telethonin.*not the sole force path", r"M-line.*unresolved"],
+    "stretch_spring": [r"immunoglobulin-like \(Ig\)",
+                       r"fibronectin type III \(Fn3\)",
+                       r"N2A.*disordered PEVK spring",
+                       r"does not place Fn3.*modeled elastic I-band",
+                       r"I-band lengthens.*A-band.*approximately fixed",
+                       r"model predicts approximate rising passive force",
                        r"added length.*incremental compliance.*how readily"],
-    "inspect_anchors": [r"telethonin.*not the sole force path", r"M-line.*unresolved"],
     "scaffold_thick_filament": [r"A-band.*thick filament.*scaffold",
+                                r"interaction and signaling sites",
+                                r"without placing partner coordinates",
                                 r"copy number.*azimuth.*register.*not encoded"],
     "knowledge_recap": [r"full Z-disc-to-M-line route",
                         r"passive spring.*scaffold.*interaction/signaling platform",
-                        r"Measured comes from observations.*inferred from interpretation"
-                        r".*modeled from equations.*schematic means illustrative",
-                        r"Replay the stretch.*inspect a region.*open its evidence"],
+                        r"Measured comes directly.*Modeled comes from.*Inferred comes from"
+                        r".*Schematic means.*Not known",
+                        r"reading and verification aids, not new biological evidence",
+                        r"Why we know this.*exact claim.*limitations.*sources"],
+}
+GUIDED_EVIDENCE_LABELS = {"Measured", "Modeled", "Inferred", "Schematic", "Not known"}
+GUIDED_RECAP_CLASSES = ["MEASURED", "MODELED", "STRONGLY INFERRED", "SCHEMATIC", "UNKNOWN"]
+SC27A_V2_NOT_CLAIMED = {
+    "a resolved atom-by-atom path",
+    "known transverse azimuth along the entire chain",
+    "atom-resolved surfaces for every domain",
+    "a known azimuth for every folded domain",
+    "that domain spacing is measured everywhere along the molecule",
+    "that Fn3 domains occur in the modeled elastic I-band",
+    "uniform scaling of titin regions",
+    "widespread physiological Ig-domain unfolding",
+    "a measured molecular trajectory",
+    "tissue-specific human force",
+    "telethonin as the sole path carrying titin tension",
+    "a resolved complete lateral route through the Z-disc",
+    "a complete M-band molecular structure",
+    "exact in-situ crosslink coordinates",
+    "whole-path titin copy number",
+    "a resolved universal titin azimuth",
+    "exact register between titin sequence repeats and myosin periodicities",
+    "a universal constant-volume lattice response",
+    "that AI is a scientific authority",
+    "that passing tests proves every biological interpretation",
+    "that procedural geometry is experimental density",
+    "a settled causal signaling mechanism",
 }
 
 
@@ -104,7 +134,7 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
         if not condition:
             errors.append(message)
 
-    require(p.get("schema") == "titin-presentation/2" and p.get("version") == 2,
+    require(p.get("schema") == "titin-presentation/3" and p.get("version") == 3,
             "unsupported presentation schema")
     collections = [
         ("audience mode", p.get("audience_modes")),
@@ -133,6 +163,22 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
 
     modes = {row.get("id") for row in p.get("audience_modes", [])}
     require(modes == {"guided", "evidence"}, "audience modes must be exactly guided and evidence")
+    evidence_language = p.get("evidence_language") or {}
+    language_classes = evidence_language.get("classes") or {}
+    require(evidence_language.get("schema") == "titin-evidence-language/1"
+            and isinstance(language_classes, dict),
+            "presentation needs a titin-evidence-language/1 mapping")
+    require(set(language_classes) == set(RANK),
+            "presentation evidence language must map all six canonical classes exactly once")
+    require(all(bool(str((record or {}).get("label", "")).strip())
+                and bool(str((record or {}).get("definition", "")).strip())
+                for record in language_classes.values()),
+            "every presentation evidence class needs a label and definition")
+    require({(record or {}).get("label") for record in language_classes.values()}
+            == GUIDED_EVIDENCE_LABELS,
+            "presentation evidence language must use only the five approved Guided labels")
+    require(evidence_language.get("guided_recap_classes") == GUIDED_RECAP_CLASSES,
+            "presentation evidence recap must declare the five canonical Guided classes in order")
     claim_map = {row["id"]: row for row in claims.get("objects", [])}
     support_ids = {row["id"] for row in claim_support.get("claims", [])}
     support_by_id = {row["id"]: row for row in claim_support.get("claims", [])}
@@ -219,6 +265,7 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
     model_min = min(row["sarcomere_length_nm"] for row in states.values())
     model_max = max(row["sarcomere_length_nm"] for row in states.values())
     chapter_ids = set()
+    primary_action_labels = set()
     for chapter in p.get("guided_chapters", []):
         chapter_ids.add(chapter.get("id"))
         missing = CHAPTER_REQUIRED_FIELDS - set(chapter)
@@ -235,8 +282,11 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
                 f"guided chapter '{chapter.get('id')}' needs a learning objective")
         require(bool(str(chapter.get("expected_learner_takeaway", "")).strip()),
                 f"guided chapter '{chapter.get('id')}' needs an expected learner takeaway")
-        require(chapter.get("narration") == chapter.get("lay_summary"),
-                f"guided chapter '{chapter.get('id')}' narration must equal lay_summary")
+        require(bool(str(chapter.get("visual_question", "")).strip())
+                and len(sentences(chapter.get("visual_question"))) == 1,
+                f"guided chapter '{chapter.get('id')}' needs one visual question")
+        require(bool(str(chapter.get("narration", "")).strip()),
+                f"guided chapter '{chapter.get('id')}' needs complete narration")
         canonical = chapter.get("claim_ids")
         require(isinstance(canonical, list) and bool(canonical)
                 and len(canonical) == len(set(canonical))
@@ -252,11 +302,15 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
                 and re.search(r"length", chapter.get("state_change_announcement", ""), re.I),
                 f"guided chapter '{chapter.get('id')}' must announce its length policy")
         actions = chapter.get("next_actions")
-        require(isinstance(actions, list) and bool(actions)
+        require(isinstance(actions, list) and len(actions) == 1
                 and len({row.get('id') for row in actions or []}) == len(actions or [])
                 and all(row.get("id") and row.get("label") and row.get("action")
                         for row in actions or []),
-                f"guided chapter '{chapter.get('id')}' has invalid next_actions")
+                f"guided chapter '{chapter.get('id')}' needs exactly one primary next action")
+        for action in actions or []:
+            require(action.get("label") not in primary_action_labels,
+                    f"guided chapter '{chapter.get('id')}' duplicates a primary action label")
+            primary_action_labels.add(action.get("label"))
         target = chapter.get("target") or {}
         known = region_ids if target.get("kind") == "region" else (
             component_ids if target.get("kind") == "component" else None)
@@ -265,16 +319,13 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
             require(target.get("id") in known,
                     f"guided chapter '{chapter.get('id')}' targets unknown {target.get('kind')} '{target.get('id')}'")
         words = len(re.findall(r"\S+", chapter.get("lay_summary", "")))
-        require(25 <= words <= 45,
-                f"guided chapter '{chapter.get('id')}' lay summary has {words} words; expected 25-45")
+        require(1 <= words <= 30,
+                f"guided chapter '{chapter.get('id')}' lay summary has {words} words; expected at most 30")
         # A word cap alone permits one 45-word sentence, which is exactly the
         # density the "one main idea" gate is about.
         parts = sentences(chapter.get("lay_summary"))
-        require(2 <= len(parts) <= 3,
-                f"guided chapter '{chapter.get('id')}' lay summary has {len(parts)} sentences; expected 2-3")
-        longest = max((len(re.findall(r"\S+", part)) for part in parts), default=0)
-        require(longest <= 30,
-                f"guided chapter '{chapter.get('id')}' has a {longest}-word sentence; expected at most 30")
+        require(len(parts) == 1,
+                f"guided chapter '{chapter.get('id')}' lay summary has {len(parts)} sentences; expected exactly one")
         require(bool(chapter.get("expert_expansion")) and bool(chapter.get("not_claimed")),
                 f"guided chapter '{chapter.get('id')}' lacks expert or not-claimed text")
         features = chapter.get("presentation_features")
@@ -300,12 +351,16 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
 
     alias_record = p.get("chapter_aliases") or {}
     ordered_chapters = sorted(p.get("guided_chapters", []), key=lambda row: row.get("order", 0))
-    require([row.get("id") for row in ordered_chapters] == SC23_CHAPTER_IDS,
-            "guided chapters must implement the ordered seven-outcome SC-23 curriculum")
-    for chapter in ordered_chapters:
-        for pattern in SC23_CONCEPT_PATTERNS.get(chapter.get("id"), []):
+    require([row.get("id") for row in ordered_chapters] == SC27A_CHAPTER_IDS,
+            "guided chapters must implement the ordered five-beat SC-27A Tour")
+    for index, chapter in enumerate(ordered_chapters):
+        for pattern in SC27A_CONCEPT_PATTERNS.get(chapter.get("id"), []):
             require(re.search(pattern, chapter.get("narration", ""), re.I | re.S),
-                    f"guided chapter '{chapter.get('id')}' misses required SC-23 concept {pattern}")
+                    f"guided chapter '{chapter.get('id')}' misses required SC-27A concept {pattern}")
+        expected_destination = ordered_chapters[(index + 1) % len(ordered_chapters)].get("id")
+        action = (chapter.get("next_actions") or [{}])[0].get("action")
+        require(action == f"story.{expected_destination}",
+                f"guided chapter '{chapter.get('id')}' primary action must target '{expected_destination}'")
     aliases = alias_record.get("aliases") or {}
     require(alias_record.get("schema") == "titin-chapter-aliases/1"
             and isinstance(aliases, dict) and bool(aliases),
@@ -318,6 +373,39 @@ def validate(presentation_path, scenes_path=DATA / "scenes.json"):
             declared_legacy[legacy_id] = chapter.get("id")
     require(aliases == declared_legacy,
             "chapter legacy_ids and the v1 alias table must match exactly")
+
+    migrations = p.get("public_binding_migrations") or {}
+    default_targets = migrations.get("default_targets") or {}
+    claim_additions = migrations.get("claim_specific_additions") or {}
+    require(migrations.get("schema") == "titin-public-binding-migrations/1"
+            and migrations.get("source_presentation_schema") == "titin-presentation/2"
+            and isinstance(default_targets, dict) and bool(default_targets)
+            and isinstance(claim_additions, dict),
+            "presentation needs a data-owned titin-public-binding-migrations/1 record")
+    for source, targets in default_targets.items():
+        require(isinstance(source, str) and isinstance(targets, list) and bool(targets)
+                and len(targets) == len(set(targets))
+                and all(isinstance(target, str) and target.startswith("data/")
+                        for target in targets),
+                f"public binding migration '{source}' has invalid default targets")
+    for claim_id, additions in claim_additions.items():
+        require(claim_id in support_ids and isinstance(additions, dict),
+                f"public binding claim additions name unknown claim '{claim_id}'")
+        for source, targets in (additions if isinstance(additions, dict) else {}).items():
+            require(isinstance(targets, list) and bool(targets)
+                    and len(targets) == len(set(targets))
+                    and all(isinstance(target, str) and target.startswith("data/")
+                            for target in targets),
+                    f"public binding claim addition '{claim_id}'/'{source}' is invalid")
+
+    current_not_claimed = {
+        statement
+        for chapter in p.get("guided_chapters", [])
+        for statement in chapter.get("not_claimed", [])
+    }
+    require(SC27A_V2_NOT_CLAIMED <= current_not_claimed,
+            "five-beat merge silently dropped v2 not-claimed statements: "
+            + ", ".join(sorted(SC27A_V2_NOT_CLAIMED - current_not_claimed)))
 
     scene_records = scenes.get("scenes") or {}
     require(scenes.get("schema") == "titin-semantic-scenes/1",

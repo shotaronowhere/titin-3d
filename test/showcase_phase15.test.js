@@ -139,22 +139,24 @@ test('SC15: the emphasis halo always contains the chain it emphasises', () => {
 
 test('SC15: the architecture chapter frames a span where domains resolve', () => {
   const chapter = model.spec.presentation.guided_chapters
-    .find((entry) => entry.id === 'molecular_architecture');
+    .find((entry) => entry.id === 'stretch_spring');
   assert.equal(chapter.recommended_state.visibility.show_domains, true);
   assert.ok(chapter.recommended_state.camera_preset.startsWith('region.'),
     'a whole-half-sarcomere framing cannot resolve a 4 nm domain');
 });
 
-test('SC15: the architecture chapter frames a region that actually has domains', () => {
+test('SC15/SC27A: the merged spring beat frames PEVK with domain context enabled', () => {
   const chapter = model.spec.presentation.guided_chapters
-    .find((entry) => entry.id === 'molecular_architecture');
+    .find((entry) => entry.id === 'stretch_spring');
   const regionId = chapter.recommended_state.camera_preset.split('.')[1];
   const region = model.titinRegions().find((entry) => entry.id === regionId);
   assert.ok(region, `the chapter frames unknown region '${regionId}'`);
-  const instances = model.domainInstancesAt(chapter.recommended_state.sarcomere_length_nm)
-    .instances.filter((instance) => instance.domain_id.split('.')[0] === regionId);
-  assert.ok(instances.filter((instance) => instance.folded_domains).length > 1,
-    `${regionId} must contain more than one folded domain for the chapter's claim to be visible`);
+  assert.equal(regionId, 'PEVK');
+  assert.match(region.geometry_proxy, /worm.like.chain/i);
+  assert.deepEqual(region.domains, { Ig_like: 0, Fn3: 0 });
+  assert.equal(chapter.recommended_state.visibility.show_domains, true);
+  assert.match(chapter.narration,
+    /immunoglobulin-like \(Ig\).*fibronectin type III \(Fn3\).*N2A.*PEVK/is);
 });
 
 test('SC15: a drawn domain is never sealed inside the backbone that carries it', () => {

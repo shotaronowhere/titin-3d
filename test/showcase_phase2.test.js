@@ -9,11 +9,12 @@ import {
   createShowcaseOverlay, EXTENSION_MECHANISM, isLongitudinalProjection,
 } from '../src/presentation/ShowcaseOverlay.js';
 import {
-  COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, SarcomereScene,
+  COMPONENT_COLOR, guidedComponentColors, SarcomereScene,
 } from '../src/render/SarcomereScene.js';
 import { VIEWS } from '../src/render/Viewer.js';
 
 const model = await TitinModel.create(nodeReader());
+const GUIDED_COMPONENT_COLOR = guidedComponentColors(model.spec.renderStyle);
 const TITIN_RENDER_STYLE = model.spec.renderStyle.titin;
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 const states = model.presets().map((preset) => preset.sarcomere_length_nm);
@@ -238,6 +239,29 @@ test('SC2: the x-ray trace is exact, continuous and independent of tube radius',
   scene.clear();
 });
 
+test('SC2/SC27A: the shipped Guided contour preserves every canonical trace endpoint', () => {
+  const scene = new SarcomereScene();
+  scene.build(model.contextSceneAt(2200, { rings: 1 }), model.domainInstancesAt(2200), {
+    mirror: true,
+    titinStrands: false,
+    domainBatches: model.instancingPlanAt(2200),
+    domainStrands: [0],
+    titinPath: model.backboneAt(2200),
+    presentationMode: 'guided',
+  });
+  for (const segment of model.backboneAt(2200).segments) {
+    const trace = scene.root.getObjectByName(`titin_continuity_trace_${segment.region_id}`);
+    assert.ok(trace, segment.region_id);
+    const [start, end] = traceEndpoints(trace);
+    assert.ok(Math.abs(start.x - segment.X_start) < 5e-5, segment.region_id);
+    assert.ok(Math.abs(end.x - segment.X_end) < 5e-5, segment.region_id);
+    const contour = scene.root.getObjectByName(`titin_contour_${segment.region_id}`);
+    assert.ok(contour, `${segment.region_id} has no Guided contour`);
+    assert.equal(contour.userData.emphasis_channel, 'presentation');
+  }
+  scene.clear();
+});
+
 test('SC2: hierarchy and selection preserve geometry and evidence opacity', () => {
   const scene = buildScene();
   const thick = scene.root.getObjectByName('thick_filament_central');
@@ -269,7 +293,7 @@ test('SC2: hierarchy and selection preserve geometry and evidence opacity', () =
 
 test('SC2/SC24: the opening and mechanics story are present in the accessible shell', () => {
   assert.equal(VIEWS.titin_story.focus, 'titin_half');
-  assert.equal(model.spec.presentation.initial_state.camera_preset, 'view.titin_story');
+  assert.equal(model.spec.presentation.initial_state.camera_preset, 'view.titin_hero');
   assert.equal(model.spec.presentation.initial_state.selected_component_or_region, 'titin');
   assert.match(page, /id="scienceOverlay"/);
   // SC-24 returns raw visibility switches to Explore and promotes biological

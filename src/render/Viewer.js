@@ -21,6 +21,11 @@ import { STAGE_LAYOUT } from '../presentation/StageLayout.js';
 /** Camera presets, expressed as directions so they work at any sarcomere length. */
 export const VIEWS = Object.freeze({
   longitudinal: { dir: [0.15, 0.35, 1], label: 'Longitudinal (default)' },
+  titin_hero: {
+    dir: [0.28, 0.55, 1],
+    label: 'Titin hero — longitudinal route in filament context',
+    focus: 'titin_half',
+  },
   titin_story: {
     dir: [0.12, 0.25, 1],
     label: 'Titin route — Z-disc to M-band',
@@ -187,9 +192,18 @@ export class Viewer {
     this.model = model;
     this.sarcomere = new SarcomereScene();
     this.scene = this.sarcomere.scene;
-    this.scene.background = new THREE.Color(0x0e1116);
+    const stageBackground = model.spec?.renderStyle?.presentation?.stage_background;
+    if (!stageBackground || !/^#[0-9a-f]{6}$/i.test(stageBackground.lightest || '')
+        || !/^#[0-9a-f]{6}$/i.test(stageBackground.darkest || '')
+        || stageBackground.contrast_reference !== 'lightest') {
+      throw new Error('Viewer: canonical presentation stage-background colors are unavailable.');
+    }
+    this.scene.background = null;
+    container.style.background = `radial-gradient(circle at 45% 42%, `
+      + `${stageBackground.lightest} 0%, ${stageBackground.darkest} 100%)`;
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer.setClearColor(0x000000, 0);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(this.renderer.domElement);
@@ -203,7 +217,13 @@ export class Viewer {
     this.camera = new THREE.PerspectiveCamera(
       35, cameraAspect(container.clientWidth, container.clientHeight), 1, 100000,
     );
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    // SC-27A. WebKit does not reliably hit-test an interactive SVG child when
+    // its root is pointer-transparent. The projected overlay therefore owns the
+    // stage interaction plane: blank gestures orbit here, and label handlers stop
+    // their named clicks before they reach the controls. The canvas remains the
+    // fallback for headless/unit consumers that do not provide the overlay.
+    this.interactionSurface = container.querySelector('#scienceOverlay') || this.renderer.domElement;
+    this.controls = new OrbitControls(this.camera, this.interactionSurface);
     this.controls.enableDamping = true;
     // Explicit rather than relying on OrbitControls defaults: these are Phase 10
     // completion conditions and a dependency update must not silently disable one.
@@ -218,6 +238,9 @@ export class Viewer {
     this._motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)') || null;
     this.prefersReducedMotion = Boolean(this._motionQuery?.matches);
     this._cameraTransition = null;
+    // A framing request may arrive before CSS gives the stage a measurable box.
+    // Keep only the latest semantic request; the first real resize re-solves it.
+    this._pendingMeasuredFraming = null;
     this._onMotionPreferenceChange = (event) => {
       this.prefersReducedMotion = event.matches;
       // If reduced motion is enabled during a transition, finish it immediately
@@ -426,7 +449,11 @@ export class Viewer {
     return 2 * halfH * this.camera.aspect;
   }
 
-  /** Frame the whole sarcomere from a named or explicit direction. */
+  /**
+   * Frame the whole sarcomere from a named or explicit direction.
+   * @param {string | number[]} [view]
+   * @param {Record<string, any>} [opts]
+   */
   frame(view = 'longitudinal', opts = {}) {
     const preset = Array.isArray(view) ? null : (VIEWS[view] || VIEWS.longitudinal);
     if (preset?.focus === 'titin_half') {
@@ -436,6 +463,9 @@ export class Viewer {
       if (!first || !last) throw new Error('frame: canonical titin backbone is empty.');
       return this.focusSpan(first.x, last.x, opts);
     }
+    this._rememberMeasuredFraming(() => this.frame(
+      Array.isArray(view) ? [...view] : view, { ...opts, animate: false },
+    ));
     const dir = Array.isArray(view) ? view : preset.dir;
     const box = this._visibleBounds();
     const centre = box.getCenter(new THREE.Vector3());
@@ -526,6 +556,9 @@ export class Viewer {
       );
     }
     const g = closeUpLandmarks(this.model, sl);
+    if (opts.move !== false) {
+      this._rememberMeasuredFraming(() => this.closeUp(name, sl, { ...opts, animate: false }));
+    }
     const target = new THREE.Vector3(...preset.at(g));
     const distance = this._distanceForSpan(preset.spanNm);
     target.y += this._contentCentreOffsetNm(distance, opts.contentCenterYPx, 'closeUp');
@@ -588,12 +621,27 @@ export class Viewer {
     if (contentCenterYPx === undefined) return 0;
     const requested = Number(contentCenterYPx);
     const heightPx = this.container.clientHeight;
-    if (!Number.isFinite(requested) || !(heightPx > 0)) {
-      throw new Error(`${where}: contentCenterYPx requires a finite pixel position `
-        + 'and a measurable viewport.');
+    if (!Number.isFinite(requested)) {
+      throw new Error(`${where}: contentCenterYPx requires a finite pixel position.`);
     }
+    // A zero height is a normal first-layout race. The semantic frame request is
+    // queued by the caller and will be re-solved from the first measured resize.
+    if (!(heightPx > 0)) return 0;
     const visibleHeightNm = 2 * distance * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
     return (requested - heightPx / 2) * visibleHeightNm / heightPx;
+  }
+
+  /** @param {()=>void} callback */
+  _rememberMeasuredFraming(callback) {
+    // Arithmetic-only unit consumers intentionally construct a Viewer without a
+    // DOM container. They have no layout race to recover from.
+    if (!this.container) return;
+    const { clientWidth: width, clientHeight: height } = this.container;
+    if (width > 0 && height > 0) {
+      this._pendingMeasuredFraming = null;
+    } else {
+      this._pendingMeasuredFraming = callback;
+    }
   }
 
   /**
@@ -605,6 +653,9 @@ export class Viewer {
     if (!Number.isFinite(startNm) || !Number.isFinite(endNm) || endNm <= startNm) {
       throw new Error(`focusSpan: expected a positive finite range, got ${startNm}..${endNm}`);
     }
+    this._rememberMeasuredFraming(() => this.focusSpan(
+      startNm, endNm, { ...opts, animate: false },
+    ));
     const physicalSpan = endNm - startNm;
     const marginFactor = opts.marginFactor ?? STAGE_LAYOUT.frame_margin_factor;
     if (!Number.isFinite(marginFactor) || marginFactor < 1) {
@@ -945,7 +996,10 @@ export class Viewer {
     // container had a size would stay at NaN for the life of the page. Re-frame once
     // the element is real, so a late layout recovers instead of leaving a canvas that
     // renders nothing while reporting a full complement of draw calls.
-    if (!Number.isFinite(this.camera.position.lengthSq())) this.frame();
+    const pending = this._pendingMeasuredFraming;
+    this._pendingMeasuredFraming = null;
+    if (pending) pending();
+    else if (!Number.isFinite(this.camera.position.lengthSq())) this.frame();
   }
 
   /**

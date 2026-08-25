@@ -94,7 +94,7 @@ test('SC24: every v1 mode migrates deterministically and only inexact values pro
   assert.equal(learn.migrated, true);
   assert.equal(learn.state.depth, 'learn');
   assert.equal(learn.state.drawer, 'closed');
-  assert.equal(learn.state.story_step, 'molecular_architecture');
+  assert.equal(learn.state.story_step, 'stretch_spring');
   assert.equal(learn.state.sarcomere_length_nm, 2317);
   assert.equal(learn.state.camera_preset, 'region.prox_Ig');
   assert.equal(learn.state.selection.id, 'titin_domains');
@@ -194,7 +194,7 @@ test('SC24: visual matrix is regenerated from v2 semantic scenes with legacy dis
     regionTargets: regions, componentTargets: components, minLength: min, maxLength: max,
   });
   assert.equal(matrix.schema, 'titin-visual-matrix/2');
-  assert.equal(matrix.cells.length, 56);
+  assert.equal(matrix.cells.length, 48);
   assert.deepEqual(
     matrix.cells.filter((cell) => cell.group === 'semantic_scenes').map((cell) => cell.id),
     CONTROL_SCENE_IDS.map((id) => `scene_${id}`),
@@ -241,12 +241,13 @@ test('SC24: Explore confidence display keeps semantic scene truth and shares as 
   assert.deepEqual(controller.parse(hash), { state: lattice, issues: [], migrated: false });
 });
 
-test('SC24: the stage shortcut legend names current surfaces, not retired modes', () => {
+test('SC24/SC27A: the nonvisual accelerator guide names current surfaces, not retired modes', () => {
+  assert.match(page, /id="interactionHelp" class="sr-only"/);
   const legend = page.match(/id="shortcutHelp">([\s\S]*?)<\/span>/)?.[1];
-  assert.ok(legend, 'the stage must carry a visible shortcut legend');
+  assert.ok(legend, 'the accessible canvas description must carry an accelerator guide');
   assert.match(legend, /x spring/i);
-  assert.match(legend, /e explore/i);
-  assert.match(legend, /g learn/i);
-  assert.doesNotMatch(legend, /extension|evidence|guided/i,
+  assert.match(legend, /e Research/i);
+  assert.match(legend, /g Tour/i);
+  assert.doesNotMatch(legend, /extension|evidence|guided|explore|learn/i,
     'the legend must not name retired actions or audience modes');
 });

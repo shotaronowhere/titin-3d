@@ -30,6 +30,16 @@ SOURCE_SUBJECT_REQUIREMENTS = {
     "10.1083/jcb.134.6.1441": ("Rattus norvegicus and Bos taurus", "rat psoas and bovine sternomandibularis", "immunoelectron"),
 }
 
+def canonical_public_bindings(
+    claim_id: str, binding: str, presentation: dict
+) -> list[str]:
+    """Resolve a protected legacy pointer to its SC-27A public target(s)."""
+    migrations = presentation.get("public_binding_migrations") or {}
+    additions = ((migrations.get("claim_specific_additions") or {})
+                 .get(claim_id, {}).get(binding, []))
+    defaults = (migrations.get("default_targets") or {}).get(binding, [binding])
+    return list(dict.fromkeys([*additions, *defaults]))
+
 
 def is_iso_date(value: object) -> bool:
     if not isinstance(value, str):
@@ -50,7 +60,22 @@ def resolve_pointer(value, pointer: str):
     return node
 
 
-def validate_public_binding(binding: str) -> str | None:
+def validate_public_binding(
+    binding: str, claim_id: str, presentation: dict
+) -> str | None:
+    candidates = canonical_public_bindings(claim_id, binding, presentation)
+    if not candidates:
+        return "has no SC-27A canonical target"
+    errors: list[str] = []
+    for candidate in candidates:
+        detail = validate_public_binding_target(candidate)
+        if detail is None:
+            return None
+        errors.append(f"{candidate} {detail}")
+    return "does not resolve through its SC-27A target(s): " + "; ".join(errors)
+
+
+def validate_public_binding_target(binding: str) -> str | None:
     if "#" not in binding:
         return "has no # fragment"
     relpath, fragment = binding.split("#", 1)
@@ -161,7 +186,7 @@ def validate(record: dict, references: dict, showcase: dict, presentation: dict,
         if claim.get("inventory_status") == "PUBLIC" and not bindings:
             problems.append(f"{prefix} is PUBLIC but has no public binding")
         for binding in bindings:
-            detail = validate_public_binding(binding)
+            detail = validate_public_binding(binding, claim_id, presentation)
             if detail:
                 problems.append(f"{prefix} public binding {binding} {detail}")
 
@@ -222,7 +247,12 @@ def validate(record: dict, references: dict, showcase: dict, presentation: dict,
             problems.append(f"showcase object {obj.get('id')} has no claim-support entry")
         else:
             expected = f"data/showcase_claims.json#/objects/{index}/claim"
-            if expected not in (by_id[claim_id].get("public_bindings") or []):
+            canonical = {
+                target
+                for binding in (by_id[claim_id].get("public_bindings") or [])
+                for target in canonical_public_bindings(claim_id, binding, presentation)
+            }
+            if expected not in canonical:
                 problems.append(
                     f"showcase object {obj.get('id')} is not bound to its exact visible claim at {expected}"
                 )
@@ -241,7 +271,12 @@ def validate(record: dict, references: dict, showcase: dict, presentation: dict,
                     )
                     continue
                 expected = f"data/presentation.json#/{section}/{index}"
-                if expected not in (by_id[claim_id].get("public_bindings") or []):
+                canonical = {
+                    target
+                    for binding in (by_id[claim_id].get("public_bindings") or [])
+                    for target in canonical_public_bindings(claim_id, binding, presentation)
+                }
+                if expected not in canonical:
                     problems.append(
                         f"presentation row {row.get('id')} is not bound to claim {claim_id} at {expected}"
                     )
@@ -251,7 +286,12 @@ def validate(record: dict, references: dict, showcase: dict, presentation: dict,
                 problems.append(f"semantic scene {scene_id} has no claim-support entry {claim_id}")
                 continue
             expected = f"data/scenes.json#/scenes/{scene_id}"
-            if expected not in (by_id[claim_id].get("public_bindings") or []):
+            canonical = {
+                target
+                for binding in (by_id[claim_id].get("public_bindings") or [])
+                for target in canonical_public_bindings(claim_id, binding, presentation)
+            }
+            if expected not in canonical:
                 problems.append(
                     f"semantic scene {scene_id} is not bound to claim {claim_id} at {expected}"
                 )

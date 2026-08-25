@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 
 import { test, expect } from '@playwright/test';
 
-import { failOnPageErrors, waitForReady } from './helpers.js';
+import { clickProjectedLabel, failOnPageErrors, waitForReady } from './helpers.js';
 
 failOnPageErrors(test);
 
@@ -95,6 +95,7 @@ const measureScene = ({ rules, ringSamples: rings, offsets }) => {
       // sample records whether an overlay is over it — reported as a coverage
       // caveat rather than silently folded into the hit rate.
       const over = document.elementFromPoint(x, y);
+      const overlay = document.querySelector('#scienceOverlay');
       results.push({
         path_id: pathId,
         offset,
@@ -103,7 +104,7 @@ const measureScene = ({ rules, ringSamples: rings, offsets }) => {
         target_type: picked?.target_type ?? null,
         target_id: picked?.target_id ?? null,
         reason: picked?.pick_reason ?? null,
-        under_chrome: Boolean(over && over.tagName !== 'CANVAS'),
+        under_chrome: Boolean(over && over.tagName !== 'CANVAS' && over !== overlay),
       });
     }
   }
@@ -133,7 +134,8 @@ async function reachableTitinPoint(page, regionId) {
       const x = rect.left + point.x_px;
       const y = rect.top + point.y_px;
       const over = document.elementFromPoint(x, y);
-      if (!over || over.tagName !== 'CANVAS') continue;
+      const stagePlane = document.querySelector('#scienceOverlay');
+      if (!over || (over.tagName !== 'CANVAS' && over !== stagePlane)) continue;
       if (!viz.pickObject(x, y, { emphasis: 'titin' })) continue;
       return { x, y };
     }
@@ -280,7 +282,7 @@ test('SC25 a real tap on titin pins its explanation through the pointer path', a
   await expect(page.locator('#objectInspector')).toBeVisible();
   await expect(page.locator('#objectAnnouncement')).toContainText('PEVK');
   // Clicking empty background clears rather than keeping a sticky selection.
-  await page.mouse.click(30, 500);
+  await page.mouse.click(800, 500);
   await expect(page.locator('#objectInspector')).toBeHidden();
 });
 
@@ -300,7 +302,7 @@ test('SC25 the one-time invitation appears, is spent by inspecting, and stays go
     });
     return [...values].sort();
   });
-  await page.locator('#stageLegend button[data-component="titin"]').click();
+  await clickProjectedLabel(page, 'Titin');
   await expect(page.locator('#inspectHint')).toBeHidden();
   const after = await page.evaluate(() => {
     const values = new Set();
@@ -343,7 +345,7 @@ test('SC25 reduced motion gets the same invitation without a pulse', async ({ pa
   expect(second).toEqual(first);
 });
 
-test('SC25 direct labels and legend entries are operable by pointer and keyboard', async ({ page }) => {
+test('SC25 direct labels are operable by pointer and keyboard', async ({ page }) => {
   await boot(page, LAPTOP);
   const labels = page.locator('#scienceOverlay .label-hit');
   expect(await labels.count()).toBeGreaterThan(0);
@@ -356,15 +358,14 @@ test('SC25 direct labels and legend entries are operable by pointer and keyboard
   const firstLabel = await labels.first().getAttribute('aria-label');
   expect(firstLabel).toMatch(/^Inspect /);
 
-  // Pointer: the stage colour key selects the same way.
-  const legendButtons = page.locator('#stageLegend button.key');
-  expect(await legendButtons.count()).toBeGreaterThan(0);
-  await legendButtons.nth(1).click();
+  await page.locator('#objectInspectorClose').click();
+  // Pointer: clicking the painted word shares the same route as its coarse hit area.
+  await clickProjectedLabel(page, 'Actin');
   await expect(page.locator('#objectInspector')).toBeVisible();
   // Coarse-pointer target floor for the label hit areas.
   const box = await labels.first().boundingBox();
   expect(box.width).toBeGreaterThanOrEqual(44);
-  expect(box.height).toBeGreaterThanOrEqual(28);
+  expect(box.height).toBeGreaterThanOrEqual(44);
 });
 
 test('SC25 a touch tap selects titin and its legend on a phone', async ({ browser }) => {
@@ -385,12 +386,14 @@ test('SC25 a touch tap selects titin and its legend on a phone', async ({ browse
 test('SC25 the pinned explanation never lands on the primary controls', async ({ page }) => {
   for (const viewport of RELEASE_VIEWPORTS) {
     await boot(page, viewport);
-    await page.locator('#stageLegend button[data-component="titin"]').click();
+    const titinLabel = page.locator('#scienceOverlay [aria-label="Inspect Titin"]');
+    await titinLabel.focus();
+    await titinLabel.press('Enter');
     await expect(page.locator('#objectInspector')).toBeVisible();
     const overlap = await page.evaluate(() => {
       const card = document.getElementById('objectInspector').getBoundingClientRect();
       const hits = [];
-      for (const id of ['stageHeader', 'stageBar']) {
+      for (const id of ['stageHeader', 'guidedCard']) {
         const node = document.getElementById(id);
         const rect = node.getBoundingClientRect();
         if (card.left < rect.right && card.right > rect.left
@@ -406,6 +409,8 @@ test('SC25 the pinned explanation never lands on the primary controls', async ({
     });
     expect(overlap.hits, `${viewport.width}x${viewport.height}`).toEqual([]);
     expect(overlap.insideStage, `${viewport.width}x${viewport.height}`).toBe(true);
+    await page.locator('#objectInspectorClose').click();
+    await expect(page.locator('#guidedCard')).toBeVisible();
   }
 });
 
@@ -424,28 +429,28 @@ test('SC25 the cold open and the route chapters show a legible continuous titin'
         })));
         const projected = viz.projectPresentationAnchors(records).filter((point) => point.visible);
         const xs = projected.map((point) => point.x_px);
-        const legend = [...document.querySelectorAll('#stageLegend .key')]
+        const directLabels = [...document.querySelectorAll('#scienceOverlay .identity-label')]
           .map((node) => node.textContent.trim());
         return {
           tracePx: manifest.titin_emphasis.trace_px,
           haloOpacity: manifest.titin_emphasis.halo_opacity,
           routeSpanFraction: xs.length ? (Math.max(...xs) - Math.min(...xs)) / rect.width : 0,
           visiblePoints: projected.length,
-          legend,
+          directLabels,
         };
       });
       const where = `${viewport.width}x${viewport.height} ${hash || 'cold open'}`;
       // Titin is identified by name and colour in the very first frame.
-      expect(read.legend, where).toContain('Titin');
+      if (!hash) expect(read.directLabels, where).toContain('Titin');
       // A continuous route, not a hairline fragment: the drawn width is a
       // reviewed reading width and a real span of the stage carries it.
       expect(read.tracePx, where).toBeGreaterThanOrEqual(4.5);
       expect(read.haloOpacity, where).toBeGreaterThanOrEqual(0.2);
       expect(read.visiblePoints, where).toBeGreaterThan(20);
       expect(read.routeSpanFraction, where).toBeGreaterThan(0.3);
-      // The primary teaching action is reachable without scrolling.
-      await expect(page.locator('#stagePlay')).toBeVisible();
-      await expect(page.locator('#sl')).toBeVisible();
+      // The primary Tour continuation is reachable without scrolling; mechanics
+      // remain contextual to beat 3 rather than painting a permanent stage bar.
+      await expect(page.locator('#chapterNext')).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth))
         .toBeLessThanOrEqual(1);
     }

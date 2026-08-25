@@ -252,21 +252,23 @@ export const COMPONENT_COLOR = Object.freeze({
  * `data/release_gates.json` → accessibility.object_contrast_pairs records these
  * three ratios and test/showcase_phase12.test.js enforces them.
  */
-export const GUIDED_COMPONENT_COLOR = Object.freeze({
-  thick_filament: 0x2d4661,
-  myosin_head: 0x33475d,
-  thin_filament: 0x337467,
-  zdisc: 0x343b45,
-  mline: 0x2b2530,
-  alpha_actinin: 0x2d6470,
-  telethonin: 0x8a949f,
-  mband_crosslink: 0x4d405a,
-  // Present for completeness only: the MyBP-C layer is admitted for Evidence mode,
-  // so a Guided build never draws it. A missing entry would set an undefined colour
-  // if that ever changed.
-  mybpc: 0x5c5230,
-  lattice_guide: 0x3c4653,
-});
+const GUIDED_COLOR_ROLES = Object.freeze([
+  'thick_filament', 'myosin_head', 'thin_filament', 'zdisc', 'mline',
+  'alpha_actinin', 'telethonin', 'mband_crosslink', 'mybpc', 'lattice_guide',
+]);
+
+/** Resolve the single data-owned Guided palette into Three.js integer colours. */
+export function guidedComponentColors(renderStyleRecord) {
+  const record = renderStyleRecord?.presentation?.guided_component_colors;
+  const colors = Object.fromEntries(GUIDED_COLOR_ROLES.map((role) => {
+    const value = record?.[role];
+    if (typeof value !== 'string' || !/^#[0-9a-f]{6}$/i.test(value)) {
+      throw new Error(`guidedComponentColors: missing canonical color for '${role}'.`);
+    }
+    return [role, Number.parseInt(value.slice(1), 16)];
+  }));
+  return Object.freeze(colors);
+}
 
 /** FNV-1a over UTF-16 code units, kept local and deterministic across runtimes. */
 function fnv1a(text) {
@@ -785,7 +787,31 @@ export class SarcomereScene {
     line.userData.azimuth_evidence = off.evidence_class || 'SCHEMATIC';
     line.userData.render_width_px = material.linewidth;
     line.userData.render_width_meaning = 'screen-space reading width; not a molecular dimension';
-    return line;
+    if (presentationMode !== 'guided') return line;
+    const contourStyle = this.renderStyleRecord.presentation?.titin_emphasis?.contour;
+    if (!contourStyle || typeof contourStyle.color !== 'string'
+        || !(contourStyle.width_px > 0) || !contourStyle.meaning) {
+      throw new Error('build: the presentation titin contour declaration is unavailable.');
+    }
+    const contourMaterial = new LineMaterial({
+      color: Number.parseInt(contourStyle.color.slice(1), 16),
+      linewidth: material.linewidth + contourStyle.width_px * 2,
+      transparent: true,
+      opacity: 0.96,
+      depthTest: false,
+      depthWrite: false,
+    });
+    this.disposables.add(contourMaterial);
+    this.screenSpaceLineMaterials.add(contourMaterial);
+    const contour = this._unpickable(new Line2(geometry, contourMaterial));
+    contour.name = `titin_contour_${segment.region_id}`;
+    contour.renderOrder = 11;
+    contour.userData.emphasis_channel = 'presentation';
+    contour.userData.render_meaning = contourStyle.meaning;
+    const group = new THREE.Group();
+    group.name = `titin_trace_with_contour_${segment.region_id}`;
+    group.add(contour, line);
+    return group;
   }
 
   /**
@@ -2774,6 +2800,7 @@ export class SarcomereScene {
       mybpc: COMPONENT_COLOR.mybpc,
       lattice_guide: COMPONENT_COLOR.lattice_guide,
     };
+    const guided = guidedComponentColors(this.renderStyleRecord);
     const roleOf = (name) => {
       if (name.startsWith('thick_filament')) return 'thick_filament';
       if (name.startsWith('myosin_heads')) return 'myosin_head';
@@ -2791,7 +2818,7 @@ export class SarcomereScene {
     this.root.traverse((object) => {
       const role = roleOf(object.name || '');
       if (!role || !object.material?.color) return;
-      object.material.color.set(mode === 'guided' ? GUIDED_COMPONENT_COLOR[role] : identity[role]);
+      object.material.color.set(mode === 'guided' ? guided[role] : identity[role]);
       recolored += 1;
     });
     this.presentationEmphasis = mode;

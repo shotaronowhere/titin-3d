@@ -279,7 +279,7 @@ window.__titinBoot = { ready: false, problems: [] };
   }
   .region-chip.on { background: var(--titin-hi); border-color: var(--titin-hi); color: #251016; }
   #scienceOverlay { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%;
-    overflow: visible; pointer-events: none; }
+    overflow: visible; pointer-events: auto; }
   #objectLeader { position: absolute; inset: 0; z-index: 6; width: 100%; height: 100%;
     overflow: visible; pointer-events: none; }
   .object-leader-line { stroke: var(--titin-hi); stroke-width: 1.25; }
@@ -382,13 +382,16 @@ window.__titinBoot = { ready: false, problems: [] };
   .sr-only { position: absolute !important; width: 1px !important; height: 1px !important;
     padding: 0 !important; margin: -1px !important; overflow: hidden !important;
     clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
-  /* SC-25. A direct label that names a structure is the shortest route to that
-     structure's explanation, so the labels that HAVE a canonical target become
-     controls. The overlay stays pointer-transparent everywhere else, or it would
-     eat the orbit gesture. Touch targets are widened with an invisible hit rect
-     rather than by growing the type, which would spend the attention budget. */
+  /* SC-25/27A. A direct label that names a structure is the shortest route to
+     that structure's explanation, so labels with a canonical target become
+     controls. The overlay is also the blank-stage orbit/pick plane. Touch targets
+     are widened invisibly rather than by growing the type. */
+  /* WebKit targets the SVG root instead of painted text in an interactive
+     full-stage SVG. The almost-transparent coarse rectangle therefore owns the
+     pointer hit at the word's exact position; the painted label remains the
+     visible affordance and keeps the same programmatic selection handler. */
   .label-target { cursor: pointer; pointer-events: auto; }
-  .label-hit { fill: transparent; pointer-events: auto; cursor: pointer; }
+  .label-hit { fill: #000; fill-opacity: .001; pointer-events: all; cursor: pointer; }
   .label-target:hover, .label-hit:hover + .label-target { fill: #fff; }
   .label-target:focus-visible, .label-hit:focus-visible + .label-target {
     outline: 2px solid var(--titin-hi); outline-offset: 2px; }
@@ -396,12 +399,20 @@ window.__titinBoot = { ready: false, problems: [] };
   .science-bracket.minor { stroke: rgb(230 237 245 / 47%); }
   .science-label { fill: #dce4ed; font-size: 9px; font-weight: 650; letter-spacing: .035em;
     paint-order: stroke; stroke: rgb(14 17 22 / 92%); stroke-width: 3px; stroke-linejoin: round; }
+  .identity-label { font-size: 13px; font-weight: 800; letter-spacing: .025em;
+    paint-order: stroke; stroke: #090c10; stroke-width: 4px; stroke-linejoin: round; }
+  .identity-leader { stroke: #d7e4f4; stroke-width: 1.25; opacity: .8; }
   /* SC-12 close-up locator. Neutral ink, like SC-6's dimension line and for the
      same reason: hue is the protein-identity channel, and a camera extent is
      presentation geometry, not a protein. */
   .locator-rule { stroke: rgb(223 231 242 / 55%); }
   .locator-tick { stroke: rgb(223 231 242 / 45%); }
   .locator-extent { fill: rgb(223 231 242 / 20%); stroke: #dfe7f2; stroke-width: 1; }
+  .locator-iband { fill: rgb(139 167 200 / 16%); }
+  .locator-aband { fill: rgb(223 231 242 / 8%); }
+  .locator-route { fill: none; stroke: var(--titin); stroke-width: 2.5; }
+  .locator-anchor { fill: var(--titin); stroke: #111820; stroke-width: 1.5; }
+  .locator-active { fill: rgb(215 228 244 / 22%); stroke: #d7e4f4; stroke-width: 1; }
   .terminus-line { stroke: var(--titin-hi); stroke-width: 1.5; }
   .terminus-dot { fill: var(--titin-hi); }
   .terminus-label { fill: #ffe1e8; font-size: 10px; font-weight: 750; letter-spacing: .03em;
@@ -750,6 +761,146 @@ window.__titinBoot = { ready: false, problems: [] };
       border-top: 1px solid var(--edge); border-radius: 12px 12px 0 0; box-shadow: 0 -16px 50px rgb(0 0 0 / 50%); }
     #objectInspector { width: min(340px, calc(100% - 18px)); }
   }
+  /* SC-27A Tour and Research surfaces. These final declarations intentionally
+     override the historical stage-bar layout while its IDs remain inert for URL
+     and expert-workbench compatibility during the migration. */
+  html, body { font-size: 15px; }
+  button { min-height: 36px; padding: 7px 11px; font-size: 14px; line-height: 1.25; }
+  #panel, #panel table, #panel li, #panel .sub, #panel .note { font-size: 13px; }
+  #panel h2 { font-size: 12px; }
+  #stageChrome { padding: 14px; }
+  #stageHeader { align-items: flex-start; }
+  .brand-block { min-width: 0; width: auto; padding: 9px 12px; }
+  .brand-title { font-size: 16px; }
+  .brand-sub { font-size: 12px; }
+  .header-actions { pointer-events: auto; display: flex; justify-content: flex-end;
+    align-items: stretch; gap: 8px; min-width: 0; }
+  #scopeBadge { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+    gap: 0 9px; max-width: min(360px, 42vw); min-width: 0; text-align: left;
+    padding: 7px 10px; background: var(--chrome); color: var(--text); }
+  #scopeBadge .scope-kicker { grid-column: 1 / -1; }
+  #scopeIdentity { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 13px; }
+  #scopeState { font-size: 13px; white-space: nowrap; }
+  #scopeCompact { display: none; }
+  #guidedCard { width: min(420px, 30vw); max-height: none; overflow: visible;
+    margin-bottom: 14px; padding: 15px 16px 14px; border-top-color: #8ba7c8; }
+  .chapter-meta { font-size: 12px; }
+  .tour-progress-markers { display: flex; gap: 5px; margin-top: 5px; }
+  .tour-progress-marker { width: 18px; height: 3px; border-radius: 99px; background: #526173; }
+  .tour-progress-marker[data-state="complete"] { background: #8ba7c8; }
+  .tour-progress-marker[data-state="current"] { background: #d7e4f4; }
+  .tour-evidence-recap { display: flex; flex-wrap: wrap; gap: 5px; margin: -4px 0 10px; }
+  .tour-evidence-recap[hidden] { display: none; }
+  .tour-evidence-recap-item { display: grid; grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center; gap: 5px 8px; width: 100%; }
+  .tour-evidence-recap .evidence-chip { margin: 0; min-height: 22px; padding-block: 1px; }
+  .tour-evidence-definition { color: #c9d2dd; font-size: 12px; line-height: 1.3; }
+  .chapter-question { margin: 12px 0 3px; color: #b9c8d9; font-size: 12px;
+    font-weight: 650; letter-spacing: .02em; }
+  #chapterTitle { margin: 2px 0 7px; font-size: 24px; line-height: 1.12; }
+  #chapterSummary { margin: 0 0 13px; color: #e2e8ef; font-size: 15px; line-height: 1.5; }
+  .chapter-actions { flex-wrap: nowrap; justify-content: space-between; }
+  .chapter-actions > button { flex: 0 0 auto; }
+  #chapterNext { margin-left: auto; background: #d7e4f4; border-color: #d7e4f4; color: #111820; }
+  #chapterPrevious:disabled { opacity: .36; }
+  .tour-mechanics { display: grid; grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center; gap: 7px 9px; margin: 2px 0 12px; padding: 10px 0 11px;
+    border-block: 1px solid var(--edge); }
+  .tour-mechanics[hidden] { display: none; }
+  .tour-mechanics .stage-label { grid-column: 1; font-size: 12px; }
+  .tour-mechanics #stageLengthReadout { grid-column: 2 / 4; justify-self: end; font-size: 14px; }
+  .tour-mechanics #sl { grid-column: 1 / -1; min-width: 0; }
+  .tour-mechanics #stagePlay { grid-column: 1 / 3; justify-self: start; }
+  .tour-mechanics #stageForce { grid-column: 3; max-width: 220px; min-width: 0; text-align: right;
+    color: #ffd7e0; font-size: 12px; white-space: normal; overflow-wrap: anywhere;
+    line-height: 1.25; }
+  .tour-mechanics #stageForce .force-class { font-size: 12px; letter-spacing: 0; }
+  /* The four clickable extension rows were an older, duplicate navigation path.
+     The Tour teaches the same mechanics on the model; raw regional values remain
+     in Research > Measure without spending four extra Guided actions. */
+  #guidedCard #extensionStory { display: none !important; }
+  #inspectHint { bottom: calc(var(--tour-card-h, 220px) + 24px); border-color: #8ba7c8;
+    background: rgb(22 27 34 / 94%); color: var(--text); font-size: 13px; }
+  #interactionHelp { bottom: 12px; font-size: 12px; }
+  #objectInspector { max-height: none; overflow: visible; }
+  .object-lay, .claim-view-plain { font-size: 15px; line-height: 1.45; }
+  .object-evidence, .evidence-chip { display: inline-flex; align-items: center; min-height: 26px;
+    margin: 5px 0 8px; border: 1px solid #7e8fa3; border-radius: 999px; padding: 3px 8px;
+    color: #f1d88f; background: repeating-linear-gradient(135deg, rgb(126 143 163 / 18%) 0 4px,
+      rgb(126 143 163 / 5%) 4px 8px); font-size: 12px; font-weight: 750; letter-spacing: .025em; }
+  .science-label, .terminus-label { font-size: 12px; }
+  #app[data-mode="evidence"][data-drawer-open="true"] {
+    grid-template-columns: minmax(0, 1fr) clamp(380px, 31vw, 440px);
+  }
+  #panel { padding-inline: 18px; }
+  .drawer-head .build-id { display: none; }
+  .research-scenes { border: 1px solid var(--edge); border-radius: 7px; padding: 9px; }
+  .research-inventory { margin: 14px 0; border: 1px solid var(--edge);
+    border-radius: 7px; padding: 8px 10px; }
+  .research-inventory > summary { min-height: 36px; display: flex; align-items: center;
+    cursor: pointer; color: #d7e4f4; font-weight: 700; }
+  #moreBackdrop { display: none !important; }
+  @media (pointer: coarse) {
+    button { min-height: 44px; }
+    input[type="range"] { min-height: 44px; }
+  }
+  @media (max-width: 767px), (orientation: portrait) and (max-width: 1024px) {
+    html, body { font-size: 16px; }
+    #stageChrome { padding: 9px; }
+    #stageHeader { display: flex; gap: 6px; align-items: flex-start; }
+    .brand-block { padding: 7px 9px; min-width: 0; flex: 0 1 auto; }
+    .brand-identity { min-width: 0; flex-basis: 120px; }
+    .brand-title { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-sub { display: none; }
+    .header-actions { margin-left: auto; gap: 5px; min-width: 0; }
+    #scopeBadge { max-width: min(56vw, 240px); display: block; padding: 6px 7px; }
+    #scopeBadge .scope-kicker, #scopeIdentity, #scopeState { display: none; }
+    #scopeCompact { display: block; overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap; font-size: 12px; }
+    #audienceEvidence { padding-inline: 9px; }
+    #guidedCard { position: absolute; left: 9px; right: 9px; bottom: 9px; width: auto;
+      max-height: none; overflow: visible; margin: 0; padding: 11px 12px; border-radius: 12px; }
+    #chapterTitle { font-size: 20px; margin-block: 2px 5px; }
+    #chapterSummary { font-size: 16px; line-height: 1.4; margin-bottom: 9px; }
+    .chapter-question { margin-top: 7px; font-size: 12px; }
+    .tour-progress-markers { margin-top: 3px; }
+    .tour-mechanics { grid-template-columns: minmax(0, 1fr) auto; margin-bottom: 8px;
+      padding-block: 7px 8px; gap: 5px 7px; }
+    .tour-mechanics #stageLengthReadout { grid-column: 2; }
+    .tour-mechanics #sl { grid-column: 1 / -1; }
+    .tour-mechanics #stagePlay { grid-column: 1; }
+    .tour-mechanics #stageForce { grid-column: 2; }
+    #interactionHelp { display: none; }
+    #inspectHint { top: auto; bottom: calc(var(--tour-card-h, 220px) + 24px);
+      max-width: calc(100% - 18px); }
+    #app[data-mode="evidence"][data-drawer-open="true"] { display: block; }
+    #app[data-mode="evidence"][data-drawer-open="true"] #panel {
+      display: block; position: fixed; inset: 0; z-index: 50; width: 100%; max-height: none;
+      border: 0; border-radius: 0; overflow-y: auto; overscroll-behavior: contain;
+    }
+    #app[data-mode="evidence"][data-drawer-open="true"] #canvas {
+      visibility: hidden; pointer-events: none;
+    }
+    #objectInspector { width: min(350px, calc(100% - 18px)); }
+    #app[data-mode="guided"][data-pinned-inspector="true"] #guidedCard { display: none; }
+  }
+  @media (max-width: 500px) {
+    #stageHeader { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+    .brand-block { grid-column: 1; grid-row: 1; }
+    .header-actions { display: contents; }
+    #audienceEvidence { grid-column: 2; grid-row: 1; }
+    #scopeBadge { grid-column: 1 / -1; grid-row: 2; width: max-content;
+      max-width: 100%; justify-self: end; }
+  }
+  /* A 1280x720 display at 200% browser zoom has a 640x360 CSS viewport. Keep
+     the Tour as one document scroll surface instead of shrinking text or adding
+     an internal story-card scrollbar. */
+  @media (max-height: 500px) {
+    html, body { height: auto; min-height: 100%; }
+    body { overflow-x: hidden; overflow-y: auto; }
+    #app { height: 680px; min-height: 680px; }
+  }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; }
   }
@@ -774,21 +925,24 @@ window.__titinBoot = { ready: false, problems: [] };
          them and a specialist goes looking for them. -->
     <section id="objectInspector" aria-label="Pinned structure explanation" hidden>
       <div class="object-inspector-head">
+        <h2 id="objectInspectorName" class="object-inspector-title"></h2>
         <div class="object-inspector-nav">
-          <button id="objectInspectorPrevious" aria-label="Previous structure">&#8249;</button>
-          <button id="objectInspectorNext" aria-label="Next structure">&#8250;</button>
+          <button id="objectInspectorPrevious" hidden aria-label="Previous structure">&#8249;</button>
+          <button id="objectInspectorNext" hidden aria-label="Next structure">&#8250;</button>
           <button id="objectInspectorClose" aria-label="Close pinned structure explanation">Close</button>
         </div>
       </div>
-      <div id="objectInspectorClaim"></div>
+      <p id="objectInspectorLay" class="object-lay"></p>
+      <div id="objectInspectorEvidence"></div>
+      <div id="objectInspectorClaim" hidden></div>
       <div class="object-instance" id="objectInspectorInstance" hidden></div>
       <div class="object-expert-link">
         <!-- SC-25. Learn's card is deliberately short: it stops at the lay claim
              and the first two citations, and everything a specialist wants is one
              click away in the drawer rather than pushed onto the stage until the
              card reaches the controls. -->
-        <button id="objectInspectorDetailLink">Full detail in the drawer</button>
-        <button id="objectInspectorSourcesLink">Sources for this object</button>
+        <button id="objectInspectorDetailLink">Why we know this &#8250;</button>
+        <button id="objectInspectorSourcesLink" hidden>Sources for this object</button>
         <button id="objectInspectorExpertLink" hidden></button>
       </div>
     </section>
@@ -798,26 +952,27 @@ window.__titinBoot = { ready: false, problems: [] };
          accessible description uses, and disappears the moment it is acted on. -->
     <div id="inspectHint" role="status" hidden>
       <span id="inspectHintText">Click or tap a structure to explain it</span>
-      <button id="inspectHintDismiss" aria-label="Dismiss the inspection hint">&#10005;</button>
+      <button id="inspectHintDismiss" hidden aria-label="Dismiss the inspection hint">&#10005;</button>
     </div>
     <div id="stageChrome">
       <div id="stageHeader">
         <div class="brand-block">
           <div class="brand-identity">
             <div class="brand-title">Titin across the sarcomere</div>
-            <div class="brand-sub">One model · two levels of explanation</div>
+            <div class="brand-sub">One titin in one sarcomere</div>
           </div>
-          <div class="mode-switch" role="group" aria-label="Audience mode">
-            <button id="audienceGuided" class="on" aria-pressed="true">Learn</button>
-            <button id="audienceEvidence" aria-pressed="false">Explore</button>
-            <button id="storyReopen" aria-expanded="true" aria-controls="guidedCard">Story</button>
-          </div>
+          <button id="audienceGuided" hidden aria-pressed="true">Tour</button>
         </div>
-        <div id="scopeBadge" aria-label="Reference scope and active structural state">
-          <div class="scope-kicker">Reference scope</div>
-          <div id="scopeIdentity">Reference construct loading…</div>
-          <div id="scopeState">Loading structural state…</div>
-          <div id="scopeDecisions">Scientific decisions loading…</div>
+        <div class="header-actions">
+          <button id="scopeBadge" aria-label="Open Research scope details">
+            <span class="scope-kicker">Scope details</span>
+            <span id="scopeIdentity">Human TTN Q8WZ42-1</span>
+            <span id="scopeState">2,200 nm</span>
+            <span id="scopeCompact">Human TTN Q8WZ42-1 · 2,200 nm</span>
+            <span id="scopeDecisions" hidden></span>
+          </button>
+          <button id="audienceEvidence" aria-pressed="false">Research</button>
+          <button id="storyReopen" hidden aria-expanded="true" aria-controls="guidedCard">Tour</button>
         </div>
       </div>
       <div id="urlNotice" role="status" hidden></div>
@@ -829,9 +984,13 @@ window.__titinBoot = { ready: false, problems: [] };
       <section id="guidedPipeline" aria-label="How this model was built" hidden></section>
       <section id="guidedCard" aria-labelledby="chapterTitle">
         <div class="story-surface-head">
-          <div class="chapter-meta"><span id="chapterProgress">Chapter —</span> · <span id="chapterEvidenceClass">—</span></div>
-          <button id="guidedCardToggle" aria-expanded="true" aria-controls="guidedCardBody">Hide story</button>
+          <div>
+            <div class="chapter-meta"><span id="chapterProgress">Beat —</span><span id="chapterEvidenceClass" hidden>—</span></div>
+            <div id="tourProgressMarkers" class="tour-progress-markers" aria-hidden="true"></div>
+          </div>
+          <button id="guidedCardToggle" hidden aria-expanded="true" aria-controls="guidedCardBody">Hide Tour</button>
         </div>
+        <p id="chapterQuestion" class="chapter-question"></p>
         <h1 id="chapterTitle" tabindex="-1">Loading guided route…</h1>
         <!-- On a phone the card is a bottom sheet: the chapter number and title
              stay visible, the rest opens on tap. Without it the header, the
@@ -840,17 +999,26 @@ window.__titinBoot = { ready: false, problems: [] };
              is simply always open. -->
         <div id="guidedCardBody">
         <p id="chapterSummary"></p>
-        <p id="chapterStateAnnouncement" role="status" aria-live="polite"></p>
+        <div id="tourEvidenceRecap" class="tour-evidence-recap" aria-label="Tour evidence labels" hidden></div>
+        <p id="chapterStateAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
         <div id="guidedSelection" hidden><b id="guidedSelectionLabel"></b><span id="guidedSelectionText"></span></div>
-        <!-- Route controls precede optional chapter figures so a large lattice or
-             extension comparison can never cover the only way to continue. -->
-        <div id="chapterNextActions" aria-label="Actions for this chapter"></div>
+        <div id="chapterNextActions" hidden aria-label="Actions for this beat"></div>
+        <section id="tourMechanics" class="tour-mechanics" aria-label="Stretch demonstration" hidden>
+          <label class="stage-label" for="sl">Sarcomere length</label>
+          <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres"
+            aria-describedby="supportedRangeDescription">
+          <span id="supportedRangeDescription" class="sr-only">The green track segment marks the supported working range.</span>
+          <output class="stage-readout" id="stageLengthReadout" for="sl" aria-live="off">— nm</output>
+          <div class="row stage-presets" id="presets" role="group" aria-label="Reviewed sarcomere length presets"></div>
+          <button id="stagePlay" aria-pressed="false" aria-label="Play a stretch sweep across the working range">&#9654; Stretch</button>
+          <button id="stageForce" title="Open the approximate passive-force evaluation in Research"></button>
+        </section>
         <div class="chapter-actions">
           <button id="chapterPrevious">Previous</button>
           <button id="chapterNext">Next</button>
-          <button id="chapterRestart">Restart</button>
-          <button id="chapterRestoreView" disabled>Restore previous view</button>
-          <button id="chapterEvidenceLink">Evidence</button>
+          <button id="chapterRestart" hidden>Restart</button>
+          <button id="chapterRestoreView" hidden disabled>Restore previous view</button>
+          <button id="chapterEvidenceLink" hidden>Evidence</button>
         </div>
         <div id="extensionStory" hidden>
           <div class="extension-head"><span>Regional end-to-end span at this length</span><span id="extensionTotal">—</span></div>
@@ -861,72 +1029,22 @@ window.__titinBoot = { ready: false, problems: [] };
         </div><!-- /guidedCardBody -->
       </section>
     </div>
-      <!-- The stage bar, not the drawer. A visitor in Guided mode could not reach
-           the sarcomere-length slider at all, which is the one interaction that
-           answers "what changes as the sarcomere lengthens?". Guided is a reduced
-           EXPLANATION set, not a reduced CONTROL set, so the bar is present in
-           both audience modes and only the surrounding prose differs. -->
-      <div id="stageBar">
-        <div class="stage-row stage-row-primary">
-          <label class="stage-label" for="sl">Sarcomere length</label>
-          <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres"
-            aria-describedby="supportedRangeDescription">
-          <span id="supportedRangeDescription" class="sr-only">The green track segment marks the supported working range.</span>
-          <!-- aria-live is off deliberately. <output> is a live region by
-               default, the range input already announces its own value as it
-               moves, and the sweep changes that value on every frame — the two
-               together would talk over each other for six seconds straight. -->
-          <output class="stage-readout" id="stageLengthReadout" for="sl"
-            aria-live="off">— nm</output>
-          <div class="row stage-presets" id="presets" role="group"
-            aria-label="Reviewed sarcomere length presets"></div>
-          <button id="stagePlay" aria-pressed="false"
-            aria-label="Play a stretch sweep across the working range">&#9654; Stretch</button>
-          <button id="stageReset" disabled aria-label="Reset the stretch demonstration">Reset</button>
-          <div id="stageForce" title="Status of approximate passive-force evaluation per titin"></div>
-          <button id="stageForceInfo" aria-label="Information about approximate modeled force">Force info</button>
-        </div>
-        <div class="stage-row stage-row-scenes">
-          <span class="stage-label" id="stageScenesLabel">Scenes</span>
-          <div class="row" id="sceneControls" role="group" aria-labelledby="stageScenesLabel"></div>
-          <span id="sceneTruth" role="status">Overview</span>
-          <div id="sceneDetails" aria-label="Controls for this scientific scene" hidden>
-            <fieldset id="sceneRingControls" hidden>
-              <legend>Lattice rings</legend>
-              <button type="button" data-scene-rings="1">1</button>
-              <button type="button" data-scene-rings="2">2</button>
-              <button type="button" data-scene-rings="3">3</button>
-            </fieldset>
-            <button id="sceneMyosinToggle" aria-pressed="false">Myosin heads + actin twist</button>
-          </div>
-          <button id="sceneDetailsToggle" hidden>Scene details</button>
-          <button id="stageMore" aria-haspopup="dialog" aria-expanded="false">More</button>
-        </div>
-        <!-- SC-25. The key was built on every render and never shown: an id
-             selector does not beat the user-agent's `[hidden] { display: none
-             !important }`, so the "novice cannot act on pink without a key"
-             comment below described a control nobody could see. It is the
-             cold-open's own answer to "which one is titin", so it is on the bar,
-             and its entries select the structures they name. -->
-        <div id="stageLegend" role="group" aria-label="Colour key: select a structure"></div>
+      <div id="stageBar" hidden>
+        <button id="stageReset" hidden disabled aria-label="Reset the stretch demonstration">Reset</button>
+        <button id="stageForceInfo" hidden aria-label="Information about approximate modeled force">Force info</button>
+        <button id="stageMore" hidden aria-haspopup="dialog" aria-expanded="false">More</button>
+        <div id="stageLegend" hidden></div>
         <div id="stretchHint" role="status" hidden>Watch the I-band bracket</div>
-      </div><!-- /stageBar -->
-    <div id="interactionHelp">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
-      id="shortcutHelp">1–7 chapters · space stretch · x spring · e explore · g learn · r restart</span></div>
+      </div>
+    <div id="interactionHelp" class="sr-only">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
+      id="shortcutHelp">1–5 beats · space stretch · x spring · e Research · g Tour · r restart</span></div>
   </div>
   <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
     <div class="drawer-head" id="drawerHead">
       <div class="drawer-head-row">
         <div>
-          <h1>Evidence &amp; controls</h1>
-          <div class="sub" style="margin:0">Complete scientific readouts and advanced views</div>
-          <!-- SC-18: these identities answer different questions. The raw HTML
-               checksum stays external because a file cannot contain its own hash. -->
-          <div class="build-id" id="buildFingerprint" aria-label="Candidate identity">
-            <div>Model <code id="modelFingerprint">—</code></div>
-            <div>App <code id="appRevision">—</code></div>
-            <div>Build inputs <code id="buildInputsFingerprint">—</code></div>
-          </div>
+          <h1>Research</h1>
+          <div class="sub" id="researchContext" style="margin:0">Inspecting the current titin selection</div>
         </div>
         <!-- SC-17. The projector control. It sits in the drawer head because
              that is where the type it mostly affects is, and because the drawer
@@ -952,13 +1070,37 @@ window.__titinBoot = { ready: false, problems: [] };
     </div>
 
       <div id="panelInspect" role="tabpanel" aria-labelledby="tabInspect">
+      <section id="scopeDetails" tabindex="-1">
+        <h2>Scope details</h2>
+        <div class="sub">Human skeletal-muscle reference construct Q8WZ42-1. Sarcomere length changes passive geometry; it does not simulate calcium activation or active contraction.</div>
+      </section>
+      <button id="researchRestoreView" hidden>Restore view before manual camera move</button>
+      <h2>Selected target audit</h2>
+      <div id="inspectionWorkbench" aria-live="polite"></div>
       <h1 id="viewTitle" style="margin-top:16px">Sarcomere context view</h1>
       <div class="sub" id="viewDescription">Titin positioned on the thick-filament periphery beside
         one myosin thick filament and its six nearest actin thin filaments; the representative
         azimuth is schematic and the extended lattice is optional.</div>
 
+      <details class="research-inventory">
+      <summary>All scenes and display controls</summary>
       <h2>Scene and camera</h2>
       <div class="sub" style="margin:0 0 6px">Semantic scenes are the teaching shortcuts. Camera orientations are advanced presentation controls and show Custom when they change a complete scene.</div>
+      <div class="research-scenes">
+        <span class="stage-label" id="stageScenesLabel">Scene</span>
+        <span id="sceneTruth" role="status">Overview</span>
+        <div class="row" id="sceneControls" role="group" aria-labelledby="stageScenesLabel"></div>
+        <div id="sceneDetails" aria-label="Controls for this scientific scene" hidden>
+          <fieldset id="sceneRingControls" hidden>
+            <legend>Lattice rings</legend>
+            <button type="button" data-scene-rings="1">1</button>
+            <button type="button" data-scene-rings="2">2</button>
+            <button type="button" data-scene-rings="3">3</button>
+          </fieldset>
+          <button id="sceneMyosinToggle" aria-pressed="false">Myosin heads + actin twist</button>
+        </div>
+        <button id="sceneDetailsToggle" hidden>Scene details</button>
+      </div>
       <div class="row" id="views" role="group" aria-label="Advanced camera orientations"></div>
 
       <h2>Scale</h2>
@@ -995,9 +1137,7 @@ window.__titinBoot = { ready: false, problems: [] };
       <div class="sub" style="margin:0 0 6px">Labels are anchored in model coordinates;
         choose a visible object here or directly in the 3D view. Every explanation resolves its bibliography from the canonical source registry.</div>
       <div class="row" id="annotations"></div>
-
-      <h2>Selected target audit</h2>
-      <div id="inspectionWorkbench" aria-live="polite"></div>
+      </details>
 
       <h2>Approved reference construct</h2>
       <div class="sub" id="referenceDomainSummary"></div>
@@ -1007,7 +1147,7 @@ window.__titinBoot = { ready: false, problems: [] };
     <div id="panelMeasure" role="tabpanel" aria-labelledby="tabMeasure" hidden>
       <h2>Sarcomere length</h2>
       <div class="sl" id="slReadout">— <small>nm</small></div>
-      <div class="sub" style="margin:0 0 6px">Set it on the stage bar below the model.</div>
+      <div class="sub" style="margin:0 0 6px">The current Tour or restored URL state supplies this value.</div>
       <div class="activation-note" id="activationStatement"></div>
       <div class="note warn" id="stateCaveat" hidden></div>
 
@@ -1074,6 +1214,14 @@ window.__titinBoot = { ready: false, problems: [] };
     </div>
 
     <div id="panelSources" role="tabpanel" aria-labelledby="tabSources" hidden>
+      <h2>Build identity</h2>
+      <!-- SC-18: these identities answer different questions. The raw HTML
+           checksum stays external because a file cannot contain its own hash. -->
+      <div class="build-id" id="buildFingerprint" aria-label="Candidate identity">
+        <div>Model <code id="modelFingerprint">—</code></div>
+        <div>App <code id="appRevision">—</code></div>
+        <div>Build inputs <code id="buildInputsFingerprint">—</code></div>
+      </div>
       <h2>Sources</h2>
       <div class="sub" id="sourceContextLabel" style="margin:0 0 6px"></div>
       <div class="source-filters" id="sourceFilters" role="group"
@@ -1137,7 +1285,7 @@ window.__titinBoot = { ready: false, problems: [] };
         <button id="stageSourcesLink">Sources</button>
         <button id="moreHelp">Keyboard help</button>
       </div>
-      <div id="moreHelpText" class="note" hidden>1–7: chapters · space: stretch or pause · X: Spring · E: Explore · G: Learn · R: restart story</div>
+      <div id="moreHelpText" class="note" hidden>1–5: Tour beats · space: stretch or pause · X: Spring · E: Research · G: Tour · R: restart Tour</div>
     </section>
   </div>
 </div>
@@ -1146,8 +1294,10 @@ window.__titinBoot = { ready: false, problems: [] };
 import { browserReader } from './src/model/readBrowser.js';
 import { TitinVisualization, SCALES } from './src/api/TitinVisualization.js';
 import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
-import { COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
+import { COMPONENT_COLOR, guidedComponentColors, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
 import { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
+import { TourView } from './src/presentation/TourView.js';
+import { createEvidenceChip, evidenceLanguage } from './src/presentation/EvidenceChip.js';
 import { SceneController, DEPTHS, SCENE_LAYER_KEYS, sceneMatch } from './src/presentation/SceneController.js';
 import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
 // Stage composition arithmetic. These rules decide whether the figure reads
@@ -1210,6 +1360,9 @@ try {
 
 const { min, max } = model.slRange();
 const presentation = model.spec.presentation;
+const presentationTheme = model.spec.renderStyle.presentation;
+document.documentElement.style.setProperty('--accent', presentationTheme.chrome.accent);
+document.documentElement.style.setProperty('--focus', presentationTheme.chrome.focus);
 const regionIds = new Set(model.titinRegions().map((region) => region.id));
 const story = new StoryController(presentation, {
   views: Object.keys(VIEWS),
@@ -1220,6 +1373,16 @@ const story = new StoryController(presentation, {
   minLength: min,
   maxLength: max,
 }, model.spec.scenes);
+const tourView = new TourView({
+  progress: $('chapterProgress'),
+  markers: $('tourProgressMarkers'),
+  question: $('chapterQuestion'),
+  title: $('chapterTitle'),
+  summary: $('chapterSummary'),
+  previous: $('chapterPrevious'),
+  next: $('chapterNext'),
+  mechanics: $('tourMechanics'),
+});
 const componentIds = Object.keys(COMPONENTS);
 const sceneController = new SceneController(model.spec.scenes, {
   views: Object.keys(VIEWS),
@@ -1257,7 +1420,8 @@ const candidateIdentity = model.spec.identity;
 $('modelFingerprint').textContent = candidateIdentity.model_fingerprint;
 $('appRevision').textContent = candidateIdentity.app_revision;
 $('buildInputsFingerprint').textContent = candidateIdentity.build_inputs_fingerprint;
-$('scopeIdentity').textContent = model.scientificScope.publicBadge;
+$('scopeIdentity').textContent = model.scientificScope.sequence.construct_label;
+$('scopeBadge').title = model.scientificScope.publicBadge;
 $('mechanicsScope').textContent = model.scientificScope.mechanics.display_label;
 $('scopeDecisions').textContent = model.scientificDecisions.summaryText;
 $('scientificDecisionStatus').textContent = `${model.scientificDecisions.badgeText} · `
@@ -1382,6 +1546,8 @@ function syncAudienceMode() {
   $('audienceEvidence').classList.toggle('on', evidence);
   $('audienceEvidence').setAttribute('aria-pressed', String(evidence));
   $('storyReopen').setAttribute('aria-expanded', String(storyVisible && !evidence));
+  const mobileResearch = drawerOpen && window.matchMedia('(max-width: 767px), (orientation: portrait) and (max-width: 1024px)').matches;
+  $('canvas').inert = mobileResearch;
   requestAnimationFrame(() => {
     visualization.resize();
     if (reframe) applyCameraPreset({ animate: false });
@@ -1444,8 +1610,7 @@ function openEvidence(trigger, targetTab) {
 
 function closeEvidence() {
   requestHistoryEntry();
-  state.drawer = 'closed';
-  setAudienceMode(AUDIENCE_MODES.evidence, {
+  setAudienceMode(AUDIENCE_MODES.guided, {
     restoreFocus: true, drawer: 'closed',
   });
 }
@@ -1454,7 +1619,14 @@ $('audienceGuided').onclick = () => {
   requestHistoryEntry();
   setAudienceMode(AUDIENCE_MODES.guided);
 };
-$('audienceEvidence').onclick = () => openEvidence($('audienceEvidence'), 'evidence');
+$('audienceEvidence').onclick = () => {
+  if (state.audienceMode === AUDIENCE_MODES.evidence && state.drawer !== 'closed') closeEvidence();
+  else openEvidence($('audienceEvidence'), 'inspect');
+};
+$('scopeBadge').onclick = () => {
+  openEvidence($('scopeBadge'), 'inspect');
+  requestAnimationFrame(() => $('scopeDetails').focus({ preventScroll: false }));
+};
 $('closeEvidence').onclick = closeEvidence;
 $('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'), 'evidence');
 $('stageMeasureLink').onclick = () => {
@@ -1468,6 +1640,7 @@ $('stageSourcesLink').onclick = () => {
   evidenceReturnFocus = $('stageMore');
 };
 $('stageForceInfo').onclick = () => openEvidence($('stageForceInfo'), 'measure');
+$('stageForce').onclick = () => openEvidence($('stageForce'), 'measure');
 
 // SC-13 drawer sections, in the order a reader asks for them: what am I looking
 // at, what does it measure, what is the evidence, where did it come from.
@@ -1517,7 +1690,7 @@ $('textScale').onclick = () => {
 // colours and Evidence's identity palette are both described correctly.
 function syncStageLegend(report) {
   const guided = state.audienceMode === AUDIENCE_MODES.guided;
-  const palette = guided ? GUIDED_COMPONENT_COLOR : COMPONENT_COLOR;
+  const palette = guided ? guidedComponentColors(model.spec.renderStyle) : COMPONENT_COLOR;
   // `hidden_components` is the authority: it already carries both the isolated-
   // titin scale's hidden set and the filament-context toggle, so the legend can
   // never name a colour that is not currently on the stage.
@@ -1634,12 +1807,6 @@ document.addEventListener('keydown', (event) => {
     closeEvidence();
     return;
   }
-  if (event.key === 'Escape' && storyVisible
-      && state.audienceMode === AUDIENCE_MODES.guided) {
-    event.preventDefault();
-    setStoryVisible(false, { restoreFocus: true });
-    return;
-  }
   // Presenter shortcuts. The actions come from the validated presentation
   // record, so a shortcut cannot name a chapter or mode that does not exist.
   // Guarded three ways: a system chord belongs to the browser, a key another
@@ -1664,7 +1831,7 @@ document.addEventListener('keydown', (event) => {
   event.preventDefault();
   if (action === 'story.stretch_spring') applySemanticScene('spring');
   else if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
-  else if (action === 'mode.evidence') openEvidence($('audienceEvidence'), 'evidence');
+  else if (action === 'mode.evidence') openEvidence($('audienceEvidence'), 'inspect');
   // Through closeEvidence rather than setAudienceMode, so the key that leaves
   // the drawer also returns focus the way Escape and Close do — and so pressing
   // it in Guided mode is not a scene rebuild that changes nothing.
@@ -1852,7 +2019,6 @@ function abandonStretchPresentation({ synchronize = true } = {}) {
 // is no peek state at all and the toggle is not rendered.
 const STORY_SESSION_KEY = 'titin.sc24.story-visible';
 let storyVisible = true;
-try { storyVisible = sessionStorage.getItem(STORY_SESSION_KEY) !== 'false'; } catch {}
 
 function setStoryVisible(visible, { focusHeading = false, restoreFocus = false } = {}) {
   storyVisible = Boolean(visible);
@@ -2150,7 +2316,7 @@ function illustrativeWidthRatio(pxPerNm) {
 const TERMINUS_REGION = Object.freeze({ n_terminus: 'Z1Z2', c_terminus: 'Mline' });
 const BRACKET_TARGET = Object.freeze({ zdisc: 'zdisc', mband: 'mline' });
 /** Coarse-pointer hit area for a direct label, in CSS pixels. */
-const LABEL_HIT = Object.freeze({ width: 96, height: 30 });
+const LABEL_HIT = Object.freeze({ width: 96, height: 44 });
 
 /** A band label that names an annotatable component becomes a control. */
 function withBracketTarget(label, bracketId, centreX, baselineY) {
@@ -2195,12 +2361,24 @@ function selectableLabel(label, target, box) {
     event.stopPropagation();
     selectNamedTarget(target.target_type, target.target_id);
   };
+  // The SVG root is also the ray-pick/orbit plane. Keep a named target's
+  // pointer sequence off that root or pointerup would first pin the ray hit and
+  // the following click would toggle the same named target straight back off.
+  for (const type of ['pointerdown', 'pointerup', 'pointercancel']) {
+    for (const node of [hit, label]) {
+      node.addEventListener(type, (event) => event.stopPropagation());
+    }
+  }
   hit.addEventListener('click', select);
   hit.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') select(event);
   });
   label.classList.add('label-target');
   label.setAttribute('aria-hidden', 'true');
+  // The painted glyph sits above the wider invisible hit rectangle in SVG paint
+  // order. Give it the same pointer route so clicking the word and clicking its
+  // coarse target are indistinguishable.
+  label.addEventListener('click', select);
   return [hit, label];
 }
 
@@ -2237,8 +2415,26 @@ function renderScienceOverlay() {
   const features = activeFeatures();
   const bandsRequested = features.has('band_brackets')
     && state.scale === SCALES.context && !state.closeup
-    && ['titin_story', 'longitudinal', 'side'].includes(state.view);
+    && ['titin_hero', 'titin_story', 'longitudinal', 'side'].includes(state.view);
   const records = [];
+  const directIdentities = state.audienceMode === AUDIENCE_MODES.guided
+      && state.storyStep === 'meet_sarcomere'
+    ? [
+      ['titin', 'Titin', 24, -64, presentationTheme.titin_emphasis.identity_color],
+      ['thick_filament', 'Myosin', -30, 25,
+        presentationTheme.guided_component_colors.thick_filament],
+      ['thin_filament', 'Actin', 30, 48,
+        presentationTheme.guided_component_colors.thin_filament],
+    ].map(([targetId, label, dx, dy, color]) => ({
+      id: `identity:${targetId}`, targetId, label, dx, dy, color,
+      annotation: activeAnnotations.find((entry) => (
+        entry.target_type === 'component' && entry.target_id === targetId
+      )),
+    })).filter((entry) => entry.annotation)
+    : [];
+  records.push(...directIdentities.map((entry) => ({
+    id: entry.id, ...entry.annotation.anchor_nm,
+  })));
   if (bandsRequested) {
     for (const bracket of activeShowcaseOverlay.brackets) {
       records.push({ id: `${bracket.id}:start`, x: bracket.start_nm, y: 0, z: 0 });
@@ -2279,7 +2475,11 @@ function renderScienceOverlay() {
   // intervening write share one layout flush anyway. The saving that matters
   // came from not running this pass at all on a still frame.
   const canvasRect = $('canvas').getBoundingClientRect();
-  const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasRect.top + 16;
+  // The 12 px SC-27A scientific labels have a taller ink box than the former
+  // 9 px labels. Twenty pixels keeps the highest marker label entirely below
+  // the measured header edge in Chromium and Firefox; sixteen left its
+  // ascender inside the header and eighteen remained 1.5 px short in Firefox.
+  const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasRect.top + 20;
   // The guided chapter card owns the bottom-left corner and its size depends on
   // the chapter's copy, so where the ruler can go is measured, not assumed.
   const guidedCard = $('guidedCard');
@@ -2293,10 +2493,13 @@ function renderScienceOverlay() {
   // The stage bar owns the bottom rule the ruler used to sit on, and it grows a
   // row as the stage narrows, so how much of the stage it takes is measured
   // rather than assumed.
-  const barTop = $('stageBar').getBoundingClientRect().top - canvasRect.top;
-  const stageBarInsetPx = Math.max(
-    STAGE_LAYOUT.scale_bar_baseline_px, height - barTop + STAGE_LAYOUT.edge_padding_px + 4,
-  );
+  const stageBarNode = $('stageBar');
+  const barTop = stageBarNode.hidden || stageBarNode.offsetParent === null
+    ? height : stageBarNode.getBoundingClientRect().top - canvasRect.top;
+  const stageBarInsetPx = barTop >= height
+    ? STAGE_LAYOUT.scale_bar_baseline_px
+    : Math.max(STAGE_LAYOUT.scale_bar_baseline_px,
+      height - barTop + STAGE_LAYOUT.edge_padding_px + 4);
   const projectionSignature = JSON.stringify({
     length: activeShowcaseOverlay.sarcomere_length_nm,
     width, height, showBands,
@@ -2321,6 +2524,30 @@ function renderScienceOverlay() {
   if (projectionSignature === scienceOverlaySignature) return;
   scienceOverlaySignature = projectionSignature;
   const nodes = [];
+  for (const identity of directIdentities) {
+    const point = projected.get(identity.id);
+    if (!point?.visible) continue;
+    const x = Math.max(64, Math.min(width - 64, point.x_px + identity.dx));
+    const y = Math.max(safeTopPx + 45, Math.min(height - 70, point.y_px + identity.dy));
+    nodes.push(svgElement('line', {
+      x1: point.x_px, y1: point.y_px, x2: x, y2: y - 4, class: 'identity-leader',
+      style: `stroke:${identity.color}`,
+    }));
+    const labelInk = identity.targetId === 'titin'
+      ? identity.color : presentationTheme.chrome.accent_strong;
+    const label = svgElement('text', {
+      x, y, 'text-anchor': 'middle', class: 'identity-label',
+      style: `fill:${labelInk}`,
+    }, identity.label);
+    nodes.push(...selectableLabel(label, {
+      target_type: 'component', target_id: identity.targetId,
+    }, {
+      x: x - LABEL_HIT.width / 2,
+      y: y - LABEL_HIT.height + 7,
+      width: LABEL_HIT.width,
+      height: LABEL_HIT.height,
+    }));
+  }
   if (showBands && laneHoldsBrackets) {
     const laneY = bracketLaneY([...projected.values()], { canvasHeight: height, safeTopPx });
     // Everything the frame COULD label, before the reviewed attention budget
@@ -2381,37 +2608,75 @@ function renderScienceOverlay() {
       }
     }
   }
-  // The locator: the half-sarcomere in miniature, with the camera's own span
-  // shaded on it. It occupies the lane the brackets have vacated and is drawn
-  // only when they are not, so the lane never holds both. Nothing here is
-  // interactive — it is an orientation aid, and making it draggable would put a
-  // second navigation model on the stage.
-  if (!laneHoldsBrackets && locator.visible && modelSpanNm) {
-    const stripPx = Math.max(120, Math.min(300, width * 0.28));
-    const left = STAGE_LAYOUT.edge_padding_px + 8;
-    const laneTop = safeTopPx + STAGE_LAYOUT.bracket_lane_gap_px;
+  // Geometry-derived full-sarcomere locator. The rendered model is specified as
+  // one Z-disc-to-M-line half; mirroring that same span places the second Z-disc
+  // without introducing another coordinate model. One representative route is
+  // drawn on the left half, and the camera extent remains truthful to that half.
+  if (state.audienceMode === AUDIENCE_MODES.guided && modelSpanNm && cameraSpanNm) {
+    const stripPx = Math.max(210, Math.min(420, width - 36, width * 0.4));
+    const compactLocator = width < 520;
+    const left = Math.max(18, (width - stripPx) / 2);
+    const laneTop = safeTopPx + STAGE_LAYOUT.bracket_lane_gap_px + 10;
+    const centreX = left + stripPx / 2;
+    const abandStart = bracketById('aband')?.start_nm ?? modelSpanNm * 0.45;
+    const iFraction = Math.max(0, Math.min(0.5, (abandStart / modelSpanNm) * 0.5));
+    const iWidth = stripPx * iFraction;
+    nodes.push(svgElement('g', { 'data-full-sarcomere-locator': 'true' }));
+    nodes.push(svgElement('rect', {
+      x: left, y: laneTop - 7, width: iWidth, height: 14, class: 'locator-iband',
+    }));
+    nodes.push(svgElement('rect', {
+      x: left + stripPx - iWidth, y: laneTop - 7, width: iWidth, height: 14, class: 'locator-iband',
+    }));
+    nodes.push(svgElement('rect', {
+      x: left + iWidth, y: laneTop - 7, width: stripPx - 2 * iWidth,
+      height: 14, class: 'locator-aband',
+    }));
     nodes.push(svgElement('path', {
       d: `M ${left} ${laneTop} H ${left + stripPx}`, class: 'science-bracket locator-rule',
     }));
-    for (const at of locatorTicks(modelSpanNm)) {
-      const x = left + stripPx * at;
+    for (const x of [left, centreX, left + stripPx]) {
       nodes.push(svgElement('path', {
-        d: `M ${x} ${laneTop - 4} V ${laneTop + 4}`, class: 'science-bracket locator-tick',
+        d: `M ${x} ${laneTop - 7} V ${laneTop + 7}`, class: 'science-bracket locator-tick',
       }));
     }
-    // A minimum drawn width, because a 20 nm view of an 1,100 nm model is half a
-    // pixel — the extent has to remain visible while staying to scale wherever
-    // scale is legible at all.
-    const from = left + stripPx * locator.from01;
-    const extent = Math.max(2, stripPx * (locator.to01 - locator.from01));
+    const from01 = Math.max(0, Math.min(1, (cameraCentreNm - cameraSpanNm / 2) / modelSpanNm));
+    const to01 = Math.max(0, Math.min(1, (cameraCentreNm + cameraSpanNm / 2) / modelSpanNm));
+    const from = left + stripPx * from01 * 0.5;
+    const extent = Math.max(2, stripPx * (to01 - from01) * 0.5);
     nodes.push(svgElement('rect', {
-      x: from, y: laneTop - 6, width: extent, height: 12, class: 'locator-extent',
+      x: from, y: laneTop - 9, width: extent, height: 18, class: 'locator-extent',
+      'data-visible-span': `${from01.toFixed(4)}:${to01.toFixed(4)}`,
     }));
-    const place = locatorPlaceLabel(cameraCentreNm);
+    const focus = bracketById(focusBracketId());
+    if (focus && Number.isFinite(focus.start_nm) && Number.isFinite(focus.end_nm)) {
+      const activeFrom = left + stripPx * (focus.start_nm / modelSpanNm) * 0.5;
+      const activeWidth = Math.max(2,
+        stripPx * ((focus.end_nm - focus.start_nm) / modelSpanNm) * 0.5);
+      nodes.push(svgElement('rect', {
+        x: activeFrom, y: laneTop - 12, width: activeWidth, height: 4, class: 'locator-active',
+      }));
+    }
+    nodes.push(svgElement('path', {
+      d: `M ${left} ${laneTop + 4} H ${centreX}`, class: 'locator-route',
+    }));
+    nodes.push(svgElement('circle', { cx: left, cy: laneTop + 4, r: 3, class: 'locator-anchor' }));
+    nodes.push(svgElement('circle', { cx: centreX, cy: laneTop + 4, r: 3, class: 'locator-anchor' }));
     nodes.push(svgElement('text', {
-      x: left, y: laneTop + 20, 'text-anchor': 'start', class: 'science-label',
-    }, `viewing ${Math.round(cameraSpanNm).toLocaleString()} nm of `
-      + `${Math.round(modelSpanNm).toLocaleString()} nm${place ? ` · ${place}` : ''}`));
+      x: left, y: laneTop - 14, 'text-anchor': 'start', class: 'science-label',
+    }, compactLocator ? 'Z · N' : 'Z-disc · N-terminus'));
+    nodes.push(svgElement('text', {
+      x: centreX, y: laneTop - 14, 'text-anchor': 'middle', class: 'science-label',
+    }, compactLocator ? 'M · C' : 'M-line · C-terminus'));
+    nodes.push(svgElement('text', {
+      x: left + stripPx, y: laneTop - 14, 'text-anchor': 'end', class: 'science-label',
+    }, compactLocator ? 'Z' : 'Z-disc'));
+    nodes.push(svgElement('text', {
+      x: left + iWidth / 2, y: laneTop + 22, 'text-anchor': 'middle', class: 'science-label',
+    }, 'I-band'));
+    nodes.push(svgElement('text', {
+      x: centreX, y: laneTop + 22, 'text-anchor': 'middle', class: 'science-label',
+    }, 'A-band'));
   }
   if (features.has('termini')) {
     for (const terminus of activeShowcaseOverlay.termini) {
@@ -2470,7 +2735,7 @@ function renderScienceOverlay() {
     if (illustrative !== null) {
       nodes.push(svgElement('text', {
         x: barX, y: barY + 11, 'text-anchor': 'start', class: 'science-label',
-      }, `titin line ≈${illustrative}× its ${TITIN_CROSS_SECTION_NM} nm cross-section — reading width, not scale`));
+      }, `titin line ≈${illustrative}× reading width, not scale`));
     }
   }
   svg.replaceChildren(...nodes);
@@ -3057,18 +3322,26 @@ function renderForceCurve() {
 function renderChapter() {
   const chapter = activeChapter();
   const index = story.chapterIndex(chapter.id);
-  $('chapterProgress').textContent = `Chapter ${index + 1} of ${story.chapters.length}`;
+  tourView.render({ chapter, chapterIndex: index, chapters: story.chapters });
   $('chapterEvidenceClass').textContent = chapter.evidence_class;
-  $('chapterTitle').textContent = chapter.title;
-  $('chapterSummary').textContent = chapter.lay_summary;
   $('chapterStateAnnouncement').textContent = chapterViewAnnouncement
     || chapter.state_change_announcement;
-  $('chapterPrevious').disabled = index <= 0;
-  $('chapterNext').disabled = index >= story.chapters.length - 1;
-  $('chapterPrevious').textContent = index > 0
-    ? `Previous: ${story.chapters[index - 1].title}` : 'Previous';
-  $('chapterNext').textContent = index < story.chapters.length - 1
-    ? `Next: ${story.chapters[index + 1].title}` : 'Next';
+  const recap = $('tourEvidenceRecap');
+  recap.hidden = chapter.id !== 'knowledge_recap';
+  if (!recap.hidden) {
+    const recapClasses = presentation.evidence_language.guided_recap_classes;
+    recap.replaceChildren(...recapClasses
+      .map((canonical) => {
+        const language = evidenceLanguage(presentation, canonical);
+        const item = document.createElement('div');
+        item.className = 'tour-evidence-recap-item';
+        const definition = document.createElement('span');
+        definition.className = 'tour-evidence-definition';
+        definition.textContent = language.definition;
+        item.append(createEvidenceChip(document, language), definition);
+        return item;
+      }));
+  } else recap.replaceChildren();
   $('chapterNextActions').replaceChildren(...chapter.next_actions.map((action) => {
     const button = document.createElement('button');
     button.textContent = action.label;
@@ -3077,7 +3350,7 @@ function renderChapter() {
     return button;
   }));
   syncChapterActionButtons();
-  $('chapterRestoreView').disabled = chapterRestoreViewState === null;
+  syncResearchRestoreView();
   const claimNode = renderClaimView(visualization.claimView(chapter.target_claim_id, {
     presentationRecord: chapter,
     relatedClaimIds: chapter.claim_ids,
@@ -3092,6 +3365,11 @@ function renderChapter() {
   renderScienceOverlay();
   renderExtensionChart(activeShowcaseOverlay);
   renderProvenancePipeline();
+  requestAnimationFrame(() => {
+    const height = Math.round($('guidedCard').getBoundingClientRect().height);
+    if (height > 0) $('app').style.setProperty('--tour-card-h', `${height}px`);
+    markStageDirty();
+  });
 }
 
 function syncChapterActionButtons() {
@@ -3198,7 +3476,14 @@ function captureChapterViewState() {
   };
 }
 
-function restorePreviousChapterView() {
+function syncResearchRestoreView() {
+  const available = chapterRestoreViewState !== null;
+  $('chapterRestoreView').disabled = !available;
+  $('researchRestoreView').hidden = !available;
+  $('researchRestoreView').disabled = !available;
+}
+
+function restorePreviousChapterView({ focusResearch = false } = {}) {
   if (chapterRestoreViewState === null) return;
   abandonStretchPresentation();
   const previous = chapterRestoreViewState;
@@ -3216,15 +3501,19 @@ function restorePreviousChapterView() {
   renderChapter();
   renderPinnedSelection();
   syncScales(); syncRegions(); syncDepictionToggles(); refreshRegionReadout();
+  syncResearchRestoreView();
   syncPublicPresentation(); syncUrl();
   markStageDirty();
+  if (focusResearch) requestAnimationFrame(() => $('scopeDetails').focus({ preventScroll: true }));
 }
 
 function applyChapter(chapterId) {
   abandonStretchPresentation();
   const chapter = story.chapter(chapterId);
   if (!chapter) return;
-  chapterRestoreViewState = captureChapterViewState();
+  // A Tour transition is a new semantic camera, not a manual framing mistake.
+  // The contextual Research restore appears only after a real orbit/pan/zoom.
+  chapterRestoreViewState = null;
   requestHistoryEntry();
   const scene = chapter.recommended_state;
   state.audienceMode = AUDIENCE_MODES.guided;
@@ -3237,8 +3526,7 @@ function applyChapter(chapterId) {
   state.selectedTarget = scene.selected_component_or_region;
   state.region = chapter.target.kind === 'region' ? chapter.target.id : null;
   state.closeup = null;
-  chapterViewAnnouncement = `${chapter.state_change_announcement} `
-    + 'Restore previous view is available; it restores framing, layers, and selection only.';
+  chapterViewAnnouncement = chapter.state_change_announcement;
   pinnedPick = null; hoverPick = null;
   applyChapterVisibility(chapter.id);
   state.extendedLattice = false;
@@ -3266,9 +3554,11 @@ $('chapterPrevious').onclick = () => {
 $('chapterNext').onclick = () => {
   const index = story.chapterIndex(activeChapter().id);
   if (index < story.chapters.length - 1) applyChapter(story.chapters[index + 1].id);
+  else applyChapter(story.chapters[0].id);
 };
 $('chapterRestart').onclick = () => applyChapter(story.chapters[0].id);
-$('chapterRestoreView').onclick = restorePreviousChapterView;
+$('chapterRestoreView').onclick = () => restorePreviousChapterView();
+$('researchRestoreView').onclick = () => restorePreviousChapterView({ focusResearch: true });
 
 // ---- controls -------------------------------------------------------------
 for (const scale of Object.values(SCALES)) {
@@ -3535,7 +3825,7 @@ function renderReferenceDomainStrip() {
     + `${view.domain_feature_count} pinned UniProt DOMAIN features · ${view.coordinate_frame} coordinates`;
   const wrapper = document.createElement('div');
   const strip = document.createElement('div'); strip.className = 'reference-strip';
-  strip.setAttribute('role', 'img');
+  strip.setAttribute('role', 'group');
   strip.setAttribute('aria-label', `Exact region map for ${view.isoform_id}, ${view.sequence_length_aa} amino acids`);
   for (const region of view.regions) {
     const segment = document.createElement('button');
@@ -3998,16 +4288,28 @@ function renderSelectedEvidence(annotation) {
   box.hidden = !annotation;
   $('selectedEvidenceSourcesLink').hidden = !annotation;
   if (!annotation) { box.replaceChildren(); return; }
-  box.replaceChildren(renderClaimView(claimViewForAnnotation(annotation), document));
+  const language = evidenceLanguage(presentation, annotation.evidence.claim_class);
+  box.replaceChildren(
+    createEvidenceChip(document, language, { research: true }),
+    renderClaimView(claimViewForAnnotation(annotation), document),
+  );
 }
 
 function renderPinnedSelection() {
   const annotation = resolvedAnnotation(pinnedPick);
   const inspector = $('objectInspector');
   inspector.hidden = !annotation;
+  // A phone cannot hold two full reading cards without one covering the other.
+  // The pinned explanation temporarily replaces the Tour card there; closing
+  // it reveals the same Tour state because this does not mutate storyVisible.
+  $('app').dataset.pinnedInspector = annotation ? 'true' : 'false';
   if (!annotation) {
     $('guidedSelection').hidden = true;
     $('objectInspectorClaim').replaceChildren();
+    $('objectInspectorName').textContent = '';
+    $('objectInspectorLay').textContent = '';
+    $('objectInspectorEvidence').replaceChildren();
+    $('researchContext').textContent = 'Inspecting the current titin selection';
     renderSelectedEvidence(null);
     syncAnnotationIndex();
     objectOverlaySignature = null;
@@ -4015,12 +4317,23 @@ function renderPinnedSelection() {
   }
   const claimView = claimViewForAnnotation(annotation);
   $('objectInspectorClaim').replaceChildren(renderClaimView(claimView, document));
+  $('objectInspectorName').textContent = annotation.label;
+  $('objectInspectorLay').textContent = claimView.plain;
+  const chip = createEvidenceChip(
+    document,
+    evidenceLanguage(presentation, annotation.evidence.claim_class),
+    { interactive: true },
+  );
+  chip.setAttribute('aria-label', `Open Research evidence: ${chip.textContent}`);
+  chip.onclick = () => openEvidence(chip, 'evidence');
+  $('objectInspectorEvidence').replaceChildren(chip);
+  $('researchContext').textContent = `Current target: ${annotation.label}`;
   // Seven reviewed expert cards used to be reachable only by scrolling one
   // column in Evidence mode. Selecting the kinase region now offers the kinase
   // card, because the card itself declares the biology it is about.
   const related = relatedExpertCards(annotation.target_id);
   const expertLink = $('objectInspectorExpertLink');
-  expertLink.hidden = related.length === 0;
+  expertLink.hidden = true;
   if (related.length) {
     expertLink.textContent = `Expert card: ${related[0].title}`;
     expertLink.onclick = () => {
@@ -4034,7 +4347,7 @@ function renderPinnedSelection() {
     };
   }
   const instance = $('objectInspectorInstance');
-  instance.hidden = !annotation.picked_instance;
+  instance.hidden = true;
   instance.textContent = annotation.picked_instance
     ? `Picked folded domain ${annotation.picked_instance.domain_id}`
       + (annotation.picked_instance.archetype ? ` · ${annotation.picked_instance.archetype}` : '')
@@ -4280,7 +4593,9 @@ function renderObjectOverlay() {
   // pointer events, so letting it settle over the bar would put an explanation
   // on top of the controls and swallow clicks meant for them. The placement
   // rule itself is the tested one — this only tells it how much stage there is.
-  const barTop = $('stageBar').getBoundingClientRect().top - canvasTop;
+  const stageBarNode = $('stageBar');
+  const barTop = stageBarNode.hidden || stageBarNode.offsetParent === null
+    ? height : stageBarNode.getBoundingClientRect().top - canvasTop;
   const placed = inspectorPlacement({
     anchor: { x_px: point.x_px, y_px: point.y_px },
     card: { width: cardWidth, height: cardHeight },
@@ -4420,6 +4735,7 @@ function render(report) {
       + (statePreset.outside_working_range ? ' · OUTSIDE WORKING RANGE' : '')
     : `Computed intermediate geometry · ${g.sarcomere_length_nm.toLocaleString()} nm`;
   $('scopeState').textContent = scopeState;
+  $('scopeCompact').textContent = `Human TTN Q8WZ42-1 · ${g.sarcomere_length_nm.toLocaleString()} nm`;
   // Phase 9's honesty requirement is user-facing, not merely an API field. Every
   // non-keyframe state visibly discloses that this is a computed intermediate
   // geometry and not directly measured molecular motion. Clamp disclosure takes
@@ -4739,17 +5055,23 @@ function restorePresentationFromHash() {
 }
 
 // ---- direct object inspection: pointer, touch, and keyboard ----------------
-const renderSurface = $('canvas').querySelector('canvas');
+// The SVG is the shared interaction surface: blank areas bubble to OrbitControls
+// and to the ray picker, while named label targets stop their own click. Keeping
+// the root interactive is required by WebKit, which otherwise ignores interactive
+// SVG children when an ancestor has pointer-events:none and lets WebGL steal them.
+const renderSurface = $('scienceOverlay');
 let pointerStart = null;
 let pendingHoverFrame = null;
 let pendingHoverEvent = null;
 
 $('canvas').addEventListener('titin:manual-camera-change', () => {
   if (state.sceneId === null && !sweepPresentationActive) return;
+  if (chapterRestoreViewState === null) chapterRestoreViewState = captureChapterViewState();
   abandonStretchPresentation();
   requestHistoryEntry();
   state.sceneId = null;
   state.sceneContextId = null;
+  syncResearchRestoreView();
   syncSceneControls(); syncContextualSceneControls(); syncUrl();
   $('objectAnnouncement').textContent = 'Camera adjusted manually. Scene is now Custom.';
 });
@@ -4780,6 +5102,18 @@ function pickAt(clientX, clientY) {
   catch (error) { fail(error); return null; }
 }
 
+// WebKit reports the SVG root as the pointer-event target even when
+// elementFromPoint identifies the painted child. Resolve the declared coarse
+// label rectangles geometrically before ray picking so all engines give the
+// named on-model control priority over the molecule behind it.
+function directLabelHitAt(clientX, clientY) {
+  return [...renderSurface.querySelectorAll('.label-hit')].find((node) => {
+    const rect = node.getBoundingClientRect();
+    return clientX >= rect.left && clientX <= rect.right
+      && clientY >= rect.top && clientY <= rect.bottom;
+  }) || null;
+}
+
 renderSurface.addEventListener('pointerdown', (event) => {
   pointerStart = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
   $('canvas').focus({ preventScroll: true });
@@ -4803,6 +5137,14 @@ renderSurface.addEventListener('pointerup', (event) => {
   pointerStart = null;
   const tolerance = event.pointerType === 'touch' ? 12 : 5;
   if (movement > tolerance) return;
+  const directLabel = directLabelHitAt(event.clientX, event.clientY);
+  if (directLabel) {
+    directLabel.dispatchEvent(new MouseEvent('click', {
+      bubbles: true, cancelable: true, view: window,
+      clientX: event.clientX, clientY: event.clientY,
+    }));
+    return;
+  }
   const picked = pickAt(event.clientX, event.clientY);
   if (picked) setPinnedSelection(picked);
   else if (pinnedPick) clearPinnedSelection();
@@ -4886,7 +5228,9 @@ const sweepRange = {
 function unobscuredFrameOptions({ animate = false } = {}) {
   const canvasBox = $('canvas').getBoundingClientRect();
   const headerBox = $('stageHeader').getBoundingClientRect();
-  const barBox = $('stageBar').getBoundingClientRect();
+  const stageBarNode = $('stageBar');
+  const barBox = stageBarNode.hidden || stageBarNode.offsetParent === null
+    ? null : stageBarNode.getBoundingClientRect();
   const storyCard = $('guidedCard');
   const storyBox = storyVisible && !storyCard.hidden && storyCard.getClientRects().length
     ? storyCard.getBoundingClientRect() : null;
@@ -4900,7 +5244,7 @@ function unobscuredFrameOptions({ animate = false } = {}) {
   );
   const safeBottom = Math.min(
     canvasBox.height,
-    barBox.top - canvasBox.top,
+    barBox ? barBox.top - canvasBox.top : canvasBox.height,
     storyBox ? storyBox.top - canvasBox.top : Infinity,
   );
   return {
@@ -4929,7 +5273,8 @@ function toggleSweep() {
   const current = Number(slider.value);
   if (current < sweepRange.min || current > sweepRange.max) {
     $('objectAnnouncement').textContent = 'Stretch not started. The current length is outside '
-      + 'the supported range; in Stretch the spring, choose Set demonstration start first.';
+      + `the supported range; use the slider to choose ${sweepRange.min.toLocaleString()} to `
+      + `${sweepRange.max.toLocaleString()} nanometres first.`;
     return;
   }
   const needsSpringScene = !sceneMatch(sceneController.scene('spring'), publicSceneState());

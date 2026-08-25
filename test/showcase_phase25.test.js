@@ -1,12 +1,15 @@
 /** SC-25 gates: pick priority, hit proxies, label routes, and titin prominence. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 import {
-  COMPONENT_COLOR, GUIDED_COMPONENT_COLOR, PICK_PROXY_LAYER, SarcomereScene,
+  COMPONENT_COLOR, guidedComponentColors, PICK_PROXY_LAYER, SarcomereScene,
 } from '../src/render/SarcomereScene.js';
 import {
   PICK_CLASS, PICK_PRIORITY_ORDER, PICK_REASON, resolvePick,
@@ -16,6 +19,7 @@ import { VIEWPORTS } from '../src/presentation/VisualMatrix.js';
 import { HIT_GRID_RULES, ringSamples } from '../scripts/build_picking_hit_grid.mjs';
 
 const model = await TitinModel.create(nodeReader());
+const GUIDED_COMPONENT_COLOR = guidedComponentColors(model.spec.renderStyle);
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 const grid = JSON.parse(readFileSync(
   new URL('../test/fixtures/picking_hit_grid.json', import.meta.url), 'utf8',
@@ -27,6 +31,20 @@ const gates = JSON.parse(readFileSync(
   new URL('../data/release_gates.json', import.meta.url), 'utf8',
 ));
 const policy = model.spec.renderStyle.titin.picking;
+
+test('SC25: evidence JSON regenerates byte-identically without prior output', (t) => {
+  const output = mkdtempSync(join(tmpdir(), 'titin-sc25-evidence-'));
+  t.after(() => rmSync(output, { recursive: true, force: true }));
+  execFileSync(process.execPath, [
+    new URL('../scripts/build_sc25_evidence.mjs', import.meta.url).pathname,
+    '--output-dir', output,
+  ], { stdio: 'pipe' });
+  for (const name of ['render-audit.json', 'picking-audit.json', 'manifest.json']) {
+    const committed = readFileSync(new URL(`../evidence/scientific/SC-25/${name}`, import.meta.url));
+    const regenerated = readFileSync(join(output, name));
+    assert.deepEqual(regenerated, committed, `${name} is not clean-room reproducible`);
+  }
+});
 
 function build(sl = 2200, opts = {}) {
   const scene = new SarcomereScene();
@@ -400,8 +418,10 @@ test('SC25: labels, legends, and the one-time invitation are wired in the page',
   // The invitation is spent at the single selection choke point, not in the
   // pointer handler, so a keyboard-only reader is not invited forever.
   assert.match(page, /completeInspectionOnboarding\(\);\s*\n\s*pinnedPick = \{ \.\.\.selection \};/);
-  // The stage colour key must not carry the attribute that made it invisible.
-  assert.doesNotMatch(page, /<div id="stageLegend" hidden/);
+  // SC-27A removes the persistent legend; direct labels and the full-sarcomere
+  // locator now carry the Guided identity cues without another control surface.
+  assert.match(page, /<div id="stageLegend" hidden/);
+  assert.match(page, /data-full-sarcomere-locator/);
 });
 
 test('SC25: the onboarding pulse moves colour only and yields to a real selection', () => {

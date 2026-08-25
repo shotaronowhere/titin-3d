@@ -10,6 +10,56 @@
     "endpoint_policy": "canonical endpoints are copied exactly; irregularity is transverse only",
     "determinism_policy": "pure local PRNG; no Math.random, time, platform fingerprint, or model fingerprint"
   },
+  "presentation": {
+    "stage_background": {
+      "lightest": "#0e1116",
+      "darkest": "#080b0f",
+      "implementation": "radial gradient on the stage behind the transparent WebGL canvas",
+      "contrast_reference": "lightest"
+    },
+    "guided_component_colors": {
+      "thick_filament": "#3f454c",
+      "myosin_head": "#41464c",
+      "thin_filament": "#636b67",
+      "zdisc": "#343b45",
+      "mline": "#2b2530",
+      "alpha_actinin": "#2d6470",
+      "telethonin": "#8a949f",
+      "mband_crosslink": "#4d405a",
+      "mybpc": "#5c5230",
+      "lattice_guide": "#3c4653"
+    },
+    "titin_emphasis": {
+      "identity_color": "#ff5d7d",
+      "halo_opacity_max": 0.32,
+      "contour": {
+        "color": "#090c10",
+        "width_px": 1.5,
+        "meaning": "dark screen-space separation edge following the exact presentation trace"
+      },
+      "meaning": "halo and contour are screen-space reading aids, not molecular envelopes or evidence classes"
+    },
+    "chrome": {
+      "accent": "#8ba7c8",
+      "accent_strong": "#d7e4f4",
+      "focus": "#f2d06b",
+      "titin_identity_reserved": "#ff5d7d"
+    },
+    "declared_contrast_ratios": {
+      "titin_to_lightest_background": 6.406,
+      "thick_filament_to_lightest_background": 1.951,
+      "myosin_head_to_lightest_background": 1.986,
+      "thin_filament_to_lightest_background": 3.449,
+      "thin_to_thick_filament": 1.767,
+      "thin_filament_to_myosin_head": 1.737,
+      "titin_dominance_margin": 1.858
+    },
+    "not_claimed": [
+      "that a screen-space halo or contour is a molecular surface or envelope",
+      "that presentation color changes scientific evidence class",
+      "that background depth variation is illumination evidence"
+    ]
+  },
   "titin": {
     "guided_radius_scale": 1.65,
     "disordered_radius_scale": 0.58,
@@ -17,7 +67,7 @@
     "trace_px": 5.0,
     "trace_px_evidence": 3.5,
     "halo_radius_scale": 3.2,
-    "halo_opacity": 0.2,
+    "halo_opacity": 0.28,
     "linker_radius_fraction": 0.5,
     "irregular_ribbon": {
       "amplitude_scale": 2.6,

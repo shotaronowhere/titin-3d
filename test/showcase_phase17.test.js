@@ -5,13 +5,14 @@ import { readFileSync } from 'node:fs';
 
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
-import { COMPONENT_COLOR, GUIDED_COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
+import { COMPONENT_COLOR, guidedComponentColors } from '../src/render/SarcomereScene.js';
 import {
   PRESENTER_KEY_BY_ACTION, STAGE_KEYS, presenterKeyGuide, presenterKeys, unboundShortcutIds,
 } from '../src/presentation/PresenterKeys.js';
 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
 const model = await TitinModel.create(nodeReader());
+const GUIDED_COMPONENT_COLOR = guidedComponentColors(model.spec.renderStyle);
 
 test('SC17: a presentation text scale exists and is user-controlled', () => {
   assert.match(page, /<button id="textScale"[^>]*aria-pressed="false"/);
@@ -60,18 +61,19 @@ test('SC17: every declared presenter shortcut is bound to a key', () => {
   assert.match(page, /event\.defaultPrevented/);
 });
 
-test('SC17: the shortcuts are discoverable, not folklore', () => {
+test('SC17/SC27A: shortcut accelerators remain in the accessible canvas description', () => {
+  assert.match(page, /id="interactionHelp" class="sr-only"/);
   assert.match(page, /id="shortcutHelp"/);
   const help = page.match(/id="shortcutHelp"[^>]*>([\s\S]*?)<\/span>/);
-  assert.ok(help, 'the help line must carry the key list');
-  // Every key the page binds is named on the stage — including the two the
-  // record does not declare, which are otherwise discoverable nowhere.
+  assert.ok(help, 'the accessible canvas description must carry the key list');
+  // Every key the page binds is named for assistive technology. SC-27A keeps
+  // these as accelerators without painting a second Tour-navigation vocabulary.
   for (const key of Object.keys(presenterKeys(model.spec.presentation))) {
     const written = key === ' ' ? 'space' : key;
     assert.match(help[1], new RegExp(`(^|\\s)${written}\\s`),
-      `the on-canvas help does not name the '${written}' key`);
+      `the accessible canvas description does not name the '${written}' key`);
   }
-  assert.match(help[1], /1–7 chapters/);
+  assert.match(help[1], /1–5 beats/);
 });
 
 test('SC17: the printed script names the keys the page binds', () => {

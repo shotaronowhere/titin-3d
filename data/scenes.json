@@ -16,7 +16,7 @@
   "control_scenes": {
     "overview": {
       "label": "Overview",
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "scale": "context",
       "context": true,
       "layers": {
@@ -45,7 +45,7 @@
     },
     "titin_alone": {
       "label": "Titin alone",
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "scale": "detail",
       "context": false,
       "layers": {
@@ -73,7 +73,7 @@
     },
     "spring": {
       "label": "Spring",
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "scale": "context",
       "context": true,
       "layers": {
@@ -217,7 +217,7 @@
         "LEARN",
         "EXPLORE"
       ],
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "scale": "context",
       "context": true,
       "layers": {
@@ -255,7 +255,7 @@
         "LEARN",
         "EXPLORE"
       ],
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "scale": "context",
       "context": true,
       "layers": {
@@ -274,6 +274,8 @@
       "claim_ids": [
         "titin_continuity_trace",
         "titin_region_architecture",
+        "zdisc_local_network",
+        "zdisc_telethonin_sandwich",
         "mband_midpoint_and_crosslinks"
       ],
       "source_filter": {
@@ -281,41 +283,9 @@
         "claim_ids": [
           "titin_continuity_trace",
           "titin_region_architecture",
+          "zdisc_local_network",
+          "zdisc_telethonin_sandwich",
           "mband_midpoint_and_crosslinks"
-        ]
-      }
-    },
-    "molecular_architecture": {
-      "label": "See its molecular architecture",
-      "available_in": [
-        "LEARN",
-        "EXPLORE"
-      ],
-      "camera_preset": "region.prox_Ig",
-      "scale": "detail",
-      "context": false,
-      "layers": {
-        "show_lattice": false,
-        "show_domains": true,
-        "show_context_detail": false,
-        "mirror": false
-      },
-      "selection": {
-        "kind": "component",
-        "id": "titin_domains"
-      },
-      "length_policy": {
-        "kind": "preserve"
-      },
-      "claim_ids": [
-        "titin_region_architecture",
-        "sequence_region_partition"
-      ],
-      "source_filter": {
-        "kind": "claims",
-        "claim_ids": [
-          "titin_region_architecture",
-          "sequence_region_partition"
         ]
       }
     },
@@ -344,50 +314,16 @@
       "claim_ids": [
         "regional_extension_story",
         "force_law_parameter_set",
-        "titin_region_architecture"
+        "titin_region_architecture",
+        "sequence_region_partition"
       ],
       "source_filter": {
         "kind": "claims",
         "claim_ids": [
           "regional_extension_story",
           "force_law_parameter_set",
-          "titin_region_architecture"
-        ]
-      }
-    },
-    "inspect_anchors": {
-      "label": "Inspect both anchors",
-      "available_in": [
-        "LEARN",
-        "EXPLORE"
-      ],
-      "camera_preset": "closeup.zdisc",
-      "scale": "context",
-      "context": true,
-      "layers": {
-        "show_lattice": true,
-        "show_domains": false,
-        "show_context_detail": true,
-        "mirror": true
-      },
-      "selection": {
-        "kind": "region",
-        "id": "Z1Z2"
-      },
-      "length_policy": {
-        "kind": "preserve"
-      },
-      "claim_ids": [
-        "zdisc_local_network",
-        "zdisc_telethonin_sandwich",
-        "mband_midpoint_and_crosslinks"
-      ],
-      "source_filter": {
-        "kind": "claims",
-        "claim_ids": [
-          "zdisc_local_network",
-          "zdisc_telethonin_sandwich",
-          "mband_midpoint_and_crosslinks"
+          "titin_region_architecture",
+          "sequence_region_partition"
         ]
       }
     },
@@ -416,14 +352,18 @@
       "claim_ids": [
         "titin_region_architecture",
         "aband_periodicity_relation",
-        "lattice_cross_section"
+        "lattice_cross_section",
+        "n2a_interaction_hub_card",
+        "titin_kinase_card"
       ],
       "source_filter": {
         "kind": "claims",
         "claim_ids": [
           "titin_region_architecture",
           "aband_periodicity_relation",
-          "lattice_cross_section"
+          "lattice_cross_section",
+          "n2a_interaction_hub_card",
+          "titin_kinase_card"
         ]
       }
     },
@@ -433,7 +373,7 @@
         "LEARN",
         "EXPLORE"
       ],
-      "camera_preset": "view.titin_story",
+      "camera_preset": "view.titin_hero",
       "scale": "context",
       "context": true,
       "layers": {

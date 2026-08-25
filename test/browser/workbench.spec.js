@@ -7,6 +7,7 @@ async function boot(page, viewport = { width: 1280, height: 720 }) {
   await page.setViewportSize(viewport);
   await page.goto('/index.html#v=2&depth=explore&step=meet_sarcomere&sl=2200&drawer=inspect&scene=overview&confidence=1');
   await waitForReady(page);
+  await page.locator('.research-inventory').evaluate((node) => { node.open = true; });
 }
 
 async function downloadText(page, selector) {

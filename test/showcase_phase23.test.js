@@ -31,24 +31,28 @@ const controller = new StoryController(presentation, {
 }, scenes);
 
 const chapterIds = [
-  'meet_sarcomere', 'follow_titin', 'molecular_architecture', 'stretch_spring',
-  'inspect_anchors', 'scaffold_thick_filament', 'knowledge_recap',
+  'meet_sarcomere', 'follow_titin', 'stretch_spring',
+  'scaffold_thick_filament', 'knowledge_recap',
 ];
 const requiredFields = [
-  'id', 'legacy_ids', 'title', 'learning_objective', 'lay_summary', 'claim_ids',
+  'id', 'legacy_ids', 'title', 'visual_question', 'learning_objective', 'lay_summary',
+  'narration', 'claim_ids',
   'semantic_scene_id', 'source_filter', 'state_change_announcement',
   'recommended_state', 'next_actions',
 ];
 
-test('SC23: schema v2 carries the ordered seven-outcome curriculum within its reviewed budget', () => {
-  assert.equal(presentation.schema, 'titin-presentation/2');
-  assert.equal(presentation.version, 2);
+test('SC23/SC27A: schema v3 carries the ordered five-beat curriculum within its reviewed budget', () => {
+  assert.equal(presentation.schema, 'titin-presentation/3');
+  assert.equal(presentation.version, 3);
   assert.deepEqual(presentation.guided_chapters.map((chapter) => chapter.id), chapterIds);
   for (const chapter of presentation.guided_chapters) {
     for (const field of requiredFields) assert.ok(Object.hasOwn(chapter, field), `${chapter.id}.${field}`);
     const words = chapter.lay_summary.trim().split(/\s+/).length;
-    assert.ok(words >= 25 && words <= 45, `${chapter.id} has ${words} words`);
-    assert.equal(chapter.narration, chapter.lay_summary);
+    assert.ok(words >= 1 && words <= 30, `${chapter.id} has ${words} words`);
+    assert.equal(chapter.lay_summary.split(/[.!?]+/).filter((part) => part.trim()).length, 1);
+    assert.ok(chapter.visual_question.trim().endsWith('?'));
+    assert.ok(chapter.narration.length > chapter.lay_summary.length);
+    assert.equal(chapter.next_actions.length, 1);
     assert.match(chapter.state_change_announcement, /length/i);
     assert.ok(chapter.claim_ids.length > 0);
   }
@@ -68,7 +72,7 @@ test('SC23: text alone teaches the required concepts and expands first-use vocab
     /telethonin.*not the sole force path.*M-line.*unresolved/is,
     /representative molecule.*copy number.*azimuth.*register.*not encoded/is,
     /passive spring.*thick-filament scaffold.*interaction\/signaling platform/is,
-    /Measured comes from observations.*inferred from interpretation.*modeled from equations.*schematic means illustrative/is,
+    /Measured comes (?:directly )?from observations.*Modeled comes from declared equations.*Inferred comes from interpretation.*Schematic means illustrative/is,
   ]) assert.match(text, pattern);
   for (const expansion of [
     'adenosine triphosphate (ATP)', 'immunoglobulin-like (Ig)',
@@ -123,9 +127,11 @@ test('SC23: legacy links resolve visibly and serialize only canonical chapter ID
   const aliases = presentation.chapter_aliases.aliases;
   assert.deepEqual(aliases, {
     orientation: 'meet_sarcomere',
-    architecture: 'molecular_architecture',
+    architecture: 'stretch_spring',
+    molecular_architecture: 'stretch_spring',
     elastic_regions: 'stretch_spring',
-    anchors: 'inspect_anchors',
+    anchors: 'follow_titin',
+    inspect_anchors: 'follow_titin',
     anchored_scaffold: 'scaffold_thick_filament',
     evidence_audit: 'knowledge_recap',
     provenance_pipeline: 'knowledge_recap',
@@ -139,7 +145,7 @@ test('SC23: legacy links resolve visibly and serialize only canonical chapter ID
     assert.equal(decoded.state.camera_preset, recommended.camera_preset);
     assert.equal(decoded.state.selected_component_or_region,
       recommended.selected_component_or_region);
-    assert.match(decoded.issues.join(' '), /Legacy chapter/);
+    assert.deepEqual(decoded.issues, []);
     assert.match(controller.serialize(decoded.state), new RegExp(`step=${canonical}`));
   }
 });
@@ -153,17 +159,16 @@ test('SC23: chapter navigation preserves length and the sweep starts at the curr
   const elapsed = sweepElapsedAtLength(2317, bounds);
   assert.equal(sweepLength(elapsed, bounds), 2317);
   assert.doesNotMatch(page, /function applyChapter[\s\S]{0,2500}slider\.value\s*=\s*chapter\.recommended_state/);
-  const actions = presentation.guided_chapters.find((chapter) => chapter.id === 'stretch_spring')
-    .next_actions.map((action) => action.label);
-  assert.ok(actions.includes('Set demonstration start'));
-  assert.ok(actions.includes('Restore previous length'));
-  assert.match(page, /demonstrationRestoreLength/);
+  const stretch = presentation.guided_chapters.find((chapter) => chapter.id === 'stretch_spring');
+  assert.deepEqual(stretch.next_actions.map((action) => action.action),
+    ['story.scaffold_thick_filament']);
+  assert.match(page, /id="tourMechanics"/);
 });
 
 test('SC23: a semantic scene outranks its chapter in contextual source resolution', () => {
   const registry = { references: model.spec.references, claimSupport: model.spec.claimSupport };
   const scene = scenes.scenes.stretch_spring;
-  const chapter = presentation.guided_chapters.find((row) => row.id === 'inspect_anchors');
+  const chapter = presentation.guided_chapters.find((row) => row.id === 'follow_titin');
   const resolved = resolveSourceContext(registry, {
     semanticScene: { label: scene.label, claimIds: scene.claim_ids },
     currentChapter: { label: chapter.title, claimIds: chapter.claim_ids },
@@ -219,9 +224,8 @@ test('SC23: generated transcripts, package gates, and handoff record are present
 test('SC23: the final frame returns to the complete titin route and actionable recap', () => {
   const final = presentation.guided_chapters.at(-1);
   assert.equal(final.id, 'knowledge_recap');
-  assert.equal(final.recommended_state.camera_preset, 'view.titin_story');
+  assert.equal(final.recommended_state.camera_preset, 'view.titin_hero');
   assert.equal(final.recommended_state.selected_component_or_region, 'titin');
-  assert.deepEqual(final.next_actions.map((action) => action.label),
-    ['Replay stretch', 'Inspect a region', 'Open evidence']);
+  assert.deepEqual(final.next_actions.map((action) => action.label), ['Replay the Tour']);
   assert.ok(!final.presentation_features.includes('provenance_pipeline'));
 });

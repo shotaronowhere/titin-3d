@@ -96,7 +96,8 @@ test('SC9: the presenter script matches the shipped route and its pacing', () =>
   assert.deepEqual(script.chapters.map((row) => row.id), chapters.map((c) => c.id));
   for (const [index, row] of script.chapters.entries()) {
     // The presenter reads the on-screen copy, so it cannot diverge from it.
-    assert.equal(row.say, chapters[index].lay_summary);
+    assert.equal(row.say, chapters[index].narration);
+    assert.equal(row.lay_summary, chapters[index].lay_summary);
     assert.equal(row.if_asked, chapters[index].expert_expansion);
     assert.match(row.show, /\d+ nm, (context|detail) scale/);
   }

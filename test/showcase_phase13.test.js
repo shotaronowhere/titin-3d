@@ -84,7 +84,8 @@ test('SC13: the drawer is tabbed and sources come last', () => {
 
 test('SC13/18: named drawer entries land on their named destination', () => {
   assert.match(page, /function openEvidence\(trigger, targetTab\)/);
-  assert.match(page, /openEvidence\(\$\('audienceEvidence'\), 'evidence'\)/);
+  assert.match(page, /openEvidence\(\$\('audienceEvidence'\), 'inspect'\)/,
+    'the general Research entry must open at the first tab');
   assert.match(page, /openEvidence\(\$\('stageMeasureLink'\), 'measure'\)/);
   assert.match(page, /openEvidence\(\$\('stageSourcesLink'\), 'sources'\)/);
   const inspect = page.indexOf('id="panelInspect"');

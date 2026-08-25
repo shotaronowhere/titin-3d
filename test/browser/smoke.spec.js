@@ -45,12 +45,15 @@ test('SC20 desktop authority: consumed rulings and a claim source are visibly in
   await setReviewViewport(page, 'desktop');
   await cleanBoot(page, '/index.html');
   await expect(page.locator('#scopeIdentity'))
-    .toHaveText(/Human TTN reference sequence.*Q8WZ42-1.*citation-reviewed SC-20/i);
+    .toHaveText('Human TTN reference sequence · Q8WZ42-1');
+  await expect(page.locator('#scopeBadge'))
+    .toHaveAttribute('title', /Q8WZ42-1.*citation-reviewed SC-20/i);
   await expect(page.locator('#scopeDecisions')).toHaveText(/0 pending.*4 approved.*1 deferred/i);
 
   await page.locator('#audienceEvidence').click();
   await expect(page.locator('#scientificDecisionStatus'))
     .toHaveText(/SD-01 approved.*SD-02 deferred.*SD-03 approved.*SD-04 approved.*SD-05 approved.*AI adjudication.*independent human review not performed/i);
+  await page.locator('#tabEvidence').click();
   await expect(page.locator('#chapterEvidenceTitle')).not.toHaveText('—');
   await expect(page.locator('#chapterSources a').first()).toBeVisible();
 
@@ -60,28 +63,25 @@ test('SC20 desktop authority: consumed rulings and a claim source are visibly in
 });
 
 for (const viewport of Object.keys(VIEWPORTS)) {
-  test(`${viewport}: Evidence, Measure, and Sources open their named tab and return focus`, async ({ page }) => {
+  test(`${viewport}: Research tabs open in order and return focus to the invoker`, async ({ page }) => {
     await setReviewViewport(page, viewport);
     await cleanBoot(page, '/index.html');
-    for (const [entry, tab, fromMore] of [
-      ['audienceEvidence', 'tabEvidence', false],
-      ['stageMeasureLink', 'tabMeasure', true],
-      ['stageSourcesLink', 'tabSources', true],
-    ]) {
-      if (fromMore) await page.locator('#stageMore').click();
-      await page.locator(`#${entry}`).click();
+    await page.locator('#audienceEvidence').click();
+    await expect(page.locator('#tabInspect')).toHaveAttribute('aria-selected', 'true');
+    for (const tab of ['tabMeasure', 'tabEvidence', 'tabSources']) {
+      await page.locator(`#${tab}`).click();
       await expect(page.locator(`#${tab}`)).toHaveAttribute('aria-selected', 'true');
-      await page.locator('#closeEvidence').click();
-      await expect(page.locator(fromMore ? '#stageMore' : `#${entry}`)).toBeFocused();
     }
+    await page.locator('#closeEvidence').click();
+    await expect(page.locator('#audienceEvidence')).toBeFocused();
   });
 }
 
-test('visible source links and every selected-row state use declared readable foregrounds', async ({ page }) => {
+test('visible source links and contextual Stretch states use declared readable foregrounds', async ({ page }) => {
   await setReviewViewport(page, 'desktop');
   await cleanBoot(page, '/index.html');
-  await page.locator('#stageMore').click();
-  await page.locator('#stageSourcesLink').click();
+  await page.locator('#audienceEvidence').click();
+  await page.locator('#tabSources').click();
   const foregrounds = await page.locator('#bibliography a').evaluateAll((nodes) => nodes
     .filter((node) => node.getClientRects().length > 0)
     .map((node) => getComputedStyle(node).color));
@@ -93,20 +93,25 @@ test('visible source links and every selected-row state use declared readable fo
   }
 
   await page.locator('#closeEvidence').click();
-  await page.locator('#audienceGuided').click();
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
-  await page.locator('#chapterNext').click();
-  const pevk = page.locator('.extension-row[data-region="PEVK"]');
-  await expect(pevk).toBeVisible();
-  await pevk.click();
-  for (const state of ['selected', 'hovered', 'focused', 'disabled']) {
-    if (state === 'hovered') await pevk.hover();
-    if (state === 'focused') await pevk.focus();
-    if (state === 'disabled') await pevk.evaluate((button) => { button.disabled = true; });
-    const foreground = await computedStyle(pevk, 'color');
-    const stateBackground = await effectiveBackground(pevk);
-    expect(contrastRatio(foreground, stateBackground), state).toBeGreaterThanOrEqual(4.5);
+  const stretch = page.locator('#stagePlay');
+  await expect(stretch).toBeVisible();
+  await stretch.evaluate((button) => {
+    button.classList.add('on');
+    button.setAttribute('aria-pressed', 'true');
+  });
+  for (const state of ['active', 'hovered', 'focused', 'disabled']) {
+    if (state === 'hovered') await stretch.hover();
+    if (state === 'focused') await stretch.focus();
+    if (state === 'disabled') await stretch.evaluate((button) => { button.disabled = true; });
+    const [foreground, stateBackground] = await stretch.evaluate((node) => {
+      const style = getComputedStyle(node);
+      return [style.color, style.backgroundColor];
+    });
+    expect(contrastRatio(foreground, stateBackground),
+      `${state}: ${foreground} on ${stateBackground}`)
+      .toBeGreaterThanOrEqual(4.5);
   }
 });
 
@@ -114,15 +119,17 @@ test('region and close-up navigation never leave a false wide-view pressed state
   await cleanBoot(page, '/index.html');
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
-  await page.locator('#chapterNext').click();
-  await expect(page.locator('.extension-row[data-region="PEVK"]'))
-    .toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('#views [aria-pressed="true"]')).toHaveCount(0);
-  await page.locator('.extension-row[data-region="prox_Ig"]').click();
+  await expect(page.locator('#chapterTitle')).toHaveText('Build and stretch the spring');
   await expect(page.locator('#views [aria-pressed="true"]')).toHaveCount(0);
 
   await page.locator('#audienceEvidence').click();
-  await page.locator('#tabInspect').click();
+  const inventory = page.locator('.research-inventory');
+  if (!(await inventory.evaluate((node) => node.open))) await inventory.locator('summary').click();
+  await expect(page.locator('#regions [data-region="PEVK"]'))
+    .toHaveAttribute('aria-pressed', 'true');
+  await page.locator('#regions [data-region="prox_Ig"]').click();
+  await expect(page.locator('#views [aria-pressed="true"]')).toHaveCount(0);
+
   await page.locator('#scales button[data-scale="context"]').click();
   await page.locator('#closeups button').first().click();
   await expect(page.locator('#views [aria-pressed="true"]')).toHaveCount(0);

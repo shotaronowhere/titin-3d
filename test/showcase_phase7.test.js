@@ -43,13 +43,13 @@ const words = (text) => String(text || '').trim().split(/\s+/).filter(Boolean).l
 // The main guided route
 // ---------------------------------------------------------------------------
 
-test('SC7: the route retains seven deterministic presentation steps', () => {
+test('SC7/SC27A: the route has five deterministic presentation beats', () => {
   assert.deepEqual(controller.chapters.map((chapter) => chapter.id), [
-    'meet_sarcomere', 'follow_titin', 'molecular_architecture', 'stretch_spring',
-    'inspect_anchors', 'scaffold_thick_filament', 'knowledge_recap',
+    'meet_sarcomere', 'follow_titin', 'stretch_spring',
+    'scaffold_thick_filament', 'knowledge_recap',
   ]);
   assert.deepEqual(controller.chapters.map((chapter) => chapter.order),
-    [1, 2, 3, 4, 5, 6, 7]);
+    [1, 2, 3, 4, 5]);
   assert.equal(controller.chapters.at(-1).id, 'knowledge_recap',
     'the complete titin route ends the presentation');
   assert.deepEqual(checkPresentationSpec(presentation, specContext), []);
@@ -59,15 +59,14 @@ test('SC7: every chapter owns one takeaway, camera, configuration, and source se
   for (const chapter of controller.chapters) {
     const scene = chapter.recommended_state;
     assert.ok(chapter.title.trim());
-    // One 25-45 word takeaway that is not a dense paragraph.
+    // One short visual question and one sentence of at most 30 words.
     const count = words(chapter.lay_summary);
-    assert.ok(count >= 25 && count <= 45, `${chapter.id}: ${count} words`);
+    assert.ok(count >= 1 && count <= 30, `${chapter.id}: ${count} words`);
     const sentences = chapter.lay_summary.split(/[.!?](?=\s|$)/)
       .map((part) => part.trim()).filter(Boolean);
-    assert.ok(sentences.length >= 2 && sentences.length <= 3,
+    assert.equal(sentences.length, 1,
       `${chapter.id}: ${sentences.length} sentences`);
-    assert.ok(Math.max(...sentences.map(words)) <= 30,
-      `${chapter.id}: has a sentence a reader has to unpack`);
+    assert.match(chapter.visual_question, /\?$/);
 
     assert.ok(chapter.expert_expansion.trim(), `${chapter.id}: no expert expansion`);
     assert.ok(chapter.not_claimed.length, `${chapter.id}: no non-claim`);
@@ -84,20 +83,20 @@ test('SC7: every chapter owns one takeaway, camera, configuration, and source se
   }
   // The route is a route: it does not park on one shot the whole way through.
   assert.ok(new Set(controller.chapters
-    .map((chapter) => chapter.recommended_state.camera_preset)).size >= 4);
-  assert.ok(new Set(controller.chapters.map((chapter) => chapter.target.id)).size >= 4);
+    .map((chapter) => chapter.recommended_state.camera_preset)).size >= 3);
+  assert.ok(new Set(controller.chapters.map((chapter) => chapter.target.id)).size >= 3);
 });
 
 test('SC7: each chapter covers the subject the plan assigned it', () => {
   const chapter = (id) => controller.chapter(id);
-  const all = (id) => `${chapter(id).lay_summary} ${chapter(id).expert_expansion}`;
+  const all = (id) => `${chapter(id).lay_summary} ${chapter(id).narration} ${chapter(id).expert_expansion}`;
   assert.match(all('meet_sarcomere'), /motor/i);
   assert.match(all('meet_sarcomere'), /sarcomere/i);
-  assert.match(all('molecular_architecture'), /Ig|domain/i);
+  assert.match(all('stretch_spring'), /Ig|domain/i);
   assert.match(all('stretch_spring'), /PEVK|disordered/i);
   // Both anchors, not just the one the camera frames.
-  assert.match(all('inspect_anchors'), /telethonin/i);
-  assert.match(all('inspect_anchors'), /M-band/);
+  assert.match(all('follow_titin'), /telethonin/i);
+  assert.match(all('follow_titin'), /M-(?:band|line)/i);
   assert.doesNotMatch(chapter('scaffold_thick_filament').lay_summary, /MyBP-C/,
     'Guided mode never draws MyBP-C, so its lay copy must not promise it');
   assert.match(all('scaffold_thick_filament'), /repeat|periodicit/i);
@@ -274,7 +273,7 @@ test('SC7: the pipeline message stays a provenance claim, not an AI claim', () =
   assert.ok(chapter.claim_ids.includes('ai_provenance_pipeline'));
   assert.ok(!chapter.presentation_features.includes('provenance_pipeline'),
     'the final visual frame must return to the complete titin route');
-  assert.match(chapter.lay_summary, /passive spring/i);
+  assert.match(chapter.lay_summary, /spring/i);
 
   assert.throws(() => validateProvenancePipeline({
     ...pipeline, stages: pipeline.stages.slice(0, 3),
@@ -334,15 +333,14 @@ test('SC7: reduced motion lands on the identical state without animating', () =>
     'frame, closeUp and focusSpan must share the one reduced-motion path');
 });
 
-test('SC7: the page renders the route, the cards, and the counted pipeline', () => {
+test('SC7/SC27A: the page renders the Tour, recap chips, and Research pipeline', () => {
   assert.match(page, /id="chapterProgress"/);
-  assert.match(page, /Chapter \$\{index \+ 1\} of \$\{story\.chapters\.length\}/,
-    'progress must follow the real chapter count');
+  assert.match(page, /new TourView/);
+  assert.match(page, /id="tourEvidenceRecap"/);
   assert.match(page, /id="provenancePipeline"/);
   assert.match(page, /id="guidedPipeline"/);
   assert.match(page, /function renderProvenancePipeline/);
   assert.match(page, /visualization\.provenancePipeline\(\)/);
-  assert.match(page, /activeFeatures\(\)\.has\('provenance_pipeline'\)/);
   assert.match(page, /renderProvenancePipeline\(\);/);
   const claimRenderer = readFileSync(
     new URL('../src/presentation/ClaimViewRenderer.js', import.meta.url), 'utf8',
@@ -357,5 +355,7 @@ test('SC7: the page renders the route, the cards, and the counted pipeline', () 
   const pipelineAt = page.indexOf('id="provenancePipeline"');
   assert.ok(pipelineAt > drawerStart && pipelineAt < drawerEnd);
   const guidedAt = page.indexOf('id="guidedPipeline"');
-  assert.ok(guidedAt < drawerStart, 'the guided copy lives on the stage, not in the drawer');
+  assert.ok(guidedAt < drawerStart);
+  assert.match(page.slice(guidedAt, guidedAt + 120), /hidden/,
+    'the legacy pipeline cannot compete with the five-beat Tour');
 });

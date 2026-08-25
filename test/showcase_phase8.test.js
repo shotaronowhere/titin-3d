@@ -209,7 +209,7 @@ test('SC8: every supported state survives a URL round trip', () => {
   }
   // An unsupported state must fail visibly rather than silently becoming another.
   const unknown = controller.parse('#mode=guided&step=orientation&sl=2200&scale=context'
-    + '&camera=view.titin_story&target=titin&evidence=0&future_field=1');
+    + '&camera=view.titin_hero&target=titin&evidence=0&future_field=1');
   assert.match(unknown.issues.join(' '), /Unknown URL field 'future_field'/);
   assert.deepEqual(unknown.state, controller.stateForChapter('orientation'));
 });

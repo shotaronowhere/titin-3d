@@ -68,6 +68,13 @@ export const EVIDENCE_CLASSES = Object.freeze([
   'UNKNOWN',
 ]);
 
+/** Return the canonical SC-27A target(s) for one protected legacy binding. */
+export function canonicalPublicBindings(claimId, binding, migrations) {
+  const defaults = migrations?.default_targets?.[binding];
+  const additions = migrations?.claim_specific_additions?.[claimId]?.[binding] || [];
+  return [...new Set([...additions, ...(defaults || [binding])])];
+}
+
 /** Development/test identity used only when a caller has no generated candidate. */
 export const UNPINNED_IDENTITY = Object.freeze({
   model_fingerprint: 'unpinned-development-model',
@@ -254,6 +261,9 @@ export class Spec {
       const token = raw.replaceAll('~1', '/').replaceAll('~0', '~');
       return Array.isArray(node) ? node[Number(token)] : node?.[token];
     }, value);
+    const bindingMigrations = this.presentation.public_binding_migrations;
+    const canonicalBindings = (claim) => new Set((claim?.public_bindings || [])
+      .flatMap((binding) => canonicalPublicBindings(claim.id, binding, bindingMigrations)));
     for (const [index, object] of (this.showcaseClaims.objects || []).entries()) {
       if (!supportIds.has(object.claim_support_id)) {
         p.push(`showcase claim '${object.id}' has no claim-support record`);
@@ -271,7 +281,7 @@ export class Spec {
         for (const claimId of rowClaimIds) {
           const claim = supportById.get(claimId);
           if (!claim) p.push(`presentation row '${row.id}' has unresolved claim-support ID '${claimId}'`);
-          else if (!(claim.public_bindings || []).includes(expected)) {
+          else if (!canonicalBindings(claim).has(expected)) {
             p.push(`presentation row '${row.id}' claim '${claimId}' lacks exact public binding '${expected}'`);
           }
         }
@@ -282,7 +292,7 @@ export class Spec {
       for (const claimId of scene.claim_ids || []) {
         const claim = supportById.get(claimId);
         if (!claim) p.push(`semantic scene '${sceneId}' has unresolved claim-support ID '${claimId}'`);
-        else if (!(claim.public_bindings || []).includes(expected)) {
+        else if (!canonicalBindings(claim).has(expected)) {
           p.push(`semantic scene '${sceneId}' claim '${claimId}' lacks exact public binding '${expected}'`);
         }
       }
@@ -335,10 +345,14 @@ export class Spec {
         p.push(`claim '${claim.id}' has unsupported approval provenance`);
       }
       for (const binding of claim.public_bindings || []) {
-        const match = binding.match(/^data\/([^#]+)#(\/.*)$/);
-        if (!match) continue;
-        const file = this._raw[match[1]];
-        if (!file || resolvePointer(file, match[2]) === undefined) {
+        const resolved = canonicalPublicBindings(claim.id, binding, bindingMigrations)
+          .some((candidate) => {
+          const match = candidate.match(/^data\/([^#]+)#(\/.*)$/);
+          if (!match) return true;
+          const file = this._raw[match[1]];
+          return Boolean(file && resolvePointer(file, match[2]) !== undefined);
+        });
+        if (!resolved) {
           p.push(`claim '${claim.id}' has unresolved public binding '${binding}'`);
         }
       }

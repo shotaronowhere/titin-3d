@@ -187,8 +187,8 @@ check(all(path and os.path.isfile(os.path.join(os.path.dirname(DATA_DIR), path))
 
 print("== SC-1 presentation registry ==")
 _PR = L["presentation.json"]
-check(_PR.get("schema") == "titin-presentation/2",
-      "presentation record has the SC-23 schema")
+check(_PR.get("schema") == "titin-presentation/3",
+      "presentation record has the SC-27A schema")
 check(L["scenes.json"].get("schema") == "titin-semantic-scenes/1",
       "semantic scene record has the SC-23 schema")
 _pr_ids = [row.get("id") for key in ("audience_modes", "scope_badges", "length_presets",

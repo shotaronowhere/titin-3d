@@ -41,7 +41,8 @@ test('SC19: scope has no tissue overclaim or literal public fallback', () => {
   assert.match(scope.mechanics.display_label, /rat\/rabbit.*SD-04 APPROVED WITH LIMITS.*approximate passive pN per titin/i);
   assert.ok(scope.render.reference_molecule_policy);
   assert.ok(scope.excludedClaims.length);
-  assert.match(page, /\$\('scopeIdentity'\)\.textContent = model\.scientificScope\.publicBadge/);
+  assert.match(page, /\$\('scopeIdentity'\)\.textContent = model\.scientificScope\.sequence\.construct_label/);
+  assert.match(page, /\$\('scopeBadge'\)\.title = model\.scientificScope\.publicBadge/);
   assert.doesNotMatch(page, /Human skeletal N2A titin/i);
   assert.throws(() => scopeLedger({ scientificScope: {
     ...model.spec.scientificScope, public_badge: '',

@@ -183,7 +183,7 @@ test('SC18: every rendered link container and selected extension state declares 
 test('SC18: drawer entry routing and camera state tell the truth', () => {
   assert.match(page, /function openEvidence\(trigger,\s*targetTab\)/);
   for (const [id, tab] of [
-    ['audienceEvidence', 'evidence'],
+    ['audienceEvidence', 'inspect'],
     ['stageMeasureLink', 'measure'],
     ['stageSourcesLink', 'sources'],
   ]) {

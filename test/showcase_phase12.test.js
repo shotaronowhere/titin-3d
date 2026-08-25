@@ -4,17 +4,21 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import { SWEEP, sweepLength } from '../src/presentation/StretchSweep.js';
-import { GUIDED_COMPONENT_COLOR, COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
+import { guidedComponentColors, COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
 import { labelBudget, locatorExtent, bracketLaneVisible } from '../src/presentation/StageLayout.js';
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 
 const model = await TitinModel.create(nodeReader());
+const GUIDED_COMPONENT_COLOR = guidedComponentColors(model.spec.renderStyle);
 const annotations = JSON.parse(
   readFileSync(new URL('../data/annotations.json', import.meta.url), 'utf8'),
 );
 
 const page = readFileSync(new URL('../src/index.template.html', import.meta.url), 'utf8');
+const tourViewSource = readFileSync(
+  new URL('../src/presentation/TourView.js', import.meta.url), 'utf8',
+);
 
 const between = (startId, endMarker) => {
   const start = page.indexOf(`id="${startId}"`);
@@ -24,21 +28,21 @@ const between = (startId, endMarker) => {
   return [start, end];
 };
 
-test('SC12/SC24: compact semantic primary controls live on the stage', () => {
-  const [barStart, barEnd] = between('stageBar', '</div><!-- /stageBar -->');
-  for (const id of [
-    'sl', 'stagePlay', 'stageReset', 'sceneControls', 'sceneDetailsToggle', 'stageMore',
-  ]) {
+test('SC12/SC27A: mechanics are contextual inside the Stretch beat', () => {
+  const [tourStart, tourEnd] = between('guidedCard', '</section>');
+  for (const id of ['sl', 'stagePlay', 'stageForce']) {
     const at = page.indexOf(`id="${id}"`);
-    assert.ok(at > barStart && at < barEnd, `${id} must be inside the stage bar`);
+    assert.ok(at > tourStart && at < tourEnd, `${id} must be inside the Tour card`);
   }
+  assert.match(page, /id="tourMechanics"/);
+  assert.match(tourViewSource, /mechanics\.hidden = chapter\.id !== STRETCH_CHAPTER_ID/);
 });
 
-test('SC12: the stage bar is visible in both audience modes', () => {
-  assert.ok(!/#app\[data-mode="evidence"\] #stageBar \{ display: none/.test(page),
-    'the stage bar must not be hidden in Evidence mode');
-  assert.ok(!/#app\[data-mode="guided"\] #stageBar \{ display: none/.test(page),
-    'the stage bar must not be hidden in Guided mode');
+test('SC12/SC27A: the persistent stage bar is retired', () => {
+  assert.match(page, /<div id="stageBar" hidden>/);
+  for (const id of ['stageReset', 'stageMore']) {
+    assert.match(page, new RegExp(`<button id="${id}" hidden`));
+  }
 });
 
 test('SC12: the readouts stay in the Evidence drawer', () => {
@@ -51,9 +55,10 @@ test('SC12: the readouts stay in the Evidence drawer', () => {
   }
 });
 
-test('SC12: Guided mode carries an on-canvas legend', () => {
-  assert.match(page, /id="stageLegend"/);
-  assert.match(page, /function syncStageLegend/);
+test('SC12/SC27A: Guided identity uses direct labels and the full-sarcomere locator', () => {
+  assert.match(page, /id="stageLegend" hidden/);
+  assert.match(page, /function selectableLabel/);
+  assert.match(page, /data-full-sarcomere-locator/);
 });
 
 test('SC12: every stage control is a real, labelled button or input', () => {
@@ -241,13 +246,15 @@ test('SC12-2c: the locator follows the camera along the model', () => {
   assert.ok(far.to01 <= 1 && near.from01 >= 0);
 });
 
-test('SC12-2c: the page draws the locator only in the lane the brackets vacate', () => {
+test('SC12/SC27A: the Guided full-sarcomere locator remains visible across views', () => {
   assert.match(page, /locatorExtent\(/);
   assert.match(page, /bracketLaneVisible\(/);
-  // One decision, used twice: the two cannot disagree about who holds the lane.
+  // Brackets still yield by resolution; the compact orientation rail remains a
+  // stable Guided reference and shows the active camera span.
   assert.match(page, /const laneHoldsBrackets = [\s\S]{0,200}bracketLaneVisible\(/);
   assert.match(page, /if \(showBands && laneHoldsBrackets\)/);
-  assert.match(page, /if \(!laneHoldsBrackets/);
+  assert.match(page, /state\.audienceMode === AUDIENCE_MODES\.guided && modelSpanNm && cameraSpanNm/);
+  assert.match(page, /data-visible-span/);
 });
 
 test('SC12-2c: the stage declares the locator as presentation geometry', () => {

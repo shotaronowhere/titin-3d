@@ -126,7 +126,9 @@ function presenterScript(model) {
       id: chapter.id,
       title: chapter.title,
       learning_objective: chapter.learning_objective,
-      say: chapter.lay_summary,
+      visual_question: chapter.visual_question,
+      lay_summary: chapter.lay_summary,
+      say: chapter.narration,
       state_change_announcement: chapter.state_change_announcement,
       expected_learner_takeaway: chapter.expected_learner_takeaway,
       semantic_scene_id: chapter.semantic_scene_id,
@@ -137,9 +139,9 @@ function presenterScript(model) {
       if_asked: chapter.expert_expansion,
       not_claimed: [...chapter.not_claimed],
       source_ids: [...chapter.source_ids],
-      words: wordCount(chapter.lay_summary) + wordCount(chapter.state_change_announcement),
+      words: wordCount(chapter.narration) + wordCount(chapter.state_change_announcement),
       estimated_seconds: Number(
-        (((wordCount(chapter.lay_summary) + wordCount(chapter.state_change_announcement))
+        (((wordCount(chapter.narration) + wordCount(chapter.state_change_announcement))
           / pacing.reading_words_per_minute) * 60
           + pacing.chapter_transition_seconds).toFixed(1),
       ),
@@ -481,7 +483,7 @@ export function validateReleasePack(pack) {
     /added length.*incremental compliance.*how readily/is,
     /telethonin.*not the sole force path.*M-line.*unresolved/is,
     /copy number.*azimuth.*register.*not encoded/is,
-    /Measured comes from observations.*schematic means illustrative/is,
+    /Measured comes (?:directly )?from observations.*Modeled comes from declared equations.*Inferred comes from interpretation.*Schematic means illustrative/is,
   ];
   if (transcript?.schema !== 'titin-transcripts/1'
       || textRows.length !== presenterRows.length

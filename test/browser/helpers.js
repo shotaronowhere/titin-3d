@@ -5,6 +5,15 @@ export const VIEWPORTS = Object.freeze({
   responsive: Object.freeze({ width: 375, height: 812 }),
 });
 
+export const SC27A_VIEWPORTS = Object.freeze([
+  Object.freeze({ width: 375, height: 812 }),
+  Object.freeze({ width: 390, height: 844 }),
+  Object.freeze({ width: 768, height: 1024 }),
+  Object.freeze({ width: 1024, height: 768 }),
+  Object.freeze({ width: 1280, height: 720 }),
+  Object.freeze({ width: 1440, height: 900 }),
+]);
+
 export async function setReviewViewport(page, name) {
   const viewport = VIEWPORTS[name];
   if (!viewport) throw new Error(`unknown review viewport '${name}'`);
@@ -22,6 +31,21 @@ export async function coarsePointerMatches(page) {
 
 export async function computedStyle(locator, property) {
   return locator.evaluate((node, name) => getComputedStyle(node).getPropertyValue(name), property);
+}
+
+/** Click the painted centre of a projected label through its coarse hit area. */
+export async function clickProjectedLabel(page, text) {
+  const label = page.locator('#scienceOverlay .identity-label').filter({ hasText: text });
+  await expect(label).toHaveCount(1);
+  // Playwright WebKit reports SVGTextElement.boundingBox() in local glyph
+  // coordinates rather than viewport coordinates. The DOM rectangle is the
+  // actual painted viewport box a reader points at in every engine.
+  const box = await label.evaluate((node) => {
+    const rect = node.getBoundingClientRect();
+    return { x: rect.left, y: rect.top, width: rect.width, height: rect.height };
+  });
+  expect(box, `projected ${text} label must have a painted box`).not.toBeNull();
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 }
 
 export async function effectiveBackground(locator) {
@@ -56,6 +80,59 @@ export async function boxesCollide(first, second) {
   if (!a || !b) return false;
   return a.x < b.x + b.width && a.x + a.width > b.x
     && a.y < b.y + b.height && a.y + a.height > b.y;
+}
+
+/** SC-27A §3.3: count painted chrome, excluding projected science targets. */
+export async function chromeCounts(page) {
+  return page.evaluate(() => {
+    const candidates = [...document.querySelectorAll(
+      'button, input, select, textarea, a[href], [role="button"], [role="tab"]',
+    )];
+    const visible = candidates.filter((node) => {
+      if (node.closest('#scienceOverlay, #objectTooltip, #objectLeader')) return false;
+      const style = getComputedStyle(node);
+      if (style.display === 'none' || style.visibility === 'hidden'
+          || Number(style.opacity) === 0) return false;
+      const rect = node.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0
+        && rect.right > 0 && rect.bottom > 0
+        && rect.left < innerWidth && rect.top < innerHeight;
+    });
+    return {
+      visible: visible.length,
+      tabbable: visible.filter((node) => !node.disabled && node.tabIndex >= 0).length,
+      visibleIds: visible.map((node) => node.id || node.getAttribute('aria-label') || node.textContent.trim()),
+      tabbableIds: visible.filter((node) => !node.disabled && node.tabIndex >= 0)
+        .map((node) => node.id || node.getAttribute('aria-label') || node.textContent.trim()),
+    };
+  });
+}
+
+export async function horizontalOverflow(page) {
+  return page.evaluate(() => ({
+    document: document.documentElement.scrollWidth - innerWidth,
+    body: document.body.scrollWidth - innerWidth,
+    canvas: document.querySelector('#canvas')?.scrollLeft || 0,
+  }));
+}
+
+export async function visibleWordCount(page, selector = 'body') {
+  return page.locator(selector).evaluate((root) => {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const words = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const parent = node.parentElement;
+      if (!parent) continue;
+      const style = getComputedStyle(parent);
+      if (style.display === 'none' || style.visibility === 'hidden'
+          || parent.closest('[hidden], .sr-only')) continue;
+      const rect = parent.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0 || rect.right <= 0 || rect.bottom <= 0
+          || rect.left >= innerWidth || rect.top >= innerHeight) continue;
+      words.push(...(node.textContent.trim().match(/\S+/g) || []));
+    }
+    return words.length;
+  });
 }
 
 /**

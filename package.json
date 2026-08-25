@@ -102,7 +102,11 @@
     "validate:exports": "node scripts/validate_research_exports.mjs",
     "test:sc26": "node --test --test-concurrency=1 test/showcase_phase26.test.js test/showcase_phase21.test.js test/showcase_phase22.test.js test/presentation.test.js test/standalone.test.js",
     "verify:sc26": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc26 && npm run validate:exports && node scripts/neg_control_sc26.mjs && npm run validate:mechanical-parameters && npm run validate:claims",
-    "test:browser:sc26": "playwright test test/browser/workbench.spec.js --project=chromium"
+    "test:browser:sc26": "playwright test test/browser/workbench.spec.js --project=chromium",
+    "test:sc27a": "node --test --test-concurrency=1 test/showcase_phase27a.test.js test/showcase_phase2.test.js test/showcase_phase8.test.js test/showcase_phase12.test.js test/showcase_phase13.test.js test/showcase_phase17.test.js test/showcase_phase18.test.js test/showcase_phase23.test.js test/showcase_phase24.test.js test/showcase_phase25.test.js test/showcase_phase26.test.js test/presentation.test.js test/standalone.test.js",
+    "test:browser:sc27a": "playwright test test/browser/ux-overhaul.spec.js test/browser/controls.spec.js test/browser/learn.spec.js test/browser/stretch.spec.js test/browser/evidence.spec.js test/browser/picking.spec.js test/browser/workbench.spec.js --project=chromium",
+    "verify:sc27a": "npm run check:build && npm run check:pack && npm run typecheck && npm run test:sc27a && npm run test:negative && npm run validate:presentation && npm run validate:render-style && npm run validate:gates && npm run check:hitgrid && npm run check:matrix && npm run verify:identity",
+    "capture:sc27a:ux": "node scripts/capture_sc27a_ux.mjs"
   },
   "license": "CC-BY-4.0",
   "dependencies": {

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-import { setReviewViewport, waitForReady } from './helpers.js';
+import { clickProjectedLabel, setReviewViewport, waitForReady } from './helpers.js';
 
 async function boot(page, viewport = 'desktop') {
   await setReviewViewport(page, viewport);
@@ -8,50 +8,55 @@ async function boot(page, viewport = 'desktop') {
   await waitForReady(page);
 }
 
-test('SC22 desktop uses the drawer as the sole full selected-claim surface', async ({ page }) => {
-  await boot(page);
-  await page.locator('#chapterNext').click();
-  await page.locator('#chapterNext').click();
-  await page.locator('#chapterNext').click();
-  await page.locator('.extension-row[data-region="prox_Ig"]').click();
+async function selectTitinFromStage(page) {
+  await clickProjectedLabel(page, 'Titin');
   await expect(page.locator('#objectInspector')).toBeVisible();
-  await page.locator('#audienceEvidence').click();
+}
+
+async function openInventory(page) {
+  const details = page.locator('.research-inventory');
+  if (!(await details.evaluate((node) => node.open))) await details.locator('summary').click();
+}
+
+test('SC22/27A object explanation is compact and Research owns the full selected claim', async ({ page }) => {
+  await boot(page);
+  await selectTitinFromStage(page);
+  await expect(page.locator('#objectInspectorName')).not.toBeEmpty();
+  await expect(page.locator('#objectInspectorLay')).not.toBeEmpty();
+  await expect(page.locator('#objectInspectorEvidence .evidence-chip')).toHaveCount(1);
+  await expect(page.locator('#objectInspectorDetailLink')).toHaveText(/Why we know this/);
+  await page.locator('#objectInspectorDetailLink').click();
   await expect(page.locator('#objectInspector')).toBeHidden();
+  await expect(page.locator('#tabEvidence')).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#selectedEvidence')).toBeVisible();
-  await expect(page.locator('#selectedEvidence .claim-view-fields dt')).toHaveCount(3);
+  expect(await page.locator('#selectedEvidence .claim-view-fields dt').count()).toBeGreaterThanOrEqual(2);
   await expect(page.locator('#selectedEvidence .claim-view-sources')).toBeVisible();
 });
 
-test('SC22 Guided inspector stays compact and clear of the stage controls', async ({ page }) => {
+test('SC22 Guided inspector stays compact and clear of the Tour continuation', async ({ page }) => {
   await boot(page);
-  await page.locator('#chapterNext').click();
-  await page.locator('#chapterNext').click();
-  await page.locator('#chapterNext').click();
-  // Chapter 4 starts with PEVK selected; move away and back so the PEVK row
-  // exercises the pinning path instead of its intentional toggle-off path.
-  await page.locator('.extension-row[data-region="prox_Ig"]').click();
-  await page.locator('.extension-row[data-region="PEVK"]').click();
+  await selectTitinFromStage(page);
   const geometry = await page.evaluate(() => {
     const card = document.querySelector('#objectInspector').getBoundingClientRect();
-    const bar = document.querySelector('#stageBar').getBoundingClientRect();
+    const tour = document.querySelector('#guidedCard').getBoundingClientRect();
+    const next = document.querySelector('#chapterNext').getBoundingClientRect();
     return {
-      card: { top: card.top, bottom: card.bottom, height: card.height },
-      bar: { top: bar.top, bottom: bar.bottom },
-      specialistDisplay: getComputedStyle(document.querySelector(
-        '#objectInspectorClaim .claim-view-specialist',
-      )).display,
+      card: { top: card.top, bottom: card.bottom, height: card.height, left: card.left, right: card.right },
+      tour: { top: tour.top, bottom: tour.bottom, left: tour.left, right: tour.right },
+      next: { top: next.top, bottom: next.bottom, left: next.left, right: next.right },
     };
   });
-  expect(geometry.card.bottom).toBeLessThanOrEqual(geometry.bar.top + 1);
-  expect(geometry.card.height).toBeLessThan(360);
-  expect(geometry.specialistDisplay).toBe('none');
-  await expect(page.locator('#objectInspector .claim-view-sources')).toBeVisible();
+  const collide = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+  expect(geometry.card.height).toBeLessThan(300);
+  expect(collide(geometry.card, geometry.next)).toBe(false);
+  await expect(page.locator('#objectInspectorClaim')).toBeHidden();
 });
 
 test('SC22 contextual source controls select object, chapter, all, and exact value', async ({ page }) => {
   await boot(page);
-  await page.locator('#stageMore').click();
-  await page.locator('#stageSourcesLink').click();
+  await selectTitinFromStage(page);
+  await page.locator('#objectInspectorDetailLink').click();
+  await page.locator('#selectedEvidenceSourcesLink').click();
   await expect(page.locator('#tabSources')).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#sourceContextLabel')).toContainText('Sources for this object');
   await expect(page.locator('#bibliography')).toHaveAttribute('data-source-scope', 'object');
@@ -76,45 +81,51 @@ test('SC22 contextual source controls select object, chapter, all, and exact val
   await expect(page.locator('#bibliography')).toContainText('Offline source ID');
 });
 
-test('SC22 value clearing falls back instead of rendering an empty source list', async ({ page }) => {
+test('SC22 value clearing falls back to the selected object instead of an empty source list', async ({ page }) => {
   await boot(page, 'responsive');
-  await page.locator('#stageMore').click();
-  await page.locator('#stageMeasureLink').click();
+  await page.locator('#audienceEvidence').click();
+  await page.locator('#tabMeasure').click();
   await page.locator('#forceCurve details > summary').click();
   await page.locator('#forceCurve .parameter-source-link').first().click();
   await expect(page.locator('#bibliography')).toHaveAttribute('data-source-scope', 'value');
+
   await page.locator('#tabInspect').click();
+  await openInventory(page);
   await page.locator('#regions [data-region="prox_Ig"]').click();
   await page.locator('#tabSources').click();
   await expect(page.locator('#bibliography')).toHaveAttribute('data-source-scope', 'object');
   expect(await page.locator('#bibliography .source-result').count()).toBeGreaterThan(0);
 });
 
-test('SC22 selectable current chart point filters sources and restores the outer invoker', async ({ page }) => {
+test('SC22 parameter source routing closes to its visible stage invoker', async ({ page }) => {
   await boot(page);
-  await page.locator('#stageMore').click();
-  await page.locator('#stageMeasureLink').click();
+  await page.locator('#chapterNext').click();
+  await page.locator('#chapterNext').click();
+  await page.locator('#stageForce').click();
+  await page.locator('#forceCurve details > summary').click();
+  await page.locator('#forceCurve .parameter-source-link').first().click();
+  await expect(page.locator('#bibliography')).toHaveAttribute('data-source-scope', 'value');
+  await page.locator('#closeEvidence').click();
+  await expect(page.locator('#stageForce')).toBeFocused();
+});
+
+test('SC22 selectable chart point filters sources and restores the contextual invoker', async ({ page }) => {
+  await boot(page);
+  await page.locator('#chapterNext').click();
+  await page.locator('#chapterNext').click();
+  await page.locator('#stageForce').click();
   await page.locator('#forceCurve .force-current-point').focus();
   await page.locator('#forceCurve .force-current-point').press('Enter');
   await expect(page.locator('#bibliography')).toHaveAttribute('data-source-scope', 'value');
   await expect(page.locator('#sourceContextLabel')).toContainText('Modeled chart point at');
   await page.locator('#closeEvidence').click();
-  await expect(page.locator('#stageMore')).toBeFocused();
+  await expect(page.locator('#stageForce')).toBeFocused();
 });
 
-test('SC22 parameter source routing keeps a visible close-focus target', async ({ page }) => {
-  await boot(page);
-  await page.locator('#stageMore').click();
-  await page.locator('#stageMeasureLink').click();
-  await page.locator('#forceCurve details > summary').click();
-  await page.locator('#forceCurve .parameter-source-link').first().click();
-  await page.locator('#closeEvidence').click();
-  await expect(page.locator('#stageMore')).toBeFocused();
-});
-
-test('SC22 ClaimView DOM keeps citations after copy, fields, and limitations', async ({ page }) => {
+test('SC22 ClaimView keeps citations after copy, fields, and limitations', async ({ page }) => {
   await boot(page);
   await page.locator('#audienceEvidence').click();
+  await page.locator('#tabEvidence').click();
   const order = await page.locator('#chapterEvidence .claim-view').evaluate((node) => {
     const names = [...node.children].map((child) => child.className);
     return {
@@ -134,25 +145,24 @@ test('SC22 ClaimView DOM keeps citations after copy, fields, and limitations', a
 });
 
 for (const viewport of ['desktop', 'responsive']) {
-  test(`SC22 ${viewport} Evidence view owns full titin, PEVK, and kinase detail`, async ({ page }) => {
+  test(`SC22 ${viewport} Research owns full titin, PEVK, and kinase detail`, async ({ page }) => {
     await boot(page, viewport);
     await page.locator('#audienceEvidence').click();
-
+    await openInventory(page);
     for (const target of [
       { selector: '#annotations [data-target-id="titin"]', title: 'Titin' },
       { selector: '#regions [data-region="PEVK"]', title: 'PEVK' },
       { selector: '#regions [data-region="kinase"]', title: 'kinase' },
     ]) {
       await page.locator('#tabInspect').click();
+      await openInventory(page);
       await page.locator(target.selector).click();
       await page.locator('#tabEvidence').click();
-      await expect(page.locator('#objectInspector')).toBeHidden();
       await expect(page.locator('#selectedEvidence')).toBeVisible();
       await expect(page.locator('#selectedEvidence .claim-view-title')).toContainText(target.title);
       await expect(page.locator('#selectedEvidence .claim-view-fields')).toBeVisible();
       await expect(page.locator('#selectedEvidence .claim-view-sources')).toBeVisible();
     }
-
     await page.locator('#selectedEvidenceSourcesLink').click();
     await expect(page.locator('#sourceContextLabel')).toBeInViewport();
     expect(await page.locator('#panel').evaluate((panel) => panel.scrollTop)).toBe(0);

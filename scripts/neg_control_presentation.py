@@ -48,7 +48,7 @@ def card(payload, card_id):
 
 
 rejected("duplicate chapter ID",
-         lambda p: chapter(p, "molecular_architecture").__setitem__("id", "meet_sarcomere"),
+         lambda p: chapter(p, "follow_titin").__setitem__("id", "meet_sarcomere"),
          "duplicate guided chapter")
 rejected("unknown narrative target",
          lambda p: chapter(p, "meet_sarcomere")["target"].__setitem__("id", "not_a_region"),
@@ -66,11 +66,11 @@ rejected("chapter targeting a deferred claim",
 rejected("dense single-sentence chapter summary",
          lambda p: chapter(p, "meet_sarcomere").__setitem__(
              "lay_summary", " ".join(["titin"] * 40)),
-         "sentences; expected 2-3")
-rejected("chapter summary with an overlong sentence",
+         "words; expected at most 30")
+rejected("chapter summary with multiple sentences",
          lambda p: chapter(p, "meet_sarcomere").__setitem__(
-             "lay_summary", " ".join(["titin"] * 34) + ". And a short second one."),
-         "word sentence; expected at most 30")
+             "lay_summary", "One idea. A second idea."),
+         "sentences; expected exactly one")
 rejected("hidden out-of-range state",
          lambda p: p["length_presets"][3].__setitem__("outside_working_range", False),
          "wrong out-of-range flag")
