@@ -53,6 +53,32 @@ CONTRAST_BLOCKS = (
     # canonical #rrggbb values to Three.js integers at runtime.
     ("object_contrast_pairs", "data/render_style.json"),
 )
+OBJECT_CONTRAST_AUTHORITIES = {
+    "actin_vs_myosin_guided": (
+        "presentation.guided_component_colors.thin_filament",
+        "presentation.guided_component_colors.thick_filament",
+    ),
+    "actin_vs_crowns_guided": (
+        "presentation.guided_component_colors.thin_filament",
+        "presentation.guided_component_colors.myosin_head",
+    ),
+    "myosin_vs_stage_guided": (
+        "presentation.guided_component_colors.thick_filament",
+        "presentation.stage_background.lightest",
+    ),
+    "titin_vs_stage_guided": (
+        "presentation.titin_emphasis.identity_color",
+        "presentation.stage_background.lightest",
+    ),
+    "titin_vs_myosin_guided": (
+        "presentation.titin_emphasis.identity_color",
+        "presentation.guided_component_colors.thick_filament",
+    ),
+    "titin_vs_actin_guided": (
+        "presentation.titin_emphasis.identity_color",
+        "presentation.guided_component_colors.thin_filament",
+    ),
+}
 
 
 class GateValidator:
@@ -168,6 +194,17 @@ class GateValidator:
         actual_text_ids = {row.get("id") for row in accessibility.get("contrast_pairs", [])}
         self.check(required_text_ids <= actual_text_ids,
                    f"SC-18 text pairs exist (missing: {sorted(required_text_ids - actual_text_ids)})")
+        render_style = json.loads((ROOT / "data/render_style.json").read_text(encoding="utf-8"))
+        object_ids = {row.get("id") for row in accessibility.get("object_contrast_pairs", [])}
+        self.check(object_ids == set(OBJECT_CONTRAST_AUTHORITIES),
+                   "object_contrast_pairs: IDs match the canonical role map")
+
+        def authority_value(path: str) -> str:
+            value = render_style
+            for key in path.split("."):
+                value = value[key]
+            return str(value).lower()
+
         for block, source in CONTRAST_BLOCKS:
             rows = accessibility.get(block, [])
             self.check(bool(rows), f"{block}: pairs are declared")
@@ -184,10 +221,18 @@ class GateValidator:
                     ratio = self.contrast_ratio(*colours)
                     self.check(ratio >= floor,
                                f"{rid}: {ratio:.2f}:1 meets {floor}:1")
-                    for colour in colours:
-                        digits = colour[1:]
-                        self.check(colour in source_text or f"0x{digits}" in source_text,
-                                   f"{rid}: {colour} ships in {source}")
+                    if block == "object_contrast_pairs":
+                        authority = OBJECT_CONTRAST_AUTHORITIES.get(row.get("id"))
+                        if authority:
+                            expected = [authority_value(path) for path in authority]
+                            self.check(colours == expected,
+                                       f"{rid}: colours match canonical roles "
+                                       f"{authority[0]} / {authority[1]}")
+                    else:
+                        for colour in colours:
+                            digits = colour[1:]
+                            self.check(colour in source_text or f"0x{digits}" in source_text,
+                                       f"{rid}: {colour} ships in {source}")
 
     def decisions_and_protocols(self) -> None:
         print("\n== Scientific and human protocol IDs ==")

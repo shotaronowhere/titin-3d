@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs';
 import { canonicalPublicBindings } from '../src/model/SpecLoader.js';
 import {
   canonicalEvidenceClass,
+  createEvidenceChip,
   evidenceLanguage,
 } from '../src/presentation/EvidenceChip.js';
 import { tourControlBudget } from '../src/presentation/TourView.js';
@@ -99,6 +100,15 @@ test('SC27A: one presentation mapping covers every canonical evidence class', ()
   assert.deepEqual(presentation.evidence_language.guided_recap_classes, [
     'MEASURED', 'MODELED', 'STRONGLY INFERRED', 'SCHEMATIC', 'UNKNOWN',
   ]);
+  assert.equal(evidenceLanguage(presentation, 'STRONGLY INFERRED').ambiguous, true);
+  assert.equal(evidenceLanguage(presentation, 'INFERRED').ambiguous, true);
+  assert.equal(evidenceLanguage(presentation, 'MEASURED').ambiguous, false);
+  const ownerDocument = {
+    createElement: () => ({ className: '', dataset: {}, title: '', textContent: '' }),
+  };
+  assert.equal(createEvidenceChip(ownerDocument, evidenceLanguage(presentation, 'INFERRED'), {
+    research: true,
+  }).textContent, 'Inferred · scientific class: inferred');
 });
 
 test('SC27A: the five-beat merge preserves every v2 scientific non-claim', () => {

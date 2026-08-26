@@ -84,6 +84,14 @@ async function assertSemanticCameraContract(page, viewport, beat) {
       .map((match) => Number(match[0]));
     const extentNode = document.querySelector('#scienceOverlay .locator-extent');
     const extent = relativeBox(extentNode);
+    const transformedX = (node, x, y) => {
+      const point = overlayNode.createSVGPoint();
+      point.x = x; point.y = y;
+      return point.matrixTransform(node.getScreenCTM()).x - canvas.left;
+    };
+    const extentX = Number(extentNode.getAttribute('x'));
+    const extentY = Number(extentNode.getAttribute('y'));
+    const extentWidth = Number(extentNode.getAttribute('width'));
     const locatorLabels = [...document.querySelectorAll('#scienceOverlay .science-label')]
       .filter((node) => {
         if (!rule) return false;
@@ -141,10 +149,10 @@ async function assertSemanticCameraContract(page, viewport, beat) {
       rule,
       extent: extent && { ...extent, span: extentNode.dataset.visibleSpan },
       locatorMath: {
-        ruleLeft: ruleCoordinates[0],
-        ruleWidth: ruleCoordinates[2] - ruleCoordinates[0],
-        extentLeft: Number(extentNode.getAttribute('x')),
-        extentWidth: Number(extentNode.getAttribute('width')),
+        ruleLeft: transformedX(ruleNode, ruleCoordinates[0], ruleCoordinates[1]),
+        ruleRight: transformedX(ruleNode, ruleCoordinates[2], ruleCoordinates[1]),
+        extentLeft: transformedX(extentNode, extentX, extentY),
+        extentRight: transformedX(extentNode, extentX + extentWidth, extentY),
       },
       semanticLabels,
       termini,
@@ -184,10 +192,11 @@ async function assertSemanticCameraContract(page, viewport, beat) {
   expect(from).toBeGreaterThanOrEqual(0);
   expect(to).toBeLessThanOrEqual(1);
   expect(to).toBeGreaterThanOrEqual(from);
+  const renderedRuleWidth = audit.locatorMath.ruleRight - audit.locatorMath.ruleLeft;
   expect(audit.locatorMath.extentLeft)
-    .toBeCloseTo(audit.locatorMath.ruleLeft + audit.locatorMath.ruleWidth * from * 0.5, 5);
-  expect(audit.locatorMath.extentWidth)
-    .toBeCloseTo(Math.max(2, audit.locatorMath.ruleWidth * (to - from) * 0.5), 5);
+    .toBeCloseTo(audit.locatorMath.ruleLeft + renderedRuleWidth * from * 0.5, 5);
+  expect(audit.locatorMath.extentRight - audit.locatorMath.extentLeft)
+    .toBeCloseTo(Math.max(2, renderedRuleWidth * (to - from) * 0.5), 5);
 }
 
 for (const viewport of SC27A_VIEWPORTS) {
@@ -231,29 +240,35 @@ for (const viewport of SC27A_VIEWPORTS) {
       await assertInViewport(label, viewport);
     }
 
-    // Beat 3 is the densest Tour state and must obey the same responsive
-    // contract rather than inheriting credit from the sparse cold open.
-    await page.locator('#chapterNext').click();
-    await page.locator('#chapterNext').click();
-    await expect(page.locator('#chapterProgress')).toHaveText('Beat 3 of 5');
-    await expect(page.locator('#tourMechanics')).toBeVisible();
-    await assertInViewport(page.locator('#guidedCard'), viewport);
-    await assertInViewport(page.locator('#chapterNext'), viewport);
-    await assertCentreUnobscured(page.locator('#chapterNext'));
-    await assertContainedBy(page.locator('#stageForce'), page.locator('#guidedCard'));
-    expect(await page.locator('#guidedCardBody')
-      .evaluate((node) => node.scrollHeight <= node.clientHeight + 1)).toBe(true);
-    expect(await horizontalOverflow(page)).toEqual({ document: 0, body: 0, canvas: 0 });
-
-    const focusTargets = await page.locator(
-      'button:visible, input:visible, select:visible, textarea:visible, a[href]:visible',
-    ).all();
-    for (const target of focusTargets) {
-      if (await target.isDisabled()) continue;
-      await target.focus();
-      await assertInViewport(target, viewport);
-      expect((await horizontalOverflow(page)).document).toBeLessThanOrEqual(1);
-      expect((await horizontalOverflow(page)).canvas).toBe(0);
+    // Every beat must obey the responsive shell contract. Beat 3 is densest,
+    // beat 4 has the tallest card, and beat 5 is the closing frame whose
+    // evidence recap previously obscured a terminus label at 1024x768.
+    for (let beat = 2; beat <= 5; beat += 1) {
+      await page.locator('#chapterNext').click();
+      await expect(page.locator('#chapterProgress')).toHaveText(`Beat ${beat} of 5`);
+      await assertInViewport(page.locator('#guidedCard'), viewport);
+      await assertInViewport(page.locator('#chapterNext'), viewport);
+      await assertCentreUnobscured(page.locator('#chapterNext'));
+      expect(await boxesCollide(page.locator('#stageHeader'), page.locator('#guidedCard'))).toBe(false);
+      expect(await page.locator('#guidedCardBody')
+        .evaluate((node) => node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+      expect(await horizontalOverflow(page)).toEqual({ document: 0, body: 0, canvas: 0 });
+      if (beat === 3) {
+        await expect(page.locator('#tourMechanics')).toBeVisible();
+        await assertContainedBy(page.locator('#stageForce'), page.locator('#guidedCard'));
+      } else {
+        await expect(page.locator('#tourMechanics')).toBeHidden();
+      }
+      const focusTargets = await page.locator(
+        'button:visible, input:visible, select:visible, textarea:visible, a[href]:visible',
+      ).all();
+      for (const target of focusTargets) {
+        if (await target.isDisabled()) continue;
+        await target.focus();
+        await assertInViewport(target, viewport);
+        expect((await horizontalOverflow(page)).document).toBeLessThanOrEqual(1);
+        expect((await horizontalOverflow(page)).canvas).toBe(0);
+      }
     }
   });
 }

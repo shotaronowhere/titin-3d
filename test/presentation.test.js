@@ -119,7 +119,7 @@ test('SC1: public facade reports audience/story/selection without adding activat
 test('SC1/SC27A: Tour owns contextual mechanics and Research owns the raw inspector', () => {
   assert.match(page, /id="app" data-mode="guided"/);
   assert.match(page, /id="scopeBadge"[\s\S]*?id="scopeIdentity"[\s\S]*?id="scopeState"/);
-  assert.match(page, /id="guidedCard"[\s\S]*?id="chapterSummary"[\s\S]*?id="chapterEvidenceLink"/);
+  assert.match(page, /id="guidedCard"[\s\S]*?id="chapterSummary"[\s\S]*?id="chapterNext"/);
   const guidedEnd = page.indexOf('</section>', page.indexOf('id="guidedCard"'));
   const rawEvidence = page.indexOf('id="evidence"');
   assert.ok(rawEvidence > guidedEnd, 'raw evidence inventory must not be inside the Guided card');

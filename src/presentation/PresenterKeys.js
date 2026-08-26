@@ -31,7 +31,7 @@ export const PRESENTER_KEY_BY_ACTION = Object.freeze({
  * Evidence, and the sweep, which IS the demonstration.
  */
 export const STAGE_KEYS = Object.freeze([
-  Object.freeze({ key: 'g', action: 'mode.guided', label: 'Return to Guided' }),
+  Object.freeze({ key: 'g', action: 'mode.guided', label: 'Return to the Tour' }),
   Object.freeze({ key: ' ', action: 'sweep.toggle', label: 'Run the stretch sweep' }),
 ]);
 
@@ -81,7 +81,7 @@ export function unboundShortcutIds(presentation) {
 export function presenterKeyGuide(presentation) {
   const chapters = (presentation.guided_chapters || []).length;
   const rows = chapters
-    ? [{ keys: `1–${chapters}`, action: 'story.step', label: 'Jump to a chapter by number' }]
+    ? [{ keys: `1–${chapters}`, action: 'story.step', label: 'Jump to a beat by number' }]
     : [];
   for (const shortcut of presentation.presenter_shortcuts || []) {
     const key = PRESENTER_KEY_BY_ACTION[shortcut.action];

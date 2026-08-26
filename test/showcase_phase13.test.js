@@ -64,9 +64,9 @@ test('SC13: the chapter card names the selection instead of repeating it', () =>
     'the duplicated lay paragraph in the guided card must go');
 });
 
-test('SC13: the card can step between structures with the pointer', () => {
-  assert.match(page, /<button id="objectInspectorPrevious"/);
-  assert.match(page, /<button id="objectInspectorNext"/);
+test('SC13/SC27A: the compact card has no duplicate object carousel', () => {
+  assert.doesNotMatch(page, /id="objectInspectorPrevious"/);
+  assert.doesNotMatch(page, /id="objectInspectorNext"/);
 });
 
 test('SC13: the drawer is tabbed and sources come last', () => {
@@ -86,8 +86,8 @@ test('SC13/18: named drawer entries land on their named destination', () => {
   assert.match(page, /function openEvidence\(trigger, targetTab\)/);
   assert.match(page, /openEvidence\(\$\('audienceEvidence'\), 'inspect'\)/,
     'the general Research entry must open at the first tab');
-  assert.match(page, /openEvidence\(\$\('stageMeasureLink'\), 'measure'\)/);
-  assert.match(page, /openEvidence\(\$\('stageSourcesLink'\), 'sources'\)/);
+  assert.match(page, /openEvidence\(\$\('stageForce'\), 'measure'\)/);
+  assert.match(page, /openEvidence\(\$\('objectInspectorDetailLink'\), 'evidence'\)/);
   const inspect = page.indexOf('id="panelInspect"');
   const evidence = page.indexOf('id="panelEvidence"');
   assert.ok(inspect < evidence);

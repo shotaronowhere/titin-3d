@@ -40,9 +40,8 @@ test('SC12/SC27A: mechanics are contextual inside the Stretch beat', () => {
 
 test('SC12/SC27A: the persistent stage bar is retired', () => {
   assert.match(page, /<div id="stageBar" hidden>/);
-  for (const id of ['stageReset', 'stageMore']) {
-    assert.match(page, new RegExp(`<button id="${id}" hidden`));
-  }
+  assert.match(page, /<button id="stageReset" hidden/);
+  assert.doesNotMatch(page, /id="stageMore"/);
 });
 
 test('SC12: the readouts stay in the Evidence drawer', () => {

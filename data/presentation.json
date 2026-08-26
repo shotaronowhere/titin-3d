@@ -59,7 +59,7 @@
       },
       "INFERRED": {
         "label": "Inferred",
-        "definition": "Cited interpretation; not directly measured here."
+        "definition": "Interpreted from cited evidence rather than directly measured here."
       },
       "SCHEMATIC": {
         "label": "Schematic",
@@ -791,17 +791,17 @@
   "presenter_shortcuts": [
     {
       "id": "restart_guided",
-      "label": "Restart guided route",
+      "label": "Restart Tour",
       "action": "story.meet_sarcomere"
     },
     {
       "id": "show_extension",
-      "label": "Show regional extension",
+      "label": "Show stretch",
       "action": "story.stretch_spring"
     },
     {
       "id": "open_evidence",
-      "label": "Open evidence",
+      "label": "Open Research",
       "action": "mode.evidence"
     }
   ],

@@ -32,18 +32,18 @@ export const SLIDE = Object.freeze({ width: 1920, height: 1080 });
 const PREFLIGHT_STEPS = Object.freeze([
   ['open_both', 'Open the deployed GitHub Pages URL and the offline standalone index.html.',
     'Both load without a network request after first paint.'],
-  ['same_build', 'Compare the model, application, and build-input identities shown in the Evidence drawer of each.',
+  ['same_build', 'Compare the model, application, and build-input identities shown in Research → Sources & build on each.',
     'All three identities are identical.'],
-  ['guided_route', 'Run the guided route once, end to end, on the actual display.',
-    'Every chapter reaches its camera and reads legibly from the back of the room.'],
+  ['guided_route', 'Run the Tour once, end to end, on the actual display.',
+    'Every beat reaches its camera and reads legibly from the back of the room.'],
   ['rendering', 'Check typography, colour, animation, WebGL, and pointer behaviour.',
     'No clipping, no missing geometry, no dropped frames on orbit.'],
-  ['reset', 'Use Restart and the presenter keys listed at the head of the presenter script.',
-    'Restart returns to chapter one; each key lands on its own deterministic state.'],
+  ['reset', 'Use final-beat Replay and the presenter keys listed at the head of the presenter script.',
+    'Replay returns to beat one; each key lands on its own deterministic state.'],
   ['fallback', 'Confirm the static fallback deck is on the presenting machine.',
     'release/fallback/*.svg open without a browser engine or a network.'],
   ['no_live_citations', 'Do not plan to open external citations during the narrative.',
-    'Every source is reachable afterwards from the Evidence drawer.'],
+    'Every source is reachable afterwards from Research → Sources & build.'],
 ]);
 
 function wordCount(text) {
@@ -192,7 +192,7 @@ function transcripts(model) {
     screen_reader: rows.map((row) => ({
       ...row,
       spoken_sequence: [
-        `Chapter ${row.order} of ${rows.length}: ${row.title}.`,
+        `Beat ${row.order} of ${rows.length}: ${row.title}.`,
         row.state_change_announcement,
         row.narration,
         `Takeaway: ${row.expected_learner_takeaway}`,
@@ -309,8 +309,7 @@ function fallbackSlides(model, referenceLengthNm, comparisonLengthNm) {
       subtitle: 'The full sheet ships as release/LIMITATIONS.md',
       lines: model.spec.showcaseClaims.global_negative_controls
         .map((entry) => `· ${entry.replace(/^Reject any /, 'No ')}`),
-      footnote: 'Every rendered object also carries its own non-claims in the '
-        + 'Evidence drawer.',
+      footnote: 'Every rendered object also carries its own non-claims in Research.',
     },
   ];
 }

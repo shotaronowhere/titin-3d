@@ -226,8 +226,8 @@ window.__titinBoot = { ready: false, problems: [] };
     letter-spacing: .05em; }
   .stage-row-scenes { flex-wrap: nowrap; min-width: 0; }
   #sceneControls { flex-wrap: nowrap; margin: 0; min-width: 0; }
-  #sceneControls button, #moreSceneControls button { white-space: nowrap; }
-  #sceneControls button[aria-pressed="true"], #moreSceneControls button[aria-pressed="true"] {
+  #sceneControls button { white-space: nowrap; }
+  #sceneControls button[aria-pressed="true"] {
     background: var(--accent); color: #0e1116; border-color: var(--accent);
   }
   #sceneTruth { color: #d9b869; font-size: 10px; white-space: nowrap; }
@@ -237,10 +237,9 @@ window.__titinBoot = { ready: false, problems: [] };
     border: 1px solid var(--edge); border-radius: 5px; }
   #sceneDetails legend { position: absolute; width: 1px; height: 1px; overflow: hidden;
     clip: rect(0, 0, 0, 0); }
-  #sceneDetailsToggle { display: none; }
   #sceneRingControls button { min-width: 27px; padding-inline: 7px; }
   #sceneRingControls button[aria-pressed="true"] { background: #4fb39f; color: #071713; }
-  #sceneMyosinToggle[aria-pressed="true"], #moreMyosinToggle[aria-pressed="true"] {
+  #sceneMyosinToggle[aria-pressed="true"] {
     background: rgb(79 179 159 / 25%); border-color: #4fb39f; color: #d9fff6;
   }
   #stretchHint { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%);
@@ -452,7 +451,6 @@ window.__titinBoot = { ready: false, problems: [] };
     border-top: 2px solid var(--titin); }
   #app[data-mode="evidence"] #guidedCard { display: none; }
   .story-surface-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  #guidedCardToggle { flex: none; }
   .chapter-meta { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .1em;
     text-transform: uppercase; }
   #chapterTitle { font-size: 19px; line-height: 1.2; margin: 4px 0 7px; }
@@ -460,7 +458,6 @@ window.__titinBoot = { ready: false, problems: [] };
   #chapterStateAnnouncement { margin: 0 0 8px; color: #aeb9c7; font-size: 10px; line-height: 1.45; }
   .chapter-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   #chapterNextActions { display: flex; gap: 5px; flex-wrap: wrap; margin: 0 0 8px; }
-  #chapterEvidenceLink { margin-left: auto; border-color: rgb(217 79 79 / 75%); }
   .status-pill { display: inline-block; border: 1px solid #775b29; border-radius: 999px;
     color: #e8c16d; padding: 1px 6px; font-size: 9px; font-weight: 700; letter-spacing: .05em; }
   .preset-outside { border-color: #8b6530; color: #e7c27c; }
@@ -636,15 +633,6 @@ window.__titinBoot = { ready: false, problems: [] };
   #app[data-text-scale="large"] .object-detail,
   #app[data-text-scale="large"] .object-sources { font-size: 12px; }
   #app[data-text-scale="large"] #chapterSummary { font-size: 16px; }
-  #moreBackdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: end center;
-    background: rgb(0 0 0 / 56%); }
-  #moreBackdrop[hidden] { display: none; }
-  #moreSheet { width: min(720px, calc(100% - 24px)); max-height: min(78vh, 720px); overflow-y: auto;
-    overscroll-behavior: contain; padding: 16px 18px 20px; border: 1px solid var(--edge);
-    border-radius: 14px 14px 0 0; background: var(--panel); box-shadow: 0 -18px 54px rgb(0 0 0 / 55%); }
-  .more-head { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
-  .more-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
-  #moreSceneDetails { border-top: 1px solid var(--edge); margin-top: 14px; padding-top: 1px; }
   /* Tablet touch targets. The drawer's density is deliberate on a desktop, where a
      mouse can hit a 28 px control comfortably; a finger cannot. Keyed on the
      POINTER rather than on width so a small laptop keeps its compact controls and
@@ -704,9 +692,6 @@ window.__titinBoot = { ready: false, problems: [] };
     #sceneControls button:nth-child(n+3) { display: none; }
     #sceneTruth { grid-column: 3; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     #sceneDetails { display: none !important; }
-    #sceneDetailsToggle { display: inline-block; grid-column: 4; justify-self: end; }
-    #sceneDetailsToggle[hidden] { display: none; }
-    #stageMore { grid-column: 5; justify-self: end; }
     /* One line, not a 90 px block of its own above the stage. */
     #scopeBadge { display: flex; align-items: baseline; gap: 8px; padding: 5px 9px; }
     #scopeBadge .scope-kicker { display: none; }
@@ -721,8 +706,6 @@ window.__titinBoot = { ready: false, problems: [] };
       max-height: 24vh; overflow-y: auto; overscroll-behavior: contain;
       padding: 9px 12px 10px; }
     #chapterTitle { font-size: 16px; margin: 2px 0 6px; }
-    .more-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    #moreSheet { width: 100%; max-height: 78vh; border-left: 0; border-right: 0; }
     /* Two rows of three: six columns on a phone would be six words wide. The
        stage keeps the flow and its counted figures; the sentence and the record
        paths for each stage stay one tap away, in Sources & build. */
@@ -833,7 +816,6 @@ window.__titinBoot = { ready: false, problems: [] };
     border-radius: 7px; padding: 8px 10px; }
   .research-inventory > summary { min-height: 36px; display: flex; align-items: center;
     cursor: pointer; color: #d7e4f4; font-weight: 700; }
-  #moreBackdrop { display: none !important; }
   @media (pointer: coarse) {
     button { min-height: 44px; }
     input[type="range"] { min-height: 44px; }
@@ -920,8 +902,6 @@ window.__titinBoot = { ready: false, problems: [] };
       <div class="object-inspector-head">
         <h2 id="objectInspectorName" class="object-inspector-title"></h2>
         <div class="object-inspector-nav">
-          <button id="objectInspectorPrevious" hidden aria-label="Previous structure">&#8249;</button>
-          <button id="objectInspectorNext" hidden aria-label="Next structure">&#8250;</button>
           <button id="objectInspectorClose" aria-label="Close pinned structure explanation">Close</button>
         </div>
       </div>
@@ -960,7 +940,6 @@ window.__titinBoot = { ready: false, problems: [] };
             <span id="scopeDecisions" hidden></span>
           </button>
           <button id="audienceEvidence" aria-pressed="false">Research</button>
-          <button id="storyReopen" hidden aria-expanded="true" aria-controls="guidedCard">Tour</button>
         </div>
       </div>
       <div id="urlNotice" role="status" hidden></div>
@@ -976,7 +955,6 @@ window.__titinBoot = { ready: false, problems: [] };
             <div class="chapter-meta"><span id="chapterProgress">Beat —</span></div>
             <div id="tourProgressMarkers" class="tour-progress-markers" aria-hidden="true"></div>
           </div>
-          <button id="guidedCardToggle" hidden aria-expanded="true" aria-controls="guidedCardBody">Hide Tour</button>
         </div>
         <p id="chapterQuestion" class="chapter-question"></p>
         <h1 id="chapterTitle" tabindex="-1">Loading guided route…</h1>
@@ -1004,9 +982,7 @@ window.__titinBoot = { ready: false, problems: [] };
         <div class="chapter-actions">
           <button id="chapterPrevious">Previous</button>
           <button id="chapterNext">Next</button>
-          <button id="chapterRestart" hidden>Restart</button>
           <button id="chapterRestoreView" hidden disabled>Restore previous view</button>
-          <button id="chapterEvidenceLink" hidden>Evidence</button>
         </div>
         <div id="extensionStory" hidden>
           <div class="extension-head"><span>Regional end-to-end span at this length</span><span id="extensionTotal">—</span></div>
@@ -1020,14 +996,13 @@ window.__titinBoot = { ready: false, problems: [] };
       <div id="stageBar" hidden>
         <button id="stageReset" hidden disabled aria-label="Reset the stretch demonstration">Reset</button>
         <button id="stageForceInfo" hidden aria-label="Information about approximate modeled force">Force info</button>
-        <button id="stageMore" hidden aria-haspopup="dialog" aria-expanded="false">More</button>
         <div id="stageLegend" hidden></div>
         <div id="stretchHint" role="status" hidden>Watch the I-band bracket</div>
       </div>
     <div id="interactionHelp" class="sr-only">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
       id="shortcutHelp">1–5 beats · space stretch · x spring · e Research · g Tour · r restart</span></div>
   </div>
-  <aside id="panel" aria-label="Evidence drawer: visualization controls and scientific readouts" aria-hidden="true">
+  <aside id="panel" aria-label="Research: visualization controls and scientific readouts" aria-hidden="true">
     <div class="drawer-head" id="drawerHead">
       <div class="drawer-head-row">
         <div>
@@ -1050,7 +1025,7 @@ window.__titinBoot = { ready: false, problems: [] };
          control below the fold and the citations near the top. Four tabs put
          the controls first, the numbers second, the argument third and the
          bibliography last — which is the order a reader asks for them in. -->
-    <div id="drawerTabs" role="tablist" aria-label="Evidence drawer sections">
+    <div id="drawerTabs" role="tablist" aria-label="Research sections">
       <button id="tabInspect" role="tab" aria-selected="true" aria-controls="panelInspect">Inspect</button>
       <button id="tabMeasure" role="tab" aria-selected="false" aria-controls="panelMeasure">Measure</button>
       <button id="tabEvidence" role="tab" aria-selected="false" aria-controls="panelEvidence">Evidence</button>
@@ -1087,7 +1062,6 @@ window.__titinBoot = { ready: false, problems: [] };
           </fieldset>
           <button id="sceneMyosinToggle" aria-pressed="false">Myosin heads + actin twist</button>
         </div>
-        <button id="sceneDetailsToggle" hidden>Scene details</button>
       </div>
       <div class="row" id="views" role="group" aria-label="Advanced camera orientations"></div>
 
@@ -1250,32 +1224,6 @@ window.__titinBoot = { ready: false, problems: [] };
       <div class="sub" id="copyViewStatus" aria-live="polite"></div>
     </div>
   </aside>
-  <div id="moreBackdrop" hidden>
-    <section id="moreSheet" role="dialog" aria-modal="true" aria-labelledby="moreTitle" tabindex="-1">
-      <div class="more-head">
-        <div>
-          <h1 id="moreTitle">More scenes and tools</h1>
-          <div class="sub">Choose a biological view or open deeper inspection.</div>
-        </div>
-        <button id="closeMore">Close</button>
-      </div>
-      <h2>All scenes</h2>
-      <div id="moreSceneControls" class="more-grid" role="group" aria-label="All semantic scenes"></div>
-      <div id="moreSceneDetails" hidden>
-        <h2>Scene details</h2>
-        <div id="moreRingControls" class="row" hidden aria-label="Lattice ring count"></div>
-        <button id="moreMyosinToggle" aria-pressed="false">Myosin heads + actin twist</button>
-      </div>
-      <h2>Explore</h2>
-      <div class="more-grid">
-        <button id="moreInspect">Inspect structures</button>
-        <button id="stageMeasureLink">Measure</button>
-        <button id="stageSourcesLink">Sources</button>
-        <button id="moreHelp">Keyboard help</button>
-      </div>
-      <div id="moreHelpText" class="note" hidden>1–5: Tour beats · space: stretch or pause · X: Spring · E: Research · G: Tour · R: restart Tour</div>
-    </section>
-  </div>
 </div>
 
 <script type="module">
@@ -1533,7 +1481,6 @@ function syncAudienceMode() {
   $('audienceGuided').setAttribute('aria-pressed', String(!evidence));
   $('audienceEvidence').classList.toggle('on', evidence);
   $('audienceEvidence').setAttribute('aria-pressed', String(evidence));
-  $('storyReopen').setAttribute('aria-expanded', String(storyVisible && !evidence));
   const mobileResearch = drawerOpen && window.matchMedia('(max-width: 767px), (orientation: portrait) and (max-width: 1024px)').matches;
   $('canvas').inert = mobileResearch;
   requestAnimationFrame(() => {
@@ -1616,17 +1563,6 @@ $('scopeBadge').onclick = () => {
   requestAnimationFrame(() => $('scopeDetails').focus({ preventScroll: false }));
 };
 $('closeEvidence').onclick = closeEvidence;
-$('chapterEvidenceLink').onclick = () => openEvidence($('chapterEvidenceLink'), 'evidence');
-$('stageMeasureLink').onclick = () => {
-  closeMore();
-  openEvidence($('stageMeasureLink'), 'measure');
-  evidenceReturnFocus = $('stageMore');
-};
-$('stageSourcesLink').onclick = () => {
-  closeMore();
-  openEvidence($('stageSourcesLink'), 'sources');
-  evidenceReturnFocus = $('stageMore');
-};
 $('stageForceInfo').onclick = () => openEvidence($('stageForceInfo'), 'measure');
 $('stageForce').onclick = () => openEvidence($('stageForce'), 'measure');
 
@@ -1780,11 +1716,6 @@ for (const id of unboundShortcutIds(presentation)) {
 }
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && !$('moreBackdrop').hidden) {
-    event.preventDefault();
-    closeMore();
-    return;
-  }
   if (event.key === 'Escape' && pinnedPick) {
     event.preventDefault();
     clearPinnedSelection();
@@ -1848,24 +1779,14 @@ function sceneButton(sceneId, destination) {
 }
 for (const sceneId of sceneController.order) {
   sceneButton(sceneId, $('sceneControls'));
-  sceneButton(sceneId, $('moreSceneControls'));
-}
-for (const ring of [1, 2, 3]) {
-  const button = document.createElement('button');
-  button.textContent = `${ring} ring${ring === 1 ? '' : 's'}`;
-  button.dataset.sceneRings = String(ring);
-  button.onclick = () => setSceneRings(ring);
-  $('moreRingControls').append(button);
 }
 
 function syncSceneControls() {
   const label = state.sceneId ? sceneController.scene(state.sceneId)?.label : 'Custom';
   $('sceneTruth').textContent = label || 'Custom';
-  for (const container of [$('sceneControls'), $('moreSceneControls')]) {
-    for (const button of container.children) {
-      const active = button.dataset.scene === state.sceneId;
-      button.setAttribute('aria-pressed', String(active));
-    }
+  for (const button of $('sceneControls').children) {
+    const active = button.dataset.scene === state.sceneId;
+    button.setAttribute('aria-pressed', String(active));
   }
 }
 
@@ -1880,20 +1801,12 @@ function syncContextualSceneControls() {
   const ringsAvailable = contextId === 'lattice';
   const myosinAvailable = ['lattice', 'architecture', 'a_band_scaffold'].includes(contextId);
   $('sceneDetails').hidden = !hasDetails;
-  $('sceneDetailsToggle').hidden = !hasDetails;
   $('sceneRingControls').hidden = !ringsAvailable;
   $('sceneMyosinToggle').hidden = !myosinAvailable;
-  $('moreSceneDetails').hidden = !hasDetails;
-  $('moreRingControls').hidden = !ringsAvailable;
-  $('moreMyosinToggle').hidden = !myosinAvailable;
-  for (const container of [$('sceneRingControls'), $('moreRingControls')]) {
-    for (const button of container.querySelectorAll('[data-scene-rings]')) {
-      button.setAttribute('aria-pressed', String(Number(button.dataset.sceneRings) === state.rings));
-    }
+  for (const button of $('sceneRingControls').querySelectorAll('[data-scene-rings]')) {
+    button.setAttribute('aria-pressed', String(Number(button.dataset.sceneRings) === state.rings));
   }
-  for (const button of [$('sceneMyosinToggle'), $('moreMyosinToggle')]) {
-    button.setAttribute('aria-pressed', String(state.showContextDetail));
-  }
+  $('sceneMyosinToggle').setAttribute('aria-pressed', String(state.showContextDetail));
 }
 
 function assignSceneState(resolved) {
@@ -1935,8 +1848,7 @@ function applySemanticScene(sceneId, { trigger = null, announce = true, push = t
     $('objectAnnouncement').textContent = `Scene changed to ${sceneController.scene(sceneId).label}.`;
   }
   syncPublicPresentation(); syncUrl(); markStageDirty();
-  if (!$('moreBackdrop').hidden) closeMore();
-  else if (trigger) trigger.focus({ preventScroll: true });
+  if (trigger) trigger.focus({ preventScroll: true });
 }
 
 function setSceneRings(rings) {
@@ -1957,9 +1869,7 @@ function toggleSceneMyosinDetail() {
   syncSceneTruth();
   rebuild();
 }
-for (const button of [$('sceneMyosinToggle'), $('moreMyosinToggle')]) {
-  button.onclick = toggleSceneMyosinDetail;
-}
+$('sceneMyosinToggle').onclick = toggleSceneMyosinDetail;
 for (const button of $('sceneRingControls').querySelectorAll('[data-scene-rings]')) {
   button.onclick = () => setSceneRings(Number(button.dataset.sceneRings));
 }
@@ -2000,26 +1910,6 @@ function abandonStretchPresentation({ synchronize = true } = {}) {
 // offset by its MEASURED height. A constant was wrong at the first viewport
 // that wrapped differently, and it was wrong silently: the chapter card simply
 // sat on top of the controls.
-// The chapter card's peek state on a narrow stage. The card is the guided
-// route's whole content, so it opens on request rather than being cut down:
-// what the narrow layout changes is whether it is open by DEFAULT, which is the
-// only way the stage below it is more than a strip. Above the breakpoint there
-// is no peek state at all and the toggle is not rendered.
-const STORY_SESSION_KEY = 'titin.sc24.story-visible';
-let storyVisible = true;
-
-function setStoryVisible(visible, { focusHeading = false, restoreFocus = false } = {}) {
-  storyVisible = Boolean(visible);
-  $('guidedCard').hidden = !storyVisible;
-  const actuallyVisible = storyVisible && state.audienceMode === AUDIENCE_MODES.guided;
-  $('storyReopen').setAttribute('aria-expanded', String(actuallyVisible));
-  $('guidedCardToggle').setAttribute('aria-expanded', String(storyVisible));
-  try { sessionStorage.setItem(STORY_SESSION_KEY, String(storyVisible)); } catch {}
-  if (focusHeading && storyVisible) requestAnimationFrame(() => $('chapterTitle').focus());
-  if (restoreFocus && !storyVisible) requestAnimationFrame(() => $('storyReopen').focus());
-  markStageDirty();
-}
-
 // ---- SC-25 one-time inspection onboarding -----------------------------------
 // The affordance the whole sprint is about — that the model explains itself when
 // you click it — was never stated anywhere a novice would read it. This says it
@@ -2120,61 +2010,6 @@ function publishDrawerHeadHeight() {
   if (height > 0) $('app').style.setProperty('--drawer-head-h', `${height}px`);
 }
 new ResizeObserver(publishDrawerHeadHeight).observe($('drawerHead'));
-$('guidedCardToggle').onclick = () => setStoryVisible(false, { restoreFocus: true });
-$('storyReopen').onclick = () => {
-  if (state.audienceMode === AUDIENCE_MODES.evidence) {
-    requestHistoryEntry();
-    setAudienceMode(AUDIENCE_MODES.guided);
-  }
-  setStoryVisible(true, { focusHeading: true });
-};
-setStoryVisible(storyVisible);
-
-let moreReturnFocus = $('stageMore');
-function focusableMoreControls() {
-  return [...$('moreSheet').querySelectorAll(
-    'button:not([disabled]):not([hidden]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
-  )].filter((node) => node.getClientRects().length);
-}
-function openMore(trigger = $('stageMore'), { focusSceneDetails = false } = {}) {
-  moreReturnFocus = trigger;
-  $('moreBackdrop').hidden = false;
-  $('stageMore').setAttribute('aria-expanded', 'true');
-  syncContextualSceneControls();
-  requestAnimationFrame(() => {
-    const target = focusSceneDetails
-      ? ($('moreRingControls').querySelector('button') || $('moreMyosinToggle'))
-      : $('closeMore');
-    target.focus();
-  });
-}
-function closeMore() {
-  if ($('moreBackdrop').hidden) return;
-  $('moreBackdrop').hidden = true;
-  $('stageMore').setAttribute('aria-expanded', 'false');
-  requestAnimationFrame(() => moreReturnFocus?.focus());
-}
-$('stageMore').onclick = () => openMore($('stageMore'));
-$('sceneDetailsToggle').onclick = () => openMore($('sceneDetailsToggle'), { focusSceneDetails: true });
-$('closeMore').onclick = closeMore;
-$('moreBackdrop').addEventListener('pointerdown', (event) => {
-  if (event.target === $('moreBackdrop')) closeMore();
-});
-$('moreSheet').addEventListener('keydown', (event) => {
-  if (event.key !== 'Tab') return;
-  const controls = focusableMoreControls();
-  if (!controls.length) return;
-  const first = controls[0]; const last = controls[controls.length - 1];
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault(); last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault(); first.focus();
-  }
-});
-$('moreInspect').onclick = () => { closeMore(); openEvidence($('stageMore'), 'inspect'); };
-$('moreHelp').onclick = () => {
-  $('moreHelpText').hidden = !$('moreHelpText').hidden;
-};
 const svgNS = 'http://www.w3.org/2000/svg';
 
 function activeFeatures() {
@@ -2230,17 +2065,6 @@ function bracketById(id) {
 function locatorModelSpanNm() {
   const mband = bracketById('mband');
   return Number.isFinite(mband?.start_nm) && mband.start_nm > 0 ? mband.start_nm : null;
-}
-/** The three landmarks the miniature marks, as fractions of the model span. */
-function locatorTicks(modelSpanNm) {
-  const zdisc = bracketById('zdisc');
-  const aband = bracketById('aband');
-  const mband = bracketById('mband');
-  return [
-    zdisc && (zdisc.start_nm + zdisc.end_nm) / 2,
-    aband && aband.start_nm,
-    mband && mband.start_nm,
-  ].filter((nm) => Number.isFinite(nm)).map((nm) => Math.max(0, Math.min(1, nm / modelSpanNm)));
 }
 /**
  * What the camera is currently inside, named by the narrowest band that
@@ -2662,11 +2486,15 @@ function renderScienceOverlay() {
     }, 'A-band'));
   }
   if (features.has('termini')) {
+    // The text baseline sits 15 px above its projected anchor. Reserve another
+    // 15 px for the 12 px glyphs and halo so clamping the anchor cannot place
+    // label ink inside the header safe area.
+    const terminusTopReservePx = 30;
     for (const terminus of activeShowcaseOverlay.termini) {
       const point = projected.get(terminus.id);
       if (!point?.visible) continue;
       const x = Math.max(18, Math.min(width - 18, point.x_px));
-      const y = Math.max(safeTopPx, Math.min(height - 80, point.y_px));
+      const y = Math.max(safeTopPx + terminusTopReservePx, Math.min(height - 80, point.y_px));
       const left = terminus.id === 'n_terminus';
       const dx = left ? 16 : -16;
       nodes.push(svgElement('circle', { cx: x, cy: y, r: 3.2, class: 'terminus-dot' }));
@@ -3538,7 +3366,6 @@ $('chapterNext').onclick = () => {
   if (index < story.chapters.length - 1) applyChapter(story.chapters[index + 1].id);
   else applyChapter(story.chapters[0].id);
 };
-$('chapterRestart').onclick = () => applyChapter(story.chapters[0].id);
 $('chapterRestoreView').onclick = () => restorePreviousChapterView();
 $('researchRestoreView').onclick = () => restorePreviousChapterView({ focusResearch: true });
 
@@ -4275,7 +4102,7 @@ function renderPinnedSelection() {
   inspector.hidden = !annotation;
   // A phone cannot hold two full reading cards without one covering the other.
   // The pinned explanation temporarily replaces the Tour card there; closing
-  // it reveals the same Tour state because this does not mutate storyVisible.
+  // it reveals the same Tour state because selection does not mutate the Tour.
   $('app').dataset.pinnedInspector = annotation ? 'true' : 'false';
   if (!annotation) {
     $('guidedSelection').hidden = true;
@@ -4374,30 +4201,6 @@ $('objectInspectorClose').onclick = () => clearPinnedSelection();
 $('objectInspectorDetailLink').onclick = () => {
   openEvidence($('objectInspectorDetailLink'), 'evidence');
 };
-
-// The keyboard could already walk the visible structures; the pointer could not.
-function stepPinnedSelection(direction) {
-  const available = availableAnnotations();
-  if (!available.length) return;
-  const current = available.findIndex((annotation) => (
-    annotation.target_type === pinnedPick?.target_type
-      && annotation.target_id === pinnedPick?.target_id
-  ));
-  const nextIndex = (current + direction + available.length) % available.length;
-  const next = available[nextIndex];
-  // The pointer and the arrow keys walk one list, so they share one cursor:
-  // stepping with the buttons and then pressing Right must continue from here
-  // rather than resuming wherever the keyboard was left.
-  keyboardAnnotationIndex = nextIndex;
-  setPinnedSelection({
-    target_type: next.target_type,
-    target_id: next.target_id,
-    sarcomere_length_nm: visualization.currentState().sarcomere_length_nm,
-    scale: state.scale,
-  });
-}
-$('objectInspectorPrevious').onclick = () => stepPinnedSelection(-1);
-$('objectInspectorNext').onclick = () => stepPinnedSelection(1);
 
 function componentAvailable(targetId, report) {
   const hidden = new Set(report?.hidden_components || []);
@@ -5185,7 +4988,7 @@ function unobscuredFrameOptions({ animate = false } = {}) {
   const barBox = stageBarNode.hidden || stageBarNode.offsetParent === null
     ? null : stageBarNode.getBoundingClientRect();
   const storyCard = $('guidedCard');
-  const storyBox = storyVisible && !storyCard.hidden && storyCard.getClientRects().length
+  const storyBox = !storyCard.hidden && storyCard.getClientRects().length
     ? storyCard.getBoundingClientRect() : null;
   const pipeline = $('guidedPipeline');
   const pipelineBox = !pipeline.hidden && pipeline.getClientRects().length

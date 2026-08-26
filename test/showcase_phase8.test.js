@@ -297,7 +297,7 @@ test('SC8: focus order, keyboard route, and touch targets hold', () => {
     `positive tabindex reorders focus: ${tabindexes}`);
 
   // The guided route is driven by real buttons, so it is keyboard reachable.
-  for (const id of ['chapterPrevious', 'chapterNext', 'chapterRestart', 'chapterEvidenceLink',
+  for (const id of ['chapterPrevious', 'chapterNext',
     'audienceGuided', 'audienceEvidence', 'closeEvidence']) {
     assert.match(page, new RegExp(`<button id="${id}"`), `${id} must be a real button`);
   }

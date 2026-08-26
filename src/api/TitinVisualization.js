@@ -572,11 +572,6 @@ export class TitinVisualization {
     return Object.freeze({
       ...base,
       anchor_nm: Object.freeze(anchor),
-      picked_instance: selection.domain_id ? Object.freeze({
-        domain_id: selection.domain_id,
-        archetype: selection.archetype || null,
-        instance_id: selection.instance_id ?? null,
-      }) : null,
     });
   }
 

@@ -21,13 +21,20 @@ export function evidenceLanguage(presentation, evidenceClass) {
   if (!canonical || !record?.label || !record?.definition) {
     throw new Error(`EvidenceChip: unmapped canonical evidence class '${evidenceClass}'.`);
   }
-  return Object.freeze({ canonical, label: record.label, definition: record.definition });
+  const matchingLabels = Object.values(presentation.evidence_language.classes)
+    .filter((candidate) => candidate?.label === record.label).length;
+  return Object.freeze({
+    canonical,
+    label: record.label,
+    definition: record.definition,
+    ambiguous: matchingLabels > 1,
+  });
 }
 
 /**
  * One component shared by Tour cards and Research headers.
  * @param {Document} ownerDocument
- * @param {{canonical: string, label: string, definition: string}} language
+ * @param {{canonical: string, label: string, definition: string, ambiguous?: boolean}} language
  * @param {{research?: boolean, canonicalDisclosure?: boolean, interactive?: boolean}} options
  */
 export function createEvidenceChip(ownerDocument, language, options = {}) {
@@ -35,8 +42,7 @@ export function createEvidenceChip(ownerDocument, language, options = {}) {
   node.className = 'evidence-chip';
   node.dataset.evidenceClass = language.canonical;
   node.title = language.definition;
-  const raw = (options.research || options.canonicalDisclosure)
-      && language.canonical !== language.label.toUpperCase()
+  const raw = (options.research || options.canonicalDisclosure) && language.ambiguous
     ? ` · scientific class: ${language.canonical.toLowerCase()}` : '';
   node.textContent = `${language.label}${raw}`;
   return node;

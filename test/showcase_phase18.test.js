@@ -184,8 +184,8 @@ test('SC18: drawer entry routing and camera state tell the truth', () => {
   assert.match(page, /function openEvidence\(trigger,\s*targetTab\)/);
   for (const [id, tab] of [
     ['audienceEvidence', 'inspect'],
-    ['stageMeasureLink', 'measure'],
-    ['stageSourcesLink', 'sources'],
+    ['stageForce', 'measure'],
+    ['objectInspectorDetailLink', 'evidence'],
   ]) {
     assert.match(page, new RegExp(`openEvidence\\(\\$\\('${id}'\\), '${tab}'\\)`),
       `${id} does not route to ${tab}`);

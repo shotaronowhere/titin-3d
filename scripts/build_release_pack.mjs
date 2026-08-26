@@ -355,8 +355,8 @@ function presenterDoc(pack) {
     + `target ${script.target_seconds[0]}–${script.target_seconds[1]} s.`,
     '',
     'Read the **Say** line; it is the on-screen copy. The **If asked** line is the '
-    + 'expert expansion and lives in the Evidence drawer — you do not need to open it '
-    + 'to finish the tour.',
+    + 'expert expansion and lives in Research — you do not need to open it '
+    + 'to finish the Tour.',
     '',
     '## Keys',
     '',
@@ -426,7 +426,7 @@ function preflightDoc(pack, matrix) {
     `- \`release/SCREENSHOT_PACK.md\` — the ${matrix.cells.length}-cell review set, if you `
     + 'need to show a specific state you cannot reach live.', '',
     '## Candidate identity', '',
-    `The Evidence drawer of both the hosted page and the offline file must report ${identitySummary(pack)}.`,
+    `Research → Sources & build in both the hosted page and the offline file must report ${identitySummary(pack)}.`,
     'A mismatch in any field means the candidates differ. Prefer the manifest-verified offline file; production parity is proved only at final release.', '');
   return `${lines.join('\n')}\n`;
 }

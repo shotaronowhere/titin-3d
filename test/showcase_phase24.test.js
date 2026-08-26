@@ -168,16 +168,15 @@ test('SC24: runtime catalog validation resolves control-scene claims when suppli
   );
 });
 
-test('SC24: responsive shell exposes story, semantic, contextual, More, and stretch contracts', () => {
+test('SC24/SC27A: responsive shell exposes Tour, Research controls, and stretch contracts', () => {
   for (const id of [
-    'storyReopen', 'guidedCardToggle', 'sceneControls', 'sceneTruth', 'sceneDetails',
-    'sceneRingControls', 'sceneMyosinToggle', 'stageMore', 'moreSheet', 'closeMore',
+    'guidedCard', 'audienceEvidence', 'sceneControls', 'sceneTruth', 'sceneDetails',
+    'sceneRingControls', 'sceneMyosinToggle',
     'stagePlay', 'stageReset', 'stretchHint',
   ]) assert.match(page, new RegExp(`id="${id}"`), id);
-  assert.match(page, /role="dialog" aria-modal="true"/);
-  assert.match(page, /STORY_SESSION_KEY/);
-  assert.match(page, /sessionStorage\.setItem/);
-  assert.match(page, /focusableMoreControls/);
+  for (const id of ['storyReopen', 'guidedCardToggle', 'stageMore', 'moreSheet', 'closeMore']) {
+    assert.doesNotMatch(page, new RegExp(`id="${id}"`), `${id} is retired duplicate chrome`);
+  }
   assert.match(page, /titin:manual-camera-change/);
   assert.match(page, /frameStretchSweep\(sweepRange\.max/);
   assert.match(page, /Watch the I-band bracket/);

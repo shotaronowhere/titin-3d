@@ -37,7 +37,6 @@ for (const viewport of SC27A_VIEWPORTS) {
       await boot(page, viewport);
       await expect(page.locator('#panel')).toBeHidden();
       await expect(page.locator('#guidedCard')).toBeVisible();
-      await expect(page.locator('#moreBackdrop')).toBeHidden();
       const counts = await chromeCounts(page);
       expect(counts.visible).toBeLessThanOrEqual(4);
       expect(counts.tabbable).toBeLessThanOrEqual(3);

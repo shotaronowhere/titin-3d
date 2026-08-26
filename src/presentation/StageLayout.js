@@ -29,11 +29,11 @@ export const STAGE_LAYOUT = Object.freeze({
   edge_padding_px: 8,
   // Height of the stage's bottom rule, where the ruler and the orbit hint live.
   scale_bar_baseline_px: 42,
-  // Horizontal room one band label needs to itself. Measured from the shipped
-  // .science-label style: 9 px semibold, and the longest bracket label,
-  // "M-band center", is ~78 px wide with its halo stroke. Two labels closer
-  // together than this collide, which is the case the occlusion rule exists for.
-  label_box_px: 88,
+  // Horizontal room one band label needs to itself. With the shipped 12 px
+  // semibold .science-label style, the widest bracket label measures ~83 px
+  // including its halo stroke. The 96 px budget retains 13 px of headroom.
+  // Two labels closer than this collide, which is the case this rule prevents.
+  label_box_px: 96,
 });
 
 /** Viewport classes the reviewed attention budget distinguishes. */

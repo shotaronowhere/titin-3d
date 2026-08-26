@@ -188,6 +188,8 @@ test('SC23: text and screen-reader transcripts share sequence, claims, announcem
     const text = pack.transcripts.text_only[index];
     const spoken = pack.transcripts.screen_reader[index];
     assert.deepEqual(spoken.claim_ids, text.claim_ids);
+    assert.equal(spoken.spoken_sequence[0],
+      `Beat ${index + 1} of ${chapterIds.length}: ${text.title}.`);
     assert.ok(spoken.spoken_sequence.includes(text.state_change_announcement));
     assert.ok(spoken.spoken_sequence.includes(text.narration));
   }
