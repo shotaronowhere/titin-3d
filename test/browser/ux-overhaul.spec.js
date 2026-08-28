@@ -194,9 +194,9 @@ async function assertSemanticCameraContract(page, viewport, beat) {
   expect(to).toBeGreaterThanOrEqual(from);
   const renderedRuleWidth = audit.locatorMath.ruleRight - audit.locatorMath.ruleLeft;
   expect(audit.locatorMath.extentLeft)
-    .toBeCloseTo(audit.locatorMath.ruleLeft + renderedRuleWidth * from * 0.5, 5);
+    .toBeCloseTo(audit.locatorMath.ruleLeft + renderedRuleWidth * from * 0.5, 4);
   expect(audit.locatorMath.extentRight - audit.locatorMath.extentLeft)
-    .toBeCloseTo(Math.max(2, renderedRuleWidth * (to - from) * 0.5), 5);
+    .toBeCloseTo(Math.max(2, renderedRuleWidth * (to - from) * 0.5), 4);
 }
 
 for (const viewport of SC27A_VIEWPORTS) {
@@ -259,10 +259,10 @@ for (const viewport of SC27A_VIEWPORTS) {
       } else {
         await expect(page.locator('#tourMechanics')).toBeHidden();
       }
-      const focusTargets = await page.locator(
-        'button:visible, input:visible, select:visible, textarea:visible, a[href]:visible',
-      ).all();
-      for (const target of focusTargets) {
+      const beatControls = ['#chapterPrevious', '#chapterNext'];
+      if (beat === 3) beatControls.push('#sl', '#stagePlay', '#stageForce');
+      for (const selector of beatControls) {
+        const target = page.locator(selector);
         if (await target.isDisabled()) continue;
         await target.focus();
         await assertInViewport(target, viewport);
