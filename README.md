@@ -13,14 +13,19 @@ On 2026-08-12 the project owner authorized citation-backed AI adjudication of
 SD-01–SD-05 without representing it as independent human review. SC-20 is complete:
 SD-01, SD-03, and SD-05 were `APPROVED`; SD-02 and SD-04 were initially `DEFERRED` with
 enforced public caveats. A later owner-authorized citation-backed ruling completed SC-21 mechanics,
-and SC-22 completed the canonical responsive claim/source presenter. SC-23 is `COMPLETE`:
-presentation schema v2, the seven-outcome lay curriculum, declarative semantic scenes, legacy
-chapter aliases, reversible length behavior, and generated accessible transcripts are implemented.
+and SC-22 completed the canonical responsive claim/source presenter. SC-23 through SC-26 are
+**ENGINEERING COMPLETE**: the presentation curriculum and semantic scenes, responsive controls,
+deterministic picking, and the expert/reproducible-research workbench are implemented. SC-27A is
+**IMPLEMENTATION COMPLETE; FINAL FREEZE BLOCKED**: the public route is a five-beat Tour with
+contextual mechanics and a four-tab Research workbench, and all automated engineering gates pass,
+but its real-human target/formative prerequisites have not occurred.
 On 2026-08-14 the project owner approved the evidence-backed opening sarcomere and actomyosin
 claims; their provenance explicitly records that independent human review was not performed. The handoffs are
 summarized in `docs/sprint-reports/SC-18.md`, `docs/sprint-reports/SC-19.md`,
 `docs/sprint-reports/SC-20.md`, `docs/sprint-reports/SC-21.md`,
-`docs/sprint-reports/SC-22.md`, and `docs/sprint-reports/SC-23.md`.
+`docs/sprint-reports/SC-22.md`, `docs/sprint-reports/SC-23.md`,
+`docs/sprint-reports/SC-24.md`, `docs/sprint-reports/SC-25.md`,
+`docs/sprint-reports/SC-26.md`, and `docs/sprint-reports/SC-27A.md`.
 
 The release pack in `release/` is generated and staleness-gated. The complete final
 release definition is tracked in `data/release_gates.json`; claim entailment,
@@ -52,52 +57,46 @@ The same committed root file can be published directly with GitHub Pages using
 **Deploy from a branch → `main` → `/(root)`**. No Pages-specific build workflow is
 required.
 
-## Guided and Evidence modes
+## Tour and Research modes
 
-The application opens in **Guided** mode: the 3D stage remains full width, the
-reference scope and current geometry stay visible above the fold, and a concise
-seven-chapter card walks from the sarcomere and titin's passive spring/scaffold role through its
-full route, architecture, stretch, anchors, and thick-filament scaffold to a titin-centered recap, without
-showing the raw evidence inventory. The route is paced to about two minutes.
-Choose **Evidence** (or **Evidence & controls**) to open every existing control,
-measurement, annotation, caveat, confidence group, and advanced close-up.
+The application opens in **Tour** mode: the 3D stage remains the hero and a concise five-beat
+card moves from the sarcomere through titin's route, passive spring, thick-filament scaffold,
+and evidence-aware recap without dumping the raw inventory. Mechanics appear contextually in
+the Stretch beat. Choose **Research** to open the full Inspect, Measure, Evidence, and Sources &
+build workbench.
 
 The four named length buttons are explicitly geometry presets. Sarcomere length
 does not set calcium activation. The 1,900 nm and 3,000 nm reference states are
 visibly marked outside the declared 2,000–2,400 nm working range; the 3,000 nm
 state is illustrative. The URL hash records the supported presentation state, so
-copying the browser address preserves audience mode, chapter, length, scale,
+copying the browser address preserves audience mode, beat, length, scale,
 named camera, selected region/component, and evidence display. Invalid shared
 state is reported visibly and replaced with a documented safe default.
 
-Hover a visible structure for a concise explanation, or click/tap it to pin the
-full evidence-linked annotation. A pinned card exposes claim and render evidence,
-lay and expert explanations, scope, render meaning, non-claims, and human-readable
-source links. Keyboard users can focus the 3D stage, move through currently visible
+Hover a visible structure for a concise explanation, or click/tap it to pin the compact Tour
+explanation. Its single “Why we know this” route opens the full evidence-linked record and exact
+sources in Research. Keyboard users can focus the 3D stage, move through currently visible
 structures with Left/Right Arrow, pin with Enter or Space, and close with Escape.
 
 ## The stage and its controls
 
-The primary controls sit on a **stage bar** below the model in both audience
-modes, because Guided is a reduced set of explanations and not a reduced set of
-controls: sarcomere length, the reviewed length presets, the named views, the
-actin/myosin context toggle, and **▶ Stretch**, which sweeps the sarcomere across
-the declared working range so the difference between regions that straighten and
-regions that extend is something to watch rather than something to read. The
+Tour keeps Previous/Next and Research as its persistent controls. The Stretch beat adds the
+sarcomere-length slider, **▶ Stretch**, and a status-bearing force route, while all scene, camera,
+layer, region, measurement, and source controls remain in Research. Stretch sweeps the sarcomere
+across the declared working range so the difference between regions that straighten and regions
+that extend is something to watch rather than something to read. The
 sweep stops on any other interaction and, under `prefers-reduced-motion`, moves
-between the two endpoint states instead of animating between them. Beside it the
-bar states that absolute passive-force output is withheld under deferred SD-04.
-The Measure tab retains the deterministic regional-extension illustration but does
-not publish an absolute-pN curve or imply that the development solver is validated
-for human Q8WZ42-1.
+between the two endpoint states instead of animating between them. The Measure tab retains the
+status-bearing force curve, regional extension, incremental compliance, and the exact SD-04
+validity/non-claim disclosures.
 
-A presenter can drive the whole route from the keyboard: digits 1–7 step the
-chapters, `r` restarts, `x` shows regional extension, `e` opens Evidence, `g`
-returns to Guided, and the space bar runs the stretch sweep. The keys are listed
-on the stage, and the three the presenter script depends on are resolved from
-`data/presentation.json` rather than written into the page.
+A presenter can drive the route from the keyboard: digits 1–5 enter the matching beats, `r`
+restarts, `x` enters the complete Stretch beat, `e` opens Research, `g` returns to Tour, and the
+space bar runs the stretch sweep. The accelerators are included in the accessible canvas
+description rather than painted as a second navigation vocabulary, and the presenter script
+resolves them from `data/presentation.json`.
 
-The Evidence drawer is **tabbed** — Inspect, Measure, Evidence, and *Sources &
+The Research workbench is **tabbed** — Inspect, Measure, Evidence, and *Sources &
 build* last — so the controls are reachable without scrolling past two screens of
 prose, and the bibliography, which lists every record in the canonical registry
 and marks the ones this build actually cites, is where a reader looks for it
@@ -145,8 +144,8 @@ npm run verify:sc8
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
-For a bounded SC-23 check, run `npm run verify:sc23`; run `npm run test:browser:sc23` for the
-1280×720 and 375×812 Learn-route browser checks.
+For the focused current gate, run `npm run verify:sc27a`; run `npm run test:browser:sc27a` for the
+six-viewport Chromium Tour/Research browser surface.
 
 To reproduce the coordinate-derived measurements from the pinned RCSB inputs, fetch
 the optional raw-structure cache and verify it before running the measurement scripts:
@@ -198,11 +197,11 @@ cannot drift away from the science it describes.
 |---|---|
 | `release/CLAIM_MATRIX.md` | every reviewed claim with its decision, evidence classes, sources, and non-claims |
 | `release/LIMITATIONS.md` | every recorded non-claim in the project, grouped by the record that holds it |
-| `release/PRESENTER_SCRIPT.md` | the guided route as a presenter reads it, with per-chapter timings |
-| `release/LEARN_TRANSCRIPT.md` | the complete text-only lay route generated from presentation v2 |
+| `release/PRESENTER_SCRIPT.md` | the Tour route as a presenter reads it, with per-beat timings |
+| `release/LEARN_TRANSCRIPT.md` | the complete text-only Tour generated from presentation v3 (the path is retained for compatibility) |
 | `release/SCREEN_READER_TRANSCRIPT.md` | the same conceptual sequence with spoken state announcements and actions |
 | `release/PREFLIGHT.md` | the demo-day checklist, including the build fingerprint to compare |
-| `release/SCREENSHOT_PACK.md` | the 52-cell deterministic capture set, each a viewport plus a URL hash |
+| `release/SCREENSHOT_PACK.md` | the 48-cell deterministic capture set, each a viewport plus a URL hash |
 | `release/fallback/*.svg` | six static slides generated from this build; no GPU, browser engine, or network |
 | `release/MANIFEST.json` | the build fingerprint and artifact inventory |
 

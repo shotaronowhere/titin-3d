@@ -255,7 +255,7 @@ async function auditCold(page, viewport) {
 
 try {
   for (const viewport of VIEWPORTS) {
-    const page = await browser.newPage({ viewport, reducedMotion: 'reduce' });
+    const page = await browser.newPage({ viewport, reducedMotion: 'no-preference' });
     await ready(page);
     audits.push({
       ...await auditCold(page, viewport),
@@ -340,6 +340,17 @@ try {
     resolve(ROOT, 'data/render_style.json'), 'utf8',
   ));
   const theme = renderStyle.presentation;
+  const capturesByHash = new Map();
+  for (const entry of captures) {
+    const siblings = capturesByHash.get(entry.sha256) || [];
+    siblings.push(entry);
+    capturesByHash.set(entry.sha256, siblings);
+  }
+  const duplicateCaptures = [...capturesByHash.values()].filter((entries) => entries.length > 1);
+  if (duplicateCaptures.length) {
+    throw new Error(`SC-27A capture pack contains duplicate observations: ${duplicateCaptures
+      .map((entries) => entries.map((entry) => entry.id).join(' = ')).join('; ')}`);
+  }
   const audit = {
     schema: 'sc27a-ux-audit/1',
     purpose: 'Automated diagnostics only; this record does not claim human comprehension or visual quality.',

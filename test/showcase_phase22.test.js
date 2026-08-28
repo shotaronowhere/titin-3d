@@ -219,7 +219,7 @@ test('SC22: UI gives Evidence drawer sole full-detail ownership and final Source
   assert.match(page, /#app\[data-mode="evidence"\] #objectInspector \{ display: none; \}/);
   assert.doesNotMatch(page, /id="objectInspectorClaim"/);
   assert.match(page, /renderClaimView\(claimViewForAnnotation\(annotation\), document\)/);
-  assert.match(page, /Sources for this value[\s\S]*Sources for this object[\s\S]*Sources for this scene[\s\S]*Sources for this chapter[\s\S]*All sources/);
+  assert.match(page, /Sources for this value[\s\S]*Sources for this object[\s\S]*Sources for this scene[\s\S]*Sources for this beat[\s\S]*All sources/);
   assert.match(page, /selectedValue[\s\S]*selectedObject[\s\S]*semanticScene[\s\S]*currentChapter/);
   assert.match(page, /Parameters behind this modeled output/);
   assert.match(page, /Sources for this modeled output/);

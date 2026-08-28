@@ -62,7 +62,7 @@ test('SC22 contextual source controls select object, chapter, all, and exact val
   await expect(page.locator('#bibliography')).toHaveAttribute('data-source-scope', 'object');
 
   await page.locator('#sourceFilters [data-source-scope="chapter"]').click();
-  await expect(page.locator('#sourceContextLabel')).toContainText('Sources for this chapter');
+  await expect(page.locator('#sourceContextLabel')).toContainText('Sources for this beat');
   await page.locator('#sourceFilters [data-source-scope="all"]').click();
   await expect(page.locator('#sourceContextLabel')).toContainText('All sources');
   expect(await page.locator('#bibliography .source-result').count()).toBeGreaterThan(40);

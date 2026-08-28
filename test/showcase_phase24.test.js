@@ -245,7 +245,7 @@ test('SC24/SC27A: the nonvisual accelerator guide names current surfaces, not re
   assert.match(page, /id="interactionHelp" class="sr-only"/);
   const legend = page.match(/id="shortcutHelp">([\s\S]*?)<\/span>/)?.[1];
   assert.ok(legend, 'the accessible canvas description must carry an accelerator guide');
-  assert.match(legend, /x spring/i);
+  assert.match(legend, /x stretch beat/i);
   assert.match(legend, /e Research/i);
   assert.match(legend, /g Tour/i);
   assert.doesNotMatch(legend, /extension|evidence|guided|explore|learn/i,

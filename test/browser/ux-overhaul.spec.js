@@ -362,6 +362,22 @@ test('SC27A has one five-beat route, contextual mechanics, and a truthful Replay
   await expect(page.locator('#chapterPrevious')).toBeDisabled();
 });
 
+test('SC27A presenter x accelerator enters the complete Stretch beat from anywhere', async ({ page }) => {
+  await openTour(page, { width: 1280, height: 720 });
+  await page.keyboard.press('x');
+  await expect(page.locator('#chapterProgress')).toHaveText('Beat 3 of 5');
+  await expect(page.locator('#chapterTitle')).toHaveText('Build and stretch the spring');
+  await expect(page.locator('#tourMechanics')).toBeVisible();
+  await expect(page).toHaveURL(/step=stretch_spring/);
+
+  await page.locator('#chapterNext').click();
+  await page.locator('#chapterNext').click();
+  await expect(page.locator('#chapterProgress')).toHaveText('Beat 5 of 5');
+  await page.keyboard.press('x');
+  await expect(page.locator('#chapterProgress')).toHaveText('Beat 3 of 5');
+  await expect(page.locator('#tourMechanics')).toBeVisible();
+});
+
 test('SC27A Research defaults and contextual routes preserve the Tour return point', async ({ page }) => {
   await openTour(page, { width: 1280, height: 720 });
   await page.locator('#audienceEvidence').click();
@@ -486,6 +502,15 @@ for (const viewport of [{ width: 375, height: 812 }, { width: 1280, height: 720 
     await page.locator('#chapterNext').click();
     await scan('beat 5 evidence recap');
     await page.locator('#audienceEvidence').click();
-    await scan('Research workbench');
+    for (const [tab, panel, label] of [
+      ['#tabInspect', '#panelInspect', 'Research Inspect'],
+      ['#tabMeasure', '#panelMeasure', 'Research Measure'],
+      ['#tabEvidence', '#panelEvidence', 'Research Evidence'],
+      ['#tabSources', '#panelSources', 'Research Sources and build'],
+    ]) {
+      await page.locator(tab).click();
+      await expect(page.locator(panel)).toBeVisible();
+      await scan(label);
+    }
   });
 }

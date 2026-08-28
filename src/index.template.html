@@ -178,14 +178,8 @@ window.__titinBoot = { ready: false, problems: [] };
     font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
   .ev { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
   .ev b { font-weight: 500; color: var(--text); }
-  #interactionHelp { position: absolute; right: 12px; z-index: 2;
-    bottom: 12px;
-    pointer-events: none; color: #aab4c2; background: rgb(14 17 22 / 78%);
-    border: 1px solid var(--edge); border-radius: 4px; padding: 4px 7px;
-    font-size: 10px; max-width: min(420px, calc(100% - 24px)); }
-  /* SC-17. The presenter keys get their own line rather than extending the
-     mouse hints: as one run it was wide enough to reach across the stage and
-     under the chapter card, which paints over it. */
+  /* SC-17. Presenter accelerators stay in the accessible canvas description
+     without painting a second Tour-navigation vocabulary. */
   #shortcutHelp { display: block; }
   /* margin: 0 overrides the drawer's block-label rule, which would otherwise
      push a label 4 px off the centre line of the control it names. */
@@ -268,29 +262,12 @@ window.__titinBoot = { ready: false, problems: [] };
   #app[data-mode="evidence"] #objectInspector { display: none; }
   .object-inspector-head { display: flex; align-items: flex-start; gap: 8px; }
   .object-inspector-title { flex: 1; font-size: 14px; font-weight: 650; }
-  .object-evidence { display: inline-block; margin: 3px 0 6px; color: #f0cc7a;
-    font-size: 9px; font-weight: 700; letter-spacing: .035em; }
   .object-lay { color: #d6dde5; font-size: 11px; }
-  .object-detail { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--edge);
-    color: var(--dim); font-size: 10px; }
-  /* Inside the disclosure the summary already carries the rule that separates
-     the specialist text from the lay text; a second one would draw two. */
-  .object-detail b { color: var(--text); font-weight: 600; }
-  /* SC-13. Five stacked full-width links read as a bibliography the card was
-     never meant to be. One muted line at the foot cites the same records and
-     leaves the explanation as the thing the card is mostly made of. */
-  .object-sources { display: flex; gap: 4px 8px; flex-wrap: wrap; margin-top: 8px;
-    padding-top: 6px; border-top: 1px solid var(--edge); color: var(--dim); font-size: 9px;
-    line-height: 1.5; }
   /* SC-18. Every container that creates a link is named here; no visible anchor
      can fall through to a low-contrast user-agent default. */
-  .object-sources a, #chapterSources a, #expertCards a, #selectedEvidence a, #bibliography a {
+  #chapterSources a, #expertCards a, #selectedEvidence a, #bibliography a {
     color: var(--source-link); text-decoration: underline;
     text-underline-offset: 2px; }
-  .object-disclosure { cursor: pointer; color: var(--dim); font-size: 10px; font-weight: 600;
-    margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--edge); list-style: none; }
-  .object-disclosure::before { content: "▸ "; }
-  details[open] > .object-disclosure::before { content: "▾ "; }
   .object-inspector-nav { display: flex; gap: 4px; margin-left: auto; }
   /* One full-width contextual route keeps the short explanation subordinate to
      the structure instead of turning its foot into a second toolbar. */
@@ -333,7 +310,6 @@ window.__titinBoot = { ready: false, problems: [] };
   #guidedSelection { margin: 0 0 9px; padding: 6px 8px; border-left: 2px solid var(--titin);
     background: rgb(255 93 125 / 8%); color: #d8dfe7; font-size: 10px; }
   #selectedEvidence[hidden] { display: none; }
-  #selectedEvidence .object-sources { margin-bottom: 2px; }
   .annotation-index { text-align: left; }
   .annotation-index[aria-current="true"] { box-shadow: 0 0 0 2px var(--titin); }
   .sr-only { position: absolute !important; width: 1px !important; height: 1px !important;
@@ -412,8 +388,6 @@ window.__titinBoot = { ready: false, problems: [] };
   #chapterSummary { margin: 0 0 10px; color: #d2d9e1; font-size: 12px; line-height: 1.55; }
   #chapterStateAnnouncement { margin: 0 0 8px; color: #aeb9c7; font-size: 10px; line-height: 1.45; }
   .chapter-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .status-pill { display: inline-block; border: 1px solid #775b29; border-radius: 999px;
-    color: #e8c16d; padding: 1px 6px; font-size: 9px; font-weight: 700; letter-spacing: .05em; }
   .preset-outside { border-color: #8b6530; color: #e7c27c; }
   #chapterEvidence { border-left-color: var(--titin); }
   #chapterSources { margin-top: 5px; color: var(--dim); font-size: 10px; }
@@ -543,12 +517,6 @@ window.__titinBoot = { ready: false, problems: [] };
   /* The clipboard-denied fallback prints the link and its build on two lines,
      and a URL has no spaces to break at. */
   #copyViewStatus { white-space: pre-line; overflow-wrap: anywhere; }
-  .bib-row { font-size: 10px; line-height: 1.5; margin-bottom: 5px; color: var(--dim); }
-  .bib-row[data-cited="true"] { border-left: 2px solid var(--titin); padding-left: 7px; }
-  .bib-title { color: var(--dim); }
-  .card-findings { margin: 5px 0 0; padding: 0; list-style: none; }
-  .card-findings li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 6px;
-    margin-top: 3px; font-size: 9px; line-height: 1.4; }
   .finding-status { font-weight: 700; letter-spacing: .05em; font-size: 9px; }
   .finding-ESTABLISHED { color: #7fc4a2; }
   .finding-PROPOSED { color: #e8c16d; }
@@ -567,8 +535,6 @@ window.__titinBoot = { ready: false, problems: [] };
   #app[data-text-scale="large"] li,
   #app[data-text-scale="large"] td { font-size: 13px; }
   #app[data-text-scale="large"] .object-lay { font-size: 14px; }
-  #app[data-text-scale="large"] .object-detail,
-  #app[data-text-scale="large"] .object-sources { font-size: 12px; }
   #app[data-text-scale="large"] #chapterSummary { font-size: 16px; }
   /* Tablet touch targets. The drawer's density is deliberate on a desktop, where a
      mouse can hit a 28 px control comfortably; a finger cannot. Keyed on the
@@ -657,10 +623,9 @@ window.__titinBoot = { ready: false, problems: [] };
   .tour-mechanics #stageForce .force-class { font-size: 12px; letter-spacing: 0; }
   #inspectHint { bottom: calc(var(--tour-card-h, 220px) + 24px); border-color: #8ba7c8;
     background: rgb(22 27 34 / 94%); color: var(--text); font-size: 13px; }
-  #interactionHelp { bottom: 12px; font-size: 12px; }
   #objectInspector { max-height: none; overflow: visible; }
   .object-lay, .claim-view-plain { font-size: 15px; line-height: 1.45; }
-  .object-evidence, .evidence-chip { display: inline-flex; align-items: center; min-height: 26px;
+  .evidence-chip { display: inline-flex; align-items: center; min-height: 26px;
     margin: 5px 0 8px; border: 1px solid #7e8fa3; border-radius: 999px; padding: 3px 8px;
     color: #f1d88f; background: repeating-linear-gradient(135deg, rgb(126 143 163 / 18%) 0 4px,
       rgb(126 143 163 / 5%) 4px 8px); font-size: 12px; font-weight: 750; letter-spacing: .025em; }
@@ -705,7 +670,6 @@ window.__titinBoot = { ready: false, problems: [] };
     .tour-mechanics #sl { grid-column: 1 / -1; }
     .tour-mechanics #stagePlay { grid-column: 1; }
     .tour-mechanics #stageForce { grid-column: 2; }
-    #interactionHelp { display: none; }
     #inspectHint { top: auto; bottom: calc(var(--tour-card-h, 220px) + 24px);
       max-width: calc(100% - 18px); }
     #app[data-mode="evidence"][data-drawer-open="true"] { display: block; }
@@ -841,7 +805,7 @@ window.__titinBoot = { ready: false, problems: [] };
       </section>
     </div>
     <div id="interactionHelp" class="sr-only">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
-      id="shortcutHelp">1–5 beats · space stretch · x spring · e Research · g Tour · r restart</span></div>
+      id="shortcutHelp">1–5 beats · space stretch · x stretch beat · e Research · g Tour · r restart</span></div>
   </div>
   <aside id="panel" aria-label="Research: visualization controls and scientific readouts" aria-hidden="true">
     <div class="drawer-head" id="drawerHead">
@@ -1032,7 +996,7 @@ window.__titinBoot = { ready: false, problems: [] };
         <button data-source-scope="value">Sources for this value</button>
         <button data-source-scope="object">Sources for this object</button>
         <button data-source-scope="scene">Sources for this scene</button>
-        <button data-source-scope="chapter">Sources for this chapter</button>
+        <button data-source-scope="chapter">Sources for this beat</button>
         <button data-source-scope="all">All sources</button>
       </div>
       <div id="bibliography" aria-live="polite"></div>
@@ -1551,8 +1515,7 @@ document.addEventListener('keydown', (event) => {
   const action = PRESENTER_KEYS[event.key.toLowerCase()];
   if (!action) return;
   event.preventDefault();
-  if (action === 'story.stretch_spring') applySemanticScene('spring');
-  else if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
+  if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
   else if (action === 'mode.evidence') openEvidence($('audienceEvidence'), 'inspect');
   // Through closeEvidence rather than setAudienceMode, so the key that leaves
   // the drawer also returns focus the way Escape and Close do — and so pressing

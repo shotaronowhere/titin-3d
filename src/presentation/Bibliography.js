@@ -173,7 +173,7 @@ export function resolveSourceContext(registry, context = {}) {
     value: `Sources for this value — ${text(descriptor?.label, 'selected value')}`,
     object: `Sources for this object — ${text(descriptor?.label, 'selected object or region')}`,
     scene: `Sources for this scene — ${text(descriptor?.label, 'current semantic scene')}`,
-    chapter: `Sources for this chapter — ${text(descriptor?.label, 'current chapter')}`,
+    chapter: `Sources for this beat — ${text(descriptor?.label, 'current beat')}`,
     all: 'All sources',
   };
   const entries = scope === 'all'

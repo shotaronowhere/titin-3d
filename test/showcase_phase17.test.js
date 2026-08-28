@@ -48,6 +48,11 @@ test('SC17: every declared presenter shortcut is bound to a key', () => {
     const verb = action.startsWith('story.') ? "action.startsWith('story.')" : `action === '${action}'`;
     assert.ok(page.includes(verb), `nothing in the page acts on '${action}'`);
   }
+  assert.match(page,
+    /if \(action\.startsWith\('story\.'\)\) applyChapter\(action\.slice\('story\.'\.length\)\)/,
+    'every story accelerator must enter its declared beat through the chapter controller');
+  assert.doesNotMatch(page, /action === 'story\.stretch_spring'/,
+    'the stretch accelerator must not bypass the Tour beat with a scene-only special case');
   // The two stage verbs the record does not declare are bound as well, and no
   // key is claimed twice.
   for (const { key, action } of STAGE_KEYS) assert.equal(bound[key], action);
