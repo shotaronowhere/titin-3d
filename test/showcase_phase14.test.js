@@ -94,9 +94,9 @@ test('SC21: the Measure tab explains the regime-bound force curve', () => {
   assert.match(page, /Equations, parameters, preparation, validity, and transfer audit/);
 });
 
-test('SC21: the extension chart keeps geometry separate from the force audit', () => {
-  assert.match(page, /chart\.total_nm\.toFixed/);
-  assert.match(page, /common-force literature-bounded solver/);
+test('SC21: the Measure contribution table keeps geometry separate from the force audit', () => {
+  assert.match(page, /curve\.current\.regional_extension_nm\[id\]\.toFixed/);
+  assert.match(page, /Added regional length is shown separately from incremental/);
 });
 
 test('SC21: the curve panel states what it does not claim', () => {
