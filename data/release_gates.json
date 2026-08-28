@@ -374,7 +374,7 @@
     "checks": [
       {
         "id": "contrast",
-        "requirement": "WCAG AA text/control pairs are declared and no visible anchor or selected extension row falls through to a user-agent/inherited foreground",
+        "requirement": "WCAG AA text/control pairs are declared and no visible evidence or bibliography link falls through to a user-agent/inherited foreground",
         "verification": "automated",
         "status": "PASS",
         "verified_by": "test/showcase_phase18.test.js; test/browser/smoke.spec.js; scripts/validate_release_gates.py"
@@ -508,18 +508,18 @@
         "min_ratio": 4.5
       },
       {
-        "id": "stage_bar_label",
+        "id": "tour_mechanics_label",
         "foreground": "#98a4b3",
         "background": "#0e1116",
         "min_ratio": 4.5,
-        "where": "stage bar control labels over the stage gradient"
+        "where": "Tour mechanics control labels over the stage gradient"
       },
       {
-        "id": "stage_readout",
+        "id": "tour_length_readout",
         "foreground": "#e6ebf1",
         "background": "#0e1116",
         "min_ratio": 4.5,
-        "where": "sarcomere length readout on the stage bar"
+        "where": "sarcomere length readout in Tour mechanics"
       },
       {
         "id": "stage_play_active",
@@ -533,7 +533,7 @@
         "foreground": "#ffd7e0",
         "background": "#0e1116",
         "min_ratio": 4.5,
-        "where": "passive force caption on the stage bar"
+        "where": "passive force caption in Tour mechanics"
       },
       {
         "id": "stage_force_class",
@@ -547,20 +547,6 @@
         "foreground": "#a9c9f2",
         "background": "#161b22",
         "role": "every visible bibliography and evidence link",
-        "min_ratio": 4.5
-      },
-      {
-        "id": "selected_extension_row",
-        "foreground": "#ffe1e8",
-        "background": "#0e1116",
-        "role": "selected, hovered, and focused regional extension row",
-        "min_ratio": 4.5
-      },
-      {
-        "id": "disabled_extension_row",
-        "foreground": "#98a4b3",
-        "background": "#0e1116",
-        "role": "disabled regional extension row before opacity",
         "min_ratio": 4.5
       }
     ],
@@ -1065,7 +1051,7 @@
       },
       {
         "id": "inspection_affordance",
-        "requirement": "a first-time reader is shown that structures are inspectable before being expected to discover it, and direct labels and legend entries are operable by pointer, keyboard, and touch",
+        "requirement": "a first-time reader is shown that structures are inspectable before being expected to discover it, and direct labels plus Research structure-key entries are operable by pointer, keyboard, and touch",
         "verification": "automated",
         "status": "PASS",
         "verified_by": "test/browser/picking.spec.js",

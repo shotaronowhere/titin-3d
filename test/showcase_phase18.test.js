@@ -172,12 +172,10 @@ test('SC18: manifest v2 binds raw candidate bytes without hashing itself', () =>
   assert.equal(detached, `${sha256(Buffer.from(manifestText))}  MANIFEST.json\n`);
 });
 
-test('SC18: every rendered link container and selected extension state declares contrast', () => {
+test('SC18: every rendered link container declares contrast', () => {
   assert.match(page, /\.object-sources a,\s*#chapterSources a,\s*#expertCards a,\s*#selectedEvidence a,\s*#bibliography a\s*\{[^}]*color:\s*var\(--source-link\)/s);
   assert.match(page, /--source-link:\s*#a9c9f2/);
-  assert.match(page, /\.extension-row\.on\s*\{[^}]*color:\s*#ffe1e8/s);
-  assert.match(page, /\.extension-row:disabled[^}]*color:/s,
-    'disabled extension rows need a deliberate foreground, not inherited opacity alone');
+  assert.doesNotMatch(page, /\.extension-row/);
 });
 
 test('SC18: drawer entry routing and camera state tell the truth', () => {

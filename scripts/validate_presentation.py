@@ -18,7 +18,7 @@ RANK = {
     "UNKNOWN": 5,
 }
 PRESENTATION_FEATURES = {
-    "continuity_trace", "band_brackets", "termini", "region_extension_chart",
+    "continuity_trace", "band_brackets", "termini",
     "lattice_cross_section", "provenance_pipeline",
 }
 FINDING_STATUSES = {"ESTABLISHED", "PROPOSED", "OPEN"}

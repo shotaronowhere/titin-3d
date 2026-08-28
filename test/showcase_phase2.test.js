@@ -314,12 +314,15 @@ test('SC2/SC24: the opening and mechanics story are present in the accessible sh
     'terminus labels must project onto the rendered representative strand');
   assert.match(page, /\['extendedLattice', 'extended lattice'\]/,
     'additional lattice rings must remain an advanced Evidence control');
-  assert.match(page, /id="extensionStory"[\s\S]*?id="extensionRows"/);
+  assert.doesNotMatch(page, /id="extensionStory"/);
   assert.match(page, /visualization\.showcaseOverlay\(\)/);
   assert.match(page, /projectPresentationAnchors/);
   assert.match(page, /isLongitudinalProjection\(\s*projected\.get\('n_terminus'\)/);
   assert.match(page, /titinStrands:\s*false/);
-  assert.match(page, /folded domains straighten[\s\S]*disordered chain extends/);
+  const mechanicsCopy = model.spec.presentation.guided_chapters
+    .find((chapter) => chapter.id === 'stretch_spring');
+  assert.match(`${mechanicsCopy.lay_summary} ${mechanicsCopy.narration}`,
+    /Folded Ig\/Fn3 domains and disordered N2A\/PEVK elements[\s\S]*I-band lengthens/i);
   assert.match(page, /#canvas \{[^}]*min-height:\s*0;[^}]*overflow:\s*hidden;/,
     'the WebGL canvas must not retain a wide-screen height at the mobile breakpoint');
   assert.match(page, /#canvas > canvas \{[^}]*position:\s*absolute;[^}]*height:\s*100% !important;/);

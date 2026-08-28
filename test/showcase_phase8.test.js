@@ -298,7 +298,7 @@ test('SC8: focus order, keyboard route, and touch targets hold', () => {
 
   // The guided route is driven by real buttons, so it is keyboard reachable.
   for (const id of ['chapterPrevious', 'chapterNext',
-    'audienceGuided', 'audienceEvidence', 'closeEvidence']) {
+    'audienceEvidence', 'closeEvidence']) {
     assert.match(page, new RegExp(`<button id="${id}"`), `${id} must be a real button`);
   }
   assert.match(page, /id="canvas"[^>]*tabindex="0"/);

@@ -217,8 +217,7 @@ test('SC22: facade uses the canonical registries and rejects unknown contexts', 
 
 test('SC22: UI gives Evidence drawer sole full-detail ownership and final Sources routing', () => {
   assert.match(page, /#app\[data-mode="evidence"\] #objectInspector \{ display: none; \}/);
-  assert.match(page, /#app\[data-mode="guided"\] #objectInspectorClaim \.claim-view-specialist/);
-  assert.match(page, /max-height: calc\(100% - var\(--stage-bar-h/);
+  assert.doesNotMatch(page, /id="objectInspectorClaim"/);
   assert.match(page, /renderClaimView\(claimViewForAnnotation\(annotation\), document\)/);
   assert.match(page, /Sources for this value[\s\S]*Sources for this object[\s\S]*Sources for this scene[\s\S]*Sources for this chapter[\s\S]*All sources/);
   assert.match(page, /selectedValue[\s\S]*selectedObject[\s\S]*semanticScene[\s\S]*currentChapter/);

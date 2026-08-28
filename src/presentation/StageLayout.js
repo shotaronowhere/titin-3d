@@ -314,8 +314,8 @@ function overlapArea(a, b) {
  * controls is a card that swallows the clicks meant for them — it has pointer
  * events, so "visually on top" and "functionally in the way" are the same thing
  * here. Obstacles are passed in as measured rectangles rather than assumed: the
- * stage bar wraps to more rows as the viewport narrows, the story card's height
- * is set by the chapter's copy, and a phone adds safe-area insets, so no constant
+ * story card height is set by the chapter's copy and a phone adds safe-area
+ * insets, so no constant
  * in this module could describe where the free space actually is.
  *
  * The search is deliberately small and total: four placements around the anchor,

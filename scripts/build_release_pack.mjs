@@ -385,7 +385,7 @@ function transcriptDoc(pack, { screenReader = false } = {}) {
   const transcript = pack.transcripts;
   const rows = screenReader ? transcript.screen_reader : transcript.text_only;
   const lines = [
-    screenReader ? '# Screen-reader transcript' : '# Text-only Learn transcript',
+    screenReader ? '# Screen-reader transcript' : '# Text-only Tour transcript',
     '',
     `Generated from \`${transcript.source}\` — ${identitySummary(pack)}.`,
     `${transcript.word_count} narrated/announced words; estimated ${transcript.estimated_seconds} s; `

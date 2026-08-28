@@ -47,7 +47,7 @@ try {
     await page.waitForFunction(() => window.__titinBoot?.ready === true);
     await page.waitForTimeout(900);
     if (name.startsWith('pinned-titin')) {
-      await page.locator('#stageLegend button[data-component="titin"]').click();
+      await page.locator('#scienceOverlay [aria-label="Inspect Titin"]').click();
       await page.waitForTimeout(400);
     } else await page.waitForTimeout(300);
     await page.screenshot({ path: join(OUT, name), animations: 'disabled' });

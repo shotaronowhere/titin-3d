@@ -39,8 +39,8 @@ test('SC12/SC27A: mechanics are contextual inside the Stretch beat', () => {
 });
 
 test('SC12/SC27A: the persistent stage bar is retired', () => {
-  assert.match(page, /<div id="stageBar" hidden>/);
-  assert.match(page, /<button id="stageReset" hidden/);
+  assert.doesNotMatch(page, /id="stageBar"/);
+  assert.doesNotMatch(page, /id="stageReset"/);
   assert.doesNotMatch(page, /id="stageMore"/);
 });
 
@@ -55,7 +55,7 @@ test('SC12: the readouts stay in the Evidence drawer', () => {
 });
 
 test('SC12/SC27A: Guided identity uses direct labels and the full-sarcomere locator', () => {
-  assert.match(page, /id="stageLegend" hidden/);
+  assert.doesNotMatch(page, /id="stageLegend"/);
   assert.match(page, /function selectableLabel/);
   assert.match(page, /data-full-sarcomere-locator/);
 });

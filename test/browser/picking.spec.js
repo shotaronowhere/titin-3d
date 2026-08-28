@@ -366,9 +366,23 @@ test('SC25 direct labels are operable by pointer and keyboard', async ({ page })
   const box = await labels.first().boundingBox();
   expect(box.width).toBeGreaterThanOrEqual(44);
   expect(box.height).toBeGreaterThanOrEqual(44);
+
+  // Research retains the full structure key after the persistent Guided legend
+  // was removed. Its entries use the same named-target path by pointer and key.
+  await page.locator('#objectInspectorClose').click();
+  await page.locator('#audienceEvidence').click();
+  await page.locator('#tabMeasure').click();
+  const myosinKey = page.locator('#legend button[aria-label="Inspect Thick filament (myosin)"]');
+  await myosinKey.scrollIntoViewIfNeeded();
+  await myosinKey.click();
+  await expect(page.locator('#researchContext')).toContainText('Myosin thick filament');
+  const titinKey = page.locator('#legend button[aria-label="Inspect Titin"]');
+  await titinKey.focus();
+  await titinKey.press('Enter');
+  await expect(page.locator('#researchContext')).toContainText('Titin');
 });
 
-test('SC25 a touch tap selects titin and its legend on a phone', async ({ browser }) => {
+test('SC25 a touch tap selects titin and the Research structure key on a phone', async ({ browser }) => {
   const context = await browser.newContext({
     viewport: PHONE, hasTouch: true, isMobile: true, deviceScaleFactor: 1,
   });
@@ -380,6 +394,14 @@ test('SC25 a touch tap selects titin and its legend on a phone', async ({ browse
   await page.touchscreen.tap(at.x, at.y);
   await expect(page.locator('#objectAnnouncement')).toContainText('A-band');
   await expect(page.locator('#inspectHint')).toBeHidden();
+  await page.locator('#audienceEvidence').click();
+  await page.locator('#tabMeasure').click();
+  const titinKey = page.locator('#legend button[aria-label="Inspect Titin"]');
+  await titinKey.scrollIntoViewIfNeeded();
+  const keyBox = await titinKey.boundingBox();
+  expect(keyBox, 'Research Titin key must be touchable').not.toBeNull();
+  await page.touchscreen.tap(keyBox.x + keyBox.width / 2, keyBox.y + keyBox.height / 2);
+  await expect(page.locator('#researchContext')).toContainText('Titin');
   await context.close();
 });
 

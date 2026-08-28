@@ -35,10 +35,43 @@ async function openTour(page, viewport) {
 async function assertInViewport(locator, viewport) {
   const box = await locator.boundingBox();
   expect(box, 'element has a rendered box').not.toBeNull();
-  expect(box.x + box.width).toBeGreaterThan(0);
-  expect(box.y + box.height).toBeGreaterThan(0);
-  expect(box.x).toBeLessThan(viewport.width);
-  expect(box.y).toBeLessThan(viewport.height);
+  expect(box.x).toBeGreaterThanOrEqual(-1);
+  expect(box.y).toBeGreaterThanOrEqual(-1);
+  expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
+  expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
+}
+
+async function assertShellFocusContainment(page, viewport) {
+  const records = await page.locator('#stageHeader button, #guidedCard button, #guidedCard input')
+    .evaluateAll((nodes) => nodes.flatMap((node) => {
+      const before = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      if (node.disabled || node.tabIndex < 0 || style.display === 'none'
+          || style.visibility === 'hidden' || before.width <= 0 || before.height <= 0) return [];
+      node.focus();
+      const rect = node.getBoundingClientRect();
+      return [{
+        id: node.id,
+        focused: document.activeElement === node,
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        documentOverflow: Math.max(0, document.documentElement.scrollWidth - innerWidth),
+        canvasOverflow: Math.max(0,
+          document.querySelector('#canvas').scrollWidth - document.querySelector('#canvas').clientWidth),
+      }];
+    }));
+  expect(records.map(({ id }) => id)).toContain('audienceEvidence');
+  for (const record of records) {
+    expect(record.focused, `${record.id} receives focus`).toBe(true);
+    expect(record.left, `${record.id} left edge`).toBeGreaterThanOrEqual(-1);
+    expect(record.top, `${record.id} top edge`).toBeGreaterThanOrEqual(-1);
+    expect(record.right, `${record.id} right edge`).toBeLessThanOrEqual(viewport.width + 1);
+    expect(record.bottom, `${record.id} bottom edge`).toBeLessThanOrEqual(viewport.height + 1);
+    expect(record.documentOverflow, `${record.id} document overflow`).toBeLessThanOrEqual(1);
+    expect(record.canvasOverflow, `${record.id} canvas overflow`).toBe(0);
+  }
 }
 
 async function assertCentreUnobscured(locator) {
@@ -224,6 +257,7 @@ for (const viewport of SC27A_VIEWPORTS) {
     expect(await body.evaluate((node) => node.scrollHeight <= node.clientHeight + 1)).toBe(true);
     await assertCentreUnobscured(page.locator('#chapterNext'));
     await expect(page.getByRole('button', { name: /^Next:/ })).toHaveCount(1);
+    await assertShellFocusContainment(page, viewport);
 
     const header = page.locator('#stageHeader');
     expect(await boxesCollide(header, card)).toBe(false);
@@ -259,16 +293,7 @@ for (const viewport of SC27A_VIEWPORTS) {
       } else {
         await expect(page.locator('#tourMechanics')).toBeHidden();
       }
-      const beatControls = ['#chapterPrevious', '#chapterNext'];
-      if (beat === 3) beatControls.push('#sl', '#stagePlay', '#stageForce');
-      for (const selector of beatControls) {
-        const target = page.locator(selector);
-        if (await target.isDisabled()) continue;
-        await target.focus();
-        await assertInViewport(target, viewport);
-        expect((await horizontalOverflow(page)).document).toBeLessThanOrEqual(1);
-        expect((await horizontalOverflow(page)).canvas).toBe(0);
-      }
+      await assertShellFocusContainment(page, viewport);
     }
   });
 }

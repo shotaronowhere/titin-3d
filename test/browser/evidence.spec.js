@@ -49,7 +49,7 @@ test('SC22 Guided inspector stays compact and clear of the Tour continuation', a
   const collide = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
   expect(geometry.card.height).toBeLessThan(300);
   expect(collide(geometry.card, geometry.next)).toBe(false);
-  await expect(page.locator('#objectInspectorClaim')).toBeHidden();
+  await expect(page.locator('#objectInspectorClaim')).toHaveCount(0);
 });
 
 test('SC22 contextual source controls select object, chapter, all, and exact value', async ({ page }) => {

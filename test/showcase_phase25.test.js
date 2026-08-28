@@ -420,7 +420,7 @@ test('SC25: labels, legends, and the one-time invitation are wired in the page',
   assert.match(page, /completeInspectionOnboarding\(\);\s*\n\s*pinnedPick = \{ \.\.\.selection \};/);
   // SC-27A removes the persistent legend; direct labels and the full-sarcomere
   // locator now carry the Guided identity cues without another control surface.
-  assert.match(page, /<div id="stageLegend" hidden/);
+  assert.doesNotMatch(page, /id="stageLegend"/);
   assert.match(page, /data-full-sarcomere-locator/);
 });
 
@@ -466,21 +466,19 @@ test('SC25: the onboarding pulse moves colour only and yields to a real selectio
 test('SC25: the pinned card clears the controls at every release viewport', () => {
   const chrome = (viewport) => {
     const headerBottom = Math.round(viewport.height * 0.16);
-    const barTop = Math.round(viewport.height * 0.85);
     return {
       safeTopPx: headerBottom,
       obstacles: [
         { id: 'stageHeader', left: 0, top: 0, right: viewport.width, bottom: headerBottom },
-        { id: 'stageBar', left: 0, top: barTop, right: viewport.width, bottom: viewport.height },
         {
           id: 'guidedCard',
           left: 14,
           top: Math.round(viewport.height * 0.35),
           right: Math.min(viewport.width - 14, 14 + Math.round(viewport.width * 0.4)),
-          bottom: barTop - 24,
+          bottom: viewport.height - 24,
         },
       ],
-      canvasHeight: barTop,
+      canvasHeight: viewport.height,
     };
   };
   for (const viewport of [...VIEWPORTS, { id: 'phone', width: 375, height: 812 }]) {
@@ -502,7 +500,7 @@ test('SC25: the pinned card clears the controls at every release viewport', () =
         // The acceptance is about the PRIMARY CONTROLS, and that clause holds at
         // every viewport including the phone.
         assert.deepEqual(
-          placed.collides_with.filter((id) => ['stageHeader', 'stageBar'].includes(id)), [],
+          placed.collides_with.filter((id) => id === 'stageHeader'), [],
           `${where} covers ${placed.collides_with}`,
         );
         // Above the phone breakpoint the stage is wide enough to clear the story
@@ -533,9 +531,9 @@ test('SC25: placement reports a real constraint rather than hiding a collision',
     card: { width: 380, height: 380 },
     canvas: { width: 400, height: 400 },
     safeTopPx: 0,
-    obstacles: [{ id: 'stageBar', left: 0, top: 0, right: 400, bottom: 400 }],
+    obstacles: [{ id: 'blockingControls', left: 0, top: 0, right: 400, bottom: 400 }],
   });
-  assert.deepEqual(placed.collides_with, ['stageBar']);
+  assert.deepEqual(placed.collides_with, ['blockingControls']);
   assert.ok(placed.collision_area_px > 0);
   // Safe-area insets shrink the band the card may use.
   const inset = inspectorPlacement({

@@ -139,7 +139,7 @@ test('SC1/SC27A: Tour owns contextual mechanics and Research owns the raw inspec
     assert.ok(location > page.indexOf('id="guidedCard"') && location < guidedEnd,
       `contextual control '${id}' must be inside the Tour card`);
   }
-  for (const id of ['sceneControls', 'stageReset', 'stageMore']) {
+  for (const id of ['sceneControls', 'stageMore']) {
     const location = page.indexOf(`id="${id}"`);
     assert.ok(location < 0 || !(location > page.indexOf('id="guidedCard"') && location < guidedEnd),
       `nonessential control '${id}' must stay out of the Tour card`);

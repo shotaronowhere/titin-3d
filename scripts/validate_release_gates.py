@@ -190,7 +190,7 @@ class GateValidator:
     def contrast(self) -> None:
         print("\n== Declared colour pairs ==")
         accessibility = self.record["accessibility"]
-        required_text_ids = {"source_link", "selected_extension_row", "disabled_extension_row"}
+        required_text_ids = {"source_link"}
         actual_text_ids = {row.get("id") for row in accessibility.get("contrast_pairs", [])}
         self.check(required_text_ids <= actual_text_ids,
                    f"SC-18 text pairs exist (missing: {sorted(required_text_ids - actual_text_ids)})")

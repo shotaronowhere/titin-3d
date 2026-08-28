@@ -29,9 +29,8 @@ const specContext = {
 test('SC13: specialist depth is disclosed, not dumped', () => {
   assert.match(claimRenderer, /element\(document, 'details', 'claim-view-specialist'\)/);
   assert.match(claimRenderer, /specialistSummary\.textContent = 'For specialists'/);
-  // SC-22 keeps the same disclosure in the one renderer and suppresses it only
-  // on the compact Guided owner; the Evidence drawer retains full specialist depth.
-  assert.match(page, /#app\[data-mode="guided"\] #objectInspectorClaim \.claim-view-specialist/);
+  // The compact Guided owner never renders the specialist record; Research does.
+  assert.doesNotMatch(page, /id="objectInspectorClaim"/);
 });
 
 test('SC13: the card reads lay text before detail and citations last', () => {
@@ -45,12 +44,10 @@ test('SC13: the card reads lay text before detail and citations last', () => {
   }
 });
 
-test('SC13/22: Guided citations are compact and remain at the card foot', () => {
+test('SC13/22: Research citations remain in the canonical renderer', () => {
   assert.match(page, /\.claim-view-sources \{[^}]*font-size: 9px/);
   assert.match(claimRenderer, /sourceLabel\.textContent = 'Sources'/);
-  assert.match(page,
-    /#app\[data-mode="guided"\] #objectInspectorClaim \.claim-view-source:nth-of-type\(n\+3\)/,
-    'the compact owner must cap its visible citations without changing the full drawer');
+  assert.doesNotMatch(page, /id="objectInspectorClaim"/);
 });
 
 test('SC13: the card is placed by the tested layout function', () => {

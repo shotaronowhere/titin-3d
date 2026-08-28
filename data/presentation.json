@@ -325,7 +325,7 @@
         "a known azimuth for every folded domain",
         "that Fn3 domains occur in the modeled elastic I-band"
       ],
-      "presentation_features": ["continuity_trace", "termini", "region_extension_chart"],
+      "presentation_features": ["continuity_trace", "termini"],
       "recommended_state": {
         "sarcomere_length_nm": 2200,
         "scale": "detail",

@@ -178,11 +178,8 @@ window.__titinBoot = { ready: false, problems: [] };
     font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
   .ev { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
   .ev b { font-weight: 500; color: var(--text); }
-  /* Right-hand end of the bottom rule: the left-hand end is the ruler's, and
-     with the stage bar in place both were landing in the same 25 px band. A
-     measurement wins that corner over a hint. */
   #interactionHelp { position: absolute; right: 12px; z-index: 2;
-    bottom: calc(var(--stage-bar-h, 114px) + 10px);
+    bottom: 12px;
     pointer-events: none; color: #aab4c2; background: rgb(14 17 22 / 78%);
     border: 1px solid var(--edge); border-radius: 4px; padding: 4px 7px;
     font-size: 10px; max-width: min(420px, calc(100% - 24px)); }
@@ -190,20 +187,6 @@ window.__titinBoot = { ready: false, problems: [] };
      mouse hints: as one run it was wide enough to reach across the stage and
      under the chapter card, which paints over it. */
   #shortcutHelp { display: block; }
-  /* SC-12. The stage bar sits on the canvas, in BOTH modes, and is deliberately
-     not inside #stageChrome: that layer is pointer-events: none, and these are
-     controls. Everything else that occupies the bottom of the stage — the
-     chapter card, the orbit hint, the SC-11 ruler — is measured or offset
-     against it rather than being allowed to sit underneath it. */
-  #stageBar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
-    display: flex; flex-direction: column; gap: 6px; padding: 9px 12px 10px;
-    background: linear-gradient(to top, rgb(14 17 22 / 96%), rgb(14 17 22 / 74%));
-    border-top: 1px solid var(--edge); backdrop-filter: blur(10px); }
-  .stage-row { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; }
-  .stage-row-primary { display: grid;
-    grid-template-columns: auto minmax(180px, 1fr) auto auto auto auto auto;
-    gap: 6px 9px; }
-  .stage-row-primary #sl { flex: 1 1 220px; min-width: 160px; width: auto; }
   /* margin: 0 overrides the drawer's block-label rule, which would otherwise
      push a label 4 px off the centre line of the control it names. */
   .stage-label { margin: 0; color: var(--dim); font-size: 10px; text-transform: uppercase;
@@ -212,7 +195,6 @@ window.__titinBoot = { ready: false, problems: [] };
     min-width: 84px; }
   .stage-presets { display: none; margin: 0; }
   #stagePlay.on { background: var(--titin); border-color: var(--titin); color: #2a0a13; }
-  #stageReset:not(:disabled) { border-color: rgb(255 176 192 / 65%); }
   /* SC-14. The one number a muscle-mechanics audience looks for first, on the
      stage rather than behind the drawer, carrying its evidence class so it can
      never be read as a measurement. flex: none + nowrap for the same reason
@@ -224,7 +206,6 @@ window.__titinBoot = { ready: false, problems: [] };
   #stageForce b { color: var(--text); font-size: 13px; font-weight: 650; }
   #stageForce .force-class { color: #e8c16d; font-size: 9px; font-weight: 700;
     letter-spacing: .05em; }
-  .stage-row-scenes { flex-wrap: nowrap; min-width: 0; }
   #sceneControls { flex-wrap: nowrap; margin: 0; min-width: 0; }
   #sceneControls button { white-space: nowrap; }
   #sceneControls button[aria-pressed="true"] {
@@ -242,12 +223,6 @@ window.__titinBoot = { ready: false, problems: [] };
   #sceneMyosinToggle[aria-pressed="true"] {
     background: rgb(79 179 159 / 25%); border-color: #4fb39f; color: #d9fff6;
   }
-  #stretchHint { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%);
-    padding: 5px 9px; border-radius: 999px; background: rgb(42 10 19 / 94%);
-    border: 1px solid var(--titin); color: #ffe1e8; font-weight: 700; }
-  #stageLegend { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto;
-    color: var(--dim); font-size: 10px; }
-  #stageLegend .key { margin: 0; }
   /* SC-25. A legend entry names a structure; making it a control removes the
      step where a reader has to find that structure in the model first. */
   button.key { appearance: none; background: none; border: 1px solid transparent;
@@ -255,12 +230,11 @@ window.__titinBoot = { ready: false, problems: [] };
     min-height: 32px; }
   button.key:hover { border-color: rgb(230 237 245 / 34%); }
   button.key[aria-pressed="true"] { border-color: var(--titin-hi); color: var(--text); }
-  #stageLegend button.key { min-height: 28px; padding: 2px 5px; }
   /* SC-25 onboarding. One sentence, once, and it leaves as soon as the reader
-     does the thing it describes. It sits above the stage bar rather than over the
-     model, so the affordance it teaches is never the thing it covers. */
+     does the thing it describes. It sits above the Tour card rather than over
+     the model, so the affordance it teaches is never the thing it covers. */
   #inspectHint { position: absolute; left: 50%; transform: translateX(-50%);
-    bottom: calc(var(--stage-bar-h, 114px) + 14px); z-index: 9; pointer-events: auto;
+    bottom: calc(var(--tour-card-h, 220px) + 24px); z-index: 9; pointer-events: auto;
     display: flex; align-items: center; gap: 10px; padding: 7px 10px 7px 12px;
     border-radius: 999px; background: rgb(42 10 19 / 94%); border: 1px solid var(--titin);
     color: #ffe1e8; font-size: 12px; font-weight: 650; max-width: calc(100% - 28px);
@@ -287,20 +261,11 @@ window.__titinBoot = { ready: false, problems: [] };
   #objectInspector { position: absolute; z-index: 8; pointer-events: auto; width: min(370px, calc(100% - 24px));
     padding: 11px 12px; border-radius: 8px; color: var(--text); background: rgb(22 27 34 / 97%);
     border: 1px solid rgb(255 176 192 / 65%); box-shadow: 0 12px 34px rgb(0 0 0 / 44%);
-    max-height: calc(100% - var(--stage-bar-h, 114px) - 128px); overflow-y: auto;
+    max-height: calc(100% - 128px); overflow-y: auto;
     overscroll-behavior: contain; }
-  /* SC-22: Guided owns the compact on-stage card. Evidence owns the full drawer
+  /* SC-22: Guided owns the compact on-stage card. Research owns the full record
      at every viewport, so the same long claim is never painted twice. */
   #app[data-mode="evidence"] #objectInspector { display: none; }
-  #app[data-mode="guided"] #objectInspectorClaim .claim-view-specialist,
-  #app[data-mode="guided"] #objectInspectorClaim .claim-view-fields,
-  #app[data-mode="guided"] #objectInspectorClaim .claim-view-limitations,
-  #app[data-mode="guided"] #objectInspectorClaim .claim-view-not-claimed {
-    display: none;
-  }
-  #app[data-mode="guided"] #objectInspectorClaim .claim-view-source:nth-of-type(n+3) {
-    display: none;
-  }
   .object-inspector-head { display: flex; align-items: flex-start; gap: 8px; }
   .object-inspector-title { flex: 1; font-size: 14px; font-weight: 650; }
   .object-evidence { display: inline-block; margin: 3px 0 6px; color: #f0cc7a;
@@ -423,8 +388,6 @@ window.__titinBoot = { ready: false, problems: [] };
   .brand-title::before { content: ""; display: inline-block; width: 18px; height: 3px;
     margin-right: 8px; vertical-align: middle; border-radius: 2px; background: var(--titin); }
   .brand-sub { color: var(--dim); font-size: 10px; }
-  .mode-switch { display: flex; gap: 4px; margin-left: auto; }
-  .mode-switch button { white-space: nowrap; }
   #filamentContextToggle { white-space: nowrap; border-color: rgb(79 179 159 / 62%); }
   #filamentContextToggle.on { background: rgb(79 179 159 / 20%); border-color: #4fb39f;
     color: #d9fff6; }
@@ -436,17 +399,9 @@ window.__titinBoot = { ready: false, problems: [] };
   #scopeState { color: #d9b869; font-size: 10px; }
   #urlNotice { pointer-events: auto; margin-top: 9px; max-width: 660px; border-left: 3px solid #d0a24c;
     border-radius: 5px; padding: 7px 10px; color: #e7cc91; font-size: 10px; }
-  /* The clearance for the stage bar is carried entirely by the card's own
-     margin rather than being split with #stageChrome's bottom padding: the card
-     is the only bottom-anchored thing in that layer, and two stacked reserves
-     would silently add up to twice the gap the bar actually needs.
-     --stage-bar-h is the bar's MEASURED height, published by the page. A
-     constant was tried first and was wrong at the first viewport that wrapped
-     the bar to a third row: at 1280 px the bar is 114 px, not the 92 px a fixed
-     reserve assumed, and the card sat on top of it. */
   #guidedCard { pointer-events: auto; margin-top: auto;
-    margin-bottom: calc(var(--stage-bar-h, 114px) + 14px); width: min(500px, calc(100vw - 28px));
-    max-height: calc(100vh - var(--stage-bar-h, 114px) - 126px); overflow-y: auto;
+    margin-bottom: 14px; width: min(500px, calc(100vw - 28px));
+    max-height: calc(100vh - 126px); overflow-y: auto;
     overscroll-behavior: contain; border-radius: 10px; padding: 14px 15px 12px;
     border-top: 2px solid var(--titin); }
   #app[data-mode="evidence"] #guidedCard { display: none; }
@@ -457,29 +412,11 @@ window.__titinBoot = { ready: false, problems: [] };
   #chapterSummary { margin: 0 0 10px; color: #d2d9e1; font-size: 12px; line-height: 1.55; }
   #chapterStateAnnouncement { margin: 0 0 8px; color: #aeb9c7; font-size: 10px; line-height: 1.45; }
   .chapter-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  #chapterNextActions { display: flex; gap: 5px; flex-wrap: wrap; margin: 0 0 8px; }
   .status-pill { display: inline-block; border: 1px solid #775b29; border-radius: 999px;
     color: #e8c16d; padding: 1px 6px; font-size: 9px; font-weight: 700; letter-spacing: .05em; }
   .preset-outside { border-color: #8b6530; color: #e7c27c; }
   #chapterEvidence { border-left-color: var(--titin); }
   #chapterSources { margin-top: 5px; color: var(--dim); font-size: 10px; }
-  #extensionStory { margin: 10px 0 11px; border-top: 1px solid var(--edge); padding-top: 9px; }
-  .extension-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px;
-    color: var(--dim); font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }
-  .extension-row { width: 100%; display: grid; grid-template-columns: 86px 70px minmax(70px, 1fr) 52px;
-    align-items: center; gap: 7px; padding: 4px 5px; border: 0; border-radius: 4px;
-    background: transparent; color: var(--text); text-align: left; }
-  .extension-row:hover:not(:disabled) { background: rgb(255 255 255 / 5%); color: #ffe1e8; }
-  .extension-row:focus-visible { color: #ffe1e8; }
-  .extension-row.on { background: rgb(255 93 125 / 13%); color: #ffe1e8;
-    box-shadow: inset 2px 0 var(--titin); }
-  .extension-row:disabled { color: #98a4b3; }
-  .extension-name { font-weight: 650; }
-  .extension-mechanism { color: var(--dim); font-size: 9px; line-height: 1.15; }
-  .extension-track { height: 5px; background: rgb(255 255 255 / 8%); border-radius: 999px; overflow: hidden; }
-  .extension-fill { height: 100%; min-width: 3px; border-radius: inherit; background: var(--titin); }
-  .extension-value { text-align: right; font-variant-numeric: tabular-nums; color: #ffe1e8; font-size: 10px; }
-  .mechanism-key { color: var(--dim); font-size: 9px; margin-top: 5px; }
   /* SC-6. Two panels side by side, each a plain 2-D plot of the shared frame, so
      the comparison cannot foreshorten or normalise the two states separately. */
   .lattice-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -621,7 +558,7 @@ window.__titinBoot = { ready: false, problems: [] };
      The shipped density is right for a laptop at arm's length and wrong for a
      room: the drawer's dominant size is 9–10 px. This raises what a reader
      READS — copy, lists, tables, the pinned card, the chapter summary — and
-     leaves chrome labels, counted figures and the stage bar where the earlier
+     leaves chrome labels and counted figures where the earlier
      sprints measured them, so turning it on does not re-solve the layout.
      A control rather than a media query, because what changes is the room. */
   #app[data-text-scale="large"] { font-size: 15px; }
@@ -638,10 +575,10 @@ window.__titinBoot = { ready: false, problems: [] };
      POINTER rather than on width so a small laptop keeps its compact controls and
      a large tablet still gets the 44 px minimum. */
   @media (pointer: coarse) {
-    button, .extension-row { min-height: 44px; }
+    button { min-height: 44px; }
     input[type=range] { height: 44px; }
     .row { gap: 8px; }
-    #closeEvidence, .mode-switch button { padding-left: 14px; padding-right: 14px; }
+    #closeEvidence { padding-left: 14px; padding-right: 14px; }
   }
   @media (max-width: 900px) {
     #app[data-mode="evidence"][data-drawer-open="true"] {
@@ -651,61 +588,9 @@ window.__titinBoot = { ready: false, problems: [] };
     .brand-sub { display: none; }
   }
   @media (min-width: 768px) and (max-width: 1100px) {
-    .stage-row-primary {
-      grid-template-columns: auto minmax(140px, 1fr) auto auto auto;
-    }
-    .stage-row-primary #stageForce { grid-column: 1 / 5; }
-    .stage-row-primary #stageForceInfo { grid-column: 5; }
-    .stage-row-scenes, #sceneControls { flex-wrap: wrap; }
+    #sceneControls { flex-wrap: wrap; }
   }
-  /* SC-12 narrow stage. At 375 x 812 the shipped build left the sarcomere a
-     ~60 px strip, and the new stage bar competes for the same space: wrapped
-     onto one control per line it took more than half the screen. Three changes,
-     none of them a font size — the bar's rows become single-line scrolling
-     strips, the scope badge collapses to one line, and the chapter card becomes
-     a bottom sheet that opens on tap. */
-  .card-peek-toggle { display: none; }
   @media (max-width: 767px) {
-    .stage-row { overflow: visible; }
-    .stage-row .row { margin: 0; }
-    .stage-row button { white-space: nowrap; }
-    /* Explicit grid placement, in reading order: the focus order must still be
-       the visual order, so the play control sits at the end of the preset strip
-       rather than beside the slider it follows in the DOM. */
-    .stage-row-primary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto;
-      gap: 5px 8px; align-items: center; overflow: visible; }
-    .stage-row-primary .stage-label { grid-area: 1 / 1; }
-    .stage-row-primary .stage-readout { grid-area: 1 / 2 / 2 / 4; text-align: right;
-      min-width: 0; font-size: 13px; }
-    .stage-row-primary #sl { grid-area: 2 / 1 / 3 / 4; min-width: 0; }
-    .stage-row-primary #stagePlay { grid-area: 3 / 1; }
-    .stage-row-primary #stageReset { grid-area: 3 / 2; }
-    .stage-row-primary #stageForce { grid-area: 3 / 3; justify-self: end; }
-    .stage-row-primary #stageForce .force-class { display: none; }
-    .stage-row-primary #stageForceInfo { display: none; }
-    .stage-row-scenes { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto auto;
-      gap: 5px; }
-    .stage-row-scenes > .stage-label { display: none; }
-    #sceneControls { display: contents; }
-    #sceneControls button:nth-child(1) { grid-column: 1; }
-    #sceneControls button:nth-child(2) { grid-column: 2; }
-    #sceneControls button:nth-child(n+3) { display: none; }
-    #sceneTruth { grid-column: 3; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-    #sceneDetails { display: none !important; }
-    /* One line, not a 90 px block of its own above the stage. */
-    #scopeBadge { display: flex; align-items: baseline; gap: 8px; padding: 5px 9px; }
-    #scopeBadge .scope-kicker { display: none; }
-    #scopeIdentity, #scopeState { font-size: 10px; white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis; }
-    .brand-title { font-size: 12px; }
-    .brand-block { padding: 6px 8px 6px 10px; }
-    /* The bottom sheet. It sits on the stage bar, spans the stage, and in its
-       peek state shows only what tells you where you are in the route. */
-    #guidedCard { position: absolute; left: 9px; right: 9px; width: auto; margin: 0;
-      bottom: var(--stage-bar-h, 114px); border-radius: 12px 12px 0 0;
-      max-height: 24vh; overflow-y: auto; overscroll-behavior: contain;
-      padding: 9px 12px 10px; }
-    #chapterTitle { font-size: 16px; margin: 2px 0 6px; }
     /* Two rows of three: six columns on a phone would be six words wide. The
        stage keeps the flow and its counted figures; the sentence and the record
        paths for each stage stay one tap away, in Sources & build. */
@@ -717,29 +602,7 @@ window.__titinBoot = { ready: false, problems: [] };
     #guidedPipeline .pipeline-foot { font-size: 10px; }
     #guidedPipeline .pipeline-detail, #guidedPipeline .pipeline-records { display: none; }
   }
-  @media (max-width: 700px) {
-    #stageChrome { padding: 9px; }
-    #stageHeader { display: grid; grid-template-columns: 1fr; gap: 7px; }
-    .brand-block { width: 100%; }
-    #scopeBadge { max-width: none; text-align: left; width: 100%; }
-    #interactionHelp { display: none; }
-    /* The card's clearance follows the measured bar height at every width, so
-       there is no narrow-viewport constant to keep in step with it here. */
-    .stage-row-secondary #stageLegend { display: none; }
-    .extension-row { grid-template-columns: 72px 62px minmax(54px, 1fr) 46px; gap: 5px; }
-    #app[data-mode="evidence"] { display: block; }
-    #app[data-mode="evidence"] #canvas { height: 100%; }
-    /* The drawer stops at the stage bar rather than covering it. SC-12's rule is
-       that the primary controls are reachable in both audience modes, and a
-       phone-width drawer that buried them would only honour that on a desktop. */
-    #panel { position: fixed; inset: auto 0 var(--stage-bar-h, 114px); z-index: 20;
-      max-height: 64vh; border-left: 0;
-      border-top: 1px solid var(--edge); border-radius: 12px 12px 0 0; box-shadow: 0 -16px 50px rgb(0 0 0 / 50%); }
-    #objectInspector { width: min(340px, calc(100% - 18px)); }
-  }
-  /* SC-27A Tour and Research surfaces. These final declarations intentionally
-     override the historical stage-bar layout while its IDs remain inert for URL
-     and expert-workbench compatibility during the migration. */
+  /* SC-27A Tour and Research surfaces. */
   html, body { font-size: 15px; }
   button { min-height: 36px; padding: 7px 11px; font-size: 14px; line-height: 1.25; }
   #panel, #panel table, #panel li, #panel .sub, #panel .note { font-size: 13px; }
@@ -792,10 +655,6 @@ window.__titinBoot = { ready: false, problems: [] };
     color: #ffd7e0; font-size: 12px; white-space: normal; overflow-wrap: anywhere;
     line-height: 1.25; }
   .tour-mechanics #stageForce .force-class { font-size: 12px; letter-spacing: 0; }
-  /* The four clickable extension rows were an older, duplicate navigation path.
-     The Tour teaches the same mechanics on the model; raw regional values remain
-     in Research > Measure without spending four extra Guided actions. */
-  #guidedCard #extensionStory { display: none !important; }
   #inspectHint { bottom: calc(var(--tour-card-h, 220px) + 24px); border-color: #8ba7c8;
     background: rgb(22 27 34 / 94%); color: var(--text); font-size: 13px; }
   #interactionHelp { bottom: 12px; font-size: 12px; }
@@ -907,7 +766,6 @@ window.__titinBoot = { ready: false, problems: [] };
       </div>
       <p id="objectInspectorLay" class="object-lay"></p>
       <div id="objectInspectorEvidence"></div>
-      <div id="objectInspectorClaim" hidden></div>
       <div class="object-expert-link">
         <!-- SC-27A. The Tour card stops at the lay claim and disclosed evidence
              class; limitations and citations are one explicit step away in
@@ -929,7 +787,6 @@ window.__titinBoot = { ready: false, problems: [] };
             <div class="brand-title">Titin across the sarcomere</div>
             <div class="brand-sub">One titin in one sarcomere</div>
           </div>
-          <button id="audienceGuided" hidden aria-pressed="true">Tour</button>
         </div>
         <div class="header-actions">
           <button id="scopeBadge" aria-label="Open Research scope details">
@@ -958,17 +815,13 @@ window.__titinBoot = { ready: false, problems: [] };
         </div>
         <p id="chapterQuestion" class="chapter-question"></p>
         <h1 id="chapterTitle" tabindex="-1">Loading guided route…</h1>
-        <!-- On a phone the card is a bottom sheet: the chapter number and title
-             stay visible, the rest opens on tap. Without it the header, the
-             card and the stage bar left the sarcomere a ~60 px strip. The
-             toggle is display: none above the narrow breakpoint, where the card
-             is simply always open. -->
+        <!-- On a phone the Tour card becomes a compact bottom sheet so the
+             scientific stage retains the visual priority. -->
         <div id="guidedCardBody">
         <p id="chapterSummary"></p>
-        <div id="tourEvidenceRecap" class="tour-evidence-recap" aria-label="Tour evidence labels" hidden></div>
+        <div id="tourEvidenceRecap" class="tour-evidence-recap" role="group" aria-label="Tour evidence labels" hidden></div>
         <p id="chapterStateAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
         <div id="guidedSelection" hidden><b id="guidedSelectionLabel"></b><span id="guidedSelectionText"></span></div>
-        <div id="chapterNextActions" hidden aria-label="Actions for this beat"></div>
         <section id="tourMechanics" class="tour-mechanics" aria-label="Stretch demonstration" hidden>
           <label class="stage-label" for="sl">Sarcomere length</label>
           <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres"
@@ -982,23 +835,11 @@ window.__titinBoot = { ready: false, problems: [] };
         <div class="chapter-actions">
           <button id="chapterPrevious">Previous</button>
           <button id="chapterNext">Next</button>
-          <button id="chapterRestoreView" hidden disabled>Restore previous view</button>
-        </div>
-        <div id="extensionStory" hidden>
-          <div class="extension-head"><span>Regional end-to-end span at this length</span><span id="extensionTotal">—</span></div>
-          <div id="extensionRows"></div>
-          <div class="mechanism-key">●—● folded domains straighten · ∿ disordered chain extends</div>
         </div>
         <div id="guidedLattice" hidden></div>
         </div><!-- /guidedCardBody -->
       </section>
     </div>
-      <div id="stageBar" hidden>
-        <button id="stageReset" hidden disabled aria-label="Reset the stretch demonstration">Reset</button>
-        <button id="stageForceInfo" hidden aria-label="Information about approximate modeled force">Force info</button>
-        <div id="stageLegend" hidden></div>
-        <div id="stretchHint" role="status" hidden>Watch the I-band bracket</div>
-      </div>
     <div id="interactionHelp" class="sr-only">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
       id="shortcutHelp">1–5 beats · space stretch · x spring · e Research · g Tour · r restart</span></div>
   </div>
@@ -1230,7 +1071,7 @@ window.__titinBoot = { ready: false, problems: [] };
 import { browserReader } from './src/model/readBrowser.js';
 import { TitinVisualization, SCALES } from './src/api/TitinVisualization.js';
 import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
-import { COMPONENT_COLOR, guidedComponentColors, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
+import { COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
 import { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
 import { TourView } from './src/presentation/TourView.js';
 import { createEvidenceChip, evidenceLanguage } from './src/presentation/EvidenceChip.js';
@@ -1282,7 +1123,6 @@ const state = { showDomains: false, showFilamentContext: true,
                 // about the model, and story.serialize() is the contract for
                 // what a shared link reproduces.
                 drawerTab: 'inspect', sourceFilter: 'auto', selectedSourceValue: null };
-let demonstrationRestoreLength = null;
 let chapterRestoreViewState = null;
 let chapterViewAnnouncement = '';
 
@@ -1477,8 +1317,6 @@ function syncAudienceMode() {
   $('app').dataset.mode = state.audienceMode;
   $('app').dataset.drawerOpen = String(drawerOpen);
   $('panel').setAttribute('aria-hidden', String(!drawerOpen));
-  $('audienceGuided').classList.toggle('on', !evidence);
-  $('audienceGuided').setAttribute('aria-pressed', String(!evidence));
   $('audienceEvidence').classList.toggle('on', evidence);
   $('audienceEvidence').setAttribute('aria-pressed', String(evidence));
   const mobileResearch = drawerOpen && window.matchMedia('(max-width: 767px), (orientation: portrait) and (max-width: 1024px)').matches;
@@ -1550,10 +1388,6 @@ function closeEvidence() {
   });
 }
 
-$('audienceGuided').onclick = () => {
-  requestHistoryEntry();
-  setAudienceMode(AUDIENCE_MODES.guided);
-};
 $('audienceEvidence').onclick = () => {
   if (state.audienceMode === AUDIENCE_MODES.evidence && state.drawer !== 'closed') closeEvidence();
   else openEvidence($('audienceEvidence'), 'inspect');
@@ -1563,7 +1397,6 @@ $('scopeBadge').onclick = () => {
   requestAnimationFrame(() => $('scopeDetails').focus({ preventScroll: false }));
 };
 $('closeEvidence').onclick = closeEvidence;
-$('stageForceInfo').onclick = () => openEvidence($('stageForceInfo'), 'measure');
 $('stageForce').onclick = () => openEvidence($('stageForce'), 'measure');
 
 // SC-13 drawer sections, in the order a reader asks for them: what am I looking
@@ -1609,37 +1442,7 @@ $('textScale').onclick = () => {
   markStageDirty();
 };
 
-// A novice cannot act on "shown in pink beside actin and myosin" without a key.
-// The swatches read the palette actually in use, so Guided's subdued context
-// colours and Evidence's identity palette are both described correctly.
-function syncStageLegend(report) {
-  const guided = state.audienceMode === AUDIENCE_MODES.guided;
-  const palette = guided ? guidedComponentColors(model.spec.renderStyle) : COMPONENT_COLOR;
-  // `hidden_components` is the authority: it already carries both the isolated-
-  // titin scale's hidden set and the filament-context toggle, so the legend can
-  // never name a colour that is not currently on the stage.
-  const hidden = new Set(report?.hidden_components || []);
-  const entries = [['titin', 'Titin', COMPONENT_COLOR.titin]];
-  if (state.showFilamentContext && !hidden.has('thick_filament')) {
-    entries.push(['thick_filament', 'Myosin', palette.thick_filament]);
-  }
-  if (state.showFilamentContext && !hidden.has('thin_filament')) {
-    entries.push(['thin_filament', 'Actin', palette.thin_filament]);
-  }
-  $('stageLegend').replaceChildren(...entries.map(([id, label, colour]) => (
-    legendEntry(id, label, colour)
-  )));
-}
-
-/**
- * One legend row, as a control.
- *
- * SC-25: a legend already tells the reader which colour is which structure, so it
- * is the shortest route from "what is the pink thing" to that structure's
- * explanation — but only when it can be operated. Rows whose component has no
- * canonical annotation stay inert rather than becoming a button that does
- * nothing.
- */
+/** Build one operable entry for the Research structure key. */
 function legendEntry(componentId, label, colour) {
   const selectable = activeAnnotations.some((annotation) => (
     annotation.target_type === 'component' && annotation.target_id === componentId
@@ -1662,7 +1465,7 @@ function legendEntry(componentId, label, colour) {
 }
 
 /**
- * Select a structure that a label, legend entry, or keyboard target NAMED.
+ * Select a structure that a direct label or keyboard target NAMED.
  *
  * This is the reviewed resolver's first clause expressed in the page: when the
  * reader points at a word rather than at a pixel, no ray is involved and no
@@ -1893,23 +1696,15 @@ function markStageDirty() { stageDirty = true; }
 let sweepHandle = null;
 let sweepElapsedMs = 0;
 let sweepLastFrameAt = null;
-let sweepResetLength = null;
-// True while Stretch owns the teaching frame, including paused, completed and
-// reset states, and any Custom state the reader reaches from Spring — the
+// True while Stretch owns the teaching frame, including paused and completed
+// states, and any Custom state the reader reaches from Spring — the
 // framing still applies even when the semantic label no longer does.
 let sweepPresentationActive = false;
 
 function abandonStretchPresentation({ synchronize = true } = {}) {
   stopSweep({ synchronize });
   sweepPresentationActive = false;
-  sweepResetLength = null;
-  $('stageReset').disabled = true;
 }
-// SC-12. The stage bar wraps to more rows as the stage narrows — 114 px at
-// 1280 px wide, more on a phone — so everything that has to stay clear of it is
-// offset by its MEASURED height. A constant was wrong at the first viewport
-// that wrapped differently, and it was wrong silently: the chapter card simply
-// sat on top of the controls.
 // ---- SC-25 one-time inspection onboarding -----------------------------------
 // The affordance the whole sprint is about — that the model explains itself when
 // you click it — was never stated anywhere a novice would read it. This says it
@@ -1996,12 +1791,6 @@ function stepInspectionPulse(now) {
   return true;
 }
 
-function publishStageBarHeight() {
-  const height = Math.round($('stageBar').getBoundingClientRect().height);
-  $('app').style.setProperty('--stage-bar-h', `${height}px`);
-  markStageDirty();
-}
-new ResizeObserver(publishStageBarHeight).observe($('stageBar'));
 // The same measured-not-assumed rule for the drawer head, which the SC-13 tab
 // bar sticks to. The head is display: none in Guided mode and measures 0 there,
 // so the last real height is kept rather than published as a zero offset.
@@ -2297,16 +2086,6 @@ function renderScienceOverlay() {
     right: cardRect.right - canvasRect.left,
     bottom: cardRect.bottom - canvasRect.top,
   } : null;
-  // The stage bar owns the bottom rule the ruler used to sit on, and it grows a
-  // row as the stage narrows, so how much of the stage it takes is measured
-  // rather than assumed.
-  const stageBarNode = $('stageBar');
-  const barTop = stageBarNode.hidden || stageBarNode.offsetParent === null
-    ? height : stageBarNode.getBoundingClientRect().top - canvasRect.top;
-  const stageBarInsetPx = barTop >= height
-    ? STAGE_LAYOUT.scale_bar_baseline_px
-    : Math.max(STAGE_LAYOUT.scale_bar_baseline_px,
-      height - barTop + STAGE_LAYOUT.edge_padding_px + 4);
   const projectionSignature = JSON.stringify({
     length: activeShowcaseOverlay.sarcomere_length_nm,
     width, height, showBands,
@@ -2322,7 +2101,6 @@ function renderScienceOverlay() {
     headerBottom: Math.round(safeTopPx * 4) / 4,
     card: cardBox && [cardBox.top, cardBox.right, cardBox.bottom]
       .map((edge) => Math.round(edge * 4) / 4),
-    bar: Math.round(stageBarInsetPx * 4) / 4,
     scale: pxPerNm === null ? null : Math.round(pxPerNm * 1e4),
     projected: [...projected.values()].map((point) => [
       point.id, Math.round(point.x_px * 4) / 4, Math.round(point.y_px * 4) / 4, point.visible,
@@ -2528,7 +2306,7 @@ function renderScienceOverlay() {
     const bar = scaleBar(pxPerNm, Math.max(100, Math.min(180, width * 0.14)));
     const { left: barX, baseline: barY } = scaleBarPlacement({
       barPx: bar.px, canvas: { width, height }, card: cardBox, safeTopPx,
-      bottomInsetPx: stageBarInsetPx,
+      bottomInsetPx: STAGE_LAYOUT.scale_bar_baseline_px,
     });
     nodes.push(svgElement('path', {
       d: `M ${barX} ${barY - 4} V ${barY} H ${barX + bar.px} V ${barY - 4}`,
@@ -2550,53 +2328,6 @@ function renderScienceOverlay() {
     }
   }
   svg.replaceChildren(...nodes);
-}
-
-function renderExtensionChart(showcase) {
-  const card = $('extensionStory');
-  const show = Boolean(showcase && activeFeatures().has('region_extension_chart'));
-  card.hidden = !show;
-  if (!show) { $('extensionRows').replaceChildren(); return; }
-  const chart = showcase.extension_chart;
-  const mechanicsDecision = model.spec.mechanicalParameters.decision.status;
-  $('extensionTotal').textContent = `${chart.total_nm.toFixed(1)} nm total · ${chart.evidence_class}`
-    + (mechanicsDecision === 'APPROVED'
-      ? ' · common-force literature-bounded solver; see Passive force for regime and sensitivity'
-      : ' · common-force development solver; absolute pN withheld pending transfer validation');
-  const maxExtension = Math.max(...chart.regions.map((region) => region.extension_nm));
-  const mechanismMark = { folded: '●—● straighten', composite: '● + ∿', disordered: '∿ extends' };
-  const rows = chart.regions.map((region) => {
-    const button = document.createElement('button');
-    button.className = 'extension-row';
-    button.dataset.region = region.id;
-    button.title = `${region.label}: ${region.extension_nm.toFixed(1)} nm; ${region.mechanism.label}. ${region.evidence_class}.`;
-    button.setAttribute('aria-label', button.title);
-    button.setAttribute('aria-pressed', String(state.region === region.id));
-    button.onclick = () => selectRegion(state.region === region.id ? null : region.id);
-    const name = document.createElement('span');
-    name.className = 'extension-name'; name.textContent = region.label;
-    const mechanism = document.createElement('span');
-    mechanism.className = 'extension-mechanism';
-    mechanism.textContent = mechanismMark[region.mechanism.kind];
-    const track = document.createElement('span'); track.className = 'extension-track';
-    const fill = document.createElement('span'); fill.className = 'extension-fill';
-    fill.style.width = `${Math.max(3, 100 * region.extension_nm / maxExtension)}%`;
-    track.append(fill);
-    const value = document.createElement('span');
-    value.className = 'extension-value'; value.textContent = `${region.extension_nm.toFixed(1)} nm`;
-    button.append(name, mechanism, track, value);
-    return button;
-  });
-  $('extensionRows').replaceChildren(...rows);
-  syncExtensionRows();
-}
-
-function syncExtensionRows() {
-  for (const row of $('extensionRows').children) {
-    const on = row.dataset.region === state.region;
-    row.classList.toggle('on', on);
-    row.setAttribute('aria-pressed', String(on));
-  }
 }
 
 /**
@@ -3152,14 +2883,6 @@ function renderChapter() {
         return item;
       }));
   } else recap.replaceChildren();
-  $('chapterNextActions').replaceChildren(...chapter.next_actions.map((action) => {
-    const button = document.createElement('button');
-    button.textContent = action.label;
-    button.dataset.chapterAction = action.action;
-    button.onclick = () => runChapterAction(action.action, button);
-    return button;
-  }));
-  syncChapterActionButtons();
   syncResearchRestoreView();
   const claimNode = renderClaimView(visualization.claimView(chapter.target_claim_id, {
     presentationRecord: chapter,
@@ -3173,50 +2896,12 @@ function renderChapter() {
   $('chapterEvidence').replaceChildren(claimNode);
   if (state.drawerTab === 'sources') renderBibliography();
   renderScienceOverlay();
-  renderExtensionChart(activeShowcaseOverlay);
   renderProvenancePipeline();
   requestAnimationFrame(() => {
     const height = Math.round($('guidedCard').getBoundingClientRect().height);
     if (height > 0) $('app').style.setProperty('--tour-card-h', `${height}px`);
     markStageDirty();
   });
-}
-
-function syncChapterActionButtons() {
-  const length = Number(slider.value);
-  const inRange = length >= sweepRange.min && length <= sweepRange.max;
-  for (const button of $('chapterNextActions').children) {
-    const action = button.dataset.chapterAction;
-    button.disabled = (action === 'length.set_demo_start' && inRange)
-      || (action === 'length.restore' && demonstrationRestoreLength === null)
-      || (action === 'sweep.toggle' && !inRange);
-  }
-}
-
-function setDemonstrationStart() {
-  const current = Number(slider.value);
-  if (current >= sweepRange.min && current <= sweepRange.max) return;
-  if (demonstrationRestoreLength === null) demonstrationRestoreLength = current;
-  slider.value = String(sweepRange.min);
-  rebuild();
-  renderChapter();
-}
-
-function restoreDemonstrationLength() {
-  if (demonstrationRestoreLength === null) return;
-  slider.value = String(demonstrationRestoreLength);
-  demonstrationRestoreLength = null;
-  rebuild();
-  renderChapter();
-}
-
-function runChapterAction(action, trigger) {
-  if (action.startsWith('story.')) applyChapter(action.slice('story.'.length));
-  else if (action === 'mode.evidence') openEvidence(trigger, 'evidence');
-  else if (action === 'sweep.toggle') toggleSweep();
-  else if (action === 'length.set_demo_start') setDemonstrationStart();
-  else if (action === 'length.restore') restoreDemonstrationLength();
-  else if (action.startsWith('target.')) selectRegion(action.slice('target.'.length));
 }
 
 function applyChapterVisibility(chapterId) {
@@ -3288,7 +2973,6 @@ function captureChapterViewState() {
 
 function syncResearchRestoreView() {
   const available = chapterRestoreViewState !== null;
-  $('chapterRestoreView').disabled = !available;
   $('researchRestoreView').hidden = !available;
   $('researchRestoreView').disabled = !available;
 }
@@ -3366,7 +3050,6 @@ $('chapterNext').onclick = () => {
   if (index < story.chapters.length - 1) applyChapter(story.chapters[index + 1].id);
   else applyChapter(story.chapters[0].id);
 };
-$('chapterRestoreView').onclick = () => restorePreviousChapterView();
 $('researchRestoreView').onclick = () => restorePreviousChapterView({ focusResearch: true });
 
 // ---- controls -------------------------------------------------------------
@@ -3782,7 +3465,7 @@ function selectRegion(regionId) {
   }
   syncSceneTruth();
   if (hadAnchorDetail) rebuild();
-  syncRegions(); syncExtensionRows(); syncCloseups(null); syncViews(); refreshRegionReadout();
+  syncRegions(); syncCloseups(null); syncViews(); refreshRegionReadout();
   if (regionId) {
     setPinnedSelection({
       target_type: 'titin_region', target_id: regionId,
@@ -3800,7 +3483,6 @@ function syncRegions() {
     const on = b.dataset.region === state.region;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   }
-  syncExtensionRows();
 }
 
 function evidenceSummary(annotation) {
@@ -4106,7 +3788,6 @@ function renderPinnedSelection() {
   $('app').dataset.pinnedInspector = annotation ? 'true' : 'false';
   if (!annotation) {
     $('guidedSelection').hidden = true;
-    $('objectInspectorClaim').replaceChildren();
     $('objectInspectorName').textContent = '';
     $('objectInspectorLay').textContent = '';
     $('objectInspectorEvidence').replaceChildren();
@@ -4117,7 +3798,6 @@ function renderPinnedSelection() {
     return;
   }
   const claimView = claimViewForAnnotation(annotation);
-  $('objectInspectorClaim').replaceChildren(renderClaimView(claimView, document));
   $('objectInspectorName').textContent = annotation.label;
   $('objectInspectorLay').textContent = claimView.plain;
   const chip = createEvidenceChip(
@@ -4162,7 +3842,7 @@ function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
     state.selectedTarget = annotation.target_id;
     state.region = annotation.target_type === 'titin_region' ? annotation.target_id : null;
     visualization.highlightTitinRegion(state.region);
-    syncRegions(); syncExtensionRows(); refreshRegionReadout();
+    syncRegions(); refreshRegionReadout();
     syncComponentButtons(visualization.currentState());
     syncSceneTruth();
     syncPublicPresentation(); syncUrl();
@@ -4180,7 +3860,7 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
     state.selectedTarget = null; state.region = null;
     state.selectedSourceValue = null; state.sourceFilter = 'auto';
     visualization.highlightTitinRegion(null);
-    syncRegions(); syncExtensionRows(); refreshRegionReadout();
+    syncRegions(); refreshRegionReadout();
     syncComponentButtons(visualization.currentState());
     syncSceneTruth();
     syncPublicPresentation(); syncUrl();
@@ -4286,12 +3966,12 @@ function showHoverPick(pick) {
  *
  * Everything here is a control or a route the reader needs while an explanation
  * is open: the identity/mode header, the story card and its actions, the primary
- * stage bar, and the onboarding invitation. Hidden surfaces are omitted rather
+ * onboarding invitation. Hidden surfaces are omitted rather
  * than listed with zero size, so a closed story card gives the card its space
  * back instead of reserving a rectangle nobody can see.
  */
 function stageObstacles(canvasRect) {
-  const ids = ['stageHeader', 'guidedCard', 'guidedPipeline', 'stageBar', 'inspectHint',
+  const ids = ['stageHeader', 'guidedCard', 'guidedPipeline', 'inspectHint',
     'urlNotice'];
   const obstacles = [];
   for (const id of ids) {
@@ -4345,17 +4025,10 @@ function renderObjectOverlay() {
   const canvasRect = $('canvas').getBoundingClientRect();
   const canvasTop = canvasRect.top;
   const headerBottom = $('stageHeader').getBoundingClientRect().bottom - canvasTop + 8;
-  // The stage bar is the floor, not the bottom of the canvas: this card has
-  // pointer events, so letting it settle over the bar would put an explanation
-  // on top of the controls and swallow clicks meant for them. The placement
-  // rule itself is the tested one — this only tells it how much stage there is.
-  const stageBarNode = $('stageBar');
-  const barTop = stageBarNode.hidden || stageBarNode.offsetParent === null
-    ? height : stageBarNode.getBoundingClientRect().top - canvasTop;
   const placed = inspectorPlacement({
     anchor: { x_px: point.x_px, y_px: point.y_px },
     card: { width: cardWidth, height: cardHeight },
-    canvas: { width, height: barTop },
+    canvas: { width, height },
     safeTopPx: headerBottom,
     gapPx: pinnedPick ? STAGE_LAYOUT.card_gap_px : 14,
     // SC-25. Measured, never assumed: the story card's height follows the
@@ -4469,7 +4142,6 @@ function render(report) {
   activeAnnotations = annotations;
   const g = model.geometryAt(requestedSL);
   activeShowcaseOverlay = visualization.showcaseOverlay();
-  renderExtensionChart(activeShowcaseOverlay);
   // The lattice comparison follows sarcomere length; the build pipeline does not
   // depend on it at all, so it is rendered on chapter change rather than rebuilt
   // on every slider frame.
@@ -4479,11 +4151,10 @@ function render(report) {
   const hiddenComponents = new Set(report.hidden_components || []);
   const hiddenSuffix = (component) => hiddenComponents.has(component) ? ' (hidden)' : '';
   $('slReadout').innerHTML = `${g.sarcomere_length_nm} <small>nm${report.clamped ? ' (clamped)' : ''}</small>`;
-  // The stage bar carries the slider now, so it carries the number the slider is
-  // reporting. Same value, same clamp disclosure, beside the control itself.
+  // The contextual Tour mechanics row reports the same value and clamp state as
+  // the slider beside it.
   $('stageLengthReadout').textContent = `${g.sarcomere_length_nm.toLocaleString()} nm`
     + (report.clamped ? ' (clamped)' : '');
-  syncChapterActionButtons();
   const statePreset = presentation.length_presets
     .find((preset) => preset.sarcomere_length_nm === g.sarcomere_length_nm);
   const scopeState = statePreset
@@ -4502,7 +4173,6 @@ function render(report) {
   caveat.textContent = disclosure || '';
   syncPresets(g.sarcomere_length_nm);
   syncDepictionToggles();
-  syncStageLegend(report);
 
   // SC-21: render the evaluator's status, never the internal geometry scalar.
   const forceEl = $('stageForce');
@@ -4925,8 +4595,6 @@ function stopSweep({ completed = false, synchronize = true } = {}) {
   $('stagePlay').setAttribute('aria-pressed', 'false');
   $('stagePlay').textContent = '\u25b6 Stretch';
   $('stagePlay').setAttribute('aria-label', 'Play a stretch sweep across the working range');
-  $('stretchHint').hidden = true;
-  $('stageReset').disabled = sweepResetLength === null;
   if (completed) {
     $('objectAnnouncement').textContent = 'Stretch complete at the supported maximum. '
       + 'The full half-sarcomere and I-band bracket remain framed.';
@@ -4984,9 +4652,6 @@ const sweepRange = {
 function unobscuredFrameOptions({ animate = false } = {}) {
   const canvasBox = $('canvas').getBoundingClientRect();
   const headerBox = $('stageHeader').getBoundingClientRect();
-  const stageBarNode = $('stageBar');
-  const barBox = stageBarNode.hidden || stageBarNode.offsetParent === null
-    ? null : stageBarNode.getBoundingClientRect();
   const storyCard = $('guidedCard');
   const storyBox = !storyCard.hidden && storyCard.getClientRects().length
     ? storyCard.getBoundingClientRect() : null;
@@ -5000,7 +4665,6 @@ function unobscuredFrameOptions({ animate = false } = {}) {
   );
   const safeBottom = Math.min(
     canvasBox.height,
-    barBox ? barBox.top - canvasBox.top : canvasBox.height,
     storyBox ? storyBox.top - canvasBox.top : Infinity,
   );
   return {
@@ -5034,7 +4698,6 @@ function toggleSweep() {
     return;
   }
   const needsSpringScene = !sceneMatch(sceneController.scene('spring'), publicSceneState());
-  if (sweepResetLength === null) sweepResetLength = current;
   sweepPresentationActive = true;
   stopInspectionPulse();
   if (needsSpringScene) {
@@ -5056,27 +4719,9 @@ function toggleSweep() {
   $('stagePlay').setAttribute('aria-pressed', 'true');
   $('stagePlay').textContent = 'Pause';
   $('stagePlay').setAttribute('aria-label', 'Pause the stretch demonstration');
-  $('stretchHint').hidden = false;
-  $('stageReset').disabled = false;
   sweepHandle = requestAnimationFrame(stepSweep);
 }
 $('stagePlay').onclick = toggleSweep;
-$('stageReset').onclick = () => {
-  if (sweepResetLength === null) return;
-  const resetLength = sweepResetLength;
-  stopSweep();
-  sweepPresentationActive = true;
-  // Reset is a complete semantic action, not just a slider write. Re-resolving
-  // Spring makes it impossible for a stale enabled button to leave the camera,
-  // layers, scene truth, and URL describing different presentations.
-  applySemanticScene('spring', { announce: false });
-  slider.value = String(resetLength);
-  sweepResetLength = null;
-  rebuild();
-  visualization.frameStretchSweep(sweepRange.max, unobscuredFrameOptions());
-  $('stageReset').disabled = true;
-  $('objectAnnouncement').textContent = 'Stretch reset to its starting length; the Spring scene remains framed.';
-};
 slider.addEventListener('pointerdown', stopSweep);
 slider.addEventListener('keydown', stopSweep);
 // The 3-D surface, not the #canvas container: the container also holds the stage

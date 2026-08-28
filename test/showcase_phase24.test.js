@@ -172,14 +172,15 @@ test('SC24/SC27A: responsive shell exposes Tour, Research controls, and stretch 
   for (const id of [
     'guidedCard', 'audienceEvidence', 'sceneControls', 'sceneTruth', 'sceneDetails',
     'sceneRingControls', 'sceneMyosinToggle',
-    'stagePlay', 'stageReset', 'stretchHint',
+    'stagePlay',
   ]) assert.match(page, new RegExp(`id="${id}"`), id);
-  for (const id of ['storyReopen', 'guidedCardToggle', 'stageMore', 'moreSheet', 'closeMore']) {
+  for (const id of ['storyReopen', 'guidedCardToggle', 'stageMore', 'moreSheet', 'closeMore',
+    'stageBar', 'stageReset', 'stretchHint', 'extensionStory', 'chapterNextActions',
+    'audienceGuided']) {
     assert.doesNotMatch(page, new RegExp(`id="${id}"`), `${id} is retired duplicate chrome`);
   }
   assert.match(page, /titin:manual-camera-change/);
   assert.match(page, /frameStretchSweep\(sweepRange\.max/);
-  assert.match(page, /Watch the I-band bracket/);
   assert.match(page, /--supported-start/);
   assert.match(page, /supportedRangeDescription/);
   assert.doesNotMatch(page, /\.stage-row \{[^}]*overflow-x:\s*auto/s,
