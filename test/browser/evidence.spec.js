@@ -157,6 +157,9 @@ for (const viewport of ['desktop', 'responsive']) {
       await page.locator('#tabInspect').click();
       await openInventory(page);
       await page.locator(target.selector).click();
+      await expect(page.locator('#objectAnnouncement')).toContainText(
+        'Review Selected structure in the Research Evidence tab for the full claim and exact sources.',
+      );
       await page.locator('#tabEvidence').click();
       await expect(page.locator('#selectedEvidence')).toBeVisible();
       await expect(page.locator('#selectedEvidence .claim-view-title')).toContainText(target.title);

@@ -50,8 +50,9 @@ test('SC13/22: Research citations remain in the canonical renderer', () => {
   assert.doesNotMatch(page, /id="objectInspectorClaim"/);
 });
 
-test('SC13/SC27A: the pinned announcement names the real route to exact sources', () => {
-  assert.match(page, /Open Why we know this in the pinned explanation[^;]+exact sources\.'/s);
+test('SC13/SC27A: selection announcements name the mode-appropriate route to exact sources', () => {
+  assert.match(page, /state\.audienceMode === AUDIENCE_MODES\.evidence\s*\n\s*\? 'Review Selected structure in the Research Evidence tab[^']+exact sources\.'/s);
+  assert.match(page, /: 'Open Why we know this in the pinned explanation[^']+exact sources\.'/s);
   assert.doesNotMatch(page, /Sources are available in the pinned explanation/);
 });
 

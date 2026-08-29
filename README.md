@@ -219,7 +219,7 @@ build-input fingerprints; a page served from unpinned source says so instead.
 - `src/geometry/ZDiscDetail.js` and `src/geometry/MBandDetail.js` — SC-3
   source-limited, target-gated terminal-anchor detail descriptors
 - `src/geometry/MyBPCContext.js` — SC-5 optional schematic MyBP-C C-zone context;
-  Evidence-only, off by default, and structurally unable to reach a thin filament,
+  Research-only, off by default, and structurally unable to reach a thin filament,
   depict a rigid thick-to-thin bridge, or claim a titin contact
 - `src/geometry/LatticeCrossSection.js` — SC-6 two-panel orthographic lattice comparison;
   plane coordinates plus one shared scale, so the educational cross-section cannot

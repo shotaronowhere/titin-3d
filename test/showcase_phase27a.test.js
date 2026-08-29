@@ -168,6 +168,8 @@ test('SC27A: user-facing vocabulary and accessible grouping use Tour and Researc
   ]) assert.ok(!page.includes(retired), `retired user-facing phrase remains: ${retired}`);
   assert.ok(!readme.includes('The Evidence drawer shows a build fingerprint'));
   assert.ok(!readme.includes('SC-5 Evidence-mode expert cards'));
+  assert.ok(!readme.includes('Evidence-only, off by default'));
+  assert.match(readme, /MyBPCContext\.js[^\n]+\n\s+Research-only, off by default/);
   assert.match(page, /id="sceneDetails" role="group" aria-label="Controls for this scientific scene"/);
   assert.match(page, /id="buildFingerprint" role="group" aria-label="Candidate identity"/);
   assert.match(releasePackBuilder, /guided_chapters: 'Tour beats'/);

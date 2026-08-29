@@ -3782,9 +3782,11 @@ function renderPinnedSelection() {
   renderSelectedEvidence(annotation);
   if (state.drawerTab === 'sources') renderBibliography();
   syncAnnotationIndex();
+  const sourceRoute = state.audienceMode === AUDIENCE_MODES.evidence
+    ? 'Review Selected structure in the Research Evidence tab for the full claim and exact sources.'
+    : 'Open Why we know this in the pinned explanation to review the full claim and exact sources.';
   $('objectAnnouncement').textContent = `${annotation.label}. ${claimView.plain} `
-    + `${evidenceSummary(annotation)}. Open Why we know this in the pinned explanation `
-    + 'to review the claim and exact sources.';
+    + `${evidenceSummary(annotation)}. ${sourceRoute}`;
   objectOverlaySignature = null;
 }
 

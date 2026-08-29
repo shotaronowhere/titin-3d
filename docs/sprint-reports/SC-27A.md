@@ -163,12 +163,12 @@ perceptual fidelity or replace the required human visual/colour review, which re
 
 The hero camera intentionally changed the fixture camera name from `titin_story` to `titin_hero`;
 the scientific targets and sampling grid did not change. The regenerated 14-cell fixture contains
-7,562 samples, 5,174 intended targets, and 5,150 intended resolutions: **99.54%** aggregate. Rings 0
-through 4 resolve at 100%; ring 8 resolves at 98.99%. The only 95.38% cell is the compact mobile
-lattice view, where missed samples resolve through the declared nearest-visible-context policy.
-The committed fixture is reproduced by `check:hitgrid`; the final Chromium pointer-path run produces
-the same counts. Projected labels have coarse invisible SVG hit areas; blank stage gestures share
-that SVG interaction plane with orbit/pan/zoom and deterministic picking. WebKit's SVG-root event
+7,562 samples and 5,174 intended targets; `check:hitgrid` reproduces those static fixture counts.
+Separately, the final Chromium pointer-path run resolves 5,150 of 5,174 intended samples:
+**99.54%** aggregate. Rings 0 through 4 resolve at 100%; ring 8 resolves at 98.99%. The only 95.38%
+cell is the compact mobile lattice view, where missed samples resolve through the declared
+nearest-visible-context policy. Projected labels have coarse invisible SVG hit areas; blank stage
+gestures share that SVG interaction plane with orbit/pan/zoom and deterministic picking. WebKit's SVG-root event
 targeting is handled by a geometric hit-area fallback that dispatches the same label action and does
 not broaden the scientific ray-picking policy.
 
@@ -214,7 +214,8 @@ accessibility, picking, evidence, and deterministic-build assertions were retain
 | `npm test` | **PASS** — 608/608 Node tests on the final source |
 | `npm run verify` | **PASS** — all generated-input checks, 608 Node tests, destructive controls, and JS/Python validators pass; pending human/release sections are truthfully represented and reject unsupported readiness claims |
 | `npm run verify:sc27a` | **PASS** — 177/177 focused unit/contract tests, all negative controls, presentation/style/gate validators, hit grid, 48-cell matrix, and artifact identity |
-| `check:hitgrid` | **PASS ON FINAL APP SOURCE** — 7,562 samples / 14 cells; 5,150/5,174 intended samples resolved (99.54%); reviewed miss dispositions unchanged |
+| `check:hitgrid` | **PASS ON FINAL APP SOURCE** — the static fixture reproduces exactly: 7,562 samples, 5,174 intended targets, 14 scene cells |
+| Chromium pointer resolution | **PASS** — browser ray-picking resolves 5,150/5,174 intended samples (99.54%); reviewed miss dispositions unchanged |
 | `check:matrix` | **PASS** — 48 reproducible cells |
 | Chromium | **PASS** — 87/87 on the final candidate: full 78-test SC-27A browser route plus 9/9 smoke |
 | Firefox | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 20/20 SC-27A UX tests on the final candidate |
