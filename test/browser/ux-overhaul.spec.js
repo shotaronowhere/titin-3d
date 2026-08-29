@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { STAGE_LAYOUT } from '../../src/presentation/StageLayout.js';
 
 import {
   SC27A_VIEWPORTS,
@@ -154,6 +155,17 @@ async function assertSemanticCameraContract(page, viewport, beat) {
         intersectsStory: intersects(story),
       };
     });
+    const labelCollisions = [];
+    for (let i = 0; i < semanticLabels.length; i += 1) {
+      for (let j = i + 1; j < semanticLabels.length; j += 1) {
+        const a = semanticLabels[i];
+        const b = semanticLabels[j];
+        if (a.box.left < b.box.right && a.box.right > b.box.left
+            && a.box.top < b.box.bottom && a.box.bottom > b.box.top) {
+          labelCollisions.push(`${a.text} ↔ ${b.text}`);
+        }
+      }
+    }
     const termini = vis.projectPresentationAnchors(vis.showcaseOverlay().termini)
       .map((point) => {
         const hit = document.elementFromPoint(
@@ -188,6 +200,8 @@ async function assertSemanticCameraContract(page, viewport, beat) {
         extentRight: transformedX(extentNode, extentX + extentWidth, extentY),
       },
       semanticLabels,
+      labelCollisions,
+      bandLabelCount: document.querySelectorAll('#scienceOverlay .band-label').length,
       termini,
       reachablePathPoints,
     };
@@ -195,13 +209,16 @@ async function assertSemanticCameraContract(page, viewport, beat) {
 
   expect(audit.locatorTicks, `beat ${beat} has two Z boundaries and one M-line`).toBe(3);
   expect(audit.locatorAnchors, `beat ${beat} locator has both titin termini`).toBe(2);
-  const expectedLocatorLabels = viewport.width < 520
+  const stripPx = Math.max(210, Math.min(420, viewport.width - 36, viewport.width * 0.4));
+  const expectedLocatorLabels = stripPx < STAGE_LAYOUT.locator_full_labels_min_px
     ? ['Z · N', 'M · C', 'Z', 'I-band', 'A-band']
     : ['Z-disc · N-terminus', 'M-line · C-terminus', 'Z-disc', 'I-band', 'A-band'];
   expect(audit.locatorLabels, `beat ${beat} locator vocabulary`)
     .toEqual(expect.arrayContaining(expectedLocatorLabels));
   expect(audit.semanticLabels.length, `beat ${beat} paints locator and termini labels`)
     .toBeGreaterThanOrEqual(7);
+  expect(audit.bandLabelCount, `beat ${beat} gives the Tour lane only to the locator`).toBe(0);
+  expect(audit.labelCollisions, `beat ${beat} scientific labels do not overprint`).toEqual([]);
   for (const label of audit.semanticLabels) {
     expect(label.box.left, `${label.text} begins in the viewport`).toBeGreaterThanOrEqual(0);
     expect(label.box.right, `${label.text} ends in the viewport`).toBeLessThanOrEqual(audit.canvas.width);

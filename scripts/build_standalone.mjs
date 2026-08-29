@@ -114,7 +114,7 @@ export { TourView } from './src/presentation/TourView.js';
 export { createEvidenceChip, evidenceLanguage } from './src/presentation/EvidenceChip.js';
 export { SceneController, DEPTHS, SCENE_LAYER_KEYS, sceneMatch } from './src/presentation/SceneController.js';
 export { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
-export { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible } from './src/presentation/StageLayout.js';
+export { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, stageOverlayLane } from './src/presentation/StageLayout.js';
 export { SWEEP, sweepElapsedAtLength, sweepLength } from './src/presentation/StretchSweep.js';
 export { presenterKeys, unboundShortcutIds } from './src/presentation/PresenterKeys.js';
 export { renderClaimView } from './src/presentation/ClaimViewRenderer.js';
@@ -194,7 +194,7 @@ let page = pageModule
   .replace(IMPORT_RE, () => {
     if (!first) return '';
     first = false;
-    return 'const { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, guidedComponentColors, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, TourView, createEvidenceChip, evidenceLanguage, SceneController, DEPTHS, SCENE_LAYER_KEYS, sceneMatch, isLongitudinalProjection, STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible, SWEEP, sweepLength, sweepElapsedAtLength, presenterKeys, unboundShortcutIds, renderClaimView } = __titinBundle;\n';
+    return 'const { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, guidedComponentColors, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, TourView, createEvidenceChip, evidenceLanguage, SceneController, DEPTHS, SCENE_LAYER_KEYS, sceneMatch, isLongitudinalProjection, STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, stageOverlayLane, SWEEP, sweepLength, sweepElapsedAtLength, presenterKeys, unboundShortcutIds, renderClaimView } = __titinBundle;\n';
   })
   .replace(/browserReader\('\.\/data'\)/g, () => '__titinSpecReader');
 if (page.includes("from './src/")) {
@@ -229,7 +229,7 @@ const standalone = html
       '/* --- inlined dependency bundle (esbuild, format=esm) --- */',
       'const __titinBundle = await (async () => {',
       bundle.replace(/export\s*\{[^}]*\};?\s*$/, () => ''),
-      'return { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, guidedComponentColors, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, TourView, createEvidenceChip, evidenceLanguage, SceneController, DEPTHS, SCENE_LAYER_KEYS, sceneMatch, isLongitudinalProjection, STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible, SWEEP, sweepLength, sweepElapsedAtLength, presenterKeys, unboundShortcutIds, renderClaimView };',
+      'return { TitinModel, TitinVisualization, SCALES, Viewer, VIEWS, CLOSEUPS, COMPONENT_COLOR, guidedComponentColors, EVIDENCE_STYLE, COMPONENTS, EVIDENCE_CLASSES, StoryController, AUDIENCE_MODES, TourView, createEvidenceChip, evidenceLanguage, SceneController, DEPTHS, SCENE_LAYER_KEYS, sceneMatch, isLongitudinalProjection, STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, stageOverlayLane, SWEEP, sweepLength, sweepElapsedAtLength, presenterKeys, unboundShortcutIds, renderClaimView };',
       '})();',
       '',
       `const __titinSpecs = Object.freeze(${safeJson(specs)});`,

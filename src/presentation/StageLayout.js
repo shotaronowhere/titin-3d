@@ -34,6 +34,10 @@ export const STAGE_LAYOUT = Object.freeze({
   // including its halo stroke. The 96 px budget retains 13 px of headroom.
   // Two labels closer than this collide, which is the case this rule prevents.
   label_box_px: 96,
+  // The full locator end labels need this rail width in Firefox, the widest of
+  // the three governed engines. Narrower rails use the compact labels while
+  // still naming both termini in the same frame.
+  locator_full_labels_min_px: 410,
 });
 
 /** Viewport classes the reviewed attention budget distinguishes. */
@@ -147,7 +151,7 @@ const BRACKET_LANE_MIN_COVERAGE = 0.5;
  * Whether the bracket lane should hold band brackets at this camera span.
  *
  * @param {number|null} cameraSpanNm width of the view, in nanometres
- * @param {number} modelSpanNm axial extent of the model being labelled
+ * @param {number|null} modelSpanNm axial extent of the model being labelled
  * @returns {boolean}
  */
 export function bracketLaneVisible(cameraSpanNm, modelSpanNm) {
@@ -158,24 +162,12 @@ export function bracketLaneVisible(cameraSpanNm, modelSpanNm) {
 }
 
 /**
- * Where the current close-up is looking, as a fraction of the whole model.
- *
- * The brackets are suppressed when the camera is too close for them to mean
- * anything — correctly, and observably: chapters 3, 4 and 5 of the tour draw
- * none. The result was that at exactly the moment a viewer most needs to know
- * where they are, the page told them least: chapter 3 frames a 70 nm PEVK
- * segment, chapter 4 a ~200 nm Z-disc, chapter 5 the C-zone, each arriving as an
- * unlabelled field with no relationship to the molecule the previous chapter
- * introduced.
- *
- * This adds no chrome. The locator occupies the lane the brackets vacate and is
- * drawn only when they are not — {@link bracketLaneVisible} is the single
- * decision both consult, which is why they cannot both appear or both vanish.
+ * Where the camera is looking, as a fraction of the whole model.
  *
  * @param {number|null} cameraSpanNm width of the view, in nanometres
- * @param {number} cameraCentreNm axial position the camera is looking at
- * @param {number} modelSpanNm axial extent of the model, from x = 0
- * @returns {{from01:number, to01:number, visible:boolean}}
+ * @param {number|null} cameraCentreNm axial position the camera is looking at
+ * @param {number|null} modelSpanNm axial extent of the model, from x = 0
+ * @returns {{from01:number, to01:number, measurable:boolean}}
  */
 export function locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm) {
   const span = Number(cameraSpanNm);
@@ -183,12 +175,38 @@ export function locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm) {
   const model = Number(modelSpanNm);
   const measurable = Number.isFinite(span) && span > 0
     && Number.isFinite(centre) && Number.isFinite(model) && model > 0;
-  if (!measurable) return { from01: 0, to01: 1, visible: false };
+  if (!measurable) return { from01: 0, to01: 1, measurable: false };
   const clamp01 = (value) => Math.max(0, Math.min(1, value));
   return {
     from01: clamp01((centre - span / 2) / model),
     to01: clamp01((centre + span / 2) / model),
-    visible: !bracketLaneVisible(span, model),
+    measurable: true,
+  };
+}
+
+/**
+ * Single ownership decision for the upper scientific-overlay lane.
+ *
+ * Tour keeps its full-sarcomere locator across camera scales. Research has no
+ * Tour locator, so longitudinal band brackets may occupy the lane when their
+ * coverage is meaningful. If the stage cannot be measured, the locator refuses
+ * to guess and the pre-existing bracket fallback remains available.
+ *
+ * @param {{audience:string, showBands:boolean, cameraSpanNm:number|null,
+ *   cameraCentreNm:number|null, modelSpanNm:number|null}} state
+ * @returns {{bracketsVisible:boolean,
+ *   locator:{from01:number,to01:number,measurable:boolean,visible:boolean}}}
+ */
+export function stageOverlayLane({
+  audience, showBands, cameraSpanNm, cameraCentreNm, modelSpanNm,
+}) {
+  const locator = locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm);
+  const locatorVisible = audience === 'guided' && locator.measurable;
+  const bracketsVisible = Boolean(showBands) && !locatorVisible
+    && (!locator.measurable || bracketLaneVisible(cameraSpanNm, modelSpanNm));
+  return {
+    bracketsVisible,
+    locator: { ...locator, visible: locatorVisible },
   };
 }
 

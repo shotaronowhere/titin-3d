@@ -5,7 +5,9 @@ import { readFileSync } from 'node:fs';
 
 import { SWEEP, sweepLength } from '../src/presentation/StretchSweep.js';
 import { guidedComponentColors, COMPONENT_COLOR } from '../src/render/SarcomereScene.js';
-import { labelBudget, locatorExtent, bracketLaneVisible } from '../src/presentation/StageLayout.js';
+import {
+  STAGE_LAYOUT, labelBudget, locatorExtent, bracketLaneVisible, stageOverlayLane,
+} from '../src/presentation/StageLayout.js';
 import { TitinModel } from '../src/model/TitinModel.js';
 import { nodeReader } from '../src/model/readNode.js';
 
@@ -204,14 +206,25 @@ test('SC12-2b: the page enforces the budget it reads from the claims record', ()
 });
 
 // ---------------------------------------------------------------------------
-// Task 12.2c — a locator for close-ups, in the lane the brackets vacate
+// Task 12.2c / SC-27A — one governed lane for locator or brackets
 // ---------------------------------------------------------------------------
 
-test('SC12-2c: the locator and the brackets are never both drawn', () => {
+test('SC12/SC27A: one lane decision keeps Tour locator and Research brackets exclusive', () => {
   for (const span of [1100, 800, 400, 200, 70, 20]) {
-    const loc = locatorExtent(span, 550, 1100);
-    assert.notEqual(loc.visible, bracketLaneVisible(span, 1100),
-      `at a ${span} nm camera span exactly one of locator/brackets must hold the lane`);
+    const tour = stageOverlayLane({
+      audience: 'guided', showBands: true,
+      cameraSpanNm: span, cameraCentreNm: 550, modelSpanNm: 1100,
+    });
+    assert.equal(tour.locator.visible, true);
+    assert.equal(tour.bracketsVisible, false);
+    const research = stageOverlayLane({
+      audience: 'evidence', showBands: true,
+      cameraSpanNm: span, cameraCentreNm: 550, modelSpanNm: 1100,
+    });
+    assert.equal(research.locator.visible, false);
+    assert.equal(research.bracketsVisible, bracketLaneVisible(span, 1100));
+    assert.equal(tour.locator.visible && tour.bracketsVisible, false);
+    assert.equal(research.locator.visible && research.bracketsVisible, false);
   }
 });
 
@@ -231,8 +244,8 @@ test('SC12-2c: a stage with no measurable span draws no locator', () => {
   // Same discipline as the scale bar: a locator claiming a wrong extent is
   // worse than no locator.
   for (const bad of [null, 0, -1, NaN, Infinity]) {
-    assert.equal(locatorExtent(bad, 550, 1100).visible, false);
-    assert.equal(locatorExtent(220, 110, bad).visible, false);
+    assert.equal(locatorExtent(bad, 550, 1100).measurable, false);
+    assert.equal(locatorExtent(220, 110, bad).measurable, false);
     assert.equal(bracketLaneVisible(bad, 1100), false);
   }
 });
@@ -246,14 +259,15 @@ test('SC12-2c: the locator follows the camera along the model', () => {
 });
 
 test('SC12/SC27A: the Guided full-sarcomere locator remains visible across views', () => {
-  assert.match(page, /locatorExtent\(/);
-  assert.match(page, /bracketLaneVisible\(/);
-  // Brackets still yield by resolution; the compact orientation rail remains a
-  // stable Guided reference and shows the active camera span.
-  assert.match(page, /const laneHoldsBrackets = [\s\S]{0,200}bracketLaneVisible\(/);
-  assert.match(page, /if \(showBands && laneHoldsBrackets\)/);
-  assert.match(page, /state\.audienceMode === AUDIENCE_MODES\.guided && modelSpanNm && cameraSpanNm/);
+  assert.match(page, /const overlayLane = stageOverlayLane\(\{/);
+  assert.match(page, /if \(overlayLane\.bracketsVisible\)/);
+  assert.match(page, /if \(locator\.visible\)/);
   assert.match(page, /data-visible-span/);
+  assert.equal(STAGE_LAYOUT.locator_full_labels_min_px, 410);
+  assert.match(page, /stripPx < STAGE_LAYOUT\.locator_full_labels_min_px/);
+  for (const dead of ['locatorPlaceLabel', 'publicPresentationState', 'applyVisibility']) {
+    assert.ok(!page.includes(`function ${dead}(`), `${dead} must not ship orphaned`);
+  }
 });
 
 test('SC12-2c: the stage declares the locator as presentation geometry', () => {

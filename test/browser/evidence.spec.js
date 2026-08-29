@@ -160,6 +160,9 @@ for (const viewport of ['desktop', 'responsive']) {
       await expect(page.locator('#objectAnnouncement')).toContainText(
         'Review Selected structure in the Research Evidence tab for the full claim and exact sources.',
       );
+      expect(await page.locator('#objectAnnouncement').evaluate(
+        (node) => node.closest('[inert]') === null,
+      ), 'the Research route announcement must remain in the accessibility tree').toBe(true);
       await page.locator('#tabEvidence').click();
       await expect(page.locator('#selectedEvidence')).toBeVisible();
       await expect(page.locator('#selectedEvidence .claim-view-title')).toContainText(target.title);

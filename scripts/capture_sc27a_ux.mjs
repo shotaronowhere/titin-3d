@@ -225,6 +225,20 @@ async function auditCold(page, viewport) {
     const canvas = box('#canvas');
     const header = box('#stageHeader');
     const card = box('#guidedCard');
+    const scienceLabels = [...document.querySelectorAll(
+      '#scienceOverlay .science-label, #scienceOverlay .terminus-label',
+    )].map((node) => ({ text: node.textContent.trim(), rect: (() => {
+      const rect = node.getBoundingClientRect();
+      return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
+    })() })).filter(({ rect }) => rect.right > rect.left && rect.bottom > rect.top);
+    const scienceLabelCollisions = [];
+    for (let i = 0; i < scienceLabels.length; i += 1) {
+      for (let j = i + 1; j < scienceLabels.length; j += 1) {
+        if (collide(scienceLabels[i].rect, scienceLabels[j].rect)) {
+          scienceLabelCollisions.push(`${scienceLabels[i].text} ↔ ${scienceLabels[j].text}`);
+        }
+      }
+    }
     const chromeArea = header.width * header.height + card.width * card.height;
     return {
       viewport: measuredViewport,
@@ -236,6 +250,7 @@ async function auditCold(page, viewport) {
       bounds: { header, story: card },
       overlap_findings: {
         header_story: collide(header, card),
+        science_label_collisions: scienceLabelCollisions,
       },
       scroll: {
         document_width: document.documentElement.scrollWidth,
@@ -350,6 +365,15 @@ try {
   if (duplicateCaptures.length) {
     throw new Error(`SC-27A capture pack contains duplicate observations: ${duplicateCaptures
       .map((entries) => entries.map((entry) => entry.id).join(' = ')).join('; ')}`);
+  }
+  const overlapFailures = audits.filter((entry) => (
+    entry.overlap_findings.header_story
+    || entry.overlap_findings.science_label_collisions.length
+  ));
+  if (overlapFailures.length) {
+    throw new Error(`SC-27A capture audit found stage collisions: ${overlapFailures
+      .map((entry) => `${entry.viewport.width}x${entry.viewport.height} `
+        + JSON.stringify(entry.overlap_findings)).join('; ')}`);
   }
   const audit = {
     schema: 'sc27a-ux-audit/1',

@@ -736,7 +736,6 @@ window.__titinBoot = { ready: false, problems: [] };
         <button id="objectInspectorDetailLink">Why we know this &#8250;</button>
       </div>
     </section>
-    <div id="objectAnnouncement" class="sr-only" aria-live="polite"></div>
     <!-- SC-25. The one-time inspection affordance. A novice was expected to
          discover clicking; this says it once, in the same words the canvas's
          accessible description uses, and disappears the moment it is acted on. -->
@@ -806,6 +805,9 @@ window.__titinBoot = { ready: false, problems: [] };
     <div id="interactionHelp" class="sr-only">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
       id="shortcutHelp">1–5 beats · space stretch · x stretch beat · e Research · g Tour · r restart</span></div>
   </div>
+  <!-- Outside #canvas so the Research mobile sheet can make the interactive
+       stage inert without silencing selection and route announcements. -->
+  <div id="objectAnnouncement" class="sr-only" aria-live="polite"></div>
   <aside id="panel" aria-label="Research: visualization controls and scientific readouts" aria-hidden="true">
     <div class="drawer-head" id="drawerHead">
       <div class="drawer-head-row">
@@ -1043,7 +1045,7 @@ import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js'
 // Stage composition arithmetic. These rules decide whether the figure reads
 // correctly, so they live in a module a Node test asserts rather than inline
 // here, where nothing but a screenshot could check them.
-import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, locatorExtent, bracketLaneVisible } from './src/presentation/StageLayout.js';
+import { STAGE_LAYOUT, BRACKET_LANE_OFFSETS, bracketLaneY, inspectorPlacement, stagePxPerNm, scaleBar, scaleBarPlacement, labelBudget, stageOverlayLane } from './src/presentation/StageLayout.js';
 import { SWEEP, sweepElapsedAtLength, sweepLength } from './src/presentation/StretchSweep.js';
 // The presenter key map. In a module, not here, so release/PRESENTER_SCRIPT.md
 // can print the keys this page actually binds rather than restating them.
@@ -1166,20 +1168,6 @@ $('scopeDecisions').textContent = model.scientificDecisions.summaryText;
 $('scientificDecisionStatus').textContent = `${model.scientificDecisions.badgeText} · `
   + 'citation-backed AI adjudication authorized by the project owner · '
   + 'independent human review not performed';
-
-function publicPresentationState() {
-  return {
-    sceneId: state.sceneId,
-    sceneContextId: state.sceneContextId,
-    audience_mode: state.audienceMode,
-    story_step: state.storyStep,
-    sarcomere_length_nm: Number(slider.value),
-    scale: state.scale,
-    camera_preset: state.cameraPreset,
-    selected_component_or_region: state.selectedTarget,
-    evidence_display: state.showEvidence,
-  };
-}
 
 function currentSceneLayers() {
   return Object.fromEntries(SCENE_LAYER_KEYS.map((key) => [key, ({
@@ -1805,7 +1793,7 @@ function viewportClass(width) {
   return width < 768 ? 'mobile' : 'desktop';
 }
 
-// ---- close-up locator -------------------------------------------------------
+// ---- full-sarcomere locator -------------------------------------------------
 // Every position below comes from the same canonical bracket records the band
 // brackets use. The locator moves no coordinate and derives no new geometry; it
 // restates, in miniature, where the camera is inside the half-sarcomere.
@@ -1817,19 +1805,6 @@ function locatorModelSpanNm() {
   const mband = bracketById('mband');
   return Number.isFinite(mband?.start_nm) && mband.start_nm > 0 ? mband.start_nm : null;
 }
-/**
- * What the camera is currently inside, named by the narrowest band that
- * contains it. "Narrowest" is what makes the answer useful: every point in the
- * C-zone is also in the A-band, and the A-band is not the thing you zoomed to.
- */
-function locatorPlaceLabel(centreNm) {
-  const containing = (activeShowcaseOverlay?.brackets || [])
-    .filter((bracket) => bracket.kind === 'range'
-      && centreNm >= bracket.start_nm && centreNm <= bracket.end_nm)
-    .sort((a, b) => (a.end_nm - a.start_nm) - (b.end_nm - b.start_nm));
-  return containing[0]?.label || null;
-}
-
 function svgElement(name, attributes = {}, textContent = null) {
   const node = document.createElementNS(svgNS, name);
   for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, String(value));
@@ -2013,20 +1988,19 @@ function renderScienceOverlay() {
   const showBands = bandsRequested && isLongitudinalProjection(
     projected.get('n_terminus'), projected.get('c_terminus'),
   );
-  // Who holds the bracket lane. ONE decision, consulted by both the brackets and
-  // the close-up locator, so the two are mutually exclusive by construction
-  // rather than by two conditions that have to be kept in agreement.
-  //
-  // When either measurement is unavailable the lane falls back to the brackets:
-  // that is the behaviour this task inherited, and a stage that cannot state
-  // where the camera is must not also silently drop the labels it could draw.
   const modelSpanNm = locatorModelSpanNm();
   const cameraSpanNm = visualization.viewSpanNm();
   const cameraCentreNm = visualization.viewCentreNm();
-  const measurableStage = cameraSpanNm !== null && modelSpanNm !== null;
-  const laneHoldsBrackets = !measurableStage
-    || bracketLaneVisible(cameraSpanNm, modelSpanNm);
-  const locator = locatorExtent(cameraSpanNm, cameraCentreNm, modelSpanNm);
+  // One pure decision owns both branches. Tour's persistent locator and
+  // Research's meaningful band brackets cannot share the lane.
+  const overlayLane = stageOverlayLane({
+    audience: state.audienceMode,
+    showBands,
+    cameraSpanNm,
+    cameraCentreNm,
+    modelSpanNm,
+  });
+  const { locator } = overlayLane;
   // Every DOM measurement this pass needs, taken together. The branches below
   // used to re-read the same two rectangles; grouping the reads is a clarity
   // change rather than a performance one, since consecutive reads with no
@@ -2058,7 +2032,7 @@ function renderScienceOverlay() {
     step: state.storyStep, audience: state.audienceMode,
     // The locator moves with the camera along the model, which no projected
     // anchor necessarily reports once the close-up has left them off-screen.
-    locator: [laneHoldsBrackets, Math.round(locator.from01 * 1e4),
+    locator: [overlayLane.bracketsVisible, Math.round(locator.from01 * 1e4),
       Math.round(locator.to01 * 1e4), locator.visible],
     headerBottom: Math.round(safeTopPx * 4) / 4,
     card: cardBox && [cardBox.top, cardBox.right, cardBox.bottom]
@@ -2095,7 +2069,7 @@ function renderScienceOverlay() {
       height: LABEL_HIT.height,
     }));
   }
-  if (showBands && laneHoldsBrackets) {
+  if (overlayLane.bracketsVisible) {
     const laneY = bracketLaneY([...projected.values()], { canvasHeight: height, safeTopPx });
     // Everything the frame COULD label, before the reviewed attention budget
     // decides how many of them it may. A bracket that is off-screen or too
@@ -2125,16 +2099,16 @@ function renderScienceOverlay() {
       if (bracket.kind === 'marker') {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y - 5} V ${y + 7}`,
-          class: 'science-bracket minor',
+          class: 'science-bracket minor band-bracket',
         }));
         nodes.push(...withBracketTarget(
-          svgElement('text', { x: x1, y: y - 8, 'text-anchor': 'middle', class: 'science-label' }, bracket.label),
+          svgElement('text', { x: x1, y: y - 8, 'text-anchor': 'middle', class: 'science-label band-label' }, bracket.label),
           bracket.id, x1, y - 8,
         ));
       } else {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y + 5} V ${y} H ${x2} V ${y + 5}`,
-          class: `science-bracket${bracket.lane === 'minor' ? ' minor' : ''}`,
+          class: `science-bracket band-bracket${bracket.lane === 'minor' ? ' minor' : ''}`,
         }));
         // Without a tick the label floats: the reader has to guess which
         // boundary a bracket end refers to.
@@ -2143,12 +2117,12 @@ function renderScienceOverlay() {
           if (!point.visible) continue;
           nodes.push(svgElement('path', {
             d: `M ${x} ${y + 5} V ${Math.min(point.y_px, y + 5 + tick)}`,
-            class: 'science-bracket minor',
+            class: 'science-bracket minor band-bracket',
           }));
         }
         nodes.push(...withBracketTarget(
           svgElement('text', {
-            x: (x1 + x2) / 2, y: y - 5, 'text-anchor': 'middle', class: 'science-label',
+            x: (x1 + x2) / 2, y: y - 5, 'text-anchor': 'middle', class: 'science-label band-label',
           }, bracket.label),
           bracket.id, (x1 + x2) / 2, y - 5,
         ));
@@ -2159,9 +2133,9 @@ function renderScienceOverlay() {
   // one Z-disc-to-M-line half; mirroring that same span places the second Z-disc
   // without introducing another coordinate model. One representative route is
   // drawn on the left half, and the camera extent remains truthful to that half.
-  if (state.audienceMode === AUDIENCE_MODES.guided && modelSpanNm && cameraSpanNm) {
+  if (locator.visible) {
     const stripPx = Math.max(210, Math.min(420, width - 36, width * 0.4));
-    const compactLocator = width < 520;
+    const compactLocator = stripPx < STAGE_LAYOUT.locator_full_labels_min_px;
     const left = Math.max(18, (width - stripPx) / 2);
     const laneTop = safeTopPx + STAGE_LAYOUT.bracket_lane_gap_px + 10;
     const centreX = left + stripPx / 2;
@@ -2187,8 +2161,7 @@ function renderScienceOverlay() {
         d: `M ${x} ${laneTop - 7} V ${laneTop + 7}`, class: 'science-bracket locator-tick',
       }));
     }
-    const from01 = Math.max(0, Math.min(1, (cameraCentreNm - cameraSpanNm / 2) / modelSpanNm));
-    const to01 = Math.max(0, Math.min(1, (cameraCentreNm + cameraSpanNm / 2) / modelSpanNm));
+    const { from01, to01 } = locator;
     const from = left + stripPx * from01 * 0.5;
     const extent = Math.max(2, stripPx * (to01 - from01) * 0.5);
     nodes.push(svgElement('rect', {
@@ -4355,7 +4328,6 @@ function render(report) {
 // A-band segment of titin is anchored relative to the thick filament, so
 // re-deriving the scene without it could move titin. Hiding must be a change of
 // what is drawn, never of what is claimed.
-const hidden = new Set();
 const COMPONENT_SCENE = Object.freeze({
   thick_filament: 'lattice', thin_filament: 'lattice', thin_filament_twist: 'lattice',
   myosin_heads: 'lattice', zdisc: 'z_anchor', alpha_actinin: 'z_anchor',
@@ -4373,15 +4345,6 @@ for (const c of Object.keys(COMPONENTS)) {
     if (sceneId) applySemanticScene(sceneId, { trigger: b });
   };
   $('components').append(b);
-}
-function applyVisibility() {
-  const vis = {};
-  for (const c of Object.keys(COMPONENTS)) vis[c] = !hidden.has(c);
-  try {
-    visualization.setComponentVisibility(vis);
-  } catch (e) { fail(e); }
-  const report = visualization.currentState();
-  if (report) render(report);
 }
 function syncComponentButtons(report) {
   for (const b of $('components').children) {
