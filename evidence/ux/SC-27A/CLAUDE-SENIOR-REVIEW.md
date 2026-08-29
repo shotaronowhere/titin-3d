@@ -182,3 +182,36 @@ and 25 unique refreshed captures across six viewports.
 
 Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
 release/freeze remains independently blocked on the declared human work.
+
+## Final-indexed review findings and remediation
+
+The next authenticated Claude Opus/high-effort read-only closure review confirmed
+that all six strict-review findings above were closed. Applying the same
+zero-actionable-finding rule, it nevertheless returned **engineering FAIL** with
+zero P0, zero P1, one P2, and five P3 findings. Its complete review artifact is
+`/Users/shotaro/.claude/plans/act-as-the-final-indexed-meteor.md`.
+
+| Priority | Finding | Disposition |
+|---|---|---|
+| P2 | The selected-object screen-reader announcement said exact sources were in the pinned explanation, although the card exposed only `Why we know this` | The announcement now names `Why we know this` and the exact-source route accurately; a focused regression pins the wording |
+| P3 | Visible source and generated release material retained Guided/Evidence/chapter vocabulary | User-facing source text, presentation data, generator labels, and all generated outputs now use Tour/Research/beat; internal compatibility identifiers remain intentionally stable |
+| P3 | README still described the Evidence drawer for build identity and Evidence-mode cards | README now names Research → Sources & build and Research-only expert cards |
+| P3 | `.drawer-head .build-id` was inert | The orphaned selector is removed |
+| P3 | Research claim/source type included 13 px body/table and 12 px metadata below the design floor | Claims/citations are 13 px, metadata is 12 px, and all other visible type is at least 12 px; the sole 9 px exception is the explicitly permitted build identity |
+| P3 | `sceneDetails` and `buildFingerprint` had accessible names on generic role-less containers | Both containers now use `role="group"`; regression coverage pins the roles |
+
+The rebuilt candidate is app revision
+`706a90d89464b3bab0c4e52d986c74390cb19807`, build-input fingerprint
+`ffe30411c59b63abd414a16ae71e450fbe2e6c7057845c11c80043054ab0eee1`,
+standalone SHA-256
+`041f0e7c4b13eb0e8ed54921648f599e77294d2e8f34d12e03ce65b84d690ec1`,
+and detached-manifest SHA-256
+`6f688128da1b33616e6352a8d0705ca090642d09ccd3b997fb142fc4cce820c7`.
+Verification on this exact candidate is: 608/608 full Node tests; 177/177
+focused tests; all destructive controls and validators; 78/78 Chromium SC-27A
+browser tests; 9/9 Chromium smoke tests; 20/20 Firefox UX tests; 20/20 WebKit
+UX tests; the 7,562-sample hit grid; the 48-cell matrix; exact artifact identity;
+and 25 unique refreshed captures across six viewports.
+
+Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
+release/freeze remains independently blocked on the declared human work.

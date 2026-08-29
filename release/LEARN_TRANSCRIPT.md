@@ -1,6 +1,6 @@
 # Text-only Tour transcript
 
-Generated from `data/presentation.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`; build inputs `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08`.
+Generated from `data/presentation.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `706a90d89464b3bab0c4e52d986c74390cb19807`; build inputs `ffe30411c59b63abd414a16ae71e450fbe2e6c7057845c11c80043054ab0eee1`.
 416 narrated/announced words; estimated 181 s; target 110–190 s.
 
 ## 1. Meet the sarcomere
@@ -61,7 +61,7 @@ Along the A-band, titin associates with the myosin thick filament as a scaffold.
 
 ## 5. What do we know?
 
-**Objective.** Recap titin's spring, scaffold, and interaction/signaling roles; distinguish the five Guided evidence labels and invite contextual source inspection.
+**Objective.** Recap titin's spring, scaffold, and interaction/signaling roles; distinguish the five Tour evidence labels and invite contextual source inspection.
 
 **State announcement.** Returning to the complete titin route and evidence-language recap; your current sarcomere length is preserved.
 

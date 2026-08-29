@@ -1,6 +1,6 @@
 # Demo-day preflight
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`; build inputs `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08`.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `706a90d89464b3bab0c4e52d986c74390cb19807`; build inputs `ffe30411c59b63abd414a16ae71e450fbe2e6c7057845c11c80043054ab0eee1`.
 
 Run this on the presenting machine, on the presenting display.
 
@@ -32,6 +32,6 @@ Run this on the presenting machine, on the presenting display.
 
 ## Candidate identity
 
-Research → Sources & build in both the hosted page and the offline file must report model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`; build inputs `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08`.
+Research → Sources & build in both the hosted page and the offline file must report model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `706a90d89464b3bab0c4e52d986c74390cb19807`; build inputs `ffe30411c59b63abd414a16ae71e450fbe2e6c7057845c11c80043054ab0eee1`.
 A mismatch in any field means the candidates differ. Prefer the manifest-verified offline file; production parity is proved only at final release.
 

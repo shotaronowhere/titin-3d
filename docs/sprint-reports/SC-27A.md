@@ -20,13 +20,13 @@ fingerprint is still
 
 | Identity | Start | Current generated candidate |
 |---|---|---|
-| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `0240a2b3a7b233cd2aef432b86cbd0e852688d03` (verified application source) |
-| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `0240a2b3a7b233cd2aef432b86cbd0e852688d03` |
-| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08` |
+| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `706a90d89464b3bab0c4e52d986c74390cb19807` (verified application source) |
+| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `706a90d89464b3bab0c4e52d986c74390cb19807` |
+| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `ffe30411c59b63abd414a16ae71e450fbe2e6c7057845c11c80043054ab0eee1` |
 | Model-input-manifest fingerprint | `39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25` | unchanged |
 | Model fingerprint | `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` | unchanged |
-| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `a354001a34cac770e1a3a51bb905d803671fe815852c79d74a73a7d45820ec1d` |
-| Detached manifest SHA-256 | n/a | `ca566084c38cbee7f8dbf0523ccf8391befd0ec1adee9119c4eaaf52c791674f` |
+| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `041f0e7c4b13eb0e8ed54921648f599e77294d2e8f34d12e03ce65b84d690ec1` |
+| Detached manifest SHA-256 | n/a | `6f688128da1b33616e6352a8d0705ca090642d09ccd3b997fb142fc4cce820c7` |
 | Export-contract fingerprint | `a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843` | unchanged |
 
 The final column is the verified generated engineering candidate. It is not a release-freeze
@@ -211,9 +211,9 @@ accessibility, picking, evidence, and deterministic-build assertions were retain
 |---|---|
 | Protected-input digest audit | **PASS** — all 11 named files match start; `docs/scientific-decisions/**` has no diff |
 | Model fingerprint | **PASS** — exact SC-26 value `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` |
-| `npm test` | **PASS** — 606/606 Node tests on the final source |
-| `npm run verify` | **PASS** — all generated-input checks, 606 Node tests, destructive controls, and JS/Python validators pass; pending human/release sections are truthfully represented and reject unsupported readiness claims |
-| `npm run verify:sc27a` | **PASS** — 175/175 focused unit/contract tests, all negative controls, presentation/style/gate validators, hit grid, 48-cell matrix, and artifact identity |
+| `npm test` | **PASS** — 608/608 Node tests on the final source |
+| `npm run verify` | **PASS** — all generated-input checks, 608 Node tests, destructive controls, and JS/Python validators pass; pending human/release sections are truthfully represented and reject unsupported readiness claims |
+| `npm run verify:sc27a` | **PASS** — 177/177 focused unit/contract tests, all negative controls, presentation/style/gate validators, hit grid, 48-cell matrix, and artifact identity |
 | `check:hitgrid` | **PASS ON FINAL APP SOURCE** — 7,562 samples / 14 cells; 5,150/5,174 intended samples resolved (99.54%); reviewed miss dispositions unchanged |
 | `check:matrix` | **PASS** — 48 reproducible cells |
 | Chromium | **PASS** — 87/87 on the final candidate: full 78-test SC-27A browser route plus 9/9 smoke |
@@ -224,9 +224,9 @@ accessibility, picking, evidence, and deterministic-build assertions were retain
 | Final UX capture audit | **PASS (automated diagnostics only)** — 25 captures, 6 viewport records, zero horizontal overflow/cold-open header-story collision; every reviewer disposition remains PENDING |
 | Human accessibility / visual review | PENDING — SC-27A/SC-27B human work |
 
-Final-candidate browser coverage ran against build-input fingerprint `80b0759d9d05…` and standalone
-SHA-256 `a354001a34ca…`. The two final SC-9/18 changes update stale regression assertions only, so the
-embedded application revision correctly remains `0240a2b`.
+Final-candidate browser coverage ran against build-input fingerprint `ffe30411c59b…` and standalone
+SHA-256 `041f0e7c4b13…`. The embedded application revision is the exact final source commit
+`706a90d`.
 
 ## Protected-input proof
 
@@ -333,6 +333,30 @@ The exact rebuilt identity is app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`, bu
 plus 9/9 smoke, Firefox passes 20/20, WebKit passes 20/20, and the uniqueness-checked audit contains
 25 refreshed captures across six viewports. A final Claude zero-finding rerun is required before
 the automated senior-review gate can be called PASS.
+
+The following authenticated Claude closure run (`act-as-the-final-indexed-meteor.md`) applied that
+zero-finding rule and therefore returned **engineering FAIL** despite confirming that all six prior
+strict-review findings were closed. It found one P2 and five P3 issues: the selected-object screen
+reader announcement overstated where exact sources appeared; several visible strings and generated
+labels still used Guided/Evidence/chapter vocabulary; README described obsolete Evidence-drawer
+routes; one build-id selector was inert; Research body/metadata text fell below the design floor;
+and two labelled generic containers lacked explicit group roles.
+
+Application commit `706a90d` closes all six. The announcement now names the actual “Why we know
+this” and Research source routes; user-facing and generated material consistently uses
+Tour/Research/beat; README names Research → Sources & build and Research-only expert cards; the
+orphaned selector is removed; visible text has a 12 px minimum with the explicitly permitted 9 px
+build-id exception and 13 px Research claims/citations; and both labelled containers use
+`role="group"`. Regression tests pin the wording, type floor, roles, and generated group labels.
+
+The exact remediated identity is app `706a90d89464b3bab0c4e52d986c74390cb19807`, build inputs
+`ffe30411c59b63abd414a16ae71e450fbe2e6c7057845c11c80043054ab0eee1`, standalone
+`041f0e7c4b13eb0e8ed54921648f599e77294d2e8f34d12e03ce65b84d690ec1`, and detached manifest
+`6f688128da1b33616e6352a8d0705ca090642d09ccd3b997fb142fc4cce820c7`. On that exact candidate,
+`npm run verify` passes 608/608, `npm run verify:sc27a` passes 177/177, Chromium passes 78/78 SC-27A
+plus 9/9 smoke, Firefox passes 20/20, WebKit passes 20/20, and the uniqueness-checked audit contains
+25 refreshed captures across six viewports. Status remains **PENDING FINAL ZERO-FINDING CLAUDE
+RERUN**; release/freeze remains separately blocked on the declared human work.
 
 ## Formative findings and remaining limitations
 
