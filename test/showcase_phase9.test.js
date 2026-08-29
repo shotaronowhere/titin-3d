@@ -284,7 +284,7 @@ test('SC9: the rehearsal record claims nothing that has not been rehearsed', () 
 test('SC9/18: the README and progress record hand the current project over accurately', () => {
   const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
   const progress = readFileSync(new URL('../PROGRESS.md', import.meta.url), 'utf8');
-  for (const needle of ['Guided', 'Evidence', 'npm run verify', 'index.html',
+  for (const needle of ['Tour', 'Research', 'Evidence', 'npm run verify', 'index.html',
     'GitHub Pages', 'release/', 'SC-18', 'CODE_COMPLETE_BLOCKED_SCIENCE',
     'docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md']) {
     assert.ok(readme.includes(needle), `README does not mention ${needle}`);

@@ -1,29 +1,29 @@
 # Demo-day preflight
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `1b72ba022a16aaceb19d209d97e81f3074862c8d`; build inputs `2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907`.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`; build inputs `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08`.
 
 Run this on the presenting machine, on the presenting display.
 
 1. **Open the deployed GitHub Pages URL and the offline standalone index.html.**
    - Expect: Both load without a network request after first paint.
 
-2. **Compare the model, application, and build-input identities shown in the Evidence drawer of each.**
+2. **Compare the model, application, and build-input identities shown in Research → Sources & build on each.**
    - Expect: All three identities are identical.
 
-3. **Run the guided route once, end to end, on the actual display.**
-   - Expect: Every chapter reaches its camera and reads legibly from the back of the room.
+3. **Run the Tour once, end to end, on the actual display.**
+   - Expect: Every beat reaches its camera and reads legibly from the back of the room.
 
 4. **Check typography, colour, animation, WebGL, and pointer behaviour.**
    - Expect: No clipping, no missing geometry, no dropped frames on orbit.
 
-5. **Use Restart and the presenter keys listed at the head of the presenter script.**
-   - Expect: Restart returns to chapter one; each key lands on its own deterministic state.
+5. **Use final-beat Replay and the presenter keys listed at the head of the presenter script.**
+   - Expect: Replay returns to beat one; each key lands on its own deterministic state.
 
 6. **Confirm the static fallback deck is on the presenting machine.**
    - Expect: release/fallback/*.svg open without a browser engine or a network.
 
 7. **Do not plan to open external citations during the narrative.**
-   - Expect: Every source is reachable afterwards from the Evidence drawer.
+   - Expect: Every source is reachable afterwards from Research → Sources & build.
 
 ## Fallback package
 
@@ -32,6 +32,6 @@ Run this on the presenting machine, on the presenting display.
 
 ## Candidate identity
 
-The Evidence drawer of both the hosted page and the offline file must report model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `1b72ba022a16aaceb19d209d97e81f3074862c8d`; build inputs `2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907`.
+Research → Sources & build in both the hosted page and the offline file must report model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`; build inputs `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08`.
 A mismatch in any field means the candidates differ. Prefer the manifest-verified offline file; production parity is proved only at final release.
 

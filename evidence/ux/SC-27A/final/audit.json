@@ -3,8 +3,8 @@
   "purpose": "Automated diagnostics only; this record does not claim human comprehension or visual quality.",
   "candidate_identity": {
     "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-    "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
-    "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+    "app_revision": "0240a2b3a7b233cd2aef432b86cbd0e852688d03",
+    "build_inputs_fingerprint": "80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08",
     "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
   },
   "viewports": [
@@ -55,8 +55,8 @@
       "unobscured_stage_area_share_diagnostic": 0.6535,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
-        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "app_revision": "0240a2b3a7b233cd2aef432b86cbd0e852688d03",
+        "build_inputs_fingerprint": "80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -64,7 +64,7 @@
         "channel_difference_threshold_8bit": 12,
         "pixel_share": 0.0488,
         "bounding_box_share": 0.5666,
-        "changed_pixels": 14849,
+        "changed_pixels": 14850,
         "total_pixels": 304500
       }
     },
@@ -115,8 +115,8 @@
       "unobscured_stage_area_share_diagnostic": 0.666,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
-        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "app_revision": "0240a2b3a7b233cd2aef432b86cbd0e852688d03",
+        "build_inputs_fingerprint": "80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -124,7 +124,7 @@
         "channel_difference_threshold_8bit": 12,
         "pixel_share": 0.0464,
         "bounding_box_share": 0.5826,
-        "changed_pixels": 15285,
+        "changed_pixels": 15286,
         "total_pixels": 329160
       }
     },
@@ -175,8 +175,8 @@
       "unobscured_stage_area_share_diagnostic": 0.7795,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
-        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "app_revision": "0240a2b3a7b233cd2aef432b86cbd0e852688d03",
+        "build_inputs_fingerprint": "80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -184,7 +184,7 @@
         "channel_difference_threshold_8bit": 12,
         "pixel_share": 0.0462,
         "bounding_box_share": 0.7229,
-        "changed_pixels": 36317,
+        "changed_pixels": 36316,
         "total_pixels": 786432
       }
     },
@@ -235,8 +235,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8114,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
-        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "app_revision": "0240a2b3a7b233cd2aef432b86cbd0e852688d03",
+        "build_inputs_fingerprint": "80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -244,7 +244,7 @@
         "channel_difference_threshold_8bit": 12,
         "pixel_share": 0.0698,
         "bounding_box_share": 0.8081,
-        "changed_pixels": 54869,
+        "changed_pixels": 54870,
         "total_pixels": 786432
       }
     },
@@ -295,8 +295,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8152,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
-        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "app_revision": "0240a2b3a7b233cd2aef432b86cbd0e852688d03",
+        "build_inputs_fingerprint": "80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -304,7 +304,7 @@
         "channel_difference_threshold_8bit": 12,
         "pixel_share": 0.0866,
         "bounding_box_share": 0.7946,
-        "changed_pixels": 79795,
+        "changed_pixels": 79796,
         "total_pixels": 921600
       }
     },
@@ -355,8 +355,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8542,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "1b72ba022a16aaceb19d209d97e81f3074862c8d",
-        "build_inputs_fingerprint": "2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907",
+        "app_revision": "0240a2b3a7b233cd2aef432b86cbd0e852688d03",
+        "build_inputs_fingerprint": "80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -476,7 +476,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-375x812.png",
-      "sha256": "0b6c8c67e245143b60abdaa2b4d49c818433adbf875a8590b1d3567b727e05e1",
+      "sha256": "bdc7d5901e4af8b2dad899358025ab57661135ed57e198cc612ef31fbfe2e6be",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -488,7 +488,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-390x844.png",
-      "sha256": "aceccc12a00921d228da2689da07ce8150cf863a67493a4835b818903c387fce",
+      "sha256": "7b1a01f3dcb567961082a24298c64c214c84ea78b4c7e9fd40e8307df2af646d",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -500,7 +500,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-768x1024.png",
-      "sha256": "0cdd190a165816ce201dea93bb0c1fb0e0bfaedbcaf46bd62be402b292bc1b04",
+      "sha256": "bdc74b0dfe0cc32997decb642f03ff989e09e03fb84a9dd6495acb9e40a71b78",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -512,7 +512,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1024x768.png",
-      "sha256": "fded17cb79f848830fbad721535e2c83e3ef2cdf89838e1fb0572af520e7fe1a",
+      "sha256": "2464283790c390684ee1940b892da15779c1ab2edd533583eab4248d6d3ddf7e",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -524,7 +524,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1280x720.png",
-      "sha256": "13504f5d49616b6d0365b4fae7c917f6de79b69ce3e0610141fb018ba24696a7",
+      "sha256": "c289a4900fc5f317b82c8a75d680e2fee268a8097ae51008834e48cc82e120bd",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -536,7 +536,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1440x900.png",
-      "sha256": "b23c56e3844f7ae07581d4aeb0912dcb44ef6e8fdd9fcb23711fb064387693d6",
+      "sha256": "c63458ac74ba46822ba6aa27e90c2cc2fd98f733d8af56161da0dd96fb1b33b4",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -548,7 +548,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-1-1280x720.png",
-      "sha256": "e73e5d7c63fb40c924cbc4d2fe3dad0ffd78b7316aa2ac9c65087eee9d9c5943",
+      "sha256": "eb973057ba1b5a008091dd065efe350c9c5f536aa4a68f12553a68c4240e8a87",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -596,7 +596,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-5-1280x720.png",
-      "sha256": "87d3ff642481904b523ed090ffbc0ed3c08ef1b626d65813a2ed1d42dd04f820",
+      "sha256": "f12b10c9d46891ef03092ce04f2b5f28c89126099486f6b0ab034fe1040a9202",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -620,7 +620,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/selected-titin-1280x720.png",
-      "sha256": "483af47fd6535bdbf3d494840d1c77ee424355a3c5d82791e6b3c3e191b3b90c",
+      "sha256": "3e5c58c2be33ef7384bb4476c47aefd4ceb2cb9b8e55b3c808382d5a9eb969d7",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -668,7 +668,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-sources-build-1280x720.png",
-      "sha256": "0c46d92102ef08c94703b8d90000d50215d48e3eaf1a4536556c3cc3fa0921f3",
+      "sha256": "b58dc197638cb341d65abb3d5736a9c9c3beb03cd796903fe7c4fddddb1e2a5d",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -728,7 +728,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-protanopia-1280x720.png",
-      "sha256": "2a8ba6bb61e899a53487c430bb7e2e26dbc82ea9647eaec6c01d8af2f9ca843b",
+      "sha256": "03d2f196a3389ab38aaff7a7c095fcf06a322e93e51c156ff013e9fa5b690a41",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -740,7 +740,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-deuteranopia-1280x720.png",
-      "sha256": "494a3408994c237d1b3ad2d9233308bdb7a6a083dbc1b305e9106feb32b0ebbd",
+      "sha256": "2da7bcdefd8c0ab8b96932707a0fde0398d0c7c7aab9dbf583f2128735eeb8e2",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -752,7 +752,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-tritanopia-1280x720.png",
-      "sha256": "c47cf6393500b705092294b7e0e64b4d190602526fea4d274db79b5e4a127ddf",
+      "sha256": "ee0fa235192ac5c52bdb8d36a2a035a87787b338d94b46ef09cacf82b3ab7c8b",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -764,7 +764,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-projector-1536x864.png",
-      "sha256": "90bae25dd6c9f03b4dfb0a06ec79462f85942001cdfe170b8e8be6e89af3d4d5",
+      "sha256": "5ac3aef51abfaeeda69b69ce3b6c138872f6db74087ef059500294061fdbcf83",
       "reviewer_disposition": "PENDING — human visual review not performed"
     }
   ],

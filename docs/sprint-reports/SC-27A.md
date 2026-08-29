@@ -2,10 +2,9 @@
 
 - Starting commit: `914a3940b276865722396ab29cb9719bc0c88bc3`.
 - Engineering status: **IMPLEMENTATION COMPLETE; FINAL FREEZE BLOCKED**. Product, compatibility,
-  build, export, accessibility-automation, and evidence-capture work is implemented. Chromium and
-  Firefox are green. A full WebKit pass reached 79/80 and the remaining test passed alone, but later
-  WebKit reruns became host-blocked before page load under severe memory pressure; this is recorded
-  below rather than over-claimed as a clean full-engine pass.
+  build, export, accessibility-automation, and evidence-capture work is implemented. The final
+  candidate passes the complete 87-test Chromium surface and the complete affected 20-test SC-27A
+  UX surface in both Firefox and WebKit.
 - Human status: **PENDING**. No target-frame reviewer, formative participant, accessibility
   reviewer, scientific expert, projector operator, or final lay participant was invented or
   inferred. Consequently this candidate is not yet eligible for freeze.
@@ -21,13 +20,13 @@ fingerprint is still
 
 | Identity | Start | Current generated candidate |
 |---|---|---|
-| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `1b72ba022a16aaceb19d209d97e81f3074862c8d` |
-| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `1b72ba022a16aaceb19d209d97e81f3074862c8d` |
-| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907` |
+| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `0240a2b3a7b233cd2aef432b86cbd0e852688d03` (verified application source) |
+| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `0240a2b3a7b233cd2aef432b86cbd0e852688d03` |
+| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08` |
 | Model-input-manifest fingerprint | `39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25` | unchanged |
 | Model fingerprint | `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` | unchanged |
-| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `6efc5c10ebc35959c190ebf3b26c93c6e414b4e3a8c794b0cb1cb9d4d7cf3508` |
-| Detached manifest SHA-256 | n/a | `e324417a3de1f10db663b05f72b911bf7712b92e8838967ccc4efb7895dbb896` |
+| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `a354001a34cac770e1a3a51bb905d803671fe815852c79d74a73a7d45820ec1d` |
+| Detached manifest SHA-256 | n/a | `ca566084c38cbee7f8dbf0523ccf8391befd0ec1adee9119c4eaaf52c791674f` |
 | Export-contract fingerprint | `a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843` | unchanged |
 
 The final column is the verified generated engineering candidate. It is not a release-freeze
@@ -43,8 +42,9 @@ Z-disc-to-M-line route truthful while the camera shows a representative half-rou
 
 Research is a bounded desktop drawer and a full-screen mobile sheet. It owns four contextual tabs:
 Inspect, Measure, Evidence, and Sources & build. Direct Titin, Myosin, and Actin labels select stage
-objects; the compact object card gives a name, lay explanation, evidence chip, and one “Why we know
-this” route into the full claim and exact sources. Closing Research restores focus to its invoker.
+objects; the compact object card gives a name, lay explanation, evidence chip, visible canonical
+class disclosure where the Guided label groups two classes, and one “Why we know this” route into
+the full claim and exact sources. Closing Research restores focus to its invoker.
 
 The visual system has a single declaration in `data/render_style.json`: a dark scientific-stage
 gradient, muted contextual filaments, reserved pink titin identity, a non-scientific screen-space
@@ -77,16 +77,16 @@ semantic scene. URL v2 aliases canonicalize directly to these IDs without an int
 | Restart | Final-beat `Replay` | Replaced contextually |
 | Restore previous view | Research-only contextual restore appears after a real manual camera gesture | Retained without adding Tour chrome |
 | Chapter Evidence | Beat-5 chips or contextual Research Evidence | Migrated |
-| Persistent length slider and Play/Reset/Force | Beat-3 slider, Stretch, and force route; full detail in Research Measure | Contextualized |
+| Persistent length slider and Play/Reset/Force | Beat-3 slider, Stretch, and force route; full detail in Research Measure | Slider/Stretch/Force contextualized; dead duplicate Reset removed |
 | Persistent scene/ring/myosin controls | Research Inspect → All scenes and display controls | Retained contextually |
-| Persistent colour legend | Direct labels plus Research Inspect inventory | Replaced without losing selection |
+| Persistent colour legend | Direct labels plus the Research Measure structure key | Replaced without losing pointer, keyboard, or touch selection |
 | More dialog | Four Research tabs | Removed as duplicate navigation |
 | More → Inspect / Measure / Sources | Matching Research tabs | Retained |
 | Keyboard help | Accessible canvas description plus presenter script | Retained nonvisually; accelerators are not painted as a second Tour vocabulary |
 | Object previous/next carousel | Direct labels and Research inventory | Removed as incidental carousel chrome |
 | Object full-detail / source buttons | One `Why we know this` route → selected Evidence → exact Sources | Consolidated |
 | Object expert-card shortcut | Contextual Research Evidence inventory | Removed as a duplicate route; the expert cards remain present |
-| Picked-instance line | Research Inspect exact locator | Removed from the compact object card and retained in the specialist path |
+| Picked-instance line | No replacement | Removed; Research Inspect retains object, region, mapped-feature, render, and claim detail without promising instance-level output |
 | Hint dismiss button | Hint clears on the first real selection | Removed to avoid spending a fifth cold-open control |
 | Text scale / close | Research header | Retained |
 | Filament context toggle | Research Inspect | Retained |
@@ -100,8 +100,9 @@ semantic scene. URL v2 aliases canonicalize directly to these IDs without an int
 | `regional-extension.csv` | Research Sources & build | Retained deterministically |
 | `claim-support.json` | Research Sources & build | Retained deterministically |
 
-Hidden compatibility nodes remain only where existing state bindings require them; they are not
-painted or tabbable and do not consume the Tour budget.
+The permanently hidden legacy UI branches identified during review were removed with their event
+handlers, writes, and orphaned styles. Backward compatibility is data-level URL alias migration,
+not hidden DOM controls.
 
 ## Before/after UX diagnostics
 
@@ -119,11 +120,17 @@ These are automated diagnostics, not human quality judgments.
 Cold-open visible word count is 91–92 at narrow/tablet sizes and 104 at desktop sizes. No measured
 header/story overlap occurs. Two distinct diagnostics are recorded without conflating them:
 chrome-free stage area is 65.35–85.42%, while actual composed scientific pixels occupy 4.62–8.66%
-of the stage and span a 57.14–83.23% bounding box. The latter is measured by pixel-differencing each
+of the stage and span a 56.66–82.80% bounding box. The latter is measured by pixel-differencing each
 composed stage against the same frame with WebGL geometry and the scientific SVG overlay hidden.
 At all six release viewports the cold open is within the exact four-visible / three-tabbable
 contract, and the dense beat-3 mechanics state keeps its force readout and Next action inside the
 card with no story scroll or horizontal overflow.
+
+Rendered semantic-camera checks now cover beats 1, 2, and 5 at all six release viewports. They
+verify the two Z-disc boundaries, M-line, locator anchors, truthful visible-span rectangle, selected
+termini, reachable titin path, viewport bounds, and header/story clearance. The new gate exposed and
+drove a real 1024×768 closing-frame fix: the same five evidence definitions were tightened to
+one-line meanings, reducing the recap height without changing the approved evidence mapping.
 
 The final capture manifest contains 25 software-composition candidates: all six release viewports,
 all five beats, beat 3 before/after stretch, selected Titin, four Research contexts, mobile Research,
@@ -159,10 +166,11 @@ the scientific targets and sampling grid did not change. The regenerated 14-cell
 7,562 samples, 5,174 intended targets, and 5,150 intended resolutions: **99.54%** aggregate. Rings 0
 through 4 resolve at 100%; ring 8 resolves at 98.99%. The only 95.38% cell is the compact mobile
 lattice view, where missed samples resolve through the declared nearest-visible-context policy.
-Chromium, Firefox, and WebKit produce the same counts. Projected labels have coarse invisible SVG
-hit areas; blank stage gestures share that SVG interaction plane with orbit/pan/zoom and
-deterministic picking. WebKit's SVG-root event targeting is handled by a geometric hit-area fallback
-that dispatches the same label action and does not broaden the scientific ray-picking policy.
+The committed fixture is reproduced by `check:hitgrid`; the final Chromium pointer-path run produces
+the same counts. Projected labels have coarse invisible SVG hit areas; blank stage gestures share
+that SVG interaction plane with orbit/pan/zoom and deterministic picking. WebKit's SVG-root event
+targeting is handled by a geometric hit-area fallback that dispatches the same label action and does
+not broaden the scientific ray-picking policy.
 
 ## Test-contract triage
 
@@ -175,18 +183,18 @@ that dispatches the same label action and does not broaden the scientific ray-pi
 | `test/browser/stretch.spec.js` | Contract | Preserved length/mechanics/state/history assertions; moved the public stretch route into beat 3 and force detail into Research Measure. |
 | `test/browser/workbench.spec.js` | Contract | Preserved expert Inspect/Measure/Evidence/Sources inventory, exact claims, offline sources, exports, and deep-link behavior under the renamed Research workbench. |
 | `test/browser/smoke.spec.js` | Contract + incidental | Preserved boot, contrast, drawer/sheet, focus, and responsive smoke checks; replaced obsolete Explore/old story chrome selectors. |
-| `test/browser/ux-overhaul.spec.js` | New contract | Added six-viewport cold and beat-3 budgets, force containment, unique action, no story scroll/overlap/overflow, contextual source path, mobile single-scroll sheet, rendered canonical-class disclosure, reduced-motion parity, 200%-equivalent reflow, double-fire prevention, and axe scans across cold, mechanics, recap, and Research states. |
+| `test/browser/ux-overhaul.spec.js` | New contract | Added six-viewport cold and beat-3 budgets, force containment, unique action, no story scroll/overlap/overflow, rendered beat-1/2/5 semantic-camera and visible-span checks, contextual source path, mobile single-scroll sheet, Guided canonical-class disclosure, reduced-motion parity, 200%-equivalent reflow, double-fire prevention, and WCAG 2.0/2.1/2.2 axe scans across cold, mechanics, recap, and Research states. |
 | `test/presentation.test.js` | Contract | Migrated schema/order/alias/source assertions to presentation v3 and exactly five beats. |
 | `test/showcase_phase2.test.js` | Contract | Updated canonical initial scene/beat and added shipped Guided-contour endpoint coverage while retaining model and state truth. |
 | `test/showcase_phase7.test.js` | Contract + incidental | Preserved presentation integrity; replaced seven-chapter and duplicate action expectations with v3 constraints. |
 | `test/showcase_phase8.test.js` | Contract | Preserved alias, URL, transcript, source, visual-matrix, and release-pack behavior for the new IDs and 48 cells. |
-| `test/showcase_phase9.test.js` | Contract | Updated presentation schema identity only. |
+| `test/showcase_phase9.test.js` | Contract | Updated the handoff vocabulary check from retired Guided naming to the current Tour/Research surfaces. |
 | `test/showcase_phase11.test.js` | Contract | Updated initial canonical story state only. |
 | `test/showcase_phase12.test.js` | Contract + incidental | Re-routed focus/visibility/Research structure checks and removed assumptions about the deleted persistent stage bar. |
 | `test/showcase_phase13.test.js` | Contract | Updated the Research naming/path while preserving source behavior. |
 | `test/showcase_phase15.test.js` | Contract | Updated the semantic chapter mapping while retaining render-style/science assertions. |
 | `test/showcase_phase17.test.js` | Contract | Updated presentation schema identity and made the accelerator test accurately assert the nonvisual accessible canvas description. |
-| `test/showcase_phase18.test.js` | Contract | Updated the current canonical story step only. |
+| `test/showcase_phase18.test.js` | Contract | Updated the canonical story step and removed a dead `.object-sources` term from the live source-link contrast selector check. |
 | `test/showcase_phase23.test.js` | Contract | Replaced the seven-chapter curriculum contract with exactly five beats, aliases, narration, claim/source closure, and one action. |
 | `test/showcase_phase24.test.js` | Contract | Updated Tour interaction-surface and camera expectations while retaining camera/state truth. |
 | `test/showcase_phase25.test.js` | Contract | Updated direct-label hit-surface expectation, retained picking policy/target identity, and added byte-identical clean-room SC-25 evidence regeneration. |
@@ -204,22 +212,21 @@ accessibility, picking, evidence, and deterministic-build assertions were retain
 | Protected-input digest audit | **PASS** — all 11 named files match start; `docs/scientific-decisions/**` has no diff |
 | Model fingerprint | **PASS** — exact SC-26 value `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` |
 | `npm test` | **PASS** — 606/606 Node tests on the final source |
-| `npm run verify` | **EXPECTED NONZERO AT HUMAN GATES** — all preceding generated-input checks, 606 Node tests, destructive controls, and JS/Python validators passed; `validate:gates` truthfully rejected seven outstanding human/release sections |
-| `npm run verify:sc27a` | **EXPECTED NONZERO AT HUMAN GATES** — 175/175 focused unit/contract tests plus negative controls and preceding validators passed; the command then stopped at the same seven outstanding release gates |
-| `check:hitgrid` | **PASS BEFORE FINAL CSS-ONLY ADJUSTMENT** — 7,562 samples / 14 cells; 5,150/5,174 intended samples resolved. No picking/model/fixture input changed afterward. A redundant final-source rerun later timed out at `page.goto` under the same host memory pressure, before exercising a sample. |
+| `npm run verify` | **PASS** — all generated-input checks, 606 Node tests, destructive controls, and JS/Python validators pass; pending human/release sections are truthfully represented and reject unsupported readiness claims |
+| `npm run verify:sc27a` | **PASS** — 175/175 focused unit/contract tests, all negative controls, presentation/style/gate validators, hit grid, 48-cell matrix, and artifact identity |
+| `check:hitgrid` | **PASS ON FINAL APP SOURCE** — 7,562 samples / 14 cells; 5,150/5,174 intended samples resolved (99.54%); reviewed miss dispositions unchanged |
 | `check:matrix` | **PASS** — 48 reproducible cells |
-| Chromium | **PASS** — full 80/80; after the final two engine-neutral layout adjustments, all 21 affected Stretch/SC-27A browser scenarios passed again |
-| Firefox | **PASS** — full 80/80 on the final source |
-| WebKit | **HOST-BLOCKED FOR A SINGLE CLEAN FULL RUN** — full 79/80, with only reduced-motion Stretch outstanding; that test then passed 1/1 alone. Later fresh-worker reruns stalled in `setViewportSize` before application load while the 8 GB host had about 60 MB free and roughly 3 GB occupied by compressed memory. No product assertion reproducibly fails. |
+| Chromium | **PASS** — 87/87 on the final candidate: full 78-test SC-27A browser route plus 9/9 smoke |
+| Firefox | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 20/20 SC-27A UX tests on the final candidate |
+| WebKit | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 20/20 SC-27A UX tests on the final candidate |
 | Build / pack / identity | **PASS** — standalone and 22-output release pack current; embedded inputs and post-candidate evidence disjoint |
 | Offline file/HTTP and denied external network | **PASS** — source/standalone/file boot and local locator/claim export remain operational with external network denied |
 | Final UX capture audit | **PASS (automated diagnostics only)** — 25 captures, 6 viewport records, zero horizontal overflow/cold-open header-story collision; every reviewer disposition remains PENDING |
 | Human accessibility / visual review | PENDING — SC-27A/SC-27B human work |
 
-Final-source browser coverage ran against build-input fingerprint `2fa9a7ef4428…` and standalone
-SHA-256 `6efc5c10ebc3…`. Chromium's full pass preceded only the final 2 px cross-engine label reserve and
-30 px tablet badge cap increase; the complete 21-test surface affected by those two adjustments
-passed on the final source. Firefox's full pass and all WebKit runs used the final source.
+Final-candidate browser coverage ran against build-input fingerprint `80b0759d9d05…` and standalone
+SHA-256 `a354001a34ca…`. The two final SC-9/18 changes update stale regression assertions only, so the
+embedded application revision correctly remains `0240a2b`.
 
 ## Protected-input proof
 
@@ -269,8 +276,63 @@ The expanded axe scan then found and drove one additional fix: the exact referen
 accessible group rather than an image role containing nested buttons. Claude's suggestion that only
 two removed IDs should migrate silently was rejected because the governing design explicitly says
 all removed chapter IDs migrate without warning and existing aliases continue to canonicalize.
-A post-remediation Claude re-review was requested; the long first client returned no response and a
-bounded retry reported an expired CLI login. No second verdict is fabricated or implied.
+
+The bounded post-remediation Claude retry succeeded after the earlier CLI login failure. It
+re-verified all 14 findings (13 fixed, one partial) and judged the engineering implementation
+complete, while correctly retaining the automated-WebKit and human/freeze qualifications. Its one
+P2, four P3 cleanup findings, and semantic-camera coverage gap were then remediated: Guided selected
+objects disclose their canonical inference class without changing the five-label curriculum; dead
+hidden branches and beat-4's inert bracket declaration are gone; axe includes WCAG 2.1/2.2 AA tags;
+and the six-viewport rendered camera gate described above now passes in Chromium, Firefox, and
+WebKit. The exact review and dispositions are recorded in
+`evidence/ux/SC-27A/CLAUDE-SENIOR-REVIEW.md`.
+
+The next authenticated Claude deep review found no P0/P1 and judged the engineering implementation
+complete, but reported two P2 and eleven P3 correctness, cleanup, documentation, and gate-quality
+items. All thirteen were remediated in `3bb85c0` and `dd54521`: generated release vocabulary and
+screen-reader progress now say Tour/Research/Beat; the false picked-instance promise is gone; the
+hit-grid attribution is precise; dead UI and `locatorTicks` code are removed; exactly five recap
+definitions were shortened; label safe areas and label-box constants agree; Guided/Research
+inference disclosure is symmetric; contrast records are bound to canonical palette roles; all five
+beats are shell-gated; and locator assertions use rendered SVG geometry. The release validator now
+has 27 destructive mutations, including absent-colour and role-swap controls.
+
+After these fixes, `npm run verify`, `npm run verify:sc27a`, Chromium 86/86, Firefox 19/19, WebKit
+19/19, and the 25-capture audit all pass. The final Claude closure result belongs in the companion
+review file; none of this changes the pending human/release sections or `release_ready: false`.
+
+An authenticated closure attempt then returned a contradictory headline: it said PASS while also
+reporting one P2 and five P3 actionable findings. It was therefore treated as a failed review, not
+as approval. All six findings were remediated in app commit `8586a5c`: the release gate now names
+the actual Research Measure structure key and browser coverage exercises it by pointer, keyboard,
+and touch; permanently hidden legacy nodes, handlers, render paths, vocabulary, and styles were
+removed; the generated transcript says Tour; focus/overflow coverage dynamically visits every
+visible enabled shell control; viewport assertions require full containment; and the Tour recap has
+an explicit accessible group role. A stale SC-21 test that still required the deleted extension
+chart was corrected in test-only commit `061ad45` to lock the current Measure contribution table.
+
+On this rebuilt candidate, `npm run verify` passes 606/606, `npm run verify:sc27a` passes 175/175,
+Chromium passes 77/77 SC-27A plus 9/9 smoke, Firefox passes 19/19, WebKit passes 19/19, and the audit
+contains 25 refreshed captures across six viewports.
+
+The next strict Claude closure review correctly treated the prior contradictory result as a
+failure and independently found two P2 and four P3 items. All six are remediated in application
+commit `0240a2b`: `x` now enters the complete Stretch beat through the normal chapter route; the
+capture baseline uses no motion preference and the script rejects duplicate observation hashes;
+the generated candidate is recorded with its evidence rather than existing only in a dirty tree;
+the final eight orphaned classes and inert interaction-help visual rules are gone; the README is
+current through SC-27A; the visible source action says beat; and axe activates, verifies, and scans
+all four Research tabs at mobile and desktop sizes. The final regression cleanup also updates two
+older tests whose assertions still named retired Guided/dead-selector behavior.
+
+The exact rebuilt identity is app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`, build inputs
+`80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08`, standalone
+`a354001a34cac770e1a3a51bb905d803671fe815852c79d74a73a7d45820ec1d`, and detached manifest
+`ca566084c38cbee7f8dbf0523ccf8391befd0ec1adee9119c4eaaf52c791674f`. On that exact candidate,
+`npm run verify` passes 606/606, `npm run verify:sc27a` passes 175/175, Chromium passes 78/78 SC-27A
+plus 9/9 smoke, Firefox passes 20/20, WebKit passes 20/20, and the uniqueness-checked audit contains
+25 refreshed captures across six viewports. A final Claude zero-finding rerun is required before
+the automated senior-review gate can be called PASS.
 
 ## Formative findings and remaining limitations
 

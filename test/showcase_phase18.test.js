@@ -173,7 +173,7 @@ test('SC18: manifest v2 binds raw candidate bytes without hashing itself', () =>
 });
 
 test('SC18: every rendered link container declares contrast', () => {
-  assert.match(page, /\.object-sources a,\s*#chapterSources a,\s*#expertCards a,\s*#selectedEvidence a,\s*#bibliography a\s*\{[^}]*color:\s*var\(--source-link\)/s);
+  assert.match(page, /#chapterSources a,\s*#expertCards a,\s*#selectedEvidence a,\s*#bibliography a\s*\{[^}]*color:\s*var\(--source-link\)/s);
   assert.match(page, /--source-link:\s*#a9c9f2/);
   assert.doesNotMatch(page, /\.extension-row/);
 });

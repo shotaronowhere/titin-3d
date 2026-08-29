@@ -1,11 +1,11 @@
 # Screen-reader transcript
 
-Generated from `data/presentation.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `1b72ba022a16aaceb19d209d97e81f3074862c8d`; build inputs `2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907`.
+Generated from `data/presentation.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`; build inputs `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08`.
 416 narrated/announced words; estimated 181 s; target 110–190 s.
 
 ## 1. Meet the sarcomere
 
-Chapter 1 of 5: Meet the sarcomere.
+Beat 1 of 5: Meet the sarcomere.
 
 Showing titin, myosin, and actin in one sarcomere; your current sarcomere length is preserved.
 
@@ -19,7 +19,7 @@ Actions: Follow titin.
 
 ## 2. Follow one giant molecule
 
-Chapter 2 of 5: Follow one giant molecule.
+Beat 2 of 5: Follow one giant molecule.
 
 Framing the complete titin route and both termini; your current sarcomere length is preserved.
 
@@ -33,7 +33,7 @@ Actions: Build and stretch.
 
 ## 3. Build and stretch the spring
 
-Chapter 3 of 5: Build and stretch the spring.
+Beat 3 of 5: Build and stretch the spring.
 
 Preparing the reversible architecture and stretch comparison without changing your current sarcomere length.
 
@@ -47,7 +47,7 @@ Actions: See the scaffold.
 
 ## 4. Scaffold the thick filament
 
-Chapter 4 of 5: Scaffold the thick filament.
+Beat 4 of 5: Scaffold the thick filament.
 
 Moving to titin's A-band scaffold and filament context; your current sarcomere length is preserved.
 
@@ -61,7 +61,7 @@ Actions: Read the evidence.
 
 ## 5. What do we know?
 
-Chapter 5 of 5: What do we know?.
+Beat 5 of 5: What do we know?.
 
 Returning to the complete titin route and evidence-language recap; your current sarcomere length is preserved.
 

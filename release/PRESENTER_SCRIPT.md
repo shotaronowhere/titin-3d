@@ -1,8 +1,8 @@
 # Presenter script
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `1b72ba022a16aaceb19d209d97e81f3074862c8d`; build inputs `2fa9a7ef4428ccbeab79841160b4a358b2b8eeb86a9f4ae3a0508b2055cdd907`. Estimated 181.1 s (3 min 1 s), target 110–190 s.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0240a2b3a7b233cd2aef432b86cbd0e852688d03`; build inputs `80b0759d9d0530befafa6c6f340e7332a9f3eff6f04b33f6d8deba44a952bb08`. Estimated 181.1 s (3 min 1 s), target 110–190 s.
 
-Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in the Evidence drawer — you do not need to open it to finish the tour.
+Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in Research — you do not need to open it to finish the Tour.
 
 ## Keys
 
@@ -10,11 +10,11 @@ Resolved from the build, not typed here. Nothing needs the mouse.
 
 | Key | Does |
 |---|---|
-| `1–5` | Jump to a chapter by number |
-| `r` | Restart guided route |
-| `x` | Show regional extension |
-| `e` | Open evidence |
-| `g` | Return to Guided |
+| `1–5` | Jump to a beat by number |
+| `r` | Restart Tour |
+| `x` | Show stretch |
+| `e` | Open Research |
+| `g` | Return to the Tour |
 | `space` | Run the stretch sweep |
 
 ## 1. Meet the sarcomere  `~25.3s`
