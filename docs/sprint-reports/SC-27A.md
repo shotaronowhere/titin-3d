@@ -20,13 +20,13 @@ fingerprint is still
 
 | Identity | Start | Current generated candidate |
 |---|---|---|
-| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `706a90d89464b3bab0c4e52d986c74390cb19807` (verified application source) |
-| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `706a90d89464b3bab0c4e52d986c74390cb19807` |
-| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `ffe30411c59b63abd414a16ae71e450fbe2e6c7057845c11c80043054ab0eee1` |
+| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448` (verified application source) |
+| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448` |
+| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686` |
 | Model-input-manifest fingerprint | `39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25` | unchanged |
 | Model fingerprint | `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` | unchanged |
-| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `041f0e7c4b13eb0e8ed54921648f599e77294d2e8f34d12e03ce65b84d690ec1` |
-| Detached manifest SHA-256 | n/a | `6f688128da1b33616e6352a8d0705ca090642d09ccd3b997fb142fc4cce820c7` |
+| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `5c92f9e759acb516599f2cd92e9706c568a123dde82c3061f6732e73147e6a91` |
+| Detached manifest SHA-256 | n/a | `e4cd231e29fd7e333485114537bde4b24bc2883bf0e86b751f1ea02b2324c74f` |
 | Export-contract fingerprint | `a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843` | unchanged |
 
 The final column is the verified generated engineering candidate. It is not a release-freeze
@@ -225,9 +225,9 @@ accessibility, picking, evidence, and deterministic-build assertions were retain
 | Final UX capture audit | **PASS (automated diagnostics only)** — 25 captures, 6 viewport records, zero horizontal overflow/cold-open header-story collision; every reviewer disposition remains PENDING |
 | Human accessibility / visual review | PENDING — SC-27A/SC-27B human work |
 
-Final-candidate browser coverage ran against build-input fingerprint `ffe30411c59b…` and standalone
-SHA-256 `041f0e7c4b13…`. The embedded application revision is the exact final source commit
-`706a90d`.
+Final-candidate browser coverage ran against build-input fingerprint `960a5603312e…` and standalone
+SHA-256 `5c92f9e759ac…`. The embedded application revision is the exact final source commit
+`5f08a3b`.
 
 ## Protected-input proof
 
@@ -358,6 +358,30 @@ The exact remediated identity is app `706a90d89464b3bab0c4e52d986c74390cb19807`,
 plus 9/9 smoke, Firefox passes 20/20, WebKit passes 20/20, and the uniqueness-checked audit contains
 25 refreshed captures across six viewports. Status remains **PENDING FINAL ZERO-FINDING CLAUDE
 RERUN**; release/freeze remains separately blocked on the declared human work.
+
+The next authenticated Claude review (`act-as-the-final-vivid-salamander.md`) independently
+confirmed every preceding finding closed, but correctly returned **engineering FAIL** under the
+zero-finding rule with zero P0, zero P1, one P2, and two P3 findings. The P2 was a mode-dependent
+residue: a selection made while Research was open still announced the Tour-only pinned-card route.
+The P3 items were the remaining “Evidence-only” MyBP-C README phrase and two report rows that
+correctly quoted Chromium pointer-resolution numbers but incorrectly attributed them to the static
+hit-grid fixture.
+
+Application commit `5f08a3b` closes all three. The live announcement now branches by actual mode:
+Tour names “Why we know this,” while Research names Selected structure in the Research Evidence tab.
+The existing desktop and responsive Research-detail browser routes assert that exact announcement.
+README now says the MyBP-C context is Research-only, with a regression preventing the old phrase.
+The picking section and verification matrix now separate `check:hitgrid` fixture reproduction
+(7,562 samples, 5,174 intended targets, 14 cells) from Chromium ray-picking resolution
+(5,150/5,174, 99.54%).
+
+The exact rebuilt identity is app `5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448`, build inputs
+`960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686`, standalone
+`5c92f9e759acb516599f2cd92e9706c568a123dde82c3061f6732e73147e6a91`, and detached manifest
+`e4cd231e29fd7e333485114537bde4b24bc2883bf0e86b751f1ea02b2324c74f`. `npm run verify` passes
+608/608 and `npm run verify:sc27a` passes 177/177 on that identity; full browser reruns are recorded
+in the verification matrix above. Status remains **PENDING FINAL ZERO-FINDING CLAUDE RERUN**;
+release/freeze remains separately blocked on the declared human work.
 
 ## Formative findings and remaining limitations
 

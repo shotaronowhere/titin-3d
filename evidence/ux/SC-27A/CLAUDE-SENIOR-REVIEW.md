@@ -215,3 +215,33 @@ and 25 unique refreshed captures across six viewports.
 
 Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
 release/freeze remains independently blocked on the declared human work.
+
+## Vivid-salamander closure findings and remediation
+
+The following authenticated Claude Opus/high-effort read-only closure review
+confirmed every prior actionable finding closed. Applying the zero-actionable-
+finding rule, it returned **engineering FAIL** with zero P0, zero P1, one P2,
+and two P3 findings. Its complete review artifact is
+`/Users/shotaro/.claude/plans/act-as-the-final-vivid-salamander.md`.
+
+| Priority | Finding | Disposition |
+|---|---|---|
+| P2 | A selection made while Research was open announced the Tour-only `Why we know this` pinned-card route, although that card is hidden in Research | The announcement now branches on the actual audience mode: Tour names the pinned action; Research names Selected structure in the Research Evidence tab. Existing desktop and responsive Research-detail browser routes assert the exact Research message |
+| P3 | The MyBP-C README module entry still said `Evidence-only`, which could be mistaken for the Research Evidence tab | It now says `Research-only`; the SC-27A vocabulary regression rejects the retired phrase |
+| P3 | The report attributed 5,150/5,174 Chromium resolution counts to the static hit-grid fixture and `check:hitgrid` | The report now separates fixture reproduction (7,562 samples, 5,174 intended targets, 14 cells) from the Chromium pointer-path result (5,150/5,174, 99.54%) in both prose and the verification matrix |
+
+The rebuilt candidate is app revision
+`5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448`, build-input fingerprint
+`960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686`,
+standalone SHA-256
+`5c92f9e759acb516599f2cd92e9706c568a123dde82c3061f6732e73147e6a91`,
+and detached-manifest SHA-256
+`e4cd231e29fd7e333485114537bde4b24bc2883bf0e86b751f1ea02b2324c74f`.
+Verification on this exact identity includes 608/608 full Node tests, 177/177
+focused tests, all destructive controls and validators, 78/78 Chromium SC-27A
+browser tests, 9/9 Chromium smoke tests, 20/20 Firefox UX tests, 20/20 WebKit UX
+tests, the 7,562-sample hit-grid fixture, the 48-cell matrix, exact artifact
+identity, and 25 unique refreshed captures across six viewports.
+
+Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
+release/freeze remains independently blocked on the declared human work.

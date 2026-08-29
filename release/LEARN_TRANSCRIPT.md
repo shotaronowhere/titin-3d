@@ -1,6 +1,6 @@
 # Text-only Tour transcript
 
-Generated from `data/presentation.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `706a90d89464b3bab0c4e52d986c74390cb19807`; build inputs `ffe30411c59b63abd414a16ae71e450fbe2e6c7057845c11c80043054ab0eee1`.
+Generated from `data/presentation.json` — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448`; build inputs `960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686`.
 416 narrated/announced words; estimated 181 s; target 110–190 s.
 
 ## 1. Meet the sarcomere
