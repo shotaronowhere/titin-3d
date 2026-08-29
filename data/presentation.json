@@ -414,7 +414,7 @@
       "order": 5,
       "title": "What do we know?",
       "visual_question": "What is measured, modeled, inferred, schematic, or not known?",
-      "learning_objective": "Recap titin's spring, scaffold, and interaction/signaling roles; distinguish the five Guided evidence labels and invite contextual source inspection.",
+      "learning_objective": "Recap titin's spring, scaffold, and interaction/signaling roles; distinguish the five Tour evidence labels and invite contextual source inspection.",
       "target_claim_id": "ai_provenance_pipeline",
       "target": {"kind": "component", "id": "titin"},
       "evidence_class": "SCHEMATIC",
@@ -812,6 +812,6 @@
       110,
       190
     ],
-    "basis": "Silent reading of the lay summary at a general-audience rate, plus one deterministic camera and visibility transition per chapter. This is the machine-checked form of the plan's 'approximately two to three minutes' guided-tour gate; it does not include time spent in the Evidence drawer."
+    "basis": "Silent reading of the lay summary at a general-audience rate, plus one deterministic camera and visibility transition per beat. This is the machine-checked form of the plan's 'approximately two to three minutes' Tour gate; it does not include time spent in Research."
   }
 }

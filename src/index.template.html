@@ -128,10 +128,10 @@ window.__titinBoot = { ready: false, problems: [] };
   #drawerTabs button[aria-selected="true"] { background: var(--accent); color: #0e1116;
     border-color: var(--accent); }
   h1 { font-size: 15px; margin: 0 0 4px; font-weight: 600; }
-  h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em;
     color: var(--dim); margin: 20px 0 8px; font-weight: 600; }
-  .sub { color: var(--dim); font-size: 11px; margin-bottom: 12px; }
-  label { display: block; font-size: 11px; color: var(--dim); margin-bottom: 4px; }
+  .sub { color: var(--dim); font-size: 13px; margin-bottom: 12px; }
+  label { display: block; font-size: 12px; color: var(--dim); margin-bottom: 4px; }
   input[type=range] { width: 100%; accent-color: var(--accent); }
   #sl { appearance: none; cursor: pointer;
     --supported-start: 9.09%; --supported-end: 45.45%;
@@ -152,7 +152,7 @@ window.__titinBoot = { ready: false, problems: [] };
     border: 2px solid #0e1116; background: var(--accent); }
   .row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
   button { background: #1f2630; color: var(--text); border: 1px solid var(--edge);
-    border-radius: 4px; padding: 5px 9px; font-size: 11px; cursor: pointer; }
+    border-radius: 4px; padding: 5px 9px; font-size: 14px; cursor: pointer; }
   button:hover { border-color: var(--accent); }
   button:focus-visible, input:focus-visible, summary:focus-visible {
     outline: 2px solid var(--focus); outline-offset: 2px;
@@ -161,29 +161,29 @@ window.__titinBoot = { ready: false, problems: [] };
   button.on { background: var(--accent); color: #0e1116; border-color: var(--accent); }
   #components button.selected-target { box-shadow: 0 0 0 2px var(--titin); }
   .sl { font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 600; }
-  .sl small { font-size: 11px; font-weight: 400; color: var(--dim); }
-  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .sl small { font-size: 12px; font-weight: 400; color: var(--dim); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
   td { padding: 2px 0; vertical-align: top; }
   td:first-child { color: var(--dim); padding-right: 8px; white-space: nowrap; }
   td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
-  ul { margin: 4px 0 0; padding-left: 16px; color: var(--dim); font-size: 11px; }
+  ul { margin: 4px 0 0; padding-left: 16px; color: var(--dim); font-size: 13px; }
   li { margin-bottom: 3px; }
-  .key { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 3px; }
+  .key { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 3px; }
   .sw { width: 20px; height: 9px; border-radius: 2px; flex: none; }
   .note { background: #1a2029; border-left: 2px solid #6b7a8f; padding: 7px 9px;
-    font-size: 11px; color: var(--dim); margin-top: 8px; }
+    font-size: 13px; color: var(--dim); margin-top: 8px; }
   .warn { border-left-color: #d0a24c; }
   #err { display: none; position: absolute; inset: 16px; z-index: 30; background: #2a1416;
     border: 1px solid #6b2a2a; border-radius: 6px; padding: 16px; overflow: auto;
-    font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
-  .ev { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
+    font-family: ui-monospace, monospace; font-size: 13px; white-space: pre-wrap; }
+  .ev { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 2px; }
   .ev b { font-weight: 500; color: var(--text); }
   /* SC-17. Presenter accelerators stay in the accessible canvas description
      without painting a second Tour-navigation vocabulary. */
   #shortcutHelp { display: block; }
   /* margin: 0 overrides the drawer's block-label rule, which would otherwise
      push a label 4 px off the centre line of the control it names. */
-  .stage-label { margin: 0; color: var(--dim); font-size: 10px; text-transform: uppercase;
+  .stage-label { margin: 0; color: var(--dim); font-size: 12px; text-transform: uppercase;
     letter-spacing: .08em; font-weight: 700; }
   .stage-readout { font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 650;
     min-width: 84px; }
@@ -195,17 +195,17 @@ window.__titinBoot = { ready: false, problems: [] };
      SC-12 gave the bar's buttons nowrap: below 768 px these rows are single-line
      scrolling strips, and a shrinkable text node in one of them wraps to six
      lines and doubles the bar's height. */
-  #stageForce { color: #ffd7e0; font-size: 10px; font-variant-numeric: tabular-nums;
+  #stageForce { color: #ffd7e0; font-size: 12px; font-variant-numeric: tabular-nums;
     flex: 0 0 auto; white-space: nowrap; }
   #stageForce b { color: var(--text); font-size: 13px; font-weight: 650; }
-  #stageForce .force-class { color: #e8c16d; font-size: 9px; font-weight: 700;
+  #stageForce .force-class { color: #e8c16d; font-size: 12px; font-weight: 700;
     letter-spacing: .05em; }
   #sceneControls { flex-wrap: nowrap; margin: 0; min-width: 0; }
   #sceneControls button { white-space: nowrap; }
   #sceneControls button[aria-pressed="true"] {
     background: var(--accent); color: #0e1116; border-color: var(--accent);
   }
-  #sceneTruth { color: #d9b869; font-size: 10px; white-space: nowrap; }
+  #sceneTruth { color: #d9b869; font-size: 12px; white-space: nowrap; }
   #sceneDetails { display: flex; align-items: center; gap: 6px; margin-left: auto; }
   #sceneDetails[hidden] { display: none; }
   #sceneDetails fieldset { display: flex; align-items: center; gap: 3px; margin: 0; padding: 2px 4px;
@@ -251,7 +251,7 @@ window.__titinBoot = { ready: false, problems: [] };
     padding: 7px 9px; border-radius: 6px; color: var(--text); background: rgb(22 27 34 / 96%);
     border: 1px solid rgb(255 176 192 / 58%); box-shadow: 0 8px 26px rgb(0 0 0 / 38%); }
   #objectTooltipLabel { font-weight: 650; }
-  #objectTooltipText { color: #cbd4de; font-size: 10px; margin-top: 2px; }
+  #objectTooltipText { color: #cbd4de; font-size: 12px; margin-top: 2px; }
   #objectInspector { position: absolute; z-index: 8; pointer-events: auto; width: min(370px, calc(100% - 24px));
     padding: 11px 12px; border-radius: 8px; color: var(--text); background: rgb(22 27 34 / 97%);
     border: 1px solid rgb(255 176 192 / 65%); box-shadow: 0 12px 34px rgb(0 0 0 / 44%);
@@ -262,7 +262,7 @@ window.__titinBoot = { ready: false, problems: [] };
   #app[data-mode="evidence"] #objectInspector { display: none; }
   .object-inspector-head { display: flex; align-items: flex-start; gap: 8px; }
   .object-inspector-title { flex: 1; font-size: 14px; font-weight: 650; }
-  .object-lay { color: #d6dde5; font-size: 11px; }
+  .object-lay { color: #d6dde5; font-size: 15px; }
   /* SC-18. Every container that creates a link is named here; no visible anchor
      can fall through to a low-contrast user-agent default. */
   #chapterSources a, #expertCards a, #selectedEvidence a, #bibliography a {
@@ -272,24 +272,24 @@ window.__titinBoot = { ready: false, problems: [] };
   /* One full-width contextual route keeps the short explanation subordinate to
      the structure instead of turning its foot into a second toolbar. */
   .object-expert-link button { width: 100%; margin-top: 8px; text-align: left;
-    font-size: 10px; line-height: 1.35; border-color: rgb(255 176 192 / 45%); }
+    font-size: 14px; line-height: 1.35; border-color: rgb(255 176 192 / 45%); }
   .claim-view { color: var(--text); }
   .claim-view-title { margin: 0 0 6px; color: var(--text); font-size: 14px;
     line-height: 1.3; text-transform: none; letter-spacing: 0; }
-  .claim-view-plain { margin: 0 0 8px; color: #d6dde5; font-size: 11px; }
-  .claim-view-specialist { margin: 0 0 8px; color: var(--dim); font-size: 10px; }
+  .claim-view-plain { margin: 0 0 8px; color: #d6dde5; font-size: 15px; }
+  .claim-view-specialist { margin: 0 0 8px; color: var(--dim); font-size: 13px; }
   .claim-view-specialist summary { cursor: pointer; color: #dfe7f2; font-weight: 650; }
   .claim-view-specialist p { margin: 6px 0 0; }
   .claim-view-fields { margin: 8px 0 0; }
-  .claim-view-fields dt { color: #dfe7f2; font-size: 10px; font-weight: 650; }
-  .claim-view-fields dd { margin: 1px 0 7px; color: var(--dim); font-size: 10px; }
+  .claim-view-fields dt { color: #dfe7f2; font-size: 13px; font-weight: 650; }
+  .claim-view-fields dd { margin: 1px 0 7px; color: var(--dim); font-size: 13px; }
   .claim-field-status { display: inline-block; margin-left: 4px; border: 1px solid #775b29;
-    border-radius: 999px; padding: 0 5px; color: #f0cc7a; font-size: 9px;
+    border-radius: 999px; padding: 0 5px; color: #f0cc7a; font-size: 12px;
     font-weight: 750; letter-spacing: .04em; vertical-align: 1px; }
-  .claim-view h4 { margin: 9px 0 3px; color: #dfe7f2; font-size: 10px; }
-  .claim-view-limitations, .claim-view-not-claimed { color: var(--dim); font-size: 10px; }
+  .claim-view h4 { margin: 9px 0 3px; color: #dfe7f2; font-size: 13px; }
+  .claim-view-limitations, .claim-view-not-claimed { color: var(--dim); font-size: 13px; }
   .claim-view-sources { margin-top: 9px; padding-top: 7px; border-top: 1px solid var(--edge);
-    color: var(--dim); font-size: 9px; }
+    color: var(--dim); font-size: 13px; }
   .claim-view-source { margin-top: 3px; }
   .claim-view-source a { color: var(--source-link); text-decoration: underline;
     text-underline-offset: 2px; }
@@ -299,16 +299,16 @@ window.__titinBoot = { ready: false, problems: [] };
     padding: 7px 8px; }
   .source-result summary { cursor: pointer; color: #dfe7f2; font-weight: 650; }
   .source-result-title { display: block; }
-  .source-result-citation { display: block; color: var(--dim); font-size: 10px;
+  .source-result-citation { display: block; color: var(--dim); font-size: 13px;
     font-weight: 400; }
-  .source-result-meta { margin-top: 6px; color: var(--dim); font-size: 10px; }
+  .source-result-meta { margin-top: 6px; color: var(--dim); font-size: 12px; }
   .source-support { margin-top: 7px; padding-top: 6px; border-top: 1px solid var(--edge); }
   .source-support dl { display: grid; grid-template-columns: 88px minmax(0, 1fr);
     gap: 2px 7px; margin: 3px 0 0; }
   .source-support dt { color: #aeb9c7; }
   .source-support dd { margin: 0; overflow-wrap: anywhere; }
   #guidedSelection { margin: 0 0 9px; padding: 6px 8px; border-left: 2px solid var(--titin);
-    background: rgb(255 93 125 / 8%); color: #d8dfe7; font-size: 10px; }
+    background: rgb(255 93 125 / 8%); color: #d8dfe7; font-size: 15px; }
   #selectedEvidence[hidden] { display: none; }
   .annotation-index { text-align: left; }
   .annotation-index[aria-current="true"] { box-shadow: 0 0 0 2px var(--titin); }
@@ -330,7 +330,7 @@ window.__titinBoot = { ready: false, problems: [] };
     outline: 2px solid var(--titin-hi); outline-offset: 2px; }
   .science-bracket { fill: none; stroke: rgb(230 237 245 / 78%); stroke-width: 1.2; }
   .science-bracket.minor { stroke: rgb(230 237 245 / 47%); }
-  .science-label { fill: #dce4ed; font-size: 9px; font-weight: 650; letter-spacing: .035em;
+  .science-label { fill: #dce4ed; font-size: 12px; font-weight: 650; letter-spacing: .035em;
     paint-order: stroke; stroke: rgb(14 17 22 / 92%); stroke-width: 3px; stroke-linejoin: round; }
   .identity-label { font-size: 13px; font-weight: 800; letter-spacing: .025em;
     paint-order: stroke; stroke: #090c10; stroke-width: 4px; stroke-linejoin: round; }
@@ -348,7 +348,7 @@ window.__titinBoot = { ready: false, problems: [] };
   .locator-active { fill: rgb(215 228 244 / 22%); stroke: #d7e4f4; stroke-width: 1; }
   .terminus-line { stroke: var(--titin-hi); stroke-width: 1.5; }
   .terminus-dot { fill: var(--titin-hi); }
-  .terminus-label { fill: #ffe1e8; font-size: 10px; font-weight: 750; letter-spacing: .03em;
+  .terminus-label { fill: #ffe1e8; font-size: 12px; font-weight: 750; letter-spacing: .03em;
     paint-order: stroke; stroke: rgb(14 17 22 / 95%); stroke-width: 4px; }
   #stageChrome { position: absolute; inset: 0; z-index: 5; pointer-events: none; padding: 14px;
     display: flex; flex-direction: column; align-items: flex-start; }
@@ -363,18 +363,18 @@ window.__titinBoot = { ready: false, problems: [] };
   .brand-title { font-size: 14px; font-weight: 650; letter-spacing: .01em; }
   .brand-title::before { content: ""; display: inline-block; width: 18px; height: 3px;
     margin-right: 8px; vertical-align: middle; border-radius: 2px; background: var(--titin); }
-  .brand-sub { color: var(--dim); font-size: 10px; }
+  .brand-sub { color: var(--dim); font-size: 12px; }
   #filamentContextToggle { white-space: nowrap; border-color: rgb(79 179 159 / 62%); }
   #filamentContextToggle.on { background: rgb(79 179 159 / 20%); border-color: #4fb39f;
     color: #d9fff6; }
   #scopeBadge { max-width: 360px; border-radius: 8px; padding: 8px 11px; text-align: right; }
-  .scope-kicker { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .11em;
+  .scope-kicker { color: var(--dim); font-size: 12px; font-weight: 700; letter-spacing: .11em;
     text-transform: uppercase; }
-  #scopeIdentity { font-size: 11px; font-weight: 650; }
-  #scopeDecisions { color: var(--warn); font-size: 10px; margin-top: 2px; }
-  #scopeState { color: #d9b869; font-size: 10px; }
+  #scopeIdentity { font-size: 13px; font-weight: 650; }
+  #scopeDecisions { color: var(--warn); font-size: 12px; margin-top: 2px; }
+  #scopeState { color: #d9b869; font-size: 13px; }
   #urlNotice { pointer-events: auto; margin-top: 9px; max-width: 660px; border-left: 3px solid #d0a24c;
-    border-radius: 5px; padding: 7px 10px; color: #e7cc91; font-size: 10px; }
+    border-radius: 5px; padding: 7px 10px; color: #e7cc91; font-size: 13px; }
   #guidedCard { pointer-events: auto; margin-top: auto;
     margin-bottom: 14px; width: min(500px, calc(100vw - 28px));
     max-height: calc(100vh - 126px); overflow-y: auto;
@@ -382,30 +382,30 @@ window.__titinBoot = { ready: false, problems: [] };
     border-top: 2px solid var(--titin); }
   #app[data-mode="evidence"] #guidedCard { display: none; }
   .story-surface-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .chapter-meta { color: var(--dim); font-size: 9px; font-weight: 700; letter-spacing: .1em;
+  .chapter-meta { color: var(--dim); font-size: 12px; font-weight: 700; letter-spacing: .1em;
     text-transform: uppercase; }
   #chapterTitle { font-size: 19px; line-height: 1.2; margin: 4px 0 7px; }
   #chapterSummary { margin: 0 0 10px; color: #d2d9e1; font-size: 12px; line-height: 1.55; }
-  #chapterStateAnnouncement { margin: 0 0 8px; color: #aeb9c7; font-size: 10px; line-height: 1.45; }
+  #chapterStateAnnouncement { margin: 0 0 8px; color: #aeb9c7; font-size: 12px; line-height: 1.45; }
   .chapter-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .preset-outside { border-color: #8b6530; color: #e7c27c; }
   #chapterEvidence { border-left-color: var(--titin); }
-  #chapterSources { margin-top: 5px; color: var(--dim); font-size: 10px; }
+  #chapterSources { margin-top: 5px; color: var(--dim); font-size: 13px; }
   /* SC-6. Two panels side by side, each a plain 2-D plot of the shared frame, so
      the comparison cannot foreshorten or normalise the two states separately. */
   .lattice-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .lattice-panel { border: 1px solid var(--edge); border-radius: 5px; padding: 6px; min-width: 0; }
   .lattice-panel svg { display: block; width: 100%; height: auto; }
-  .lattice-caption { margin-top: 4px; font-size: 9px; line-height: 1.35; color: var(--dim); }
+  .lattice-caption { margin-top: 4px; font-size: 12px; line-height: 1.35; color: var(--dim); }
   .lattice-caption b { color: #dfe7f2; font-variant-numeric: tabular-nums; }
   .lattice-d10 { color: #ffe1e8; font-variant-numeric: tabular-nums; }
-  .lattice-caveat { margin-top: 7px; font-size: 9px; line-height: 1.4; color: #c9b989;
+  .lattice-caveat { margin-top: 7px; font-size: 12px; line-height: 1.4; color: #c9b989;
     border-left: 2px solid #8b6530; padding-left: 7px; }
-  .lattice-delta { margin-top: 6px; font-size: 9px; color: var(--dim); }
+  .lattice-delta { margin-top: 6px; font-size: 12px; color: var(--dim); }
   #forceCurve svg { display: block; width: 100%; height: auto;
     border: 1px solid var(--edge); border-radius: 5px; }
   .mechanics-audit { margin-top: 8px; }
-  .mechanics-audit .status { color: #e8c16d; font-size: 10px; font-weight: 700;
+  .mechanics-audit .status { color: #e8c16d; font-size: 12px; font-weight: 700;
     letter-spacing: .06em; text-transform: uppercase; }
   .mechanics-audit details { margin-top: 8px; border: 1px solid var(--edge);
     border-radius: 5px; padding: 7px; }
@@ -413,7 +413,7 @@ window.__titinBoot = { ready: false, problems: [] };
   .mechanics-audit table { margin-top: 7px; }
   .mechanics-audit code { overflow-wrap: anywhere; }
   .mechanics-audit .force-chart { margin-top: 7px; background: #11161d; }
-  .mechanics-audit .force-chart text { fill: #aeb9c7; font: 10px system-ui, sans-serif; }
+  .mechanics-audit .force-chart text { fill: #aeb9c7; font: 12px system-ui, sans-serif; }
   .mechanics-audit .force-chart .axis-title { fill: #dfe7f2; font-weight: 650; }
   .mechanics-audit .force-current-point { cursor: pointer; }
   .mechanics-audit .force-current-point:focus { stroke: var(--focus); stroke-width: 4; }
@@ -427,7 +427,7 @@ window.__titinBoot = { ready: false, problems: [] };
     border: 0; border-right: 1px solid rgb(14 17 22 / 65%); border-radius: 0;
     padding: 0 3px; overflow: hidden; text-overflow: clip; white-space: nowrap;
     background: repeating-linear-gradient(135deg, rgb(255 93 125 / 88%) 0 5px,
-      rgb(255 176 192 / 68%) 5px 9px); color: #270812; font-size: 9px; font-weight: 750; }
+      rgb(255 176 192 / 68%) 5px 9px); color: #270812; font-size: 12px; font-weight: 750; }
   .reference-strip-region:nth-child(even) { background: repeating-linear-gradient(45deg,
     rgb(122 162 216 / 82%) 0 5px, rgb(169 201 242 / 58%) 5px 9px); color: #07111e; }
   .reference-region-table td:last-child { text-align: left; }
@@ -439,13 +439,13 @@ window.__titinBoot = { ready: false, problems: [] };
   .domain-feature-list { max-height: 180px; overflow-y: auto; margin-top: 5px;
     border-top: 1px solid var(--edge); padding-top: 5px; }
   .domain-feature { display: grid; grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px; font-size: 9px; color: var(--dim); padding: 2px 0; }
+    gap: 6px; font-size: 13px; color: var(--dim); padding: 2px 0; }
   #compliancePlot svg { display: block; width: 100%; height: auto; margin-top: 7px;
     border: 1px solid var(--edge); border-radius: 5px; background: #11161d; }
-  #compliancePlot svg text { fill: #aeb9c7; font: 10px system-ui, sans-serif; }
+  #compliancePlot svg text { fill: #aeb9c7; font: 12px system-ui, sans-serif; }
   .compliance-current { margin-top: 7px; }
   .compliance-share { display: grid; grid-template-columns: minmax(90px, 1fr) 2fr auto;
-    gap: 6px; align-items: center; margin-top: 4px; font-size: 10px; }
+    gap: 6px; align-items: center; margin-top: 4px; font-size: 13px; }
   .compliance-share-track { height: 8px; background: #252d38; border-radius: 999px; overflow: hidden; }
   .compliance-share-fill { height: 100%; background: var(--titin); }
   .claim-evidence-group { margin-top: 7px; border: 1px solid var(--edge);
@@ -463,15 +463,15 @@ window.__titinBoot = { ready: false, problems: [] };
   .evidence-pattern-unknown { background: repeating-linear-gradient(90deg,
     transparent 0 3px, #7f8b9c 3px 4px); }
   .atomic-claim-row { margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--edge);
-    color: var(--dim); font-size: 9px; }
+    color: var(--dim); font-size: 13px; }
   .atomic-claim-row b { color: var(--text); }
   .render-status { display: inline-block; margin-left: 4px; border: 1px solid #657184;
-    border-radius: 999px; padding: 0 4px; color: #c5cfdb; font-size: 9px; }
+    border-radius: 999px; padding: 0 4px; color: #c5cfdb; font-size: 12px; }
   .research-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
   .research-actions button { text-align: left; }
   .reproduction-sheet { margin-top: 7px; }
   .reproduction-sheet code { overflow-wrap: anywhere; }
-  .export-identity { overflow-wrap: anywhere; font-size: 9px; color: var(--dim); }
+  .export-identity { overflow-wrap: anywhere; font-size: 12px; color: var(--dim); }
   @media (max-width: 460px) { .lattice-pair { grid-template-columns: 1fr; } }
   /* SC-7. A vertical flow: one counted, inspectable stage per row. */
   .pipeline { margin: 10px 0 2px; border-top: 1px solid var(--edge); padding-top: 9px; }
@@ -479,11 +479,11 @@ window.__titinBoot = { ready: false, problems: [] };
   .pipeline-stage:last-child { padding-bottom: 0; }
   .pipeline-stage::before { content: ""; position: absolute; left: -5px; top: 4px;
     width: 8px; height: 8px; border-radius: 50%; background: #3f5a7a; }
-  .pipeline-label { font-weight: 650; font-size: 10px; }
-  .pipeline-count { color: #ffe1e8; font-variant-numeric: tabular-nums; font-size: 10px; }
-  .pipeline-detail { color: var(--dim); font-size: 9px; line-height: 1.4; margin-top: 1px; }
-  .pipeline-records { color: #7f8b9c; font-size: 9px; margin-top: 2px; word-break: break-word; }
-  .pipeline-foot { color: #c9b989; font-size: 9px; line-height: 1.4; margin-top: 7px;
+  .pipeline-label { font-weight: 650; font-size: 12px; }
+  .pipeline-count { color: #ffe1e8; font-variant-numeric: tabular-nums; font-size: 12px; }
+  .pipeline-detail { color: var(--dim); font-size: 12px; line-height: 1.4; margin-top: 1px; }
+  .pipeline-records { color: #7f8b9c; font-size: 12px; margin-top: 2px; word-break: break-word; }
+  .pipeline-foot { color: #c9b989; font-size: 12px; line-height: 1.4; margin-top: 7px;
     border-left: 2px solid #8b6530; padding-left: 7px; }
   /* SC-13. On the stage the same six counted stages become a band: one column
      each, the counted figure at headline size because the figure is the payload,
@@ -499,11 +499,11 @@ window.__titinBoot = { ready: false, problems: [] };
   #guidedPipeline .pipeline-label { font-size: 12px; line-height: 1.25; }
   #guidedPipeline .pipeline-figure { display: block; font-size: 30px; font-weight: 700;
     line-height: 1.1; margin-top: 2px; }
-  #guidedPipeline .pipeline-unit { display: block; color: var(--dim); font-size: 11px;
+  #guidedPipeline .pipeline-unit { display: block; color: var(--dim); font-size: 12px;
     line-height: 1.3; }
-  #guidedPipeline .pipeline-detail { font-size: 11px; margin-top: 4px; }
-  #guidedPipeline .pipeline-records { font-size: 9px; }
-  #guidedPipeline .pipeline-foot { grid-column: 1 / -1; font-size: 11px; margin-top: 0; }
+  #guidedPipeline .pipeline-detail { font-size: 12px; margin-top: 4px; }
+  #guidedPipeline .pipeline-records { font-size: 12px; }
+  #guidedPipeline .pipeline-foot { grid-column: 1 / -1; font-size: 12px; margin-top: 0; }
   /* The scene is the backdrop to the argument here, not its competitor. */
   #app[data-mode="guided"] #stageChrome[data-pipeline="true"]::before { content: "";
     position: absolute; inset: 0; z-index: -1; background: rgb(14 17 22 / 62%); }
@@ -517,14 +517,14 @@ window.__titinBoot = { ready: false, problems: [] };
   /* The clipboard-denied fallback prints the link and its build on two lines,
      and a URL has no spaces to break at. */
   #copyViewStatus { white-space: pre-line; overflow-wrap: anywhere; }
-  .finding-status { font-weight: 700; letter-spacing: .05em; font-size: 9px; }
+  .finding-status { font-weight: 700; letter-spacing: .05em; font-size: 12px; }
   .finding-ESTABLISHED { color: #7fc4a2; }
   .finding-PROPOSED { color: #e8c16d; }
   .finding-OPEN { color: #9aa7b8; }
-  .activation-note { margin: 7px 0 0; color: #c9b989; font-size: 10px; }
-  /* SC-17. A projector text scale, and a 9 px floor under everything else.
-     The shipped density is right for a laptop at arm's length and wrong for a
-     room: the drawer's dominant size is 9–10 px. This raises what a reader
+  .activation-note { margin: 7px 0 0; color: #c9b989; font-size: 13px; }
+  /* SC-17. A projector text scale above the default SC-27A readability floor.
+     The shipped density is right for a laptop at arm's length and benefits from
+     another step up in a room. This raises what a reader
      READS — copy, lists, tables, the pinned card, the chapter summary — and
      leaves chrome labels and counted figures where the earlier
      sprints measured them, so turning it on does not re-solve the layout.
@@ -563,16 +563,16 @@ window.__titinBoot = { ready: false, problems: [] };
     #guidedPipeline { padding: 8px 9px; margin-top: 8px; }
     #guidedPipeline .pipeline { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px 9px; }
     #guidedPipeline .pipeline-figure { font-size: 20px; margin-top: 0; }
-    #guidedPipeline .pipeline-label { font-size: 10px; line-height: 1.2; }
-    #guidedPipeline .pipeline-unit { font-size: 10px; line-height: 1.25; }
-    #guidedPipeline .pipeline-foot { font-size: 10px; }
+    #guidedPipeline .pipeline-label { font-size: 12px; line-height: 1.2; }
+    #guidedPipeline .pipeline-unit { font-size: 12px; line-height: 1.25; }
+    #guidedPipeline .pipeline-foot { font-size: 12px; }
     #guidedPipeline .pipeline-detail, #guidedPipeline .pipeline-records { display: none; }
   }
   /* SC-27A Tour and Research surfaces. */
   html, body { font-size: 15px; }
   button { min-height: 36px; padding: 7px 11px; font-size: 14px; line-height: 1.25; }
   #panel, #panel table, #panel li, #panel .sub, #panel .note { font-size: 13px; }
-  #panel h2 { font-size: 12px; }
+  #panel h2 { font-size: 14px; }
   #stageChrome { padding: 14px; }
   #stageHeader { align-items: flex-start; }
   .brand-block { min-width: 0; width: auto; padding: 9px 12px; }
@@ -634,7 +634,6 @@ window.__titinBoot = { ready: false, problems: [] };
     grid-template-columns: minmax(0, 1fr) clamp(380px, 31vw, 440px);
   }
   #panel { padding-inline: 18px; }
-  .drawer-head .build-id { display: none; }
   .research-scenes { border: 1px solid var(--edge); border-radius: 7px; padding: 9px; }
   .research-inventory { margin: 14px 0; border: 1px solid var(--edge);
     border-radius: 7px; padding: 8px 10px; }
@@ -778,7 +777,7 @@ window.__titinBoot = { ready: false, problems: [] };
           </div>
         </div>
         <p id="chapterQuestion" class="chapter-question"></p>
-        <h1 id="chapterTitle" tabindex="-1">Loading guided route…</h1>
+        <h1 id="chapterTitle" tabindex="-1">Loading Tour…</h1>
         <!-- On a phone the Tour card becomes a compact bottom sheet so the
              scientific stage retains the visual priority. -->
         <div id="guidedCardBody">
@@ -858,7 +857,7 @@ window.__titinBoot = { ready: false, problems: [] };
         <span class="stage-label" id="stageScenesLabel">Scene</span>
         <span id="sceneTruth" role="status">Overview</span>
         <div class="row" id="sceneControls" role="group" aria-labelledby="stageScenesLabel"></div>
-        <div id="sceneDetails" aria-label="Controls for this scientific scene" hidden>
+        <div id="sceneDetails" role="group" aria-label="Controls for this scientific scene" hidden>
           <fieldset id="sceneRingControls" hidden>
             <legend>Lattice rings</legend>
             <button type="button" data-scene-rings="1">1</button>
@@ -950,7 +949,7 @@ window.__titinBoot = { ready: false, problems: [] };
 
       <h2>Scientific decisions</h2>
       <div class="note warn" id="scientificDecisionStatus"></div>
-      <h2>Current guided claim</h2>
+      <h2>Current Tour claim</h2>
       <div class="note" id="chapterEvidence">
         <b id="chapterEvidenceTitle">—</b>
         <div id="chapterExpert"></div>
@@ -960,7 +959,7 @@ window.__titinBoot = { ready: false, problems: [] };
 
       <h2>Expert cards</h2>
       <div class="sub" style="margin:0 0 6px">Scope and omission notes for the optional
-        context layers. These are Evidence-mode only.</div>
+        context layers. These are available only in Research.</div>
       <div id="expertCards"></div>
 
       <h2>Atomic claim evidence</h2>
@@ -984,7 +983,7 @@ window.__titinBoot = { ready: false, problems: [] };
       <h2>Build identity</h2>
       <!-- SC-18: these identities answer different questions. The raw HTML
            checksum stays external because a file cannot contain its own hash. -->
-      <div class="build-id" id="buildFingerprint" aria-label="Candidate identity">
+      <div class="build-id" id="buildFingerprint" role="group" aria-label="Candidate identity">
         <div>Model <code id="modelFingerprint">—</code></div>
         <div>App <code id="appRevision">—</code></div>
         <div>Build inputs <code id="buildInputsFingerprint">—</code></div>
@@ -2948,7 +2947,7 @@ function restorePreviousChapterView({ focusResearch = false } = {}) {
   Object.assign(state, previous);
   requestHistoryEntry();
   syncSceneTruth();
-  chapterViewAnnouncement = 'Previous view restored; the current chapter and sarcomere length are unchanged.';
+  chapterViewAnnouncement = 'Previous view restored; the current beat and sarcomere length are unchanged.';
   pinnedPick = null; hoverPick = null;
   if (visualization.scale !== state.scale) visualization.setScale(state.scale);
   rebuild(true);
@@ -3227,7 +3226,7 @@ function syncDepictionToggles() {
       b.disabled = false;
       b.title = detail ? 'Fixed by the isolated-titin view'
         : audienceUnavailable
-          ? 'Accessory C-zone context is admitted for Evidence mode only'
+          ? 'Accessory C-zone context is available only in Research'
           : requiredByMband ? 'M-band detail requires titin from both half-sarcomeres'
             : (contextUnavailable ? 'Turn on Actin + myosin context first' : '');
     }
@@ -3784,7 +3783,8 @@ function renderPinnedSelection() {
   if (state.drawerTab === 'sources') renderBibliography();
   syncAnnotationIndex();
   $('objectAnnouncement').textContent = `${annotation.label}. ${claimView.plain} `
-    + `${evidenceSummary(annotation)}. Sources are available in the pinned explanation.`;
+    + `${evidenceSummary(annotation)}. Open Why we know this in the pinned explanation `
+    + 'to review the claim and exact sources.';
   objectOverlaySignature = null;
 }
 
@@ -4199,8 +4199,8 @@ function render(report) {
       rows.push(
         ['Z-disc local actin context', `${anchorDetail.actin_segments} antiparallel segment proxies`],
         ['α-actinin context', anchorDetail.alpha_actinin_doublets_rendered
-          ? `${anchorDetail.alpha_actinin_crosslinks} crosslinks · ${anchorDetail.alpha_actinin_doublet_spacing_nm} nm Evidence-only doublet spacing`
-          : `${anchorDetail.alpha_actinin_crosslinks} heterogeneous schematic crosslinks · exact doublets withheld in Guided mode`],
+          ? `${anchorDetail.alpha_actinin_crosslinks} crosslinks · ${anchorDetail.alpha_actinin_doublet_spacing_nm} nm Research-only doublet spacing`
+          : `${anchorDetail.alpha_actinin_crosslinks} heterogeneous schematic crosslinks · exact doublets withheld in Tour`],
         ['Telethonin topology', '2 antiparallel titin Z1Z2 chains : 1 telethonin'],
       );
     } else if (anchorDetail.target === 'mline' && anchorDetail.drawn) {
@@ -4315,7 +4315,7 @@ function render(report) {
       const claims = groups.get(c).map((k) => k.replace(/_/g, ' ')).join(', ');
       return `<div class="ev" style="opacity:${op}"><span><b>${c}</b></span>`
         + `<b>${groups.get(c).length}</b></div>`
-        + `<div style="font-size:10px;color:var(--dim);margin:0 0 6px">${claims}</div>`;
+        + `<div style="font-size:13px;color:var(--dim);margin:0 0 6px">${claims}</div>`;
     }).join('');
 
   renderAnnotationIndex();

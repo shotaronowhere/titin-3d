@@ -96,7 +96,7 @@ function limitations(model) {
     model.spec.showcaseClaims.global_negative_controls);
   push('annotations', 'Object annotations', 'data/annotations.json',
     model.spec.annotations.components.flatMap((record) => record.not_claimed));
-  push('narrative', 'Guided route and expert cards', 'data/presentation.json',
+  push('narrative', 'Tour route and Research expert cards', 'data/presentation.json',
     [
       ...model.spec.presentation.guided_chapters.flatMap((chapter) => chapter.not_claimed),
       ...model.spec.presentation.expert_cards.flatMap((card) => card.not_claimed),

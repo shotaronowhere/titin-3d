@@ -45,9 +45,14 @@ test('SC13: the card reads lay text before detail and citations last', () => {
 });
 
 test('SC13/22: Research citations remain in the canonical renderer', () => {
-  assert.match(page, /\.claim-view-sources \{[^}]*font-size: 9px/);
+  assert.match(page, /\.claim-view-sources \{[^}]*font-size: 13px/);
   assert.match(claimRenderer, /sourceLabel\.textContent = 'Sources'/);
   assert.doesNotMatch(page, /id="objectInspectorClaim"/);
+});
+
+test('SC13/SC27A: the pinned announcement names the real route to exact sources', () => {
+  assert.match(page, /Open Why we know this in the pinned explanation[^;]+exact sources\.'/s);
+  assert.doesNotMatch(page, /Sources are available in the pinned explanation/);
 });
 
 test('SC13: the card is placed by the tested layout function', () => {

@@ -19,10 +19,20 @@ test('SC17: a presentation text scale exists and is user-controlled', () => {
   assert.match(page, /data-text-scale="large"/);
 });
 
-test('SC17: no shipped rule is smaller than 9 px, and large mode floors at 12 px', () => {
-  const sizes = [...page.matchAll(/font-size:\s*(\d+(?:\.\d+)?)px/g)].map((hit) => Number(hit[1]));
+test('SC17/SC27A: default type meets the design floor and large mode raises it', () => {
+  const css = page.match(/<style>([\s\S]*?)<\/style>/)?.[1] || '';
+  assert.match(css, /\.build-id \{[^}]*font-size: 9px/,
+    'the sole permitted build-only identifier may retain the 9 px exception');
+  const userFacingCss = css.replace(/\.build-id \{[^}]*\}/, '');
+  const sizes = [...userFacingCss.matchAll(/font-size:\s*(\d+(?:\.\d+)?)px/g)]
+    .map((hit) => Number(hit[1]));
   assert.ok(sizes.length > 10);
-  assert.ok(Math.min(...sizes) >= 9, `smallest shipped font-size is ${Math.min(...sizes)}px`);
+  assert.ok(Math.min(...sizes) >= 12,
+    `smallest non-build shipped font-size is ${Math.min(...sizes)}px`);
+  assert.match(page, /\.claim-view-specialist \{[^}]*font-size: 13px/);
+  assert.match(page, /\.claim-view-sources \{[^}]*font-size: 13px/);
+  assert.match(page, /\.claim-field-status \{[^}]*font-size: 12px/s);
+  assert.match(page, /\.finding-status \{[^}]*font-size: 12px/);
   assert.match(page, /\[data-text-scale="large"\][\s\S]{0,600}font-size: 1[2-9]px/);
 });
 

@@ -405,10 +405,10 @@ test('SC5: an Evidence-mode card records why cardiac coordinates were not import
     .some((problem) => /must be Evidence-mode only/.test(problem)));
 });
 
-test('SC5: the page keeps MyBP-C optional, Evidence-scoped, and labelled schematic', () => {
+test('SC5: the page keeps MyBP-C optional, Research-scoped, and labelled schematic', () => {
   assert.match(page, /showMyBPC: false/, 'the layer starts off');
   assert.match(page, /\['showMyBPC', 'MyBP-C context \(schematic\)'\]/);
-  assert.match(page, /Accessory C-zone context is admitted for Evidence mode only/);
+  assert.match(page, /Accessory C-zone context is available only in Research/);
   assert.match(page, /showMyBPC: contextScale\s*\n\s*&& state\.audienceMode === AUDIENCE_MODES\.evidence/);
   assert.match(page, /A-band display allocation/, 'the scaffold story is reported in the drawer');
   assert.match(page, /Distinct thick-filament spacings/);

@@ -433,6 +433,10 @@ function preflightDoc(pack, matrix) {
 
 function screenshotDoc(pack, matrix) {
   const viewport = new Map(matrix.viewports.map((entry) => [entry.id, entry]));
+  const groupLabels = Object.freeze({
+    guided_chapters: 'Tour beats',
+    evidence_mode: 'Research workbench',
+  });
   const lines = [
     '# Standard screenshot review pack',
     '',
@@ -451,7 +455,7 @@ function screenshotDoc(pack, matrix) {
   for (const cell of matrix.cells) {
     if (cell.group !== group) {
       group = cell.group;
-      lines.push('', `## ${group.replace(/_/g, ' ')}`, '');
+      lines.push('', `## ${groupLabels[group] || group.replace(/_/g, ' ')}`, '');
     }
     const { width, height } = viewport.get(cell.viewport_id);
     const options = Object.entries(cell.options)

@@ -205,9 +205,9 @@ cannot drift away from the science it describes.
 | `release/fallback/*.svg` | six static slides generated from this build; no GPU, browser engine, or network |
 | `release/MANIFEST.json` | the build fingerprint and artifact inventory |
 
-The Evidence drawer shows a build fingerprint. Before a demonstration, confirm the
-hosted page and the offline `index.html` show the same one; a page served from
-unpinned source says so instead.
+Research → Sources & build shows the candidate identity. Before a demonstration,
+confirm the hosted page and the offline `index.html` show the same model, app, and
+build-input fingerprints; a page served from unpinned source says so instead.
 
 ## Public modules
 
@@ -232,7 +232,7 @@ unpinned source says so instead.
 - `src/presentation/VisualMatrix.js` — SC-8 deterministic capture set; every cell is a
   viewport plus a URL hash that is round-trip checked, so a screenshot can be returned to
 - `src/presentation/AnnotationCatalog.js` — SC-4 annotation validation and citation/link resolution
-- `data/presentation.json` — sourced SC-1/SC-2 presentation contract and SC-5 Evidence-mode expert cards (no authoritative geometry)
+- `data/presentation.json` — sourced SC-1/SC-2 presentation contract and SC-5 Research-only expert cards (no authoritative geometry)
 - `data/annotations.json` — validated SC-4 dual-audience object explanations and scientific bindings
 - `data/geometry_strategy.json` — current defect/completion register
 - `data/release_gates.json` — SC-8 release-gate record; a gate cannot be marked passed

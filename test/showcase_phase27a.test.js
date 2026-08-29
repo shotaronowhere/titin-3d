@@ -18,6 +18,9 @@ const presentation = json('data/presentation.json');
 const scenes = json('data/scenes.json');
 const renderStyle = json('data/render_style.json');
 const gates = json('data/release_gates.json');
+const page = readFileSync('src/index.template.html', 'utf8');
+const readme = readFileSync('README.md', 'utf8');
+const releasePackBuilder = readFileSync('scripts/build_release_pack.mjs', 'utf8');
 
 const BEATS = Object.freeze([
   'meet_sarcomere',
@@ -151,6 +154,24 @@ test('SC27A: the presentation palette names its contrast and non-claim contracts
   assert.ok(theme.titin_emphasis.contour.width_px > 0);
   assert.ok(theme.declared_contrast_ratios.thin_to_thick_filament >= 1.7);
   assert.match(theme.titin_emphasis.meaning, /not molecular envelopes|not molecular/i);
+});
+
+test('SC27A: user-facing vocabulary and accessible grouping use Tour and Research', () => {
+  for (const retired of [
+    'Loading guided route',
+    'Current guided claim',
+    'Evidence-mode only',
+    'current chapter and sarcomere length',
+    'admitted for Evidence mode only',
+    'Evidence-only doublet spacing',
+    'withheld in Guided mode',
+  ]) assert.ok(!page.includes(retired), `retired user-facing phrase remains: ${retired}`);
+  assert.ok(!readme.includes('The Evidence drawer shows a build fingerprint'));
+  assert.ok(!readme.includes('SC-5 Evidence-mode expert cards'));
+  assert.match(page, /id="sceneDetails" role="group" aria-label="Controls for this scientific scene"/);
+  assert.match(page, /id="buildFingerprint" role="group" aria-label="Candidate identity"/);
+  assert.match(releasePackBuilder, /guided_chapters: 'Tour beats'/);
+  assert.match(releasePackBuilder, /evidence_mode: 'Research workbench'/);
 });
 
 test('SC27A: every protected scientific input remains byte-identical to SC-26', () => {
