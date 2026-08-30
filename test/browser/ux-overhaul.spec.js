@@ -116,6 +116,7 @@ async function openTourState(page, viewport, beat, scene) {
   await page.goto(`/#v=2&depth=learn&step=${beat}&sl=2200&drawer=closed&scene=${scene}&confidence=0`);
   await waitForReady(page);
   await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+  await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'resolved');
 }
 
 /** Every painted overlay label family, using the same >3 px overprint rule as runtime. */
@@ -123,6 +124,8 @@ async function assertOverlayLabelsClear(page, viewport, stateLabel) {
   const audit = await page.evaluate((tolerance) => {
     const canvas = document.querySelector('#canvas').getBoundingClientRect();
     const overlay = document.querySelector('#scienceOverlay');
+    const hint = document.querySelector('#inspectHint');
+    const hintRect = hint.hidden ? null : hint.getBoundingClientRect();
     const labels = [...overlay.querySelectorAll('text')].flatMap((node) => {
       const rect = node.getBoundingClientRect();
       if (rect.width <= 0 || rect.height <= 0) return [];
@@ -148,11 +151,25 @@ async function assertOverlayLabelsClear(page, viewport, stateLabel) {
         }
       }
     }
-    return { labels, collisions, layout: overlay.dataset.labelLayout };
+    const hintCollisions = hintRect ? labels.filter((label) => (
+      label.right > hintRect.left - canvas.left
+      && label.left < hintRect.right - canvas.left
+      && label.bottom > hintRect.top - canvas.top
+      && label.top < hintRect.bottom - canvas.top
+    )).map(({ text }) => text) : [];
+    return {
+      labels,
+      collisions,
+      hintCollisions,
+      layout: overlay.dataset.labelLayout,
+      hintLayout: hint.dataset.overlayLayout,
+    };
   }, STAGE_LAYOUT.label_collision_tolerance_px);
   expect(audit.layout, `${stateLabel} runtime placement resolved`).toBe('resolved');
+  expect(audit.hintLayout, `${stateLabel} inspection invitation placement resolved`).toBe('resolved');
   expect(audit.labels.length, `${stateLabel} paints scientific labels`).toBeGreaterThan(0);
   expect(audit.collisions, `${stateLabel} has no scientific-label overprint`).toEqual([]);
+  expect(audit.hintCollisions, `${stateLabel} hint clears every scientific label`).toEqual([]);
   for (const label of audit.labels) {
     expect(label.left, `${stateLabel}: ${label.text} begins in viewport`).toBeGreaterThanOrEqual(-1);
     expect(label.right, `${stateLabel}: ${label.text} ends in viewport`)
@@ -408,9 +425,10 @@ for (const viewport of SC27A_VIEWPORTS) {
 for (const viewport of SC27A_VIEWPORTS) {
   for (const beat of SC27A_BEATS) {
     test(`SC27A every scene clears every overlay label at ${viewport.width}x${viewport.height} in ${beat}`, async ({ page }) => {
-      await page.addInitScript(() => {
-        localStorage.setItem('titin.sc25.inspect-hint-seen', 'seen');
-      });
+      // Seven independent cold boots include the lattice-heavy beat. Keep the
+      // assertion waits strict while giving the group enough aggregate time on
+      // constrained review hosts.
+      test.setTimeout(120_000);
       for (const scene of SC27A_SCENES) {
         await openTourState(page, viewport, beat, scene);
         await assertOverlayLabelsClear(

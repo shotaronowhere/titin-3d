@@ -268,6 +268,7 @@ test('SC12/SC27A: the Guided full-sarcomere locator remains visible across views
   assert.equal(STAGE_LAYOUT.terminus_label_shift_step_px, 18);
   assert.match(page, /stripPx < STAGE_LAYOUT\.locator_full_labels_min_px/);
   assert.match(page, /resolveTerminusLabelCollisions\(svg,/);
+  assert.match(page, /resolveInspectHintPosition\(svg,/);
   assert.match(page, /data-terminus-label/);
   assert.ok(!page.includes('band-bracket'), 'the unused band-bracket marker class must not return');
   for (const dead of ['locatorPlaceLabel', 'publicPresentationState', 'applyVisibility']) {

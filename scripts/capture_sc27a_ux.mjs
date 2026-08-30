@@ -91,6 +91,8 @@ async function auditScienceLabels(page, state) {
   return page.evaluate(({ auditState, tolerance }) => {
     const canvas = document.querySelector('#canvas').getBoundingClientRect();
     const overlay = document.querySelector('#scienceOverlay');
+    const hint = document.querySelector('#inspectHint');
+    const hintRect = hint.hidden ? null : hint.getBoundingClientRect();
     const labels = [...overlay.querySelectorAll('text')].flatMap((node) => {
       const rect = node.getBoundingClientRect();
       if (rect.width <= 0 || rect.height <= 0) return [];
@@ -117,7 +119,12 @@ async function auditScienceLabels(page, state) {
       ...auditState,
       label_count: labels.length,
       label_layout: overlay.dataset.labelLayout,
+      inspection_hint_layout: hint.dataset.overlayLayout,
       science_label_collisions: collisions,
+      inspection_hint_label_collisions: hintRect ? labels.filter(({ rect }) => (
+        rect.right > hintRect.left && rect.left < hintRect.right
+        && rect.bottom > hintRect.top && rect.top < hintRect.bottom
+      )).map(({ text }) => text) : [],
       covered_science_labels: labels.filter(({ covered }) => covered).map(({ text }) => text),
     };
   }, { auditState: state, tolerance: STAGE_LAYOUT.label_collision_tolerance_px });
@@ -438,7 +445,9 @@ try {
   }
   const overlayFailures = overlayAudits.filter((entry) => (
     entry.label_layout !== 'resolved'
+    || entry.inspection_hint_layout !== 'resolved'
     || entry.science_label_collisions.length
+    || entry.inspection_hint_label_collisions.length
     || entry.covered_science_labels.length
   ));
   if (overlayFailures.length) {
@@ -446,7 +455,9 @@ try {
       .map((entry) => `${entry.viewport.width}x${entry.viewport.height} ${entry.beat}/${entry.scene} `
         + JSON.stringify({
           layout: entry.label_layout,
+          hint_layout: entry.inspection_hint_layout,
           collisions: entry.science_label_collisions,
+          hint_collisions: entry.inspection_hint_label_collisions,
           covered: entry.covered_science_labels,
         })).join('; ')}`);
   }
