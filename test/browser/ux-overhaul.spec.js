@@ -375,6 +375,7 @@ for (const viewport of SC27A_VIEWPORTS) {
     await expect(page.locator('#scienceOverlay .identity-label')).toHaveText([
       'Titin', 'Myosin', 'Actin',
     ]);
+    await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
     for (const label of await page.locator('#scienceOverlay .identity-label').all()) {
       await assertInViewport(label, viewport);
     }
@@ -385,6 +386,7 @@ for (const viewport of SC27A_VIEWPORTS) {
     for (let beat = 2; beat <= 5; beat += 1) {
       await page.locator('#chapterNext').click();
       await expect(page.locator('#chapterProgress')).toHaveText(`Beat ${beat} of 5`);
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
       await assertInViewport(page.locator('#guidedCard'), viewport);
       await assertInViewport(page.locator('#chapterNext'), viewport);
       await assertCentreUnobscured(page.locator('#chapterNext'));

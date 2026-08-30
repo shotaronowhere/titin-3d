@@ -42,8 +42,8 @@ export const STAGE_LAYOUT = Object.freeze({
   // separated by the scale rule (Firefox is the tallest governed engine). A
   // larger overlap on both axes is an actual overprint and must be resolved.
   label_collision_tolerance_px: 3,
-  // Terminus labels stay near their projected anchors, but move in one readable
-  // text-line increment when another scientific label owns that space.
+  // Terminus labels stay near their projected anchors. This one-line increment
+  // seeds the rendered-edge search with nearby horizontal and vertical options.
   terminus_label_shift_step_px: 18,
 });
 

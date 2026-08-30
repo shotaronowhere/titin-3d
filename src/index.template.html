@@ -1276,7 +1276,10 @@ function syncAudienceMode() {
   requestAnimationFrame(() => {
     visualization.resize();
     if (reframe) applyCameraPreset({ animate: false });
-    renderScienceOverlay();
+    // This callback may land inside a semantic-camera transition started later
+    // in the same audience-state update. Treat it as an intermediate frame;
+    // markStageDirty below guarantees a strict settled-frame measurement.
+    renderScienceOverlay({ transient: true });
     markStageDirty();
   });
 }
@@ -1925,6 +1928,8 @@ function selectableLabel(label, target, box) {
  * are used here because Firefox, Chromium, and WebKit do not agree exactly on
  * glyph metrics. The anchor dot stays at the projected coordinate; only the
  * leader endpoint, painted label, and its matching hit target move together.
+ * Candidate positions come from rendered obstacle edges in both axes, so an
+ * animated camera path cannot strand a label in a full horizontal lane.
  *
  * @param {SVGSVGElement} svg
  * @param {{canvas:DOMRect, header:DOMRect, card:DOMRect|null}} obstacles
@@ -1940,54 +1945,104 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, card }) {
     const rect = node?.getBoundingClientRect();
     return rect && rect.width > 0 && rect.height > 0 ? rect : null;
   };
+  const shifted = (box, dx, dy) => box && ({
+    left: box.left + dx,
+    right: box.right + dx,
+    top: box.top + dy,
+    bottom: box.bottom + dy,
+  });
+  const inside = (box) => box && box.left >= canvas.left && box.right <= canvas.right
+    && box.top >= canvas.top && box.bottom <= canvas.bottom;
   const unresolved = [];
   for (const label of svg.querySelectorAll('.terminus-label[data-terminus-label]')) {
     const id = label.dataset.terminusLabel;
     const hit = svg.querySelector(`.label-hit[data-terminus-label="${id}"]`);
     const leader = svg.querySelector(`[data-terminus-leader="${id}"]`);
+    const labelBox = visibleBox(label);
+    const hitBox = visibleBox(hit);
+    const otherLabelBoxes = [...svg.querySelectorAll('text')]
+      .filter((other) => other !== label)
+      .map(visibleBox)
+      .filter(Boolean);
+    const otherHitBoxes = [...svg.querySelectorAll('.label-hit')]
+      .filter((other) => other !== hit)
+      .map(visibleBox)
+      .filter(Boolean);
+    const labelX = Number(label.getAttribute('x'));
     const labelY = Number(label.getAttribute('y'));
+    const hitX = hit ? Number(hit.getAttribute('x')) : null;
     const hitY = hit ? Number(hit.getAttribute('y')) : null;
+    const leaderX = leader ? Number(leader.getAttribute('x2')) : null;
     const leaderY = leader ? Number(leader.getAttribute('y2')) : null;
-    const setDelta = (delta) => {
-      label.setAttribute('y', String(labelY + delta));
-      if (hit) hit.setAttribute('y', String(hitY + delta));
-      if (leader) leader.setAttribute('y2', String(leaderY + delta));
-    };
-    const clear = () => {
-      const box = visibleBox(label);
-      if (!box || box.left < canvas.left || box.right > canvas.right
-          || box.top < canvas.top || box.bottom > canvas.bottom
-          || overlaps(box, header, 0) || (card && overlaps(box, card, 0))) return false;
-      for (const other of svg.querySelectorAll('text')) {
-        if (other === label) continue;
-        const otherBox = visibleBox(other);
-        if (otherBox && overlaps(box, otherBox)) return false;
-      }
+    const setDelta = (dx, dy) => {
+      label.setAttribute('x', String(labelX + dx));
+      label.setAttribute('y', String(labelY + dy));
       if (hit) {
-        const hitBox = visibleBox(hit);
-        for (const other of svg.querySelectorAll('.label-hit')) {
-          if (other === hit) continue;
-          const otherBox = visibleBox(other);
-          if (hitBox && otherBox && overlaps(hitBox, otherBox, 0)) return false;
-        }
+        hit.setAttribute('x', String(hitX + dx));
+        hit.setAttribute('y', String(hitY + dy));
       }
-      return true;
+      if (leader) {
+        leader.setAttribute('x2', String(leaderX + dx));
+        leader.setAttribute('y2', String(leaderY + dy));
+      }
     };
+    const clear = (dx, dy) => {
+      const box = shifted(labelBox, dx, dy);
+      const target = shifted(hitBox, dx, dy);
+      return inside(box) && (!target || inside(target))
+        && !overlaps(box, header, 0) && (!card || !overlaps(box, card, 0))
+        && (!target || (!overlaps(target, header, 0) && (!card || !overlaps(target, card, 0))))
+        && otherLabelBoxes.every((otherBox) => !overlaps(box, otherBox))
+        && (!target || otherHitBoxes.every((otherBox) => !overlaps(target, otherBox, 0)));
+    };
+
+    // Every free cell among axis-aligned rectangles is bounded by a canvas or
+    // obstacle edge. Their Cartesian product is exhaustive without a per-frame
+    // pixel scan; one text-line step also supplies nearby readable candidates.
     const step = STAGE_LAYOUT.terminus_label_shift_step_px;
-    const candidates = [0];
-    for (let distance = step; distance <= canvas.height; distance += step) {
-      candidates.push(-distance, distance);
+    const xDeltas = new Set([0, -step, step]);
+    const yDeltas = new Set([0, -step, step]);
+    const addInsideEdges = (box) => {
+      if (!box) return;
+      xDeltas.add(canvas.left - box.left);
+      xDeltas.add(canvas.right - box.right);
+      yDeltas.add(canvas.top - box.top);
+      yDeltas.add(canvas.bottom - box.bottom);
+    };
+    const addObstacleEdges = (box, obstacle, margin) => {
+      if (!box || !obstacle) return;
+      xDeltas.add(obstacle.left - margin - box.right);
+      xDeltas.add(obstacle.right + margin - box.left);
+      yDeltas.add(obstacle.top - margin - box.bottom);
+      yDeltas.add(obstacle.bottom + margin - box.top);
+    };
+    addInsideEdges(labelBox);
+    addInsideEdges(hitBox);
+    for (const obstacle of [header, card]) {
+      addObstacleEdges(labelBox, obstacle, 0);
+      addObstacleEdges(hitBox, obstacle, 0);
     }
+    for (const otherBox of otherLabelBoxes) addObstacleEdges(labelBox, otherBox, tolerance);
+    for (const otherBox of otherHitBoxes) addObstacleEdges(hitBox, otherBox, 0);
+    const candidates = [];
+    for (const dx of xDeltas) {
+      for (const dy of yDeltas) {
+        if (!Number.isFinite(dx) || !Number.isFinite(dy)) continue;
+        candidates.push({ dx, dy, distance: Math.hypot(dx, dy) });
+      }
+    }
+    candidates.sort((a, b) => a.distance - b.distance
+      || Math.abs(a.dx) - Math.abs(b.dx) || a.dy - b.dy || a.dx - b.dx);
     let placed = false;
-    for (const delta of candidates) {
-      setDelta(delta);
-      if (clear()) {
+    for (const { dx, dy } of candidates) {
+      if (clear(dx, dy)) {
+        setDelta(dx, dy);
         placed = true;
         break;
       }
     }
     if (!placed) {
-      setDelta(0);
+      setDelta(0, 0);
       unresolved.push(id);
     }
   }
@@ -2125,7 +2180,7 @@ function renderedTitinAnchor(record) {
   };
 }
 
-function renderScienceOverlay() {
+function renderScienceOverlay({ transient = false } = {}) {
   const svg = $('scienceOverlay');
   if (!activeShowcaseOverlay || !$('canvas').clientWidth) {
     if (scienceOverlaySignature !== 'empty') svg.replaceChildren();
@@ -2467,7 +2522,20 @@ function renderScienceOverlay() {
     card: cardRect,
   });
   if (unresolvedLabels.length) {
-    console.error(`Scientific overlay could not place terminus labels: ${unresolvedLabels.join(', ')}`);
+    if (transient) {
+      // The semantic camera can pass through a projection for which the fixed
+      // header/card band has no legal label cell. Never paint an overprint:
+      // retain the scientific anchor dots, suppress only their movable leaders
+      // and targets for that frame, and require the settled frame to resolve.
+      for (const id of unresolvedLabels) {
+        for (const node of svg.querySelectorAll(
+          `[data-terminus-label="${id}"], [data-terminus-leader="${id}"]`,
+        )) node.style.visibility = 'hidden';
+      }
+      svg.dataset.labelLayout = 'pending';
+    } else {
+      console.error(`Scientific overlay could not place terminus labels: ${unresolvedLabels.join(', ')}`);
+    }
   }
   if (!resolveInspectHintPosition(svg, {
     canvas: canvasRect,
@@ -3009,7 +3077,7 @@ function renderForceCurve() {
   renderCompliancePlot();
 }
 
-function renderChapter() {
+function renderChapter({ renderOverlay = true } = {}) {
   const chapter = activeChapter();
   const index = story.chapterIndex(chapter.id);
   tourView.render({ chapter, chapterIndex: index, chapters: story.chapters });
@@ -3043,7 +3111,7 @@ function renderChapter() {
   if (chapterNotClaimed) chapterNotClaimed.id = 'chapterNotClaimed';
   $('chapterEvidence').replaceChildren(claimNode);
   if (state.drawerTab === 'sources') renderBibliography();
-  renderScienceOverlay();
+  if (renderOverlay) renderScienceOverlay();
   renderProvenancePipeline();
   requestAnimationFrame(() => {
     const height = Math.round($('guidedCard').getBoundingClientRect().height);
@@ -3136,11 +3204,15 @@ function restorePreviousChapterView({ focusResearch = false } = {}) {
   chapterViewAnnouncement = 'Previous view restored; the current beat and sarcomere length are unchanged.';
   pinnedPick = null; hoverPick = null;
   if (visualization.scale !== state.scale) visualization.setScale(state.scale);
-  rebuild(true);
+  rebuild(true, { renderOverlay: false });
   visualization.highlightTitinRegion(state.region);
   applyCameraPreset({ animate: true });
-  render(visualization.currentState());
-  renderChapter();
+  // Update every chapter-owned surface before measuring the scientific
+  // overlay. Otherwise the intermediate DOM can combine the previous beat's
+  // mechanics with the next beat's lattice and temporarily cover the canvas.
+  render(visualization.currentState(), { renderOverlay: false });
+  renderChapter({ renderOverlay: false });
+  renderScienceOverlay({ transient: true });
   renderPinnedSelection();
   syncScales(); syncRegions(); syncDepictionToggles(); refreshRegionReadout();
   syncResearchRestoreView();
@@ -3178,11 +3250,14 @@ function applyChapter(chapterId) {
   // start action; navigation itself never overwrites the slider.
   if (visualization.scale !== state.scale) visualization.setScale(state.scale);
   syncAudienceMode();
-  rebuild(true);
+  rebuild(true, { renderOverlay: false });
   visualization.highlightTitinRegion(state.region);
   applyCameraPreset({ animate: true });
-  render(visualization.currentState());
-  renderChapter();
+  // Render the scene attachment and chapter chrome as one measurement batch;
+  // neither intermediate DOM is a user-visible or collision-auditable state.
+  render(visualization.currentState(), { renderOverlay: false });
+  renderChapter({ renderOverlay: false });
+  renderScienceOverlay({ transient: true });
   renderPinnedSelection();
   syncScales(); syncRegions(); syncDepictionToggles();
   syncPublicPresentation(); syncUrl();
@@ -4258,7 +4333,7 @@ function currentDisplayOptions() {
   };
 }
 
-function rebuild(refit = false) {
+function rebuild(refit = false, { renderOverlay = true } = {}) {
   try {
     const sl = Number(slider.value);
     visualization.setDisplayOptions(currentDisplayOptions());
@@ -4281,14 +4356,14 @@ function rebuild(refit = false) {
       const cameraRegion = state.cameraPreset.slice('region.'.length);
       visualization.focusTitinRegion(cameraRegion);
     }
-    render(report);
+    render(report, { renderOverlay });
     refreshRegionReadout();
     syncPublicPresentation(); syncUrl();
     markStageDirty();
   } catch (e) { fail(e); }
 }
 
-function render(report) {
+function render(report, { renderOverlay = true } = {}) {
   const { manifest: man, sarcomere_length_nm: requestedSL, annotations = [] } = report;
   activeAnnotations = annotations;
   const g = model.geometryAt(requestedSL);
@@ -4298,7 +4373,7 @@ function render(report) {
   // on every slider frame.
   renderLatticeCrossSection();
   renderForceCurve();
-  renderScienceOverlay();
+  if (renderOverlay) renderScienceOverlay();
   const hiddenComponents = new Set(report.hidden_components || []);
   const hiddenSuffix = (component) => hiddenComponents.has(component) ? ' (hidden)' : '';
   $('slReadout').innerHTML = `${g.sarcomere_length_nm} <small>nm${report.clamped ? ' (clamped)' : ''}</small>`;
@@ -4937,7 +5012,7 @@ visualization.start((report) => {
   const pulsing = stepInspectionPulse(performance.now());
   if (!stageDirty && !cameraMoving && !pulsing) return;
   stageDirty = false;
-  renderScienceOverlay(); renderObjectOverlay();
+  renderScienceOverlay({ transient: cameraMoving }); renderObjectOverlay();
 });
 // Last, so a hint can never appear over a stage that failed to build.
 startInspectionOnboarding();
