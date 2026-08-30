@@ -1915,6 +1915,85 @@ function selectableLabel(label, target, box) {
   return [hit, label];
 }
 
+/**
+ * Keep projected titin-terminus labels in the nearest collision-free position.
+ *
+ * Locator, identity, and scale labels are fixed semantic measurements. A
+ * terminus label already has a leader, so it is the one label family that can
+ * move without changing what point it names. The browser's rendered text boxes
+ * are used here because Firefox, Chromium, and WebKit do not agree exactly on
+ * glyph metrics. The anchor dot stays at the projected coordinate; only the
+ * leader endpoint, painted label, and its matching hit target move together.
+ *
+ * @param {SVGSVGElement} svg
+ * @param {{canvas:DOMRect, header:DOMRect, card:DOMRect|null}} obstacles
+ * @returns {string[]} terminus IDs for which no collision-free position exists
+ */
+function resolveTerminusLabelCollisions(svg, { canvas, header, card }) {
+  const tolerance = STAGE_LAYOUT.label_collision_tolerance_px;
+  const overlaps = (a, b, margin = tolerance) => (
+    Math.min(a.right, b.right) - Math.max(a.left, b.left) > margin
+    && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > margin
+  );
+  const visibleBox = (node) => {
+    const rect = node?.getBoundingClientRect();
+    return rect && rect.width > 0 && rect.height > 0 ? rect : null;
+  };
+  const unresolved = [];
+  for (const label of svg.querySelectorAll('.terminus-label[data-terminus-label]')) {
+    const id = label.dataset.terminusLabel;
+    const hit = svg.querySelector(`.label-hit[data-terminus-label="${id}"]`);
+    const leader = svg.querySelector(`[data-terminus-leader="${id}"]`);
+    const labelY = Number(label.getAttribute('y'));
+    const hitY = hit ? Number(hit.getAttribute('y')) : null;
+    const leaderY = leader ? Number(leader.getAttribute('y2')) : null;
+    const setDelta = (delta) => {
+      label.setAttribute('y', String(labelY + delta));
+      if (hit) hit.setAttribute('y', String(hitY + delta));
+      if (leader) leader.setAttribute('y2', String(leaderY + delta));
+    };
+    const clear = () => {
+      const box = visibleBox(label);
+      if (!box || box.left < canvas.left || box.right > canvas.right
+          || box.top < canvas.top || box.bottom > canvas.bottom
+          || overlaps(box, header, 0) || (card && overlaps(box, card, 0))) return false;
+      for (const other of svg.querySelectorAll('text')) {
+        if (other === label) continue;
+        const otherBox = visibleBox(other);
+        if (otherBox && overlaps(box, otherBox)) return false;
+      }
+      if (hit) {
+        const hitBox = visibleBox(hit);
+        for (const other of svg.querySelectorAll('.label-hit')) {
+          if (other === hit) continue;
+          const otherBox = visibleBox(other);
+          if (hitBox && otherBox && overlaps(hitBox, otherBox, 0)) return false;
+        }
+      }
+      return true;
+    };
+    const step = STAGE_LAYOUT.terminus_label_shift_step_px;
+    const candidates = [0];
+    for (let distance = step; distance <= canvas.height; distance += step) {
+      candidates.push(-distance, distance);
+    }
+    let placed = false;
+    for (const delta of candidates) {
+      setDelta(delta);
+      if (clear()) {
+        placed = true;
+        break;
+      }
+    }
+    if (!placed) {
+      setDelta(0);
+      unresolved.push(id);
+    }
+  }
+  svg.dataset.labelLayout = unresolved.length ? `unresolved:${unresolved.join(',')}` : 'resolved';
+  return unresolved;
+}
+
 function renderedTitinAnchor(record) {
   const placement = visualization.currentState()?.manifest?.representative_titin;
   const offset = placement?.a_band_transverse_offset_nm;
@@ -2007,11 +2086,12 @@ function renderScienceOverlay() {
   // intervening write share one layout flush anyway. The saving that matters
   // came from not running this pass at all on a still frame.
   const canvasRect = $('canvas').getBoundingClientRect();
+  const stageHeaderRect = $('stageHeader').getBoundingClientRect();
   // The 12 px SC-27A scientific labels have a taller ink box than the former
   // 9 px labels. Twenty pixels keeps the highest marker label entirely below
   // the measured header edge in Chromium and Firefox; sixteen left its
   // ascender inside the header and eighteen remained 1.5 px short in Firefox.
-  const safeTopPx = $('stageHeader').getBoundingClientRect().bottom - canvasRect.top + 20;
+  const safeTopPx = stageHeaderRect.bottom - canvasRect.top + 20;
   // The guided chapter card owns the bottom-left corner and its size depends on
   // the chapter's copy, so where the ruler can go is measured, not assumed.
   const guidedCard = $('guidedCard');
@@ -2099,7 +2179,7 @@ function renderScienceOverlay() {
       if (bracket.kind === 'marker') {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y - 5} V ${y + 7}`,
-          class: 'science-bracket minor band-bracket',
+          class: 'science-bracket minor',
         }));
         nodes.push(...withBracketTarget(
           svgElement('text', { x: x1, y: y - 8, 'text-anchor': 'middle', class: 'science-label band-label' }, bracket.label),
@@ -2108,7 +2188,7 @@ function renderScienceOverlay() {
       } else {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y + 5} V ${y} H ${x2} V ${y + 5}`,
-          class: `science-bracket band-bracket${bracket.lane === 'minor' ? ' minor' : ''}`,
+          class: `science-bracket${bracket.lane === 'minor' ? ' minor' : ''}`,
         }));
         // Without a tick the label floats: the reader has to guess which
         // boundary a bracket end refers to.
@@ -2117,7 +2197,7 @@ function renderScienceOverlay() {
           if (!point.visible) continue;
           nodes.push(svgElement('path', {
             d: `M ${x} ${y + 5} V ${Math.min(point.y_px, y + 5 + tick)}`,
-            class: 'science-bracket minor band-bracket',
+            class: 'science-bracket minor',
           }));
         }
         nodes.push(...withBracketTarget(
@@ -2211,7 +2291,10 @@ function renderScienceOverlay() {
       const left = terminus.id === 'n_terminus';
       const dx = left ? 16 : -16;
       nodes.push(svgElement('circle', { cx: x, cy: y, r: 3.2, class: 'terminus-dot' }));
-      nodes.push(svgElement('line', { x1: x, y1: y, x2: x + dx, y2: y - 12, class: 'terminus-line' }));
+      nodes.push(svgElement('line', {
+        x1: x, y1: y, x2: x + dx, y2: y - 12, class: 'terminus-line',
+        'data-terminus-leader': terminus.id,
+      }));
       const labelX = x + dx + (left ? 3 : -3);
       const label = svgElement('text', {
         x: labelX, y: y - 15,
@@ -2219,7 +2302,7 @@ function renderScienceOverlay() {
       }, terminus.label);
       // The two termini ARE titin regions — the N-terminal Z1Z2 anchor and the
       // C-terminal M-line segment — so the labels that name them select them.
-      nodes.push(...selectableLabel(label, {
+      const labelNodes = selectableLabel(label, {
         target_type: 'titin_region',
         target_id: TERMINUS_REGION[terminus.id],
       }, {
@@ -2227,7 +2310,9 @@ function renderScienceOverlay() {
         y: y - 15 - LABEL_HIT.height + 6,
         width: LABEL_HIT.width,
         height: LABEL_HIT.height,
-      }));
+      });
+      for (const node of labelNodes) node.setAttribute('data-terminus-label', terminus.id);
+      nodes.push(...labelNodes);
     }
   }
   // The ruler. Every number in this project is in nanometres and nothing on the
@@ -2263,6 +2348,14 @@ function renderScienceOverlay() {
     }
   }
   svg.replaceChildren(...nodes);
+  const unresolvedLabels = resolveTerminusLabelCollisions(svg, {
+    canvas: canvasRect,
+    header: stageHeaderRect,
+    card: cardRect,
+  });
+  if (unresolvedLabels.length) {
+    console.error(`Scientific overlay could not place terminus labels: ${unresolvedLabels.join(', ')}`);
+  }
 }
 
 /**

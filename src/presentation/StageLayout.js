@@ -38,6 +38,13 @@ export const STAGE_LAYOUT = Object.freeze({
   // the three governed engines. Narrower rails use the compact labels while
   // still naming both termini in the same frame.
   locator_full_labels_min_px: 410,
+  // Browser text boxes can touch by a couple of pixels even when their ink is
+  // separated by the scale rule (Firefox is the tallest governed engine). A
+  // larger overlap on both axes is an actual overprint and must be resolved.
+  label_collision_tolerance_px: 3,
+  // Terminus labels stay near their projected anchors, but move in one readable
+  // text-line increment when another scientific label owns that space.
+  terminus_label_shift_step_px: 18,
 });
 
 /** Viewport classes the reviewed attention budget distinguishes. */

@@ -5,6 +5,7 @@ import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 
 import { chromium } from 'playwright';
+import { STAGE_LAYOUT } from '../src/presentation/StageLayout.js';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const OUT = resolve(ROOT, 'evidence/ux/SC-27A/final');
@@ -18,6 +19,14 @@ const VIEWPORTS = [
   { width: 1280, height: 720 },
   { width: 1440, height: 900 },
 ];
+const TOUR_BEATS = Object.freeze([
+  'meet_sarcomere', 'follow_titin', 'stretch_spring',
+  'scaffold_thick_filament', 'knowledge_recap',
+]);
+const TOUR_SCENES = Object.freeze([
+  'overview', 'titin_alone', 'spring', 'architecture',
+  'z_anchor', 'a_band_scaffold', 'lattice',
+]);
 // Linear-RGB diagnostic matrices commonly used for software composition. These
 // frames are review aids, not a substitute for human colour-vision review or a
 // claim that the simulation reproduces any individual's perception.
@@ -62,14 +71,56 @@ for (let attempt = 0; attempt < 80; attempt += 1) {
 const browser = await chromium.launch({ headless: true });
 const captures = [];
 const audits = [];
+const overlayAudits = [];
 
-async function ready(page) {
+async function ready(page, url = ORIGIN) {
   const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto(ORIGIN, { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => window.__titinBoot?.ready === true);
-  await page.waitForTimeout(250);
-  if (errors.length) throw new Error(errors.join('\n'));
+  const recordError = (error) => errors.push(error.message);
+  page.on('pageerror', recordError);
+  try {
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__titinBoot?.ready === true);
+    await page.waitForTimeout(250);
+    if (errors.length) throw new Error(errors.join('\n'));
+  } finally {
+    page.off('pageerror', recordError);
+  }
+}
+
+async function auditScienceLabels(page, state) {
+  return page.evaluate(({ auditState, tolerance }) => {
+    const canvas = document.querySelector('#canvas').getBoundingClientRect();
+    const overlay = document.querySelector('#scienceOverlay');
+    const labels = [...overlay.querySelectorAll('text')].flatMap((node) => {
+      const rect = node.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return [];
+      const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      return [{
+        text: node.textContent.trim(),
+        rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom },
+        covered: !hit || (!overlay.contains(hit) && hit.tagName !== 'CANVAS'),
+      }];
+    });
+    const collisions = [];
+    for (let i = 0; i < labels.length; i += 1) {
+      for (let j = i + 1; j < labels.length; j += 1) {
+        const a = labels[i];
+        const b = labels[j];
+        const overlapX = Math.min(a.rect.right, b.rect.right) - Math.max(a.rect.left, b.rect.left);
+        const overlapY = Math.min(a.rect.bottom, b.rect.bottom) - Math.max(a.rect.top, b.rect.top);
+        if (overlapX > tolerance && overlapY > tolerance) {
+          collisions.push(`${a.text} ↔ ${b.text} (${overlapX.toFixed(1)}×${overlapY.toFixed(1)} px)`);
+        }
+      }
+    }
+    return {
+      ...auditState,
+      label_count: labels.length,
+      label_layout: overlay.dataset.labelLayout,
+      science_label_collisions: collisions,
+      covered_science_labels: labels.filter(({ covered }) => covered).map(({ text }) => text),
+    };
+  }, { auditState: state, tolerance: STAGE_LAYOUT.label_collision_tolerance_px });
 }
 
 async function capture(page, name, state) {
@@ -187,7 +238,7 @@ async function applyColorVisionDiagnostic(page, id, values) {
 }
 
 async function auditCold(page, viewport) {
-  return page.evaluate((measuredViewport) => {
+  return page.evaluate(({ measuredViewport, tolerance }) => {
     const isVisible = (node) => {
       if (node.closest('#scienceOverlay, #objectTooltip, #objectLeader')) return false;
       const style = getComputedStyle(node);
@@ -225,16 +276,19 @@ async function auditCold(page, viewport) {
     const canvas = box('#canvas');
     const header = box('#stageHeader');
     const card = box('#guidedCard');
-    const scienceLabels = [...document.querySelectorAll(
-      '#scienceOverlay .science-label, #scienceOverlay .terminus-label',
-    )].map((node) => ({ text: node.textContent.trim(), rect: (() => {
+    const scienceLabels = [...document.querySelectorAll('#scienceOverlay text')]
+      .map((node) => ({ text: node.textContent.trim(), rect: (() => {
       const rect = node.getBoundingClientRect();
       return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
-    })() })).filter(({ rect }) => rect.right > rect.left && rect.bottom > rect.top);
+      })() })).filter(({ rect }) => rect.right > rect.left && rect.bottom > rect.top);
     const scienceLabelCollisions = [];
     for (let i = 0; i < scienceLabels.length; i += 1) {
       for (let j = i + 1; j < scienceLabels.length; j += 1) {
-        if (collide(scienceLabels[i].rect, scienceLabels[j].rect)) {
+        const a = scienceLabels[i].rect;
+        const b = scienceLabels[j].rect;
+        const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const overlapY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (overlapX > tolerance && overlapY > tolerance) {
           scienceLabelCollisions.push(`${scienceLabels[i].text} ↔ ${scienceLabels[j].text}`);
         }
       }
@@ -265,7 +319,7 @@ async function auditCold(page, viewport) {
       ),
       candidate_identity: window.__titinBuild,
     };
-  }, viewport);
+  }, { measuredViewport: viewport, tolerance: STAGE_LAYOUT.label_collision_tolerance_px });
 }
 
 try {
@@ -277,6 +331,13 @@ try {
       composed_geometry_share_diagnostic: await composedGeometryDiagnostic(page),
     });
     await capture(page, `cold-${viewport.width}x${viewport.height}`, 'cold open');
+    for (const beat of TOUR_BEATS) {
+      for (const scene of TOUR_SCENES) {
+        await ready(page, `${ORIGIN}/#v=2&depth=learn&step=${beat}`
+          + `&sl=2200&drawer=closed&scene=${scene}&confidence=0`);
+        overlayAudits.push(await auditScienceLabels(page, { viewport, beat, scene }));
+      }
+    }
     await page.close();
   }
 
@@ -375,11 +436,31 @@ try {
       .map((entry) => `${entry.viewport.width}x${entry.viewport.height} `
         + JSON.stringify(entry.overlap_findings)).join('; ')}`);
   }
+  const overlayFailures = overlayAudits.filter((entry) => (
+    entry.label_layout !== 'resolved'
+    || entry.science_label_collisions.length
+    || entry.covered_science_labels.length
+  ));
+  if (overlayFailures.length) {
+    throw new Error(`SC-27A overlay matrix found label failures: ${overlayFailures
+      .map((entry) => `${entry.viewport.width}x${entry.viewport.height} ${entry.beat}/${entry.scene} `
+        + JSON.stringify({
+          layout: entry.label_layout,
+          collisions: entry.science_label_collisions,
+          covered: entry.covered_science_labels,
+        })).join('; ')}`);
+  }
   const audit = {
     schema: 'sc27a-ux-audit/1',
     purpose: 'Automated diagnostics only; this record does not claim human comprehension or visual quality.',
     candidate_identity: audits[0].candidate_identity,
     viewports: audits,
+    overlay_label_matrix: {
+      scope: 'Every Tour beat × every supported scene × every release viewport in Chromium.',
+      collision_tolerance_px: STAGE_LAYOUT.label_collision_tolerance_px,
+      state_count: overlayAudits.length,
+      states: overlayAudits,
+    },
     declared_contrast_results: theme.declared_contrast_ratios,
     presentation_titin_emphasis: {
       ...theme.titin_emphasis,

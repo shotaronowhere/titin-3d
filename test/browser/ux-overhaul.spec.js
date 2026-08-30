@@ -25,6 +25,23 @@ test.beforeEach(({ page }) => {
 });
 test.afterEach(() => expect(consoleErrors, 'the page must log no console error').toEqual([]));
 
+const SC27A_BEATS = Object.freeze([
+  'meet_sarcomere',
+  'follow_titin',
+  'stretch_spring',
+  'scaffold_thick_filament',
+  'knowledge_recap',
+]);
+const SC27A_SCENES = Object.freeze([
+  'overview',
+  'titin_alone',
+  'spring',
+  'architecture',
+  'z_anchor',
+  'a_band_scaffold',
+  'lattice',
+]);
+
 async function openTour(page, viewport) {
   await page.setViewportSize(viewport);
   await page.goto('/');
@@ -91,6 +108,60 @@ async function assertContainedBy(child, parent) {
   expect(inside.y).toBeGreaterThanOrEqual(outside.y - 1);
   expect(inside.x + inside.width).toBeLessThanOrEqual(outside.x + outside.width + 1);
   expect(inside.y + inside.height).toBeLessThanOrEqual(outside.y + outside.height + 1);
+}
+
+async function openTourState(page, viewport, beat, scene) {
+  await page.setViewportSize(viewport);
+  await setReducedMotion(page, true);
+  await page.goto(`/#v=2&depth=learn&step=${beat}&sl=2200&drawer=closed&scene=${scene}&confidence=0`);
+  await waitForReady(page);
+  await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+}
+
+/** Every painted overlay label family, using the same >3 px overprint rule as runtime. */
+async function assertOverlayLabelsClear(page, viewport, stateLabel) {
+  const audit = await page.evaluate((tolerance) => {
+    const canvas = document.querySelector('#canvas').getBoundingClientRect();
+    const overlay = document.querySelector('#scienceOverlay');
+    const labels = [...overlay.querySelectorAll('text')].flatMap((node) => {
+      const rect = node.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return [];
+      const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      return [{
+        text: node.textContent.trim(),
+        left: rect.left - canvas.left,
+        right: rect.right - canvas.left,
+        top: rect.top - canvas.top,
+        bottom: rect.bottom - canvas.top,
+        coveredByChrome: !hit || (!overlay.contains(hit) && hit.tagName !== 'CANVAS'),
+      }];
+    });
+    const collisions = [];
+    for (let i = 0; i < labels.length; i += 1) {
+      for (let j = i + 1; j < labels.length; j += 1) {
+        const a = labels[i];
+        const b = labels[j];
+        const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const overlapY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (overlapX > tolerance && overlapY > tolerance) {
+          collisions.push(`${a.text} ↔ ${b.text} (${overlapX.toFixed(1)}×${overlapY.toFixed(1)} px)`);
+        }
+      }
+    }
+    return { labels, collisions, layout: overlay.dataset.labelLayout };
+  }, STAGE_LAYOUT.label_collision_tolerance_px);
+  expect(audit.layout, `${stateLabel} runtime placement resolved`).toBe('resolved');
+  expect(audit.labels.length, `${stateLabel} paints scientific labels`).toBeGreaterThan(0);
+  expect(audit.collisions, `${stateLabel} has no scientific-label overprint`).toEqual([]);
+  for (const label of audit.labels) {
+    expect(label.left, `${stateLabel}: ${label.text} begins in viewport`).toBeGreaterThanOrEqual(-1);
+    expect(label.right, `${stateLabel}: ${label.text} ends in viewport`)
+      .toBeLessThanOrEqual(viewport.width + 1);
+    expect(label.top, `${stateLabel}: ${label.text} begins in viewport`).toBeGreaterThanOrEqual(-1);
+    expect(label.bottom, `${stateLabel}: ${label.text} ends in viewport`)
+      .toBeLessThanOrEqual(viewport.height + 1);
+    expect(label.coveredByChrome, `${stateLabel}: ${label.text} centre is unobscured`).toBe(false);
+  }
 }
 
 async function assertSemanticCameraContract(page, viewport, beat) {
@@ -332,6 +403,22 @@ for (const viewport of SC27A_VIEWPORTS) {
     }
     await assertSemanticCameraContract(page, viewport, 5);
   });
+}
+
+for (const viewport of SC27A_VIEWPORTS) {
+  for (const beat of SC27A_BEATS) {
+    test(`SC27A every scene clears every overlay label at ${viewport.width}x${viewport.height} in ${beat}`, async ({ page }) => {
+      await page.addInitScript(() => {
+        localStorage.setItem('titin.sc25.inspect-hint-seen', 'seen');
+      });
+      for (const scene of SC27A_SCENES) {
+        await openTourState(page, viewport, beat, scene);
+        await assertOverlayLabelsClear(
+          page, viewport, `${viewport.width}x${viewport.height} ${beat}/${scene}`,
+        );
+      }
+    });
+  }
 }
 
 test('SC27A has one five-beat route, contextual mechanics, and a truthful Replay', async ({ page }) => {
