@@ -217,7 +217,7 @@ test('SC11: overlay work is dirty-flagged, not run on every frame', () => {
   // order the assertion pins is unchanged: flag first, DOM measurement after.
   assert.match(
     page,
-    /\}, \(\{ camera_moving[\s\S]{0,400}if \(!stageDirty[\s\S]{0,200}renderScienceOverlay\(\); renderObjectOverlay\(\);/,
+    /\}, \(\{ camera_moving[\s\S]{0,400}if \(!stageDirty[\s\S]{0,200}renderScienceOverlay\(\{ transient: cameraMoving \}\); renderObjectOverlay\(\);/,
     'the frame callback must early-out when nothing changed',
   );
   assert.match(page, /window\.addEventListener\('resize', markStageDirty\)/,

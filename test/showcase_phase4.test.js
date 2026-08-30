@@ -247,7 +247,7 @@ test('SC4: page wires one synchronized accessible tooltip and pinned explanation
   assert.match(page, /renderSelectedEvidence\(annotation\)/);
   assert.match(page, /guidedSelectionLabel/);
   assert.match(page, /syncComponentButtons\(visualization\.currentState\(\)\)/);
-  assert.match(page, /renderScienceOverlay\(\); renderObjectOverlay\(\);/,
+  assert.match(page, /renderScienceOverlay\(\{ transient: cameraMoving \}\); renderObjectOverlay\(\);/,
     'leader anchors must update after every orbit frame');
   assert.match(page, /getComputedStyle\(card\)\.display === 'none'/,
     'responsive drawers must not retain a leader to a CSS-hidden duplicate card');
