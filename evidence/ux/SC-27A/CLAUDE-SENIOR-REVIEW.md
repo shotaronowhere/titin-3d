@@ -245,3 +245,37 @@ identity, and 25 unique refreshed captures across six viewports.
 
 Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
 release/freeze remains independently blocked on the declared human work.
+
+## Iridescent-summit closure findings and remediation
+
+The next authenticated Claude Opus/high-effort read-only closure review
+confirmed every vivid-salamander finding closed. Applying the same strict rule,
+it returned **engineering FAIL** with zero P0, one P1, two P2, and three P3
+findings. Its complete review artifact is
+`/Users/shotaro/.claude/plans/act-as-the-final-iridescent-summit.md`.
+
+| Priority | Finding | Disposition |
+|---|---|---|
+| P1 | Full locator endpoint labels collided with terminus labels at widths from 520 through 933 px, including the required 768×1024 capture | Locator vocabulary now switches from full to compact according to the actual rendered strip width and a governed 410 px threshold; all six viewport gates reject every pairwise scientific-label collision |
+| P2 | Tour rendered a full locator and band brackets in the same overlay lane, duplicating vocabulary and creating collision risk | One pure `stageOverlayLane` decision now gives Tour's measurable locator exclusive ownership and Research's requested brackets exclusive ownership; the two cannot render together |
+| P2 | A unit test claimed locator/bracket mutual exclusion while source-level conditions allowed both | The unit and source contracts now pin the single overlay-lane decision and exhaustively assert its Tour, Research, and unmeasurable cases |
+| P3 | Mobile Research made the canvas inert while the selected-object live region remained inside it | The live region now sits outside the inert canvas; desktop and 375×812 Research selection tests require that it has no inert ancestor and announce the Research-specific route |
+| P3 | `locatorPlaceLabel`, `publicPresentationState`, and `applyVisibility` were dead | All three functions and the orphaned hidden-state set are removed; a regression rejects their return |
+| P3 | Stage-layout documentation still described locator/bracket visibility as independent and page code repeated the from/to arithmetic | The layout contract now documents exclusive lane ownership, and the page consumes `locatorExtent`'s canonical endpoints without duplicating arithmetic |
+
+The rebuilt candidate is app revision
+`65789d3b5dcf43dff298eede934c65e10845678d`, build-input fingerprint
+`47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7`,
+standalone SHA-256
+`f2f43e6c3228fadb7ef06cb8c3f9140cac8c558422a923657399b7dd214ca013`,
+and detached-manifest SHA-256
+`e3104796d15be0823d7594a38ee4647a8ce948ec48b3c14256fbd32d4dc54637`.
+Verification on this exact identity includes 608/608 full Node tests, 177/177
+focused tests, all destructive controls and validators, 78/78 Chromium SC-27A
+browser tests, 9/9 Chromium smoke tests, 20/20 Firefox UX tests, 20/20 WebKit
+UX tests, the 7,562-sample hit-grid fixture, the 48-cell matrix, exact artifact
+identity, and 25 unique refreshed captures with zero scientific-label
+collisions across all six release viewports.
+
+Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
+release/freeze remains independently blocked on the declared human work.

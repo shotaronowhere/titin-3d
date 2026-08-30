@@ -3,8 +3,8 @@
   "purpose": "Automated diagnostics only; this record does not claim human comprehension or visual quality.",
   "candidate_identity": {
     "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-    "app_revision": "5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448",
-    "build_inputs_fingerprint": "960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686",
+    "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
+    "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
     "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
   },
   "viewports": [
@@ -22,7 +22,7 @@
         "chapterPrevious",
         "chapterNext"
       ],
-      "visible_word_count": 91,
+      "visible_word_count": 87,
       "bounds": {
         "header": {
           "left": 9,
@@ -42,7 +42,8 @@
         }
       },
       "overlap_findings": {
-        "header_story": false
+        "header_story": false,
+        "science_label_collisions": []
       },
       "scroll": {
         "document_width": 375,
@@ -55,16 +56,16 @@
       "unobscured_stage_area_share_diagnostic": 0.6535,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448",
-        "build_inputs_fingerprint": "960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686",
+        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
+        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
-        "pixel_share": 0.0488,
+        "pixel_share": 0.0444,
         "bounding_box_share": 0.5666,
-        "changed_pixels": 14850,
+        "changed_pixels": 13532,
         "total_pixels": 304500
       }
     },
@@ -82,7 +83,7 @@
         "chapterPrevious",
         "chapterNext"
       ],
-      "visible_word_count": 91,
+      "visible_word_count": 87,
       "bounds": {
         "header": {
           "left": 9,
@@ -102,7 +103,8 @@
         }
       },
       "overlap_findings": {
-        "header_story": false
+        "header_story": false,
+        "science_label_collisions": []
       },
       "scroll": {
         "document_width": 390,
@@ -115,16 +117,16 @@
       "unobscured_stage_area_share_diagnostic": 0.666,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448",
-        "build_inputs_fingerprint": "960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686",
+        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
+        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
-        "pixel_share": 0.0464,
+        "pixel_share": 0.0423,
         "bounding_box_share": 0.5826,
-        "changed_pixels": 15286,
+        "changed_pixels": 13922,
         "total_pixels": 329160
       }
     },
@@ -142,7 +144,7 @@
         "chapterPrevious",
         "chapterNext"
       ],
-      "visible_word_count": 92,
+      "visible_word_count": 87,
       "bounds": {
         "header": {
           "left": 9,
@@ -162,7 +164,8 @@
         }
       },
       "overlap_findings": {
-        "header_story": false
+        "header_story": false,
+        "science_label_collisions": []
       },
       "scroll": {
         "document_width": 768,
@@ -175,16 +178,16 @@
       "unobscured_stage_area_share_diagnostic": 0.7795,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448",
-        "build_inputs_fingerprint": "960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686",
+        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
+        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
-        "pixel_share": 0.0462,
+        "pixel_share": 0.0419,
         "bounding_box_share": 0.7229,
-        "changed_pixels": 36316,
+        "changed_pixels": 32952,
         "total_pixels": 786432
       }
     },
@@ -202,7 +205,7 @@
         "chapterPrevious",
         "chapterNext"
       ],
-      "visible_word_count": 104,
+      "visible_word_count": 99,
       "bounds": {
         "header": {
           "left": 14,
@@ -222,7 +225,8 @@
         }
       },
       "overlap_findings": {
-        "header_story": false
+        "header_story": false,
+        "science_label_collisions": []
       },
       "scroll": {
         "document_width": 1024,
@@ -235,16 +239,16 @@
       "unobscured_stage_area_share_diagnostic": 0.8114,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448",
-        "build_inputs_fingerprint": "960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686",
+        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
+        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
-        "pixel_share": 0.0698,
+        "pixel_share": 0.0647,
         "bounding_box_share": 0.8081,
-        "changed_pixels": 54870,
+        "changed_pixels": 50872,
         "total_pixels": 786432
       }
     },
@@ -262,7 +266,7 @@
         "chapterPrevious",
         "chapterNext"
       ],
-      "visible_word_count": 104,
+      "visible_word_count": 99,
       "bounds": {
         "header": {
           "left": 14,
@@ -282,7 +286,8 @@
         }
       },
       "overlap_findings": {
-        "header_story": false
+        "header_story": false,
+        "science_label_collisions": []
       },
       "scroll": {
         "document_width": 1280,
@@ -295,16 +300,16 @@
       "unobscured_stage_area_share_diagnostic": 0.8152,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448",
-        "build_inputs_fingerprint": "960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686",
+        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
+        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
-        "pixel_share": 0.0866,
+        "pixel_share": 0.083,
         "bounding_box_share": 0.7946,
-        "changed_pixels": 79796,
+        "changed_pixels": 76502,
         "total_pixels": 921600
       }
     },
@@ -322,7 +327,7 @@
         "chapterPrevious",
         "chapterNext"
       ],
-      "visible_word_count": 104,
+      "visible_word_count": 99,
       "bounds": {
         "header": {
           "left": 14,
@@ -342,7 +347,8 @@
         }
       },
       "overlap_findings": {
-        "header_story": false
+        "header_story": false,
+        "science_label_collisions": []
       },
       "scroll": {
         "document_width": 1440,
@@ -355,16 +361,16 @@
       "unobscured_stage_area_share_diagnostic": 0.8542,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "5f08a3b5d1575de70dc28c8d4b6fd6b41b66e448",
-        "build_inputs_fingerprint": "960a5603312e25f30fd41632fb84d88b2229c3c110f508464e531c21eb219686",
+        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
+        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
-        "pixel_share": 0.0764,
+        "pixel_share": 0.0736,
         "bounding_box_share": 0.828,
-        "changed_pixels": 99004,
+        "changed_pixels": 95438,
         "total_pixels": 1296000
       }
     }
@@ -476,7 +482,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-375x812.png",
-      "sha256": "748cc6382badce9e7286388cd396f8272e5008b554a71df3a7248f24915b569b",
+      "sha256": "442f46f207b17b1c3aee978969e8b2ada0c55b6339b0fc7b78903fa614408368",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -488,7 +494,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-390x844.png",
-      "sha256": "8eb1fdb0faa852556a9135cbea80b627fe5dd5abc16dbaf78ecb360bb6853ae0",
+      "sha256": "28b62cf2d197b029d18b88471af48b474a682e9495a3d6b2eea00483785c103e",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -500,7 +506,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-768x1024.png",
-      "sha256": "bdc74b0dfe0cc32997decb642f03ff989e09e03fb84a9dd6495acb9e40a71b78",
+      "sha256": "88a63f2f8ccb4996818cc84e302f5a6f0c192f2167024e633c68f3964ba36dea",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -512,7 +518,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1024x768.png",
-      "sha256": "a6e4a1a37116646568a05f1137ef2910be7753aaea18f1bc60673a4f6dc43ddf",
+      "sha256": "37f21662e1a552f5ec480acf8cd7b20a2e78e483a810969816913701e79d8a99",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -524,7 +530,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1280x720.png",
-      "sha256": "90dfd9db4d88abf7acc9208d58be45e99836f507083571d25c0f81706a0b1a24",
+      "sha256": "7fb2d726644a85b73d38f431db04a106c65c929bc890a5d04f351de58706121a",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -536,7 +542,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1440x900.png",
-      "sha256": "84825d5ea23f86f67d2147b665f20a71372e84f1c1ca6bbdad86bdd8ba33d9a6",
+      "sha256": "2d7e5e7edbab5ad479f9b031ad115ec74a7e6258f19196a313ea372d36bd88f4",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -548,7 +554,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-1-1280x720.png",
-      "sha256": "33629675ad6df2a5eea7bc8beb20f4cb4658219635e4700dd00eaa0692d49003",
+      "sha256": "6e301a2a90d9dab22b0b60417ef1099f5c0072aeabf30ddf1b72913d88b7b801",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -560,7 +566,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-2-1280x720.png",
-      "sha256": "f5bb22eecf1eacb20be4b56c27b2418dc47adf3dca8b3e95c22896d61d119f75",
+      "sha256": "e66f803d618a3fa7b6ddaf819e54ad1f234dc08b3757e2611a5ce5a5e8157546",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -596,7 +602,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-5-1280x720.png",
-      "sha256": "a56749d31552eb845f93986cef3bbacfd6408ba578ac66bd0709270304820342",
+      "sha256": "353e0c78adce679c929d61f45faf5b53b02e671247807e3cc4f3f75a71e25653",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -620,7 +626,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/selected-titin-1280x720.png",
-      "sha256": "aea0650cdd327f74c504b23a5d67b88815fcf15c30f3880770395b720bb8d0c8",
+      "sha256": "ef373a34f759fa37efb55a83946ea0da8616a0aec47fd355e3f12fdd9186af69",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -668,7 +674,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-sources-build-1280x720.png",
-      "sha256": "b151a337085ef453e18a4ed45e4575edf7fb4bb45ea46efb39ba48a3f4320346",
+      "sha256": "7d0ddf95d7bdfca96dd34e8b0094b0e07bb2435d581d12f3985bb0400e13c727",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -704,7 +710,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-reduced-motion-1280x720.png",
-      "sha256": "6b0679c0aaf03b75712adbc8c44a083659361e753e76001d849b038da2d92432",
+      "sha256": "ec441416969d4dadaec1c3fc0ef99b363b68d5483e1e43b0684ecb89f297c366",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -716,7 +722,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-grayscale-1280x720.png",
-      "sha256": "01d5230772dcb7836e736eea66411ef54a5b49ad9f13410cfbfca704968f24f8",
+      "sha256": "9759b64164e47aa4852d9681786bf7f9401d9a924c36c92e2bcf165d52b86c66",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -728,7 +734,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-protanopia-1280x720.png",
-      "sha256": "2621faaec09715cbf548361ca6191fc42dfd5177a003f1d6c47993a62502482f",
+      "sha256": "137c8ca292e2fcd301ab4f4dd854dd395f6ee12c636945a5770d28327748a33c",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -740,7 +746,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-deuteranopia-1280x720.png",
-      "sha256": "e7cb53ce0b3805066fec28e1dd980c698a2e19ad7821312048f35e6c4bbcd4d2",
+      "sha256": "528900133e35de795a1e823f67c119bbc155fb7aaa2143e7492497945f71d7bd",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -752,7 +758,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-tritanopia-1280x720.png",
-      "sha256": "98f9eb9d1f4d00a9e5eecaa8b12ba9cf68b463ff864e1d44a9b5c8f4c9d5c5fc",
+      "sha256": "9cfb12e0fd3eb1141ea7658f317605512f97928c97f60a070fc73dd2b906b031",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -764,7 +770,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-projector-1536x864.png",
-      "sha256": "cf8a372cb0a5b113a8590af5921b0bd3a44f1a2b3ce65677b13d9b6768703821",
+      "sha256": "ac54ab9174be8037264226daf0479c0b8043a6729d4cb4de1b1946a29e42bccb",
       "reviewer_disposition": "PENDING — human visual review not performed"
     }
   ],
