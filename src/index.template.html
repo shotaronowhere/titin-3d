@@ -2182,13 +2182,26 @@ function renderedTitinAnchor(record) {
 
 function renderScienceOverlay({ transient = false } = {}) {
   const svg = $('scienceOverlay');
-  if (!activeShowcaseOverlay || !$('canvas').clientWidth) {
+  const canvasNode = $('canvas');
+  if (canvasNode.inert) {
+    // Mobile Research deliberately replaces the stage with one full-screen
+    // sheet. Its canvas (and all descendants) are CSS-hidden, so there is no
+    // visible coordinate space to audit or annotate until Tour returns.
+    if (scienceOverlaySignature !== 'hidden') svg.replaceChildren();
+    svg.dataset.labelLayout = 'hidden';
+    const hint = $('inspectHint');
+    hint.style.visibility = 'hidden';
+    hint.dataset.overlayLayout = 'hidden';
+    scienceOverlaySignature = 'hidden';
+    return;
+  }
+  if (!activeShowcaseOverlay || !canvasNode.clientWidth) {
     if (scienceOverlaySignature !== 'empty') svg.replaceChildren();
     scienceOverlaySignature = 'empty';
     return;
   }
-  const width = $('canvas').clientWidth;
-  const height = $('canvas').clientHeight;
+  const width = canvasNode.clientWidth;
+  const height = canvasNode.clientHeight;
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
   const features = activeFeatures();
   const bandsRequested = features.has('band_brackets')

@@ -572,6 +572,8 @@ test('SC27A mobile Research is one full-screen scroll sheet and leaves no stage 
       && Math.abs(rect.width - innerWidth) <= 1 && Math.abs(rect.height - innerHeight) <= 1;
   })).toBe(true);
   await expect(page.locator('#canvas')).toHaveCSS('visibility', 'hidden');
+  await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'hidden');
+  await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'hidden');
   const scrollContainers = await page.evaluate(() => [...document.querySelectorAll('*')]
     .filter((node) => {
       const style = getComputedStyle(node);
@@ -590,6 +592,8 @@ test('SC27A mobile Research is one full-screen scroll sheet and leaves no stage 
   await page.locator('#closeEvidence').click();
   await expect(page.locator('#audienceEvidence')).toBeFocused();
   await expect(page.locator('#canvas')).toHaveCSS('visibility', 'visible');
+  await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+  await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'resolved');
 });
 
 test('SC27A 200% browser-zoom layout equivalent preserves the Tour route', async ({ page }) => {
