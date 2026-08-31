@@ -89,7 +89,15 @@ async function ready(page, url = ORIGIN) {
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => window.__titinBoot?.ready === true);
-    await page.waitForTimeout(250);
+    // Chapter rendering measures the actual Tour-card height on the next frame,
+    // then marks the projected overlay dirty. Record only the resulting settled
+    // verdict; a fixed delay can sample the correct final boxes while retaining
+    // the prior frame's pending/unresolved runtime attribute.
+    await page.waitForFunction(() => {
+      const layout = document.querySelector('#scienceOverlay')?.dataset.labelLayout;
+      return layout === 'resolved' || layout === 'hidden'
+        || layout === 'suppressed:compact-stage';
+    });
     if (errors.length) throw new Error(errors.join('\n'));
   } finally {
     page.off('pageerror', recordError);
