@@ -19,6 +19,14 @@ const VIEWPORTS = [
   { width: 1280, height: 720 },
   { width: 1440, height: 900 },
 ];
+const RESEARCH_VIEWPORTS = VIEWPORTS.filter(({ width, height }) => (
+  width >= 1024 && width > height
+));
+const COMPACT_HEIGHT_VIEWPORTS = [
+  { width: 375, height: 667 },
+  { width: 390, height: 684 },
+  { width: 360, height: 640 },
+];
 const TOUR_BEATS = Object.freeze([
   'meet_sarcomere', 'follow_titin', 'stretch_spring',
   'scaffold_thick_filament', 'knowledge_recap',
@@ -72,6 +80,7 @@ const browser = await chromium.launch({ headless: true });
 const captures = [];
 const audits = [];
 const overlayAudits = [];
+const transitionAudits = [];
 
 async function ready(page, url = ORIGIN) {
   const errors = [];
@@ -119,6 +128,7 @@ async function auditScienceLabels(page, state) {
       ...auditState,
       label_count: labels.length,
       label_layout: overlay.dataset.labelLayout,
+      terminus_layout: overlay.dataset.terminusLayout,
       inspection_hint_layout: hint.dataset.overlayLayout,
       science_label_collisions: collisions,
       inspection_hint_label_collisions: hintRect ? labels.filter(({ rect }) => (
@@ -345,8 +355,100 @@ try {
         overlayAudits.push(await auditScienceLabels(page, { viewport, beat, scene }));
       }
     }
+    if (RESEARCH_VIEWPORTS.some((candidate) => (
+      candidate.width === viewport.width && candidate.height === viewport.height
+    ))) {
+      for (const beat of TOUR_BEATS) {
+        for (const scene of TOUR_SCENES) {
+          await ready(page, `${ORIGIN}/#v=2&depth=explore&step=${beat}`
+            + `&sl=2200&drawer=inspect&scene=${scene}&confidence=1`);
+          overlayAudits.push(await auditScienceLabels(page, {
+            surface: 'Research', viewport, beat, scene,
+          }));
+        }
+      }
+    }
     await page.close();
   }
+
+  for (const viewport of COMPACT_HEIGHT_VIEWPORTS) {
+    const page = await browser.newPage({ viewport, reducedMotion: 'reduce' });
+    for (const beat of TOUR_BEATS) {
+      await ready(page, `${ORIGIN}/#v=2&depth=learn&step=${beat}`
+        + '&sl=2200&drawer=closed&scene=overview&confidence=0');
+      overlayAudits.push(await auditScienceLabels(page, {
+        surface: 'Tour compact-height', viewport, beat, scene: 'overview',
+      }));
+    }
+    await page.close();
+  }
+
+  for (const [portrait, landscape] of [
+    [{ width: 768, height: 1024 }, { width: 1024, height: 768 }],
+    [{ width: 375, height: 812 }, { width: 1280, height: 720 }],
+  ]) {
+    const page = await browser.newPage({ viewport: portrait, reducedMotion: 'reduce' });
+    await ready(page);
+    await page.locator('#audienceEvidence').click();
+    await page.waitForFunction(() => (
+      document.querySelector('#scienceOverlay').dataset.labelLayout === 'hidden'
+    ));
+    const observe = () => page.evaluate(() => ({
+      viewport: { width: innerWidth, height: innerHeight },
+      canvas_inert: document.querySelector('#canvas').inert,
+      canvas_visibility: getComputedStyle(document.querySelector('#canvas')).visibility,
+      label_layout: document.querySelector('#scienceOverlay').dataset.labelLayout,
+      terminus_layout: document.querySelector('#scienceOverlay').dataset.terminusLayout,
+      hint_layout: document.querySelector('#inspectHint').dataset.overlayLayout,
+    }));
+    const states = [await observe()];
+    await page.setViewportSize(landscape);
+    await page.waitForFunction(() => (
+      document.querySelector('#scienceOverlay').dataset.labelLayout === 'resolved'
+    ));
+    states.push(await observe());
+    await page.setViewportSize(portrait);
+    await page.waitForFunction(() => (
+      document.querySelector('#scienceOverlay').dataset.labelLayout === 'hidden'
+    ));
+    states.push(await observe());
+    transitionAudits.push({ kind: 'Research viewport round-trip', portrait, landscape, states });
+    await page.close();
+  }
+
+  const historyPage = await browser.newPage({
+    viewport: { width: 375, height: 812 }, reducedMotion: 'reduce',
+  });
+  await ready(historyPage, `${ORIGIN}/#v=2&depth=learn&step=scaffold_thick_filament`
+    + '&sl=2200&drawer=closed&scene=overview&confidence=0');
+  await historyPage.locator('#chapterNext').click();
+  await historyPage.waitForFunction(() => (
+    document.querySelector('#chapterProgress').textContent.trim() === 'Beat 5 of 5'
+    && document.querySelector('#scienceOverlay').dataset.labelLayout === 'resolved'
+  ));
+  const observeHistory = () => historyPage.evaluate(() => ({
+    progress: document.querySelector('#chapterProgress').textContent,
+    scene: document.querySelector('#sceneTruth').textContent,
+    label_layout: document.querySelector('#scienceOverlay').dataset.labelLayout,
+    terminus_layout: document.querySelector('#scienceOverlay').dataset.terminusLayout,
+    hint_layout: document.querySelector('#inspectHint').dataset.overlayLayout,
+  }));
+  const historyStates = [await observeHistory()];
+  await historyPage.goBack();
+  await historyPage.waitForFunction(() => (
+    document.querySelector('#chapterProgress').textContent.trim() === 'Beat 4 of 5'
+    && document.querySelector('#sceneTruth').textContent.trim() === 'Overview'
+    && document.querySelector('#scienceOverlay').dataset.labelLayout === 'resolved'
+  ));
+  historyStates.push(await observeHistory());
+  await historyPage.goForward();
+  await historyPage.waitForFunction(() => (
+    document.querySelector('#chapterProgress').textContent.trim() === 'Beat 5 of 5'
+    && document.querySelector('#scienceOverlay').dataset.labelLayout === 'resolved'
+  ));
+  historyStates.push(await observeHistory());
+  transitionAudits.push({ kind: 'mobile beat 4/overview history round-trip', states: historyStates });
+  await historyPage.close();
 
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   await ready(page);
@@ -444,7 +546,13 @@ try {
         + JSON.stringify(entry.overlap_findings)).join('; ')}`);
   }
   const overlayFailures = overlayAudits.filter((entry) => (
-    entry.label_layout !== 'resolved'
+    !(
+      (entry.label_layout === 'resolved' && entry.terminus_layout === 'resolved')
+      || (entry.surface === 'Tour compact-height'
+        && entry.label_layout === 'suppressed:compact-stage'
+        && entry.terminus_layout === 'suppressed:compact-stage'
+        && entry.label_count === 0)
+    )
     || entry.inspection_hint_layout !== 'resolved'
     || entry.science_label_collisions.length
     || entry.inspection_hint_label_collisions.length
@@ -455,11 +563,32 @@ try {
       .map((entry) => `${entry.viewport.width}x${entry.viewport.height} ${entry.beat}/${entry.scene} `
         + JSON.stringify({
           layout: entry.label_layout,
+          terminus_layout: entry.terminus_layout,
           hint_layout: entry.inspection_hint_layout,
           collisions: entry.science_label_collisions,
           hint_collisions: entry.inspection_hint_label_collisions,
           covered: entry.covered_science_labels,
         })).join('; ')}`);
+  }
+  const transitionFailures = transitionAudits.filter((entry) => {
+    if (entry.kind === 'Research viewport round-trip') {
+      const [portraitBefore, landscape, portraitAfter] = entry.states;
+      const hidden = (state) => state.canvas_inert && state.canvas_visibility === 'hidden'
+        && state.label_layout === 'hidden' && state.terminus_layout === 'hidden'
+        && state.hint_layout === 'hidden';
+      const visible = (state) => !state.canvas_inert && state.canvas_visibility === 'visible'
+        && state.label_layout === 'resolved' && state.terminus_layout === 'resolved'
+        && state.hint_layout === 'resolved';
+      return !hidden(portraitBefore) || !visible(landscape) || !hidden(portraitAfter);
+    }
+    const [beatFiveBefore, beatFour, beatFiveAfter] = entry.states;
+    const resolved = (state) => state.label_layout === 'resolved'
+      && state.terminus_layout === 'resolved' && state.hint_layout === 'resolved';
+    return !resolved(beatFiveBefore) || !resolved(beatFour) || !resolved(beatFiveAfter)
+      || beatFour.progress.trim() !== 'Beat 4 of 5' || beatFour.scene.trim() !== 'Overview';
+  });
+  if (transitionFailures.length) {
+    throw new Error(`SC-27A transition audit failed: ${JSON.stringify(transitionFailures)}`);
   }
   const audit = {
     schema: 'sc27a-ux-audit/1',
@@ -467,11 +596,12 @@ try {
     candidate_identity: audits[0].candidate_identity,
     viewports: audits,
     overlay_label_matrix: {
-      scope: 'Every Tour beat × every supported scene × every release viewport in Chromium.',
+      scope: 'Every Tour beat × scene × release viewport; every visible desktop Research beat × scene; and every Tour beat at three compact phone heights in Chromium.',
       collision_tolerance_px: STAGE_LAYOUT.label_collision_tolerance_px,
       state_count: overlayAudits.length,
       states: overlayAudits,
     },
+    transition_audits: transitionAudits,
     declared_contrast_results: theme.declared_contrast_ratios,
     presentation_titin_emphasis: {
       ...theme.titin_emphasis,

@@ -29,6 +29,9 @@ export const STAGE_LAYOUT = Object.freeze({
   edge_padding_px: 8,
   // Height of the stage's bottom rule, where the ruler and the orbit hint live.
   scale_bar_baseline_px: 42,
+  // The reading-width disclaimer is painted below the ruler baseline. Reserve
+  // its 12 px glyph box plus breathing room when the ruler moves above a card.
+  scale_caption_below_px: 18,
   // Horizontal room one band label needs to itself. With the shipped 12 px
   // semibold .science-label style, the widest bracket label measures ~83 px
   // including its halo stroke. The 96 px budget retains 13 px of headroom.
@@ -320,7 +323,13 @@ export function scaleBarPlacement({
   if (!card || card.bottom <= baseline - pad) return { left: pad, baseline };
   const beside = card.right + pad;
   if (beside + barPx <= canvas.width - pad) return { left: beside, baseline };
-  return { left: pad, baseline: Math.max(safeTopPx + 20, card.top - pad) };
+  return {
+    left: pad,
+    baseline: Math.max(
+      safeTopPx + 20,
+      card.top - pad - STAGE_LAYOUT.scale_caption_below_px,
+    ),
+  };
 }
 
 /** Overlap area of two container-local rectangles, in square pixels. */

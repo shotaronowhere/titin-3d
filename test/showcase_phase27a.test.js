@@ -202,3 +202,14 @@ test('SC27A: implementation never claims human or release evidence', () => {
   assert.deepEqual(gates.lay_comprehension.results, []);
   assert.deepEqual(gates.expert_review.reviewers, []);
 });
+
+test('SC27A: history, viewport, and all-family overlay truth share atomic runtime gates', () => {
+  assert.match(page, /function restorePresentationFromHash\(\)[\s\S]*?rebuild\(true, \{ renderOverlay: false \}\)[\s\S]*?renderChapter\(\{ renderOverlay: false \}\)[\s\S]*?renderScienceOverlay\(\{ transient: true \}\)/);
+  assert.match(page, /const MOBILE_RESEARCH_QUERY[\s\S]*?function mobileResearchActive/);
+  assert.match(page, /window\.addEventListener\('resize', scheduleViewportSync\)/);
+  assert.match(page, /mobileResearchMedia\.addEventListener\('change', scheduleViewportSync\)/);
+  assert.match(page, /function auditPaintedOverlayLayout/);
+  assert.match(page, /dataset\.terminusLayout/);
+  assert.match(page, /suppressed:compact-stage/);
+  assert.match(page, /function syncInspectHintSurface/);
+});

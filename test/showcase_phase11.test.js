@@ -220,8 +220,8 @@ test('SC11: overlay work is dirty-flagged, not run on every frame', () => {
     /\}, \(\{ camera_moving[\s\S]{0,400}if \(!stageDirty[\s\S]{0,200}renderScienceOverlay\(\{ transient: cameraMoving \}\); renderObjectOverlay\(\);/,
     'the frame callback must early-out when nothing changed',
   );
-  assert.match(page, /window\.addEventListener\('resize', markStageDirty\)/,
-    'a window resize moves every overlay and is not visible as camera motion');
+  assert.match(page, /window\.addEventListener\('resize', scheduleViewportSync\)/,
+    'a window resize must resynchronize viewport-dependent overlay state');
 });
 
 test('SC11: every state change that can move an overlay marks the stage dirty', () => {
@@ -335,7 +335,8 @@ test('SC11-4a: a phone-width card pushes the ruler above it rather than off-stag
   const placed = scaleBarPlacement({ barPx: 100, canvas, card, safeTopPx: 120 });
   assert.equal(placed.left, 12);
   assert.ok(placed.left + 100 <= canvas.width - 12, 'the bar must stay on the stage');
-  assert.equal(placed.baseline, card.top - 12);
+  assert.equal(placed.baseline,
+    card.top - 12 - STAGE_LAYOUT.scale_caption_below_px);
   // And a card tall enough to reach the header cannot push the bar underneath it.
   const engulfing = { top: 100, right: 356, bottom: 795 };
   assert.equal(

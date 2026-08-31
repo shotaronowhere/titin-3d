@@ -116,6 +116,18 @@ async function openTourState(page, viewport, beat, scene) {
   await page.goto(`/#v=2&depth=learn&step=${beat}&sl=2200&drawer=closed&scene=${scene}&confidence=0`);
   await waitForReady(page);
   await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+  await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-terminus-layout', 'resolved');
+  await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'resolved');
+}
+
+async function openResearchState(page, viewport, beat, scene) {
+  await page.setViewportSize(viewport);
+  await setReducedMotion(page, true);
+  await page.goto(`/#v=2&depth=explore&step=${beat}&sl=2200&drawer=inspect&scene=${scene}&confidence=1`);
+  await waitForReady(page);
+  await expect(page.locator('#canvas')).not.toHaveAttribute('inert');
+  await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+  await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-terminus-layout', 'resolved');
   await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'resolved');
 }
 
@@ -403,6 +415,101 @@ for (const viewport of SC27A_VIEWPORTS) {
       await assertShellFocusContainment(page, viewport);
     }
   });
+}
+
+for (const viewport of SC27A_VIEWPORTS) {
+  test(`SC27A browser history restores complete overlay frames at ${viewport.width}x${viewport.height}`,
+    async ({ page }) => {
+      await openTourState(page, viewport, 'scaffold_thick_filament', 'overview');
+      await page.locator('#chapterNext').click();
+      await expect(page.locator('#chapterProgress')).toHaveText('Beat 5 of 5');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+
+      await page.goBack();
+      await expect(page.locator('#chapterProgress')).toHaveText('Beat 4 of 5');
+      await expect(page.locator('#sceneTruth')).toHaveText('Overview');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+      await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'resolved');
+
+      await page.goForward();
+      await expect(page.locator('#chapterProgress')).toHaveText('Beat 5 of 5');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+      await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'resolved');
+    });
+}
+
+for (const [portrait, landscape] of [
+  [{ width: 768, height: 1024 }, { width: 1024, height: 768 }],
+  [{ width: 375, height: 812 }, { width: 1280, height: 720 }],
+]) {
+  test(`SC27A Research resynchronizes the stage across ${portrait.width}x${portrait.height} ↔ ${landscape.width}x${landscape.height}`,
+    async ({ page }) => {
+      await openTour(page, portrait);
+      await page.locator('#audienceEvidence').click();
+      await expect(page.locator('#canvas')).toHaveAttribute('inert');
+      await expect(page.locator('#canvas')).toHaveCSS('visibility', 'hidden');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'hidden');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-terminus-layout', 'hidden');
+      await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'hidden');
+
+      await page.setViewportSize(landscape);
+      await expect(page.locator('#canvas')).not.toHaveAttribute('inert');
+      await expect(page.locator('#canvas')).toHaveCSS('visibility', 'visible');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'resolved');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-terminus-layout', 'resolved');
+      await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'resolved');
+
+      await page.setViewportSize(portrait);
+      await expect(page.locator('#canvas')).toHaveAttribute('inert');
+      await expect(page.locator('#canvas')).toHaveCSS('visibility', 'hidden');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-label-layout', 'hidden');
+      await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-terminus-layout', 'hidden');
+      await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'hidden');
+    });
+}
+
+for (const viewport of [
+  { width: 375, height: 667 },
+  { width: 390, height: 684 },
+  { width: 360, height: 640 },
+]) {
+  test(`SC27A compact-height inspection guidance remains visible at ${viewport.width}x${viewport.height}`,
+    async ({ page }) => {
+      await openTour(page, viewport);
+      for (let beat = 1; beat <= 5; beat += 1) {
+        const overlay = page.locator('#scienceOverlay');
+        await expect.poll(() => overlay.getAttribute('data-label-layout'))
+          .toMatch(/^(resolved|suppressed:compact-stage)$/);
+        const labelLayout = await overlay.getAttribute('data-label-layout');
+        await expect(overlay).toHaveAttribute('data-terminus-layout', labelLayout);
+        if (labelLayout === 'suppressed:compact-stage') {
+          await expect(overlay.locator('text')).toHaveCount(0);
+        }
+        await expect(page.locator('#inspectHint')).toBeVisible();
+        await expect(page.locator('#inspectHint')).toHaveAttribute('data-overlay-layout', 'resolved');
+        await expect(page.locator('#inspectHint')).toHaveAttribute(
+          'data-copy-variant', /^(full|compact|minimal|inline)$/,
+        );
+        if (beat < 5) await page.locator('#chapterNext').click();
+      }
+    });
+}
+
+for (const viewport of SC27A_VIEWPORTS.filter(({ width, height }) => (
+  width >= 1024 && width > height
+))) {
+  for (const beat of SC27A_BEATS) {
+    test(`SC27A Research clears every overlay label at ${viewport.width}x${viewport.height} in ${beat}`,
+      async ({ page }) => {
+        test.setTimeout(120_000);
+        for (const scene of SC27A_SCENES) {
+          await openResearchState(page, viewport, beat, scene);
+          await assertOverlayLabelsClear(
+            page, viewport, `Research ${viewport.width}x${viewport.height} ${beat}/${scene}`,
+          );
+        }
+      });
+  }
 }
 
 for (const viewport of SC27A_VIEWPORTS) {

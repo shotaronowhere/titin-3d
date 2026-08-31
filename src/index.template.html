@@ -234,6 +234,9 @@ window.__titinBoot = { ready: false, problems: [] };
     color: #ffe1e8; font-size: 12px; font-weight: 650; white-space: nowrap;
     max-width: calc(100% - 28px);
     box-shadow: 0 10px 28px rgb(0 0 0 / 42%); }
+  #inspectHint[data-copy-variant="inline"] { position: static; left: auto; top: auto;
+    bottom: auto; transform: none; width: max-content; max-width: 100%; margin: 0 0 6px;
+    padding-block: 5px; box-shadow: none; }
   @media (prefers-reduced-motion: no-preference) {
     #inspectHint { animation: inspect-hint-in 320ms ease-out both; }
   }
@@ -1261,17 +1264,29 @@ function announceUrlIssues(issues) {
  * starts an animated camera transition a few lines later; an unconditional
  * un-animated re-apply on the next frame would cut that transition short.
  */
+const MOBILE_RESEARCH_QUERY = '(max-width: 767px), (orientation: portrait) and (max-width: 1024px)';
+const mobileResearchMedia = window.matchMedia(MOBILE_RESEARCH_QUERY);
+
+/** Whether Research currently replaces the stage with its full-screen sheet. */
+function mobileResearchActive(drawerOpen = (
+  state.audienceMode === AUDIENCE_MODES.evidence && state.drawer !== 'closed'
+)) {
+  return drawerOpen && mobileResearchMedia.matches;
+}
+
 function syncAudienceMode() {
   const evidence = state.audienceMode === AUDIENCE_MODES.evidence;
   const drawerOpen = evidence && state.drawer !== 'closed';
+  const mobileResearch = mobileResearchActive(drawerOpen);
   const reframe = $('app').dataset.mode !== state.audienceMode
-    || $('app').dataset.drawerOpen !== String(drawerOpen);
+    || $('app').dataset.drawerOpen !== String(drawerOpen)
+    || $('app').dataset.mobileResearch !== String(mobileResearch);
   $('app').dataset.mode = state.audienceMode;
   $('app').dataset.drawerOpen = String(drawerOpen);
+  $('app').dataset.mobileResearch = String(mobileResearch);
   $('panel').setAttribute('aria-hidden', String(!drawerOpen));
   $('audienceEvidence').classList.toggle('on', evidence);
   $('audienceEvidence').setAttribute('aria-pressed', String(evidence));
-  const mobileResearch = drawerOpen && window.matchMedia('(max-width: 767px), (orientation: portrait) and (max-width: 1024px)').matches;
   $('canvas').inert = mobileResearch;
   requestAnimationFrame(() => {
     visualization.resize();
@@ -2046,8 +2061,76 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, card }) {
       unresolved.push(id);
     }
   }
-  svg.dataset.labelLayout = unresolved.length ? `unresolved:${unresolved.join(',')}` : 'resolved';
+  svg.dataset.terminusLayout = unresolved.length
+    ? `unresolved:${unresolved.join(',')}` : 'resolved';
   return unresolved;
+}
+
+/**
+ * Audit every painted scientific-text family after movable termini settle.
+ *
+ * The terminus resolver has a deliberately narrow job. This second verdict is
+ * the public frame truth: identity, locator, band, terminus, and scale labels
+ * must all be inside the canvas, clear of stage chrome, and clear of one
+ * another by the same rendered-glyph tolerance used by the browser gates.
+ *
+ * @param {SVGSVGElement} svg
+ * @param {{canvas:DOMRect, header:DOMRect, card:DOMRect|null}} obstacles
+ * @returns {string[]} human-readable layout findings
+ */
+function auditPaintedOverlayLayout(svg, { canvas, header, card }) {
+  const tolerance = STAGE_LAYOUT.label_collision_tolerance_px;
+  const overlaps = (a, b, margin = tolerance) => (
+    Math.min(a.right, b.right) - Math.max(a.left, b.left) > margin
+    && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > margin
+  );
+  const labels = [...svg.querySelectorAll('text')].flatMap((node) => {
+    if (getComputedStyle(node).visibility === 'hidden') return [];
+    const box = node.getBoundingClientRect();
+    return box.width > 0 && box.height > 0 ? [{ node, box }] : [];
+  });
+  const name = (node) => node.textContent.trim() || node.className.baseVal || 'unnamed label';
+  const findings = [];
+  for (const { node, box } of labels) {
+    if (box.left < canvas.left - 0.5 || box.right > canvas.right + 0.5
+        || box.top < canvas.top - 0.5 || box.bottom > canvas.bottom + 0.5) {
+      findings.push(`${name(node)} is outside the canvas`);
+    }
+    if (overlaps(box, header, 0)) findings.push(`${name(node)} overlaps the stage header`);
+    if (card && overlaps(box, card, 0)) findings.push(`${name(node)} overlaps the Tour card`);
+  }
+  for (let index = 0; index < labels.length; index += 1) {
+    for (let other = index + 1; other < labels.length; other += 1) {
+      if (overlaps(labels[index].box, labels[other].box)) {
+        findings.push(`${name(labels[index].node)} overlaps ${name(labels[other].node)}`);
+      }
+    }
+  }
+  return findings;
+}
+
+/**
+ * At compact phone heights there is no honest free stage lane for a floating
+ * invitation in the densest beat. Put the same one-time affordance in the Tour
+ * card's normal flow; moving it back restores the full floating treatment as
+ * soon as the viewport has room.
+ */
+function syncInspectHintSurface(canvas, compactHeight) {
+  const hint = $('inspectHint');
+  const inline = compactHeight && !hint.hidden
+    && state.audienceMode === AUDIENCE_MODES.guided;
+  if (inline) {
+    if (hint.parentElement !== $('guidedCardBody')) $('guidedCardBody').prepend(hint);
+    $('inspectHintText').textContent = 'Inspect a label';
+    hint.dataset.copyVariant = 'inline';
+    hint.style.removeProperty('left');
+    hint.style.removeProperty('top');
+    hint.style.removeProperty('bottom');
+    hint.style.removeProperty('visibility');
+    return;
+  }
+  if (hint.parentElement !== canvas) canvas.insertBefore(hint, $('stageChrome'));
+  if (hint.dataset.copyVariant === 'inline') delete hint.dataset.copyVariant;
 }
 
 /**
@@ -2063,16 +2146,22 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, card }) {
  */
 function resolveInspectHintPosition(svg, { canvas, header, card }) {
   const hint = $('inspectHint');
-  hint.style.removeProperty('left');
-  hint.style.removeProperty('top');
-  hint.style.removeProperty('bottom');
   if (hint.hidden) {
+    $('inspectHintText').textContent = 'Click or tap a structure to explain it';
+    hint.style.removeProperty('left');
+    hint.style.removeProperty('top');
+    hint.style.removeProperty('bottom');
     hint.style.removeProperty('visibility');
     delete hint.dataset.overlayAttempts;
+    delete hint.dataset.copyVariant;
     hint.dataset.overlayLayout = 'hidden';
     return true;
   }
-  const preferred = hint.getBoundingClientRect();
+  if (hint.dataset.copyVariant === 'inline') {
+    hint.style.removeProperty('visibility');
+    hint.dataset.overlayLayout = 'resolved';
+    return true;
+  }
   const labelBoxes = [...svg.querySelectorAll('text')].flatMap((node) => {
     const rect = node.getBoundingClientRect();
     return rect.width > 0 && rect.height > 0 ? [rect] : [];
@@ -2090,64 +2179,76 @@ function resolveInspectHintPosition(svg, { canvas, header, card }) {
     && (!card || separated(box, card, chromeGap))
     && labelBoxes.every((labelBox) => separated(box, labelBox, labelGap))
   );
-  const preferredCentreX = preferred.left - canvas.left + preferred.width / 2;
-  const preferredTop = preferred.top - canvas.top;
-  const centreCandidates = [preferredCentreX];
-  const topCandidates = [preferredTop];
-  const obstaclesWithGap = [
-    { box: header, margin: chromeGap },
-    ...(card ? [{ box: card, margin: chromeGap }] : []),
-    ...labelBoxes.map((box) => ({ box, margin: labelGap })),
-  ];
-  // Boundary-derived candidates cannot skip a narrow valid slot when the
-  // CSS-preferred position changes phase while the Tour card settles.
-  for (const { box, margin } of obstaclesWithGap) {
+  const place = () => {
+    hint.style.removeProperty('left');
+    hint.style.removeProperty('top');
+    hint.style.removeProperty('bottom');
+    hint.style.removeProperty('visibility');
+    const preferred = hint.getBoundingClientRect();
+    const preferredCentreX = preferred.left - canvas.left + preferred.width / 2;
+    const preferredTop = preferred.top - canvas.top;
+    const centreCandidates = [preferredCentreX];
+    const topCandidates = [preferredTop];
+    const obstaclesWithGap = [
+      { box: header, margin: chromeGap },
+      ...(card ? [{ box: card, margin: chromeGap }] : []),
+      ...labelBoxes.map((box) => ({ box, margin: labelGap })),
+    ];
+    // Boundary-derived candidates cannot skip a narrow valid slot when the
+    // CSS-preferred position changes phase while the Tour card settles.
+    for (const { box, margin } of obstaclesWithGap) {
+      centreCandidates.push(
+        box.left - canvas.left - margin - preferred.width / 2,
+        box.right - canvas.left + margin + preferred.width / 2,
+      );
+      topCandidates.push(
+        box.top - canvas.top - margin - preferred.height,
+        box.bottom - canvas.top + margin,
+      );
+    }
     centreCandidates.push(
-      box.left - canvas.left - margin - preferred.width / 2,
-      box.right - canvas.left + margin + preferred.width / 2,
+      chromeGap + preferred.width / 2,
+      canvas.width - chromeGap - preferred.width / 2,
     );
-    topCandidates.push(
-      box.top - canvas.top - margin - preferred.height,
-      box.bottom - canvas.top + margin,
-    );
-  }
-  centreCandidates.push(
-    chromeGap + preferred.width / 2,
-    canvas.width - chromeGap - preferred.width / 2,
-  );
-  topCandidates.push(chromeGap, canvas.height - chromeGap - preferred.height);
-  const candidates = [];
-  for (const centreX of centreCandidates) {
-    if (centreX - preferred.width / 2 < chromeGap
-        || centreX + preferred.width / 2 > canvas.width - chromeGap) continue;
-    for (const top of topCandidates) {
-      if (top < chromeGap || top + preferred.height > canvas.height - chromeGap) continue;
-      candidates.push({
-        centreX,
-        top,
-        distance: Math.hypot(centreX - preferredCentreX, top - preferredTop),
-      });
+    topCandidates.push(chromeGap, canvas.height - chromeGap - preferred.height);
+    const candidates = [];
+    for (const centreX of centreCandidates) {
+      if (centreX - preferred.width / 2 < chromeGap
+          || centreX + preferred.width / 2 > canvas.width - chromeGap) continue;
+      for (const top of topCandidates) {
+        if (top < chromeGap || top + preferred.height > canvas.height - chromeGap) continue;
+        candidates.push({
+          centreX,
+          top,
+          distance: Math.hypot(centreX - preferredCentreX, top - preferredTop),
+        });
+      }
+    }
+    candidates.sort((a, b) => a.distance - b.distance
+      || a.top - b.top || a.centreX - b.centreX);
+    return candidates.find(({ centreX, top }) => clear({
+      left: canvas.left + centreX - preferred.width / 2,
+      right: canvas.left + centreX + preferred.width / 2,
+      top: canvas.top + top,
+      bottom: canvas.top + top + preferred.height,
+    })) || null;
+  };
+  const variants = [
+    ['full', 'Click or tap a structure to explain it'],
+    ['compact', 'Select a label to inspect'],
+    ['minimal', 'Inspect a label'],
+  ];
+  let selected = null;
+  for (const [variant, copy] of variants) {
+    $('inspectHintText').textContent = copy;
+    selected = place();
+    if (selected) {
+      hint.dataset.copyVariant = variant;
+      break;
     }
   }
-  candidates.sort((a, b) => a.distance - b.distance || a.top - b.top || a.centreX - b.centreX);
-  const selected = candidates.find(({ centreX, top }) => clear({
-    left: canvas.left + centreX - preferred.width / 2,
-    right: canvas.left + centreX + preferred.width / 2,
-    top: canvas.top + top,
-    bottom: canvas.top + top + preferred.height,
-  }));
   if (!selected) {
-    const attempts = Number(hint.dataset.overlayAttempts || 0) + 1;
-    hint.dataset.overlayAttempts = String(attempts);
     hint.style.visibility = 'hidden';
-    if (attempts < 4) {
-      hint.dataset.overlayLayout = 'pending';
-      requestAnimationFrame(() => {
-        scienceOverlaySignature = null;
-        markStageDirty();
-      });
-      return true;
-    }
     hint.dataset.overlayLayout = 'unresolved';
     return false;
   }
@@ -2183,26 +2284,41 @@ function renderedTitinAnchor(record) {
 function renderScienceOverlay({ transient = false } = {}) {
   const svg = $('scienceOverlay');
   const canvasNode = $('canvas');
-  if (canvasNode.inert) {
+  const canvasStyle = getComputedStyle(canvasNode);
+  const canvasRect = canvasNode.getBoundingClientRect();
+  const canvasHidden = canvasNode.inert
+    || canvasStyle.display === 'none' || canvasStyle.visibility === 'hidden'
+    || canvasNode.clientWidth <= 0 || canvasNode.clientHeight <= 0
+    || canvasRect.width <= 0 || canvasRect.height <= 0;
+  if (canvasHidden) {
     // Mobile Research deliberately replaces the stage with one full-screen
     // sheet. Its canvas (and all descendants) are CSS-hidden, so there is no
     // visible coordinate space to audit or annotate until Tour returns.
     if (scienceOverlaySignature !== 'hidden') svg.replaceChildren();
     svg.dataset.labelLayout = 'hidden';
+    svg.dataset.terminusLayout = 'hidden';
+    svg.dataset.labelLayoutDetail = '';
     const hint = $('inspectHint');
     hint.style.visibility = 'hidden';
     hint.dataset.overlayLayout = 'hidden';
+    delete hint.dataset.overlayAttempts;
     scienceOverlaySignature = 'hidden';
     return;
   }
-  if (!activeShowcaseOverlay || !canvasNode.clientWidth) {
+  if (!activeShowcaseOverlay) {
     if (scienceOverlaySignature !== 'empty') svg.replaceChildren();
+    svg.dataset.labelLayout = 'empty';
+    svg.dataset.terminusLayout = 'empty';
+    svg.dataset.labelLayoutDetail = '';
     scienceOverlaySignature = 'empty';
     return;
   }
   const width = canvasNode.clientWidth;
   const height = canvasNode.clientHeight;
+  syncInspectHintSurface(canvasNode, height < 700);
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.setAttribute('aria-description',
+    'The titin line uses an illustrative reading width and is not measured by the scale bar.');
   const features = activeFeatures();
   const bandsRequested = features.has('band_brackets')
     && state.scale === SCALES.context && !state.closeup
@@ -2264,7 +2380,8 @@ function renderScienceOverlay({ transient = false } = {}) {
   // change rather than a performance one, since consecutive reads with no
   // intervening write share one layout flush anyway. The saving that matters
   // came from not running this pass at all on a still frame.
-  const canvasRect = $('canvas').getBoundingClientRect();
+  // Reuse the visibility read above. A second rectangle read here would split
+  // this frame's measurement batch without adding information.
   const stageHeaderRect = $('stageHeader').getBoundingClientRect();
   // The 12 px SC-27A scientific labels have a taller ink box than the former
   // 9 px labels. Twenty pixels keeps the highest marker label entirely below
@@ -2305,6 +2422,25 @@ function renderScienceOverlay({ transient = false } = {}) {
   });
   if (projectionSignature === scienceOverlaySignature) return;
   scienceOverlaySignature = projectionSignature;
+  const compactStageOccluded = height < 700 && cardRect
+    && cardRect.top - stageHeaderRect.bottom < 48;
+  if (compactStageOccluded) {
+    // Beat 4's evidence comparison can legitimately consume the entire free
+    // vertical band on a 640 px-high phone. In that state there is no canvas
+    // coordinate in which a scientific label could be both visible and clear
+    // of chrome. State the withdrawal explicitly instead of painting under the
+    // card or pretending an empty label family was "resolved".
+    svg.replaceChildren();
+    svg.dataset.labelLayout = 'suppressed:compact-stage';
+    svg.dataset.terminusLayout = 'suppressed:compact-stage';
+    svg.dataset.labelLayoutDetail = 'Tour chrome leaves no visible scientific-label lane';
+    resolveInspectHintPosition(svg, {
+      canvas: canvasRect,
+      header: stageHeaderRect,
+      card: cardRect,
+    });
+    return;
+  }
   const nodes = [];
   for (const identity of directIdentities) {
     const point = projected.get(identity.id);
@@ -2357,14 +2493,22 @@ function renderScienceOverlay({ transient = false } = {}) {
       { audience: state.audienceMode },
     )) {
       const y = laneY + (BRACKET_LANE_OFFSETS[bracket.lane] ?? BRACKET_LANE_OFFSETS.major);
+      const unclampedLabelX = bracket.kind === 'marker' ? x1 : (x1 + x2) / 2;
+      const labelHalfWidth = STAGE_LAYOUT.label_box_px / 2;
+      const bandLabelX = Math.max(
+        STAGE_LAYOUT.edge_padding_px + labelHalfWidth,
+        Math.min(width - STAGE_LAYOUT.edge_padding_px - labelHalfWidth, unclampedLabelX),
+      );
       if (bracket.kind === 'marker') {
         nodes.push(svgElement('path', {
           d: `M ${x1} ${y - 5} V ${y + 7}`,
           class: 'science-bracket minor',
         }));
         nodes.push(...withBracketTarget(
-          svgElement('text', { x: x1, y: y - 8, 'text-anchor': 'middle', class: 'science-label band-label' }, bracket.label),
-          bracket.id, x1, y - 8,
+          svgElement('text', {
+            x: bandLabelX, y: y - 8, 'text-anchor': 'middle', class: 'science-label band-label',
+          }, bracket.label),
+          bracket.id, bandLabelX, y - 8,
         ));
       } else {
         nodes.push(svgElement('path', {
@@ -2383,9 +2527,9 @@ function renderScienceOverlay({ transient = false } = {}) {
         }
         nodes.push(...withBracketTarget(
           svgElement('text', {
-            x: (x1 + x2) / 2, y: y - 5, 'text-anchor': 'middle', class: 'science-label band-label',
+            x: bandLabelX, y: y - 5, 'text-anchor': 'middle', class: 'science-label band-label',
           }, bracket.label),
-          bracket.id, (x1 + x2) / 2, y - 5,
+          bracket.id, bandLabelX, y - 5,
         ));
       }
     }
@@ -2452,12 +2596,18 @@ function renderScienceOverlay({ transient = false } = {}) {
     nodes.push(svgElement('text', {
       x: left + stripPx, y: laneTop - 14, 'text-anchor': 'end', class: 'science-label',
     }, compactLocator ? 'Z' : 'Z-disc'));
-    nodes.push(svgElement('text', {
-      x: left + iWidth / 2, y: laneTop + 22, 'text-anchor': 'middle', class: 'science-label',
-    }, 'I-band'));
-    nodes.push(svgElement('text', {
-      x: centreX, y: laneTop + 22, 'text-anchor': 'middle', class: 'science-label',
-    }, 'A-band'));
+    // On ordinary short phone viewports the scale rule and locator share the
+    // only strip above the Tour card. Retain the locator geometry and endpoint
+    // vocabulary, but withdraw these two secondary names before overprinting
+    // the ruler. Taller release viewports keep the complete five-label rail.
+    if (height >= 700) {
+      nodes.push(svgElement('text', {
+        x: left + iWidth / 2, y: laneTop + 22, 'text-anchor': 'middle', class: 'science-label',
+      }, 'I-band'));
+      nodes.push(svgElement('text', {
+        x: centreX, y: laneTop + 22, 'text-anchor': 'middle', class: 'science-label',
+      }, 'A-band'));
+    }
   }
   if (features.has('termini')) {
     // The text baseline sits 15 px above its projected anchor. Reserve another
@@ -2522,7 +2672,7 @@ function renderScienceOverlay({ transient = false } = {}) {
     // and a viewer who has just been given a ruler is entitled to know that this
     // one line is not measured by it. Shown only when the exaggeration is real.
     const illustrative = illustrativeWidthRatio(pxPerNm);
-    if (illustrative !== null) {
+    if (illustrative !== null && height >= 700) {
       nodes.push(svgElement('text', {
         x: barX, y: barY + 11, 'text-anchor': 'start', class: 'science-label',
       }, `titin line ≈${illustrative}× reading width, not scale`));
@@ -2546,17 +2696,26 @@ function renderScienceOverlay({ transient = false } = {}) {
         )) node.style.visibility = 'hidden';
       }
       svg.dataset.labelLayout = 'pending';
-    } else {
-      console.error(`Scientific overlay could not place terminus labels: ${unresolvedLabels.join(', ')}`);
+      svg.dataset.labelLayoutDetail = `unplaced termini: ${unresolvedLabels.join(', ')}`;
     }
   }
-  if (!resolveInspectHintPosition(svg, {
+  if (!(transient && unresolvedLabels.length)) {
+    const layoutFindings = auditPaintedOverlayLayout(svg, {
+      canvas: canvasRect,
+      header: stageHeaderRect,
+      card: cardRect,
+    });
+    if (unresolvedLabels.length) {
+      layoutFindings.unshift(`unplaced termini: ${unresolvedLabels.join(', ')}`);
+    }
+    svg.dataset.labelLayout = layoutFindings.length ? 'unresolved' : 'resolved';
+    svg.dataset.labelLayoutDetail = layoutFindings.join('; ');
+  }
+  resolveInspectHintPosition(svg, {
     canvas: canvasRect,
     header: stageHeaderRect,
     card: cardRect,
-  })) {
-    console.error('Scientific overlay could not place the inspection invitation');
-  }
+  });
 }
 
 /**
@@ -4699,14 +4858,21 @@ function restorePresentationFromHash() {
   $('evidence').hidden = !state.showEvidence;
   $('evidenceToggle').classList.toggle('on', state.showEvidence);
   $('evidenceToggle').setAttribute('aria-pressed', String(state.showEvidence));
-  syncDrawerTabs(); syncAudienceMode(); renderChapter();
-  rebuild(true);
+  syncSceneTruth();
+  syncDrawerTabs(); syncAudienceMode();
+  rebuild(true, { renderOverlay: false });
   visualization.highlightTitinRegion(state.region);
-  applyCameraPreset();
-  render(visualization.currentState());
-  syncViews(); syncScales(); syncRegions(); syncDepictionToggles(); syncSceneTruth();
+  applyCameraPreset({ animate: true });
+  // History can change beat, scene, drawer, and camera in one event. Measure
+  // only the fully restored DOM, never a new chapter against old geometry.
+  render(visualization.currentState(), { renderOverlay: false });
+  renderChapter({ renderOverlay: false });
+  renderScienceOverlay({ transient: true });
+  renderPinnedSelection();
+  syncViews(); syncScales(); syncRegions(); syncDepictionToggles();
   announceUrlIssues(decoded.issues);
   syncPublicPresentation(); syncUrl();
+  markStageDirty();
 }
 
 // ---- direct object inspection: pointer, touch, and keyboard ----------------
@@ -4987,9 +5153,21 @@ function scheduleHistoryRestore() {
 }
 window.addEventListener('hashchange', scheduleHistoryRestore);
 window.addEventListener('popstate', scheduleHistoryRestore);
-// A viewport resize moves every projected anchor and is not visible to the frame
-// callback as camera motion, so it marks the stage explicitly.
-window.addEventListener('resize', markStageDirty);
+// A viewport change can cross the full-screen Research-sheet media query while
+// audience state stays untouched. Recompute that branch and overlay lifecycle
+// together; a dirty flag alone would preserve stale canvas inertness.
+let pendingViewportSync = null;
+function scheduleViewportSync() {
+  if (pendingViewportSync !== null) return;
+  pendingViewportSync = requestAnimationFrame(() => {
+    pendingViewportSync = null;
+    syncAudienceMode();
+    markStageDirty();
+  });
+}
+window.addEventListener('resize', scheduleViewportSync);
+window.addEventListener('orientationchange', scheduleViewportSync);
+mobileResearchMedia.addEventListener('change', scheduleViewportSync);
 if (visualization.scale !== state.scale) visualization.setScale(state.scale);
 syncAudienceMode();
 $('evidence').hidden = !state.showEvidence;
