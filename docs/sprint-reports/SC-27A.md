@@ -3,9 +3,9 @@
 - Starting commit: `914a3940b276865722396ab29cb9719bc0c88bc3`.
 - Engineering status: **IMPLEMENTATION VERIFIED; FINAL CLAUDE CLOSURE PENDING; FINAL FREEZE
   BLOCKED**. Product, compatibility, build, export, accessibility-automation, and evidence-capture
-  work is implemented. The candidate passes the complete 87-test Chromium surface and the complete
-  affected 20-test SC-27A UX surface in both Firefox and WebKit. Engineering closure is not claimed
-  until the strict zero-finding Claude rerun completes.
+  work is implemented. The candidate passes the complete 108-test Chromium SC-27A surface plus
+  9/9 standalone smoke tests and the complete 50-test SC-27A UX surface in both Firefox and WebKit.
+  Engineering closure is not claimed until the strict zero-finding Claude rerun completes.
 - Human status: **PENDING**. No target-frame reviewer, formative participant, accessibility
   reviewer, scientific expert, projector operator, or final lay participant was invented or
   inferred. Consequently this candidate is not yet eligible for freeze.
@@ -21,13 +21,13 @@ fingerprint is still
 
 | Identity | Start | Current generated candidate |
 |---|---|---|
-| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `65789d3b5dcf43dff298eede934c65e10845678d` (verified application source) |
-| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `65789d3b5dcf43dff298eede934c65e10845678d` |
-| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7` |
+| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `d21c3e7b039c537218f93e89f79a58b90d94756d` (verified application source) |
+| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `d21c3e7b039c537218f93e89f79a58b90d94756d` |
+| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864` |
 | Model-input-manifest fingerprint | `39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25` | unchanged |
 | Model fingerprint | `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` | unchanged |
-| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `f2f43e6c3228fadb7ef06cb8c3f9140cac8c558422a923657399b7dd214ca013` |
-| Detached manifest SHA-256 | n/a | `e3104796d15be0823d7594a38ee4647a8ce948ec48b3c14256fbd32d4dc54637` |
+| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `95edae66036748f23fb181fb417c9a5a1eae9662aa186895c216093b4f759227` |
+| Detached manifest SHA-256 | n/a | `44a90e7ddf9b0051dd4cd22477e2552d0b8ef183ff79c7b16025ef12b34ba2f3` |
 | Export-contract fingerprint | `a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843` | unchanged |
 
 The final column is the verified generated engineering candidate. It is not a release-freeze
@@ -127,17 +127,22 @@ At all six release viewports the cold open is within the exact four-visible / th
 contract, and the dense beat-3 mechanics state keeps its force readout and Next action inside the
 card with no story scroll or horizontal overflow.
 
-Rendered semantic-camera checks now cover beats 1, 2, and 5 at all six release viewports. They
-verify the two Z-disc boundaries, M-line, locator anchors, truthful visible-span rectangle, selected
-termini, reachable titin path, viewport bounds, and header/story clearance. The new gate exposed and
-drove a real 1024×768 closing-frame fix: the same five evidence definitions were tightened to
-one-line meanings, reducing the recap height without changing the approved evidence mapping.
+Rendered semantic-camera checks cover all five beats at all six release viewports. A separate
+exhaustive gate covers every supported combination of 5 beats × 7 semantic scenes × 6 release
+viewports = 210 settled states in Chromium, Firefox, and WebKit. It measures every painted SVG text
+family—scale, identity, locator, termini, and the visible first-use hint—using a 3 px both-axis
+tolerance; exact hint intersections are rejected. It also verifies the two Z-disc boundaries,
+M-line, locator anchors, truthful visible-span rectangle, reachable titin path, viewport bounds,
+and header/story clearance. Transition frames may temporarily mark movable labels pending while
+the semantic camera is moving, but every settled frame must resolve; mobile Research instead marks
+the stage overlays hidden because the full-screen sheet makes the canvas inert and invisible.
 
 The final capture manifest contains 25 software-composition candidates: all six release viewports,
 all five beats, beat 3 before/after stretch, selected Titin, four Research contexts, mobile Research,
 200%-equivalent browser reflow (640×360 CSS pixels at device scale 2, producing a 1280×720 image),
-reduced motion, grayscale, protanopia, deuteranopia, tritanopia, and projector composition. Every
-capture remains
+reduced motion, grayscale, protanopia, deuteranopia, tritanopia, and projector composition. Its
+Chromium overlay matrix separately records all 210 settled beat/scene/viewport states with zero
+unresolved layouts, collisions, or covered science labels. Every capture remains
 `PENDING — human visual review not performed`.
 
 ## Palette and contrast
@@ -218,17 +223,17 @@ accessibility, picking, evidence, and deterministic-build assertions were retain
 | `check:hitgrid` | **PASS ON FINAL APP SOURCE** — the static fixture reproduces exactly: 7,562 samples, 5,174 intended targets, 14 scene cells |
 | Chromium pointer resolution | **PASS** — browser ray-picking resolves 5,150/5,174 intended samples (99.54%); reviewed miss dispositions unchanged |
 | `check:matrix` | **PASS** — 48 reproducible cells |
-| Chromium | **PASS** — 87/87 on the final candidate: full 78-test SC-27A browser route plus 9/9 smoke |
-| Firefox | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 20/20 SC-27A UX tests on the final candidate |
-| WebKit | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 20/20 SC-27A UX tests on the final candidate |
+| Chromium | **PASS** — 108/108 complete SC-27A browser suite plus 9/9 standalone smoke tests |
+| Firefox | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 50/50 SC-27A UX tests |
+| WebKit | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 50/50 SC-27A UX tests |
 | Build / pack / identity | **PASS** — standalone and 22-output release pack current; embedded inputs and post-candidate evidence disjoint |
 | Offline file/HTTP and denied external network | **PASS** — source/standalone/file boot and local locator/claim export remain operational with external network denied |
-| Final UX capture audit | **PASS (automated diagnostics only)** — 25 unique captures, 6 viewport records, zero horizontal overflow, zero cold-open header/story collisions, and zero scientific-label collisions at all six viewports; every human reviewer disposition remains PENDING |
+| Final UX capture audit | **PASS (automated diagnostics only)** — 25/25 unique captures match their recorded SHA-256, 6 viewport records, and a 210-state Chromium overlay matrix has zero unresolved layouts, label/hint collisions, or covered science labels; every human reviewer disposition remains PENDING |
 | Human accessibility / visual review | PENDING — SC-27A/SC-27B human work |
 
-Final-candidate browser coverage ran against build-input fingerprint `47e5a4680930…` and standalone
-SHA-256 `f2f43e6c3228…`. The embedded application revision is the exact verified source commit
-`65789d3`.
+Final-candidate browser coverage ran against build-input fingerprint `9a2b54e75a46…` and standalone
+SHA-256 `95edae660367…`. The embedded application revision is the exact verified source commit
+`d21c3e7`.
 
 ## Protected-input proof
 
@@ -390,7 +395,7 @@ rule with zero P0, one P1, two P2, and three P3 findings:
 
 | Priority | Finding | Disposition |
 |---|---|---|
-| P1 | Full locator endpoint labels collided with terminus labels at widths from 520 through 933 px, including the required 768×1024 capture | Locator vocabulary now switches from full to compact according to the actual rendered strip width and a governed 410 px threshold; all six viewport gates reject every pairwise scientific-label collision |
+| P1 | The two full locator endpoint labels collided with each other at widths from 520 through 933 px, including the required 768×1024 capture | Locator vocabulary now switches from full to compact according to the actual rendered strip width and a governed 410 px threshold; the subsequently added exhaustive gate now checks every painted SVG text family across all 210 supported states per engine |
 | P2 | Tour rendered a full locator and band brackets in the same overlay lane, duplicating vocabulary and creating collision risk | One pure `stageOverlayLane` decision now gives Tour's measurable locator exclusive ownership and Research's requested brackets exclusive ownership; the two cannot render together |
 | P2 | A unit test claimed locator/bracket mutual exclusion while source-level conditions allowed both | The unit and source contracts now pin the single overlay-lane decision and exhaustively assert its Tour, Research, and unmeasurable cases |
 | P3 | Mobile Research made the canvas inert while the selected-object live region remained inside it | The live region now sits outside the inert canvas; desktop and 375×812 Research selection tests require that it has no inert ancestor and announce the Research-specific route |
@@ -405,9 +410,34 @@ Application commit `65789d3` closes all six findings. The regenerated exact cand
 
 On that exact candidate, `npm run verify` passes 608/608, `npm run verify:sc27a` passes 177/177,
 Chromium passes 78/78 SC-27A plus 9/9 smoke, Firefox passes 20/20, WebKit passes 20/20, and the
-capture audit records 25 unique captures, six viewport records, and zero scientific-label
-collisions at every viewport. Status is **PENDING FINAL ZERO-FINDING CLAUDE RERUN**; release/freeze
-remains separately blocked on the declared human work.
+capture audit records 25 unique captures, six viewport records, and zero cold-open scientific-label
+collisions at those viewports. That cold-only scope was subsequently found insufficient and is
+superseded by the 210-state matrix below. Status is **PENDING FINAL ZERO-FINDING CLAUDE RERUN**;
+release/freeze remains separately blocked on the declared human work.
+
+The next authenticated Claude closure review (`act-as-the-final-vectorized-flask.md`) confirmed all
+six iridescent-summit findings closed, then returned **engineering FAIL** under the strict rule with
+zero P0, zero P1, two P2, and two P3 findings. It found reachable label overprints in supported
+noncanonical beat/scene combinations; undercoverage that omitted beats 3/4, noncanonical scenes,
+scale/identity labels, and all but the cold-open capture state; imprecise report wording about the
+prior P1 and audit scope; and the unused `band-bracket` marker class.
+
+Application commits `0db1970`, `c8d7b87`, `fc82467`, and `d21c3e7` close those findings and the
+adjacent defects exposed by the stronger gate. All painted SVG label families and the visible
+first-use hint now resolve against canvas, header, card, and one another in two dimensions; the
+scientific anchor stays fixed while only the leader endpoint, text, and matching hit target move.
+Unplaceable transition frames are explicitly pending only while the semantic camera moves; settled
+frames are strict. Batching prevents old/new scene DOM from being measured together, mobile
+Research hides overlays while its canvas is inert, and the orphaned marker is gone.
+
+The exact remediated identity is app `d21c3e7b039c537218f93e89f79a58b90d94756d`, build inputs
+`9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864`, standalone
+`95edae66036748f23fb181fb417c9a5a1eae9662aa186895c216093b4f759227`, and detached manifest
+`44a90e7ddf9b0051dd4cd22477e2552d0b8ef183ff79c7b16025ef12b34ba2f3`. On that identity,
+`npm run verify` passes 608/608, `npm run verify:sc27a` passes 177/177, Chromium passes 108/108
+SC-27A plus 9/9 smoke, Firefox passes 50/50, WebKit passes 50/50, and the 25-capture audit records a
+zero-failure 210-state Chromium overlay matrix. Status remains **PENDING FINAL ZERO-FINDING CLAUDE
+RERUN**; release/freeze remains separately blocked on the declared human work.
 
 ## Formative findings and remaining limitations
 
@@ -430,6 +460,7 @@ sequence/mechanics review, physical projector rehearsal, deployment parity, and 
 
 ## Freeze disposition
 
-**BLOCKED — do not freeze yet.** Automated engineering is complete and the scientific identity is
-preserved, but SC-27A's real-human target/formative prerequisites have not occurred.
+**BLOCKED — do not freeze yet.** Automated implementation and verification are complete, final
+zero-finding Claude closure is pending, and the scientific identity is preserved, but SC-27A's
+real-human target/formative prerequisites have not occurred.
 `release_ready: false` is therefore the only truthful state.

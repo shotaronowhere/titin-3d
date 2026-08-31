@@ -256,7 +256,7 @@ findings. Its complete review artifact is
 
 | Priority | Finding | Disposition |
 |---|---|---|
-| P1 | Full locator endpoint labels collided with terminus labels at widths from 520 through 933 px, including the required 768×1024 capture | Locator vocabulary now switches from full to compact according to the actual rendered strip width and a governed 410 px threshold; all six viewport gates reject every pairwise scientific-label collision |
+| P1 | The two full locator endpoint labels collided with each other at widths from 520 through 933 px, including the required 768×1024 capture | Locator vocabulary now switches from full to compact according to the actual rendered strip width and a governed 410 px threshold; the subsequently added exhaustive gate now checks every painted SVG text family across all 210 supported states per engine |
 | P2 | Tour rendered a full locator and band brackets in the same overlay lane, duplicating vocabulary and creating collision risk | One pure `stageOverlayLane` decision now gives Tour's measurable locator exclusive ownership and Research's requested brackets exclusive ownership; the two cannot render together |
 | P2 | A unit test claimed locator/bracket mutual exclusion while source-level conditions allowed both | The unit and source contracts now pin the single overlay-lane decision and exhaustively assert its Tour, Research, and unmeasurable cases |
 | P3 | Mobile Research made the canvas inert while the selected-object live region remained inside it | The live region now sits outside the inert canvas; desktop and 375×812 Research selection tests require that it has no inert ancestor and announce the Research-specific route |
@@ -275,7 +275,49 @@ focused tests, all destructive controls and validators, 78/78 Chromium SC-27A
 browser tests, 9/9 Chromium smoke tests, 20/20 Firefox UX tests, 20/20 WebKit
 UX tests, the 7,562-sample hit-grid fixture, the 48-cell matrix, exact artifact
 identity, and 25 unique refreshed captures with zero scientific-label
-collisions across all six release viewports.
+collisions in the cold-open records across all six release viewports. That
+cold-only scope was later found insufficient and is superseded by the
+210-state matrix below.
+
+Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
+release/freeze remains independently blocked on the declared human work.
+
+## Vectorized-flask closure findings and remediation
+
+The next authenticated Claude Opus/high-effort read-only closure review
+confirmed every iridescent-summit finding closed. Applying the strict rule, it
+returned **engineering FAIL** with zero P0, zero P1, two P2, and two P3 findings.
+Its complete review artifact is
+`/Users/shotaro/.claude/plans/act-as-the-final-vectorized-flask.md`.
+
+| Priority | Finding | Disposition |
+|---|---|---|
+| P2 | Supported beat/scene combinations still produced scientific-label overprints at 375×812 and 390×844 in all three engines | The terminus resolver now searches rendered two-dimensional placements against the canvas, header, card, other labels, and matching hit targets while retaining the scientific anchor point |
+| P2 | The gate omitted beats 3/4, noncanonical scenes, scale/identity labels, and all but the cold capture state | The browser gate now covers 5 beats × 7 scenes × 6 viewports = 210 settled states per Chromium, Firefox, and WebKit, including scale, identity, locator, termini, and the visible first-use hint; the Chromium capture audit records the same 210-state matrix |
+| P3 | Reports overstated the prior gate and misdescribed the earlier P1 as locator-vs-terminus | Reports now state the actual locator-endpoint-vs-locator-endpoint defect and distinguish cold screenshots from the exhaustive overlay matrix |
+| P3 | `band-bracket` was an unused shipped marker class | Removed; the live `band-label` contract remains covered |
+
+The stricter gate exposed adjacent transition and lifecycle defects that were
+also fixed before closure: old/new scene DOM is no longer measured in the same
+batch; movable labels are pending only during genuine camera motion and strict
+when settled; the visible first-use hint participates in collision resolution;
+and mobile Research hides stage overlays while its full-screen sheet makes the
+canvas inert. The full Chromium rerun that originally found two mobile failures
+now passes both in context.
+
+The rebuilt candidate is app revision
+`d21c3e7b039c537218f93e89f79a58b90d94756d`, build-input fingerprint
+`9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864`,
+standalone SHA-256
+`95edae66036748f23fb181fb417c9a5a1eae9662aa186895c216093b4f759227`,
+and detached-manifest SHA-256
+`44a90e7ddf9b0051dd4cd22477e2552d0b8ef183ff79c7b16025ef12b34ba2f3`.
+Verification on this exact identity includes 608/608 full Node tests, 177/177
+focused tests, all destructive controls and validators, 108/108 Chromium
+SC-27A browser tests, 9/9 Chromium smoke tests, 50/50 Firefox UX tests, 50/50
+WebKit UX tests, the 7,562-sample hit-grid fixture, the 48-cell visual matrix,
+exact artifact identity, 25/25 unique hash-matching captures, and a zero-failure
+210-state Chromium capture matrix.
 
 Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
 release/freeze remains independently blocked on the declared human work.

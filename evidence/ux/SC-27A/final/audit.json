@@ -3,8 +3,8 @@
   "purpose": "Automated diagnostics only; this record does not claim human comprehension or visual quality.",
   "candidate_identity": {
     "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-    "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
-    "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
+    "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
+    "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
     "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
   },
   "viewports": [
@@ -56,8 +56,8 @@
       "unobscured_stage_area_share_diagnostic": 0.6535,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
-        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
+        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
+        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -65,7 +65,7 @@
         "channel_difference_threshold_8bit": 12,
         "pixel_share": 0.0444,
         "bounding_box_share": 0.5666,
-        "changed_pixels": 13532,
+        "changed_pixels": 13528,
         "total_pixels": 304500
       }
     },
@@ -117,8 +117,8 @@
       "unobscured_stage_area_share_diagnostic": 0.666,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
-        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
+        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
+        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -178,8 +178,8 @@
       "unobscured_stage_area_share_diagnostic": 0.7795,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
-        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
+        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
+        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -239,8 +239,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8114,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
-        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
+        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
+        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -300,8 +300,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8152,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
-        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
+        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
+        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -361,8 +361,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8542,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "65789d3b5dcf43dff298eede934c65e10845678d",
-        "build_inputs_fingerprint": "47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7",
+        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
+        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -375,6 +375,2953 @@
       }
     }
   ],
+  "overlay_label_matrix": {
+    "scope": "Every Tour beat × every supported scene × every release viewport in Chromium.",
+    "collision_tolerance_px": 3,
+    "state_count": 210,
+    "states": [
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 8,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 8,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 8,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 8,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 8,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 8,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 8,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 12,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 7,
+        "label_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      }
+    ]
+  },
   "declared_contrast_results": {
     "titin_to_lightest_background": 6.406,
     "thick_filament_to_lightest_background": 1.951,
@@ -482,7 +3429,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-375x812.png",
-      "sha256": "442f46f207b17b1c3aee978969e8b2ada0c55b6339b0fc7b78903fa614408368",
+      "sha256": "b73279f169d73bc8fce0a8af1f71fcef5f6707f036c08d43b95174d9687c7e3f",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -494,7 +3441,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-390x844.png",
-      "sha256": "28b62cf2d197b029d18b88471af48b474a682e9495a3d6b2eea00483785c103e",
+      "sha256": "86a8910a6e22b92132764d6cb0fcd388dcc506892bcca65b2a15aa647c0ba6f8",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -506,7 +3453,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-768x1024.png",
-      "sha256": "88a63f2f8ccb4996818cc84e302f5a6f0c192f2167024e633c68f3964ba36dea",
+      "sha256": "b3e7596254676911961ee0f19849635c25f4b0ad43d474036cf048d03c71310b",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -518,7 +3465,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1024x768.png",
-      "sha256": "37f21662e1a552f5ec480acf8cd7b20a2e78e483a810969816913701e79d8a99",
+      "sha256": "ab6c2be06cd3984e1872fb47b9160023c60ecb546a251e70774f366d00621bff",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -530,7 +3477,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1280x720.png",
-      "sha256": "7fb2d726644a85b73d38f431db04a106c65c929bc890a5d04f351de58706121a",
+      "sha256": "07e04d7218f25eb96bb8e8bdaed970ec9aa790bc542d6bb08af3c8a6e9e5a19e",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -542,7 +3489,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1440x900.png",
-      "sha256": "2d7e5e7edbab5ad479f9b031ad115ec74a7e6258f19196a313ea372d36bd88f4",
+      "sha256": "428d8cef998da09863d0f99fa6812b9f66d3ec3af655a4fdc4f65dd5488f0cd4",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -554,7 +3501,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-1-1280x720.png",
-      "sha256": "6e301a2a90d9dab22b0b60417ef1099f5c0072aeabf30ddf1b72913d88b7b801",
+      "sha256": "8c05143d971e9c37c332a218f1c57be0c19a4d505bd4332a7c4f6decf77f787c",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -590,7 +3537,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-4-1280x720.png",
-      "sha256": "93e73a5eb57dd0fa9dc148c4c215601a633fa95a71f580cb67cd0b2bc25be0ed",
+      "sha256": "27941b9742b46e2c31093c98c6b9a9bd968bceeaa377a879faede2b812510e0a",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -638,7 +3585,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-evidence-1280x720.png",
-      "sha256": "10cc6e8bc645cb3cbdef6010414656483818da762a204bf3cec625c63fd30f75",
+      "sha256": "8009624afa6780fd09a3a84f3a7adc2a934d4b28f382771989d3992575da493d",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -650,7 +3597,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-inspect-1280x720.png",
-      "sha256": "ccfb78d80014cef550c4426177063a52587820fe70b2795e12c0fc91aab7ef86",
+      "sha256": "279735bfcd2341fbc51da120531bd8a5a00f0aca30876b5b180a856e287ea98b",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -662,7 +3609,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-measure-1280x720.png",
-      "sha256": "46202dff2636f5eede52ae265eef78a3c8c58a63b9875b2ca585797079925088",
+      "sha256": "bef58db6f89d532b4a427d9cc3de6808bcebfc6fa76b4858f332cafd0fd7e3ef",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -674,7 +3621,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-sources-build-1280x720.png",
-      "sha256": "7d0ddf95d7bdfca96dd34e8b0094b0e07bb2435d581d12f3985bb0400e13c727",
+      "sha256": "7f513ac213df65b955678cc80c28b028cb945a0e3e1debdc6d43843a0f3878c6",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -698,7 +3645,7 @@
       },
       "device_scale_factor": 2,
       "path": "evidence/ux/SC-27A/final/cold-200-percent-1280x720.png",
-      "sha256": "98ef2349f705ace2a8b4ec3817db263222641bdf722126e81ddf8e399307a5de",
+      "sha256": "423f186050594b77f943dbdade6c03b30cb56e28b21c605e6cfa95cc65be2012",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -710,7 +3657,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-reduced-motion-1280x720.png",
-      "sha256": "ec441416969d4dadaec1c3fc0ef99b363b68d5483e1e43b0684ecb89f297c366",
+      "sha256": "9bae3c7011b680866c940373016dd748b79b531991e57fe41b2b0c9973a828cd",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -722,7 +3669,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-grayscale-1280x720.png",
-      "sha256": "9759b64164e47aa4852d9681786bf7f9401d9a924c36c92e2bcf165d52b86c66",
+      "sha256": "f17310b0f714e9dd88a4d864f2da833ccca85cb6e68abaab294e22ea912ac6de",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -734,7 +3681,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-protanopia-1280x720.png",
-      "sha256": "137c8ca292e2fcd301ab4f4dd854dd395f6ee12c636945a5770d28327748a33c",
+      "sha256": "63ad55ab241c4ab94d8a1484aa3fb3a065e535692049629e7ad875fc27593d3b",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -746,7 +3693,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-deuteranopia-1280x720.png",
-      "sha256": "528900133e35de795a1e823f67c119bbc155fb7aaa2143e7492497945f71d7bd",
+      "sha256": "a7a3f9997fb365af53473caa8920b0ba5d7d91b2f7398cd61973a8a21090fd4e",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -758,7 +3705,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-tritanopia-1280x720.png",
-      "sha256": "9cfb12e0fd3eb1141ea7658f317605512f97928c97f60a070fc73dd2b906b031",
+      "sha256": "8a83b2c90184bfe9c96b641d257bbd94bf5428aaf3757ea55eb2ef7aa73993f4",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -770,7 +3717,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-projector-1536x864.png",
-      "sha256": "ac54ab9174be8037264226daf0479c0b8043a6729d4cb4de1b1946a29e42bccb",
+      "sha256": "501eb297682eff4d715c314d9c34a002249be7c26fb9634723f9516a2cf1aea1",
       "reviewer_disposition": "PENDING — human visual review not performed"
     }
   ],

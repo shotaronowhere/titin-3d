@@ -1,6 +1,6 @@
 # Presenter script
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `65789d3b5dcf43dff298eede934c65e10845678d`; build inputs `47e5a46809306a1b4fcf4a65a2f2fd7621cfddcd06e3f4ce0215660446e270c7`. Estimated 181.1 s (3 min 1 s), target 110–190 s.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `d21c3e7b039c537218f93e89f79a58b90d94756d`; build inputs `9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864`. Estimated 181.1 s (3 min 1 s), target 110–190 s.
 
 Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in Research — you do not need to open it to finish the Tour.
 
