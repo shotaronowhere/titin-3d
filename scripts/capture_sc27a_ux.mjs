@@ -93,11 +93,36 @@ async function ready(page, url = ORIGIN) {
     // then marks the projected overlay dirty. Record only the resulting settled
     // verdict; a fixed delay can sample the correct final boxes while retaining
     // the prior frame's pending/unresolved runtime attribute.
-    await page.waitForFunction(() => {
+    const terminalOverlay = () => {
       const layout = document.querySelector('#scienceOverlay')?.dataset.labelLayout;
       return layout === 'resolved' || layout === 'hidden'
         || layout === 'suppressed:compact-stage';
-    });
+    };
+    try {
+      await page.waitForFunction(terminalOverlay);
+    } catch {
+      // A cold animated camera can stop after its last dirty-frame callback on
+      // a heavily loaded headless renderer. A viewport event requests the same
+      // strict settled measurement the product performs after a real resize.
+      await page.evaluate(() => window.dispatchEvent(new Event('resize')));
+      try {
+        await page.waitForFunction(terminalOverlay);
+      } catch (error) {
+        const diagnostic = await page.evaluate(() => {
+          const overlay = document.querySelector('#scienceOverlay');
+          return {
+            url: location.href,
+            label_layout: overlay?.dataset.labelLayout,
+            terminus_layout: overlay?.dataset.terminusLayout,
+            detail: overlay?.dataset.labelLayoutDetail,
+            hint_layout: document.querySelector('#inspectHint')?.dataset.overlayLayout,
+          };
+        });
+        throw new Error(`SC-27A capture frame did not settle: ${JSON.stringify(diagnostic)}`, {
+          cause: error,
+        });
+      }
+    }
     if (errors.length) throw new Error(errors.join('\n'));
   } finally {
     page.off('pageerror', recordError);
@@ -356,6 +381,9 @@ try {
       composed_geometry_share_diagnostic: await composedGeometryDiagnostic(page),
     });
     await capture(page, `cold-${viewport.width}x${viewport.height}`, 'cold open');
+    // The matrix records semantic settled frames, not transition timing. Motion
+    // remains covered by dedicated no-preference and reduced-motion captures.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const beat of TOUR_BEATS) {
       for (const scene of TOUR_SCENES) {
         await ready(page, `${ORIGIN}/#v=2&depth=learn&step=${beat}`
