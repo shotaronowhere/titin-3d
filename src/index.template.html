@@ -2696,8 +2696,9 @@ function renderScienceOverlay({ transient = false } = {}) {
     header: stageHeaderRect,
     card: cardRect,
   });
+  const compactTerminiSuppressed = unresolvedLabels.length > 0 && height < 700;
   if (unresolvedLabels.length) {
-    if (transient) {
+    if (transient || compactTerminiSuppressed) {
       // The semantic camera can pass through a projection for which the fixed
       // header/card band has no legal label cell. Never paint an overprint:
       // retain the scientific anchor dots, suppress only their movable leaders
@@ -2707,17 +2708,21 @@ function renderScienceOverlay({ transient = false } = {}) {
           `[data-terminus-label="${id}"], [data-terminus-leader="${id}"]`,
         )) node.style.visibility = 'hidden';
       }
-      svg.dataset.labelLayout = 'pending';
-      svg.dataset.labelLayoutDetail = `unplaced termini: ${unresolvedLabels.join(', ')}`;
+      if (compactTerminiSuppressed) {
+        svg.dataset.terminusLayout = 'suppressed:compact-stage';
+      } else {
+        svg.dataset.labelLayout = 'pending';
+        svg.dataset.labelLayoutDetail = `unplaced termini: ${unresolvedLabels.join(', ')}`;
+      }
     }
   }
-  if (!(transient && unresolvedLabels.length)) {
+  if (!(transient && unresolvedLabels.length && !compactTerminiSuppressed)) {
     const layoutFindings = auditPaintedOverlayLayout(svg, {
       canvas: canvasRect,
       header: stageHeaderRect,
       card: cardRect,
     });
-    if (unresolvedLabels.length) {
+    if (unresolvedLabels.length && !compactTerminiSuppressed) {
       layoutFindings.unshift(`unplaced termini: ${unresolvedLabels.join(', ')}`);
     }
     svg.dataset.labelLayout = layoutFindings.length ? 'unresolved' : 'resolved';

@@ -475,13 +475,19 @@ for (const viewport of [
 ]) {
   test(`SC27A compact-height inspection guidance remains visible at ${viewport.width}x${viewport.height}`,
     async ({ page }) => {
-      await openTour(page, viewport);
-      for (let beat = 1; beat <= 5; beat += 1) {
+      await page.setViewportSize(viewport);
+      await setReducedMotion(page, true);
+      for (const [index, beat] of SC27A_BEATS.entries()) {
+        await page.goto(`/#v=2&depth=learn&step=${beat}`
+          + '&sl=2200&drawer=closed&scene=overview&confidence=0');
+        await waitForReady(page);
         const overlay = page.locator('#scienceOverlay');
         await expect.poll(() => overlay.getAttribute('data-label-layout'))
           .toMatch(/^(resolved|suppressed:compact-stage)$/);
         const labelLayout = await overlay.getAttribute('data-label-layout');
-        await expect(overlay).toHaveAttribute('data-terminus-layout', labelLayout);
+        await expect(overlay).toHaveAttribute(
+          'data-terminus-layout', /^(resolved|suppressed:compact-stage)$/,
+        );
         if (labelLayout === 'suppressed:compact-stage') {
           await expect(overlay.locator('text')).toHaveCount(0);
         }
@@ -490,7 +496,7 @@ for (const viewport of [
         await expect(page.locator('#inspectHint')).toHaveAttribute(
           'data-copy-variant', /^(full|compact|minimal|inline)$/,
         );
-        if (beat < 5) await page.locator('#chapterNext').click();
+        await expect(page.locator('#chapterProgress')).toHaveText(`Beat ${index + 1} of 5`);
       }
     });
 }

@@ -585,9 +585,13 @@ try {
     !(
       (entry.label_layout === 'resolved' && entry.terminus_layout === 'resolved')
       || (entry.surface === 'Tour compact-height'
-        && entry.label_layout === 'suppressed:compact-stage'
-        && entry.terminus_layout === 'suppressed:compact-stage'
-        && entry.label_count === 0)
+        && (
+          (entry.label_layout === 'suppressed:compact-stage'
+            && entry.terminus_layout === 'suppressed:compact-stage'
+            && entry.label_count === 0)
+          || (entry.label_layout === 'resolved'
+            && entry.terminus_layout === 'suppressed:compact-stage')
+        ))
     )
     || entry.inspection_hint_layout !== 'resolved'
     || entry.science_label_collisions.length
