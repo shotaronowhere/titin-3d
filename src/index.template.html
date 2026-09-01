@@ -2541,12 +2541,24 @@ function renderScienceOverlay({ transient = false } = {}) {
   if (locator.visible) {
     const stripPx = Math.max(210, Math.min(420, width - 36, width * 0.4));
     const compactLocator = stripPx < STAGE_LAYOUT.locator_full_labels_min_px;
-    const left = Math.max(18, (width - stripPx) / 2);
+    let left = Math.max(18, (width - stripPx) / 2);
     const laneTop = safeTopPx + STAGE_LAYOUT.bracket_lane_gap_px + 10;
-    const centreX = left + stripPx / 2;
     const abandStart = bracketById('aband')?.start_nm ?? modelSpanNm * 0.45;
     const iFraction = Math.max(0, Math.min(0.5, (abandStart / modelSpanNm) * 0.5));
     const iWidth = stripPx * iFraction;
+    // A tall, narrow Tour card can meet the lower locator-label row at tablet
+    // landscape widths. Preserve the rail and its semantic relationships by
+    // shifting the complete locator just far enough right for the conservative
+    // label budget to clear the measured card edge.
+    const lowerLabelBandOverlapsCard = height >= 700 && cardBox
+      && cardBox.top < laneTop + 30 && cardBox.bottom > laneTop + 8;
+    if (lowerLabelBandOverlapsCard) {
+      const desiredLeft = cardBox.right
+        + STAGE_LAYOUT.label_collision_tolerance_px
+        + STAGE_LAYOUT.label_box_px / 2 - iWidth / 2;
+      left = Math.min(width - stripPx - 18, Math.max(left, desiredLeft));
+    }
+    const centreX = left + stripPx / 2;
     nodes.push(svgElement('g', { 'data-full-sarcomere-locator': 'true' }));
     nodes.push(svgElement('rect', {
       x: left, y: laneTop - 7, width: iWidth, height: 14, class: 'locator-iband',
