@@ -136,6 +136,7 @@ async function auditScienceLabels(page, state) {
     const hint = document.querySelector('#inspectHint');
     const hintRect = hint.hidden ? null : hint.getBoundingClientRect();
     const labels = [...overlay.querySelectorAll('text')].flatMap((node) => {
+      if (getComputedStyle(node).visibility === 'hidden') return [];
       const rect = node.getBoundingClientRect();
       if (rect.width <= 0 || rect.height <= 0) return [];
       const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
