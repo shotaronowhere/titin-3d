@@ -351,6 +351,13 @@ async function assertSemanticCameraContract(page, viewport, beat) {
 
 for (const viewport of SC27A_VIEWPORTS) {
   test(`SC27A Tour shell obeys its viewport contract at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    // Alone among the shell gates this one walks all five beats with motion
+    // left at the reader's default, so it waits out four real animated camera
+    // transitions and re-measures the whole shell after each. At the largest
+    // release viewport that exceeds the default per-test budget while every
+    // assertion still passes; give the budget room rather than dropping the
+    // animated route or the coverage.
+    test.slow();
     await openTour(page, viewport);
 
     const counts = await chromeCounts(page);

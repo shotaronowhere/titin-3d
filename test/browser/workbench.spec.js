@@ -98,6 +98,12 @@ test('SC26 browser downloads deterministic bytes and unsupported force is blank,
 });
 
 test('SC26 all four handoff files agree at supported, extrapolated, and omitted states', async ({ page }) => {
+  // Five full boots, each followed by four real file downloads and their
+  // deterministic re-derivation, is the longest single route in the suite. It
+  // measures roughly 50 s alone and tips past the default per-test budget under
+  // the serialized full-matrix run, so the budget — not the assertions — is
+  // what needs the room.
+  test.slow();
   const cases = [
     [2000, 'supported'], [2200, 'supported'], [2400, 'supported'], [1900, 'not_evaluated'],
   ];
