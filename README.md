@@ -144,8 +144,33 @@ npm run verify:sc8
 ```
 
 The exhaustive `npm run verify` command is intended for release/CI validation.
-For the focused current gate, run `npm run verify:sc27a`; run `npm run test:browser:sc27a` for the
-six-viewport Chromium Tour/Research browser surface.
+For the focused current gate, run `npm run verify:sc27a`.
+
+### Choosing a browser gate
+
+Every browser test boots a real WebGL page, and each semantic scene change costs the app
+1.5–3 seconds of geometry rebuild. That floor is the app's own render work, not test overhead,
+so the only way to keep the loop short is to run the narrowest gate that covers what changed.
+Measured durations on a developer laptop:
+
+| Gate | Scope | Time |
+|---|---|---|
+| `npx playwright test test/browser/smoke.spec.js --project=chromium` | boot, static fallback, axe foundation — 9 tests | ~1.5 min |
+| `npx playwright test test/browser/ux-overhaul.spec.js --project=chromium --grep-invert @sweep` | every bounded Tour/Research shell, overlay, history, viewport and accessibility contract — 32 tests | ~9 min |
+| `npx playwright test --project=chromium --grep @sweep` | the exhaustive beat × scene × viewport label matrix — 45 tests | ~25 min |
+| `npm run test:browser:sc27a` | the complete Chromium SC-27A surface — 135 tests | ~50 min |
+
+Run the smoke gate while iterating, the overlay gate after changing stage, overlay, or shell
+code, and the sweep plus the complete surface only when preparing a candidate for review. The
+exhaustive tests carry the `@sweep` tag, so `--grep`/`--grep-invert @sweep` selects or excludes
+them anywhere. These are deliberately not `package.json` scripts: `package.json` is a build input,
+so adding one would change the candidate's build-input fingerprint and require the whole
+verification matrix to be re-run to keep the recorded identity truthful.
+
+`playwright.config.js` deliberately pins `workers: 1`. These tests measure rendered label boxes
+to a 3 px tolerance, and concurrent workers shift those measurements; the suite has been observed
+failing purely from host memory pressure, always as timeouts rather than failed assertions. If a
+browser run fails, check `sysctl -n vm.swapusage` before suspecting the code.
 
 To reproduce the coordinate-derived measurements from the pinned RCSB inputs, fetch
 the optional raw-structure cache and verify it before running the measurement scripts:

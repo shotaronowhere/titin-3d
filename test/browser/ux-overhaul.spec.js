@@ -528,6 +528,7 @@ for (const viewport of SC27A_VIEWPORTS.filter(({ width, height }) => (
 ))) {
   for (const beat of SC27A_BEATS) {
     test(`SC27A Research clears every overlay label at ${viewport.width}x${viewport.height} in ${beat}`,
+      { tag: '@sweep' },
       async ({ page }) => {
         test.setTimeout(120_000);
         for (const scene of SC27A_SCENES) {
@@ -561,10 +562,13 @@ for (const viewport of SC27A_VIEWPORTS) {
 
 for (const viewport of SC27A_VIEWPORTS) {
   for (const beat of SC27A_BEATS) {
-    test(`SC27A every scene clears every overlay label at ${viewport.width}x${viewport.height} in ${beat}`, async ({ page }) => {
-      // Seven independent cold boots include the lattice-heavy beat. Keep the
-      // assertion waits strict while giving the group enough aggregate time on
-      // constrained review hosts.
+    test(`SC27A every scene clears every overlay label at ${viewport.width}x${viewport.height} in ${beat}`,
+      { tag: '@sweep' },
+      async ({ page }) => {
+      // Scene changes here are same-document hash navigations, not reloads, so
+      // the cost is the app rebuilding lattice-heavy geometry rather than seven
+      // boots. Keep the assertion waits strict while giving the group enough
+      // aggregate time on constrained review hosts.
       test.setTimeout(120_000);
       for (const scene of SC27A_SCENES) {
         await openTourState(page, viewport, beat, scene);
