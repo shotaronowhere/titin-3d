@@ -41,6 +41,14 @@ export const STAGE_LAYOUT = Object.freeze({
   // the three governed engines. Narrower rails use the compact labels while
   // still naming both termini in the same frame.
   locator_full_labels_min_px: 410,
+  // The declared SC-27A release viewports are all at least 720 px tall, and the
+  // stage canvas is full-height, so every reviewed size clears this threshold.
+  // Below it — an iPhone SE at 667, a 640 px browser window — the free band
+  // between the stage header and the Tour card is too short to hold the whole
+  // scientific rail honestly. That is the supported envelope's lower edge, not
+  // a defect: inside it the overlay withdraws named secondary labels and moves
+  // the first-use invitation into the card rather than overprinting the ruler.
+  compact_stage_height_px: 700,
   // Browser text boxes can touch by a couple of pixels even when their ink is
   // separated by the scale rule (Firefox is the tallest governed engine). A
   // larger overlap on both axes is an actual overprint and must be resolved.

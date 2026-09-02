@@ -2315,7 +2315,7 @@ function renderScienceOverlay({ transient = false } = {}) {
   }
   const width = canvasNode.clientWidth;
   const height = canvasNode.clientHeight;
-  syncInspectHintSurface(canvasNode, height < 700);
+  syncInspectHintSurface(canvasNode, height < STAGE_LAYOUT.compact_stage_height_px);
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
   svg.setAttribute('aria-description',
     'The titin line uses an illustrative reading width and is not measured by the scale bar.');
@@ -2422,7 +2422,7 @@ function renderScienceOverlay({ transient = false } = {}) {
   });
   if (projectionSignature === scienceOverlaySignature) return;
   scienceOverlaySignature = projectionSignature;
-  const compactStageOccluded = height < 700 && cardRect
+  const compactStageOccluded = height < STAGE_LAYOUT.compact_stage_height_px && cardRect
     && cardRect.top - stageHeaderRect.bottom < 48;
   if (compactStageOccluded) {
     // Beat 4's evidence comparison can legitimately consume the entire free
@@ -2550,7 +2550,7 @@ function renderScienceOverlay({ transient = false } = {}) {
     // landscape widths. Preserve the rail and its semantic relationships by
     // shifting the complete locator just far enough right for the conservative
     // label budget to clear the measured card edge.
-    const lowerLabelBandOverlapsCard = height >= 700 && cardBox
+    const lowerLabelBandOverlapsCard = height >= STAGE_LAYOUT.compact_stage_height_px && cardBox
       && cardBox.top < laneTop + 30 && cardBox.bottom > laneTop + 8;
     if (lowerLabelBandOverlapsCard) {
       const desiredLeft = cardBox.right
@@ -2612,7 +2612,7 @@ function renderScienceOverlay({ transient = false } = {}) {
     // only strip above the Tour card. Retain the locator geometry and endpoint
     // vocabulary, but withdraw these two secondary names before overprinting
     // the ruler. Taller release viewports keep the complete five-label rail.
-    if (height >= 700) {
+    if (height >= STAGE_LAYOUT.compact_stage_height_px) {
       nodes.push(svgElement('text', {
         x: left + iWidth / 2, y: laneTop + 22, 'text-anchor': 'middle', class: 'science-label',
       }, 'I-band'));
@@ -2684,7 +2684,7 @@ function renderScienceOverlay({ transient = false } = {}) {
     // and a viewer who has just been given a ruler is entitled to know that this
     // one line is not measured by it. Shown only when the exaggeration is real.
     const illustrative = illustrativeWidthRatio(pxPerNm);
-    if (illustrative !== null && height >= 700) {
+    if (illustrative !== null && height >= STAGE_LAYOUT.compact_stage_height_px) {
       nodes.push(svgElement('text', {
         x: barX, y: barY + 11, 'text-anchor': 'start', class: 'science-label',
       }, `titin line ≈${illustrative}× reading width, not scale`));
@@ -2696,7 +2696,8 @@ function renderScienceOverlay({ transient = false } = {}) {
     header: stageHeaderRect,
     card: cardRect,
   });
-  const compactTerminiSuppressed = unresolvedLabels.length > 0 && height < 700;
+  const compactTerminiSuppressed = unresolvedLabels.length > 0
+    && height < STAGE_LAYOUT.compact_stage_height_px;
   if (unresolvedLabels.length) {
     if (transient || compactTerminiSuppressed) {
       // The semantic camera can pass through a projection for which the fixed

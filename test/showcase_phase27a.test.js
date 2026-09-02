@@ -10,6 +10,7 @@ import {
   createEvidenceChip,
   evidenceLanguage,
 } from '../src/presentation/EvidenceChip.js';
+import { STAGE_LAYOUT } from '../src/presentation/StageLayout.js';
 import { tourControlBudget } from '../src/presentation/TourView.js';
 import { Viewer } from '../src/render/Viewer.js';
 
@@ -21,6 +22,7 @@ const gates = json('data/release_gates.json');
 const page = readFileSync('src/index.template.html', 'utf8');
 const readme = readFileSync('README.md', 'utf8');
 const releasePackBuilder = readFileSync('scripts/build_release_pack.mjs', 'utf8');
+const browserHelpers = readFileSync('test/browser/helpers.js', 'utf8');
 
 const BEATS = Object.freeze([
   'meet_sarcomere',
@@ -212,4 +214,26 @@ test('SC27A: history, viewport, and all-family overlay truth share atomic runtim
   assert.match(page, /dataset\.terminusLayout/);
   assert.match(page, /suppressed:compact-stage/);
   assert.match(page, /function syncInspectHintSurface/);
+});
+
+test('SC27A: the compact-stage envelope is one governed threshold, not a repeated literal', () => {
+  assert.equal(STAGE_LAYOUT.compact_stage_height_px, 700);
+  // Read the six release viewports from their single declaration rather than
+  // restating them, so this stays true if the reviewed envelope ever changes.
+  const block = browserHelpers.match(/SC27A_VIEWPORTS = Object\.freeze\(\[([\s\S]*?)\]\)/);
+  assert.ok(block, 'helpers.js declares the SC-27A release viewports');
+  const declared = [...block[1].matchAll(/width: (\d+), height: (\d+)/g)]
+    .map(([, width, height]) => ({ width: Number(width), height: Number(height) }));
+  assert.equal(declared.length, 6, 'six SC-27A release viewports are declared');
+  for (const { width, height } of declared) {
+    assert.ok(height >= STAGE_LAYOUT.compact_stage_height_px,
+      `release viewport ${width}x${height} must clear the compact-stage threshold`);
+  }
+  // The hint surface, the occluded-stage withdrawal, the tablet locator shift,
+  // the two secondary locator names, the reading-width caption, and the
+  // terminus suppression are the six branches the envelope governs.
+  const uses = page.match(/height (?:<|>=) STAGE_LAYOUT\.compact_stage_height_px/g) || [];
+  assert.equal(uses.length, 6, 'every compact-stage branch reads the governed threshold');
+  assert.ok(!/height (?:<|>=) 700\b/.test(page),
+    'no compact-stage branch may restate the threshold as a literal');
 });

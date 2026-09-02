@@ -468,11 +468,26 @@ for (const [portrait, landscape] of [
     });
 }
 
-for (const viewport of [
+// Below the governed compact-stage threshold, and therefore outside the six
+// declared release viewports, which are all at least 720 px tall. The overlay
+// may withdraw named secondary labels here; it may never overprint, and the
+// first-use invitation must still reach the reader.
+const COMPACT_HEIGHT_VIEWPORTS = [
   { width: 375, height: 667 },
   { width: 390, height: 684 },
   { width: 360, height: 640 },
-]) {
+];
+
+test('SC27A compact-height coverage sits below the declared release envelope', () => {
+  for (const { height } of COMPACT_HEIGHT_VIEWPORTS) {
+    expect(height).toBeLessThan(STAGE_LAYOUT.compact_stage_height_px);
+  }
+  for (const { height } of SC27A_VIEWPORTS) {
+    expect(height).toBeGreaterThanOrEqual(STAGE_LAYOUT.compact_stage_height_px);
+  }
+});
+
+for (const viewport of COMPACT_HEIGHT_VIEWPORTS) {
   test(`SC27A compact-height inspection guidance remains visible at ${viewport.width}x${viewport.height}`,
     async ({ page }) => {
       await page.setViewportSize(viewport);
