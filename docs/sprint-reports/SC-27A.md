@@ -21,13 +21,13 @@ fingerprint is still
 
 | Identity | Start | Current generated candidate |
 |---|---|---|
-| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `d21c3e7b039c537218f93e89f79a58b90d94756d` (verified application source) |
-| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `d21c3e7b039c537218f93e89f79a58b90d94756d` |
-| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864` |
+| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `6029da7d46cbad98d9ea036087cfd30284c385b7` (verified application source) |
+| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `6029da7d46cbad98d9ea036087cfd30284c385b7` |
+| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5` |
 | Model-input-manifest fingerprint | `39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25` | unchanged |
 | Model fingerprint | `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` | unchanged |
-| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `95edae66036748f23fb181fb417c9a5a1eae9662aa186895c216093b4f759227` |
-| Detached manifest SHA-256 | n/a | `44a90e7ddf9b0051dd4cd22477e2552d0b8ef183ff79c7b16025ef12b34ba2f3` |
+| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `3ea829c2072b4b0f742fed77d0a1f46a776116b0a42a51bf02fef7662a8096c6` |
+| Detached manifest SHA-256 | n/a | `973651ff02e98cd4f5936f6f8ecf33538d1eb69d3b1518e67b1e05119c1ec480` |
 | Export-contract fingerprint | `a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843` | unchanged |
 
 The final column is the verified generated engineering candidate. It is not a release-freeze
@@ -133,16 +133,42 @@ viewports = 210 settled states in Chromium, Firefox, and WebKit. It measures eve
 family—scale, identity, locator, termini, and the visible first-use hint—using a 3 px both-axis
 tolerance; exact hint intersections are rejected. It also verifies the two Z-disc boundaries,
 M-line, locator anchors, truthful visible-span rectangle, reachable titin path, viewport bounds,
-and header/story clearance. Transition frames may temporarily mark movable labels pending while
-the semantic camera is moving, but every settled frame must resolve; mobile Research instead marks
-the stage overlays hidden because the full-screen sheet makes the canvas inert and invisible.
+and header/story clearance.
+
+That 210-state matrix has exactly three axes and no more. Every one of its states is a Tour
+(`depth=learn`) state at `sl=2200`, entered directly at one beat, with the viewport fixed for the
+lifetime of the state. It therefore says nothing on its own about crossing a beat boundary, about
+Research, about the stretch range, or about any mid-session viewport change. Four separate gates
+cover those axes, each in Chromium, Firefox, and WebKit:
+
+| Axis the 210-state matrix cannot see | Gate |
+|---|---|
+| Beat-to-beat transitions through `hashchange`/`popstate` | Browser Back/Forward across the beat-4 → beat-5 boundary at all six release viewports, with the console-error contract live |
+| Mid-session viewport and orientation change | Research opened, then resized in both directions at 768×1024 ↔ 1024×768 and 375×812 ↔ 1280×720 |
+| Research (`depth=explore`) overlay states | Every beat × scene at each visible desktop Research viewport |
+| Viewport heights below the declared envelope | Every beat at 375×667, 390×684, and 360×640 |
+
+Within those gates the frame contract is: transition frames may temporarily mark movable labels
+pending while the semantic camera is moving, and every settled frame must reach one of three
+explicit terminal verdicts — `resolved`, `hidden` when mobile Research's full-screen sheet makes
+the canvas inert and invisible, or `suppressed:compact-stage` below the governed
+`compact_stage_height_px` envelope, where the free band between stage header and Tour card cannot
+hold the rail honestly. No settled frame may paint an overprint, and none may stay `pending` or
+`unresolved`. `data-label-layout` carries that all-family verdict; `data-terminus-layout` carries
+the narrower verdict of the two movable terminus labels, which is the only family the resolver
+moves.
 
 The final capture manifest contains 25 software-composition candidates: all six release viewports,
 all five beats, beat 3 before/after stretch, selected Titin, four Research contexts, mobile Research,
 200%-equivalent browser reflow (640×360 CSS pixels at device scale 2, producing a 1280×720 image),
 reduced motion, grayscale, protanopia, deuteranopia, tritanopia, and projector composition. Its
-Chromium overlay matrix separately records all 210 settled beat/scene/viewport states with zero
-unresolved layouts, collisions, or covered science labels. Every capture remains
+Chromium overlay matrix separately records 330 settled states — 210 Tour beat/scene/viewport
+states, 105 desktop Research states, and 15 compact-height states — with zero collisions and zero
+covered science labels. Three hundred and twenty-seven reach `resolved` on both the all-family and
+terminus verdicts; the three compact-height exceptions record `suppressed:compact-stage` on the
+family whose lane the Tour chrome consumes, and all 330 place the first-use invitation. The audit
+also records two Research viewport round-trips and one mobile beat-4 → beat-5 history round-trip
+with their per-state verdicts. Every capture remains
 `PENDING — human visual review not performed`.
 
 ## Palette and contrast
@@ -217,23 +243,28 @@ accessibility, picking, evidence, and deterministic-build assertions were retain
 |---|---|
 | Protected-input digest audit | **PASS** — all 11 named files match start; `docs/scientific-decisions/**` has no diff |
 | Model fingerprint | **PASS** — exact SC-26 value `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` |
-| `npm test` | **PASS** — 608/608 Node tests on the final source |
-| `npm run verify` | **PASS** — all generated-input checks, 608 Node tests, destructive controls, and JS/Python validators pass; pending human/release sections are truthfully represented and reject unsupported readiness claims |
-| `npm run verify:sc27a` | **PASS** — 177/177 focused unit/contract tests, all negative controls, presentation/style/gate validators, hit grid, 48-cell matrix, and artifact identity |
+| `npm test` | **PASS** — 610/610 Node tests on the final source |
+| `npm run verify` | **PASS** — all generated-input checks, 610 Node tests, destructive controls, and JS/Python validators pass; pending human/release sections are truthfully represented and reject unsupported readiness claims |
+| `npm run verify:sc27a` | **PASS** — 179/179 focused unit/contract tests, all negative controls, presentation/style/gate validators, hit grid, 48-cell matrix, and artifact identity |
 | `check:hitgrid` | **PASS ON FINAL APP SOURCE** — the static fixture reproduces exactly: 7,562 samples, 5,174 intended targets, 14 scene cells |
 | Chromium pointer resolution | **PASS** — browser ray-picking resolves 5,150/5,174 intended samples (99.54%); reviewed miss dispositions unchanged |
 | `check:matrix` | **PASS** — 48 reproducible cells |
-| Chromium | **PASS** — 108/108 complete SC-27A browser suite plus 9/9 standalone smoke tests |
-| Firefox | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 50/50 SC-27A UX tests |
-| WebKit | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 50/50 SC-27A UX tests |
+| Chromium | **PASS** — 144/144 in one uninterrupted pass: 135 SC-27A browser tests plus 9 standalone smoke tests |
+| Firefox | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 77/77 SC-27A UX tests |
+| WebKit | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 77/77 SC-27A UX tests |
 | Build / pack / identity | **PASS** — standalone and 22-output release pack current; embedded inputs and post-candidate evidence disjoint |
 | Offline file/HTTP and denied external network | **PASS** — source/standalone/file boot and local locator/claim export remain operational with external network denied |
-| Final UX capture audit | **PASS (automated diagnostics only)** — 25/25 unique captures match their recorded SHA-256, 6 viewport records, and a 210-state Chromium overlay matrix has zero unresolved layouts, label/hint collisions, or covered science labels; every human reviewer disposition remains PENDING |
+| Final UX capture audit | **PASS (automated diagnostics only)** — 25/25 unique captures match their recorded SHA-256, 6 viewport records, and a 330-state Chromium overlay matrix (210 Tour, 105 Research, 15 compact-height) has zero label or hint collisions and zero covered science labels, with every state placing the first-use invitation; every human reviewer disposition remains PENDING |
 | Human accessibility / visual review | PENDING — SC-27A/SC-27B human work |
 
-Final-candidate browser coverage ran against build-input fingerprint `9a2b54e75a46…` and standalone
-SHA-256 `95edae660367…`. The embedded application revision is the exact verified source commit
-`d21c3e7`.
+Final-candidate browser coverage ran against build-input fingerprint `93efeccf9bbc…` and standalone
+SHA-256 `3ea829c2072b…`. The embedded application revision is the exact verified source commit
+`6029da7`.
+
+Two browser routes carry an explicit extended budget rather than the default per-test timeout: the
+1440×900 shell gate, which walks all five beats through real animated camera transitions, and the
+SC-26 handoff gate, which boots five times around twenty file downloads. Both pass every assertion;
+only their duration exceeds the shared default.
 
 ## Protected-input proof
 
@@ -439,6 +470,40 @@ SC-27A plus 9/9 smoke, Firefox passes 50/50, WebKit passes 50/50, and the 25-cap
 zero-failure 210-state Chromium overlay matrix. Status remains **PENDING FINAL ZERO-FINDING CLAUDE
 RERUN**; release/freeze remains separately blocked on the declared human work.
 
+The next authenticated Claude closure review (`act-as-the-final-luminous-harbor.md`) independently
+confirmed all four vectorized-flask findings closed for the states the new gate covers, then
+returned **engineering FAIL** under the strict rule with zero P0, zero P1, three P2, and four P3
+findings. Every one of them lived in a state the 210-state matrix structurally could not observe: a
+beat transition through `hashchange`/`popstate`, a mid-session viewport or orientation change, the
+Research surface, or a viewport shorter than the declared envelope. The beat-transition path in
+particular repainted the previous round's terminus overprint, at its exact magnitudes, as a settled
+frame at 375×812 and 390×844 in all three engines.
+
+Application commits `a01ec84`, `3648b85`, `784dee4`, `a707691`, `09b4e15`, `053b26e`, `5aa36e9`, and
+`6029da7` close all seven findings and the adjacent defects the closure work exposed.
+`restorePresentationFromHash` now measures once, after the whole restored DOM; the mobile-Research
+decision is re-derived from a coalesced `resize`/`orientationchange`/media-query sync instead of
+being cached in `canvas.inert`; the overlay withdraws on any non-renderable stage rather than
+running a placement pass on a zero-height canvas; the first-use invitation has three shorter copy
+variants and an in-card lane below the governed compact-stage envelope; `data-label-layout` became
+an all-family verdict with the movable-terminus verdict split into `data-terminus-layout`;
+band-bracket label centres are clamped into the canvas box; and the capture audit waits for a
+terminal overlay verdict, scores only painted text, and walks Research and compact-height states in
+addition to the Tour matrix. The gate-scope wording above and in the review record is corrected to
+the matrix's real axes.
+
+The exact remediated identity is app `6029da7d46cbad98d9ea036087cfd30284c385b7`, build inputs
+`93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5`, standalone
+`3ea829c2072b4b0f742fed77d0a1f46a776116b0a42a51bf02fef7662a8096c6`, and detached manifest
+`973651ff02e98cd4f5936f6f8ecf33538d1eb69d3b1518e67b1e05119c1ec480`. On that identity,
+`npm run verify` passes 610/610, `npm run verify:sc27a` passes 179/179, Chromium passes 144/144 in
+one uninterrupted pass (135 SC-27A plus 9 smoke), Firefox passes 77/77, WebKit passes 77/77, and the
+25-capture audit records a zero-collision 330-state Chromium overlay matrix plus three recorded
+transition round-trips. All 11 protected digests, `docs/scientific-decisions/**`, and the model
+fingerprint `7badc8e270e7…` are byte-identical to the sprint baseline. Status remains **PENDING
+FINAL ZERO-FINDING CLAUDE RERUN**; release/freeze remains separately blocked on the declared human
+work.
+
 ## Formative findings and remaining limitations
 
 There are no formative findings to anonymize because no real participant or specialist walkthrough
@@ -460,7 +525,14 @@ sequence/mechanics review, physical projector rehearsal, deployment parity, and 
 
 ## Freeze disposition
 
-**BLOCKED — do not freeze yet.** Automated implementation and verification are complete, final
-zero-finding Claude closure is pending, and the scientific identity is preserved, but SC-27A's
-real-human target/formative prerequisites have not occurred.
+**BLOCKED — do not freeze yet.** On this candidate every declared automated gate passes: the full
+and focused Node suites, all destructive controls and validators, the complete Chromium browser
+suite in one uninterrupted pass, the Firefox and WebKit UX surfaces, artifact identity, and the
+capture audit. The scientific identity is preserved — all 11 protected digests,
+`docs/scientific-decisions/**`, and the model fingerprint are byte-identical to the sprint baseline.
+
+Two things nevertheless remain, and either alone forbids a freeze. The strict closure rule requires
+one independent Claude review of this exact candidate that returns **zero** actionable findings;
+every round so far has returned findings, so that rerun is still pending. Independently of it,
+SC-27A's real-human target and formative prerequisites have not occurred at all.
 `release_ready: false` is therefore the only truthful state.

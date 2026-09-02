@@ -293,7 +293,7 @@ Its complete review artifact is
 | Priority | Finding | Disposition |
 |---|---|---|
 | P2 | Supported beat/scene combinations still produced scientific-label overprints at 375×812 and 390×844 in all three engines | The terminus resolver now searches rendered two-dimensional placements against the canvas, header, card, other labels, and matching hit targets while retaining the scientific anchor point |
-| P2 | The gate omitted beats 3/4, noncanonical scenes, scale/identity labels, and all but the cold capture state | The browser gate now covers 5 beats × 7 scenes × 6 viewports = 210 settled states per Chromium, Firefox, and WebKit, including scale, identity, locator, termini, and the visible first-use hint; the Chromium capture audit records the same 210-state matrix |
+| P2 | The gate omitted beats 3/4, noncanonical scenes, scale/identity labels, and all but the cold capture state | The browser gate now covers 5 beats × 7 scenes × 6 viewports = 210 settled states per Chromium, Firefox, and WebKit, including scale, identity, locator, termini, and the visible first-use hint; the Chromium capture audit records the same 210-state matrix. **Scope correction (luminous-harbor):** all 210 states are Tour `depth=learn` states at `sl=2200`, each entered directly at one beat with a fixed viewport, so this matrix alone covers neither beat transitions, Research, the stretch range, nor any mid-session viewport change; the four gates added below cover those axes |
 | P3 | Reports overstated the prior gate and misdescribed the earlier P1 as locator-vs-terminus | Reports now state the actual locator-endpoint-vs-locator-endpoint defect and distinguish cold screenshots from the exhaustive overlay matrix |
 | P3 | `band-bracket` was an unused shipped marker class | Removed; the live `band-label` contract remains covered |
 
@@ -318,6 +318,86 @@ SC-27A browser tests, 9/9 Chromium smoke tests, 50/50 Firefox UX tests, 50/50
 WebKit UX tests, the 7,562-sample hit-grid fixture, the 48-cell visual matrix,
 exact artifact identity, 25/25 unique hash-matching captures, and a zero-failure
 210-state Chromium capture matrix.
+
+Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
+release/freeze remains independently blocked on the declared human work.
+
+## Luminous-harbor closure findings and remediation
+
+The next authenticated Claude Opus/high-effort read-only closure review
+independently confirmed all four vectorized-flask findings closed for the states
+the new gate covers. Applying the same zero-actionable-finding rule, it returned
+**engineering FAIL** with zero P0, zero P1, three P2, and four P3 findings. Its
+complete review artifact is
+`/Users/shotaro/.claude/plans/act-as-the-final-luminous-harbor.md`.
+
+Every finding was a state the 210-state matrix structurally could not see: the
+matrix varies beat, scene, and viewport, but each of its states is a Tour state
+entered directly at one beat with a fixed viewport, so it observes no beat
+transition, no Research surface, and no mid-session viewport change.
+
+| Priority | Finding | Disposition |
+|---|---|---|
+| P2 | `restorePresentationFromHash` was the one beat-changing path never converted to the batched, transient-marked measurement, and it ran in the wrong order, so returning to a beat through Back/Forward repainted the prior round's terminus overprint as a settled frame at 375×812 and 390×844 in all three engines | The handler now rebuilds and renders with the overlay suppressed and measures once, after the whole restored DOM, exactly as `applyChapter` does. A browser gate crosses the beat-4 → beat-5 boundary with the browser's own Back and Forward at all six release viewports with the console-error contract live, and the capture audit records the same mobile round trip |
+| P2 | The overlay's hidden branch keyed on `canvas.inert`, which nothing re-derived after a viewport or orientation change, so rotating out of mobile Research left a visible desktop stage carrying a completely empty scientific overlay | `syncAudienceMode` now re-runs from one coalesced viewport sync bound to `resize`, `orientationchange`, and the media query's own `change` event, and the mobile-Research decision is part of the reframe latch. A gate opens Research and resizes in both directions at 768×1024 ↔ 1024×768 and 375×812 ↔ 1280×720 |
+| P2 | The mirror direction ran the whole placement pass on a zero-height, CSS-hidden canvas and escalated to five persistent `console.error`s in all three engines | The overlay withdraws on any non-renderable stage — inert, `display: none`, `visibility: hidden`, or a zero client or rendered box — rather than guarding on inertness and width alone. The same round-trip gate asserts the terminal verdict in both directions |
+| P3 | The unplaceable first-use invitation had no designed fallback: it was left `visibility: hidden` with a spent retry budget and an internal error at ordinary phone heights | Three progressively shorter copy variants are searched before the pill gives up, and below the governed compact-stage envelope the same affordance moves into the Tour card's normal flow. A gate requires it visible and `resolved` for all five beats at 375×667, 390×684, and 360×640 |
+| P3 | `data-label-layout` certified only that the two movable terminus labels were placed, so a collision between two fixed label families still read `resolved` | That narrow verdict moved to `data-terminus-layout`. `data-label-layout` is now an all-family audit of every painted overlay label against the canvas, the stage header, the Tour card, and one another, with the finding text published in `data-label-layout-detail` |
+| P3 | `M-band center` was clipped by the canvas in a quarter of desktop Research states, in a surface no gate covered | Band-bracket label centres are clamped into the canvas box using the same governed label budget the terminus labels use, and the capture audit now walks every beat × scene at each visible desktop Research viewport |
+| P3 | The report and this record overstated the 210-state matrix for the third consecutive round | Both now state its real axes — Tour only, `sl=2200`, one beat per state, fixed viewport — and name the four separate gates that cover beat transitions, viewport change, Research, and compact heights. "Every settled frame must resolve" is replaced by the three explicit terminal verdicts the implementation actually guarantees: `resolved`, `hidden`, and `suppressed:compact-stage` |
+
+Closing these findings exposed adjacent defects and residue that were fixed in
+the same round:
+
+- The capture audit waited a fixed 250 ms and could record a settled geometry
+  under the previous frame's runtime verdict. It now waits for a terminal
+  overlay verdict, requests one strict re-measurement when a cold animated
+  camera stops after its last dirty-frame callback on a loaded headless
+  renderer, and reports the exact unsettled state rather than timing out blind.
+- The audit counted labels the resolver had already hidden. It now reads only
+  painted text, so a suppressed terminus is never scored as an overprint.
+- A tall, narrow Tour card could meet the lower locator label row at tablet
+  landscape widths. The complete locator now shifts right just far enough for
+  the conservative label budget to clear the measured card edge, keeping the
+  rail and its endpoint vocabulary intact.
+- Below the compact-stage threshold the terminus resolver can legitimately run
+  out of free cells. That case now records `suppressed:compact-stage` on the
+  terminus verdict while the remaining painted families are still audited,
+  instead of reporting a permanent `pending`.
+- The 700 px compact-stage envelope was a bare literal repeated across six
+  overlay branches. It is now the governed `STAGE_LAYOUT.compact_stage_height_px`
+  threshold, documented against the six declared release viewports, and a
+  regression rejects any restated literal.
+- The retired four-attempt retry budget left three deletes of an attribute
+  nothing writes, and the hint placement kept returning a boolean no caller
+  reads after its verdict moved onto the element. Both are removed and rejected
+  by regression.
+
+The rebuilt candidate is app revision
+`6029da7d46cbad98d9ea036087cfd30284c385b7`, build-input fingerprint
+`93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5`,
+standalone SHA-256
+`3ea829c2072b4b0f742fed77d0a1f46a776116b0a42a51bf02fef7662a8096c6`,
+and detached-manifest SHA-256
+`973651ff02e98cd4f5936f6f8ecf33538d1eb69d3b1518e67b1e05119c1ec480`.
+Verification on this exact identity includes 610/610 full Node tests, 179/179
+focused tests, all destructive controls and validators, 144/144 Chromium
+browser tests in one uninterrupted pass (135 SC-27A plus 9 smoke), 77/77 Firefox
+UX tests, 77/77 WebKit UX tests, the 7,562-sample hit-grid fixture, the 48-cell
+visual matrix, exact artifact identity, 25/25 unique hash-matching captures, and
+a zero-collision 330-state Chromium overlay matrix covering 210 Tour, 105
+desktop Research, and 15 compact-height states, alongside three recorded
+transition round-trips. All 11 protected digests, `docs/scientific-decisions/**`,
+and the model fingerprint are byte-identical to the sprint baseline.
+
+Two browser routes carry an explicit extended budget rather than the shared
+default timeout — the 1440×900 shell gate, which walks all five beats through
+real animated camera transitions, and the SC-26 handoff gate, which boots five
+times around twenty file downloads. Every assertion in both passes; only their
+duration exceeds the default. An earlier full-matrix attempt on a host under
+heavy memory pressure produced seven timeouts, every one of them a failure to
+boot or respond rather than a failed assertion; the recorded result above is a
+single clean pass taken after that pressure was relieved.
 
 Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
 release/freeze remains independently blocked on the declared human work.

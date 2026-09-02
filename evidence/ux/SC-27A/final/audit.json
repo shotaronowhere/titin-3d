@@ -3,8 +3,8 @@
   "purpose": "Automated diagnostics only; this record does not claim human comprehension or visual quality.",
   "candidate_identity": {
     "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-    "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
-    "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
+    "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
+    "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
     "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
   },
   "viewports": [
@@ -56,16 +56,16 @@
       "unobscured_stage_area_share_diagnostic": 0.6535,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
-        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
+        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
+        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
-        "pixel_share": 0.0444,
-        "bounding_box_share": 0.5666,
-        "changed_pixels": 13528,
+        "pixel_share": 0.0445,
+        "bounding_box_share": 0.5475,
+        "changed_pixels": 13541,
         "total_pixels": 304500
       }
     },
@@ -117,16 +117,16 @@
       "unobscured_stage_area_share_diagnostic": 0.666,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
-        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
+        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
+        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
         "pixel_share": 0.0423,
-        "bounding_box_share": 0.5826,
-        "changed_pixels": 13922,
+        "bounding_box_share": 0.5642,
+        "changed_pixels": 13936,
         "total_pixels": 329160
       }
     },
@@ -178,16 +178,16 @@
       "unobscured_stage_area_share_diagnostic": 0.7795,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
-        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
+        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
+        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
         "method": "pixel difference between the composed stage and the same frame with WebGL geometry and scientific SVG overlay hidden",
         "channel_difference_threshold_8bit": 12,
         "pixel_share": 0.0419,
-        "bounding_box_share": 0.7229,
-        "changed_pixels": 32952,
+        "bounding_box_share": 0.7075,
+        "changed_pixels": 32969,
         "total_pixels": 786432
       }
     },
@@ -239,8 +239,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8114,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
-        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
+        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
+        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -300,8 +300,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8152,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
-        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
+        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
+        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -361,8 +361,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8542,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "d21c3e7b039c537218f93e89f79a58b90d94756d",
-        "build_inputs_fingerprint": "9a2b54e75a46055a56dc6ae050047ce0ac2a443fe95354058c8a56a770b7d864",
+        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
+        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -376,9 +376,9 @@
     }
   ],
   "overlay_label_matrix": {
-    "scope": "Every Tour beat × every supported scene × every release viewport in Chromium.",
+    "scope": "Every Tour beat × scene × release viewport; every visible desktop Research beat × scene; and every Tour beat at three compact phone heights in Chromium.",
     "collision_tolerance_px": 3,
-    "state_count": 210,
+    "state_count": 330,
     "states": [
       {
         "viewport": {
@@ -389,6 +389,7 @@
         "scene": "overview",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -403,6 +404,7 @@
         "scene": "titin_alone",
         "label_count": 10,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -417,6 +419,7 @@
         "scene": "spring",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -431,6 +434,7 @@
         "scene": "architecture",
         "label_count": 8,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -445,6 +449,7 @@
         "scene": "z_anchor",
         "label_count": 8,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -459,6 +464,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -473,6 +479,7 @@
         "scene": "lattice",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -487,6 +494,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -501,6 +509,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -515,6 +524,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -529,6 +539,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -543,6 +554,7 @@
         "scene": "z_anchor",
         "label_count": 8,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -557,6 +569,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -571,6 +584,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -585,6 +599,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -599,6 +614,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -613,6 +629,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -627,6 +644,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -641,6 +659,7 @@
         "scene": "z_anchor",
         "label_count": 8,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -655,6 +674,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -669,6 +689,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -683,6 +704,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -697,6 +719,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -711,6 +734,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -725,6 +749,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -739,6 +764,7 @@
         "scene": "z_anchor",
         "label_count": 8,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -753,6 +779,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -767,6 +794,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -781,6 +809,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -795,6 +824,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -809,6 +839,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -823,6 +854,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -837,6 +869,7 @@
         "scene": "z_anchor",
         "label_count": 8,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -851,6 +884,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -865,6 +899,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -879,6 +914,7 @@
         "scene": "overview",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -893,6 +929,7 @@
         "scene": "titin_alone",
         "label_count": 10,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -907,6 +944,7 @@
         "scene": "spring",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -921,6 +959,7 @@
         "scene": "architecture",
         "label_count": 8,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -935,6 +974,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -949,6 +989,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -963,6 +1004,7 @@
         "scene": "lattice",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -977,6 +1019,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -991,6 +1034,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1005,6 +1049,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1019,6 +1064,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1033,6 +1079,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1047,6 +1094,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1061,6 +1109,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1075,6 +1124,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1089,6 +1139,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1103,6 +1154,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1117,6 +1169,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1131,6 +1184,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1145,6 +1199,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1159,6 +1214,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1173,6 +1229,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1187,6 +1244,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1201,6 +1259,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1215,6 +1274,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1229,6 +1289,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1243,6 +1304,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1257,6 +1319,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1271,6 +1334,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1285,6 +1349,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1299,6 +1364,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1313,6 +1379,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1327,6 +1394,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1341,6 +1409,7 @@
         "scene": "a_band_scaffold",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1355,6 +1424,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1369,6 +1439,7 @@
         "scene": "overview",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1383,6 +1454,7 @@
         "scene": "titin_alone",
         "label_count": 10,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1397,6 +1469,7 @@
         "scene": "spring",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1411,6 +1484,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1425,6 +1499,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1439,6 +1514,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1453,6 +1529,7 @@
         "scene": "lattice",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1467,6 +1544,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1481,6 +1559,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1495,6 +1574,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1509,6 +1589,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1523,6 +1604,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1537,6 +1619,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1551,6 +1634,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1565,6 +1649,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1579,6 +1664,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1593,6 +1679,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1607,6 +1694,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1621,6 +1709,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1635,6 +1724,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1649,6 +1739,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1663,6 +1754,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1677,6 +1769,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1691,6 +1784,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1705,6 +1799,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1719,6 +1814,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1733,6 +1829,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1747,6 +1844,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1761,6 +1859,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1775,6 +1874,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1789,6 +1889,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1803,6 +1904,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1817,6 +1919,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1831,6 +1934,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1845,6 +1949,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1859,6 +1964,7 @@
         "scene": "overview",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1873,6 +1979,7 @@
         "scene": "titin_alone",
         "label_count": 10,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1887,6 +1994,7 @@
         "scene": "spring",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1901,6 +2009,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1915,6 +2024,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1929,6 +2039,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1943,6 +2054,7 @@
         "scene": "lattice",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1957,6 +2069,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1971,6 +2084,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1985,6 +2099,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -1999,6 +2114,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2013,6 +2129,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2027,6 +2144,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2041,6 +2159,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2055,6 +2174,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2069,6 +2189,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2083,6 +2204,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2097,6 +2219,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2111,6 +2234,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2125,6 +2249,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2139,6 +2264,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2153,6 +2279,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2167,6 +2294,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2181,6 +2309,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2195,6 +2324,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2209,6 +2339,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2223,6 +2354,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2237,6 +2369,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2251,6 +2384,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2265,6 +2399,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2279,6 +2414,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2293,6 +2429,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2307,6 +2444,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2321,6 +2459,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2335,6 +2474,567 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1024,
+          "height": 768
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2349,6 +3049,7 @@
         "scene": "overview",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2363,6 +3064,7 @@
         "scene": "titin_alone",
         "label_count": 10,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2377,6 +3079,7 @@
         "scene": "spring",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2391,6 +3094,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2405,6 +3109,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2419,6 +3124,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2433,6 +3139,7 @@
         "scene": "lattice",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2447,6 +3154,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2461,6 +3169,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2475,6 +3184,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2489,6 +3199,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2503,6 +3214,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2517,6 +3229,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2531,6 +3244,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2545,6 +3259,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2559,6 +3274,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2573,6 +3289,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2587,6 +3304,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2601,6 +3319,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2615,6 +3334,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2629,6 +3349,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2643,6 +3364,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2657,6 +3379,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2671,6 +3394,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2685,6 +3409,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2699,6 +3424,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2713,6 +3439,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2727,6 +3454,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2741,6 +3469,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2755,6 +3484,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2769,6 +3499,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2783,6 +3514,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2797,6 +3529,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2811,6 +3544,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2825,6 +3559,567 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2839,6 +4134,7 @@
         "scene": "overview",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2853,6 +4149,7 @@
         "scene": "titin_alone",
         "label_count": 10,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2867,6 +4164,7 @@
         "scene": "spring",
         "label_count": 12,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2881,6 +4179,7 @@
         "scene": "architecture",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2895,6 +4194,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2909,6 +4209,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2923,6 +4224,7 @@
         "scene": "lattice",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2937,6 +4239,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2951,6 +4254,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2965,6 +4269,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2979,6 +4284,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -2993,6 +4299,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3007,6 +4314,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3021,6 +4329,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3035,6 +4344,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3049,6 +4359,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3063,6 +4374,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3077,6 +4389,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3091,6 +4404,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3105,6 +4419,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3119,6 +4434,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3133,6 +4449,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3147,6 +4464,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3161,6 +4479,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3175,6 +4494,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3189,6 +4509,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3203,6 +4524,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3217,6 +4539,7 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3231,6 +4554,7 @@
         "scene": "overview",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3245,6 +4569,7 @@
         "scene": "titin_alone",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3259,6 +4584,7 @@
         "scene": "spring",
         "label_count": 9,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3273,6 +4599,7 @@
         "scene": "architecture",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3287,6 +4614,7 @@
         "scene": "z_anchor",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3301,6 +4629,7 @@
         "scene": "a_band_scaffold",
         "label_count": 6,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3315,6 +4644,807 @@
         "scene": "lattice",
         "label_count": 7,
         "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "meet_sarcomere",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "follow_titin",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "stretch_spring",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "titin_alone",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "spring",
+        "label_count": 10,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "architecture",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "z_anchor",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "a_band_scaffold",
+        "label_count": 1,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Research",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "beat": "knowledge_recap",
+        "scene": "lattice",
+        "label_count": 2,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 375,
+          "height": 667
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 375,
+          "height": 667
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 375,
+          "height": 667
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 375,
+          "height": 667
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 0,
+        "label_layout": "suppressed:compact-stage",
+        "terminus_layout": "suppressed:compact-stage",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 375,
+          "height": 667
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 390,
+          "height": 684
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 390,
+          "height": 684
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 390,
+          "height": 684
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 390,
+          "height": 684
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 4,
+        "label_layout": "resolved",
+        "terminus_layout": "suppressed:compact-stage",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 390,
+          "height": 684
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 360,
+          "height": 640
+        },
+        "beat": "meet_sarcomere",
+        "scene": "overview",
+        "label_count": 9,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 360,
+          "height": 640
+        },
+        "beat": "follow_titin",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 360,
+          "height": 640
+        },
+        "beat": "stretch_spring",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 360,
+          "height": 640
+        },
+        "beat": "scaffold_thick_filament",
+        "scene": "overview",
+        "label_count": 0,
+        "label_layout": "suppressed:compact-stage",
+        "terminus_layout": "suppressed:compact-stage",
+        "inspection_hint_layout": "resolved",
+        "science_label_collisions": [],
+        "inspection_hint_label_collisions": [],
+        "covered_science_labels": []
+      },
+      {
+        "surface": "Tour compact-height",
+        "viewport": {
+          "width": 360,
+          "height": 640
+        },
+        "beat": "knowledge_recap",
+        "scene": "overview",
+        "label_count": 6,
+        "label_layout": "resolved",
+        "terminus_layout": "resolved",
         "inspection_hint_layout": "resolved",
         "science_label_collisions": [],
         "inspection_hint_label_collisions": [],
@@ -3322,6 +5452,126 @@
       }
     ]
   },
+  "transition_audits": [
+    {
+      "kind": "Research viewport round-trip",
+      "portrait": {
+        "width": 768,
+        "height": 1024
+      },
+      "landscape": {
+        "width": 1024,
+        "height": 768
+      },
+      "states": [
+        {
+          "viewport": {
+            "width": 768,
+            "height": 1024
+          },
+          "canvas_inert": true,
+          "canvas_visibility": "hidden",
+          "label_layout": "hidden",
+          "terminus_layout": "hidden",
+          "hint_layout": "hidden"
+        },
+        {
+          "viewport": {
+            "width": 1024,
+            "height": 768
+          },
+          "canvas_inert": false,
+          "canvas_visibility": "visible",
+          "label_layout": "resolved",
+          "terminus_layout": "resolved",
+          "hint_layout": "resolved"
+        },
+        {
+          "viewport": {
+            "width": 768,
+            "height": 1024
+          },
+          "canvas_inert": true,
+          "canvas_visibility": "hidden",
+          "label_layout": "hidden",
+          "terminus_layout": "hidden",
+          "hint_layout": "hidden"
+        }
+      ]
+    },
+    {
+      "kind": "Research viewport round-trip",
+      "portrait": {
+        "width": 375,
+        "height": 812
+      },
+      "landscape": {
+        "width": 1280,
+        "height": 720
+      },
+      "states": [
+        {
+          "viewport": {
+            "width": 375,
+            "height": 812
+          },
+          "canvas_inert": true,
+          "canvas_visibility": "hidden",
+          "label_layout": "hidden",
+          "terminus_layout": "hidden",
+          "hint_layout": "hidden"
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas_inert": false,
+          "canvas_visibility": "visible",
+          "label_layout": "resolved",
+          "terminus_layout": "resolved",
+          "hint_layout": "resolved"
+        },
+        {
+          "viewport": {
+            "width": 375,
+            "height": 812
+          },
+          "canvas_inert": true,
+          "canvas_visibility": "hidden",
+          "label_layout": "hidden",
+          "terminus_layout": "hidden",
+          "hint_layout": "hidden"
+        }
+      ]
+    },
+    {
+      "kind": "mobile beat 4/overview history round-trip",
+      "states": [
+        {
+          "progress": "Beat 5 of 5",
+          "scene": "Overview",
+          "label_layout": "resolved",
+          "terminus_layout": "resolved",
+          "hint_layout": "resolved"
+        },
+        {
+          "progress": "Beat 4 of 5",
+          "scene": "Overview",
+          "label_layout": "resolved",
+          "terminus_layout": "resolved",
+          "hint_layout": "resolved"
+        },
+        {
+          "progress": "Beat 5 of 5",
+          "scene": "Overview",
+          "label_layout": "resolved",
+          "terminus_layout": "resolved",
+          "hint_layout": "resolved"
+        }
+      ]
+    }
+  ],
   "declared_contrast_results": {
     "titin_to_lightest_background": 6.406,
     "thick_filament_to_lightest_background": 1.951,
@@ -3429,7 +5679,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-375x812.png",
-      "sha256": "b73279f169d73bc8fce0a8af1f71fcef5f6707f036c08d43b95174d9687c7e3f",
+      "sha256": "ec8303aeaf747f4c7e6cf4c0de4e86e2110f05d41148df532e2aeeb1487b7da5",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3441,7 +5691,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-390x844.png",
-      "sha256": "86a8910a6e22b92132764d6cb0fcd388dcc506892bcca65b2a15aa647c0ba6f8",
+      "sha256": "a8e831677f55a0a6d47d3d6e14fa7a4ad2a1d4b6fdc437127db08b48982df1b8",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3453,7 +5703,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-768x1024.png",
-      "sha256": "b3e7596254676911961ee0f19849635c25f4b0ad43d474036cf048d03c71310b",
+      "sha256": "2e8b6adff7af1eff2f6da2b7207f2c20f1ae16975b92cd729205a48559eba02d",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3465,7 +5715,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1024x768.png",
-      "sha256": "ab6c2be06cd3984e1872fb47b9160023c60ecb546a251e70774f366d00621bff",
+      "sha256": "22642df4224e7284ac02fde20fc1f0c2345c7b2b7fd39a4763c4e131a2b64626",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3477,7 +5727,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1280x720.png",
-      "sha256": "07e04d7218f25eb96bb8e8bdaed970ec9aa790bc542d6bb08af3c8a6e9e5a19e",
+      "sha256": "3914dc0c0fc0a4fbca55e2fe06d4523c9b608b890e8ec33cbe0b7faae6858e35",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3489,7 +5739,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1440x900.png",
-      "sha256": "428d8cef998da09863d0f99fa6812b9f66d3ec3af655a4fdc4f65dd5488f0cd4",
+      "sha256": "03f332791e2d51be181479b0d135c691b43b23cc33c6cf5d1e75b515f40b03c9",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3501,7 +5751,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-1-1280x720.png",
-      "sha256": "8c05143d971e9c37c332a218f1c57be0c19a4d505bd4332a7c4f6decf77f787c",
+      "sha256": "f3f875c0f47578ef74fcba5e1213987d9c00b1bdf2a20ecebdb45f389003ec34",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3585,7 +5835,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-evidence-1280x720.png",
-      "sha256": "8009624afa6780fd09a3a84f3a7adc2a934d4b28f382771989d3992575da493d",
+      "sha256": "eaf43d7e1775ca4dfeef79f03e02cf6156c438cc7fc20b0c3862227ccdea2f99",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3597,7 +5847,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-inspect-1280x720.png",
-      "sha256": "279735bfcd2341fbc51da120531bd8a5a00f0aca30876b5b180a856e287ea98b",
+      "sha256": "3da2a93c5e74b7c1932ee46889a84033aac5e0090b97a04af3023755df235033",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3609,7 +5859,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-measure-1280x720.png",
-      "sha256": "bef58db6f89d532b4a427d9cc3de6808bcebfc6fa76b4858f332cafd0fd7e3ef",
+      "sha256": "45c98f4e051dd439225bfac4ff52378bc03073a1c5b07c47e1c8982160a59c04",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3621,7 +5871,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-sources-build-1280x720.png",
-      "sha256": "7f513ac213df65b955678cc80c28b028cb945a0e3e1debdc6d43843a0f3878c6",
+      "sha256": "e91918f9cc691ee72ea57f11e9ef08ec4e1db45a7fb63498498cc007dce966c9",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3645,7 +5895,7 @@
       },
       "device_scale_factor": 2,
       "path": "evidence/ux/SC-27A/final/cold-200-percent-1280x720.png",
-      "sha256": "423f186050594b77f943dbdade6c03b30cb56e28b21c605e6cfa95cc65be2012",
+      "sha256": "f9a52e2ea47bc671d8641645dbe3228f6efd66109df3d1d724a9b97b3396bf43",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3681,7 +5931,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-protanopia-1280x720.png",
-      "sha256": "63ad55ab241c4ab94d8a1484aa3fb3a065e535692049629e7ad875fc27593d3b",
+      "sha256": "224a10a76489141a3325514375ad22d3a58e8ebc041ccc7e864f8397d50785a9",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3693,7 +5943,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-deuteranopia-1280x720.png",
-      "sha256": "a7a3f9997fb365af53473caa8920b0ba5d7d91b2f7398cd61973a8a21090fd4e",
+      "sha256": "94a9c4ed4aa527ca5279909901add263416c1ab96a909f9d7f982b45ad87de88",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3705,7 +5955,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-tritanopia-1280x720.png",
-      "sha256": "8a83b2c90184bfe9c96b641d257bbd94bf5428aaf3757ea55eb2ef7aa73993f4",
+      "sha256": "92a88d766720285f23e1a06ade4a0e8cb14de86b78971727cd93f6d05a97fe7f",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -3717,7 +5967,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-projector-1536x864.png",
-      "sha256": "501eb297682eff4d715c314d9c34a002249be7c26fb9634723f9516a2cf1aea1",
+      "sha256": "d20d296b7d10c14f46cd744d7fe8861f3e5fda209d97276bec88dbfc2c38477c",
       "reviewer_disposition": "PENDING — human visual review not performed"
     }
   ],
