@@ -1268,9 +1268,7 @@ const MOBILE_RESEARCH_QUERY = '(max-width: 767px), (orientation: portrait) and (
 const mobileResearchMedia = window.matchMedia(MOBILE_RESEARCH_QUERY);
 
 /** Whether Research currently replaces the stage with its full-screen sheet. */
-function mobileResearchActive(drawerOpen = (
-  state.audienceMode === AUDIENCE_MODES.evidence && state.drawer !== 'closed'
-)) {
+function mobileResearchActive(drawerOpen) {
   return drawerOpen && mobileResearchMedia.matches;
 }
 
@@ -2140,9 +2138,12 @@ function syncInspectHintSurface(canvas, compactHeight) {
  * visually false if the pill covers it. Search actual rendered rectangles from
  * the CSS-preferred position outwards and retain the closest free position.
  *
+ * The verdict is published on the element as `data-overlay-layout`, which is
+ * what the runtime, the browser gates, and the capture audit all read.
+ *
  * @param {SVGSVGElement} svg
  * @param {{canvas:DOMRect, header:DOMRect, card:DOMRect|null}} obstacles
- * @returns {boolean} whether a collision-free position was found
+ * @returns {void}
  */
 function resolveInspectHintPosition(svg, { canvas, header, card }) {
   const hint = $('inspectHint');
@@ -2152,15 +2153,14 @@ function resolveInspectHintPosition(svg, { canvas, header, card }) {
     hint.style.removeProperty('top');
     hint.style.removeProperty('bottom');
     hint.style.removeProperty('visibility');
-    delete hint.dataset.overlayAttempts;
     delete hint.dataset.copyVariant;
     hint.dataset.overlayLayout = 'hidden';
-    return true;
+    return;
   }
   if (hint.dataset.copyVariant === 'inline') {
     hint.style.removeProperty('visibility');
     hint.dataset.overlayLayout = 'resolved';
-    return true;
+    return;
   }
   const labelBoxes = [...svg.querySelectorAll('text')].flatMap((node) => {
     const rect = node.getBoundingClientRect();
@@ -2250,15 +2250,13 @@ function resolveInspectHintPosition(svg, { canvas, header, card }) {
   if (!selected) {
     hint.style.visibility = 'hidden';
     hint.dataset.overlayLayout = 'unresolved';
-    return false;
+    return;
   }
   hint.style.removeProperty('visibility');
-  delete hint.dataset.overlayAttempts;
   hint.style.left = `${selected.centreX}px`;
   hint.style.top = `${selected.top}px`;
   hint.style.bottom = 'auto';
   hint.dataset.overlayLayout = 'resolved';
-  return true;
 }
 
 function renderedTitinAnchor(record) {
@@ -2301,7 +2299,6 @@ function renderScienceOverlay({ transient = false } = {}) {
     const hint = $('inspectHint');
     hint.style.visibility = 'hidden';
     hint.dataset.overlayLayout = 'hidden';
-    delete hint.dataset.overlayAttempts;
     scienceOverlaySignature = 'hidden';
     return;
   }

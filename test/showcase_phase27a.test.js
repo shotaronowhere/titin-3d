@@ -214,6 +214,11 @@ test('SC27A: history, viewport, and all-family overlay truth share atomic runtim
   assert.match(page, /dataset\.terminusLayout/);
   assert.match(page, /suppressed:compact-stage/);
   assert.match(page, /function syncInspectHintSurface/);
+  // The copy-variant fallback replaced the four-attempt retry budget. Its
+  // attribute must not come back, and the hint verdict lives on the element
+  // rather than in a return value no caller reads.
+  assert.ok(!page.includes('overlayAttempts'), 'the retired hint retry budget must not return');
+  assert.match(page, /@returns \{void\}\n \*\/\nfunction resolveInspectHintPosition/);
 });
 
 test('SC27A: the compact-stage envelope is one governed threshold, not a repeated literal', () => {
