@@ -4403,12 +4403,15 @@ function stageObstacles(canvasRect) {
       bottom: rect.bottom - canvasRect.top,
     });
   }
-  // The painted scientific labels are obstacles too. Most of them — locator,
-  // band, identity and scale names — are fixed to what they measure and cannot
-  // be moved out from under a card, so the card is the surface that has to give
-  // way. `inspectorPlacement` scores by least overlap and always answers, so
-  // adding these can only improve the chosen placement, never prevent one.
-  for (const node of $('scienceOverlay').querySelectorAll('text')) {
+  // The painted scientific labels are obstacles too, but only the fixed ones:
+  // locator, band, identity and scale names are pinned to what they measure and
+  // cannot move out from under a card, so the card is the surface that gives
+  // way. Terminus labels are deliberately excluded — those are the family the
+  // overlay itself moves around chrome, and if each side avoided the other the
+  // two placers would chase one another frame after frame. Fixed labels do not
+  // move, so this direction terminates. `inspectorPlacement` scores by least
+  // overlap and always answers, so this can only improve the placement chosen.
+  for (const node of $('scienceOverlay').querySelectorAll('text:not(.terminus-label)')) {
     if (getComputedStyle(node).visibility === 'hidden') continue;
     const rect = node.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) continue;
@@ -4481,6 +4484,10 @@ function renderObjectOverlay() {
     width, height].join(':');
   if (signature === objectOverlaySignature) return;
   objectOverlaySignature = signature;
+  // The card was parked at 0,0 a few lines above to measure its natural size.
+  // Any overlay verdict taken during that measurement describes the parked box,
+  // not this one, so the settled position has to be audited again.
+  markStageDirty();
   leader.setAttribute('viewBox', `0 0 ${width} ${height}`);
   leader.replaceChildren(
     svgElement('line', { x1: point.x_px, y1: point.y_px, x2: endX, y2: endY, class: 'object-leader-line' }),
