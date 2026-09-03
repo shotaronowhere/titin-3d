@@ -1,11 +1,13 @@
 # SC-27A handoff — five-beat Tour and contextual Research
 
 - Starting commit: `914a3940b276865722396ab29cb9719bc0c88bc3`.
-- Engineering status: **IMPLEMENTATION VERIFIED; FINAL CLAUDE CLOSURE PENDING; FINAL FREEZE
+- Engineering status: **IMPLEMENTATION VERIFIED; INDEPENDENT CLOSURE PENDING; FINAL FREEZE
   BLOCKED**. Product, compatibility, build, export, accessibility-automation, and evidence-capture
-  work is implemented. The candidate passes the complete 108-test Chromium SC-27A surface plus
-  9/9 standalone smoke tests and the complete 50-test SC-27A UX surface in both Firefox and WebKit.
-  Engineering closure is not claimed until the strict zero-finding Claude rerun completes.
+  work is implemented. The candidate passes the complete 138-test Chromium SC-27A surface plus
+  9/9 standalone smoke tests and the complete 80-test SC-27A UX surface in both Firefox and WebKit.
+  Engineering closure is not claimed until an independent review returns zero actionable findings;
+  the most recent such review is the Codex round recorded in
+  `evidence/ux/SC-27A/CODEX-SENIOR-REVIEW.md`, which has not yet returned zero.
 - Human status: **PENDING**. No target-frame reviewer, formative participant, accessibility
   reviewer, scientific expert, projector operator, or final lay participant was invented or
   inferred. Consequently this candidate is not yet eligible for freeze.
