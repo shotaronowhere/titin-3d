@@ -21,13 +21,13 @@ fingerprint is still
 
 | Identity | Start | Current generated candidate |
 |---|---|---|
-| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `6029da7d46cbad98d9ea036087cfd30284c385b7` (verified application source) |
-| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `6029da7d46cbad98d9ea036087cfd30284c385b7` |
-| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5` |
+| Source revision | `914a3940b276865722396ab29cb9719bc0c88bc3` | `0c67821b2cf82411b195dddc3f3dc95841fb6dea` (verified application source) |
+| App revision | `5bae463fa933662cc215e7eb994165694236aa4b` | `0c67821b2cf82411b195dddc3f3dc95841fb6dea` |
+| Build-input fingerprint | `2c216b264d5ae530fd894749ab689c17f79c3c1630be6a44ea674782fafb3a09` | `9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788` |
 | Model-input-manifest fingerprint | `39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25` | unchanged |
 | Model fingerprint | `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` | unchanged |
-| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `3ea829c2072b4b0f742fed77d0a1f46a776116b0a42a51bf02fef7662a8096c6` |
-| Detached manifest SHA-256 | n/a | `973651ff02e98cd4f5936f6f8ecf33538d1eb69d3b1518e67b1e05119c1ec480` |
+| Standalone SHA-256 | `01f195e5186b5a6e1997e16d71f109de717ae1906c93a88e9fb142a328bd88b9` | `476bf0ddd0d09fc86829e3ea34f7bc0928e2751bd7223c9c33490d4198055528` |
+| Detached manifest SHA-256 | n/a | `c772989d11bafcb026123f528f929eb6d76dfff3276caa576d56629b740f3751` |
 | Export-contract fingerprint | `a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843` | unchanged |
 
 The final column is the verified generated engineering candidate. It is not a release-freeze
@@ -243,23 +243,23 @@ accessibility, picking, evidence, and deterministic-build assertions were retain
 |---|---|
 | Protected-input digest audit | **PASS** — all 11 named files match start; `docs/scientific-decisions/**` has no diff |
 | Model fingerprint | **PASS** — exact SC-26 value `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6` |
-| `npm test` | **PASS** — 610/610 Node tests on the final source |
-| `npm run verify` | **PASS** — all generated-input checks, 610 Node tests, destructive controls, and JS/Python validators pass; pending human/release sections are truthfully represented and reject unsupported readiness claims |
-| `npm run verify:sc27a` | **PASS** — 179/179 focused unit/contract tests, all negative controls, presentation/style/gate validators, hit grid, 48-cell matrix, and artifact identity |
+| `npm test` | **PASS** — 615/615 Node tests on the final source |
+| `npm run verify` | **PASS** — all generated-input checks, 615 Node tests, destructive controls, and JS/Python validators pass; pending human/release sections are truthfully represented and reject unsupported readiness claims |
+| `npm run verify:sc27a` | **PASS** — 184/184 focused unit/contract tests, all negative controls, presentation/style/gate validators, hit grid, 48-cell matrix, and artifact identity |
 | `check:hitgrid` | **PASS ON FINAL APP SOURCE** — the static fixture reproduces exactly: 7,562 samples, 5,174 intended targets, 14 scene cells |
 | Chromium pointer resolution | **PASS** — browser ray-picking resolves 5,150/5,174 intended samples (99.54%); reviewed miss dispositions unchanged |
 | `check:matrix` | **PASS** — 48 reproducible cells |
-| Chromium | **PASS** — 144/144 in one uninterrupted pass: 135 SC-27A browser tests plus 9 standalone smoke tests |
-| Firefox | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 77/77 SC-27A UX tests |
-| WebKit | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 77/77 SC-27A UX tests |
+| Chromium | **PASS** — 147/147 in one uninterrupted pass: 138 SC-27A browser tests plus 9 standalone smoke tests |
+| Firefox | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 80/80 SC-27A UX tests |
+| WebKit | **PASS FOR THE COMPLETE FINAL AFFECTED SURFACE** — 80/80 SC-27A UX tests |
 | Build / pack / identity | **PASS** — standalone and 22-output release pack current; embedded inputs and post-candidate evidence disjoint |
 | Offline file/HTTP and denied external network | **PASS** — source/standalone/file boot and local locator/claim export remain operational with external network denied |
 | Final UX capture audit | **PASS (automated diagnostics only)** — 25/25 unique captures match their recorded SHA-256, 6 viewport records, and a 330-state Chromium overlay matrix (210 Tour, 105 Research, 15 compact-height) has zero label or hint collisions and zero covered science labels, with every state placing the first-use invitation; every human reviewer disposition remains PENDING |
 | Human accessibility / visual review | PENDING — SC-27A/SC-27B human work |
 
-Final-candidate browser coverage ran against build-input fingerprint `93efeccf9bbc…` and standalone
-SHA-256 `3ea829c2072b…`. The embedded application revision is the exact verified source commit
-`6029da7`.
+Final-candidate browser coverage ran against build-input fingerprint `9454472a6c52…` and standalone
+SHA-256 `476bf0ddd0d0…`. The embedded application revision is the exact verified source commit
+`0c67821`.
 
 Two browser routes carry an explicit extended budget rather than the default per-test timeout: the
 1440×900 shell gate, which walks all five beats through real animated camera transitions, and the
@@ -503,6 +503,38 @@ transition round-trips. All 11 protected digests, `docs/scientific-decisions/**`
 fingerprint `7badc8e270e7…` are byte-identical to the sprint baseline. Status remains **PENDING
 FINAL ZERO-FINDING CLAUDE RERUN**; release/freeze remains separately blocked on the declared human
 work.
+
+### Independent Codex closure review
+
+Every closure review above was performed by a Claude model. Eleven rounds from one
+model family share one set of blind spots, and the strict zero-actionable-finding
+rule had never been met, so the candidate was put to a different model family.
+
+`codex-cli` 0.149.0, run read-only against `cf8c1d0`, returned **engineering
+FAIL** with zero P0, zero P1, four P2, and two P3 findings — six defects eleven
+Claude rounds had not found. The pattern is worth recording: those rounds had
+converged on the scientific-label overlay and driven it through an exhaustive
+beat × scene × viewport matrix, but no gate in that matrix ever selected an
+object or operated the accessibility controls. Both are one click from a cold
+open, and both held real defects — a pinned explanation that covered the locator
+and identity labels while the overlay still reported `resolved`, and a `Large
+type` control that made the pinned explanation smaller.
+
+The full record, including the adjacent placement and cross-engine defects the
+remediation exposed, is `evidence/ux/SC-27A/CODEX-SENIOR-REVIEW.md`. Application
+commits `5664016`, `b85a3cd`, and `0c67821` close all six. Three existing tests
+asserted the defective behaviour and were corrected to the intended contract
+rather than loosened.
+
+On the remediated identity, `npm run verify` passes 615/615, `npm run
+verify:sc27a` passes 184/184, Chromium passes 147/147 in one uninterrupted pass
+(138 SC-27A plus 9 smoke), Firefox passes 80/80, WebKit passes 80/80, and the
+25-capture audit records a zero-collision 330-state overlay matrix. Status is
+**PENDING A ZERO-FINDING RERUN**; release and freeze remain separately blocked on
+the declared human work.
+
+The browser gate now also pins an object at three viewports in all three engines
+and requires every painted scientific label to stay clear of the explanation.
 
 ## Formative findings and remaining limitations
 

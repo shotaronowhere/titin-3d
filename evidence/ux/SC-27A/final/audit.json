@@ -3,8 +3,8 @@
   "purpose": "Automated diagnostics only; this record does not claim human comprehension or visual quality.",
   "candidate_identity": {
     "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-    "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
-    "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
+    "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
+    "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
     "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
   },
   "viewports": [
@@ -56,8 +56,8 @@
       "unobscured_stage_area_share_diagnostic": 0.6535,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
-        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
+        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
+        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -117,8 +117,8 @@
       "unobscured_stage_area_share_diagnostic": 0.666,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
-        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
+        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
+        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -178,8 +178,8 @@
       "unobscured_stage_area_share_diagnostic": 0.7795,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
-        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
+        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
+        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -239,8 +239,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8114,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
-        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
+        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
+        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -300,8 +300,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8152,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
-        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
+        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
+        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -361,8 +361,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8542,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "6029da7d46cbad98d9ea036087cfd30284c385b7",
-        "build_inputs_fingerprint": "93efeccf9bbc041c60e5b2f194e469e5ca28884cd129f64ea860f811f7867cd5",
+        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
+        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -5679,7 +5679,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-375x812.png",
-      "sha256": "ec8303aeaf747f4c7e6cf4c0de4e86e2110f05d41148df532e2aeeb1487b7da5",
+      "sha256": "ea5e6ffbc9e03d598aa50277db20ffbdfafc3e39617ca6e1da47205e4b43c983",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5691,7 +5691,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-390x844.png",
-      "sha256": "a8e831677f55a0a6d47d3d6e14fa7a4ad2a1d4b6fdc437127db08b48982df1b8",
+      "sha256": "e78b0c85a980e12dc2859b472ef0eda639caa46297dbe4d629d53f1c66fef01c",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5703,7 +5703,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-768x1024.png",
-      "sha256": "2e8b6adff7af1eff2f6da2b7207f2c20f1ae16975b92cd729205a48559eba02d",
+      "sha256": "da812d2c9113823369c23b46e4990aab8ce5d14a595957e7db10bc0827042c68",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5715,7 +5715,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1024x768.png",
-      "sha256": "22642df4224e7284ac02fde20fc1f0c2345c7b2b7fd39a4763c4e131a2b64626",
+      "sha256": "ab6c2be06cd3984e1872fb47b9160023c60ecb546a251e70774f366d00621bff",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5727,7 +5727,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1280x720.png",
-      "sha256": "3914dc0c0fc0a4fbca55e2fe06d4523c9b608b890e8ec33cbe0b7faae6858e35",
+      "sha256": "44fbbdf2da72b5532e0b6c27e709890116d0603a50350e35d33658dcce0ff733",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5739,7 +5739,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1440x900.png",
-      "sha256": "03f332791e2d51be181479b0d135c691b43b23cc33c6cf5d1e75b515f40b03c9",
+      "sha256": "087e559a1ef3ef5fab0f9e2674d1455703b28cd467a4b81cb2625ae7c3f3a8b6",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5751,7 +5751,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-1-1280x720.png",
-      "sha256": "f3f875c0f47578ef74fcba5e1213987d9c00b1bdf2a20ecebdb45f389003ec34",
+      "sha256": "e73f447f9ff7173717e3005c373cba9947312eb18b7378cedf1fc835bbc0581b",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5823,7 +5823,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/selected-titin-1280x720.png",
-      "sha256": "ef373a34f759fa37efb55a83946ea0da8616a0aec47fd355e3f12fdd9186af69",
+      "sha256": "6ce5014417974e6ecda22666b136cd0a49f637e8c3f93b548ae1dc5a9ab5ab9d",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5871,7 +5871,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-sources-build-1280x720.png",
-      "sha256": "e91918f9cc691ee72ea57f11e9ef08ec4e1db45a7fb63498498cc007dce966c9",
+      "sha256": "f9f59442d48b03bcb8eae93738556c24036c68689e30e0011ef0b7e068c56c23",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5931,7 +5931,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-protanopia-1280x720.png",
-      "sha256": "224a10a76489141a3325514375ad22d3a58e8ebc041ccc7e864f8397d50785a9",
+      "sha256": "9a59cc3fcc7266112cc2aeb7693721da38cac40d5a732dd9ae842fd3444e4c07",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5943,7 +5943,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-deuteranopia-1280x720.png",
-      "sha256": "94a9c4ed4aa527ca5279909901add263416c1ab96a909f9d7f982b45ad87de88",
+      "sha256": "4b8c9e907ea0178296c6830d2b3c7a387c3a186f3957b547f97875779d9259c2",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5955,7 +5955,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-tritanopia-1280x720.png",
-      "sha256": "92a88d766720285f23e1a06ade4a0e8cb14de86b78971727cd93f6d05a97fe7f",
+      "sha256": "57c23069f53952e5e6eb8d01682d2ffaa828ba59dd6df9cae9d730fd94c97190",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5967,7 +5967,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-projector-1536x864.png",
-      "sha256": "d20d296b7d10c14f46cd744d7fe8861f3e5fda209d97276bec88dbfc2c38477c",
+      "sha256": "c4363e4f651a925e504de322116b61fa1d6f4f4122d97f7922da7282b01b3764",
       "reviewer_disposition": "PENDING — human visual review not performed"
     }
   ],

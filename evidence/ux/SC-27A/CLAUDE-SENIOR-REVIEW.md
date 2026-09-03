@@ -401,3 +401,12 @@ single clean pass taken after that pressure was relieved.
 
 Status at this point: **PENDING FINAL ZERO-FINDING CLAUDE RERUN**. Full
 release/freeze remains independently blocked on the declared human work.
+
+## Superseded by an independent non-Claude round
+
+Every review recorded above was performed by a Claude model. A subsequent
+`codex-cli` read-only closure review of candidate `cf8c1d0` returned engineering
+FAIL with four P2 and two P3 findings that none of these rounds found, all of
+them in states this record's exhaustive overlay matrix never entered: an object
+selected on the stage, and the accessibility controls. That record, and the
+remediation closing it, is `evidence/ux/SC-27A/CODEX-SENIOR-REVIEW.md`.
