@@ -43,10 +43,14 @@ for (const viewport of [
     await expect(page.locator('#forceCurve details > summary')).toContainText('Equations, parameters');
 
     await page.locator('#tabEvidence').click();
-    await expect(page.locator('#claimEvidenceGroups .claim-evidence-group')).toHaveCount(5);
+    // Six groups, not five: Schematic and Not known are distinct canonical
+    // classes in the five-label curriculum beat 5 teaches, and Research must not
+    // report a drawn relationship as an unresolved one.
+    await expect(page.locator('#claimEvidenceGroups .claim-evidence-group')).toHaveCount(6);
     await expect(page.locator('[data-evidence-group="measured_source_direct"]')).toContainText('Measured / source-direct');
     await expect(page.locator('[data-evidence-group="modeled"]')).toContainText('Modeled');
-    await expect(page.locator('[data-evidence-group="unknown"]')).toContainText('Unknown');
+    await expect(page.locator('[data-evidence-group="schematic"]')).toContainText('Schematic');
+    await expect(page.locator('[data-evidence-group="unknown"]')).toContainText('Not known');
 
     await page.locator('#tabSources').click();
     await expect(page.locator('.research-actions button')).toHaveCount(4);
