@@ -3,8 +3,8 @@
   "purpose": "Automated diagnostics only; this record does not claim human comprehension or visual quality.",
   "candidate_identity": {
     "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-    "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
-    "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
+    "app_revision": "f40cc66e891c2843b2d8ecbe66a2fcded995ecae",
+    "build_inputs_fingerprint": "5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305",
     "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
   },
   "viewports": [
@@ -56,8 +56,8 @@
       "unobscured_stage_area_share_diagnostic": 0.6535,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
-        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
+        "app_revision": "f40cc66e891c2843b2d8ecbe66a2fcded995ecae",
+        "build_inputs_fingerprint": "5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -117,8 +117,8 @@
       "unobscured_stage_area_share_diagnostic": 0.666,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
-        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
+        "app_revision": "f40cc66e891c2843b2d8ecbe66a2fcded995ecae",
+        "build_inputs_fingerprint": "5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -178,8 +178,8 @@
       "unobscured_stage_area_share_diagnostic": 0.7795,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
-        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
+        "app_revision": "f40cc66e891c2843b2d8ecbe66a2fcded995ecae",
+        "build_inputs_fingerprint": "5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -239,8 +239,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8114,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
-        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
+        "app_revision": "f40cc66e891c2843b2d8ecbe66a2fcded995ecae",
+        "build_inputs_fingerprint": "5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -300,8 +300,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8152,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
-        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
+        "app_revision": "f40cc66e891c2843b2d8ecbe66a2fcded995ecae",
+        "build_inputs_fingerprint": "5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -361,8 +361,8 @@
       "unobscured_stage_area_share_diagnostic": 0.8542,
       "candidate_identity": {
         "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
-        "app_revision": "0c67821b2cf82411b195dddc3f3dc95841fb6dea",
-        "build_inputs_fingerprint": "9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788",
+        "app_revision": "f40cc66e891c2843b2d8ecbe66a2fcded995ecae",
+        "build_inputs_fingerprint": "5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305",
         "model_input_manifest_fingerprint": "39e3e31b6fc990289f77bcf08d3fcecaeec24fc2701374a3086256cecd102c25"
       },
       "composed_geometry_share_diagnostic": {
@@ -5691,7 +5691,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-390x844.png",
-      "sha256": "e78b0c85a980e12dc2859b472ef0eda639caa46297dbe4d629d53f1c66fef01c",
+      "sha256": "a8e831677f55a0a6d47d3d6e14fa7a4ad2a1d4b6fdc437127db08b48982df1b8",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5703,7 +5703,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-768x1024.png",
-      "sha256": "da812d2c9113823369c23b46e4990aab8ce5d14a595957e7db10bc0827042c68",
+      "sha256": "204f71997d6d77507638967e089acc8987a400af037a5754f26c2be9d10fc753",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5715,7 +5715,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-1024x768.png",
-      "sha256": "ab6c2be06cd3984e1872fb47b9160023c60ecb546a251e70774f366d00621bff",
+      "sha256": "da1a5f5a155e97caaa6ecd07f2e0381fd70ac49b7c8cb02c7fbb6354792c079a",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5751,7 +5751,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/beat-1-1280x720.png",
-      "sha256": "e73f447f9ff7173717e3005c373cba9947312eb18b7378cedf1fc835bbc0581b",
+      "sha256": "f8bd5951d0ddf87a64b1d533aab32f7bee6ff980bd61392b3085fb87662ed1eb",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5871,7 +5871,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/research-sources-build-1280x720.png",
-      "sha256": "f9f59442d48b03bcb8eae93738556c24036c68689e30e0011ef0b7e068c56c23",
+      "sha256": "869a5fd01284dcdae21829ea77aa14e6bd82f312a2fc92239f7aa28010945a93",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5931,7 +5931,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-protanopia-1280x720.png",
-      "sha256": "9a59cc3fcc7266112cc2aeb7693721da38cac40d5a732dd9ae842fd3444e4c07",
+      "sha256": "041c4ad13c69c518648557e1e7b591e7289250f8dca8d155e1c9a205174dbdd2",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5943,7 +5943,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-deuteranopia-1280x720.png",
-      "sha256": "4b8c9e907ea0178296c6830d2b3c7a387c3a186f3957b547f97875779d9259c2",
+      "sha256": "6892fb8f0281d99d06988e0038c2647888241c4322160f3fd6af4c9d2f18f3c4",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5955,7 +5955,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-tritanopia-1280x720.png",
-      "sha256": "57c23069f53952e5e6eb8d01682d2ffaa828ba59dd6df9cae9d730fd94c97190",
+      "sha256": "8442b0b66e9024ba320a2805970c1c2322737548374efdc4d9c3219b9c262dc4",
       "reviewer_disposition": "PENDING — human visual review not performed"
     },
     {
@@ -5967,7 +5967,7 @@
       },
       "device_scale_factor": 1,
       "path": "evidence/ux/SC-27A/final/cold-projector-1536x864.png",
-      "sha256": "c4363e4f651a925e504de322116b61fa1d6f4f4122d97f7922da7282b01b3764",
+      "sha256": "1e954c1ce29fa7e5f639ae5a12f6a3fe24ba15812349f3802497e7a972dda521",
       "reviewer_disposition": "PENDING — human visual review not performed"
     }
   ],

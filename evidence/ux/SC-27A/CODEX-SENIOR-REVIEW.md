@@ -88,3 +88,55 @@ remediated one shows every label clear.
 
 Status: **PENDING A ZERO-FINDING RERUN OF THIS REVIEW.** Release and candidate
 freeze remain independently blocked on the declared human work.
+
+## Second independent Codex round
+
+A second read-only `codex-cli` review of candidate `7dc6c90` independently
+confirmed all six findings above closed, then returned **engineering FAIL** again
+with zero P0, zero P1, four P2, and two P3 findings. Three of the four P2s were
+incompleteness in the remediation rather than new territory, which is the loop
+converging rather than failing.
+
+Two were closed immediately; four were deliberately deferred with the project
+owner's decision recorded here rather than silently left open.
+
+| Priority | Finding | Disposition |
+|---|---|---|
+| P2 | The group labelled `Measured / source-direct` held all thirteen `MEASURED` claims, but six reach their sources through context or derivation rather than directly | **Closed.** The class carries its canonical `Measured` label from `data/presentation.json`, and the per-claim `source_direct` flag the renderer had been discarding is shown on each row. The group id stays stable as a compatibility key |
+| P3 | The generated human review checklist labelled the four Research cells `Explore / Inspect`, and two gate records described the Research panel and README in `Guided/Evidence` terms | **Closed.** All three now use current vocabulary; a regression rejects the retired checklist label |
+| P2 | `Large type` enlarges nothing visible in Research: the root is already 15 px and `#panel` pins its text at 13 px | **Deferred.** Real, and the accessibility gate should eventually cover it. Making it work means changing Research panel type sizes, which moves the 48-cell visual matrix and the overlay gates — a design change with layout consequences, not a defect fix, and out of scope for this candidate |
+| P2 | The overlay chrome list omits `#urlNotice` and `#objectTooltip`, so the all-family audit can publish `resolved` without checking either | **Deferred.** The audit gap is real and confirmed by reading the code; the reviewer states it could not verify an actual current-frame collision. Reachable only with an invalid-URL notice or an active hover |
+| P2 | Escape moves focus to the canvas rather than the Research control that invoked a selection | **Deferred.** Real; `clearPinnedSelection` has no invoker memory. Keyboard-only, and adjacent to the focus-restoration work rather than a regression from it |
+| P3 | The report headline reported stale test counts and named Claude as the pending closer | **Closed** in `d7c7d1a` before this round's remediation |
+
+The three deferred findings are open, known, and non-blocking for an engineering
+checkpoint. They are not closed and this record does not claim they are.
+
+## Candidate after the second round
+
+Application commits `d7c7d1a` and `f40cc66` close the two accepted findings. The
+regenerated candidate is app revision
+`f40cc66e891c2843b2d8ecbe66a2fcded995ecae`, build-input fingerprint
+`5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305`,
+standalone SHA-256
+`f63157c6d5cbbf022ab375d444562eb1d0d40e4c3923d058df452186a1a0ee3b`,
+and detached-manifest SHA-256
+`83bdf50ab47c2dd9c632ff245e8ebeba957611782fe60bb0a8b36f74b5576cfa`.
+
+Verification on this exact identity: 616/616 full Node tests; 185/185 focused
+tests; all destructive controls and validators; 147/147 Chromium browser tests in
+one uninterrupted pass; 80/80 Firefox UX tests; 80/80 WebKit UX tests; the
+7,562-sample hit grid; the 48-cell matrix; exact artifact identity; 25/25 unique
+captures; and a zero-collision 330-state overlay matrix in which all 330 states
+place the first-use invitation. All 11 protected digests,
+`docs/scientific-decisions/**`, and the model fingerprint are byte-identical to
+the sprint baseline, and `release_ready` remains `false`.
+
+The reviewer also correctly faulted this sprint's own large-type regression: it
+asserted only that no size decreases, which a control that does nothing equally
+satisfies. It now requires that Large type enlarge at least one selector.
+
+Status: **ENGINEERING CHECKPOINT, THREE KNOWN OPEN FINDINGS.** Zero-finding
+closure is not claimed. Release and candidate freeze remain independently blocked
+on the declared human work.
+

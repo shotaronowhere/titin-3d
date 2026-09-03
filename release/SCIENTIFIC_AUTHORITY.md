@@ -1,6 +1,6 @@
 # Scientific authority status
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `0c67821b2cf82411b195dddc3f3dc95841fb6dea`; build inputs `9454472a6c526dc039d47a6937207d570c705d7dd9800c3017bf1f79787e2788`.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `f40cc66e891c2843b2d8ecbe66a2fcded995ecae`; build inputs `5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305`.
 
 **Decision-ledger status:** DECISIONS_CONSUMABLE_SC20
 
