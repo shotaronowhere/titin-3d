@@ -172,28 +172,29 @@ test('SC13-5: no pipeline figure is written into the page', () => {
   }
 });
 
-test('SC13-5: the pipeline lays across the stage instead of scrolling inside the card', () => {
-  const cardStart = page.indexOf('id="guidedCard"');
-  const cardEnd = page.indexOf('</section>', page.indexOf('id="guidedCardBody"'));
-  const pipeline = page.indexOf('id="guidedPipeline"');
-  assert.ok(pipeline > -1 && !(pipeline > cardStart && pipeline < cardEnd),
-    'the pipeline must not live inside the chapter card');
-  assert.match(page, /#guidedPipeline \.pipeline \{[^}]*grid-template-columns: repeat\(6/,
-    'the six counted stages must read as six columns across the stage');
-  assert.ok(!/#guidedLattice, #guidedPipeline \{[\s\S]{0,120}overflow-y: auto/.test(page),
-    'the band must not be an inner scroll region at any supported width');
+// SC-27A retired the Guided provenance band: no beat declares the feature, so
+// the on-stage surface could never render. The provenance record itself is not
+// lost — it lives in Research, which is the only place that now paints it.
+test('SC13-5/SC27A: the retired Guided provenance band does not return', () => {
+  assert.ok(!page.includes('id="guidedPipeline"'),
+    'the permanently hidden on-stage band must stay removed');
+  assert.ok(!page.includes('data-pipeline'),
+    'the scrim keyed on the retired band must stay removed');
+  const drawerStart = page.indexOf('id="panel"');
+  const drawerEnd = page.indexOf('</aside>', drawerStart);
+  const pipelineAt = page.indexOf('id="provenancePipeline"');
+  assert.ok(pipelineAt > drawerStart && pipelineAt < drawerEnd,
+    'the surviving provenance record is the Research one');
 });
 
 // The projector floor for the whole page is SC-17.1's gate. This one holds the
 // band SC-13 built to it: the counted figure carries at headline size and no
 // part of the diagram is set below the floor SC-17 will apply everywhere.
 test('SC13-5: the pipeline is typeset for a room, not for a scrolling box', () => {
-  const rules = [...page.matchAll(/#guidedPipeline [^{]*\{[^}]*font-size:\s*(\d+(?:\.\d+)?)px/g)]
+  const rules = [...page.matchAll(/\.pipeline[\w-]* \{[^}]*font-size:\s*(\d+(?:\.\d+)?)px/g)]
     .map((hit) => Number(hit[1]));
-  assert.ok(rules.length >= 4, `expected the band to set its own type scale, found ${rules.length} rules`);
-  assert.ok(Math.min(...rules) >= 9, `the band sets ${Math.min(...rules)}px, below the 9px floor`);
-  assert.match(page, /#guidedPipeline \.pipeline-figure \{[^}]*font-size: (2[0-9]|[3-9][0-9])px/,
-    'the counted figure is the payload and must carry at display size');
+  assert.ok(rules.length >= 4, `expected the record to set its own type scale, found ${rules.length} rules`);
+  assert.ok(Math.min(...rules) >= 9, `the record sets ${Math.min(...rules)}px, below the 9px floor`);
   assert.ok(!/\.pipeline-records \{[^}]*font-size: 8px/.test(page),
     'the 8 px record list must be gone');
 });

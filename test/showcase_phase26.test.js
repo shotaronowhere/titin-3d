@@ -144,15 +144,25 @@ test('SC26: exact reference strip accounts for every residue and every domain fe
 test('SC26: atomic evidence groups cover every claim while render status stays orthogonal', () => {
   const grouped = createEvidenceGroups(model);
   assert.deepEqual(grouped.groups.map((group) => group.id), [
-    'measured_source_direct', 'strongly_inferred', 'modeled', 'inferred', 'unknown',
+    'measured_source_direct', 'strongly_inferred', 'modeled', 'inferred', 'schematic', 'unknown',
   ]);
   const claims = grouped.groups.flatMap((group) => group.claims);
   assert.equal(claims.length, model.spec.claimSupport.claims.length);
   assert.equal(new Set(claims.map((claim) => claim.id)).size, claims.length);
   assert.ok(claims.every((claim) => ['MODELED', 'SCHEMATIC', 'UNKNOWN']
     .includes(claim.render_status)));
+  // Schematic is its own canonical class, not a synonym for Not known. The Tour
+  // teaches both in beat 5, so Research must not rewrite one into the other.
+  const schematic = grouped.groups.find((group) => group.id === 'schematic');
+  const notKnown = grouped.groups.find((group) => group.id === 'unknown');
+  assert.equal(schematic.label, 'Schematic');
+  assert.equal(notKnown.label, 'Not known');
+  assert.deepEqual(schematic.claims.map((claim) => claim.id), ['object_linked_tooltips']);
   assert.equal(claims.find((claim) => claim.id === 'object_linked_tooltips').scientific_status,
-    'UNKNOWN');
+    'SCHEMATIC');
+  assert.ok(claims.every((claim) => claim.scientific_status === claim.render_status
+    || claim.scientific_status !== 'UNKNOWN' || claim.render_status !== 'SCHEMATIC'),
+  'no schematic claim may be reported as unknown');
 });
 
 test('SC26: compliance plot has shares at supported lengths and nulls at omission boundaries', () => {

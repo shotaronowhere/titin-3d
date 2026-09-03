@@ -580,6 +580,32 @@ for (const viewport of SC27A_VIEWPORTS) {
   }
 }
 
+for (const viewport of [{ width: 1280, height: 720 }, { width: 1024, height: 768 },
+  { width: 375, height: 812 }]) {
+  test(`SC27A a pinned explanation never covers a scientific label at ${viewport.width}x${viewport.height}`,
+    async ({ page }) => {
+      await openTourState(page, viewport, 'meet_sarcomere', 'overview');
+      await clickProjectedLabel(page, 'Titin');
+      await expect(page.locator('#objectInspector')).toBeVisible();
+      await expect.poll(() => page.locator('#scienceOverlay').getAttribute('data-label-layout'))
+        .toBe('resolved');
+
+      const covered = await page.evaluate(() => {
+        const card = document.querySelector('#objectInspector').getBoundingClientRect();
+        return [...document.querySelectorAll('#scienceOverlay text')].flatMap((node) => {
+          if (getComputedStyle(node).visibility === 'hidden') return [];
+          const box = node.getBoundingClientRect();
+          if (box.width <= 0 || box.height <= 0) return [];
+          const overlapX = Math.min(box.right, card.right) - Math.max(box.left, card.left);
+          const overlapY = Math.min(box.bottom, card.bottom) - Math.max(box.top, card.top);
+          return overlapX > 0 && overlapY > 0
+            ? [`${node.textContent.trim()} (${overlapX.toFixed(1)}x${overlapY.toFixed(1)} px)`] : [];
+        });
+      });
+      expect(covered, 'the pinned explanation must not cover a scientific label').toEqual([]);
+    });
+}
+
 test('SC27A has one five-beat route, contextual mechanics, and a truthful Replay', async ({ page }) => {
   await openTour(page, { width: 1280, height: 720 });
   const stageComposition = await page.locator('#canvas').evaluate((node) => {

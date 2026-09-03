@@ -427,14 +427,22 @@ export function inspectorPlacement({
   // header's escape and the story card's escape are equally legal, and taking
   // whichever was listed first parks the explanation in a far corner while a
   // clear placement beside its molecule goes unused.
-  const escapes = [];
+  //
+  // Both axes are crossed rather than varied one at a time. Varying only one
+  // holds the other at its anchor-relative value, so a stage whose free space
+  // is diagonally offset from the anchor — the common case once the painted
+  // scientific labels are obstacles too — has no candidate at all in the clear
+  // region, and the scorer settles for the least-bad overlap instead of the
+  // placement that overlaps nothing.
+  const escapeX = [beside, otherSide];
+  const escapeY = [centredY];
   for (const obstacle of obstacles) {
-    escapes.push(
-      { left: obstacle.right + gapPx, top: centredY },
-      { left: obstacle.left - card.width - gapPx, top: centredY },
-      { left: beside, top: obstacle.bottom + gapPx },
-      { left: beside, top: obstacle.top - card.height - gapPx },
-    );
+    escapeX.push(obstacle.right + gapPx, obstacle.left - card.width - gapPx);
+    escapeY.push(obstacle.bottom + gapPx, obstacle.top - card.height - gapPx);
+  }
+  const escapes = [];
+  for (const left of escapeX) {
+    for (const top of escapeY) escapes.push({ left, top });
   }
   const anchorDistance = (candidate) => Math.hypot(
     clampLeft(candidate.left) + card.width / 2 - anchor.x_px,

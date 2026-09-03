@@ -242,7 +242,13 @@ const CLAIM_GROUPS = Object.freeze([
   Object.freeze({ id: 'strongly_inferred', label: 'Strongly inferred', classes: ['STRONGLY INFERRED'] }),
   Object.freeze({ id: 'modeled', label: 'Modeled', classes: ['MODELED'] }),
   Object.freeze({ id: 'inferred', label: 'Inferred', classes: ['INFERRED'] }),
-  Object.freeze({ id: 'unknown', label: 'Unknown', classes: ['UNKNOWN', 'SCHEMATIC'] }),
+  // Schematic and Not known are two of the five evidence labels the Tour
+  // teaches, and `data/presentation.json` defines them differently: a schematic
+  // claim is a drawn relationship rather than measured geometry, while an
+  // unknown one is a feature the evidence does not settle. Collapsing the first
+  // into the second would tell a reader we know less than we do.
+  Object.freeze({ id: 'schematic', label: 'Schematic', classes: ['SCHEMATIC'] }),
+  Object.freeze({ id: 'unknown', label: 'Not known', classes: ['UNKNOWN'] }),
 ]);
 
 /** Atomic claim groups; depiction status is deliberately orthogonal. */
@@ -263,7 +269,7 @@ export function createEvidenceGroups(model, { claimIds = null } = {}) {
         .map((claim) => ({
           id: claim.id,
           statement: claim.statement,
-          scientific_status: claim.claim_class === 'SCHEMATIC' ? 'UNKNOWN' : claim.claim_class,
+          scientific_status: claim.claim_class,
           source_direct: (claim.support || []).some((row) => row.relationship === 'direct'),
           render_status: claim.render_class,
           source_ids: Object.freeze((claim.support || []).map((row) => row.source_id)),

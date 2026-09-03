@@ -221,6 +221,73 @@ test('SC27A: history, viewport, and all-family overlay truth share atomic runtim
   assert.match(page, /@returns \{void\}\n \*\/\nfunction resolveInspectHintPosition/);
 });
 
+test('SC27A: Large type never makes any visible text smaller', () => {
+  // A control labelled Large type that shrinks the pinned explanation is worse
+  // than no control. Compare every large-mode declaration with the base rule for
+  // the same selector rather than trusting the block to be self-evidently right.
+  const base = new Map();
+  for (const [, selector, size] of page.matchAll(
+    /\n {2}([.#][\w-]+(?:, [.#][\w-]+)*) \{[^}]*font-size: (\d+(?:\.\d+)?)px/g,
+  )) {
+    for (const one of selector.split(', ')) {
+      if (!base.has(one)) base.set(one, Number(size));
+    }
+  }
+  const large = [...page.matchAll(
+    /#app\[data-text-scale="large"\] ([.#][\w-]+) \{[^}]*font-size: (\d+(?:\.\d+)?)px/g,
+  )];
+  assert.ok(large.length >= 2, 'the large-type block must set sizes');
+  for (const [, selector, size] of large) {
+    const normal = base.get(selector);
+    if (normal === undefined) continue;
+    assert.ok(Number(size) >= normal,
+      `Large type sets ${selector} to ${size}px, below its ${normal}px default`);
+  }
+});
+
+test('SC27A: Escape closes the last-opened surface and never focuses an inert canvas', () => {
+  assert.match(page, /let surfaceOpenSequence = 0;/);
+  assert.match(page, /pinnedOpenedAt = \+\+surfaceOpenSequence;/);
+  assert.match(page, /drawerOpenedAt = \+\+surfaceOpenSequence;/);
+  assert.match(page,
+    /pinnedOpen && \(!drawerOpen \|\| pinnedOpenedAt > drawerOpenedAt\)\) clearPinnedSelection\(\);/);
+  assert.match(page, /if \(!\$\('canvas'\)\.inert\) \$\('canvas'\)\.focus\(\);/);
+  // The retired fixed order always spent Escape on the selection first.
+  assert.ok(!/Escape' && pinnedPick\)/.test(page),
+    'the fixed selection-first Escape order must not return');
+});
+
+test('SC27A: the Tour-return accelerator uses the focus-restoring close path', () => {
+  assert.match(page,
+    /action === 'mode\.guided'\) \{\s*if \(state\.audienceMode === AUDIENCE_MODES\.evidence\) closeEvidence\(\);/);
+});
+
+test('SC27A: every surface that can hide a scientific label is an overlay obstacle', () => {
+  // The pinned explanation is as opaque as the Tour card. Measuring only the
+  // card reported a resolved overlay while the card sat across the locator.
+  assert.match(page, /const chromeObstacles = \[/);
+  assert.match(page, /name: 'the Tour card'/);
+  assert.match(page, /name: 'the pinned explanation'/);
+  assert.match(page, /is covered by \$\{what\}/);
+  // The short-circuit must see a pin, or the pass never re-runs.
+  assert.match(page, /inspector: inspectorRect && \[inspectorRect\.top - canvasRect\.top,/);
+  // Fixed label families cannot move, so the card is what gives way.
+  assert.match(page, /id: `science-label:\$\{node\.textContent\.trim\(\) \|\| 'unnamed'\}`/);
+  for (const resolver of ['resolveTerminusLabelCollisions', 'auditPaintedOverlayLayout',
+    'resolveInspectHintPosition']) {
+    assert.match(page, new RegExp(`function ${resolver}\\(svg, \\{ canvas, header, chrome \\}\\)`),
+      `${resolver} must take the full chrome list`);
+  }
+});
+
+test('SC27A: the retired Guided provenance band leaves nothing behind', () => {
+  for (const dead of ['guidedPipeline', 'data-pipeline', 'provenance_pipeline']) {
+    assert.ok(!page.includes(dead), `${dead} must not ship`);
+  }
+  assert.ok(!page.includes('compact = false'),
+    'the band-only compact record option must not ship');
+});
+
 test('SC27A: the compact-stage envelope is one governed threshold, not a repeated literal', () => {
   assert.equal(STAGE_LAYOUT.compact_stage_height_px, 700);
   // Read the six release viewports from their single declaration rather than

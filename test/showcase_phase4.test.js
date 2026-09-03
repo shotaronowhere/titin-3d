@@ -243,7 +243,11 @@ test('SC4: page wires one synchronized accessible tooltip and pinned explanation
   assert.match(page, /visualization\.resolveAnnotation\(selection\)/);
   assert.match(page, /event\.pointerType === 'touch' \? 12 : 5/);
   assert.match(page, /\['ArrowLeft', 'ArrowRight', 'Enter', ' '\]/);
-  assert.match(page, /event\.key === 'Escape' && pinnedPick/);
+  // SC-27A: Escape still dismisses the pinned explanation, but in last-opened
+  // order rather than always spending the key on the selection first.
+  assert.match(page, /if \(event\.key === 'Escape'\) \{/);
+  assert.match(page, /const pinnedOpen = Boolean\(pinnedPick\);/);
+  assert.match(page, /pinnedOpenedAt > drawerOpenedAt\)\) clearPinnedSelection\(\);/);
   assert.match(page, /renderSelectedEvidence\(annotation\)/);
   assert.match(page, /guidedSelectionLabel/);
   assert.match(page, /syncComponentButtons\(visualization\.currentState\(\)\)/);

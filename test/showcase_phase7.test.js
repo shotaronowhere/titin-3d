@@ -338,7 +338,6 @@ test('SC7/SC27A: the page renders the Tour, recap chips, and Research pipeline',
   assert.match(page, /new TourView/);
   assert.match(page, /id="tourEvidenceRecap"/);
   assert.match(page, /id="provenancePipeline"/);
-  assert.match(page, /id="guidedPipeline"/);
   assert.match(page, /function renderProvenancePipeline/);
   assert.match(page, /visualization\.provenancePipeline\(\)/);
   assert.match(page, /renderProvenancePipeline\(\);/);
@@ -354,8 +353,6 @@ test('SC7/SC27A: the page renders the Tour, recap chips, and Research pipeline',
   const drawerEnd = page.indexOf('</aside>', drawerStart);
   const pipelineAt = page.indexOf('id="provenancePipeline"');
   assert.ok(pipelineAt > drawerStart && pipelineAt < drawerEnd);
-  const guidedAt = page.indexOf('id="guidedPipeline"');
-  assert.ok(guidedAt < drawerStart);
-  assert.match(page.slice(guidedAt, guidedAt + 120), /hidden/,
-    'the legacy pipeline cannot compete with the five-beat Tour');
+  assert.ok(!page.includes('id="guidedPipeline"'),
+    'the retired on-stage pipeline cannot compete with the five-beat Tour');
 });

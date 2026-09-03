@@ -358,7 +358,7 @@ window.__titinBoot = { ready: false, problems: [] };
     display: flex; flex-direction: column; align-items: flex-start; }
   #stageHeader { width: 100%; display: flex; align-items: flex-start; justify-content: space-between;
     gap: 12px; }
-  .brand-block, #scopeBadge, #guidedCard, #urlNotice, #guidedPipeline { background: var(--chrome);
+  .brand-block, #scopeBadge, #guidedCard, #urlNotice { background: var(--chrome);
     border: 1px solid rgb(116 133 154 / 38%); box-shadow: 0 10px 32px rgb(0 0 0 / 28%);
     backdrop-filter: blur(10px); }
   .brand-block { pointer-events: auto; display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap;
@@ -464,6 +464,8 @@ window.__titinBoot = { ready: false, problems: [] };
     #e8c16d 0 4px, #463a20 4px 8px); }
   .evidence-pattern-inferred { background: repeating-linear-gradient(45deg,
     #7f8b9c 0 3px, #252d38 3px 7px); }
+  .evidence-pattern-schematic { background: repeating-linear-gradient(90deg,
+    #5f6b7c 0 2px, #202832 2px 6px); }
   .evidence-pattern-unknown { background: repeating-linear-gradient(90deg,
     transparent 0 3px, #7f8b9c 3px 4px); }
   .atomic-claim-row { margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--edge);
@@ -493,24 +495,7 @@ window.__titinBoot = { ready: false, problems: [] };
      each, the counted figure at headline size because the figure is the payload,
      and no inner scroll region at any supported width. Nothing here is a number;
      every figure still arrives from ProvenancePipeline at render time. */
-  #guidedPipeline { pointer-events: auto; width: 100%; margin-top: 10px;
-    border-radius: 10px; padding: 12px 14px 11px; border-top: 2px solid #3f5a7a; }
-  #app[data-mode="evidence"] #guidedPipeline { display: none; }
-  #guidedPipeline .pipeline { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 9px 14px; margin: 0; padding-top: 0; border-top: 0; }
-  #guidedPipeline .pipeline-stage { padding: 0 0 0 10px; }
-  #guidedPipeline .pipeline-stage::before { top: 6px; }
-  #guidedPipeline .pipeline-label { font-size: 12px; line-height: 1.25; }
-  #guidedPipeline .pipeline-figure { display: block; font-size: 30px; font-weight: 700;
-    line-height: 1.1; margin-top: 2px; }
-  #guidedPipeline .pipeline-unit { display: block; color: var(--dim); font-size: 12px;
-    line-height: 1.3; }
-  #guidedPipeline .pipeline-detail { font-size: 12px; margin-top: 4px; }
-  #guidedPipeline .pipeline-records { font-size: 12px; }
-  #guidedPipeline .pipeline-foot { grid-column: 1 / -1; font-size: 12px; margin-top: 0; }
   /* The scene is the backdrop to the argument here, not its competitor. */
-  #app[data-mode="guided"] #stageChrome[data-pipeline="true"]::before { content: "";
-    position: absolute; inset: 0; z-index: -1; background: rgb(14 17 22 / 62%); }
   /* The guided card floats over the stage and has no height of its own, so the
      long chapter attachment is bounded here rather than being allowed to push
      the card off the top of the viewport on a short screen. */
@@ -538,7 +523,7 @@ window.__titinBoot = { ready: false, problems: [] };
   #app[data-text-scale="large"] .note,
   #app[data-text-scale="large"] li,
   #app[data-text-scale="large"] td { font-size: 13px; }
-  #app[data-text-scale="large"] .object-lay { font-size: 14px; }
+  #app[data-text-scale="large"] .object-lay { font-size: 17px; }
   #app[data-text-scale="large"] #chapterSummary { font-size: 16px; }
   /* Tablet touch targets. The drawer's density is deliberate on a desktop, where a
      mouse can hit a 28 px control comfortably; a finger cannot. Keyed on the
@@ -564,13 +549,6 @@ window.__titinBoot = { ready: false, problems: [] };
     /* Two rows of three: six columns on a phone would be six words wide. The
        stage keeps the flow and its counted figures; the sentence and the record
        paths for each stage stay one tap away, in Sources & build. */
-    #guidedPipeline { padding: 8px 9px; margin-top: 8px; }
-    #guidedPipeline .pipeline { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px 9px; }
-    #guidedPipeline .pipeline-figure { font-size: 20px; margin-top: 0; }
-    #guidedPipeline .pipeline-label { font-size: 12px; line-height: 1.2; }
-    #guidedPipeline .pipeline-unit { font-size: 12px; line-height: 1.25; }
-    #guidedPipeline .pipeline-foot { font-size: 12px; }
-    #guidedPipeline .pipeline-detail, #guidedPipeline .pipeline-records { display: none; }
   }
   /* SC-27A Tour and Research surfaces. */
   html, body { font-size: 15px; }
@@ -771,7 +749,6 @@ window.__titinBoot = { ready: false, problems: [] };
            chapter attachment — hidden unless the active chapter declares the
            feature — but it is laid across the full width, at a size that
            survives a projector. -->
-      <section id="guidedPipeline" aria-label="How this model was built" hidden></section>
       <section id="guidedCard" aria-labelledby="chapterTitle">
         <div class="story-surface-head">
           <div>
@@ -1272,6 +1249,16 @@ function mobileResearchActive(drawerOpen) {
   return drawerOpen && mobileResearchMedia.matches;
 }
 
+/**
+ * Escape closes the object explanation or Research in last-opened order, which
+ * the design requires. Either surface can be opened while the other is already
+ * open, so neither is unconditionally on top and a boolean will not do: stamp
+ * each opening with a monotonic sequence and close the higher one first.
+ */
+let surfaceOpenSequence = 0;
+let pinnedOpenedAt = 0;
+let drawerOpenedAt = 0;
+
 function syncAudienceMode() {
   const evidence = state.audienceMode === AUDIENCE_MODES.evidence;
   const drawerOpen = evidence && state.drawer !== 'closed';
@@ -1279,6 +1266,9 @@ function syncAudienceMode() {
   const reframe = $('app').dataset.mode !== state.audienceMode
     || $('app').dataset.drawerOpen !== String(drawerOpen)
     || $('app').dataset.mobileResearch !== String(mobileResearch);
+  // Read before the dataset is overwritten below, so this sees the transition.
+  if (!drawerOpen) drawerOpenedAt = 0;
+  else if ($('app').dataset.drawerOpen !== 'true') drawerOpenedAt = ++surfaceOpenSequence;
   $('app').dataset.mode = state.audienceMode;
   $('app').dataset.drawerOpen = String(drawerOpen);
   $('app').dataset.mobileResearch = String(mobileResearch);
@@ -1487,15 +1477,17 @@ for (const id of unboundShortcutIds(presentation)) {
 }
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && pinnedPick) {
-    event.preventDefault();
-    clearPinnedSelection();
-    return;
-  }
-  if (event.key === 'Escape' && state.drawer !== 'closed') {
-    event.preventDefault();
-    closeEvidence();
-    return;
+  if (event.key === 'Escape') {
+    const pinnedOpen = Boolean(pinnedPick);
+    const drawerOpen = state.drawer !== 'closed';
+    if (pinnedOpen || drawerOpen) {
+      event.preventDefault();
+      // Last opened, first closed. Live state decides what is open; the stamps
+      // only order two surfaces that are both open.
+      if (pinnedOpen && (!drawerOpen || pinnedOpenedAt > drawerOpenedAt)) clearPinnedSelection();
+      else closeEvidence();
+      return;
+    }
   }
   // Presenter shortcuts. The actions come from the validated presentation
   // record, so a shortcut cannot name a chapter or mode that does not exist.
@@ -1525,10 +1517,7 @@ document.addEventListener('keydown', (event) => {
   // the drawer also returns focus the way Escape and Close do — and so pressing
   // it in Guided mode is not a scene rebuild that changes nothing.
   else if (action === 'mode.guided') {
-    if (state.audienceMode === AUDIENCE_MODES.evidence) {
-      requestHistoryEntry();
-      setAudienceMode(AUDIENCE_MODES.guided);
-    }
+    if (state.audienceMode === AUDIENCE_MODES.evidence) closeEvidence();
   } else if (action === 'sweep.toggle') toggleSweep();
 });
 announceUrlIssues(restored.issues);
@@ -1945,10 +1934,10 @@ function selectableLabel(label, target, box) {
  * animated camera path cannot strand a label in a full horizontal lane.
  *
  * @param {SVGSVGElement} svg
- * @param {{canvas:DOMRect, header:DOMRect, card:DOMRect|null}} obstacles
+ * @param {{canvas:DOMRect, header:DOMRect, chrome:{box:DOMRect,name:string}[]}} obstacles
  * @returns {string[]} terminus IDs for which no collision-free position exists
  */
-function resolveTerminusLabelCollisions(svg, { canvas, header, card }) {
+function resolveTerminusLabelCollisions(svg, { canvas, header, chrome }) {
   const tolerance = STAGE_LAYOUT.label_collision_tolerance_px;
   const overlaps = (a, b, margin = tolerance) => (
     Math.min(a.right, b.right) - Math.max(a.left, b.left) > margin
@@ -2003,8 +1992,9 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, card }) {
       const box = shifted(labelBox, dx, dy);
       const target = shifted(hitBox, dx, dy);
       return inside(box) && (!target || inside(target))
-        && !overlaps(box, header, 0) && (!card || !overlaps(box, card, 0))
-        && (!target || (!overlaps(target, header, 0) && (!card || !overlaps(target, card, 0))))
+        && !overlaps(box, header, 0) && chrome.every(({ box: over }) => !overlaps(box, over, 0))
+        && (!target || (!overlaps(target, header, 0)
+          && chrome.every(({ box: over }) => !overlaps(target, over, 0))))
         && otherLabelBoxes.every((otherBox) => !overlaps(box, otherBox))
         && (!target || otherHitBoxes.every((otherBox) => !overlaps(target, otherBox, 0)));
     };
@@ -2031,7 +2021,7 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, card }) {
     };
     addInsideEdges(labelBox);
     addInsideEdges(hitBox);
-    for (const obstacle of [header, card]) {
+    for (const obstacle of [header, ...chrome.map(({ box }) => box)]) {
       addObstacleEdges(labelBox, obstacle, 0);
       addObstacleEdges(hitBox, obstacle, 0);
     }
@@ -2073,10 +2063,10 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, card }) {
  * another by the same rendered-glyph tolerance used by the browser gates.
  *
  * @param {SVGSVGElement} svg
- * @param {{canvas:DOMRect, header:DOMRect, card:DOMRect|null}} obstacles
+ * @param {{canvas:DOMRect, header:DOMRect, chrome:{box:DOMRect,name:string}[]}} obstacles
  * @returns {string[]} human-readable layout findings
  */
-function auditPaintedOverlayLayout(svg, { canvas, header, card }) {
+function auditPaintedOverlayLayout(svg, { canvas, header, chrome }) {
   const tolerance = STAGE_LAYOUT.label_collision_tolerance_px;
   const overlaps = (a, b, margin = tolerance) => (
     Math.min(a.right, b.right) - Math.max(a.left, b.left) > margin
@@ -2095,7 +2085,9 @@ function auditPaintedOverlayLayout(svg, { canvas, header, card }) {
       findings.push(`${name(node)} is outside the canvas`);
     }
     if (overlaps(box, header, 0)) findings.push(`${name(node)} overlaps the stage header`);
-    if (card && overlaps(box, card, 0)) findings.push(`${name(node)} overlaps the Tour card`);
+    for (const { box: over, name: what } of chrome) {
+      if (overlaps(box, over, 0)) findings.push(`${name(node)} is covered by ${what}`);
+    }
   }
   for (let index = 0; index < labels.length; index += 1) {
     for (let other = index + 1; other < labels.length; other += 1) {
@@ -2142,10 +2134,10 @@ function syncInspectHintSurface(canvas, compactHeight) {
  * what the runtime, the browser gates, and the capture audit all read.
  *
  * @param {SVGSVGElement} svg
- * @param {{canvas:DOMRect, header:DOMRect, card:DOMRect|null}} obstacles
+ * @param {{canvas:DOMRect, header:DOMRect, chrome:{box:DOMRect,name:string}[]}} obstacles
  * @returns {void}
  */
-function resolveInspectHintPosition(svg, { canvas, header, card }) {
+function resolveInspectHintPosition(svg, { canvas, header, chrome }) {
   const hint = $('inspectHint');
   if (hint.hidden) {
     $('inspectHintText').textContent = 'Click or tap a structure to explain it';
@@ -2176,7 +2168,7 @@ function resolveInspectHintPosition(svg, { canvas, header, card }) {
     box.left >= canvas.left + chromeGap && box.right <= canvas.right - chromeGap
     && box.top >= canvas.top + chromeGap && box.bottom <= canvas.bottom - chromeGap
     && separated(box, header, chromeGap)
-    && (!card || separated(box, card, chromeGap))
+    && chrome.every(({ box: over }) => separated(box, over, chromeGap))
     && labelBoxes.every((labelBox) => separated(box, labelBox, labelGap))
   );
   const place = () => {
@@ -2191,7 +2183,7 @@ function resolveInspectHintPosition(svg, { canvas, header, card }) {
     const topCandidates = [preferredTop];
     const obstaclesWithGap = [
       { box: header, margin: chromeGap },
-      ...(card ? [{ box: card, margin: chromeGap }] : []),
+      ...chrome.map(({ box }) => ({ box, margin: chromeGap })),
       ...labelBoxes.map((box) => ({ box, margin: labelGap })),
     ];
     // Boundary-derived candidates cannot skip a narrow valid slot when the
@@ -2395,6 +2387,19 @@ function renderScienceOverlay({ transient = false } = {}) {
     right: cardRect.right - canvasRect.left,
     bottom: cardRect.bottom - canvasRect.top,
   } : null;
+  // Everything that floats over the canvas and can therefore hide a scientific
+  // label. The pinned explanation is as opaque as the Tour card, so a label
+  // placed under it is just as unreadable; measuring only the card reported a
+  // resolved overlay while the selected-object card sat across the locator.
+  // Measured in the same batch as the rectangles above, not a second flush.
+  const inspectorNode = $('objectInspector');
+  const inspectorRect = inspectorNode.hidden || inspectorNode.offsetParent === null
+    ? null : inspectorNode.getBoundingClientRect();
+  const chromeObstacles = [
+    ...(cardRect ? [{ box: cardRect, name: 'the Tour card' }] : []),
+    ...(inspectorRect && inspectorRect.width > 0 && inspectorRect.height > 0
+      ? [{ box: inspectorRect, name: 'the pinned explanation' }] : []),
+  ];
   const projectionSignature = JSON.stringify({
     length: activeShowcaseOverlay.sarcomere_length_nm,
     width, height, showBands,
@@ -2410,6 +2415,11 @@ function renderScienceOverlay({ transient = false } = {}) {
     headerBottom: Math.round(safeTopPx * 4) / 4,
     card: cardBox && [cardBox.top, cardBox.right, cardBox.bottom]
       .map((edge) => Math.round(edge * 4) / 4),
+    // Without this the short-circuit below would skip the re-measurement that
+    // pinning or dismissing an explanation requires.
+    inspector: inspectorRect && [inspectorRect.top - canvasRect.top,
+      inspectorRect.left - canvasRect.left, inspectorRect.right - canvasRect.left,
+      inspectorRect.bottom - canvasRect.top].map((edge) => Math.round(edge * 4) / 4),
     hint: $('inspectHint').hidden ? null
       : [$('inspectHint').offsetWidth, $('inspectHint').offsetHeight],
     scale: pxPerNm === null ? null : Math.round(pxPerNm * 1e4),
@@ -2434,7 +2444,7 @@ function renderScienceOverlay({ transient = false } = {}) {
     resolveInspectHintPosition(svg, {
       canvas: canvasRect,
       header: stageHeaderRect,
-      card: cardRect,
+      chrome: chromeObstacles,
     });
     return;
   }
@@ -2691,7 +2701,7 @@ function renderScienceOverlay({ transient = false } = {}) {
   const unresolvedLabels = resolveTerminusLabelCollisions(svg, {
     canvas: canvasRect,
     header: stageHeaderRect,
-    card: cardRect,
+    chrome: chromeObstacles,
   });
   const compactTerminiSuppressed = unresolvedLabels.length > 0
     && height < STAGE_LAYOUT.compact_stage_height_px;
@@ -2718,7 +2728,7 @@ function renderScienceOverlay({ transient = false } = {}) {
     const layoutFindings = auditPaintedOverlayLayout(svg, {
       canvas: canvasRect,
       header: stageHeaderRect,
-      card: cardRect,
+      chrome: chromeObstacles,
     });
     if (unresolvedLabels.length && !compactTerminiSuppressed) {
       layoutFindings.unshift(`unplaced termini: ${unresolvedLabels.join(', ')}`);
@@ -2729,7 +2739,7 @@ function renderScienceOverlay({ transient = false } = {}) {
   resolveInspectHintPosition(svg, {
     canvas: canvasRect,
     header: stageHeaderRect,
-    card: cardRect,
+    chrome: chromeObstacles,
   });
 }
 
@@ -2738,7 +2748,7 @@ function renderScienceOverlay({ transient = false } = {}) {
  * from the loaded records — a diagram asserting its own numbers would be exactly
  * the unaudited illustration the chapter says this is not.
  */
-function pipelineNode(pipeline, { compact = false } = {}) {
+function pipelineNode(pipeline) {
   const wrapper = document.createElement('div');
   wrapper.className = 'pipeline';
   for (const stage of pipeline.stages) {
@@ -2768,10 +2778,7 @@ function pipelineNode(pipeline, { compact = false } = {}) {
     // names is already going.
     const records = document.createElement('div');
     records.className = 'pipeline-records';
-    const remaining = stage.records.length - 1;
-    records.textContent = compact && remaining > 0
-      ? `${stage.records[0]} · +${remaining} more`
-      : stage.records.join(' · ');
+    records.textContent = stage.records.join(' · ');
     records.title = stage.records.join(' · ');
     row.append(head, count, detail, records);
     wrapper.append(row);
@@ -2786,13 +2793,6 @@ function pipelineNode(pipeline, { compact = false } = {}) {
 function renderProvenancePipeline() {
   const pipeline = visualization.provenancePipeline();
   $('provenancePipeline').replaceChildren(pipelineNode(pipeline));
-  const guided = $('guidedPipeline');
-  const show = activeFeatures().has('provenance_pipeline');
-  guided.hidden = !show;
-  guided.replaceChildren(...(show ? [pipelineNode(pipeline, { compact: true })] : []));
-  // The scrim behind the band is a property of the chapter, so it is switched
-  // where the band is, not from a second place that could disagree with it.
-  $('stageChrome').dataset.pipeline = String(show);
 }
 
 /**
@@ -4245,6 +4245,7 @@ function setPinnedSelection(selection, { synchronizeBiology = true } = {}) {
   // legend entry, annotation index — so this is where the one-time invitation is
   // spent. Hooking the pointer handler instead would leave a keyboard-only reader
   // being invited to click forever.
+  if (!pinnedPick) pinnedOpenedAt = ++surfaceOpenSequence;
   completeInspectionOnboarding();
   pinnedPick = { ...selection };
   hoverPick = null;
@@ -4284,7 +4285,10 @@ function clearPinnedSelection({ preserveBiologicalSelection = false } = {}) {
   renderInspectionWorkbench();
   if (state.drawerTab === 'sources') renderBibliography();
   markStageDirty();
-  $('canvas').focus();
+  pinnedOpenedAt = 0;
+  // Mobile Research replaces the stage with a full-screen sheet and makes the
+  // canvas inert. Returning focus there would drop it out of the open sheet.
+  if (!$('canvas').inert) $('canvas').focus();
 }
 
 $('objectInspectorClose').onclick = () => clearPinnedSelection();
@@ -4384,8 +4388,7 @@ function showHoverPick(pick) {
  * back instead of reserving a rectangle nobody can see.
  */
 function stageObstacles(canvasRect) {
-  const ids = ['stageHeader', 'guidedCard', 'guidedPipeline', 'inspectHint',
-    'urlNotice'];
+  const ids = ['stageHeader', 'guidedCard', 'inspectHint', 'urlNotice'];
   const obstacles = [];
   for (const id of ids) {
     const node = $(id);
@@ -4394,6 +4397,23 @@ function stageObstacles(canvasRect) {
     if (rect.width <= 0 || rect.height <= 0) continue;
     obstacles.push({
       id,
+      left: rect.left - canvasRect.left,
+      top: rect.top - canvasRect.top,
+      right: rect.right - canvasRect.left,
+      bottom: rect.bottom - canvasRect.top,
+    });
+  }
+  // The painted scientific labels are obstacles too. Most of them — locator,
+  // band, identity and scale names — are fixed to what they measure and cannot
+  // be moved out from under a card, so the card is the surface that has to give
+  // way. `inspectorPlacement` scores by least overlap and always answers, so
+  // adding these can only improve the chosen placement, never prevent one.
+  for (const node of $('scienceOverlay').querySelectorAll('text')) {
+    if (getComputedStyle(node).visibility === 'hidden') continue;
+    const rect = node.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) continue;
+    obstacles.push({
+      id: `science-label:${node.textContent.trim() || 'unnamed'}`,
       left: rect.left - canvasRect.left,
       top: rect.top - canvasRect.top,
       right: rect.right - canvasRect.left,
@@ -5065,14 +5085,7 @@ function unobscuredFrameOptions({ animate = false } = {}) {
   const storyCard = $('guidedCard');
   const storyBox = !storyCard.hidden && storyCard.getClientRects().length
     ? storyCard.getBoundingClientRect() : null;
-  const pipeline = $('guidedPipeline');
-  const pipelineBox = !pipeline.hidden && pipeline.getClientRects().length
-    ? pipeline.getBoundingClientRect() : null;
-  const safeTop = Math.max(
-    0,
-    headerBox.bottom - canvasBox.top,
-    pipelineBox ? pipelineBox.bottom - canvasBox.top : 0,
-  );
+  const safeTop = Math.max(0, headerBox.bottom - canvasBox.top);
   const safeBottom = Math.min(
     canvasBox.height,
     storyBox ? storyBox.top - canvasBox.top : Infinity,
