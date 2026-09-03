@@ -237,12 +237,24 @@ test('SC27A: Large type never makes any visible text smaller', () => {
     /#app\[data-text-scale="large"\] ([.#][\w-]+) \{[^}]*font-size: (\d+(?:\.\d+)?)px/g,
   )];
   assert.ok(large.length >= 2, 'the large-type block must set sizes');
+  let enlarged = 0;
   for (const [, selector, size] of large) {
     const normal = base.get(selector);
     if (normal === undefined) continue;
     assert.ok(Number(size) >= normal,
       `Large type sets ${selector} to ${size}px, below its ${normal}px default`);
+    if (Number(size) > normal) enlarged += 1;
   }
+  // "Never smaller" passes on equality, so a control that does nothing would
+  // satisfy it. Require that it actually enlarges something.
+  assert.ok(enlarged > 0, 'Large type must enlarge at least one visible selector');
+});
+
+test('SC27A: the generated review checklist uses current vocabulary', () => {
+  const matrix = readFileSync('src/presentation/VisualMatrix.js', 'utf8');
+  assert.ok(!/Explore \/ Inspect/.test(matrix),
+    'the retired Explore vocabulary must not reach the human checklist');
+  assert.match(matrix, /Research \/ Inspect/);
 });
 
 test('SC27A: Escape closes the last-opened surface and never focuses an inert canvas', () => {

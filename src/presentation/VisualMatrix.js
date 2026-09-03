@@ -166,7 +166,7 @@ export function createVisualMatrix(model, capabilities) {
   });
   for (const viewport of VIEWPORTS) {
     cell(`evidence_${viewport.id}`, 'evidence_mode', viewport.id,
-      evidenceBase, `Explore / Inspect — ${viewport.label}`);
+      evidenceBase, `Research / Inspect — ${viewport.label}`);
   }
 
   const states = model.spec.states.states;

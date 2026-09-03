@@ -47,7 +47,11 @@ for (const viewport of [
     // classes in the five-label curriculum beat 5 teaches, and Research must not
     // report a drawn relationship as an unresolved one.
     await expect(page.locator('#claimEvidenceGroups .claim-evidence-group')).toHaveCount(6);
-    await expect(page.locator('[data-evidence-group="measured_source_direct"]')).toContainText('Measured / source-direct');
+    // The class label is "Measured"; source-directness is a per-claim fact shown
+    // on each row, because six of these claims are not source-direct.
+    await expect(page.locator('[data-evidence-group="measured_source_direct"]')).toContainText('Measured');
+    await expect(page.locator('[data-evidence-group="measured_source_direct"]'))
+      .toContainText('not source-direct');
     await expect(page.locator('[data-evidence-group="modeled"]')).toContainText('Modeled');
     await expect(page.locator('[data-evidence-group="schematic"]')).toContainText('Schematic');
     await expect(page.locator('[data-evidence-group="unknown"]')).toContainText('Not known');

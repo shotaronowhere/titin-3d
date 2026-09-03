@@ -238,7 +238,12 @@ export function createReferenceDomainStrip(model) {
 }
 
 const CLAIM_GROUPS = Object.freeze([
-  Object.freeze({ id: 'measured_source_direct', label: 'Measured / source-direct', classes: ['MEASURED'] }),
+  // The group is the MEASURED class, and `data/presentation.json` names that
+  // class "Measured". Source-directness is a per-claim property, not a property
+  // of the class: six of these claims reach their sources through context or
+  // derivation rather than directly, so a group label promising source-direct
+  // evidence overstated them. The id stays stable as a compatibility key.
+  Object.freeze({ id: 'measured_source_direct', label: 'Measured', classes: ['MEASURED'] }),
   Object.freeze({ id: 'strongly_inferred', label: 'Strongly inferred', classes: ['STRONGLY INFERRED'] }),
   Object.freeze({ id: 'modeled', label: 'Modeled', classes: ['MODELED'] }),
   Object.freeze({ id: 'inferred', label: 'Inferred', classes: ['INFERRED'] }),

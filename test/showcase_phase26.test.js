@@ -157,6 +157,15 @@ test('SC26: atomic evidence groups cover every claim while render status stays o
   const notKnown = grouped.groups.find((group) => group.id === 'unknown');
   assert.equal(schematic.label, 'Schematic');
   assert.equal(notKnown.label, 'Not known');
+  // A group label may only assert what is true of every member. Six of the
+  // thirteen MEASURED claims are not source-direct, so the class carries its
+  // canonical name and source-directness stays a per-claim fact.
+  const measured = grouped.groups.find((group) => group.id === 'measured_source_direct');
+  assert.equal(measured.label, 'Measured');
+  assert.ok(measured.claims.some((claim) => claim.source_direct === false),
+    'the fixture must still contain a measured claim that is not source-direct');
+  assert.ok(measured.claims.every((claim) => typeof claim.source_direct === 'boolean'),
+    'every claim carries the flag the row renders');
   assert.deepEqual(schematic.claims.map((claim) => claim.id), ['object_linked_tooltips']);
   assert.equal(claims.find((claim) => claim.id === 'object_linked_tooltips').scientific_status,
     'SCHEMATIC');

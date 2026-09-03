@@ -3841,7 +3841,10 @@ function renderClaimEvidenceGroups() {
       const row = document.createElement('div'); row.className = 'atomic-claim-row';
       const name = document.createElement('b'); name.textContent = claim.id;
       const render = document.createElement('span'); render.className = 'render-status';
-      render.textContent = `render ${claim.render_status}`;
+      // Source-directness is computed per claim and was being discarded here,
+      // which is what left the group label carrying the claim instead.
+      render.textContent = `render ${claim.render_status} · `
+        + `${claim.source_direct ? 'source-direct' : 'not source-direct'}`;
       const statement = document.createElement('div'); statement.textContent = claim.statement;
       row.append(name, render, statement); details.append(row);
     }

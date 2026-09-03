@@ -441,7 +441,7 @@
         "id": "drawer_text",
         "foreground": "#e6ebf1",
         "background": "#161b22",
-        "role": "Evidence drawer text",
+        "role": "Research panel text",
         "min_ratio": 4.5
       },
       {
@@ -683,7 +683,7 @@
       },
       {
         "id": "readme",
-        "requirement": "README with Guided/Evidence instructions and scope",
+        "requirement": "README with Tour/Research instructions and scope",
         "verification": "automated",
         "status": "PASS",
         "verified_by": "test/showcase_phase9.test.js"
