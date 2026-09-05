@@ -6,11 +6,13 @@ supporting claims, source locators, preparation limits, and model outputs. Indep
 scientific validation and human usability review are pending. We are sharing it to solicit
 corrections before broader educational use.
 
-**Draft distribution instructions — ZIP assembly is pending at handoff.** Extract the
-complete ZIP and open `index.html` in a desktop browser with WebGL. Keep the adjacent
-`release` folder. If 3D is unavailable, open `release/fallback/scope.svg`, then the other
-five SVG slides in that folder; `release/LEARN_TRANSCRIPT.md` supplies the text route.
-The package's `DELIVERY.md` will record the exact candidate identity and verification scope.
+**How to open this package.** Extract the complete ZIP and open `index.html` in a desktop
+browser with WebGL. Keep the adjacent `release` folder. Nothing here needs a server or a
+network connection. If 3D is unavailable, open `release/fallback/scope.svg`, then the other
+five SVG slides in that folder — `architecture`, `extension`, `lattice`, `provenance`,
+`limitations`; `release/LEARN_TRANSCRIPT.md` supplies the same route as text.
+`DELIVERY.md`, beside this note, records the exact candidate identity and verification scope,
+including what has **not** been checked.
 
 **Three-minute tour:**
 

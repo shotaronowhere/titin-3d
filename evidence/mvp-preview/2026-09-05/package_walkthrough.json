@@ -1,0 +1,93 @@
+{
+  "package_root": "/private/tmp/claude-501/-Users-shotaro-Downloads-artifacts/df9d7b68-62bb-4595-b9f0-fc7e8cf6881a/scratchpad/extracted/titin-sarcomere-preview",
+  "index_sha256": "b5ee9beb2ea4f7b9c26dd25d5574018952a4f1518c6af12573e4b758086f4f5e",
+  "note": "Offline route walkthrough of the extracted package. Not human usability evidence.",
+  "beats": [
+    {
+      "progress": "Beat 1 of 5",
+      "headline": "Meet the sarcomere",
+      "headline_present": true
+    },
+    {
+      "progress": "Beat 2 of 5",
+      "headline": "Follow one giant molecule",
+      "headline_present": true
+    },
+    {
+      "progress": "Beat 3 of 5",
+      "headline": "Build and stretch the spring",
+      "headline_present": true
+    },
+    {
+      "progress": "Beat 4 of 5",
+      "headline": "Scaffold the thick filament",
+      "headline_present": true
+    },
+    {
+      "progress": "Beat 5 of 5",
+      "headline": "What do we know?",
+      "headline_present": true
+    }
+  ],
+  "mechanics": {
+    "endpoint_length_nm": 2400,
+    "announcement": "Stretch complete at the supported maximum. The full half-sarcomere and I-band bracket remain framed.",
+    "tour_force_chip": "≈1.3 pN · supported · modeled passive force per titin",
+    "research_states_sensitivity": true,
+    "research_states_not_a_confidence_interval": true,
+    "export_download": "titin-state.json"
+  },
+  "export_build": {
+    "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+    "app_revision": "557f09aaa6f663b4e1bf958ef6c44357861a4d16",
+    "build_inputs_fingerprint": "d7970b235a73ab1df2e93e26807cda95cb9b0d769b41eccd4ec2169747cbd33f",
+    "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843"
+  },
+  "export_candidate_manifest_verified": true,
+  "fallback_slides": [
+    {
+      "slide": "scope",
+      "width": 1920,
+      "height": 1080,
+      "text_nodes": 13,
+      "first_text": "Titin across the sarcomere"
+    },
+    {
+      "slide": "architecture",
+      "width": 1920,
+      "height": 1080,
+      "text_nodes": 17,
+      "first_text": "One molecule, Z-disc to M-band"
+    },
+    {
+      "slide": "extension",
+      "width": 1920,
+      "height": 1080,
+      "text_nodes": 22,
+      "first_text": "Regions extend differently"
+    },
+    {
+      "slide": "lattice",
+      "width": 1920,
+      "height": 1080,
+      "text_nodes": 11,
+      "first_text": "The lattice narrows as the sarcomere lengthens"
+    },
+    {
+      "slide": "provenance",
+      "width": 1920,
+      "height": 1080,
+      "text_nodes": 22,
+      "first_text": "How this model was built"
+    },
+    {
+      "slide": "limitations",
+      "width": 1920,
+      "height": 1080,
+      "text_nodes": 13,
+      "first_text": "What this model does not claim"
+    }
+  ],
+  "off_package_requests": [],
+  "page_errors": []
+}

@@ -1739,31 +1739,55 @@ and final verification results.
 
 ---
 
-# 2026-09-06 — bounded scientist-feedback preview handoff
+# 2026-09-06 — bounded scientist-feedback preview, finished and packaged
 
-**IMPLEMENTED; FINAL VALIDATION AND PACKAGING INCOMPLETE.** The owner authorized the
-bounded MVP plan on 2026-09-05 and requested a junior-engineer handoff on 2026-09-06.
-Continue with [the implementation supplement and finish checklist](docs/superpowers/plans/2026-09-06-titin-mvp-preview-finish.md).
-The original review is retained at `evidence/mvp-review/2026-09-05/REVIEW_AND_PLAN.md`.
+**IMPLEMENTED, VERIFIED AND PACKAGED. `release_ready` remains false.** The owner authorized
+the bounded MVP plan on 2026-09-05 and requested a junior-engineer handoff on 2026-09-06;
+[that finish checklist](docs/superpowers/plans/2026-09-06-titin-mvp-preview-finish.md) is now
+complete. The original review is retained at `evidence/mvp-review/2026-09-05/REVIEW_AND_PLAN.md`.
 
-Branch `codex/mvp-preview` contains source commit `557f09a` and clean generated-artifact
-commit `8674dd7`. Implemented: corrected N2A and muscle/half-sarcomere explanations;
-manifest-based scene notes; explicit endpoint stretch replay; direct force-detail focus/scroll;
-modeled-force/sensitivity wording; Spring as beat 3's opening view; Research-only paired
-lattice inset; aligned README and generated transcripts. Scientific model inputs, numerical
-parameters, scientific decisions and formal release gates are unchanged.
+Branch `codex/mvp-preview` still carries source commit `557f09a` and clean generated-artifact
+commit `8674dd7`; the finishing work changed no application input, so the model fingerprint,
+app revision, build-input fingerprint and `index.html` SHA-256 are unchanged. Scientific model
+inputs, numerical parameters, scientific decisions and formal release gates are untouched.
+
+**The one open Chromium failure is closed, and it was not a defect.** The preserved trace shows
+the pause test's own first `#sl` read taking 10.5 s and returning 2,053 nm two seconds after
+the 8 s expect budget had expired — the sweep had started and moved, and the assertion never
+ran. Every action in that trace is 5–20× slower than normal, so the cause was host starvation.
+The correction is test-only: one explicit 30 s budget on the "sweep has started" poll, matching
+the headroom the supported-maximum assertion has carried since SC-24. A pause/resume regression
+was added, because nothing previously checked that resuming from a paused intermediate length
+continues from it instead of resetting. See `evidence/mvp-preview/2026-09-05/pause-failure/DIAGNOSIS.md`.
 
 Verification on this candidate: **`npm run verify` passes, 617/617 Node tests**; artifact
-identity/boundary passes; a clean detached worktree reproduces all **23 compared files**
-byte-for-byte. Integrated Chromium is **69/70**, with one unresolved 8000 ms timeout waiting
-for the slider to advance above 2000 nm before the pause assertion. Do not call it a confirmed
-pause defect or an explained flaky test. The preserved trace and log are under
-`evidence/mvp-preview/2026-09-05/`. All four new MVP browser checks, nine smoke tests and the
-included evidence/learn/UX/zoom/accessibility checks passed. Sixteen candidate frames were
-captured; some stored mobile/zoom frames still need visual review.
+identity and boundary pass; a clean detached worktree reproduces all **23 compared files**
+byte-for-byte. Chromium re-runs are green — the pause test alone at `--repeat-each=3`, the whole
+Stretch suite, and Stretch plus MVP preview together (**13/13**). **Firefox is 18/18** across
+the MVP preview, learn and evidence suites. Exports were checked twice: the deterministic
+download gate on Chromium, and the presenter route walked on the standalone over `file://`,
+where all eight downloaded files carry the frozen fingerprints and the unsupported 1,900 nm
+state leaves its three force cells **empty rather than zero**. The remaining stored frames were
+reviewed. The full historical SC-27A cross-engine matrix was **not** rerun.
 
-The junior engineer should diagnose the timeout first, then finish the second-browser route,
-actual export downloads, remaining visual review and available demo-device rehearsal, and
-assemble/verify the distribution ZIP. No ZIP, hosted deployment, scientist message or human
-validation has been completed. `SCIENTIST_NOTE.md` is a draft; `DELIVERY.md` records exact
-hashes and separates completed checks from pending work. Formal `release_ready` remains false.
+The distribution ZIP exists, outside the repository at
+`/Users/shotaro/Downloads/titin-sarcomere-preview-2026-09-06-557f09a.zip`. It was extracted to a
+fresh directory, compared byte-for-byte, verified with the repository's own identity verifier
+against the extracted paths, checked against all 20 manifest-listed artifacts, and walked
+offline — five beats, the stretch endpoint, the force route, one export download and all six
+static fallback slides, with zero non-`file:` requests and zero page errors. Its identity is
+recorded in `evidence/mvp-preview/2026-09-05/PACKAGE.md`, deliberately outside the archive.
+
+**Known and shipped:** the static fallback deck has four measured layout defects — a 400×20 px
+text overprint on `scope.svg`, a second collision and an 83 px clipped label on `extension.svg`,
+and a 23 px clipped evidence-class label on `architecture.svg`. Nothing false is displayed; the
+interactive Tour, Stretch, evidence and export routes are intact. The root cause of the worst
+one is a row-advance bug in `scripts/build_release_pack.mjs:93-100`. Fixing it regenerates
+manifest artifacts and re-issues this candidate's manifest, so it was recorded rather than
+taken unilaterally: see `evidence/mvp-preview/2026-09-05/FALLBACK_SLIDE_FINDINGS.md`, and the
+shipped `DELIVERY.md` names it so recipients are told before opening the deck.
+
+**Still not done, and not claimed:** rehearsal on the actual intended demo hardware, any human
+usability or comprehension result, independent scientific validation, and hosted-byte
+fetchback. No demo device, participants or hosting destination were supplied, and nothing was
+published or sent. The first sharing should be treated as guided feedback.

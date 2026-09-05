@@ -1,0 +1,22 @@
+swap before: total = 6144.00M  used = 4637.31M  free = 1506.69M  (encrypted)
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+
+Running 13 tests using 1 worker
+
+[1/13] [chromium] › test/browser/mvp-preview.spec.js:12:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[2/13] [chromium] › test/browser/mvp-preview.spec.js:29:1 › MVP reduced-motion replay resets before showing the endpoint
+[3/13] [chromium] › test/browser/mvp-preview.spec.js:49:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[4/13] [chromium] › test/browser/mvp-preview.spec.js:49:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[5/13] [chromium] › test/browser/stretch.spec.js:92:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[6/13] [chromium] › test/browser/stretch.spec.js:102:1 › SC24/27A Stretch replaces a Research close-up before running
+[7/13] [chromium] › test/browser/stretch.spec.js:115:1 › SC24/27A mobile Stretch reframes before its first length frame
+[8/13] [chromium] › test/browser/stretch.spec.js:124:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[9/13] [chromium] › test/browser/stretch.spec.js:138:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[10/13] [chromium] › test/browser/stretch.spec.js:153:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[11/13] [chromium] › test/browser/stretch.spec.js:185:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[12/13] [chromium] › test/browser/stretch.spec.js:199:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[13/13] [chromium] › test/browser/stretch.spec.js:211:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+  13 passed (4.9m)
+EXIT=0
+swap after: total = 6144.00M  used = 4776.31M  free = 1367.69M  (encrypted)

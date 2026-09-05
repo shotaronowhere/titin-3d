@@ -4,10 +4,15 @@ Updated **2026-09-06 JST** at the owner's request to hand the remaining sprint t
 engineer. This supplements the original [bounded review/plan](../../../evidence/mvp-review/2026-09-05/REVIEW_AND_PLAN.md).
 It is the entry point for finishing this preview; do not restart SC-27A or the full SC-27B programme.
 
-**Status: presentation fixes implemented; final validation and distribution incomplete.**
-The full repository verification passes. The integrated Chromium run is **69/70**, with one
-unresolved timeout before the pause test observes motion. Finish that investigation, check a
-second browser and actual downloads, then assemble and check the distribution package.
+**Status, 2026-09-06: COMPLETE.** The pause timeout is diagnosed and closed as host
+starvation, not a defect; Chromium and Firefox are green; exports and the remaining frames
+are checked; the package is assembled, extracted, byte-verified and walked offline. Two
+things are recorded rather than done: rehearsal on the intended demo hardware, for which no
+device or participants were supplied, and four measured layout defects in the static
+fallback deck, which re-issue a frozen manifest to fix and so were left as an owner's call.
+Outcomes are in [DELIVERY.md](../../../evidence/mvp-preview/2026-09-05/DELIVERY.md) and
+[PACKAGE.md](../../../evidence/mvp-preview/2026-09-05/PACKAGE.md). The sections below are
+retained as the record of what was asked for.
 
 ## 1. Scope and authority
 
@@ -263,16 +268,23 @@ at that URL. A localhost pass is not hosted parity.
 
 ## 9. Definition of done for the junior engineer
 
-- [ ] Pause-start timeout investigated and core start/pause/resume/replay behavior verified.
-- [ ] Affected Chromium checks pass with the failure disposition recorded honestly.
-- [ ] Second-browser Tour/replay/force/evidence route and actual exports checked.
-- [ ] Remaining visual review and available intended-device rehearsal recorded.
-- [ ] Exact candidate/manifest and model-unchanged checks still hold.
-- [ ] Scientist note finalized; ZIP assembled, extracted, byte-verified and opened offline;
-      static SVG fallback checked.
-- [ ] Delivery record has actual checks, remaining limitations, ZIP identity and preview status.
-- [ ] Source/artifacts/evidence committed on `codex/mvp-preview`; `git status` understood/clean.
-- [ ] `release_ready` is still false; independent validation is not claimed; no new scope added.
+- [x] Pause-start timeout investigated and core start/pause/resume/replay behavior verified.
+      Trace-diagnosed as host starvation, test-only fix, plus a new resume regression.
+- [x] Affected Chromium checks pass with the failure disposition recorded honestly.
+      3/3, 9/9 and 13/13; the original failure is described as unreproduced, not as explained.
+- [x] Second-browser Tour/replay/force/evidence route and actual exports checked.
+      Firefox 18/18; the download gate plus a presenter-route walk on the standalone.
+- [x] Remaining visual review and available intended-device rehearsal recorded.
+      All seven remaining frames reviewed; no demo hardware or participants were available,
+      and that is recorded as pending rather than described as done.
+- [x] Exact candidate/manifest and model-unchanged checks still hold.
+- [x] Scientist note finalized; ZIP assembled, extracted, byte-verified and opened offline;
+      static SVG fallback checked. The fallback check found four measured layout defects;
+      they are recorded in `FALLBACK_SLIDE_FINDINGS.md`, named in the shipped `DELIVERY.md`,
+      and left unfixed because fixing them re-issues the frozen manifest.
+- [x] Delivery record has actual checks, remaining limitations, ZIP identity and preview status.
+- [x] Source/artifacts/evidence committed on `codex/mvp-preview`; `git status` understood/clean.
+- [x] `release_ready` is still false; independent validation is not claimed; no new scope added.
 
 Stop when this checklist is complete. Feedback from the first scientists is the next phase,
 not a reason to preemptively expand this sprint.

@@ -1,0 +1,77 @@
+{
+  "note": "Measured getBBox geometry for every <text> in the six static fallback slides.",
+  "viewbox": {
+    "width": 1920,
+    "height": 1080
+  },
+  "slides": [
+    {
+      "slide": "scope",
+      "text_nodes": 13,
+      "overflow": [],
+      "collisions": [
+        {
+          "a": "approximate passive pN per titin",
+          "b": "Declared working range: 2000–2400 nm",
+          "overlap_px": {
+            "x": 400,
+            "y": 20
+          }
+        }
+      ]
+    },
+    {
+      "slide": "architecture",
+      "text_nodes": 17,
+      "overflow": [
+        {
+          "text": "bare zone · STRONGLY INFERRED",
+          "right_px": 1943,
+          "bottom_px": 586,
+          "overflow_px": 23
+        }
+      ],
+      "collisions": []
+    },
+    {
+      "slide": "extension",
+      "text_nodes": 22,
+      "overflow": [
+        {
+          "text": "235.4 nm · folded domains straighten",
+          "right_px": 2003,
+          "bottom_px": 601,
+          "overflow_px": 83
+        }
+      ],
+      "collisions": [
+        {
+          "a": "2200 nm · total 275.0 nm",
+          "b": "Evidence: MODELED SD-04-authorized approximate passive force per titin",
+          "overlap_px": {
+            "x": 299,
+            "y": 9
+          }
+        }
+      ]
+    },
+    {
+      "slide": "lattice",
+      "text_nodes": 11,
+      "overflow": [],
+      "collisions": []
+    },
+    {
+      "slide": "provenance",
+      "text_nodes": 22,
+      "overflow": [],
+      "collisions": []
+    },
+    {
+      "slide": "limitations",
+      "text_nodes": 13,
+      "overflow": [],
+      "collisions": []
+    }
+  ]
+}

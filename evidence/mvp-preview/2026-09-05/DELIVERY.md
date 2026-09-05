@@ -1,8 +1,13 @@
 # Scientist-feedback preview delivery — 2026-09-05
 
-**Handoff update, 2026-09-06: IMPLEMENTED; VERIFICATION AND PACKAGING INCOMPLETE.**
-This is a candidate record, not a declaration that the preview is ready to distribute.
-Finish instructions: `docs/superpowers/plans/2026-09-06-titin-mvp-preview-finish.md`.
+**Completion update, 2026-09-06: IMPLEMENTED, VERIFIED AND PACKAGED FOR FEEDBACK.**
+This records the checks that were actually run. It is not a declaration that the formal
+release gates pass, and it claims no independent scientific or human usability result.
+Finish instructions followed: `docs/superpowers/plans/2026-09-06-titin-mvp-preview-finish.md`.
+
+This file travels in the shared package, but the logs, traces, frames and export files it
+links to stay in the project repository under `evidence/mvp-preview/2026-09-05/`. Those links
+therefore do not resolve from inside the package; ask for the repository to read them.
 
 Implementation of the bounded plan was authorized by the project owner on 2026-09-05.
 This decision permits a scientist-feedback preview, not a formally validated public
@@ -17,12 +22,13 @@ Historical SC-27A evidence remains historical; no human approval is inferred fro
   and its descriptor notes remain available internally as `lastVerificationNotes`.
 - Explicit endpoint Replay stretch resets to the working-range minimum. Intermediate
   pause/resume, user interruption, URL restoration, and ordinary length preservation remain
-  in the implementation; one integrated pause-test timeout needs diagnosis below.
+  in the implementation, and pause/resume now carries its own browser regression.
 - Beat 3 opens in the existing Spring composition. The paired lattice inset stays in Research.
 - Tour force is labeled as a modeled estimate. Its action focuses/scrolls to Passive force;
   the detailed sensitivity disclosure sits with the number. Research precision is retained.
-- Updated the README and generated transcripts/release pack. Prepared a draft scientist note
-  and candidate-specific verification evidence. A distribution ZIP has **not** been assembled.
+- Updated the README and generated transcripts/release pack. Finalized the scientist note and
+  assembled the distribution ZIP; its identity is recorded outside the package, in
+  [PACKAGE.md](PACKAGE.md), so the archive does not reference its own hash.
 
 The nine model-input files, solver, numerical parameters, geometry construction, scientific
 decisions, and formal release gates are unchanged. Presentation/build identities change.
@@ -45,17 +51,52 @@ decisions, and formal release gates are unchanged. Presentation/build identities
 - **PASS:** raw artifact identity and artifact-boundary verification. See [identity.log](identity.log).
 - **PASS:** clean detached-worktree rebuild of the standalone and release pack; all **23 files**
   compared byte-for-byte and the worktree remained clean. See [reproducibility.json](reproducibility.json).
-- **INCOMPLETE:** integrated Chromium run **69/70 passed**, exit 1. The pause test timed out
-  waiting for length to exceed 2000 nm within 8000 ms, **before its pause assertion**. This is
-  not established as either a product defect or infrastructure timing. See [chromium.log](chromium.log)
-  and [preserved trace](pause-failure/trace.zip). All four new MVP regressions, nine smoke tests,
-  evidence/learn tests, and the included UX/zoom/automated-accessibility checks passed.
+- **RESOLVED:** the 2026-09-05 integrated Chromium run was **69/70, exit 1**
+  ([chromium.log](chromium.log)). The one failure is diagnosed in
+  [pause-failure/DIAGNOSIS.md](pause-failure/DIAGNOSIS.md): the preserved trace shows the poll's
+  own first `#sl` read taking 10.5 s and returning **2053 nm** two seconds after the 8 s expect
+  budget had already expired — the sweep had started and moved, and the assertion never ran.
+  Every action in that trace is 5–20× slower than normal, so this is host starvation, not a
+  defect. The fix is **test-only**: one explicit 30 s budget on the "sweep has started" poll,
+  matching the headroom the supported-maximum assertion has carried since SC-24. No predicate,
+  global timeout, retry setting or assertion was changed, and no application input was touched.
+- **PASS:** re-run on Chromium after that change — the pause test alone `--repeat-each=3`
+  (3/3), the whole Stretch suite (9/9), and Stretch plus the MVP preview suites together
+  (**13/13**). Logs in [pause-failure/](pause-failure/). A pause/resume regression was added:
+  nothing previously checked that resuming from a paused intermediate length continues from it
+  instead of resetting to the working minimum.
+- **PASS:** second browser. **Firefox 18/18** across the MVP preview, learn and evidence
+  suites on these bytes — the Tour, endpoint replay, reduced-motion replay, the desktop and
+  mobile force route, and the source/claim routes. See [firefox.log](firefox.log). This is a
+  second engine on the preview routes, not a rerun of the historical SC-27A cross-engine matrix.
+- **PASS:** exports. The deterministic-download gate passes on Chromium
+  ([downloads.log](downloads.log)), and the presenter route was walked on the **standalone
+  candidate over `file://`** — Research → Sources & build → all four download buttons at
+  2,400 nm and 1,900 nm. All eight files carry the frozen model fingerprint, app revision,
+  build-input and export-contract fingerprints, with `candidate_manifest_verified: true` and
+  nine pinned inputs. At the unsupported 1,900 nm state the three force cells are **empty,
+  not zero**, with an explicit `not_evaluated` reason. See [exports.json](exports.json),
+  [exports.mjs](exports.mjs) and `exports/`.
+- **REVIEWED:** the remaining stored frames — mobile beats 2, 4 and 5, the mobile stretch
+  endpoint, both 640×360 zoom-equivalent states, and the desktop force frame. The corrected
+  N2A and Z-to-M copy reads correctly, the Tour force chip shows `≈1.3 pN · supported ·
+  modeled passive force per titin` against a raw central value of 1.2847 pN, the endpoint
+  control reads `↻ Replay stretch`, the lattice cross-section is absent from beat 4, and the
+  Passive force heading clears the sticky Research tabs. This is AI visual review, not human
+  comprehension evidence.
 - **CAPTURED:** 16 frames for all five beats at 1280×720 and 390×844, stretch endpoints,
   force details, and two 640×360 browser-zoom-equivalent states. See [captures.json](captures.json)
   and `frames/`. Captures use reduced motion; they are not physical-device or human evidence.
-- **PENDING:** second-browser route on these bytes, final export/download walkthrough,
-  actual offline/static-fallback walkthrough from the assembled ZIP, remaining image review,
-  intended-device rehearsal, ZIP assembly, and any future hosted-byte fetchback.
+- **PASS:** the assembled package. The staged directory was zipped, extracted to a fresh
+  temporary directory, and the extracted `index.html` and `release/MANIFEST.json` verified with
+  `scripts/verify_artifact_identity.mjs`; the extracted primary route and all six static
+  fallback slides were then opened offline over `file://`. Identity, path and results are in
+  [PACKAGE.md](PACKAGE.md), which is deliberately **outside** the archive.
+- **PENDING:** rehearsal on the actual intended demo hardware, any human usability or
+  comprehension result, independent scientific validation, and hosted-byte fetchback. No demo
+  device, no participants and no hosting destination were supplied for this task, so none of
+  these is claimed. The first sharing should be treated as guided feedback, not a rehearsed
+  presentation.
 
 The full historical SC-27A cross-engine/330-state matrix was not rerun for this candidate.
 The integrated Chromium command explicitly excluded `@sweep` combinatorial UX tests; it
@@ -74,7 +115,27 @@ Hosted-byte verification must be run against the actual URL when published, usin
 Known minor issues retained from the review: Research Large type is ineffective; closing a
 selected object does not restore its Research selection invoker; the overlay audit does not
 cover the tooltip and invalid-URL notice. Ordinary browser zoom has separate route coverage.
-These are recorded, not silently marked fixed. The actual intended demo hardware still needs
+These are recorded, not silently marked fixed.
+
+**The static fallback deck has four measured layout defects, recorded and not fixed.** On
+`release/fallback/scope.svg` — the slide the scientist note tells you to open first when 3D
+is unavailable — the wrapped line `approximate passive pN per titin` is overprinted by
+`Declared working range: 2000–2400 nm` across 400 × 20 px, so both are hard to read. On
+`extension.svg` the label `235.4 nm · folded domains straighten` is clipped 83 px past the
+right edge, and `Evidence: MODELED …` touches the row below it. On `architecture.svg`,
+`bare zone · STRONGLY INFERRED` is clipped by 23 px and renders as `…STRONGLY INFERRE`.
+Nothing false is displayed and every claim, number and evidence class is unchanged; these
+are legibility defects on the contingency route, and the interactive Tour, Stretch, evidence
+and export paths are intact. The measurements, the root cause and the proposed fix are in
+`FALLBACK_SLIDE_FINDINGS.md` in the project repository. Fixing them regenerates manifest
+artifacts, so it re-issues this frozen candidate's manifest and is an owner's decision.
+
+Two further cosmetic observations from the 2026-09-06 frame review, neither a blocker and
+neither fixed: at the 640×360 browser-zoom equivalent the beat-3 card fills the viewport, so
+the 3-D stage has to be scrolled to — every core control stays visible and reachable, and
+360 px is well below the declared 700 px stage-height envelope; and with Research open at
+1280×720 the scope chip truncates the construct name to `Human TT…`, whose full value stays
+in Research → Sources & build. The actual intended demo hardware still needs
 a short rehearsal, and independent novice comprehension remains untested.
 
 No new isoforms, molecular dynamics, active contraction, signaling animation, uncertainty

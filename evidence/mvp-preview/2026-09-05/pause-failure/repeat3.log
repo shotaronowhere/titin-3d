@@ -1,0 +1,13 @@
+swap before: total = 6144.00M  used = 5643.62M  free = 500.38M  (encrypted)
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+
+Running 3 tests using 1 worker
+
+[1/3] [chromium] › test/browser/stretch.spec.js:123:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[2/3] [chromium] › test/browser/stretch.spec.js:123:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[3/3] [chromium] › test/browser/stretch.spec.js:123:1 › SC24/27A Pause freezes the sweep at an exact slider value
+  3 passed (1.4m)
+npx playwright test test/browser/stretch.spec.js --project=chromium --grep    134.63s user 23.95s system 191% cpu 1:22.78 total
+EXIT=0
+swap after: total = 6144.00M  used = 4875.19M  free = 1268.81M  (encrypted)

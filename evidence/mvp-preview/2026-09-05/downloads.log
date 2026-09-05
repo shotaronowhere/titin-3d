@@ -1,0 +1,8 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+
+Running 1 test using 1 worker
+
+[1/1] [chromium] › test/browser/workbench.spec.js:88:1 › SC26 browser downloads deterministic bytes and unsupported force is blank, not zero
+  1 passed (10.8s)
+EXIT=0

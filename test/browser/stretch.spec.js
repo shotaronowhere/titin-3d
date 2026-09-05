@@ -28,6 +28,21 @@ async function expectSpringSweep(page) {
   )).toBe('view.titin_hero');
 }
 
+// The contract is that the sweep starts moving, not that a loaded host reports it
+// promptly. In the 2026-09-05 integrated run this poll timed out while its own first
+// `#sl` read was still in flight: the read was issued at 11.5 s, the driver did not
+// begin resolving the locator until 18.0 s, and it returned "2053" at 22.0 s — the
+// page had started and moved, and the 8 s expect budget expired mid-round-trip
+// (evidence/mvp-preview/2026-09-05/pause-failure/trace.zip). Give it the same 30 s
+// headroom the supported-maximum assertion below already carries. The predicate is
+// unchanged, so a sweep that never starts still fails.
+async function expectSweepStarted(page) {
+  await expect.poll(
+    async () => Number(await page.locator('#sl').inputValue()),
+    { timeout: 30_000 },
+  ).toBeGreaterThan(2000);
+}
+
 async function framedGeometry(page) {
   return page.evaluate(() => {
     const vis = window.titinVisualization;
@@ -125,8 +140,7 @@ test('SC24/27A Pause freezes the sweep at an exact slider value', async ({ page 
   await enterStretch(page);
   await page.locator('#sl').fill('2000');
   await page.locator('#stagePlay').click();
-  await expect.poll(async () => Number(await page.locator('#sl').inputValue()))
-    .toBeGreaterThan(2000);
+  await expectSweepStarted(page);
   await page.locator('#stagePlay').click();
   const paused = await page.locator('#sl').inputValue();
   expect(Number(paused)).toBeLessThan(2400);
@@ -136,13 +150,44 @@ test('SC24/27A Pause freezes the sweep at an exact slider value', async ({ page 
   await expect(page.locator('#sl')).toHaveValue('2000');
 });
 
+test('SC24/27A resuming a paused stretch continues instead of resetting', async ({ page }) => {
+  test.setTimeout(90_000);
+  await boot(page);
+  await enterStretch(page);
+  await page.locator('#sl').fill('2000');
+  await page.locator('#stagePlay').click();
+  await expectSweepStarted(page);
+  await page.locator('#stagePlay').click();
+  const paused = Number(await page.locator('#sl').inputValue());
+  expect(paused).toBeGreaterThan(2000);
+  expect(paused).toBeLessThan(2400);
+  // Only an explicit endpoint replay resets to the working minimum, so no frame of
+  // the resumed sweep may write a length below the paused one. Record every write:
+  // reading the endpoint alone would also pass a reset that raced back up to 2,400.
+  await page.evaluate(() => {
+    window.__resumeLengths = [];
+    const input = document.querySelector('#sl');
+    const descriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    Object.defineProperty(input, 'value', {
+      get() { return descriptor.get.call(this); },
+      set(value) { window.__resumeLengths.push(Number(value)); descriptor.set.call(this, value); },
+    });
+  });
+  await page.locator('#stagePlay').click();
+  await expect(page.locator('#objectAnnouncement')).not.toContainText('Replay reset');
+  await expect(page.locator('#sl')).toHaveValue('2400', { timeout: 30_000 });
+  const resumed = await page.evaluate(() => window.__resumeLengths);
+  expect(resumed.length).toBeGreaterThan(0);
+  expect(Math.min(...resumed)).toBeGreaterThanOrEqual(paused);
+  await expect(page.locator('#stagePlay')).toHaveText(/Replay stretch/);
+});
+
 test('SC24/27A leaving Stretch stops mechanics without stale state', async ({ page }) => {
   await boot(page);
   await enterStretch(page);
   await page.locator('#sl').fill('2000');
   await page.locator('#stagePlay').click();
-  await expect.poll(async () => Number(await page.locator('#sl').inputValue()))
-    .toBeGreaterThan(2000);
+  await expectSweepStarted(page);
   await page.locator('#chapterNext').click();
   await expect(page.locator('#chapterProgress')).toHaveText('Beat 4 of 5');
   await expect(page.locator('#tourMechanics')).toBeHidden();

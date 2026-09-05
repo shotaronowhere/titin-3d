@@ -1,0 +1,27 @@
+swap before: total = 6144.00M  used = 4776.31M  free = 1367.69M  (encrypted)
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+
+Running 18 tests using 1 worker
+
+[1/18] [firefox] › test/browser/evidence.spec.js:21:1 › SC22/27A object explanation is compact and Research owns the full selected claim
+[2/18] [firefox] › test/browser/evidence.spec.js:36:1 › SC22 Guided inspector stays compact and clear of the Tour continuation
+[3/18] [firefox] › test/browser/evidence.spec.js:55:1 › SC22 contextual source controls select object, chapter, all, and exact value
+[4/18] [firefox] › test/browser/evidence.spec.js:84:1 › SC22 value clearing falls back to the selected object instead of an empty source list
+[5/18] [firefox] › test/browser/evidence.spec.js:100:1 › SC22 parameter source routing closes to its visible stage invoker
+[6/18] [firefox] › test/browser/evidence.spec.js:112:1 › SC22 selectable chart point filters sources and restores the contextual invoker
+[7/18] [firefox] › test/browser/evidence.spec.js:125:1 › SC22 ClaimView keeps citations after copy, fields, and limitations
+[8/18] [firefox] › test/browser/evidence.spec.js:148:3 › SC22 desktop Research owns full titin, PEVK, and kinase detail
+[9/18] [firefox] › test/browser/evidence.spec.js:148:3 › SC22 responsive Research owns full titin, PEVK, and kinase detail
+[10/18] [firefox] › test/browser/learn.spec.js:20:3 › SC23/27A desktop completes the silent five-beat Tour without changing length
+[11/18] [firefox] › test/browser/learn.spec.js:20:3 › SC23/27A responsive completes the silent five-beat Tour without changing length
+[12/18] [firefox] › test/browser/learn.spec.js:44:1 › SC23 out-of-range Stretch setup stays explicit and user-reversible
+[13/18] [firefox] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene
+[14/18] [firefox] › test/browser/learn.spec.js:77:1 › SC23 Sources exposes the resolved semantic-scene context in Research
+[15/18] [firefox] › test/browser/mvp-preview.spec.js:12:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[16/18] [firefox] › test/browser/mvp-preview.spec.js:29:1 › MVP reduced-motion replay resets before showing the endpoint
+[17/18] [firefox] › test/browser/mvp-preview.spec.js:49:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[18/18] [firefox] › test/browser/mvp-preview.spec.js:49:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+  18 passed (1.7m)
+EXIT=0
+swap after: total = 6144.00M  used = 4928.94M  free = 1215.06M  (encrypted)
