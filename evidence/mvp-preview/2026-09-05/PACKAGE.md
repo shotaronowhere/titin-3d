@@ -8,8 +8,8 @@ archive on purpose: a ZIP cannot honestly carry its own hash.
 | | |
 |---|---|
 | Path | `/Users/shotaro/Downloads/titin-sarcomere-preview-2026-09-06-557f09a.zip` |
-| Bytes | 570,600 |
-| SHA-256 | `70a9d4b12439b141405869cff0c0ce29f67ce2c90ade48ce8a146735eaf9be21` |
+| Bytes | 571,497 |
+| SHA-256 | `a469e9d6956cc2f465aeea87cf4af79888a27ed5f962ea8aa4fc3ee672a1fcf6` |
 | Entries | 26 files in one top-level `titin-sarcomere-preview/` directory |
 
 The archive is **not** committed. It is fully derivable from this repository at
@@ -61,6 +61,14 @@ Extracted to a fresh temporary directory, then:
   at 1920×1080. **Zero non-`file:` requests and zero page errors**, so "offline" is measured
   rather than assumed. See [package_walkthrough.json](package_walkthrough.json),
   [package_walkthrough.mjs](package_walkthrough.mjs) and `package-frames/`.
+
+## Rebuilt after the scientist-note correction
+
+An earlier archive of this same candidate, SHA-256 `70a9d4b1…f9be21`, is **superseded**. The
+application bytes are identical — `index.html` and every `release/` artifact are unchanged —
+but its `SCIENTIST_NOTE.md` carried a scope sentence that asserted an excluded claim, and its
+`DELIVERY.md` predated the three-engine and 71/71 results. Discard that copy and use the hash
+above. All the checks in this section were re-run against the rebuilt archive.
 
 ## Known limitation shipped in this package
 

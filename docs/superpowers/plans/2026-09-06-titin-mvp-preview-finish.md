@@ -5,11 +5,14 @@ engineer. This supplements the original [bounded review/plan](../../../evidence/
 It is the entry point for finishing this preview; do not restart SC-27A or the full SC-27B programme.
 
 **Status, 2026-09-06: COMPLETE.** The pause timeout is diagnosed and closed as host
-starvation, not a defect; Chromium and Firefox are green; exports and the remaining frames
-are checked; the package is assembled, extracted, byte-verified and walked offline. Two
-things are recorded rather than done: rehearsal on the intended demo hardware, for which no
-device or participants were supplied, and four measured layout defects in the static
-fallback deck, which re-issue a frozen manifest to fix and so were left as an owner's call.
+starvation, not a defect; the integrated Chromium command is **71/71, exit 0**, and Firefox
+and WebKit are green too; exports and the remaining frames are checked; the package is
+assembled, extracted, byte-verified and walked offline. A review pass then caught one
+shipped statement that asserted an excluded claim, in the hand-written scientist note, and
+corrected it. Two things are recorded rather than done: rehearsal on the intended demo
+hardware, for which no device or participants were supplied, and four measured layout
+defects in the static fallback deck, which re-issue a frozen manifest to fix and so were
+left as an owner's call.
 Outcomes are in [DELIVERY.md](../../../evidence/mvp-preview/2026-09-05/DELIVERY.md) and
 [PACKAGE.md](../../../evidence/mvp-preview/2026-09-05/PACKAGE.md). The sections below are
 retained as the record of what was asked for.
@@ -271,15 +274,20 @@ at that URL. A localhost pass is not hosted parity.
 - [x] Pause-start timeout investigated and core start/pause/resume/replay behavior verified.
       Trace-diagnosed as host starvation, test-only fix, plus a new resume regression.
 - [x] Affected Chromium checks pass with the failure disposition recorded honestly.
-      3/3, 9/9 and 13/13; the original failure is described as unreproduced, not as explained.
+      3/3, 9/9, 13/13, then the full integrated command re-run: 71/71, exit 0. The original
+      failure is described as unreproduced, not as explained.
 - [x] Second-browser Tour/replay/force/evidence route and actual exports checked.
-      Firefox 18/18; the download gate plus a presenter-route walk on the standalone.
+      Three engines, not one: Firefox 18/18 on the preview routes and 9/9 on Stretch, and
+      WebKit 27/27 across all four. Plus the download gate and a presenter-route walk on the
+      standalone over file://.
 - [x] Remaining visual review and available intended-device rehearsal recorded.
       All seven remaining frames reviewed; no demo hardware or participants were available,
       and that is recorded as pending rather than described as done.
 - [x] Exact candidate/manifest and model-unchanged checks still hold.
 - [x] Scientist note finalized; ZIP assembled, extracted, byte-verified and opened offline;
-      static SVG fallback checked. The fallback check found four measured layout defects;
+      static SVG fallback checked. Finalizing the note meant auditing it against
+      `data/scientific_scope.json`: its scope sentence asserted `excluded_claims[0]` and was
+      corrected. The fallback check found four measured layout defects;
       they are recorded in `FALLBACK_SLIDE_FINDINGS.md`, named in the shipped `DELIVERY.md`,
       and left unfixed because fixing them re-issues the frozen manifest.
 - [x] Delivery record has actual checks, remaining limitations, ZIP identity and preview status.

@@ -77,13 +77,22 @@ route; the interactive Tour, Stretch, evidence and export paths are intact, and 
 false is displayed. So they are recorded here and named in the shipped `DELIVERY.md`, which
 means a recipient is told before they open the deck.
 
-Fixing them is cheap but not free: `release/fallback/*.svg` are manifest artifacts, so
-regenerating them changes `release/MANIFEST.json` and its SHA-256
-(`13cb66e6…d4ac`), the value the finish plan, `DELIVERY.md`, the reproducibility record and
-the assembled package all currently pin. `index.html` would **not** change — the release
-pack generator is not one of its build inputs — so the model fingerprint, app revision,
-build-input fingerprint and standalone hash would survive, and the browser suites would not
-need rerunning. The work is: fix `drawText`, `npm run pack`, `npm run verify`,
-`npm run verify:identity`, re-run this audit, then reassemble and re-verify the package.
+Fixing finding 1 is a small edit with a large paper trail. `release/fallback/*.svg` are
+manifest artifacts, so regenerating them changes `release/MANIFEST.json` and its SHA-256
+(`13cb66e6…d4ac`) — the value the finish plan, `DELIVERY.md`, `PACKAGE.md`, the
+reproducibility record and the assembled package all currently pin. `index.html` would
+**not** change, because the release-pack generator is not one of its build inputs, so the
+model fingerprint, app revision, build-input fingerprint and standalone hash all survive and
+no browser suite needs rerunning.
+
+The full sequence is: fix `drawText`; `npm run pack`; `npm run verify`;
+`npm run verify:identity`; re-run this audit; **redo the clean detached-worktree
+reproduction**, because [reproducibility.json](reproducibility.json) records a byte-for-byte
+comparison of 23 files that would otherwise describe a superseded tree; update the four
+records that pin the manifest hash; then reassemble, re-extract and re-verify the package.
+The reproduction is the expensive step — a fresh worktree, a copy of the pinned
+`node_modules`, a full build and pack — so this is an hour or so of careful work, not the
+twenty minutes the one-line diff suggests. Doing it as its own small sprint, with a fresh
+reproduction, is cleaner than bolting it onto this one.
 
 That is an owner's call, not a junior engineer's, because it re-issues a frozen artifact.

@@ -5,9 +5,10 @@ This records the checks that were actually run. It is not a declaration that the
 release gates pass, and it claims no independent scientific or human usability result.
 Finish instructions followed: `docs/superpowers/plans/2026-09-06-titin-mvp-preview-finish.md`.
 
-This file travels in the shared package, but the logs, traces, frames and export files it
-links to stay in the project repository under `evidence/mvp-preview/2026-09-05/`. Those links
-therefore do not resolve from inside the package; ask for the repository to read them.
+This file travels in the shared package, but everything it links to — logs, traces, frames,
+export files and the companion records named below — stays in the project repository under
+`evidence/mvp-preview/2026-09-05/`. Those links therefore do not resolve from inside the
+package; ask for the repository to read them.
 
 Implementation of the bounded plan was authorized by the project owner on 2026-09-05.
 This decision permits a scientist-feedback preview, not a formally validated public
@@ -60,15 +61,24 @@ decisions, and formal release gates are unchanged. Presentation/build identities
   defect. The fix is **test-only**: one explicit 30 s budget on the "sweep has started" poll,
   matching the headroom the supported-maximum assertion has carried since SC-24. No predicate,
   global timeout, retry setting or assertion was changed, and no application input was touched.
-- **PASS:** re-run on Chromium after that change — the pause test alone `--repeat-each=3`
-  (3/3), the whole Stretch suite (9/9), and Stretch plus the MVP preview suites together
-  (**13/13**). Logs in [pause-failure/](pause-failure/). A pause/resume regression was added:
-  nothing previously checked that resuming from a paused intermediate length continues from it
-  instead of resetting to the working minimum.
-- **PASS:** second browser. **Firefox 18/18** across the MVP preview, learn and evidence
-  suites on these bytes — the Tour, endpoint replay, reduced-motion replay, the desktop and
-  mobile force route, and the source/claim routes. See [firefox.log](firefox.log). This is a
-  second engine on the preview routes, not a rerun of the historical SC-27A cross-engine matrix.
+- **PASS:** Chromium after that change — the pause test alone `--repeat-each=3` (3/3), the
+  whole Stretch suite (9/9), Stretch plus the MVP preview suites together (13/13), and then
+  the plan's exact integrated command re-run end to end: **71/71 passed, exit 0**, 16.2
+  minutes ([chromium-integrated-final.log](chromium-integrated-final.log)). That is the
+  original 70 checks, now all passing, plus one new regression. It was added because nothing
+  previously checked that resuming from a paused intermediate length continues from it
+  instead of resetting to the working minimum; its predicate was then proved non-vacuous by
+  a positive control that ran the same instrumentation against a real endpoint replay and
+  correctly reported the reset. Logs in [pause-failure/](pause-failure/).
+- **PASS:** all three engines, on these bytes. **Firefox 18/18** across the MVP preview,
+  learn and evidence suites ([firefox.log](firefox.log)) — the Tour, endpoint replay,
+  reduced-motion replay, the desktop and mobile force route, and the source/claim routes —
+  then **Firefox 9/9** on the Stretch suite and **WebKit 27/27** on all four of those suites
+  ([engines.log](engines.log)). The plan asked for one second browser; the Stretch and WebKit
+  passes were added because the changed and newly added tests live in the Stretch suite and
+  had only been exercised on Chromium, and because Safari is the likely engine on a Mac or
+  iPad demo and had no result for this candidate. This is three engines on the preview
+  routes, not a rerun of the historical SC-27A cross-engine matrix.
 - **PASS:** exports. The deterministic-download gate passes on Chromium
   ([downloads.log](downloads.log)), and the presenter route was walked on the **standalone
   candidate over `file://`** — Research → Sources & build → all four download buttons at
@@ -84,6 +94,19 @@ decisions, and formal release gates are unchanged. Presentation/build identities
   control reads `↻ Replay stretch`, the lattice cross-section is absent from beat 4, and the
   Passive force heading clears the sticky Research tabs. This is AI visual review, not human
   comprehension evidence.
+- **CORRECTED:** the scientist note that ships beside this record is the only shipped
+  document **not** generated from gated canonical records, so it was audited against
+  `data/scientific_scope.json`. Its scope sentence read "the human skeletal-muscle reference
+  construct is Q8WZ42-1" — which asserts `excluded_claims[0]`, "that Q8WZ42-1 is a
+  tissue-specific human skeletal-muscle isoform", and contradicts the application's own scope
+  badge, "no tissue-specific claim". It now names the construct with no tissue assigned and
+  disclaims the opposite excluded claim, that titin is isoform- or tissue-neutral. The rest of
+  the note holds: the N2A sentence is verbatim from `data/presentation.json`; the supported,
+  extrapolated and not-evaluated boundaries match `regime_policy` exactly; the "Why we know
+  this" and "Sources for this object" routes exist in the application; and the three-minute
+  claim matches the manifest's 186 presenter seconds. The generated release documents were
+  checked for the same error and are clean — they use "skeletal" only of the source
+  preparations the parameters transfer from.
 - **CAPTURED:** 16 frames for all five beats at 1280×720 and 390×844, stretch endpoints,
   force details, and two 640×360 browser-zoom-equivalent states. See [captures.json](captures.json)
   and `frames/`. Captures use reduced motion; they are not physical-device or human evidence.

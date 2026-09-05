@@ -1,0 +1,54 @@
+### firefox stretch (covers the two new/changed tests on a second engine)
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+
+Running 9 tests using 1 worker
+
+[1/9] [firefox] › test/browser/stretch.spec.js:100:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[2/9] [firefox] › test/browser/stretch.spec.js:110:1 › SC24/27A Stretch replaces a Research close-up before running
+[3/9] [firefox] › test/browser/stretch.spec.js:123:1 › SC24/27A mobile Stretch reframes before its first length frame
+[4/9] [firefox] › test/browser/stretch.spec.js:132:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[5/9] [firefox] › test/browser/stretch.spec.js:146:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[6/9] [firefox] › test/browser/stretch.spec.js:161:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[7/9] [firefox] › test/browser/stretch.spec.js:195:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[8/9] [firefox] › test/browser/stretch.spec.js:209:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[9/9] [firefox] › test/browser/stretch.spec.js:221:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+  9 passed (1.9m)
+FIREFOX_STRETCH_EXIT=0
+
+### webkit: third engine, preview routes + stretch
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+
+Running 27 tests using 1 worker
+
+[1/27] [webkit] › test/browser/evidence.spec.js:21:1 › SC22/27A object explanation is compact and Research owns the full selected claim
+[2/27] [webkit] › test/browser/evidence.spec.js:36:1 › SC22 Guided inspector stays compact and clear of the Tour continuation
+[3/27] [webkit] › test/browser/evidence.spec.js:55:1 › SC22 contextual source controls select object, chapter, all, and exact value
+[4/27] [webkit] › test/browser/evidence.spec.js:84:1 › SC22 value clearing falls back to the selected object instead of an empty source list
+[5/27] [webkit] › test/browser/evidence.spec.js:100:1 › SC22 parameter source routing closes to its visible stage invoker
+[6/27] [webkit] › test/browser/evidence.spec.js:112:1 › SC22 selectable chart point filters sources and restores the contextual invoker
+[7/27] [webkit] › test/browser/evidence.spec.js:125:1 › SC22 ClaimView keeps citations after copy, fields, and limitations
+[8/27] [webkit] › test/browser/evidence.spec.js:148:3 › SC22 desktop Research owns full titin, PEVK, and kinase detail
+[9/27] [webkit] › test/browser/evidence.spec.js:148:3 › SC22 responsive Research owns full titin, PEVK, and kinase detail
+[10/27] [webkit] › test/browser/learn.spec.js:20:3 › SC23/27A desktop completes the silent five-beat Tour without changing length
+[11/27] [webkit] › test/browser/learn.spec.js:20:3 › SC23/27A responsive completes the silent five-beat Tour without changing length
+[12/27] [webkit] › test/browser/learn.spec.js:44:1 › SC23 out-of-range Stretch setup stays explicit and user-reversible
+[13/27] [webkit] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene
+[14/27] [webkit] › test/browser/learn.spec.js:77:1 › SC23 Sources exposes the resolved semantic-scene context in Research
+[15/27] [webkit] › test/browser/mvp-preview.spec.js:12:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[16/27] [webkit] › test/browser/mvp-preview.spec.js:29:1 › MVP reduced-motion replay resets before showing the endpoint
+[17/27] [webkit] › test/browser/mvp-preview.spec.js:49:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[18/27] [webkit] › test/browser/mvp-preview.spec.js:49:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[19/27] [webkit] › test/browser/stretch.spec.js:100:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[20/27] [webkit] › test/browser/stretch.spec.js:110:1 › SC24/27A Stretch replaces a Research close-up before running
+[21/27] [webkit] › test/browser/stretch.spec.js:123:1 › SC24/27A mobile Stretch reframes before its first length frame
+[22/27] [webkit] › test/browser/stretch.spec.js:132:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[23/27] [webkit] › test/browser/stretch.spec.js:146:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[24/27] [webkit] › test/browser/stretch.spec.js:161:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[25/27] [webkit] › test/browser/stretch.spec.js:195:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[26/27] [webkit] › test/browser/stretch.spec.js:209:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[27/27] [webkit] › test/browser/stretch.spec.js:221:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+  27 passed (3.4m)
+WEBKIT_EXIT=0
+swap after: total = 7168.00M  used = 6245.75M  free = 922.25M  (encrypted)

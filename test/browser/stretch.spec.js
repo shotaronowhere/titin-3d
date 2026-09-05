@@ -37,6 +37,14 @@ async function expectSpringSweep(page) {
 // headroom the supported-maximum assertion below already carries. The predicate is
 // unchanged, so a sweep that never starts still fails.
 async function expectSweepStarted(page) {
+  // A 30 s wait is only usable if the enclosing test can hold it. On the host that
+  // produced the original failure the boot and setup alone reached 11.5 s, so a 30 s
+  // poll inside the 60 s default would fail on the test budget instead — a worse and
+  // far less diagnosable failure than the one being fixed. Raise the ceiling for the
+  // tests that wait this way; it is a ceiling, not a duration, and the fast path is
+  // unaffected. `setTimeout` sets rather than raises, so a caller that already asked
+  // for more must not be cut back down to 90 s by calling this helper.
+  test.setTimeout(Math.max(90_000, test.info().timeout));
   await expect.poll(
     async () => Number(await page.locator('#sl').inputValue()),
     { timeout: 30_000 },
@@ -151,7 +159,9 @@ test('SC24/27A Pause freezes the sweep at an exact slider value', async ({ page 
 });
 
 test('SC24/27A resuming a paused stretch continues instead of resetting', async ({ page }) => {
-  test.setTimeout(90_000);
+  // Two long waits in one route: the sweep has to start, and then the resumed sweep has
+  // to reach the endpoint. Budget for both rather than for one.
+  test.setTimeout(120_000);
   await boot(page);
   await enterStretch(page);
   await page.locator('#sl').fill('2000');

@@ -34,12 +34,14 @@ species/preparation, and transfer limitation. Return to the stretch beat and sel
 force value to open its model/sensitivity explanation. Research also retains molecular
 architecture, lattice comparisons, and reproducible exports.
 
-**Scope:** the human skeletal-muscle reference construct is Q8WZ42-1; its sequence and
-literature inputs are explicitly identified. The three-dimensional route is partly
-schematic and does not depict biological copy number. N2A includes four Ig domains and a
-structured UN2A core with flexible flanks. The passive series-chain model imports
-parameters across source species and preparations; its pN values are estimates, not
-measurements of this complete human construct. Force is reported within the model's
+**Scope:** the reference construct is human TTN Q8WZ42-1, a citation-reviewed SC-20
+reference sequence carrying **no tissue-specific claim**; its sequence and literature
+inputs are explicitly identified. No muscle or tissue is assigned to it, which is a limit
+of this model rather than a claim that titin is isoform- or tissue-neutral. The
+three-dimensional route is partly schematic and does not depict biological copy number.
+N2A includes four Ig domains and a structured UN2A core with flexible flanks. The passive
+series-chain model imports parameters across source species and preparations; its pN
+values are estimates, not measurements of this complete human construct. Force is reported within the model's
 2000–2400 nm supported range, flagged as extrapolated above 2400 and below 2500 nm, and
 withheld outside those evaluated regimes. “Supported” denotes the internal applicability
 policy. Detailed ± values describe literature-parameter sensitivity, not a confidence

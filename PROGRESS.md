@@ -1758,17 +1758,31 @@ ran. Every action in that trace is 5–20× slower than normal, so the cause was
 The correction is test-only: one explicit 30 s budget on the "sweep has started" poll, matching
 the headroom the supported-maximum assertion has carried since SC-24. A pause/resume regression
 was added, because nothing previously checked that resuming from a paused intermediate length
-continues from it instead of resetting. See `evidence/mvp-preview/2026-09-05/pause-failure/DIAGNOSIS.md`.
+continues from it instead of resetting; a positive control against a real endpoint replay
+proves that predicate is not vacuous. See
+`evidence/mvp-preview/2026-09-05/pause-failure/DIAGNOSIS.md`.
 
 Verification on this candidate: **`npm run verify` passes, 617/617 Node tests**; artifact
 identity and boundary pass; a clean detached worktree reproduces all **23 compared files**
-byte-for-byte. Chromium re-runs are green — the pause test alone at `--repeat-each=3`, the whole
-Stretch suite, and Stretch plus MVP preview together (**13/13**). **Firefox is 18/18** across
-the MVP preview, learn and evidence suites. Exports were checked twice: the deterministic
-download gate on Chromium, and the presenter route walked on the standalone over `file://`,
+byte-for-byte. The plan's exact integrated Chromium command was re-run end to end and is now
+**71/71, exit 0** — the original 70 checks plus the new regression — after green re-runs of the
+pause test alone, the Stretch suite, and Stretch plus MVP preview together. All three engines
+pass: **Firefox 18/18** on the MVP preview, learn and evidence suites and **9/9** on Stretch,
+and **WebKit 27/27** across all four. That covers the changed and added tests on more than
+Chromium, and gives Safari — the likely engine on a Mac or iPad demo — its first result for
+this candidate. Exports were checked twice: the deterministic download gate on Chromium,
+and the presenter route walked on the standalone over `file://`,
 where all eight downloaded files carry the frozen fingerprints and the unsupported 1,900 nm
 state leaves its three force cells **empty rather than zero**. The remaining stored frames were
 reviewed. The full historical SC-27A cross-engine matrix was **not** rerun.
+
+One shipped statement was wrong and is corrected. `SCIENTIST_NOTE.md` is the only shipped
+document not generated from gated canonical records, and its scope sentence read "the human
+skeletal-muscle reference construct is Q8WZ42-1" — the first entry in
+`data/scientific_scope.json`'s `excluded_claims`, and a direct contradiction of the
+application's own "no tissue-specific claim" badge. It now names the construct with no tissue
+assigned and disclaims the opposite excluded claim. The generated release documents were
+checked for the same error and are clean.
 
 The distribution ZIP exists, outside the repository at
 `/Users/shotaro/Downloads/titin-sarcomere-preview-2026-09-06-557f09a.zip`. It was extracted to a

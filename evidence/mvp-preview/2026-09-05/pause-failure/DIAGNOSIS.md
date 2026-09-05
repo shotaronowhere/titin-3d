@@ -64,6 +64,16 @@ fingerprint and the artifact hashes are untouched.
    since SC-24, for the same reason. The predicate is unchanged, so a sweep that never
    starts still fails — later, not never. Global timeouts, retries and `expect.timeout`
    are untouched, and no assertion was removed.
+
+   A 30 s wait is only usable if the enclosing test can hold it. On the host that produced
+   the failure, boot and setup alone reached 11.5 s, so a 30 s poll inside the 60 s default
+   test budget would have failed on the *test* timeout instead — a worse and far less
+   diagnosable failure than the one being fixed. The helper therefore raises its test's
+   ceiling to 90 s, using `Math.max(90_000, test.info().timeout)` because
+   `test.setTimeout` sets rather than raises and must not cut back a caller that asked for
+   more. This is the repository's existing idiom: `test.slow()` on the shell and handoff
+   gates, `test.setTimeout(120_000)` on the `@sweep` matrices, `test.setTimeout(90_000)` on
+   the MVP replay test. It is a ceiling, not a duration; the fast path is unchanged.
 2. Added `SC24/27A resuming a paused stretch continues instead of resetting`. The
    pause/resume half of the reset contract had no browser coverage: nothing checked that
    resuming from a paused intermediate length keeps that length instead of resetting to the
@@ -71,7 +81,15 @@ fingerprint and the artifact hashes are untouched.
    minimum of them to be at or above the paused length — reading only the endpoint would
    also pass a reset that raced back up to 2,400 nm. The instrumentation is the pattern
    already used by `mvp-preview.spec.js`'s reduced-motion replay test, which observes the
-   `2000` written by an endpoint reset; that is what makes this assertion non-vacuous.
+   `2000` written by an endpoint reset.
+
+   Non-vacuity was demonstrated, not argued. A positive control ran the identical
+   instrumentation and the identical `min(writes) >= paused` predicate against a real
+   endpoint replay — the one path that *does* reset. It recorded 31 writes beginning
+   `[2000, 2013, 2027]`, `min(writes)` of 2,000 against a start of 2,400, and the predicate
+   evaluated **false**. So a resume that reset would fail this test. (Those first three
+   writes also confirm `stepSweep`'s 100 ms per-frame cap: 100/3000 × 400 nm ≈ 13 nm a
+   frame, which is what keeps the sweep from jumping start to finish on a slow host.)
 
 Preserved behavioral assertions, all still green: motion begins, pause stops below the
 maximum, the paused length stays fixed, the slider still accepts a manual length after a
