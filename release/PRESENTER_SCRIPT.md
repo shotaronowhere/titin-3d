@@ -1,6 +1,6 @@
 # Presenter script
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `f40cc66e891c2843b2d8ecbe66a2fcded995ecae`; build inputs `5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305`. Estimated 181.1 s (3 min 1 s), target 110–190 s.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `557f09aaa6f663b4e1bf958ef6c44357861a4d16`; build inputs `d7970b235a73ab1df2e93e26807cda95cb9b0d769b41eccd4ec2169747cbd33f`. Estimated 186 s (3 min 6 s), target 110–190 s.
 
 Read the **Say** line; it is the on-screen copy. The **If asked** line is the expert expansion and lives in Research — you do not need to open it to finish the Tour.
 
@@ -27,7 +27,7 @@ Resolved from the build, not typed here. Nothing needs the mouse.
 
 **Say.** A sarcomere is the repeating contractile unit between two Z-discs. Adenosine triphosphate (ATP)-powered myosin pulls on actin to drive active contraction; titin is the long passive spring and scaffold that helps the unit recoil and stay organized, not the motor.
 
-**Takeaway.** Myosin and actin power active contraction; titin is a passive spring and scaffold spanning the sarcomere.
+**Takeaway.** Myosin and actin power active contraction; one titin spans a half-sarcomere from Z-disc to M-line and contributes passive elasticity and structural support.
 
 **If asked.** The continuous axial topology and domain order are constrained, while the smooth three-dimensional backbone path remains a schematic presentation of unresolved transverse placement.
 
@@ -49,15 +49,15 @@ Resolved from the build, not typed here. Nothing needs the mouse.
 
 **If pushed.** Not claimed: telethonin as the sole path carrying titin tension; a resolved complete lateral route through the Z-disc; a complete M-band molecular structure; exact in-situ crosslink coordinates; atom-resolved surfaces for every domain; a known azimuth for every folded domain; that domain spacing is measured everywhere along the molecule.
 
-## 3. Build and stretch the spring  `~40.6s`
+## 3. Build and stretch the spring  `~45.5s`
 
 **Objective.** Connect titin's Ig, Fn3, N2A, and PEVK architecture to regional extension, incremental compliance, and approximate modeled passive force.
 
-**Do.** focus the PEVK region; recommended 2200 nm, detail scale; preserve the user's current sarcomere length
+**Do.** frame the titin hero view; recommended 2200 nm, context scale; preserve the user's current sarcomere length
 
-**Announce.** Preparing the reversible architecture and stretch comparison without changing your current sarcomere length.
+**Announce.** Framing the spring and scaffold for stretch while preserving your current sarcomere length.
 
-**Say.** Titin combines folded immunoglobulin-like (Ig) domains, fibronectin type III (Fn3) domains, N2A, and the disordered PEVK spring. The approved partition places the Ig/Fn3 array in the A-band and does not place Fn3 in the modeled elastic I-band. As sarcomere length rises within the supported range, the I-band lengthens while the A-band stays approximately fixed. The model predicts approximate rising passive force; PEVK takes a growing share of added length and incremental compliance—how readily the next small stretch occurs—not simply more total extension.
+**Say.** Titin combines folded immunoglobulin-like (Ig) domains, fibronectin type III (Fn3) domains, N2A, and the disordered PEVK spring. N2A includes four Ig domains and a structured UN2A core with flexible flanks. The approved partition places the Ig/Fn3 array in the A-band and does not place Fn3 in the modeled elastic I-band. As sarcomere length rises within the supported range, the I-band lengthens while the A-band stays approximately fixed. The model predicts approximate rising passive force; PEVK takes a growing share of added length and incremental compliance—how readily the next small stretch occurs—not simply more total extension.
 
 **Takeaway.** Titin combines folded and disordered elements; stretch concentrates in elastic I-band regions while modeled passive force rises.
 

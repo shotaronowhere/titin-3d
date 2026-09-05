@@ -1,6 +1,6 @@
 # Standard screenshot review pack
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `f40cc66e891c2843b2d8ecbe66a2fcded995ecae`; build inputs `5ff8017125a9fbde0aedc693f11c13c0dbe17d163bc0a1cf1839b8af5fe02305`. 48 cells.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `557f09aaa6f663b4e1bf958ef6c44357861a4d16`; build inputs `d7970b235a73ab1df2e93e26807cda95cb9b0d769b41eccd4ec2169747cbd33f`. 48 cells.
 
 Deterministic SC-24 capture set generated from semantic scenes and canonical URL v2 state. Pixel comparison supplements human review and does not determine scientific correctness.
 
@@ -53,13 +53,13 @@ Deterministic SC-24 capture set generated from semantic scenes and canonical URL
 - [ ] `chapter_follow_titin_mobile` — 390×844
       `#v=2&depth=learn&step=follow_titin&sl=2200&drawer=closed&scene=overview&confidence=0`
 - [ ] `chapter_stretch_spring_projector` — 1920×1080
-      `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&camera=region.PEVK&scale=detail&target=PEVK&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
+      `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&scene=spring&confidence=0`
 - [ ] `chapter_stretch_spring_desktop` — 1440×900
-      `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&camera=region.PEVK&scale=detail&target=PEVK&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
+      `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&scene=spring&confidence=0`
 - [ ] `chapter_stretch_spring_laptop` — 1280×720
-      `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&camera=region.PEVK&scale=detail&target=PEVK&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
+      `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&scene=spring&confidence=0`
 - [ ] `chapter_stretch_spring_mobile` — 390×844
-      `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&camera=region.PEVK&scale=detail&target=PEVK&context=0&layers=lattice_rings_1%2Cshow_domains&confidence=0`
+      `#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&scene=spring&confidence=0`
 - [ ] `chapter_scaffold_thick_filament_projector` — 1920×1080
       `#v=2&depth=learn&step=scaffold_thick_filament&sl=2200&drawer=closed&scene=a_band_scaffold&confidence=0`
 - [ ] `chapter_scaffold_thick_filament_desktop` — 1440×900
