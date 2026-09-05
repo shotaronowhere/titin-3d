@@ -4,7 +4,15 @@ A scientifically traceable Three.js visualization of titin in sarcomere context.
 JSON records in `data/` are the scientific source of truth; the renderer and public
 API consume those records rather than restating biological constants.
 
-**Project status:** the scoped MVP is complete through Phases 0–10 and Milestones
+**Scientist-feedback preview.** On 2026-09-05 the project owner authorized the
+bounded MVP completion plan in `evidence/mvp-review/2026-09-05/REVIEW_AND_PLAN.md`.
+This preview preserves the reference model and its scientific limits while
+correcting Tour wording, displayed counts and Stretch replay. Formal independent
+scientific validation and human usability review remain pending; `release_ready`
+stays false. Preview delivery and its exact candidate identity are recorded in
+`evidence/mvp-preview/2026-09-05/DELIVERY.md`.
+
+**Implementation history:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` remain optional future extensions. Showcase
 completion now follows
 `docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md`. SC-18 and
@@ -88,7 +96,12 @@ that extend is something to watch rather than something to read. The
 sweep stops on any other interaction and, under `prefers-reduced-motion`, moves
 between the two endpoint states instead of animating between them. The Measure tab retains the
 status-bearing force curve, regional extension, incremental compliance, and the exact SD-04
-validity/non-claim disclosures.
+validity/non-claim disclosures. Beat 3 starts in the full Spring view. At the upper endpoint,
+**Replay stretch** explicitly resets to the working-range minimum before stretching again;
+pausing partway and ordinary beat navigation preserve the current length. The Tour force button
+opens the force explanation directly. Its detailed ± values describe literature-parameter
+sensitivity, not a confidence interval. Molecular architecture and the paired lattice comparison
+remain available in Research.
 
 A presenter can drive the route from the keyboard: digits 1–5 enter the matching beats, `r`
 restarts, `x` enters the complete Stretch beat, `e` opens Research, `g` returns to Tour, and the
@@ -278,7 +291,10 @@ full text, an abstract, a database record, coordinates, or an executable model.
 `data/scientific_scope.json` is the sole public identity ledger: the displayed
 sequence is the pinned human TTN reference sequence Q8WZ42-1, not a claimed
 tissue-specific human isoform. Mechanics transferred from rat-psoas preparations
-remain identified as development transfers, and absolute-pN output is withheld.
+remain identified as cross-preparation transfers: approximate passive pN per titin is
+shown at 2,000–2,400 nm, labeled extrapolated above 2,400 and below 2,500 nm, and
+withheld below 2,000 or at/above 2,500 nm. These are model estimates, not measured
+human forces; parameter sensitivity is not a confidence interval.
 `data/claim_support.json` records exact locators and limitations separately from
 human entailment status; all independent human entailment reviews are still pending.
 `PHASE0_REVIEW.md` records the completed research audit and the remaining scientific

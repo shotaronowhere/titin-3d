@@ -322,7 +322,7 @@ test('SC2/SC24: the opening and mechanics story are present in the accessible sh
   const mechanicsCopy = model.spec.presentation.guided_chapters
     .find((chapter) => chapter.id === 'stretch_spring');
   assert.match(`${mechanicsCopy.lay_summary} ${mechanicsCopy.narration}`,
-    /Folded Ig\/Fn3 domains and disordered N2A\/PEVK elements[\s\S]*I-band lengthens/i);
+    /folded-domain chains straighten[\s\S]*I-band[\s\S]*N2A includes four Ig domains and a structured UN2A core with flexible flanks/i);
   assert.match(page, /#canvas \{[^}]*min-height:\s*0;[^}]*overflow:\s*hidden;/,
     'the WebGL canvas must not retain a wide-screen height at the mobile breakpoint');
   assert.match(page, /#canvas > canvas \{[^}]*position:\s*absolute;[^}]*height:\s*100% !important;/);

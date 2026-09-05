@@ -74,13 +74,13 @@ async function expectGeometryInsideUnobscuredStage(page) {
   expect(geometry.iBandLabel.bottom).toBeLessThanOrEqual(geometry.bottom);
 }
 
-test('SC24/27A Stretch reframes and announces a chapter-camera start', async ({ page }) => {
+test('MVP Stretch opens in the Spring scene and keeps its geometry framed', async ({ page }) => {
   await boot(page);
   await enterStretch(page);
   await page.locator('#sl').fill('2000');
   await page.locator('#stagePlay').click();
   await expectSpringSweep(page);
-  await expect(page.locator('#objectAnnouncement')).toContainText('Changed to the Spring scene');
+  expect(new URL(page.url()).hash).toContain('scene=spring');
   await expectGeometryInsideUnobscuredStage(page);
 });
 
@@ -115,7 +115,7 @@ test('SC24/27A Stretch reaches the supported maximum with geometry retained', as
   // Headless WebGL can throttle requestAnimationFrame substantially while the
   // geometry rebuilds; the semantic endpoint, not wall-clock throughput, is the contract.
   await expect(page.locator('#sl')).toHaveValue('2400', { timeout: 30_000 });
-  await expect(page.locator('#stagePlay')).toHaveText(/Stretch/);
+  await expect(page.locator('#stagePlay')).toHaveText(/Replay stretch/);
   await expect(page.locator('#objectAnnouncement')).toContainText('Stretch complete');
   await expectGeometryInsideUnobscuredStage(page);
 });
@@ -170,7 +170,7 @@ test('SC24 reduced motion lands on the same Spring maximum without tweening', as
   await page.locator('#sl').fill('2000');
   await page.locator('#stagePlay').click();
   await expect(page.locator('#sl')).toHaveValue('2400');
-  await expect(page.locator('#stagePlay')).toHaveText(/Stretch/);
+  await expect(page.locator('#stagePlay')).toHaveText(/Replay stretch/);
   await expect(page.locator('#objectAnnouncement')).toContainText('Stretch complete');
   await expectGeometryInsideUnobscuredStage(page);
 });

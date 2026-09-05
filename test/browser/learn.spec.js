@@ -67,9 +67,11 @@ test('SC23 legacy step-only links restore and canonicalize the complete final sc
   expect(hash).toContain('v=2');
   expect(hash).toContain('step=stretch_spring');
   expect(hash).toContain('sl=2317');
-  expect(hash).toContain('scale=detail');
-  expect(hash).toContain('camera=region.PEVK');
-  expect(hash).toContain('target=PEVK');
+  expect(hash).toContain('scene=spring');
+  expect(await page.evaluate(() => window.titinVisualization.currentState().camera_preset))
+    .toBe('view.titin_hero');
+  expect(await page.evaluate(() => window.titinVisualization.currentState().highlighted_titin_region))
+    .toBe('PEVK');
 });
 
 test('SC23 Sources exposes the resolved semantic-scene context in Research', async ({ page }) => {

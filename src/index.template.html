@@ -729,7 +729,7 @@ window.__titinBoot = { ready: false, problems: [] };
         <div class="brand-block">
           <div class="brand-identity">
             <div class="brand-title">Titin across the sarcomere</div>
-            <div class="brand-sub">One titin in one sarcomere</div>
+            <div class="brand-sub">Research preview · titin in muscle</div>
           </div>
         </div>
         <div class="header-actions">
@@ -821,6 +821,7 @@ window.__titinBoot = { ready: false, problems: [] };
 
       <div id="panelInspect" role="tabpanel" aria-labelledby="tabInspect">
       <section id="scopeDetails" tabindex="-1">
+      <p class="note">Scientist-feedback preview · independent scientific validation and human usability review pending.</p>
         <h2>Scope details</h2>
         <div class="sub">Human skeletal-muscle reference construct Q8WZ42-1. Sarcomere length changes passive geometry; it does not simulate calcium activation or active contraction.</div>
       </section>
@@ -903,7 +904,7 @@ window.__titinBoot = { ready: false, problems: [] };
       <h2>Geometry at this length</h2>
       <table id="metrics"></table>
 
-      <h2>Passive force</h2>
+      <h2 id="passiveForceHeading" tabindex="-1">Passive force</h2>
       <div class="sub" style="margin:0 0 6px">Regional extension remains a
         deterministic model output. Quantitative force appears only where the loaded
         SD-04 decision explicitly authorizes its regime and sensitivity policy.</div>
@@ -1355,7 +1356,17 @@ $('scopeBadge').onclick = () => {
   requestAnimationFrame(() => $('scopeDetails').focus({ preventScroll: false }));
 };
 $('closeEvidence').onclick = closeEvidence;
-$('stageForce').onclick = () => openEvidence($('stageForce'), 'measure');
+$('stageForce').onclick = () => {
+  openEvidence($('stageForce'), 'measure');
+  requestAnimationFrame(() => {
+    const heading = $('passiveForceHeading');
+    heading.focus({ preventScroll: true });
+    // The drawer header and tabs are sticky: ordinary scrollIntoView would
+    // place the requested heading behind them.
+    $('panel').scrollTop += heading.getBoundingClientRect().top
+      - $('drawerTabs').getBoundingClientRect().bottom - 12;
+  });
+};
 
 // SC-13 drawer sections, in the order a reader asks for them: what am I looking
 // at, what does it measure, what is the evidence, where did it come from.
@@ -3160,7 +3171,7 @@ function renderForceCurve() {
   const readout = document.createElement('div');
   readout.className = 'force-readout';
   readout.textContent = Number.isFinite(curve.current?.force_pN)
-    ? `${curve.current.precision?.text || `${curve.current.force_pN} pN`} · ${curve.current.status}`
+    ? `${curve.current.precision?.text || `${curve.current.force_pN} pN`} · ${curve.current.status} · model estimate; ± is literature parameter sensitivity, not a confidence interval.`
     : 'Absolute pN withheld';
 
   const contributionHeading = document.createElement('div');
@@ -4623,16 +4634,18 @@ function render(report, { renderOverlay = true } = {}) {
   const forceValue = document.createElement(g.titin_force_status === 'not_evaluated' ? 'span' : 'b');
   forceValue.textContent = g.titin_force_status === 'not_evaluated'
     ? `force not evaluated · absolute pN withheld · SD-04 ${g.titin_mechanics_decision_status}`
-    : g.titin_force_precision?.text || 'mechanics value unavailable';
+    : Number.isFinite(g.titin_force_precision?.central)
+      ? `≈${g.titin_force_precision.central} pN` : 'mechanics value unavailable';
   if (g.titin_force_status !== 'not_evaluated') {
     const forceClass = document.createElement('span');
     forceClass.className = 'force-class';
-    forceClass.textContent = ` · ${g.titin_force_status} · approximate passive force per titin`;
+    forceClass.textContent = ` · ${g.titin_force_status} · modeled passive force per titin`;
     forceEl.append(forceValue, forceClass);
   } else {
     forceEl.append(forceValue);
   }
   forceEl.dataset.evaluationStatus = g.titin_force_status;
+  syncSweepControl();
 
   const rows = [
     ['Half-sarcomere', `${g.half_sarcomere_nm.toFixed(1)} nm`],
@@ -5027,14 +5040,22 @@ renderSurface.addEventListener('pointercancel', () => { pointerStart = null; });
 // mid-session is asking for it to apply now, not at the next reload.
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+function syncSweepControl() {
+  if (sweepHandle !== null) return;
+  const replay = Number(slider.value) === sweepRange.max;
+  $('stagePlay').classList.remove('on');
+  $('stagePlay').setAttribute('aria-pressed', 'false');
+  $('stagePlay').textContent = replay ? '↻ Replay stretch' : '\u25b6 Stretch';
+  $('stagePlay').setAttribute('aria-label', replay
+    ? 'Replay stretch: reset to the working-range minimum and stretch again'
+    : 'Play a stretch sweep across the working range');
+}
+
 function stopSweep({ completed = false, synchronize = true } = {}) {
   if (sweepHandle !== null) cancelAnimationFrame(sweepHandle);
   sweepHandle = null;
   sweepLastFrameAt = null;
-  $('stagePlay').classList.remove('on');
-  $('stagePlay').setAttribute('aria-pressed', 'false');
-  $('stagePlay').textContent = '\u25b6 Stretch';
-  $('stagePlay').setAttribute('aria-label', 'Play a stretch sweep across the working range');
+  syncSweepControl();
   if (completed) {
     $('objectAnnouncement').textContent = 'Stretch complete at the supported maximum. '
       + 'The full half-sarcomere and I-band bracket remain framed.';
@@ -5137,6 +5158,14 @@ function toggleSweep() {
     applySemanticScene('spring', { announce: false });
     $('objectAnnouncement').textContent = 'Changed to the Spring scene so the complete '
       + 'half-sarcomere and I-band bracket stay visible during Stretch.';
+  }
+  // Reset only on an explicit replay at the endpoint. Paused/intermediate
+  // lengths and ordinary chapter/URL navigation preserve their current value.
+  if (current === sweepRange.max) {
+    slider.value = String(sweepRange.min);
+    rebuild();
+    $('objectAnnouncement').textContent = `Replay reset to ${sweepRange.min.toLocaleString()} nm; `
+      + 'stretching again within the model working range.';
   }
   const start = Number(slider.value);
   // The sweep must not outrun its own camera transition. Resolve the semantic

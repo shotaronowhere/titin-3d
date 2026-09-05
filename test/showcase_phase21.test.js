@@ -442,6 +442,6 @@ test('SC21: the public mechanics surface is status-bearing and one-click auditab
   assert.match(page, /supported_range_nm/);
   assert.match(page, /stroke-dasharray/);
   assert.match(page, /parameter sensitivity range/i);
-  assert.match(page, /approximate passive force per titin/);
+  assert.match(page, /modeled passive force per titin/);
   assert.doesNotMatch(page, /titin_chain_force_pN\.toFixed/);
 });

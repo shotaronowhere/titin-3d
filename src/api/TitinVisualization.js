@@ -60,7 +60,7 @@ import {
  * @property {boolean} interpolated true when the length falls between keyframes
  * @property {string|null} interpolation_caveat set iff interpolated
  * @property {object} manifest what the renderer actually drew
- * @property {string[]} notes verification notes from the scene check
+ * @property {string[]} notes built-scene counts and presentation limitations
  * @property {string[]} hidden_components components not visible at this scale
  * @property {string|null} highlighted_titin_region active selection, if any
  * @property {object} region_highlight_applied selection counts in the built tree

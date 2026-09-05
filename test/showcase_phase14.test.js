@@ -82,7 +82,7 @@ test('SC21: the public stage binds force disclosure to the loaded decision and s
   assert.match(page, /id="stageForce"/);
   assert.match(page, /force not evaluated · absolute pN withheld/);
   assert.match(page, /SD-04 \$\{g\.titin_mechanics_decision_status\}/);
-  assert.match(page, /g\.titin_force_precision\?\.text/);
+  assert.match(page, /g\.titin_force_precision\?\.central/);
   assert.doesNotMatch(page, /value\.textContent = `\$\{g\.titin_chain_force_pN/);
 });
 

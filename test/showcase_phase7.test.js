@@ -82,8 +82,9 @@ test('SC7: every chapter owns one takeaway, camera, configuration, and source se
     }
   }
   // The route is a route: it does not park on one shot the whole way through.
-  assert.ok(new Set(controller.chapters
-    .map((chapter) => chapter.recommended_state.camera_preset)).size >= 3);
+  assert.deepEqual([...new Set(controller.chapters
+    .map((chapter) => chapter.recommended_state.camera_preset))].sort(),
+  ['closeup.czone', 'view.titin_hero']);
   assert.ok(new Set(controller.chapters.map((chapter) => chapter.target.id)).size >= 3);
 });
 

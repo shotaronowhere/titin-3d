@@ -18,6 +18,22 @@ import { STAGE_LAYOUT } from '../presentation/StageLayout.js';
 
 /** @typedef {import('../model/TitinModel.js').TitinModel} TitinModel */
 
+/** Describe the built presentation, not the larger verified lattice descriptor. */
+export function renderedSceneNotes(scene, manifest) {
+  const notes = [];
+  if (manifest.lattice) {
+    const { scope, thick_drawn, thin_drawn } = manifest.lattice;
+    notes.push(`${scope === 'local' ? 'Local filament context' : 'Extended lattice'} built: `
+      + `${thick_drawn} thick filament(s), ${thin_drawn} thin filament(s) per half-sarcomere; `
+      + 'these display counts do not represent whole-muscle stoichiometry.');
+    const idealization = scene.lattice?.provenance?.idealization;
+    if (idealization) notes.push(idealization);
+  }
+  notes.push(`${manifest.titin_strands_drawn} representative titin path(s) built per half-sarcomere; `
+    + 'biological copy number is not depicted. Component controls may hide built geometry.');
+  return notes;
+}
+
 /** Camera presets, expressed as directions so they work at any sarcomere length. */
 export const VIEWS = Object.freeze({
   longitudinal: { dir: [0.15, 0.35, 1], label: 'Longitudinal (default)' },
@@ -420,7 +436,10 @@ export class Viewer {
     const { clientWidth: lineW, clientHeight: lineH } = this.container;
     if (lineW > 0 && lineH > 0) this.sarcomere.setLineResolution(lineW, lineH);
     this.currentSL = scene.sarcomere_length_nm;
-    this.lastNotes = notes;
+    // Preserve the full scientific diagnostic separately; its descriptor counts
+    // are not a description of the subset selected by the renderer.
+    this.lastVerificationNotes = notes;
+    this.lastNotes = renderedSceneNotes(scene, this.sarcomere.manifest);
     // Remember what was actually built. buildOpts is the constructor's DEFAULTS;
     // the per-call opts are what the UI passed, and checkDetailLOD must reason
     // about the latter or it would never see the context layer enabled at all.

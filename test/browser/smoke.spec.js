@@ -120,7 +120,8 @@ test('region and close-up navigation never leave a false wide-view pressed state
   await page.locator('#chapterNext').click();
   await page.locator('#chapterNext').click();
   await expect(page.locator('#chapterTitle')).toHaveText('Build and stretch the spring');
-  await expect(page.locator('#views [aria-pressed="true"]')).toHaveCount(0);
+  await expect(page.locator('#views [aria-pressed="true"]')).toHaveCount(1);
+  await expect(page.locator('#views [data-view="titin_hero"]')).toHaveAttribute('aria-pressed', 'true');
 
   await page.locator('#audienceEvidence').click();
   const inventory = page.locator('.research-inventory');

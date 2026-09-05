@@ -295,12 +295,12 @@
         "LEARN",
         "EXPLORE"
       ],
-      "camera_preset": "region.PEVK",
-      "scale": "detail",
-      "context": false,
+      "camera_preset": "view.titin_hero",
+      "scale": "context",
+      "context": true,
       "layers": {
-        "show_lattice": false,
-        "show_domains": true,
+        "show_lattice": true,
+        "show_domains": false,
         "show_context_detail": false,
         "mirror": false
       },
