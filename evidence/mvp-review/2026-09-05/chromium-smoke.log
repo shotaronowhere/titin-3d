@@ -1,0 +1,18 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:29002) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 9 tests using 1 worker
+
+[1/9] [chromium] › test/browser/smoke.spec.js:22:1 › source and standalone pages boot without module, console, or WebGL errors
+[2/9] [chromium] › test/browser/smoke.spec.js:40:1 › committed standalone opens from file:// and reaches its ready marker
+[3/9] [chromium] › test/browser/smoke.spec.js:44:1 › SC20 desktop authority: consumed rulings and a claim source are visibly inspectable
+[4/9] [chromium] › test/browser/smoke.spec.js:66:3 › desktop: Research tabs open in order and return focus to the invoker
+[5/9] [chromium] › test/browser/smoke.spec.js:66:3 › responsive: Research tabs open in order and return focus to the invoker
+[6/9] [chromium] › test/browser/smoke.spec.js:80:1 › visible source links and contextual Stretch states use declared readable foregrounds
+[7/9] [chromium] › test/browser/smoke.spec.js:118:1 › region and close-up navigation never leave a false wide-view pressed state
+[8/9] [chromium] › test/browser/smoke.spec.js:139:1 › a missing WebGL context produces an actionable static-fallback message
+[9/9] [chromium] › test/browser/smoke.spec.js:152:1 › the pinned axe foundation reports no critical WCAG A/AA violation
+  9 passed (1.1m)

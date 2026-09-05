@@ -1,0 +1,100 @@
+{
+  "candidate_commit": "8674dd7",
+  "app_revision": "557f09aaa6f663b4e1bf958ef6c44357861a4d16",
+  "procedure": "Detached clean worktree; copied pinned node_modules; npm run build:release && npm run pack; compared every packaged artifact and confirmed clean worktree.",
+  "matched_files": 23,
+  "files": [
+    {
+      "path": "index.html",
+      "sha256": "b5ee9beb2ea4f7b9c26dd25d5574018952a4f1518c6af12573e4b758086f4f5e"
+    },
+    {
+      "path": "release/MANIFEST.json",
+      "sha256": "13cb66e61e55cbbc4966219ce22ed35da5cf56b812987c6611d3d59ae6c0d4ac"
+    },
+    {
+      "path": "release/MANIFEST.sha256",
+      "sha256": "b328e6f1cd68f854c1810f5caf1ec7882d535b117c4b12362d427a275cc9352a"
+    },
+    {
+      "path": "release/BOUNDARY_WORKSHEET.md",
+      "sha256": "eae51593bf6ff08aaf0f5d4b2175c4596c73d5c8a4820a78ba4fc608c20e7284"
+    },
+    {
+      "path": "release/CLAIM_MATRIX.md",
+      "sha256": "600d0a99014a7ab8bcbed76d767e15d9bbfc600063c45bf53d9b46bf89f69890"
+    },
+    {
+      "path": "release/export/EXPORT_CONTRACT.json",
+      "sha256": "2e60ead5236281a4ec930e5cd7591a0fd2ccb6bc46fcd644f3f7c41b10d15dec"
+    },
+    {
+      "path": "release/export/titin-claim-support-export.schema.json",
+      "sha256": "a7db19fbf9a0b132db189b38db6829154104ff67e25f5136b113e050f754eee5"
+    },
+    {
+      "path": "release/export/titin-state-export.schema.json",
+      "sha256": "a9c9acf91005c79078c52da69cbab55f413052f0bea3363ebe014404adfdf0dc"
+    },
+    {
+      "path": "release/fallback/architecture.svg",
+      "sha256": "718df6a852f7ebc8048a2cfac1c12cb84bbecb0d547180936c3f761f45535636"
+    },
+    {
+      "path": "release/fallback/extension.svg",
+      "sha256": "c49fb84e81c8248ae51b1c6e48dba085c33d445a4916a7ca577861951ca26d49"
+    },
+    {
+      "path": "release/fallback/lattice.svg",
+      "sha256": "8180baa18ae8b06f3af2f6777113f3e892678d2a19cbd4012a253f0b662a1c1e"
+    },
+    {
+      "path": "release/fallback/limitations.svg",
+      "sha256": "18768bbc1bc017f92ec4b55d88635a841ff1c335a89dd15fd2a6faedc1bd6413"
+    },
+    {
+      "path": "release/fallback/provenance.svg",
+      "sha256": "fb29f657fab178a12a98a5ec12d8e96f4abda888928d1f0fbe9eccdea2846f99"
+    },
+    {
+      "path": "release/fallback/scope.svg",
+      "sha256": "4034239eb9c8cd35e9319b6b45bbf62c9d0d0348102c5b3442eae7ff68f9e67e"
+    },
+    {
+      "path": "release/LEARN_TRANSCRIPT.md",
+      "sha256": "f6e5146b70ececaaae079b66b1dc49132098328930950fea2a1ce02194d187f1"
+    },
+    {
+      "path": "release/LIMITATIONS.md",
+      "sha256": "396b0e6dd50c1b772b42f64a8c3e27a43a50ce2f72d8702bc20819180a492f65"
+    },
+    {
+      "path": "release/mechanical_parameters.json",
+      "sha256": "c7fbf33ce82469f1fc346526e58e84c7c5434ad2b926ed05c37d27c443414cc3"
+    },
+    {
+      "path": "release/PREFLIGHT.md",
+      "sha256": "8f0f7776d93012975471d283fa4555b777b81265e47f3d6be09f7ff7cbb24c73"
+    },
+    {
+      "path": "release/PRESENTER_SCRIPT.md",
+      "sha256": "0f40d2cfc588c08512ec17198baa9d0088c7d1fe589f674e94bb02219ffda765"
+    },
+    {
+      "path": "release/REPRODUCTION.md",
+      "sha256": "9fffdda2794c7b77a74eee19a93cc8efabae41bc17d8b629053473ac4f477240"
+    },
+    {
+      "path": "release/SCIENTIFIC_AUTHORITY.md",
+      "sha256": "cadaa32ac1712aba3c2b009bc4bc827a45effcf084271021df12bb6c6fe94671"
+    },
+    {
+      "path": "release/SCREEN_READER_TRANSCRIPT.md",
+      "sha256": "668fbcf38397da7f3ac5705c721f8cc81d91d181f3dcdad6c3ffb3b820e1a38f"
+    },
+    {
+      "path": "release/SCREENSHOT_PACK.md",
+      "sha256": "43c13e0a78137aa3efc31ecacef8ec7054c9258b6bebb1e05b13238a1cce5b5a"
+    }
+  ]
+}

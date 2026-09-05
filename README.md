@@ -12,6 +12,11 @@ scientific validation and human usability review remain pending; `release_ready`
 stays false. Preview delivery and its exact candidate identity are recorded in
 `evidence/mvp-preview/2026-09-05/DELIVERY.md`.
 
+**2026-09-06 handoff:** implementation is committed; full repository verification passes
+(617 tests), but one Chromium pause-start timeout remains unresolved (69/70 passed).
+Second-browser checks and distribution packaging remain. Follow the
+[junior-engineer finish plan](docs/superpowers/plans/2026-09-06-titin-mvp-preview-finish.md).
+
 **Implementation history:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` remain optional future extensions. Showcase
 completion now follows

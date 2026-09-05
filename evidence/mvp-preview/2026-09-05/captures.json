@@ -1,0 +1,136 @@
+{
+  "index_sha256": "b5ee9beb2ea4f7b9c26dd25d5574018952a4f1518c6af12573e4b758086f4f5e",
+  "reduced_motion": true,
+  "note": "Browser software captures, not physical-device or human usability evidence.",
+  "frames": [
+    {
+      "name": "1280-beat-1",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "1280-beat-2",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=follow_titin&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "1280-beat-3",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&scene=spring&confidence=0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "1280-stretch-endpoint",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=stretch_spring&sl=2400&drawer=closed&scene=spring&confidence=0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "1280-force",
+      "url": "http://127.0.0.1:8000/#v=2&depth=explore&step=stretch_spring&sl=2400&drawer=measure&scene=spring&confidence=1",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "1280-beat-4",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=scaffold_thick_filament&sl=2400&drawer=closed&scene=a_band_scaffold&confidence=0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "1280-beat-5",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=knowledge_recap&sl=2400&drawer=closed&scene=overview&confidence=0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "390-beat-1",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "390-beat-2",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=follow_titin&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "390-beat-3",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&scene=spring&confidence=0",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "390-stretch-endpoint",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=stretch_spring&sl=2400&drawer=closed&scene=spring&confidence=0",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "390-force",
+      "url": "http://127.0.0.1:8000/#v=2&depth=explore&step=stretch_spring&sl=2400&drawer=measure&scene=spring&confidence=1",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "390-beat-4",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=scaffold_thick_filament&sl=2400&drawer=closed&scene=a_band_scaffold&confidence=0",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "390-beat-5",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=knowledge_recap&sl=2400&drawer=closed&scene=overview&confidence=0",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "640-zoom-equivalent-opening",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+      "viewport": {
+        "width": 640,
+        "height": 360
+      }
+    },
+    {
+      "name": "640-zoom-equivalent-stretch",
+      "url": "http://127.0.0.1:8000/#v=2&depth=learn&step=stretch_spring&sl=2200&drawer=closed&scene=spring&confidence=0",
+      "viewport": {
+        "width": 640,
+        "height": 360
+      }
+    }
+  ],
+  "page_errors": []
+}

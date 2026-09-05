@@ -1,0 +1,3094 @@
+
+> titin-visualization@0.3.0 test
+> node --test --test-concurrency=1 test/*.test.js
+
+TAP version 13
+# Subtest: close-ups: every landmark lies inside the structure at every length
+ok 1 - close-ups: every landmark lies inside the structure at every length
+  ---
+  duration_ms: 105.617875
+  ...
+# Subtest: close-ups: landmarks track sarcomere length rather than staying put
+ok 2 - close-ups: landmarks track sarcomere length rather than staying put
+  ---
+  duration_ms: 4.81675
+  ...
+# Subtest: close-ups: the crown view lands inside the overlap zone, not the bare zone
+ok 3 - close-ups: the crown view lands inside the overlap zone, not the bare zone
+  ---
+  duration_ms: 63.66175
+  ...
+# Subtest: close-ups: the twist view avoids the crown array that would occlude it
+ok 4 - close-ups: the twist view avoids the crown array that would occlude it
+  ---
+  duration_ms: 36.670625
+  ...
+# Subtest: close-ups: each span resolves the periodicity it claims to show
+ok 5 - close-ups: each span resolves the periodicity it claims to show
+  ---
+  duration_ms: 0.165958
+  ...
+# Subtest: close-ups: the adaptive near plane does not clip the subject
+ok 6 - close-ups: the adaptive near plane does not clip the subject
+  ---
+  duration_ms: 0.203958
+  ...
+# Subtest: close-ups: depth resolution stays finer than the features being drawn
+ok 7 - close-ups: depth resolution stays finer than the features being drawn
+  ---
+  duration_ms: 0.090542
+  ...
+# Subtest: close-ups: distances solve from the span, not from tuning
+ok 8 - close-ups: distances solve from the span, not from tuning
+  ---
+  duration_ms: 0.201541
+  ...
+# Subtest: close-ups: the vocabulary is complete and self-describing
+ok 9 - close-ups: the vocabulary is complete and self-describing
+  ---
+  duration_ms: 0.239167
+  ...
+# Subtest: close-ups: the lattice view looks down the filament axis
+ok 10 - close-ups: the lattice view looks down the filament axis
+  ---
+  duration_ms: 0.167791
+  ...
+# Subtest: close-ups: the detail layer actually draws at each close-up view width
+ok 11 - close-ups: the detail layer actually draws at each close-up view width
+  ---
+  duration_ms: 3198.504708
+  ...
+# Subtest: close-ups: the camera frustum actually contains drawn structure
+ok 12 - close-ups: the camera frustum actually contains drawn structure
+  ---
+  duration_ms: 3133.6265
+  ...
+# Subtest: spec loads and validates cleanly
+ok 13 - spec loads and validates cleanly
+  ---
+  duration_ms: 19.404
+  ...
+# Subtest: validation rejects a broken spec (dangling citation)
+ok 14 - validation rejects a broken spec (dangling citation)
+  ---
+  duration_ms: 7.273125
+  ...
+# Subtest: validation rejects domain-total mismatch
+ok 15 - validation rejects domain-total mismatch
+  ---
+  duration_ms: 7.346333
+  ...
+# Subtest: presets match the four spec keyframes
+ok 16 - presets match the four spec keyframes
+  ---
+  duration_ms: 1.071
+  ...
+# Subtest: geometry at a preset reproduces the keyframe exactly
+ok 17 - geometry at a preset reproduces the keyframe exactly
+  ---
+  duration_ms: 37.465083
+  ...
+# Subtest: INVARIANT: thick filament length never changes across the SL range
+ok 18 - INVARIANT: thick filament length never changes across the SL range
+  ---
+  duration_ms: 322.051792
+  ...
+# Subtest: INVARIANT: titin extension confined to I-band (span == I-band half-width - Z-disc half-width)
+ok 19 - INVARIANT: titin extension confined to I-band (span == I-band half-width - Z-disc half-width)
+  ---
+  duration_ms: 315.491125
+  ...
+# Subtest: INVARIANT: half-sarcomere = SL/2 and I-band = SL/2 - halfThick
+ok 20 - INVARIANT: half-sarcomere = SL/2 and I-band = SL/2 - halfThick
+  ---
+  duration_ms: 219.799041
+  ...
+# Subtest: titin is NOT uniformly scaled: PEVK recruits nonlinearly vs prox_Ig
+ok 21 - titin is NOT uniformly scaled: PEVK recruits nonlinearly vs prox_Ig
+  ---
+  duration_ms: 15.816333
+  ...
+# Subtest: lattice d10 follows constant-volume law: monotonic decrease with SL
+ok 22 - lattice d10 follows constant-volume law: monotonic decrease with SL
+  ---
+  duration_ms: 14.896708
+  ...
+# Subtest: SL requests outside range are clamped and flagged
+ok 23 - SL requests outside range are clamped and flagged
+  ---
+  duration_ms: 15.8815
+  ...
+# Subtest: provenance: PEVK render proxy is SCHEMATIC, span is MEASURED
+ok 24 - provenance: PEVK render proxy is SCHEMATIC, span is MEASURED
+  ---
+  duration_ms: 0.180167
+  ...
+# Subtest: provenance: unknowns are explicit and non-empty
+ok 25 - provenance: unknowns are explicit and non-empty
+  ---
+  duration_ms: 0.095125
+  ...
+# Subtest: forbidden rules surface to the UI layer
+ok 26 - forbidden rules surface to the UI layer
+  ---
+  duration_ms: 0.2315
+  ...
+# Subtest: forParameter resolves by component ID and by human name
+ok 27 - forParameter resolves by component ID and by human name
+  ---
+  duration_ms: 0.143583
+  ...
+# Subtest: forParameter miss returns found:false, NOT a fake UNKNOWN
+ok 28 - forParameter miss returns found:false, NOT a fake UNKNOWN
+  ---
+  duration_ms: 0.124917
+  ...
+# Subtest: every geometry_sources parameter is resolvable via forParameter
+ok 29 - every geometry_sources parameter is resolvable via forParameter
+  ---
+  duration_ms: 0.246583
+  ...
+# Subtest: _baseClass reduces all real evidence strings to one of the six declared classes
+ok 30 - _baseClass reduces all real evidence strings to one of the six declared classes
+  ---
+  duration_ms: 0.177209
+  ...
+# Subtest: CONSISTENCY: engine-recomputed titin layout matches spec keyframe layout
+ok 31 - CONSISTENCY: engine-recomputed titin layout matches spec keyframe layout
+  ---
+  duration_ms: 31.360416
+  ...
+# Subtest: PHASE3: geometry strategy loads and the model exposes a strategy layer
+ok 32 - PHASE3: geometry strategy loads and the model exposes a strategy layer
+  ---
+  duration_ms: 0.166834
+  ...
+# Subtest: PHASE3: strategy covers every sarcomere component and titin region
+ok 33 - PHASE3: strategy covers every sarcomere component and titin region
+  ---
+  duration_ms: 0.069041
+  ...
+# Subtest: PHASE3: every strategy primitive/assembly is drawn from the declared vocabulary
+ok 34 - PHASE3: every strategy primitive/assembly is drawn from the declared vocabulary
+  ---
+  duration_ms: 0.069042
+  ...
+# Subtest: PHASE3: strategy validation fails loudly on an out-of-vocab primitive
+ok 35 - PHASE3: strategy validation fails loudly on an out-of-vocab primitive
+  ---
+  duration_ms: 5.411375
+  ...
+# Subtest: PHASE3: scene descriptors — folded regions instance capsules, disordered regions are tubes
+ok 36 - PHASE3: scene descriptors — folded regions instance capsules, disordered regions are tubes
+  ---
+  duration_ms: 15.475208
+  ...
+# Subtest: PHASE3: thick filament length is SL-invariant across the scene range
+ok 37 - PHASE3: thick filament length is SL-invariant across the scene range
+  ---
+  duration_ms: 31.799333
+  ...
+# Subtest: PHASE3: verifyScene reports zero errors and the distal titin end meets the A-band tip
+ok 38 - PHASE3: verifyScene reports zero errors and the distal titin end meets the A-band tip
+  ---
+  duration_ms: 63.04825
+  ...
+# Subtest: PHASE3: titin elastic span equals I-band half-width minus Z-disc half-width (confinement)
+ok 39 - PHASE3: titin elastic span equals I-band half-width minus Z-disc half-width (confinement)
+  ---
+  duration_ms: 64.408417
+  ...
+# Subtest: PHASE3: geometric relationships resolve to real spec params and references
+ok 40 - PHASE3: geometric relationships resolve to real spec params and references
+  ---
+  duration_ms: 0.154917
+  ...
+# Subtest: PHASE4: titin is ONE continuous polypeptide — no gaps between regions
+ok 41 - PHASE4: titin is ONE continuous polypeptide — no gaps between regions
+  ---
+  duration_ms: 51.335458
+  ...
+# Subtest: PHASE4: N-terminus starts in the Z-disc, C-terminus reaches the M-line centre
+ok 42 - PHASE4: N-terminus starts in the Z-disc, C-terminus reaches the M-line centre
+  ---
+  duration_ms: 33.849375
+  ...
+# Subtest: PHASE4: anchored titin spans exactly the half thick filament (SL-invariant)
+ok 43 - PHASE4: anchored titin spans exactly the half thick filament (SL-invariant)
+  ---
+  duration_ms: 31.961792
+  ...
+# Subtest: PHASE4: domain instance counts match the spec exactly
+ok 44 - PHASE4: domain instance counts match the spec exactly
+  ---
+  duration_ms: 17.5475
+  ...
+# Subtest: PHASE4: every instance carries the plan-mandated Level-1 fields
+ok 45 - PHASE4: every instance carries the plan-mandated Level-1 fields
+  ---
+  duration_ms: 17.372709
+  ...
+# Subtest: PHASE4: FORBIDDEN — no folded domain is stretched beyond its folded length
+ok 46 - PHASE4: FORBIDDEN — no folded domain is stretched beyond its folded length
+  ---
+  duration_ms: 350.136042
+  ...
+# Subtest: PHASE4: FORBIDDEN — disordered regions carry no folded-domain geometry
+ok 47 - PHASE4: FORBIDDEN — disordered regions carry no folded-domain geometry
+  ---
+  duration_ms: 15.832083
+  ...
+# Subtest: PHASE4: folded archetypes are never deformed (scale stays 1)
+ok 48 - PHASE4: folded archetypes are never deformed (scale stays 1)
+  ---
+  duration_ms: 19.076875
+  ...
+# Subtest: PHASE4: sequence positions tile each region without gaps or overlaps
+ok 49 - PHASE4: sequence positions tile each region without gaps or overlaps
+  ---
+  duration_ms: 16.085375
+  ...
+# Subtest: PHASE4: A-band titin uses the source-context derived 11-domain interval
+ok 50 - PHASE4: A-band titin uses the source-context derived 11-domain interval
+  ---
+  duration_ms: 15.334625
+  ...
+# Subtest: PHASE4: backbone must not claim to be a smooth tube
+ok 51 - PHASE4: backbone must not claim to be a smooth tube
+  ---
+  duration_ms: 15.447083
+  ...
+# Subtest: PHASE4: Level 3 molecular structures never load in the browser
+ok 52 - PHASE4: Level 3 molecular structures never load in the browser
+  ---
+  duration_ms: 0.103458
+  ...
+# Subtest: PHASE4/6: level-2 proxies are claimed only once measurements back them
+ok 53 - PHASE4/6: level-2 proxies are claimed only once measurements back them
+  ---
+  duration_ms: 0.242959
+  ...
+# Subtest: PHASE4: representation verifies clean across the whole SL range
+ok 54 - PHASE4: representation verifies clean across the whole SL range
+  ---
+  duration_ms: 367.292583
+  ...
+# Subtest: PHASE4: instance shape is uniform — no undefined fields anywhere
+ok 55 - PHASE4: instance shape is uniform — no undefined fields anywhere
+  ---
+  duration_ms: 28.810416
+  ...
+# Subtest: PHASE4: EVIDENCE — placement is tracked separately and never overclaimed
+ok 56 - PHASE4: EVIDENCE — placement is tracked separately and never overclaimed
+  ---
+  duration_ms: 17.355542
+  ...
+# Subtest: PHASE4: EVIDENCE — only the C-zone may claim MEASURED placement
+ok 57 - PHASE4: EVIDENCE — only the C-zone may claim MEASURED placement
+  ---
+  duration_ms: 15.742333
+  ...
+# Subtest: PHASE4: disordered regions declare rise/linker INAPPLICABLE, not zero
+ok 58 - PHASE4: disordered regions declare rise/linker INAPPLICABLE, not zero
+  ---
+  duration_ms: 15.556667
+  ...
+# Subtest: PHASE4: every instance source resolves to a reference or UniProt accession
+ok 59 - PHASE4: every instance source resolves to a reference or UniProt accession
+  ---
+  duration_ms: 16.480833
+  ...
+# Subtest: PHASE4: domain_class values stay inside the exported vocabulary
+ok 60 - PHASE4: domain_class values stay inside the exported vocabulary
+  ---
+  duration_ms: 16.693541
+  ...
+# Subtest: PHASE4: A-band titin geometry is SL-invariant (bound, translates only)
+ok 61 - PHASE4: A-band titin geometry is SL-invariant (bound, translates only)
+  ---
+  duration_ms: 54.969208
+  ...
+# Subtest: PHASE4: excluding the A-band drops exactly the bound super-repeat domains
+ok 62 - PHASE4: excluding the A-band drops exactly the bound super-repeat domains
+  ---
+  duration_ms: 30.410042
+  ...
+# Subtest: PHASE4: fold class and mechanical role are separate axes
+ok 63 - PHASE4: fold class and mechanical role are separate axes
+  ---
+  duration_ms: 15.041125
+  ...
+# Subtest: PHASE4: plan Level-0 backbone spans the half-sarcomere Z-disc -> M-line
+ok 64 - PHASE4: plan Level-0 backbone spans the half-sarcomere Z-disc -> M-line
+  ---
+  duration_ms: 17.460875
+  ...
+# Subtest: PHASE5: instances collapse to one draw call per archetype
+ok 65 - PHASE5: instances collapse to one draw call per archetype
+  ---
+  duration_ms: 16.495875
+  ...
+# Subtest: PHASE5: archetype matches the domain fold class (Fn3 is not drawn as Ig)
+ok 66 - PHASE5: archetype matches the domain fold class (Fn3 is not drawn as Ig)
+  ---
+  duration_ms: 15.572042
+  ...
+# Subtest: PHASE5: archetype is instanced, never deformed
+ok 67 - PHASE5: archetype is instanced, never deformed
+  ---
+  duration_ms: 15.559708
+  ...
+# Subtest: PHASE5: every batch names a real representative experimental structure
+ok 68 - PHASE5: every batch names a real representative experimental structure
+  ---
+  duration_ms: 15.872084
+  ...
+# Subtest: PHASE5: disordered regions are never instanced as folded primitives
+ok 69 - PHASE5: disordered regions are never instanced as folded primitives
+  ---
+  duration_ms: 15.510083
+  ...
+# Subtest: PHASE5: azimuth alternates so the chain stays connected and on axis
+ok 70 - PHASE5: azimuth alternates so the chain stays connected and on axis
+  ---
+  duration_ms: 15.416792
+  ...
+# Subtest: PHASE5: chain continuity — every folded-domain junction fits its linker budget
+ok 71 - PHASE5: chain continuity — every folded-domain junction fits its linker budget
+  ---
+  duration_ms: 138.7905
+  ...
+# Subtest: PHASE5: A-band D-zone joins the measured C-zone without a seam
+ok 72 - PHASE5: A-band D-zone joins the measured C-zone without a seam
+  ---
+  duration_ms: 16.162584
+  ...
+# Subtest: PHASE5: instancing adds no geometry — positions match Level 1 exactly
+ok 73 - PHASE5: instancing adds no geometry — positions match Level 1 exactly
+  ---
+  duration_ms: 30.655417
+  ...
+# Subtest: PHASE5: azimuth alternation is checked PER REGION, not per batch
+ok 74 - PHASE5: azimuth alternation is checked PER REGION, not per batch
+  ---
+  duration_ms: 15.471125
+  ...
+# Subtest: PHASE5: every declared domain is instanced or documented as undepicted
+ok 75 - PHASE5: every declared domain is instanced or documented as undepicted
+  ---
+  duration_ms: 33.866167
+  ...
+# Subtest: PHASE5: N2A depicts its declared Ig in series with the mixed-structure UN2A envelope
+ok 76 - PHASE5: N2A depicts its declared Ig in series with the mixed-structure UN2A envelope
+  ---
+  duration_ms: 45.90575
+  ...
+# Subtest: PHASE6: level 2 exposes measured proxies for every archetype class
+ok 77 - PHASE6: level 2 exposes measured proxies for every archetype class
+  ---
+  duration_ms: 17.930917
+  ...
+# Subtest: PHASE6: every fitted primitive is a faithful envelope (>=95% heavy atoms)
+ok 78 - PHASE6: every fitted primitive is a faithful envelope (>=95% heavy atoms)
+  ---
+  duration_ms: 7.570041
+  ...
+# Subtest: PHASE6: proxy guards pass on the committed spec
+ok 79 - PHASE6: proxy guards pass on the committed spec
+  ---
+  duration_ms: 6.094958
+  ...
+# Subtest: PHASE6: Ig/Fn3 axial length remains the literature value, not the measurement
+ok 80 - PHASE6: Ig/Fn3 axial length remains the literature value, not the measurement
+  ---
+  duration_ms: 7.5275
+  ...
+# Subtest: PHASE6: Ig and Fn3 still share one axial length (Phase-5 invariant)
+ok 81 - PHASE6: Ig and Fn3 still share one axial length (Phase-5 invariant)
+  ---
+  duration_ms: 5.539375
+  ...
+# Subtest: PHASE6: measured lateral diameters differ per class and are not the placeholder
+ok 82 - PHASE6: measured lateral diameters differ per class and are not the placeholder
+  ---
+  duration_ms: 5.891
+  ...
+# Subtest: PHASE6: kinase claims measured SIZE but explicitly not orientation
+ok 83 - PHASE6: kinase claims measured SIZE but explicitly not orientation
+  ---
+  duration_ms: 6.187833
+  ...
+# Subtest: PHASE6: kinase instances no longer emit a null folded length
+ok 84 - PHASE6: kinase instances no longer emit a null folded length
+  ---
+  duration_ms: 23.342541
+  ...
+# Subtest: PHASE6: adopting measurements did not move any domain coordinate
+ok 85 - PHASE6: adopting measurements did not move any domain coordinate
+  ---
+  duration_ms: 85.509834
+  ...
+# Subtest: PHASE6: no mesh assets are claimed for level 2
+ok 86 - PHASE6: no mesh assets are claimed for level 2
+  ---
+  duration_ms: 6.045125
+  ...
+# Subtest: PHASE6-REVIEW: interaction geometry between consecutive domains exists
+ok 87 - PHASE6-REVIEW: interaction geometry between consecutive domains exists
+  ---
+  duration_ms: 5.632167
+  ...
+# Subtest: PHASE6-REVIEW: flexible-linker twist is never adopted as a coordinate
+ok 88 - PHASE6-REVIEW: flexible-linker twist is never adopted as a coordinate
+  ---
+  duration_ms: 5.860917
+  ...
+# Subtest: PHASE6-REVIEW: measurement excludes a constant azimuth
+ok 89 - PHASE6-REVIEW: measurement excludes a constant azimuth
+  ---
+  duration_ms: 5.054958
+  ...
+# Subtest: PHASE6-REVIEW: adopting interdomain twist as coordinates fails verify()
+ok 90 - PHASE6-REVIEW: adopting interdomain twist as coordinates fails verify()
+  ---
+  duration_ms: 6.998667
+  ...
+# Subtest: PHASE6-REVIEW: upgrading the azimuth policy past SCHEMATIC fails verify()
+ok 91 - PHASE6-REVIEW: upgrading the azimuth policy past SCHEMATIC fails verify()
+  ---
+  duration_ms: 6.108
+  ...
+# Subtest: PHASE6-REVIEW: interdomain evidence moves no coordinate
+ok 92 - PHASE6-REVIEW: interdomain evidence moves no coordinate
+  ---
+  duration_ms: 85.972792
+  ...
+# Subtest: PHASE6-REVIEW: in-situ cross-check corroborates the retained literature value
+ok 93 - PHASE6-REVIEW: in-situ cross-check corroborates the retained literature value
+  ---
+  duration_ms: 5.791916
+  ...
+# Subtest: PHASE6-REVIEW: the 6.4 A in-situ entry never carries an angle
+ok 94 - PHASE6-REVIEW: the 6.4 A in-situ entry never carries an angle
+  ---
+  duration_ms: 6.0485
+  ...
+# Subtest: PHASE6-REVIEW: giving the in-situ entry a twist fails verify()
+ok 95 - PHASE6-REVIEW: giving the in-situ entry a twist fails verify()
+  ---
+  duration_ms: 5.796917
+  ...
+# Subtest: PHASE10: the supported experience exposes every plan-named capability
+ok 96 - PHASE10: the supported experience exposes every plan-named capability
+  ---
+  duration_ms: 1.346167
+  ...
+# Subtest: PHASE10: region tubes use exactly the canonical Level-0 boundaries
+ok 97 - PHASE10: region tubes use exactly the canonical Level-0 boundaries
+  ---
+  duration_ms: 141.846334
+  ...
+# Subtest: PHASE10: highlighting changes selection colour only — never geometry or evidence opacity
+ok 98 - PHASE10: highlighting changes selection colour only — never geometry or evidence opacity
+  ---
+  duration_ms: 94.329875
+  ...
+# Subtest: PHASE10: disordered regions highlight through the path without fake folded domains
+ok 99 - PHASE10: disordered regions highlight through the path without fake folded domains
+  ---
+  duration_ms: 79.05625
+  ...
+# Subtest: PHASE10: the biological facade focuses the canonical region span
+ok 100 - PHASE10: the biological facade focuses the canonical region span
+  ---
+  duration_ms: 258.605417
+  ...
+# Subtest: PHASE10: component visibility synchronizes the public state report
+ok 101 - PHASE10: component visibility synchronizes the public state report
+  ---
+  duration_ms: 74.285417
+  ...
+# Subtest: PHASE10: structural annotations register without detached marker geometry
+ok 102 - PHASE10: structural annotations register without detached marker geometry
+  ---
+  duration_ms: 75.112667
+  ...
+# Subtest: PHASE10: zoom-driven rebuilds can refresh the public readout
+ok 103 - PHASE10: zoom-driven rebuilds can refresh the public readout
+  ---
+  duration_ms: 0.213083
+  ...
+# Subtest: PHASE10: camera easing is bounded, symmetric, monotone, and terminates exactly
+ok 104 - PHASE10: camera easing is bounded, symmetric, monotone, and terminates exactly
+  ---
+  duration_ms: 0.668
+  ...
+# Subtest: PHASE10: reduced-motion preference makes navigation immediate
+ok 105 - PHASE10: reduced-motion preference makes navigation immediate
+  ---
+  duration_ms: 0.19025
+  ...
+# Subtest: PHASE10: detail framing excludes hidden context geometry
+ok 106 - PHASE10: detail framing excludes hidden context geometry
+  ---
+  duration_ms: 0.448917
+  ...
+# Subtest: PHASE10: the page wires smooth scale/region navigation and accessible controls
+ok 107 - PHASE10: the page wires smooth scale/region navigation and accessible controls
+  ---
+  duration_ms: 0.791625
+  ...
+# Subtest: PHASE10: an unlaid-out container cannot poison the camera aspect
+ok 108 - PHASE10: an unlaid-out container cannot poison the camera aspect
+  ---
+  duration_ms: 0.088875
+  ...
+# Subtest: PHASE10: span framing refuses to write a non-finite camera position
+ok 109 - PHASE10: span framing refuses to write a non-finite camera position
+  ---
+  duration_ms: 0.248666
+  ...
+# Subtest: PHASE10: a resize recovers a camera left non-finite by a zero-sized first layout
+ok 110 - PHASE10: a resize recovers a camera left non-finite by a zero-sized first layout
+  ---
+  duration_ms: 0.432
+  ...
+# Subtest: PHASE7: hexagonal identities hold at every state
+ok 111 - PHASE7: hexagonal identities hold at every state
+  ---
+  duration_ms: 0.706708
+  ...
+# Subtest: PHASE7: patch thick-filament count matches 1+3N(N+1)
+ok 112 - PHASE7: patch thick-filament count matches 1+3N(N+1)
+  ---
+  duration_ms: 1.785792
+  ...
+# Subtest: PHASE7: every thin filament sits exactly at a trigonal point
+ok 113 - PHASE7: every thin filament sits exactly at a trigonal point
+  ---
+  duration_ms: 1.010625
+  ...
+# Subtest: PHASE7: nearest thick-thick distance equals the lattice constant
+ok 114 - PHASE7: nearest thick-thick distance equals the lattice constant
+  ---
+  duration_ms: 0.327
+  ...
+# Subtest: PHASE7: 1 thick : 2 thin stoichiometry emerges as the patch grows
+ok 115 - PHASE7: 1 thick : 2 thin stoichiometry emerges as the patch grows
+  ---
+  duration_ms: 1.941541
+  ...
+# Subtest: PHASE7: spec lattice triple is recovered at its own reference SL
+ok 116 - PHASE7: spec lattice triple is recovered at its own reference SL
+  ---
+  duration_ms: 0.124875
+  ...
+# Subtest: PHASE7: surface separation is derived from the live lattice and declared radii
+ok 117 - PHASE7: surface separation is derived from the live lattice and declared radii
+  ---
+  duration_ms: 0.101375
+  ...
+# Subtest: PHASE7: filaments never interpenetrate over the supported range
+ok 118 - PHASE7: filaments never interpenetrate over the supported range
+  ---
+  duration_ms: 0.084041
+  ...
+# Subtest: PHASE7: lattice is evaluated at the same clamped SL as the axial layer
+ok 119 - PHASE7: lattice is evaluated at the same clamped SL as the axial layer
+  ---
+  duration_ms: 24.73675
+  ...
+# Subtest: PHASE7: calculator-calibrated absolute d10 is MODELED, not mislabelled MEASURED
+ok 120 - PHASE7: calculator-calibrated absolute d10 is MODELED, not mislabelled MEASURED
+  ---
+  duration_ms: 0.379666
+  ...
+# Subtest: PHASE7: titin strand count equals the MEASURED copy number
+ok 121 - PHASE7: titin strand count equals the MEASURED copy number
+  ---
+  duration_ms: 0.149709
+  ...
+# Subtest: PHASE7: strand offsets are six-fold symmetric on the filament surface
+ok 122 - PHASE7: strand offsets are six-fold symmetric on the filament surface
+  ---
+  duration_ms: 0.1985
+  ...
+# Subtest: PHASE7: the azimuthal arrangement is never claimed above SCHEMATIC
+ok 123 - PHASE7: the azimuthal arrangement is never claimed above SCHEMATIC
+  ---
+  duration_ms: 0.105542
+  ...
+# Subtest: PHASE7: a spec/renderer divergence is declared, never silent
+ok 124 - PHASE7: a spec/renderer divergence is declared, never silent
+  ---
+  duration_ms: 0.154667
+  ...
+# Subtest: PHASE7: the declared divergence magnitudes match the measured arrangement
+ok 125 - PHASE7: the declared divergence magnitudes match the measured arrangement
+  ---
+  duration_ms: 1.628833
+  ...
+# Subtest: PHASE7: latticePatch rejects an invalid ring count
+ok 126 - PHASE7: latticePatch rejects an invalid ring count
+  ---
+  duration_ms: 0.325333
+  ...
+# Subtest: PHASE7: the lattice layer is opt-in and does not perturb the axial scene
+ok 127 - PHASE7: the lattice layer is opt-in and does not perturb the axial scene
+  ---
+  duration_ms: 31.369792
+  ...
+# Subtest: PHASE7: verifyScene passes with the lattice at every state
+ok 128 - PHASE7: verifyScene passes with the lattice at every state
+  ---
+  duration_ms: 64.896166
+  ...
+# Subtest: PHASE7: scene uses the primitive vocabulary the plan specifies
+ok 129 - PHASE7: scene uses the primitive vocabulary the plan specifies
+  ---
+  duration_ms: 91.369292
+  ...
+# Subtest: PHASE7: filament meshes match their descriptor extents exactly
+ok 130 - PHASE7: filament meshes match their descriptor extents exactly
+  ---
+  duration_ms: 57.324583
+  ...
+# Subtest: PHASE7: shared components are drawn once, half-scoped components twice
+ok 131 - PHASE7: shared components are drawn once, half-scoped components twice
+  ---
+  duration_ms: 56.680167
+  ...
+# Subtest: PHASE7: the mirror preserves handedness (no inside-out geometry)
+ok 132 - PHASE7: the mirror preserves handedness (no inside-out geometry)
+  ---
+  duration_ms: 56.243417
+  ...
+# Subtest: PHASE7: full repeating unit spans one sarcomere length
+ok 133 - PHASE7: full repeating unit spans one sarcomere length
+  ---
+  duration_ms: 188.501375
+  ...
+# Subtest: PHASE7: titin halves meet at the M-line without crossing it
+ok 134 - PHASE7: titin halves meet at the M-line without crossing it
+  ---
+  duration_ms: 161.474375
+  ...
+# Subtest: PHASE7: thin-filament double overlap is reported below SL~2150
+ok 135 - PHASE7: thin-filament double overlap is reported below SL~2150
+  ---
+  duration_ms: 134.852125
+  ...
+# Subtest: PHASE7: the manifest declares what the render does not claim
+ok 136 - PHASE7: the manifest declares what the render does not claim
+  ---
+  duration_ms: 53.688375
+  ...
+# Subtest: PHASE7: weaker evidence renders more transparent, monotonically
+ok 137 - PHASE7: weaker evidence renders more transparent, monotonically
+  ---
+  duration_ms: 0.088875
+  ...
+# Subtest: PHASE7: repeated domains are drawn as InstancedMesh, one batch per archetype
+ok 138 - PHASE7: repeated domains are drawn as InstancedMesh, one batch per archetype
+  ---
+  duration_ms: 73.803958
+  ...
+# Subtest: PHASE7: archetype primitives reproduce their descriptor dimensions
+ok 139 - PHASE7: archetype primitives reproduce their descriptor dimensions
+  ---
+  duration_ms: 16.183958
+  ...
+# Subtest: PHASE7: an unknown archetype primitive is refused, not guessed at
+ok 140 - PHASE7: an unknown archetype primitive is refused, not guessed at
+  ---
+  duration_ms: 0.185083
+  ...
+# Subtest: PHASE7: every domain instance sits at its descriptor position
+ok 141 - PHASE7: every domain instance sits at its descriptor position
+  ---
+  duration_ms: 70.749416
+  ...
+# Subtest: PHASE7: renderer consumes full tilt azimuth, not only tilt magnitude
+ok 142 - PHASE7: renderer consumes full tilt azimuth, not only tilt magnitude
+  ---
+  duration_ms: 70.47575
+  ...
+# Subtest: PHASE7: the three chain-envelope records remain outside folded-domain batches
+ok 143 - PHASE7: the three chain-envelope records remain outside folded-domain batches
+  ---
+  duration_ms: 30.809834
+  ...
+# Subtest: PHASE7: a batch renders the weakest evidence among its members
+ok 144 - PHASE7: a batch renders the weakest evidence among its members
+  ---
+  duration_ms: 0.108625
+  ...
+# Subtest: PHASE7: domain detail is opt-in and defaults to the central strand
+ok 145 - PHASE7: domain detail is opt-in and defaults to the central strand
+  ---
+  duration_ms: 113.356458
+  ...
+# Subtest: PHASE7: every lattice site is actually drawn, at every ring count
+ok 146 - PHASE7: every lattice site is actually drawn, at every ring count
+  ---
+  duration_ms: 158.637667
+  ...
+# Subtest: PHASE7: a degenerate lattice is refused rather than miscounted
+ok 147 - PHASE7: a degenerate lattice is refused rather than miscounted
+  ---
+  duration_ms: 31.394208
+  ...
+# Subtest: PHASE7: model.contextSceneAt adds the lattice; sceneAt still does not
+ok 148 - PHASE7: model.contextSceneAt adds the lattice; sceneAt still does not
+  ---
+  duration_ms: 94.246792
+  ...
+# Subtest: PHASE7: domains render at their own evidence class, not the batch minimum
+ok 149 - PHASE7: domains render at their own evidence class, not the batch minimum
+  ---
+  duration_ms: 73.969792
+  ...
+# Subtest: PHASE7: one geometry per archetype is shared across its evidence classes
+ok 150 - PHASE7: one geometry per archetype is shared across its evidence classes
+  ---
+  duration_ms: 68.201166
+  ...
+# Subtest: PHASE7: a shared geometry is disposed exactly once
+ok 151 - PHASE7: a shared geometry is disposed exactly once
+  ---
+  duration_ms: 68.301542
+  ...
+# Subtest: PHASE7: the instanced-mesh inventory matches the built tree
+ok 152 - PHASE7: the instanced-mesh inventory matches the built tree
+  ---
+  duration_ms: 74.867625
+  ...
+# Subtest: PHASE7: mirrored InstancedMesh batches keep their instance matrices
+ok 153 - PHASE7: mirrored InstancedMesh batches keep their instance matrices
+  ---
+  duration_ms: 71.355958
+  ...
+# Subtest: PHASE7: every state the user can reach builds and verifies
+ok 154 - PHASE7: every state the user can reach builds and verifies
+  ---
+  duration_ms: 8593.363
+  ...
+# Subtest: PHASE7: every manifest evidence value maps to a known style
+ok 155 - PHASE7: every manifest evidence value maps to a known style
+  ---
+  duration_ms: 77.140959
+  ...
+# Subtest: PHASE7: camera presets are directions, so they hold at any length
+ok 156 - PHASE7: camera presets are directions, so they hold at any length
+  ---
+  duration_ms: 0.104542
+  ...
+# Subtest: PHASE7: clear() releases every GPU resource it allocated
+ok 157 - PHASE7: clear() releases every GPU resource it allocated
+  ---
+  duration_ms: 57.104208
+  ...
+# Subtest: PHASE7: build() is idempotent — rebuilding does not accumulate meshes
+ok 158 - PHASE7: build() is idempotent — rebuilding does not accumulate meshes
+  ---
+  duration_ms: 95.33375
+  ...
+# Subtest: PHASE7: trigonal site count is exactly 6*rings^2 at every ring count
+ok 159 - PHASE7: trigonal site count is exactly 6*rings^2 at every ring count
+  ---
+  duration_ms: 0.8835
+  ...
+# Subtest: PHASE7: both site sets carry the 6-fold symmetry of the lattice
+ok 160 - PHASE7: both site sets carry the 6-fold symmetry of the lattice
+  ---
+  duration_ms: 0.970375
+  ...
+# Subtest: PHASE7: trigonal sites are the centroids of complete lattice triangles
+ok 161 - PHASE7: trigonal sites are the centroids of complete lattice triangles
+  ---
+  duration_ms: 1.14025
+  ...
+# Subtest: PHASE7: every drawn filament occupies a declared lattice site
+ok 162 - PHASE7: every drawn filament occupies a declared lattice site
+  ---
+  duration_ms: 168.512541
+  ...
+# Subtest: PHASE7: an out-of-range SL request is reported as clamped
+ok 163 - PHASE7: an out-of-range SL request is reported as clamped
+  ---
+  duration_ms: 8.734959
+  ...
+# Subtest: PHASE7: an in-range SL request is not reported as clamped
+ok 164 - PHASE7: an in-range SL request is not reported as clamped
+  ---
+  duration_ms: 20.563417
+  ...
+# Subtest: PHASE7: clamping changes provenance only, never the geometry
+ok 165 - PHASE7: clamping changes provenance only, never the geometry
+  ---
+  duration_ms: 10.533083
+  ...
+# Subtest: PHASE7: the axial and transverse layers agree on the evaluated SL
+ok 166 - PHASE7: the axial and transverse layers agree on the evaluated SL
+  ---
+  duration_ms: 19.95525
+  ...
+# Subtest: kT at the sourced temperature is 4.14 pN nm
+ok 167 - kT at the sourced temperature is 4.14 pN nm
+  ---
+  duration_ms: 2.97875
+  ...
+# Subtest: reproduces the PEVK force-extension datapoints its source reports
+ok 168 - reproduces the PEVK force-extension datapoints its source reports
+  ---
+  duration_ms: 0.144542
+  ...
+# Subtest: independently confirms the source's own stated validity boundary
+ok 169 - independently confirms the source's own stated validity boundary
+  ---
+  duration_ms: 0.182458
+  ...
+# Subtest: poly-Ig entropic fit limit of ~35 pN sits below, not past, its contour
+ok 170 - poly-Ig entropic fit limit of ~35 pN sits below, not past, its contour
+  ---
+  duration_ms: 0.199708
+  ...
+# Subtest: g is strictly increasing, so its bisection inverse cannot pick a branch
+ok 171 - g is strictly increasing, so its bisection inverse cannot pick a branch
+  ---
+  duration_ms: 0.6145
+  ...
+# Subtest: gInverse round-trips g to double precision
+ok 172 - gInverse round-trips g to double precision
+  ---
+  duration_ms: 0.244416
+  ...
+# Subtest: pure-entropic WLC never reaches its contour length
+ok 173 - pure-entropic WLC never reaches its contour length
+  ---
+  duration_ms: 0.175875
+  ...
+# Subtest: extensible WLC has no contour ceiling — the enthalpic term is real strain
+ok 174 - extensible WLC has no contour ceiling — the enthalpic term is real strain
+  ---
+  duration_ms: 0.090875
+  ...
+# Subtest: every region extension is monotone increasing in force
+ok 175 - every region extension is monotone increasing in force
+  ---
+  duration_ms: 0.730834
+  ...
+# Subtest: chain length is CONTINUOUS in force — no branch-switch discontinuity
+ok 176 - chain length is CONTINUOUS in force — no branch-switch discontinuity
+  ---
+  duration_ms: 99.80325
+  ...
+# Subtest: recruitment order is DERIVED, not asserted: compliance migrates Ig -> PEVK
+ok 177 - recruitment order is DERIVED, not asserted: compliance migrates Ig -> PEVK
+  ---
+  duration_ms: 5.324375
+  ...
+# Subtest: A-band titin bears the chain force but does NOT extend
+ok 178 - A-band titin bears the chain force but does NOT extend
+  ---
+  duration_ms: 0.708709
+  ...
+# Subtest: force partition preserves the I-band total exactly
+ok 179 - force partition preserves the I-band total exactly
+  ---
+  duration_ms: 5.139417
+  ...
+# Subtest: partition is labelled MODELED, a defined class ranking below STRONGLY INFERRED
+ok 180 - partition is labelled MODELED, a defined class ranking below STRONGLY INFERRED
+  ---
+  duration_ms: 1.551459
+  ...
+# Subtest: the weakest-link lattice places MODELED at its documented rung
+ok 181 - the weakest-link lattice places MODELED at its documented rung
+  ---
+  duration_ms: 0.599792
+  ...
+# Subtest: development diagnostic force rises monotonically with sarcomere length
+ok 182 - development diagnostic force rises monotonically with sarcomere length
+  ---
+  duration_ms: 4.882
+  ...
+# Subtest: development diagnostic stays below the omitted unfolding regime in the working band
+ok 183 - development diagnostic stays below the omitted unfolding regime in the working band
+  ---
+  duration_ms: 3.953625
+  ...
+# Subtest: audit reports unreachable values as null, never as a huge force
+ok 184 - audit reports unreachable values as null, never as a huge force
+  ---
+  duration_ms: 5.881
+  ...
+# Subtest: N2A can never be shorter than the folded Ig domain it contains
+ok 185 - N2A can never be shorter than the folded Ig domain it contains
+  ---
+  duration_ms: 0.141666
+  ...
+# Subtest: every keyframe partition is now mechanically realisable and monotone
+ok 186 - every keyframe partition is now mechanically realisable and monotone
+  ---
+  duration_ms: 5.095334
+  ...
+# Subtest: the audit detects a mechanically inconsistent partition
+ok 187 - the audit detects a mechanically inconsistent partition
+  ---
+  duration_ms: 4.405916
+  ...
+# Subtest: JS port agrees with Python on the configured dense grid and regime boundaries
+ok 188 - JS port agrees with Python on the configured dense grid and regime boundaries
+  ---
+  duration_ms: 36629.618375
+  ...
+# Subtest: contour lengths come from the spec, so they cannot drift
+ok 189 - contour lengths come from the spec, so they cannot drift
+  ---
+  duration_ms: 0.576916
+  ...
+# Subtest: mechanical mode is the default — live geometry is force-balanced
+ok 190 - mechanical mode is the default — live geometry is force-balanced
+  ---
+  duration_ms: 15.600417
+  ...
+# Subtest: every geometry declares which route produced its titin partition
+ok 191 - every geometry declares which route produced its titin partition
+  ---
+  duration_ms: 15.198625
+  ...
+# Subtest: an unknown partition mode throws rather than falling back silently
+ok 192 - an unknown partition mode throws rather than falling back silently
+  ---
+  duration_ms: 2.9265
+  ...
+# Subtest: the partition mode cannot move filaments, overlap, M-line or lattice
+ok 193 - the partition mode cannot move filaments, overlap, M-line or lattice
+  ---
+  duration_ms: 47.853417
+  ...
+# Subtest: mechanical mode lays titin regions end-to-end with no gap or overlap
+ok 194 - mechanical mode lays titin regions end-to-end with no gap or overlap
+  ---
+  duration_ms: 32.339959
+  ...
+# Subtest: mechanical mode is continuous in SL — no keyframe seams
+ok 195 - mechanical mode is continuous in SL — no keyframe seams
+  ---
+  duration_ms: 116.941958
+  ...
+# Subtest: PHASE9: every API name the plan specifies is exported and callable
+ok 196 - PHASE9: every API name the plan specifies is exported and callable
+  ---
+  duration_ms: 1.192625
+  ...
+# Subtest: PHASE9: createSarcomere returns verified geometry, not a bare mesh spec
+ok 197 - PHASE9: createSarcomere returns verified geometry, not a bare mesh spec
+  ---
+  duration_ms: 36.671459
+  ...
+# Subtest: PHASE9: the API passes model numbers through unchanged (no re-derivation)
+ok 198 - PHASE9: the API passes model numbers through unchanged (no re-derivation)
+  ---
+  duration_ms: 29.568542
+  ...
+# Subtest: PHASE9: headless biological queries reject out-of-range lengths instead of mislabelling clamps
+ok 199 - PHASE9: headless biological queries reject out-of-range lengths instead of mislabelling clamps
+  ---
+  duration_ms: 0.535833
+  ...
+# Subtest: PHASE9: placeDomainsAlongPath refuses explicit uniform-spacing arguments
+ok 200 - PHASE9: placeDomainsAlongPath refuses explicit uniform-spacing arguments
+  ---
+  duration_ms: 15.7875
+  ...
+# Subtest: PHASE9: placeDomainsAlongPath refuses a rescaled path
+ok 201 - PHASE9: placeDomainsAlongPath refuses a rescaled path
+  ---
+  duration_ms: 30.050375
+  ...
+# Subtest: PHASE9: placeDomainsAlongPath refuses an even redistribution that preserves the total
+ok 202 - PHASE9: placeDomainsAlongPath refuses an even redistribution that preserves the total
+  ---
+  duration_ms: 30.463583
+  ...
+# Subtest: PHASE9: the fidelity gate is not merely strict — sub-tolerance noise passes
+ok 203 - PHASE9: the fidelity gate is not merely strict — sub-tolerance noise passes
+  ---
+  duration_ms: 46.924542
+  ...
+# Subtest: PHASE9: path fidelity requires complete ordered segments and actual control points
+ok 204 - PHASE9: path fidelity requires complete ordered segments and actual control points
+  ---
+  duration_ms: 60.100042
+  ...
+# Subtest: PHASE9: path placement rejects invalid and unknown options even when false or zero
+ok 205 - PHASE9: path placement rejects invalid and unknown options even when false or zero
+  ---
+  duration_ms: 15.214459
+  ...
+# Subtest: PHASE9: region extension stays non-uniform across the modelled range
+ok 206 - PHASE9: region extension stays non-uniform across the modelled range
+  ---
+  duration_ms: 9.709166
+  ...
+# Subtest: PHASE9: defined keyframes are never labelled interpolated
+ok 207 - PHASE9: defined keyframes are never labelled interpolated
+  ---
+  duration_ms: 0.19
+  ...
+# Subtest: PHASE9: every non-keyframe length carries a caveat naming its bracketing states
+ok 208 - PHASE9: every non-keyframe length carries a caveat naming its bracketing states
+  ---
+  duration_ms: 0.252875
+  ...
+# Subtest: PHASE9: describeLength refuses a non-finite length
+ok 209 - PHASE9: describeLength refuses a non-finite length
+  ---
+  duration_ms: 0.152834
+  ...
+# Subtest: PHASE9: an explicit length and a named state together are refused
+ok 210 - PHASE9: an explicit length and a named state together are refused
+  ---
+  duration_ms: 0.099584
+  ...
+# Subtest: PHASE9: an unknown structural state names the states that exist
+ok 211 - PHASE9: an unknown structural state names the states that exist
+  ---
+  duration_ms: 0.154917
+  ...
+# Subtest: PHASE9: placeDomainsAlongPath refuses a path with no provenance
+ok 212 - PHASE9: placeDomainsAlongPath refuses a path with no provenance
+  ---
+  duration_ms: 0.099291
+  ...
+# Subtest: PHASE9: domain-to-region attribution prefers the longest matching id
+ok 213 - PHASE9: domain-to-region attribution prefers the longest matching id
+  ---
+  duration_ms: 15.925792
+  ...
+# Subtest: PHASE9: every built object is owned by exactly one component
+ok 214 - PHASE9: every built object is owned by exactly one component
+  ---
+  duration_ms: 267.937375
+  ...
+# Subtest: PHASE9: hiding filaments does not move titin
+ok 215 - PHASE9: hiding filaments does not move titin
+  ---
+  duration_ms: 72.369417
+  ...
+# Subtest: PHASE9: the detail view hides all non-titin structure and keeps titin
+ok 216 - PHASE9: the detail view hides all non-titin structure and keeps titin
+  ---
+  duration_ms: 232.828333
+  ...
+# Subtest: PHASE9: an unknown component name is refused, not ignored
+ok 217 - PHASE9: an unknown component name is refused, not ignored
+  ---
+  duration_ms: 52.067584
+  ...
+# Subtest: PHASE9: setComponentVisibility before build is refused
+ok 218 - PHASE9: setComponentVisibility before build is refused
+  ---
+  duration_ms: 0.116541
+  ...
+# Subtest: PHASE9: the two scales the plan names are the two scales offered
+ok 219 - PHASE9: the two scales the plan names are the two scales offered
+  ---
+  duration_ms: 0.059833
+  ...
+# Subtest: PHASE9: DETAIL_HIDDEN names only real components and never hides titin
+ok 220 - PHASE9: DETAIL_HIDDEN names only real components and never hides titin
+  ---
+  duration_ms: 0.064333
+  ...
+# Subtest: PHASE9: detail scale invariants cannot be overridden through build options
+ok 221 - PHASE9: detail scale invariants cannot be overridden through build options
+  ---
+  duration_ms: 0.081042
+  ...
+# Subtest: PHASE9: a user visibility preference cannot leak filaments into detail scale
+ok 222 - PHASE9: a user visibility preference cannot leak filaments into detail scale
+  ---
+  duration_ms: 52.668125
+  ...
+# Subtest: PHASE9: annotations carry anchors, evidence, and resolved sources without detached markers
+ok 223 - PHASE9: annotations carry anchors, evidence, and resolved sources without detached markers
+  ---
+  duration_ms: 280.170542
+  ...
+# Subtest: PHASE9: the page source consumes the biological visualization facade
+ok 224 - PHASE9: the page source consumes the biological visualization facade
+  ---
+  duration_ms: 0.268084
+  ...
+# Subtest: PHASE9: the page source visibly consumes the interpolation caveat
+ok 225 - PHASE9: the page source visibly consumes the interpolation caveat
+  ---
+  duration_ms: 0.355292
+  ...
+# Subtest: PHASE9: isolated-titin scale cannot retain a context-only close-up claim
+ok 226 - PHASE9: isolated-titin scale cannot retain a context-only close-up claim
+  ---
+  duration_ms: 0.664917
+  ...
+# Subtest: PHASE9: the page source imports the evidence vocabulary instead of restating it
+ok 227 - PHASE9: the page source imports the evidence vocabulary instead of restating it
+  ---
+  duration_ms: 0.289666
+  ...
+# Subtest: PHASE9: all seven plan-named API entry points exist
+ok 228 - PHASE9: all seven plan-named API entry points exist
+  ---
+  duration_ms: 0.179834
+  ...
+# Subtest: PHASE9: the page reports boot failure visibly, not only to the console
+ok 229 - PHASE9: the page reports boot failure visibly, not only to the console
+  ---
+  duration_ms: 0.601291
+  ...
+# Subtest: PHASE9: package.json documents how to serve the page
+ok 230 - PHASE9: package.json documents how to serve the page
+  ---
+  duration_ms: 0.318709
+  ...
+# Subtest: PHASE9: the boot diagnostic fires on failure and stays silent on success
+ok 231 - PHASE9: the boot diagnostic fires on failure and stays silent on success
+  ---
+  duration_ms: 0.547792
+  ...
+# Subtest: PHASE9: describeLength explains the options-object mistake instead of printing [object Object]
+ok 232 - PHASE9: describeLength explains the options-object mistake instead of printing [object Object]
+  ---
+  duration_ms: 0.125417
+  ...
+# Subtest: SC1: presentation.json is required and cross-file validated at runtime
+ok 233 - SC1: presentation.json is required and cross-file validated at runtime
+  ---
+  duration_ms: 1.025625
+  ...
+# Subtest: SC1: every supported public URL state round-trips exactly
+ok 234 - SC1: every supported public URL state round-trips exactly
+  ---
+  duration_ms: 1.05025
+  ...
+# Subtest: SC1: bad URL fields fail visibly and use documented defaults
+ok 235 - SC1: bad URL fields fail visibly and use documented defaults
+  ---
+  duration_ms: 0.464417
+  ...
+# Subtest: SC1: public facade reports audience/story/selection without adding activation
+ok 236 - SC1: public facade reports audience/story/selection without adding activation
+  ---
+  duration_ms: 0.424958
+  ...
+# Subtest: SC1/SC27A: Tour owns contextual mechanics and Research owns the raw inspector
+ok 237 - SC1/SC27A: Tour owns contextual mechanics and Research owns the raw inspector
+  ---
+  duration_ms: 1.39375
+  ...
+# Subtest: SC1: length presets distinguish geometry, activation, and working-range status
+ok 238 - SC1: length presets distinguish geometry, activation, and working-range status
+  ---
+  duration_ms: 0.456875
+  ...
+# Subtest: SC1: runtime validation rejects a presentation target that does not exist
+ok 239 - SC1: runtime validation rejects a presentation target that does not exist
+  ---
+  duration_ms: 15.914791
+  ...
+# Subtest: SC10: the continuity trace is a screen-space wide line
+ok 240 - SC10: the continuity trace is a screen-space wide line
+  ---
+  duration_ms: 120.4935
+  ...
+# Subtest: SC10: both audiences get a ribbon, and Guided gets the wider one
+ok 241 - SC10: both audiences get a ribbon, and Guided gets the wider one
+  ---
+  duration_ms: 166.099291
+  ...
+# Subtest: SC10: every screen-space line material is registered and resolution-settable
+ok 242 - SC10: every screen-space line material is registered and resolution-settable
+  ---
+  duration_ms: 80.151875
+  ...
+# Subtest: SC10: clear() releases every tracked resource
+ok 243 - SC10: clear() releases every tracked resource
+  ---
+  duration_ms: 75.997625
+  ...
+# Subtest: SC10: the halo is an emphasis channel, not an evidence claim
+ok 244 - SC10: the halo is an emphasis channel, not an evidence claim
+  ---
+  duration_ms: 100.658958
+  ...
+# Subtest: SC10: the halo stays on the representative strand
+ok 245 - SC10: the halo stays on the representative strand
+  ---
+  duration_ms: 209.850709
+  ...
+# Subtest: SC10: emphasis does not change any evidence opacity
+ok 246 - SC10: emphasis does not change any evidence opacity
+  ---
+  duration_ms: 104.763708
+  ...
+# Subtest: SC11-0: a step-only hash adopts that chapter's complete declared scene
+ok 247 - SC11-0: a step-only hash adopts that chapter's complete declared scene
+  ---
+  duration_ms: 1.144416
+  ...
+# Subtest: SC11-0: explicit scene fields still win over the chapter defaults
+ok 248 - SC11-0: explicit scene fields still win over the chapter defaults
+  ---
+  duration_ms: 0.129542
+  ...
+# Subtest: SC11-0: every close-up chapter enables its detail layer
+ok 249 - SC11-0: every close-up chapter enables its detail layer
+  ---
+  duration_ms: 0.066166
+  ...
+# Subtest: SC11-0: a close-up chapter round-trips through its own URL
+ok 250 - SC11-0: a close-up chapter round-trips through its own URL
+  ---
+  duration_ms: 0.289417
+  ...
+# Subtest: SC11: the bracket lane hugs the model instead of the page header
+ok 251 - SC11: the bracket lane hugs the model instead of the page header
+  ---
+  duration_ms: 0.122083
+  ...
+# Subtest: SC11: an off-screen model falls back to a deterministic lane
+ok 252 - SC11: an off-screen model falls back to a deterministic lane
+  ---
+  duration_ms: 0.052875
+  ...
+# Subtest: SC11: a model near the top clamps to the safe area instead of overlapping the header
+ok 253 - SC11: a model near the top clamps to the safe area instead of overlapping the header
+  ---
+  duration_ms: 0.11
+  ...
+# Subtest: SC11: the inspector card never covers the object it explains
+ok 254 - SC11: the inspector card never covers the object it explains
+  ---
+  duration_ms: 0.285166
+  ...
+# Subtest: SC11: the card prefers the side away from the anchor
+ok 255 - SC11: the card prefers the side away from the anchor
+  ---
+  duration_ms: 0.145792
+  ...
+# Subtest: SC11: a small region focus keeps a minimum readable span
+ok 256 - SC11: a small region focus keeps a minimum readable span
+  ---
+  duration_ms: 0.519875
+  ...
+# Subtest: SC11: a large span uses the tighter margin
+ok 257 - SC11: a large span uses the tighter margin
+  ---
+  duration_ms: 0.149584
+  ...
+# Subtest: SC11: the page derives the bracket lane from the model, not the header
+ok 258 - SC11: the page derives the bracket lane from the model, not the header
+  ---
+  duration_ms: 0.245166
+  ...
+# Subtest: SC11: brackets drop a tick to the axis they measure
+ok 259 - SC11: brackets drop a tick to the axis they measure
+  ---
+  duration_ms: 0.077
+  ...
+# Subtest: SC11: changing audience mode reframes the camera
+ok 260 - SC11: changing audience mode reframes the camera
+  ---
+  duration_ms: 0.197291
+  ...
+# Subtest: SC11: every StageLayout binding the page imports is re-exported by the bundle
+ok 261 - SC11: every StageLayout binding the page imports is re-exported by the bundle
+  ---
+  duration_ms: 0.14175
+  ...
+# Subtest: SC11: overlay work is dirty-flagged, not run on every frame
+ok 262 - SC11: overlay work is dirty-flagged, not run on every frame
+  ---
+  duration_ms: 0.322417
+  ...
+# Subtest: SC11: every state change that can move an overlay marks the stage dirty
+ok 263 - SC11: every state change that can move an overlay marks the stage dirty
+  ---
+  duration_ms: 0.484041
+  ...
+# Subtest: SC11: the viewer reports camera motion so overlays keep up while it moves
+ok 264 - SC11: the viewer reports camera motion so overlays keep up while it moves
+  ---
+  duration_ms: 0.187417
+  ...
+# Subtest: SC11-4a: the bar picks a round span that fits the budget
+ok 265 - SC11-4a: the bar picks a round span that fits the budget
+  ---
+  duration_ms: 0.197208
+  ...
+# Subtest: SC11-4a: the label switches unit without changing the measurement
+ok 266 - SC11-4a: the label switches unit without changing the measurement
+  ---
+  duration_ms: 0.111417
+  ...
+# Subtest: SC11-4a: a scale that cannot be measured is refused, not drawn
+ok 267 - SC11-4a: a scale that cannot be measured is refused, not drawn
+  ---
+  duration_ms: 0.254292
+  ...
+# Subtest: SC11-4a: the stage scale is a property of the camera, not of the scene
+ok 268 - SC11-4a: the stage scale is a property of the camera, not of the scene
+  ---
+  duration_ms: 0.595209
+  ...
+# Subtest: SC11-4a: a scale the stage cannot state is reported as absent
+ok 269 - SC11-4a: a scale the stage cannot state is reported as absent
+  ---
+  duration_ms: 0.160125
+  ...
+# Subtest: SC11-4a: the ruler holds the stage rule instead of following the card
+ok 270 - SC11-4a: the ruler holds the stage rule instead of following the card
+  ---
+  duration_ms: 0.445292
+  ...
+# Subtest: SC11-4a: a phone-width card pushes the ruler above it rather than off-stage
+ok 271 - SC11-4a: a phone-width card pushes the ruler above it rather than off-stage
+  ---
+  duration_ms: 0.070958
+  ...
+# Subtest: SC11-4a: the page takes the bar's scale from the camera
+ok 272 - SC11-4a: the page takes the bar's scale from the camera
+  ---
+  duration_ms: 0.287084
+  ...
+# Subtest: SC11-4a: the stage declares the scale bar as presentation geometry
+ok 273 - SC11-4a: the stage declares the scale bar as presentation geometry
+  ---
+  duration_ms: 0.09825
+  ...
+# Subtest: SC12/SC27A: mechanics are contextual inside the Stretch beat
+ok 274 - SC12/SC27A: mechanics are contextual inside the Stretch beat
+  ---
+  duration_ms: 0.77275
+  ...
+# Subtest: SC12/SC27A: the persistent stage bar is retired
+ok 275 - SC12/SC27A: the persistent stage bar is retired
+  ---
+  duration_ms: 0.322458
+  ...
+# Subtest: SC12: the readouts stay in the Evidence drawer
+ok 276 - SC12: the readouts stay in the Evidence drawer
+  ---
+  duration_ms: 0.396125
+  ...
+# Subtest: SC12/SC27A: Guided identity uses direct labels and the full-sarcomere locator
+ok 277 - SC12/SC27A: Guided identity uses direct labels and the full-sarcomere locator
+  ---
+  duration_ms: 0.18475
+  ...
+# Subtest: SC12: every stage control is a real, labelled button or input
+ok 278 - SC12: every stage control is a real, labelled button or input
+  ---
+  duration_ms: 0.343417
+  ...
+# Subtest: SC12: the sweep is a closed triangle between the two working-range ends
+ok 279 - SC12: the sweep is a closed triangle between the two working-range ends
+  ---
+  duration_ms: 0.087417
+  ...
+# Subtest: SC12: the sweep is monotone on each limb and always an integer
+ok 280 - SC12: the sweep is monotone on each limb and always an integer
+  ---
+  duration_ms: 0.160875
+  ...
+# Subtest: SC12: a non-positive period is rejected rather than dividing by zero
+ok 281 - SC12: a non-positive period is rejected rather than dividing by zero
+  ---
+  duration_ms: 0.178625
+  ...
+# Subtest: SC12: the page refuses to autoplay and honours reduced motion
+ok 282 - SC12: the page refuses to autoplay and honours reduced motion
+  ---
+  duration_ms: 0.385792
+  ...
+# Subtest: SC12: the sweep stays inside the declared working range
+ok 283 - SC12: the sweep stays inside the declared working range
+  ---
+  duration_ms: 0.262833
+  ...
+# Subtest: SC12-2a: the two filament families are separable by luminance alone
+ok 284 - SC12-2a: the two filament families are separable by luminance alone
+  ---
+  duration_ms: 0.10525
+  ...
+# Subtest: SC12-2a: context stays visible without competing with titin
+ok 285 - SC12-2a: context stays visible without competing with titin
+  ---
+  duration_ms: 0.139292
+  ...
+# Subtest: SC12-2b: the drawn label set obeys the reviewed budget
+ok 286 - SC12-2b: the drawn label set obeys the reviewed budget
+  ---
+  duration_ms: 0.171167
+  ...
+# Subtest: SC12-2b: it drops the lowest priority first, never the anchor in view
+ok 287 - SC12-2b: it drops the lowest priority first, never the anchor in view
+  ---
+  duration_ms: 0.367917
+  ...
+# Subtest: SC12-2b: Evidence mode is not subject to the guided budget
+ok 288 - SC12-2b: Evidence mode is not subject to the guided budget
+  ---
+  duration_ms: 0.0755
+  ...
+# Subtest: SC12-2b: a label that would collide with a kept one is dropped, not overlapped
+ok 289 - SC12-2b: a label that would collide with a kept one is dropped, not overlapped
+  ---
+  duration_ms: 0.135625
+  ...
+# Subtest: SC12-2b: a budget record without its declared keys is refused, not guessed
+ok 290 - SC12-2b: a budget record without its declared keys is refused, not guessed
+  ---
+  duration_ms: 0.113833
+  ...
+# Subtest: SC12-2b: the page enforces the budget it reads from the claims record
+ok 291 - SC12-2b: the page enforces the budget it reads from the claims record
+  ---
+  duration_ms: 0.355167
+  ...
+# Subtest: SC12/SC27A: one lane decision keeps Tour locator and Research brackets exclusive
+ok 292 - SC12/SC27A: one lane decision keeps Tour locator and Research brackets exclusive
+  ---
+  duration_ms: 0.225917
+  ...
+# Subtest: SC12-2c: the shaded extent is the camera span, to scale
+ok 293 - SC12-2c: the shaded extent is the camera span, to scale
+  ---
+  duration_ms: 0.099583
+  ...
+# Subtest: SC12-2c: a view wider than the model clamps instead of overflowing
+ok 294 - SC12-2c: a view wider than the model clamps instead of overflowing
+  ---
+  duration_ms: 0.055
+  ...
+# Subtest: SC12-2c: a stage with no measurable span draws no locator
+ok 295 - SC12-2c: a stage with no measurable span draws no locator
+  ---
+  duration_ms: 0.054666
+  ...
+# Subtest: SC12-2c: the locator follows the camera along the model
+ok 296 - SC12-2c: the locator follows the camera along the model
+  ---
+  duration_ms: 0.040625
+  ...
+# Subtest: SC12/SC27A: the Guided full-sarcomere locator remains visible across views
+ok 297 - SC12/SC27A: the Guided full-sarcomere locator remains visible across views
+  ---
+  duration_ms: 0.528209
+  ...
+# Subtest: SC12-2c: the stage declares the locator as presentation geometry
+ok 298 - SC12-2c: the stage declares the locator as presentation geometry
+  ---
+  duration_ms: 0.066125
+  ...
+# Subtest: SC13: specialist depth is disclosed, not dumped
+ok 299 - SC13: specialist depth is disclosed, not dumped
+  ---
+  duration_ms: 0.784833
+  ...
+# Subtest: SC13: the card reads lay text before detail and citations last
+ok 300 - SC13: the card reads lay text before detail and citations last
+  ---
+  duration_ms: 0.116
+  ...
+# Subtest: SC13/22: Research citations remain in the canonical renderer
+ok 301 - SC13/22: Research citations remain in the canonical renderer
+  ---
+  duration_ms: 0.16725
+  ...
+# Subtest: SC13/SC27A: selection announcements name the mode-appropriate route to exact sources
+ok 302 - SC13/SC27A: selection announcements name the mode-appropriate route to exact sources
+  ---
+  duration_ms: 0.418
+  ...
+# Subtest: SC13: the card is placed by the tested layout function
+ok 303 - SC13: the card is placed by the tested layout function
+  ---
+  duration_ms: 0.157458
+  ...
+# Subtest: SC13: the chapter card names the selection instead of repeating it
+ok 304 - SC13: the chapter card names the selection instead of repeating it
+  ---
+  duration_ms: 0.0835
+  ...
+# Subtest: SC13/SC27A: the compact card has no duplicate object carousel
+ok 305 - SC13/SC27A: the compact card has no duplicate object carousel
+  ---
+  duration_ms: 0.155875
+  ...
+# Subtest: SC13: the drawer is tabbed and sources come last
+ok 306 - SC13: the drawer is tabbed and sources come last
+  ---
+  duration_ms: 0.336125
+  ...
+# Subtest: SC13/18: named drawer entries land on their named destination
+ok 307 - SC13/18: named drawer entries land on their named destination
+  ---
+  duration_ms: 0.258625
+  ...
+# Subtest: SC13: an empty selection hides its heading instead of leaving it dangling
+ok 308 - SC13: an empty selection hides its heading instead of leaving it dangling
+  ---
+  duration_ms: 0.166083
+  ...
+# Subtest: SC13: the bibliography resolves every record in the registry
+ok 309 - SC13: the bibliography resolves every record in the registry
+  ---
+  duration_ms: 21.791292
+  ...
+# Subtest: SC13: the bibliography is stably ordered
+ok 310 - SC13: the bibliography is stably ordered
+  ---
+  duration_ms: 1.01475
+  ...
+# Subtest: SC13: the page can copy a citable link to the current view
+ok 311 - SC13: the page can copy a citable link to the current view
+  ---
+  duration_ms: 0.2595
+  ...
+# Subtest: SC13: every expert card names the biology it is about
+ok 312 - SC13: every expert card names the biology it is about
+  ---
+  duration_ms: 1.898083
+  ...
+# Subtest: SC13: an unknown related target is rejected by the contract
+ok 313 - SC13: an unknown related target is rejected by the contract
+  ---
+  duration_ms: 1.308333
+  ...
+# Subtest: SC13/SC27A: expert cards remain in Research after the compact shortcut removal
+ok 314 - SC13/SC27A: expert cards remain in Research after the compact shortcut removal
+  ---
+  duration_ms: 0.245292
+  ...
+# Subtest: SC13-5: no pipeline figure is written into the page
+ok 315 - SC13-5: no pipeline figure is written into the page
+  ---
+  duration_ms: 0.385875
+  ...
+# Subtest: SC13-5/SC27A: the retired Guided provenance band does not return
+ok 316 - SC13-5/SC27A: the retired Guided provenance band does not return
+  ---
+  duration_ms: 0.373041
+  ...
+# Subtest: SC13-5: the pipeline is typeset for a room, not for a scrolling box
+ok 317 - SC13-5: the pipeline is typeset for a room, not for a scrolling box
+  ---
+  duration_ms: 0.337292
+  ...
+# Subtest: SC14: the curve is sampled from the same pipeline the render uses
+ok 318 - SC14: the curve is sampled from the same pipeline the render uses
+  ---
+  duration_ms: 706.16725
+  ...
+# Subtest: SC21: approved curve has monotone geometry and regime-bound force values
+ok 319 - SC21: approved curve has monotone geometry and regime-bound force values
+  ---
+  duration_ms: 0.57125
+  ...
+# Subtest: SC21: generated state rows and browser evaluations apply the same regimes
+ok 320 - SC21: generated state rows and browser evaluations apply the same regimes
+  ---
+  duration_ms: 31.843333
+  ...
+# Subtest: SC21: added length is distinct from authorized incremental compliance
+ok 321 - SC21: added length is distinct from authorized incremental compliance
+  ---
+  duration_ms: 16.405208
+  ...
+# Subtest: SC14: the curve carries evidence metadata it cannot silently drop
+ok 322 - SC14: the curve carries evidence metadata it cannot silently drop
+  ---
+  duration_ms: 0.334958
+  ...
+# Subtest: SC21: the public stage binds force disclosure to the loaded decision and status
+ok 323 - SC21: the public stage binds force disclosure to the loaded decision and status
+  ---
+  duration_ms: 0.308458
+  ...
+# Subtest: SC21: the Measure tab explains the regime-bound force curve
+ok 324 - SC21: the Measure tab explains the regime-bound force curve
+  ---
+  duration_ms: 0.234417
+  ...
+# Subtest: SC21: the Measure contribution table keeps geometry separate from the force audit
+ok 325 - SC21: the Measure contribution table keeps geometry separate from the force audit
+  ---
+  duration_ms: 0.149042
+  ...
+# Subtest: SC21: the curve panel states what it does not claim
+ok 326 - SC21: the curve panel states what it does not claim
+  ---
+  duration_ms: 0.21175
+  ...
+# Subtest: SC14: new bundle bindings are re-exported by the standalone builder
+ok 327 - SC14: new bundle bindings are re-exported by the standalone builder
+  ---
+  duration_ms: 0.210875
+  ...
+# Subtest: SC15: unresolved/disordered regions use a seeded irregular ribbon and remain schematic
+ok 328 - SC15: unresolved/disordered regions use a seeded irregular ribbon and remain schematic
+  ---
+  duration_ms: 118.557375
+  ...
+# Subtest: SC15: irregular ribbons never move a canonical axial coordinate
+ok 329 - SC15: irregular ribbons never move a canonical axial coordinate
+  ---
+  duration_ms: 99.355625
+  ...
+# Subtest: SC15: the irregular ribbon is bounded by the canonical interval it decorates
+ok 330 - SC15: the irregular ribbon is bounded by the canonical interval it decorates
+  ---
+  duration_ms: 97.39125
+  ...
+# Subtest: SC15: stretching straightens contour-backed ribbons
+ok 331 - SC15: stretching straightens contour-backed ribbons
+  ---
+  duration_ms: 152.551084
+  ...
+# Subtest: SC15: the coil is driven by the same contour length the mechanics use
+ok 332 - SC15: the coil is driven by the same contour length the mechanics use
+  ---
+  duration_ms: 75.660667
+  ...
+# Subtest: SC15: the emphasis halo always contains the chain it emphasises
+ok 333 - SC15: the emphasis halo always contains the chain it emphasises
+  ---
+  duration_ms: 21.13875
+  ...
+# Subtest: SC15: the architecture chapter frames a span where domains resolve
+ok 334 - SC15: the architecture chapter frames a span where domains resolve
+  ---
+  duration_ms: 0.108042
+  ...
+# Subtest: SC15/SC27A: the merged spring beat frames PEVK with domain context enabled
+ok 335 - SC15/SC27A: the merged spring beat frames PEVK with domain context enabled
+  ---
+  duration_ms: 0.855417
+  ...
+# Subtest: SC15: a drawn domain is never sealed inside the backbone that carries it
+ok 336 - SC15: a drawn domain is never sealed inside the backbone that carries it
+  ---
+  duration_ms: 90.537458
+  ...
+# Subtest: SC15: narrowing the backbone is a width, not a change of region identity
+ok 337 - SC15: narrowing the backbone is a width, not a change of region identity
+  ---
+  duration_ms: 75.627625
+  ...
+# Subtest: SC15: a build without domain detail keeps the full-width backbone
+ok 338 - SC15: a build without domain detail keeps the full-width backbone
+  ---
+  duration_ms: 58.562292
+  ...
+# Subtest: SC15: the folded regions are never coiled
+ok 339 - SC15: the folded regions are never coiled
+  ---
+  duration_ms: 74.786042
+  ...
+# Subtest: SC16: the Z-disc envelope stays solid in the overview
+ok 340 - SC16: the Z-disc envelope stays solid in the overview
+  ---
+  duration_ms: 92.693542
+  ...
+# Subtest: SC16: the envelope ghosts when its own detail is drawn
+ok 341 - SC16: the envelope ghosts when its own detail is drawn
+  ---
+  duration_ms: 85.712833
+  ...
+# Subtest: SC16: the ghost is actually blended and stops writing depth
+ok 342 - SC16: the ghost is actually blended and stops writing depth
+  ---
+  duration_ms: 81.437709
+  ...
+# Subtest: SC16: ghosting is a visibility choice, not an evidence downgrade
+ok 343 - SC16: ghosting is a visibility choice, not an evidence downgrade
+  ---
+  duration_ms: 140.342291
+  ...
+# Subtest: SC16: an envelope whose detail is withheld keeps its boundary
+ok 344 - SC16: an envelope whose detail is withheld keeps its boundary
+  ---
+  duration_ms: 77.284875
+  ...
+# Subtest: SC16: the M-band reference marker never needed ghosting
+ok 345 - SC16: the M-band reference marker never needed ghosting
+  ---
+  duration_ms: 76.710875
+  ...
+# Subtest: SC16: the ghosted frame still contains the anchor it exists to show
+ok 346 - SC16: the ghosted frame still contains the anchor it exists to show
+  ---
+  duration_ms: 75.3085
+  ...
+# Subtest: SC16: the ghost is a render decision made at the framed span
+ok 347 - SC16: the ghost is a render decision made at the framed span
+  ---
+  duration_ms: 150.327375
+  ...
+# Subtest: SC16.2: the backbones come from the archetypes' own declared structures
+ok 348 - SC16.2: the backbones come from the archetypes' own declared structures
+  ---
+  duration_ms: 0.289083
+  ...
+# Subtest: SC16.2: a backbone is a drop-in for the capsule it replaces
+ok 349 - SC16.2: a backbone is a drop-in for the capsule it replaces
+  ---
+  duration_ms: 0.342166
+  ...
+# Subtest: SC16.2: the capsule stays until a domain is big enough to read as a chain
+ok 350 - SC16.2: the capsule stays until a domain is big enough to read as a chain
+  ---
+  duration_ms: 77.811
+  ...
+# Subtest: SC16.2: the backbone is drawn once a domain resolves
+ok 351 - SC16.2: the backbone is drawn once a domain resolves
+  ---
+  duration_ms: 80.054667
+  ...
+# Subtest: SC16.2: a measured surface never promotes a placement's evidence class
+ok 352 - SC16.2: a measured surface never promotes a placement's evidence class
+  ---
+  duration_ms: 154.90225
+  ...
+# Subtest: SC16.2: without the optional file the capsules simply stay
+ok 353 - SC16.2: without the optional file the capsules simply stay
+  ---
+  duration_ms: 75.155375
+  ...
+# Subtest: SC16.2: drawing a backbone retires no disclaimer, and adds its own
+ok 354 - SC16.2: drawing a backbone retires no disclaimer, and adds its own
+  ---
+  duration_ms: 151.645833
+  ...
+# Subtest: SC16.2: crossing the resolve threshold rebuilds, and settling stops
+ok 355 - SC16.2: crossing the resolve threshold rebuilds, and settling stops
+  ---
+  duration_ms: 151.512208
+  ...
+# Subtest: SC16.2: an archetype that can never swap never asks for a rebuild
+ok 356 - SC16.2: an archetype that can never swap never asks for a rebuild
+  ---
+  duration_ms: 74.984542
+  ...
+# Subtest: SC16: the sandwich glyph fits the room its own descriptor gives it
+ok 357 - SC16: the sandwich glyph fits the room its own descriptor gives it
+  ---
+  duration_ms: 148.18075
+  ...
+# Subtest: SC16: fitting the glyph only ever narrows it
+ok 358 - SC16: fitting the glyph only ever narrows it
+  ---
+  duration_ms: 76.800167
+  ...
+# Subtest: SC16: the fitted widths follow the descriptor, not a constant
+ok 359 - SC16: the fitted widths follow the descriptor, not a constant
+  ---
+  duration_ms: 148.403083
+  ...
+# Subtest: SC16: neither chain's drawn surface swallows the molecule it clamps
+ok 360 - SC16: neither chain's drawn surface swallows the molecule it clamps
+  ---
+  duration_ms: 136.40975
+  ...
+# Subtest: SC16: fitting the glyph moves no coordinate and no evidence class
+ok 361 - SC16: fitting the glyph moves no coordinate and no evidence class
+  ---
+  duration_ms: 73.830458
+  ...
+# Subtest: SC16: a clamp with no clearance is refused, not defaulted
+ok 362 - SC16: a clamp with no clearance is refused, not defaulted
+  ---
+  duration_ms: 75.424
+  ...
+# Subtest: SC16: the fit reports itself only when it actually narrowed something
+ok 363 - SC16: the fit reports itself only when it actually narrowed something
+  ---
+  duration_ms: 74.6565
+  ...
+# Subtest: SC17: a presentation text scale exists and is user-controlled
+ok 364 - SC17: a presentation text scale exists and is user-controlled
+  ---
+  duration_ms: 0.699458
+  ...
+# Subtest: SC17/SC27A: default type meets the design floor and large mode raises it
+ok 365 - SC17/SC27A: default type meets the design floor and large mode raises it
+  ---
+  duration_ms: 0.385125
+  ...
+# Subtest: SC17: every declared presenter shortcut is bound to a key
+ok 366 - SC17: every declared presenter shortcut is bound to a key
+  ---
+  duration_ms: 0.611334
+  ...
+# Subtest: SC17/SC27A: shortcut accelerators remain in the accessible canvas description
+ok 367 - SC17/SC27A: shortcut accelerators remain in the accessible canvas description
+  ---
+  duration_ms: 0.244417
+  ...
+# Subtest: SC17: the printed script names the keys the page binds
+ok 368 - SC17: the printed script names the keys the page binds
+  ---
+  duration_ms: 1.4695
+  ...
+# Subtest: SC17: orientation is claim-bound while titin retains one identity colour
+ok 369 - SC17: orientation is claim-bound while titin retains one identity colour
+  ---
+  duration_ms: 0.28325
+  ...
+# Subtest: SC18: the model identity has one explicit, non-self-referential input manifest
+ok 370 - SC18: the model identity has one explicit, non-self-referential input manifest
+  ---
+  duration_ms: 10.085167
+  ...
+# Subtest: SC18: build identity covers the real graph and excludes attestations and outputs
+ok 371 - SC18: build identity covers the real graph and excludes attestations and outputs
+  ---
+  duration_ms: 41.631584
+  ...
+# Subtest: SC18: classification refuses evidence in every candidate identity surface
+ok 372 - SC18: classification refuses evidence in every candidate identity surface
+  ---
+  duration_ms: 4.24475
+  ...
+# Subtest: SC18: app revision follows source inputs and ignores an output-only commit
+ok 373 - SC18: app revision follows source inputs and ignores an output-only commit
+  ---
+  duration_ms: 143.400958
+  ...
+# Subtest: SC18: manifest v2 binds raw candidate bytes without hashing itself
+ok 374 - SC18: manifest v2 binds raw candidate bytes without hashing itself
+  ---
+  duration_ms: 6.952125
+  ...
+# Subtest: SC18: every rendered link container declares contrast
+ok 375 - SC18: every rendered link container declares contrast
+  ---
+  duration_ms: 0.334542
+  ...
+# Subtest: SC18: drawer entry routing and camera state tell the truth
+ok 376 - SC18: drawer entry routing and camera state tell the truth
+  ---
+  duration_ms: 0.392708
+  ...
+# Subtest: SC18: release-gate v2 retains pending human evidence and uses stable protocol IDs
+ok 377 - SC18: release-gate v2 retains pending human evidence and uses stable protocol IDs
+  ---
+  duration_ms: 0.826916
+  ...
+# Subtest: SC19: all four authority records are mandatory standalone spec inputs
+ok 378 - SC19: all four authority records are mandatory standalone spec inputs
+  ---
+  duration_ms: 3.940875
+  ...
+# Subtest: SC19: scope has no tissue overclaim or literal public fallback
+ok 379 - SC19: scope has no tissue overclaim or literal public fallback
+  ---
+  duration_ms: 0.59725
+  ...
+# Subtest: SC19: all five decision statuses are normalized and visibly rendered
+ok 380 - SC19: all five decision statuses are normalized and visibly rendered
+  ---
+  duration_ms: 0.584917
+  ...
+# Subtest: SC19: pinned features map deterministically and retain the adjudication discrepancy
+ok 381 - SC19: pinned features map deterministically and retain the adjudication discrepancy
+  ---
+  duration_ms: 0.341167
+  ...
+# Subtest: SC19: coordinate-frame mismatch throws rather than becoming a warning
+ok 382 - SC19: coordinate-frame mismatch throws rather than becoming a warning
+  ---
+  duration_ms: 0.071625
+  ...
+# Subtest: SC19: every visible claim resolves to its exact atomic support record
+ok 383 - SC19: every visible claim resolves to its exact atomic support record
+  ---
+  duration_ms: 0.385958
+  ...
+# Subtest: SC19: runtime rejects a valid pointer rebound to the wrong public claim
+ok 384 - SC19: runtime rejects a valid pointer rebound to the wrong public claim
+  ---
+  duration_ms: 8.115041
+  ...
+# Subtest: SC23: runtime rejects fabricated project-owner approval provenance
+ok 385 - SC23: runtime rejects fabricated project-owner approval provenance
+  ---
+  duration_ms: 12.315708
+  ...
+# Subtest: SC20: all five owner-authorized decisions are honest and packet-byte bound
+ok 386 - SC20: all five owner-authorized decisions are honest and packet-byte bound
+  ---
+  duration_ms: 3.271709
+  ...
+# Subtest: SC19: registry closure and human entailment stay separate
+ok 387 - SC19: registry closure and human entailment stay separate
+  ---
+  duration_ms: 0.687834
+  ...
+# Subtest: SC2: immediate context is one myosin filament with its six nearest actin filaments
+ok 388 - SC2: immediate context is one myosin filament with its six nearest actin filaments
+  ---
+  duration_ms: 108.345125
+  ...
+# Subtest: SC2: immediate context detail zips one central crown array to one central site
+ok 389 - SC2: immediate context detail zips one central crown array to one central site
+  ---
+  duration_ms: 240.418291
+  ...
+# Subtest: SC2: filament-context and lattice-scope options are validated and persistent
+ok 390 - SC2: filament-context and lattice-scope options are validated and persistent
+  ---
+  duration_ms: 0.354
+  ...
+# Subtest: SC2: every presentation descriptor is a derivative of canonical geometry
+ok 391 - SC2: every presentation descriptor is a derivative of canonical geometry
+  ---
+  duration_ms: 192.383916
+  ...
+# Subtest: SC2: band labels use sourced ranges and do not invent M-band substructure
+ok 392 - SC2: band labels use sourced ranges and do not invent M-band substructure
+  ---
+  duration_ms: 132.658959
+  ...
+# Subtest: SC2: screen-space brackets are admitted only for the live longitudinal camera
+ok 393 - SC2: screen-space brackets are admitted only for the live longitudinal camera
+  ---
+  duration_ms: 0.262
+  ...
+# Subtest: SC2: the x-ray trace is exact, continuous and independent of tube radius
+ok 394 - SC2: the x-ray trace is exact, continuous and independent of tube radius
+  ---
+  duration_ms: 100.20125
+  ...
+# Subtest: SC2/SC27A: the shipped Guided contour preserves every canonical trace endpoint
+ok 395 - SC2/SC27A: the shipped Guided contour preserves every canonical trace endpoint
+  ---
+  duration_ms: 93.241833
+  ...
+# Subtest: SC2: hierarchy and selection preserve geometry and evidence opacity
+ok 396 - SC2: hierarchy and selection preserve geometry and evidence opacity
+  ---
+  duration_ms: 79.532166
+  ...
+# Subtest: SC2/SC24: the opening and mechanics story are present in the accessible shell
+ok 397 - SC2/SC24: the opening and mechanics story are present in the accessible shell
+  ---
+  duration_ms: 1.164708
+  ...
+# Subtest: SC20/21: decision provenance distinguishes AI adjudication from later specialist review
+ok 398 - SC20/21: decision provenance distinguishes AI adjudication from later specialist review
+  ---
+  duration_ms: 1.009666
+  ...
+# Subtest: SC20: live region boundaries implement the approved Q8WZ42-1 partition
+ok 399 - SC20: live region boundaries implement the approved Q8WZ42-1 partition
+  ---
+  duration_ms: 0.1415
+  ...
+# Subtest: SC20: imported, curated, and rendered domain totals are not collapsed
+ok 400 - SC20: imported, curated, and rendered domain totals are not collapsed
+  ---
+  duration_ms: 20.867125
+  ...
+# Subtest: SC20: A/M display allocations are continuous, non-metric, and kinase-bounded
+ok 401 - SC20: A/M display allocations are continuous, non-metric, and kinase-bounded
+  ---
+  duration_ms: 0.105167
+  ...
+# Subtest: SC20: sequence composition, axial spacings, and register hypothesis stay distinct
+ok 402 - SC20: sequence composition, axial spacings, and register hypothesis stay distinct
+  ---
+  duration_ms: 0.120792
+  ...
+# Subtest: SC20: render style is required build input and excluded from model identity
+ok 403 - SC20: render style is required build input and excluded from model identity
+  ---
+  duration_ms: 0.637833
+  ...
+# Subtest: SC20: a render-style-only mutation changes build identity but not model identity
+ok 404 - SC20: a render-style-only mutation changes build identity but not model identity
+  ---
+  duration_ms: 2.003958
+  ...
+# Subtest: SC20: irregular ribbons are deterministic, bounded, and endpoint-preserving
+ok 405 - SC20: irregular ribbons are deterministic, bounded, and endpoint-preserving
+  ---
+  duration_ms: 193.03525
+  ...
+# Subtest: SC20: the public application requests one representative titin only
+ok 406 - SC20: the public application requests one representative titin only
+  ---
+  duration_ms: 89.80225
+  ...
+# Subtest: SC21: the parameter record is required, model-identifying, and decision-bound
+ok 407 - SC21: the parameter record is required, model-identifying, and decision-bound
+  ---
+  duration_ms: 2.967084
+  ...
+# Subtest: SC21: every law parameter carries units, uncertainty, source, preparation, and transfer
+ok 408 - SC21: every law parameter carries units, uncertainty, source, preparation, and transfer
+  ---
+  duration_ms: 0.414125
+  ...
+# Subtest: SC21: JavaScript contains algorithms but no duplicated material constants
+ok 409 - SC21: JavaScript contains algorithms but no duplicated material constants
+  ---
+  duration_ms: 0.3275
+  ...
+# Subtest: SC21: approved SD-04 emits force only inside its length regimes
+ok 410 - SC21: approved SD-04 emits force only inside its length regimes
+  ---
+  duration_ms: 72.300084
+  ...
+# Subtest: SC21: target evaluation cannot be confused with the development geometry solve
+ok 411 - SC21: target evaluation cannot be confused with the development geometry solve
+  ---
+  duration_ms: 31.622125
+  ...
+# Subtest: SC21: both solver ports reject targets outside their configured force bracket
+ok 412 - SC21: both solver ports reject targets outside their configured force bracket
+  ---
+  duration_ms: 67.339666
+  ...
+# Subtest: SC21: decision validation admits honest citation-backed and qualified-human provenance
+ok 413 - SC21: decision validation admits honest citation-backed and qualified-human provenance
+  ---
+  duration_ms: 58.228959
+  ...
+# Subtest: SC21: generated outputs contain identities and regime-authorized evaluations
+ok 414 - SC21: generated outputs contain identities and regime-authorized evaluations
+  ---
+  duration_ms: 0.227542
+  ...
+# Subtest: SC21: release pack exports the exact canonical parameter record
+ok 415 - SC21: release pack exports the exact canonical parameter record
+  ---
+  duration_ms: 0.713375
+  ...
+# Subtest: SC21: release validation supports a complete approved authority but rejects partial approval
+ok 416 - SC21: release validation supports a complete approved authority but rejects partial approval
+  ---
+  duration_ms: 138.949
+  ...
+# Subtest: SC21: every sensitivity scenario is source-bound and remains non-probabilistic
+ok 417 - SC21: every sensitivity scenario is source-bound and remains non-probabilistic
+  ---
+  duration_ms: 0.238291
+  ...
+# Subtest: SC21: approved-regime scaffold honors both omission boundaries and PEVK-rise scenarios
+ok 418 - SC21: approved-regime scaffold honors both omission boundaries and PEVK-rise scenarios
+  ---
+  duration_ms: 610.88175
+  ...
+# Subtest: SC21: approved evaluations conserve length and stay continuous and monotone by regime
+ok 419 - SC21: approved evaluations conserve length and stay continuous and monotone by regime
+  ---
+  duration_ms: 300.981375
+  ...
+# Subtest: SC21: uncertainty formatting obeys sensitivity place and significant-digit cap
+ok 420 - SC21: uncertainty formatting obeys sensitivity place and significant-digit cap
+  ---
+  duration_ms: 0.256416
+  ...
+# Subtest: SC21: approved presenter data includes regimes, marker precision, and sensitivity
+ok 421 - SC21: approved presenter data includes regimes, marker precision, and sensitivity
+  ---
+  duration_ms: 492.103916
+  ...
+# Subtest: SC21: validators and destructive controls pass
+ok 422 - SC21: validators and destructive controls pass
+  ---
+  duration_ms: 81.53325
+  ...
+# Subtest: SC21: the public mechanics surface is status-bearing and one-click auditable
+ok 423 - SC21: the public mechanics surface is status-bearing and one-click auditable
+  ---
+  duration_ms: 1.174333
+  ...
+# Subtest: SC22: claim view and renderer expose one pure public function apiece
+ok 424 - SC22: claim view and renderer expose one pure public function apiece
+  ---
+  duration_ms: 1.136708
+  ...
+# Subtest: SC22: one canonical record supplies complete, source-rich ClaimView data
+ok 425 - SC22: one canonical record supplies complete, source-rich ClaimView data
+  ---
+  duration_ms: 0.667667
+  ...
+# Subtest: SC22: mixed region fields are canonical values with one semantic status each
+ok 426 - SC22: mixed region fields are canonical values with one semantic status each
+  ---
+  duration_ms: 89.194125
+  ...
+# Subtest: SC22: expert finding status is resolved before the DOM boundary
+ok 427 - SC22: expert finding status is resolved before the DOM boundary
+  ---
+  duration_ms: 1.081375
+  ...
+# Subtest: SC22: every annotation ClaimView is closed over its canonical claim support
+ok 428 - SC22: every annotation ClaimView is closed over its canonical claim support
+  ---
+  duration_ms: 77.889708
+  ...
+# Subtest: SC22/23: source precedence falls through value, object, scene, chapter, then all
+ok 429 - SC22/23: source precedence falls through value, object, scene, chapter, then all
+  ---
+  duration_ms: 8.8635
+  ...
+# Subtest: SC22: every chapter retains its declared contextual citations
+ok 430 - SC22: every chapter retains its declared contextual citations
+  ---
+  duration_ms: 1.216708
+  ...
+# Subtest: SC22: exact parameter source context remains useful offline
+ok 431 - SC22: exact parameter source context remains useful offline
+  ---
+  duration_ms: 452.164041
+  ...
+# Subtest: SC22: facade uses the canonical registries and rejects unknown contexts
+ok 432 - SC22: facade uses the canonical registries and rejects unknown contexts
+  ---
+  duration_ms: 0.57525
+  ...
+# Subtest: SC22: UI gives Evidence drawer sole full-detail ownership and final Sources routing
+ok 433 - SC22: UI gives Evidence drawer sole full-detail ownership and final Sources routing
+  ---
+  duration_ms: 4.098666
+  ...
+# Subtest: SC22: governed performance baseline was not replaced by a dirty working tree
+ok 434 - SC22: governed performance baseline was not replaced by a dirty working tree
+  ---
+  duration_ms: 0.105417
+  ...
+# Subtest: SC22: handoff records the required schema, coverage, and ownership matrix
+ok 435 - SC22: handoff records the required schema, coverage, and ownership matrix
+  ---
+  duration_ms: 0.59325
+  ...
+# Subtest: SC22: bounded commands and valid-unrelated-source control are installed
+ok 436 - SC22: bounded commands and valid-unrelated-source control are installed
+  ---
+  duration_ms: 99.399167
+  ...
+# Subtest: SC23/SC27A: schema v3 carries the ordered five-beat curriculum within its reviewed budget
+ok 437 - SC23/SC27A: schema v3 carries the ordered five-beat curriculum within its reviewed budget
+  ---
+  duration_ms: 1.24925
+  ...
+# Subtest: SC23: text alone teaches the required concepts and expands first-use vocabulary
+ok 438 - SC23: text alone teaches the required concepts and expands first-use vocabulary
+  ---
+  duration_ms: 2.181625
+  ...
+# Subtest: SC23: scenes are a closed declarative vocabulary with no scientific constants
+ok 439 - SC23: scenes are a closed declarative vocabulary with no scientific constants
+  ---
+  duration_ms: 1.824458
+  ...
+# Subtest: SC23: legacy links resolve visibly and serialize only canonical chapter IDs
+ok 440 - SC23: legacy links resolve visibly and serialize only canonical chapter IDs
+  ---
+  duration_ms: 1.406833
+  ...
+# Subtest: SC23: chapter navigation preserves length and the sweep starts at the current value
+ok 441 - SC23: chapter navigation preserves length and the sweep starts at the current value
+  ---
+  duration_ms: 0.424334
+  ...
+# Subtest: SC23: a semantic scene outranks its chapter in contextual source resolution
+ok 442 - SC23: a semantic scene outranks its chapter in contextual source resolution
+  ---
+  duration_ms: 8.172083
+  ...
+# Subtest: SC23: text and screen-reader transcripts share sequence, claims, announcements, and pacing
+ok 443 - SC23: text and screen-reader transcripts share sequence, claims, announcements, and pacing
+  ---
+  duration_ms: 137.54125
+  ...
+# Subtest: SC23: generated transcripts, package gates, and handoff record are present
+ok 444 - SC23: generated transcripts, package gates, and handoff record are present
+  ---
+  duration_ms: 0.269042
+  ...
+# Subtest: SC23: the final frame returns to the complete titin route and actionable recap
+ok 445 - SC23: the final frame returns to the complete titin route and actionable recap
+  ---
+  duration_ms: 0.154959
+  ...
+# Subtest: SC24: seven human semantic controls resolve purely from the declarative catalog
+ok 446 - SC24: seven human semantic controls resolve purely from the declarative catalog
+  ---
+  duration_ms: 1.85575
+  ...
+# Subtest: SC24: complete meaningful state—not the last clicked button—owns active truth
+ok 447 - SC24: complete meaningful state—not the last clicked button—owns active truth
+  ---
+  duration_ms: 0.330042
+  ...
+# Subtest: SC24: canonical v2 scene and Custom URLs round-trip without mixed representations
+ok 448 - SC24: canonical v2 scene and Custom URLs round-trip without mixed representations
+  ---
+  duration_ms: 1.93075
+  ...
+# Subtest: SC24: every v1 mode migrates deterministically and only inexact values produce issues
+ok 449 - SC24: every v1 mode migrates deterministically and only inexact values produce issues
+  ---
+  duration_ms: 0.376375
+  ...
+# Subtest: SC24: a conflicting scene plus custom representation visibly becomes Custom
+ok 450 - SC24: a conflicting scene plus custom representation visibly becomes Custom
+  ---
+  duration_ms: 0.519084
+  ...
+# Subtest: SC24: v2 repairs renderer invariants visibly and serialization rejects impossible state
+ok 451 - SC24: v2 repairs renderer invariants visibly and serialization rejects impossible state
+  ---
+  duration_ms: 0.762042
+  ...
+# Subtest: SC24: runtime catalog validation resolves control-scene claims when supplied
+ok 452 - SC24: runtime catalog validation resolves control-scene claims when supplied
+  ---
+  duration_ms: 0.531625
+  ...
+# Subtest: SC24/SC27A: responsive shell exposes Tour, Research controls, and stretch contracts
+ok 453 - SC24/SC27A: responsive shell exposes Tour, Research controls, and stretch contracts
+  ---
+  duration_ms: 1.393209
+  ...
+# Subtest: SC24: visual matrix is regenerated from v2 semantic scenes with legacy disposition
+ok 454 - SC24: visual matrix is regenerated from v2 semantic scenes with legacy disposition
+  ---
+  duration_ms: 10.13325
+  ...
+# Subtest: SC24: a close-up scene can turn its context-detail layer off and still share
+ok 455 - SC24: a close-up scene can turn its context-detail layer off and still share
+  ---
+  duration_ms: 0.366208
+  ...
+# Subtest: SC24: a close-up still refuses to serialize without its filament lattice
+ok 456 - SC24: a close-up still refuses to serialize without its filament lattice
+  ---
+  duration_ms: 0.175292
+  ...
+# Subtest: SC24: Explore confidence display keeps semantic scene truth and shares as one field
+ok 457 - SC24: Explore confidence display keeps semantic scene truth and shares as one field
+  ---
+  duration_ms: 0.262958
+  ...
+# Subtest: SC24/SC27A: the nonvisual accelerator guide names current surfaces, not retired modes
+ok 458 - SC24/SC27A: the nonvisual accelerator guide names current surfaces, not retired modes
+  ---
+  duration_ms: 0.292
+  ...
+# Subtest: SC25: evidence JSON regenerates byte-identically without prior output
+ok 459 - SC25: evidence JSON regenerates byte-identically without prior output
+  ---
+  duration_ms: 210.736416
+  ...
+# Subtest: SC25: the resolver implements the reviewed order and nothing else
+ok 460 - SC25: the resolver implements the reviewed order and nothing else
+  ---
+  duration_ms: 0.161209
+  ...
+# Subtest: SC25: an explicitly named target wins outright, with or without ray candidates
+ok 461 - SC25: an explicitly named target wins outright, with or without ray candidates
+  ---
+  duration_ms: 0.223834
+  ...
+# Subtest: SC25: emphasized titin within tolerance outranks a nearer occluding surface
+ok 462 - SC25: emphasized titin within tolerance outranks a nearer occluding surface
+  ---
+  duration_ms: 0.135417
+  ...
+# Subtest: SC25: outside the tolerance the emphasized molecule does not steal the click
+ok 463 - SC25: outside the tolerance the emphasized molecule does not steal the click
+  ---
+  duration_ms: 0.084167
+  ...
+# Subtest: SC25: clause 2 answers with the nearest part of the molecule, not the nearest depth
+ok 464 - SC25: clause 2 answers with the nearest part of the molecule, not the nearest depth
+  ---
+  duration_ms: 0.194667
+  ...
+# Subtest: SC25: a proxy-only hit resolves last, and never over a drawn surface
+ok 465 - SC25: a proxy-only hit resolves last, and never over a drawn surface
+  ---
+  duration_ms: 0.167375
+  ...
+# Subtest: SC25: the current selection is inert and cannot make a selection sticky
+ok 466 - SC25: the current selection is inert and cannot make a selection sticky
+  ---
+  duration_ms: 0.170583
+  ...
+# Subtest: SC25: decoration is dropped, and hidden geometry never resolves
+ok 467 - SC25: decoration is dropped, and hidden geometry never resolves
+  ---
+  duration_ms: 0.19525
+  ...
+# Subtest: SC25: malformed candidate records are refused rather than ranked
+ok 468 - SC25: malformed candidate records are refused rather than ranked
+  ---
+  duration_ms: 0.37525
+  ...
+# Subtest: SC25: the hit grid is exactly what its declared rules produce
+ok 469 - SC25: the hit grid is exactly what its declared rules produce
+  ---
+  duration_ms: 0.3255
+  ...
+# Subtest: SC25: every hit-grid offset is a rule multiple on a real titin path
+ok 470 - SC25: every hit-grid offset is a rule multiple on a real titin path
+  ---
+  duration_ms: 0.828166
+  ...
+# Subtest: SC25: changing the committed grid requires a recorded contract migration
+ok 471 - SC25: changing the committed grid requires a recorded contract migration
+  ---
+  duration_ms: 0.189625
+  ...
+# Subtest: SC25: hit proxies are non-rendering, uncounted, and out of every bound
+ok 472 - SC25: hit proxies are non-rendering, uncounted, and out of every bound
+  ---
+  duration_ms: 113.775375
+  ...
+# Subtest: SC25: a proxy resolves to its canonical region and never to an unknown object
+ok 473 - SC25: a proxy resolves to its canonical region and never to an unknown object
+  ---
+  duration_ms: 80.210542
+  ...
+# Subtest: SC25: selection and emphasis style the visible target, never the hit area
+ok 474 - SC25: selection and emphasis style the visible target, never the hit area
+  ---
+  duration_ms: 79.74025
+  ...
+# Subtest: SC25: proxies are rebuilt and disposed with the target they follow
+ok 475 - SC25: proxies are rebuilt and disposed with the target they follow
+  ---
+  duration_ms: 158.907042
+  ...
+# Subtest: SC25: the pick centreline is the path the molecule is drawn on
+ok 476 - SC25: the pick centreline is the path the molecule is drawn on
+  ---
+  duration_ms: 96.426833
+  ...
+# Subtest: SC25: labels, legends, and the one-time invitation are wired in the page
+ok 477 - SC25: labels, legends, and the one-time invitation are wired in the page
+  ---
+  duration_ms: 1.019083
+  ...
+# Subtest: SC25: the onboarding pulse moves colour only and yields to a real selection
+ok 478 - SC25: the onboarding pulse moves colour only and yields to a real selection
+  ---
+  duration_ms: 77.393291
+  ...
+# Subtest: SC25: the pinned card clears the controls at every release viewport
+ok 479 - SC25: the pinned card clears the controls at every release viewport
+  ---
+  duration_ms: 3.15025
+  ...
+# Subtest: SC25: placement reports a real constraint rather than hiding a collision
+ok 480 - SC25: placement reports a real constraint rather than hiding a collision
+  ---
+  duration_ms: 0.116
+  ...
+# Subtest: SC25: titin keeps the top of the luminance range against every context object
+ok 481 - SC25: titin keeps the top of the luminance range against every context object
+  ---
+  duration_ms: 0.187667
+  ...
+# Subtest: SC25: the drawn chain is irregular at every length, not a regular helix
+ok 482 - SC25: the drawn chain is irregular at every length, not a regular helix
+  ---
+  duration_ms: 257.657417
+  ...
+# Subtest: SC25: the stage states that titin’s drawn width is a reading width
+ok 483 - SC25: the stage states that titin’s drawn width is a reading width
+  ---
+  duration_ms: 0.269208
+  ...
+# Subtest: SC26: contract fingerprint is SHA-256 of the canonical schema contract, not payload bytes
+ok 484 - SC26: contract fingerprint is SHA-256 of the canonical schema contract, not payload bytes
+  ---
+  duration_ms: 1.158583
+  ...
+# Subtest: SC26: complete parameter table exposes values, bindings, units, preparation, and transfer
+ok 485 - SC26: complete parameter table exposes values, bindings, units, preparation, and transfer
+  ---
+  duration_ms: 0.637416
+  ...
+# Subtest: SC26: Inspect resolves the exact construct, interval, mapped features, render, and claims
+ok 486 - SC26: Inspect resolves the exact construct, interval, mapped features, render, and claims
+  ---
+  duration_ms: 241.106667
+  ...
+# Subtest: SC26: exact reference strip accounts for every residue and every domain feature
+ok 487 - SC26: exact reference strip accounts for every residue and every domain feature
+  ---
+  duration_ms: 0.366417
+  ...
+# Subtest: SC26: atomic evidence groups cover every claim while render status stays orthogonal
+ok 488 - SC26: atomic evidence groups cover every claim while render status stays orthogonal
+  ---
+  duration_ms: 0.378458
+  ...
+# Subtest: SC26: compliance plot has shares at supported lengths and nulls at omission boundaries
+ok 489 - SC26: compliance plot has shares at supported lengths and nulls at omission boundaries
+  ---
+  duration_ms: 948.320959
+  ...
+# Subtest: SC26: reproduction worksheet names only fingerprinted model inputs and every required runtime
+ok 490 - SC26: reproduction worksheet names only fingerprinted model inputs and every required runtime
+  ---
+  duration_ms: 1.851
+  ...
+# Subtest: SC26: boundary worksheet pins every exact SC27 review coordinate
+ok 491 - SC26: boundary worksheet pins every exact SC27 review coordinate
+  ---
+  duration_ms: 1.198875
+  ...
+# Subtest: SC26: 2000 nm export is byte-deterministic and agrees with direct evaluation
+ok 492 - SC26: 2000 nm export is byte-deterministic and agrees with direct evaluation
+  ---
+  duration_ms: 4101.360875
+  ...
+# Subtest: SC26: 2200 nm export is byte-deterministic and agrees with direct evaluation
+ok 493 - SC26: 2200 nm export is byte-deterministic and agrees with direct evaluation
+  ---
+  duration_ms: 3891.905583
+  ...
+# Subtest: SC26: 2400 nm export is byte-deterministic and agrees with direct evaluation
+ok 494 - SC26: 2400 nm export is byte-deterministic and agrees with direct evaluation
+  ---
+  duration_ms: 3905.867709
+  ...
+# Subtest: SC26: 1900 nm export is byte-deterministic and agrees with direct evaluation
+ok 495 - SC26: 1900 nm export is byte-deterministic and agrees with direct evaluation
+  ---
+  duration_ms: 2303.25975
+  ...
+# Subtest: SC26: CSV shapes are exact, parse cleanly, and every row carries all four identities
+ok 496 - SC26: CSV shapes are exact, parse cleanly, and every row carries all four identities
+  ---
+  duration_ms: 1585.998958
+  ...
+# Subtest: SC26: custom-state export restores every serialized presentation field
+ok 497 - SC26: custom-state export restores every serialized presentation field
+  ---
+  duration_ms: 2150.567
+  ...
+# Subtest: SC26: selected claim subset includes local metadata and exact source locators offline
+ok 498 - SC26: selected claim subset includes local metadata and exact source locators offline
+  ---
+  duration_ms: 1592.22825
+  ...
+# Subtest: SC26: validators reject malformed, forged, drifted, and non-canonical payloads
+ok 499 - SC26: validators reject malformed, forged, drifted, and non-canonical payloads
+  ---
+  duration_ms: 9895.307667
+  ...
+# Subtest: SC26: JSON Schema records describe the two emitted JSON payloads
+ok 500 - SC26: JSON Schema records describe the two emitted JSON payloads
+  ---
+  duration_ms: 1.305667
+  ...
+# Subtest: SC26: release manifest records contract and sample byte hashes externally
+ok 501 - SC26: release manifest records contract and sample byte hashes externally
+  ---
+  duration_ms: 0.51575
+  ...
+# Subtest: SC26: serializer module remains free of browser, clock, random, and Node-only reads
+ok 502 - SC26: serializer module remains free of browser, clock, random, and Node-only reads
+  ---
+  duration_ms: 1.223916
+  ...
+# Subtest: SC27A: the public Tour is exactly five ordered beats with one transition each
+ok 503 - SC27A: the public Tour is exactly five ordered beats with one transition each
+  ---
+  duration_ms: 1.628917
+  ...
+# Subtest: SC27A: every v1 chapter alias canonicalizes directly to a final v3 beat
+ok 504 - SC27A: every v1 chapter alias canonicalizes directly to a final v3 beat
+  ---
+  duration_ms: 0.081083
+  ...
+# Subtest: SC27A: protected public claim bindings migrate without editing the claim ledger
+ok 505 - SC27A: protected public claim bindings migrate without editing the claim ledger
+  ---
+  duration_ms: 0.097541
+  ...
+# Subtest: SC27A: one presentation mapping covers every canonical evidence class
+ok 506 - SC27A: one presentation mapping covers every canonical evidence class
+  ---
+  duration_ms: 0.339042
+  ...
+# Subtest: SC27A: the five-beat merge preserves every v2 scientific non-claim
+ok 507 - SC27A: the five-beat merge preserves every v2 scientific non-claim
+  ---
+  duration_ms: 0.392917
+  ...
+# Subtest: SC27A: TourView declares four controls except for the contextual stretch beat
+ok 508 - SC27A: TourView declares four controls except for the contextual stretch beat
+  ---
+  duration_ms: 0.104875
+  ...
+# Subtest: SC27A: a zero-height first layout is deferred rather than treated as corrupt
+ok 509 - SC27A: a zero-height first layout is deferred rather than treated as corrupt
+  ---
+  duration_ms: 0.10725
+  ...
+# Subtest: SC27A: the presentation palette names its contrast and non-claim contracts
+ok 510 - SC27A: the presentation palette names its contrast and non-claim contracts
+  ---
+  duration_ms: 0.196334
+  ...
+# Subtest: SC27A: user-facing vocabulary and accessible grouping use Tour and Research
+ok 511 - SC27A: user-facing vocabulary and accessible grouping use Tour and Research
+  ---
+  duration_ms: 1.013
+  ...
+# Subtest: SC27A: every protected scientific input remains byte-identical to SC-26
+ok 512 - SC27A: every protected scientific input remains byte-identical to SC-26
+  ---
+  duration_ms: 3.90225
+  ...
+# Subtest: SC27A: implementation never claims human or release evidence
+ok 513 - SC27A: implementation never claims human or release evidence
+  ---
+  duration_ms: 0.082625
+  ...
+# Subtest: SC27A: history, viewport, and all-family overlay truth share atomic runtime gates
+ok 514 - SC27A: history, viewport, and all-family overlay truth share atomic runtime gates
+  ---
+  duration_ms: 0.588833
+  ...
+# Subtest: SC27A: Large type never makes any visible text smaller
+ok 515 - SC27A: Large type never makes any visible text smaller
+  ---
+  duration_ms: 0.629375
+  ...
+# Subtest: SC27A: the generated review checklist uses current vocabulary
+ok 516 - SC27A: the generated review checklist uses current vocabulary
+  ---
+  duration_ms: 0.30225
+  ...
+# Subtest: SC27A: Escape closes the last-opened surface and never focuses an inert canvas
+ok 517 - SC27A: Escape closes the last-opened surface and never focuses an inert canvas
+  ---
+  duration_ms: 0.242
+  ...
+# Subtest: SC27A: the Tour-return accelerator uses the focus-restoring close path
+ok 518 - SC27A: the Tour-return accelerator uses the focus-restoring close path
+  ---
+  duration_ms: 0.189417
+  ...
+# Subtest: SC27A: every surface that can hide a scientific label is an overlay obstacle
+ok 519 - SC27A: every surface that can hide a scientific label is an overlay obstacle
+  ---
+  duration_ms: 0.301667
+  ...
+# Subtest: SC27A: the retired Guided provenance band leaves nothing behind
+ok 520 - SC27A: the retired Guided provenance band leaves nothing behind
+  ---
+  duration_ms: 0.51075
+  ...
+# Subtest: SC27A: the compact-stage envelope is one governed threshold, not a repeated literal
+ok 521 - SC27A: the compact-stage envelope is one governed threshold, not a repeated literal
+  ---
+  duration_ms: 0.428084
+  ...
+# Subtest: SC3: the 160 nm interval belongs only to the thick-filament bare zone
+ok 522 - SC3: the 160 nm interval belongs only to the thick-filament bare zone
+  ---
+  duration_ms: 19.641334
+  ...
+# Subtest: SC3: Z-disc detail is local, heterogeneous, antiparallel, and source-limited
+ok 523 - SC3: Z-disc detail is local, heterogeneous, antiparallel, and source-limited
+  ---
+  duration_ms: 17.529375
+  ...
+# Subtest: SC3: the local Z-disc motif is invariant when the surrounding lattice expands
+ok 524 - SC3: the local Z-disc motif is invariant when the surrounding lattice expands
+  ---
+  duration_ms: 92.415583
+  ...
+# Subtest: SC3: M-band detail separates midpoint, head-free interval, and crosslink context
+ok 525 - SC3: M-band detail separates midpoint, head-free interval, and crosslink context
+  ---
+  duration_ms: 15.399791
+  ...
+# Subtest: SC3: normal view has no anchor micro-detail and M-band is never a solid slab
+ok 526 - SC3: normal view has no anchor micro-detail and M-band is never a solid slab
+  ---
+  duration_ms: 90.45275
+  ...
+# Subtest: SC3: only the selected, screen-resolved anchor detail is drawn
+ok 527 - SC3: only the selected, screen-resolved anchor detail is drawn
+  ---
+  duration_ms: 389.483959
+  ...
+# Subtest: SC3: live LOD reevaluates crown, twist, and anchor gates exactly once
+ok 528 - SC3: live LOD reevaluates crown, twist, and anchor gates exactly once
+  ---
+  duration_ms: 0.367917
+  ...
+# Subtest: SC3: destructive controls reject a slab, single-ended telethonin, and one-half M detail
+ok 529 - SC3: destructive controls reject a slab, single-ended telethonin, and one-half M detail
+  ---
+  duration_ms: 150.290833
+  ...
+# Subtest: SC3: controls expose target gating and detail-only component ownership
+ok 530 - SC3: controls expose target gating and detail-only component ownership
+  ---
+  duration_ms: 0.539042
+  ...
+# Subtest: SC4: the validated catalog covers every pickable biological component once
+ok 531 - SC4: the validated catalog covers every pickable biological component once
+  ---
+  duration_ms: 1.008375
+  ...
+# Subtest: SC4: every annotation exposes complete dual-audience evidence and resolved links
+ok 532 - SC4: every annotation exposes complete dual-audience evidence and resolved links
+  ---
+  duration_ms: 157.301708
+  ...
+# Subtest: SC4: negative catalog mutations fail closed
+ok 533 - SC4: negative catalog mutations fail closed
+  ---
+  duration_ms: 0.46675
+  ...
+# Subtest: SC4: tubes, instanced domains, and ordinary components resolve to biological IDs
+ok 534 - SC4: tubes, instanced domains, and ordinary components resolve to biological IDs
+  ---
+  duration_ms: 112.62175
+  ...
+# Subtest: SC4: Z-disc and M-band detail structures are directly pickable
+ok 535 - SC4: Z-disc and M-band detail structures are directly pickable
+  ---
+  duration_ms: 159.750875
+  ...
+# Subtest: SC4: annotation registration adds no detached square or sprite geometry
+ok 536 - SC4: annotation registration adds no detached square or sprite geometry
+  ---
+  duration_ms: 134.498292
+  ...
+# Subtest: SC4: Viewer raycasting rejects off-canvas input and returns no Three.js object
+ok 537 - SC4: Viewer raycasting rejects off-canvas input and returns no Three.js object
+  ---
+  duration_ms: 63.631583
+  ...
+# Subtest: SC4: the first browser build has a positive LOD span before camera framing
+ok 538 - SC4: the first browser build has a positive LOD span before camera framing
+  ---
+  duration_ms: 0.198708
+  ...
+# Subtest: SC4: a logical selection re-resolves after orbit-safe projection and rebuild
+ok 539 - SC4: a logical selection re-resolves after orbit-safe projection and rebuild
+  ---
+  duration_ms: 220.160167
+  ...
+# Subtest: SC4: page wires one synchronized accessible tooltip and pinned explanation path
+ok 540 - SC4: page wires one synchronized accessible tooltip and pinned explanation path
+  ---
+  duration_ms: 0.833584
+  ...
+# Subtest: SC5: the A-band scaffold story is complete and sourced without MyBP-C
+ok 541 - SC5: the A-band scaffold story is complete and sourced without MyBP-C
+  ---
+  duration_ms: 235.786834
+  ...
+# Subtest: SC5: the anchored A-band span is invariant while the I-band spring changes
+ok 542 - SC5: the anchored A-band span is invariant while the I-band spring changes
+  ---
+  duration_ms: 183.170792
+  ...
+# Subtest: SC5: one canonical C-zone feeds the domain block, the bracket, and MyBP-C
+ok 543 - SC5: one canonical C-zone feeds the domain block, the bracket, and MyBP-C
+  ---
+  duration_ms: 281.678375
+  ...
+# Subtest: SC5: MyBP-C uses only the canonical C-zone and its sourced skeletal periodicity
+ok 544 - SC5: MyBP-C uses only the canonical C-zone and its sourced skeletal periodicity
+  ---
+  duration_ms: 94.955791
+  ...
+# Subtest: SC5: MyBP-C is accessory context — Evidence-only, off by default, subordinate
+ok 545 - SC5: MyBP-C is accessory context — Evidence-only, off by default, subordinate
+  ---
+  duration_ms: 237.657708
+  ...
+# Subtest: SC5: MyBP-C detail appears only when the view is framed on its C-zone
+ok 546 - SC5: MyBP-C detail appears only when the view is framed on its C-zone
+  ---
+  duration_ms: 535.360792
+  ...
+# Subtest: SC5: a C-zone close-up exists and satisfies the framing gate it presupposes
+ok 547 - SC5: a C-zone close-up exists and satisfies the framing gate it presupposes
+  ---
+  duration_ms: 215.746875
+  ...
+# Subtest: SC5: hiding or withdrawing MyBP-C changes no other coordinate
+ok 548 - SC5: hiding or withdrawing MyBP-C changes no other coordinate
+  ---
+  duration_ms: 233.922833
+  ...
+# Subtest: SC5: no MyBP-C molecule bridges to a thin filament or contacts titin
+ok 549 - SC5: no MyBP-C molecule bridges to a thin filament or contacts titin
+  ---
+  duration_ms: 48.491458
+  ...
+# Subtest: SC5: placement evidence can never be promoted above SCHEMATIC
+ok 550 - SC5: placement evidence can never be promoted above SCHEMATIC
+  ---
+  duration_ms: 15.926584
+  ...
+# Subtest: SC5: the module refuses a claim record that no longer admits a schematic layer
+ok 551 - SC5: the module refuses a claim record that no longer admits a schematic layer
+  ---
+  duration_ms: 16.01825
+  ...
+# Subtest: SC5: MyBP-C is explained as accessory context with resolved sources
+ok 552 - SC5: MyBP-C is explained as accessory context with resolved sources
+  ---
+  duration_ms: 164.142625
+  ...
+# Subtest: SC5: an Evidence-mode card records why cardiac coordinates were not imported
+ok 553 - SC5: an Evidence-mode card records why cardiac coordinates were not imported
+  ---
+  duration_ms: 4.20175
+  ...
+# Subtest: SC5: the page keeps MyBP-C optional, Research-scoped, and labelled schematic
+ok 554 - SC5: the page keeps MyBP-C optional, Research-scoped, and labelled schematic
+  ---
+  duration_ms: 0.638417
+  ...
+# Subtest: SC6: the cross-section is orthographic and cannot foreshorten
+ok 555 - SC6: the cross-section is orthographic and cannot foreshorten
+  ---
+  duration_ms: 3.348584
+  ...
+# Subtest: SC6: cross-section sites are exactly the existing LatticeGeometry output
+ok 556 - SC6: cross-section sites are exactly the existing LatticeGeometry output
+  ---
+  duration_ms: 5.925417
+  ...
+# Subtest: SC6: axial and transverse readouts describe the same state
+ok 557 - SC6: axial and transverse readouts describe the same state
+  ---
+  duration_ms: 83.677583
+  ...
+# Subtest: SC6: increasing sarcomere length monotonically reduces the displayed d10
+ok 558 - SC6: increasing sarcomere length monotonically reduces the displayed d10
+  ---
+  duration_ms: 7.295083
+  ...
+# Subtest: SC6: both panels share one centre, scale, and projection
+ok 559 - SC6: both panels share one centre, scale, and projection
+  ---
+  duration_ms: 1.576833
+  ...
+# Subtest: SC6: the comparison state is a defined state inside the declared working band
+ok 560 - SC6: the comparison state is a defined state inside the declared working band
+  ---
+  duration_ms: 1.420625
+  ...
+# Subtest: SC6: the dimension line measures d10 rather than being labelled with it
+ok 561 - SC6: the dimension line measures d10 rather than being labelled with it
+  ---
+  duration_ms: 1.156083
+  ...
+# Subtest: SC6: the constant-volume caveat travels with the comparison
+ok 562 - SC6: the constant-volume caveat travels with the comparison
+  ---
+  duration_ms: 0.383916
+  ...
+# Subtest: SC6: destructive mutations of the cross-section record fail closed
+ok 563 - SC6: destructive mutations of the cross-section record fail closed
+  ---
+  duration_ms: 2.80725
+  ...
+# Subtest: SC6: the module refuses a working band that drifted from its source
+ok 564 - SC6: the module refuses a working band that drifted from its source
+  ---
+  duration_ms: 17.21925
+  ...
+# Subtest: SC6: the page renders both panels from one shared frame and no camera
+ok 565 - SC6: the page renders both panels from one shared frame and no camera
+  ---
+  duration_ms: 0.601
+  ...
+# Subtest: SC6: a guided chapter may legally request the comparison
+ok 566 - SC6: a guided chapter may legally request the comparison
+  ---
+  duration_ms: 3.260833
+  ...
+# Subtest: SC6: the facade exposes the comparison at the displayed length only
+ok 567 - SC6: the facade exposes the comparison at the displayed length only
+  ---
+  duration_ms: 0.456167
+  ...
+# Subtest: SC7/SC27A: the route has five deterministic presentation beats
+ok 568 - SC7/SC27A: the route has five deterministic presentation beats
+  ---
+  duration_ms: 2.54675
+  ...
+# Subtest: SC7: every chapter owns one takeaway, camera, configuration, and source set
+ok 569 - SC7: every chapter owns one takeaway, camera, configuration, and source set
+  ---
+  duration_ms: 0.277958
+  ...
+# Subtest: SC7: each chapter covers the subject the plan assigned it
+ok 570 - SC7: each chapter covers the subject the plan assigned it
+  ---
+  duration_ms: 0.628333
+  ...
+# Subtest: SC7: the tour is paced to the plan window without opening the drawer
+ok 571 - SC7: the tour is paced to the plan window without opening the drawer
+  ---
+  duration_ms: 0.194541
+  ...
+# Subtest: SC7: every chapter transition is deterministic and resettable
+ok 572 - SC7: every chapter transition is deterministic and resettable
+  ---
+  duration_ms: 1.326083
+  ...
+# Subtest: SC7: the reviewed expert deep dives are all present and Evidence-scoped
+ok 573 - SC7: the reviewed expert deep dives are all present and Evidence-scoped
+  ---
+  duration_ms: 0.230583
+  ...
+# Subtest: SC7: expert cards separate established findings from proposed mechanisms
+ok 574 - SC7: expert cards separate established findings from proposed mechanisms
+  ---
+  duration_ms: 1.864459
+  ...
+# Subtest: SC7: expert cards resolve to real citations through the facade
+ok 575 - SC7: expert cards resolve to real citations through the facade
+  ---
+  duration_ms: 0.732291
+  ...
+# Subtest: SC7: the pipeline counts its figures from the loaded records
+ok 576 - SC7: the pipeline counts its figures from the loaded records
+  ---
+  duration_ms: 3.830875
+  ...
+# Subtest: SC7: the pipeline message stays a provenance claim, not an AI claim
+ok 577 - SC7: the pipeline message stays a provenance claim, not an AI claim
+  ---
+  duration_ms: 0.410083
+  ...
+# Subtest: SC7: reduced motion lands on the identical state without animating
+ok 578 - SC7: reduced motion lands on the identical state without animating
+  ---
+  duration_ms: 0.775208
+  ...
+# Subtest: SC7/SC27A: the page renders the Tour, recap chips, and Research pipeline
+ok 579 - SC7/SC27A: the page renders the Tour, recap chips, and Research pipeline
+  ---
+  duration_ms: 0.700416
+  ...
+# Subtest: SC8: no presentation combination changes the model or the solver
+ok 580 - SC8: no presentation combination changes the model or the solver
+  ---
+  duration_ms: 9961.515333
+  ...
+# Subtest: SC8: every visibility and mode combination keeps titin continuous
+ok 581 - SC8: every visibility and mode combination keeps titin continuous
+  ---
+  duration_ms: 3525.0845
+  ...
+# Subtest: SC8: no annotation renders stronger evidence than it claims
+ok 582 - SC8: no annotation renders stronger evidence than it claims
+  ---
+  duration_ms: 233.830375
+  ...
+# Subtest: SC8: cross-muscle measurements are declared and never silently adopted
+ok 583 - SC8: cross-muscle measurements are declared and never silently adopted
+  ---
+  duration_ms: 15.856708
+  ...
+# Subtest: SC8: every supported state survives a URL round trip
+ok 584 - SC8: every supported state survives a URL round trip
+  ---
+  duration_ms: 4.006667
+  ...
+# Subtest: SC8: the visual matrix covers the plan and every cell is reproducible
+ok 585 - SC8: the visual matrix covers the plan and every cell is reproducible
+  ---
+  duration_ms: 14.227959
+  ...
+# Subtest: SC8: every declared colour pair meets its contrast floor and exists in the page
+ok 586 - SC8: every declared colour pair meets its contrast floor and exists in the page
+  ---
+  duration_ms: 15.556584
+  ...
+# Subtest: SC8: focus order, keyboard route, and touch targets hold
+ok 587 - SC8: focus order, keyboard route, and touch targets hold
+  ---
+  duration_ms: 0.594875
+  ...
+# Subtest: SC8: evidence and selection are never carried by colour alone
+ok 588 - SC8: evidence and selection are never carried by colour alone
+  ---
+  duration_ms: 78.493708
+  ...
+# Subtest: SC8: repeated rebuilds and mode changes do not grow resource counts
+ok 589 - SC8: repeated rebuilds and mode changes do not grow resource counts
+  ---
+  duration_ms: 1132.058667
+  ...
+# Subtest: SC8: an idle frame rebuilds no geometry
+ok 590 - SC8: an idle frame rebuilds no geometry
+  ---
+  duration_ms: 218.651834
+  ...
+# Subtest: SC8: the standalone build stays inside its declared size budget
+ok 591 - SC8: the standalone build stays inside its declared size budget
+  ---
+  duration_ms: 0.56375
+  ...
+# Subtest: SC8: the release record claims nothing that has not been earned
+ok 592 - SC8: the release record claims nothing that has not been earned
+  ---
+  duration_ms: 0.923583
+  ...
+# Subtest: SC9: every named release artifact exists and is generated, not written
+ok 593 - SC9: every named release artifact exists and is generated, not written
+  ---
+  duration_ms: 3.065292
+  ...
+# Subtest: SC9: the claim matrix restates the audit exactly, with resolvable citations
+ok 594 - SC9: the claim matrix restates the audit exactly, with resolvable citations
+  ---
+  duration_ms: 1.894416
+  ...
+# Subtest: SC9: the limitations sheet carries every recorded non-claim
+ok 595 - SC9: the limitations sheet carries every recorded non-claim
+  ---
+  duration_ms: 0.929625
+  ...
+# Subtest: SC9: the presenter script matches the shipped route and its pacing
+ok 596 - SC9: the presenter script matches the shipped route and its pacing
+  ---
+  duration_ms: 0.684792
+  ...
+# Subtest: SC9: the preflight keeps its seven steps and points at a real fallback
+ok 597 - SC9: the preflight keeps its seven steps and points at a real fallback
+  ---
+  duration_ms: 0.682042
+  ...
+# Subtest: SC9/18: the standalone reports three non-self-referential candidate identities
+ok 598 - SC9/18: the standalone reports three non-self-referential candidate identities
+  ---
+  duration_ms: 0.287375
+  ...
+# Subtest: SC9/18: the model fingerprint tracks only explicit primary model inputs
+ok 599 - SC9/18: the model fingerprint tracks only explicit primary model inputs
+  ---
+  duration_ms: 2.696625
+  ...
+# Subtest: SC9: the fallback deck says what the application says, without a GPU
+ok 600 - SC9: the fallback deck says what the application says, without a GPU
+  ---
+  duration_ms: 1.904458
+  ...
+# Subtest: SC9: a release pack missing its provenance is rejected
+ok 601 - SC9: a release pack missing its provenance is rejected
+  ---
+  duration_ms: 7.954084
+  ...
+# Subtest: SC9: the twelve release conditions are tracked and none is over-claimed
+ok 602 - SC9: the twelve release conditions are tracked and none is over-claimed
+  ---
+  duration_ms: 0.276292
+  ...
+# Subtest: SC9: the rehearsal record claims nothing that has not been rehearsed
+ok 603 - SC9: the rehearsal record claims nothing that has not been rehearsed
+  ---
+  duration_ms: 0.29075
+  ...
+# Subtest: SC9/18: the README and progress record hand the current project over accurately
+ok 604 - SC9/18: the README and progress record hand the current project over accurately
+  ---
+  duration_ms: 1.687584
+  ...
+# Subtest: standalone: no live reference to sibling files can survive
+ok 605 - standalone: no live reference to sibling files can survive
+  ---
+  duration_ms: 3.211959
+  ...
+# Subtest: standalone: HTML script elements are balanced
+ok 606 - standalone: HTML script elements are balanced
+  ---
+  duration_ms: 4.2555
+  ...
+# Subtest: standalone: the $& splice corruption never recurs
+ok 607 - standalone: the $& splice corruption never recurs
+  ---
+  duration_ms: 0.695625
+  ...
+# Subtest: standalone: every page binding is exposed by the inlined bundle namespace
+ok 608 - standalone: every page binding is exposed by the inlined bundle namespace
+  ---
+  duration_ms: 3.654417
+  ...
+# Subtest: standalone: embedded spec matches data/ byte-for-byte
+ok 609 - standalone: embedded spec matches data/ byte-for-byte
+  ---
+  duration_ms: 18.599166
+  ...
+# Subtest: standalone: every spec file the loader requests is embedded
+ok 610 - standalone: every spec file the loader requests is embedded
+  ---
+  duration_ms: 8.658083
+  ...
+# Subtest: standalone: model and scene build from the shipped file alone
+ok 611 - standalone: model and scene build from the shipped file alone
+  ---
+  duration_ms: 173.28525
+  ...
+# Subtest: standalone: the science matches the served page exactly
+ok 612 - standalone: the science matches the served page exactly
+  ---
+  duration_ms: 205.686375
+  ...
+# Subtest: standalone: the boot advice is not the served-page advice
+ok 613 - standalone: the boot advice is not the served-page advice
+  ---
+  duration_ms: 0.42075
+  ...
+# Subtest: standalone: the real boot scripts permit a healthy file:// launch
+ok 614 - standalone: the real boot scripts permit a healthy file:// launch
+  ---
+  duration_ms: 3.197917
+  ...
+# Subtest: standalone: spec discovery is redundant, not single-point
+ok 615 - standalone: spec discovery is redundant, not single-point
+  ---
+  duration_ms: 0.821959
+  ...
+# Subtest: standalone: build refuses rather than emit a file missing a spec
+ok 616 - standalone: build refuses rather than emit a file missing a spec
+  ---
+  duration_ms: 86.344709
+  ...
+1..616
+# tests 616
+# suites 0
+# pass 616
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 124651.125791

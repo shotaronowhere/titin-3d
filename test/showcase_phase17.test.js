@@ -119,7 +119,8 @@ test('SC17: orientation is claim-bound while titin retains one identity colour',
   assert.ok(chapter.claim_ids.includes('titin_continuity_trace'));
   assert.match(chapter.lay_summary, /sarcomere[\s\S]*Z-discs/i);
   assert.match(chapter.lay_summary,
-    /(?:ATP|\(ATP\))-powered myosin[\s\S]*titin[\s\S]*not the motor/i);
+    /(?:ATP|\(ATP\))-powered myosin[\s\S]*titin[\s\S]*passive spring and scaffold/i);
+  assert.match(chapter.narration, /titin[\s\S]*not the motor/i);
   assert.equal(COMPONENT_COLOR.titin, 0xff5d7d);
   assert.equal(Object.hasOwn(GUIDED_COMPONENT_COLOR, 'titin'), false,
     'Guided mode must inherit, not redefine, titin identity colour');

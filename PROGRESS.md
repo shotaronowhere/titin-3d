@@ -1736,3 +1736,34 @@ and locator review was not performed. The SC-23 release-pack content interlock i
 overall showcase remains `release_ready: false` under its broader gates. See
 `docs/sprint-reports/SC-23.md` for aliases, transcript budget, negative controls, viewport coverage,
 and final verification results.
+
+---
+
+# 2026-09-06 — bounded scientist-feedback preview handoff
+
+**IMPLEMENTED; FINAL VALIDATION AND PACKAGING INCOMPLETE.** The owner authorized the
+bounded MVP plan on 2026-09-05 and requested a junior-engineer handoff on 2026-09-06.
+Continue with [the implementation supplement and finish checklist](docs/superpowers/plans/2026-09-06-titin-mvp-preview-finish.md).
+The original review is retained at `evidence/mvp-review/2026-09-05/REVIEW_AND_PLAN.md`.
+
+Branch `codex/mvp-preview` contains source commit `557f09a` and clean generated-artifact
+commit `8674dd7`. Implemented: corrected N2A and muscle/half-sarcomere explanations;
+manifest-based scene notes; explicit endpoint stretch replay; direct force-detail focus/scroll;
+modeled-force/sensitivity wording; Spring as beat 3's opening view; Research-only paired
+lattice inset; aligned README and generated transcripts. Scientific model inputs, numerical
+parameters, scientific decisions and formal release gates are unchanged.
+
+Verification on this candidate: **`npm run verify` passes, 617/617 Node tests**; artifact
+identity/boundary passes; a clean detached worktree reproduces all **23 compared files**
+byte-for-byte. Integrated Chromium is **69/70**, with one unresolved 8000 ms timeout waiting
+for the slider to advance above 2000 nm before the pause assertion. Do not call it a confirmed
+pause defect or an explained flaky test. The preserved trace and log are under
+`evidence/mvp-preview/2026-09-05/`. All four new MVP browser checks, nine smoke tests and the
+included evidence/learn/UX/zoom/accessibility checks passed. Sixteen candidate frames were
+captured; some stored mobile/zoom frames still need visual review.
+
+The junior engineer should diagnose the timeout first, then finish the second-browser route,
+actual export downloads, remaining visual review and available demo-device rehearsal, and
+assemble/verify the distribution ZIP. No ZIP, hosted deployment, scientist message or human
+validation has been completed. `SCIENTIST_NOTE.md` is a draft; `DELIVERY.md` records exact
+hashes and separates completed checks from pending work. Formal `release_ready` remains false.
