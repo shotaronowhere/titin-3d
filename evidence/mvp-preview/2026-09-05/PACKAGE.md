@@ -77,3 +77,12 @@ No hosting destination and no recipients were supplied, so nothing was published
 If publishing is later authorized to a specific destination, fetch the hosted bytes back
 with `scripts/verify_artifact_identity.mjs --url` and exercise the route at that URL; a
 `file://` or localhost pass is not hosted parity.
+
+## Identity after the finishing commit
+
+The finishing work touched only `test/`, documentation and `evidence/` — none of which is a
+build input — so committing it must not move the candidate. Verified on commit `679eb16`:
+`npm run verify` passes 617/617 at exit 0 and `npm run verify:identity` still reports app
+revision `557f09aaa6f663b4e…`, model `7badc8e2…f329ef6`, build inputs `d7970b23…dd33f`,
+`index.html` `b5ee9beb…86f4f5e` and manifest `13cb66e6…d6c4ac`, with the artifact boundary
+validated. Log: [verify-postcommit-679eb16.log](verify-postcommit-679eb16.log).
