@@ -1,6 +1,6 @@
 # Standard screenshot review pack
 
-Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `4f8270387aa90be6ed94e576906737a7d5b6f6be`; build inputs `a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc`. 48 cells.
+Generated — model `7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6`; app `dcdb403a759bd3df1f7d7bc821f3a73aeeb10caa`; build inputs `0d4877e8a7ce243caa7f8222cbb5d6d11101c0f0c7c756c4cda58408a8aef907`. 48 cells.
 
 Deterministic SC-24 capture set generated from semantic scenes and canonical URL v2 state. Pixel comparison supplements human review and does not determine scientific correctness.
 
