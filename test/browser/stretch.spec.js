@@ -306,6 +306,7 @@ test('MVP direct Stretch entry and history preserve length, while manual camera 
   await page.goto(url);
   await waitForReady(page);
   await settledCamera(page);
+  expect(await page.evaluate(() => window.titinVisualization.currentState().camera_preset)).toBe('view.titin_hero');
   await expectSameCamera(page, baseline);
   await expect(page.locator('#sl')).toHaveValue('2250');
   // Real orbit gesture; a click alone must not claim a manual camera change.

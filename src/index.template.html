@@ -3410,6 +3410,9 @@ function applyCameraPreset({ animate = false } = {}) {
     state.view = name; state.closeup = null;
     if (usesStretchComparisonFrame()) {
       visualization.frameStretchSweep(sweepRange.max, framing);
+      // The sweep facade defaults to titin_story; this lesson retains its
+      // canonical hero preset in the public report and restored URL state.
+      visualization.setPresentationState({ camera_preset: state.cameraPreset });
     } else visualization.frame(name, framing);
     syncViews(); syncCloseups(null);
   } else if (kind === 'closeup') {
