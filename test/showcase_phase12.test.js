@@ -258,10 +258,11 @@ test('SC12-2c: the locator follows the camera along the model', () => {
   assert.ok(far.to01 <= 1 && near.from01 >= 0);
 });
 
-test('SC12/SC27A: the Guided full-sarcomere locator remains visible across views', () => {
+test('SC12/SC27A: the Guided locator yields space to the model while preserving essential labels', () => {
   assert.match(page, /const overlayLane = stageOverlayLane\(\{/);
   assert.match(page, /if \(overlayLane\.bracketsVisible\)/);
-  assert.match(page, /if \(locator\.visible\)/);
+  assert.match(page, /if \(locator\.visible && !locatorCrowdsModel\)/);
+  assert.match(page, /suppressed:model-proximity/);
   assert.match(page, /data-visible-span/);
   assert.equal(STAGE_LAYOUT.locator_full_labels_min_px, 410);
   assert.equal(STAGE_LAYOUT.label_collision_tolerance_px, 3);
