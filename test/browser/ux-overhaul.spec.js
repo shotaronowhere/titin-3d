@@ -194,7 +194,13 @@ async function assertOverlayLabelsClear(page, viewport, stateLabel) {
 }
 
 async function assertSemanticCameraContract(page, viewport, beat) {
-  await expect(page.locator('#scienceOverlay [data-full-sarcomere-locator]')).toHaveCount(1);
+  // These finale layouts withdraw the optional rail to clear the main model.
+  // Keep the camera, main-terminus, reachability and remaining label checks below.
+  const locatorSuppressed = beat === 5 && [375, 1024, 1280].includes(viewport.width);
+  await expect(page.locator('#scienceOverlay')).toHaveAttribute('data-locator-layout',
+    locatorSuppressed ? 'suppressed:model-proximity' : 'visible');
+  await expect(page.locator('#scienceOverlay [data-full-sarcomere-locator]'))
+    .toHaveCount(locatorSuppressed ? 0 : 1);
   const audit = await page.evaluate(() => {
     const vis = window.titinVisualization;
     const canvasNode = document.querySelector('#canvas');
@@ -214,7 +220,7 @@ async function assertSemanticCameraContract(page, viewport, beat) {
     };
     const ruleNode = document.querySelector('#scienceOverlay .locator-rule');
     const rule = relativeBox(ruleNode);
-    const ruleCoordinates = [...ruleNode.getAttribute('d').matchAll(/-?[\d.]+/g)]
+    const ruleCoordinates = [...(ruleNode?.getAttribute('d') || '').matchAll(/-?[\d.]+/g)]
       .map((match) => Number(match[0]));
     const extentNode = document.querySelector('#scienceOverlay .locator-extent');
     const extent = relativeBox(extentNode);
@@ -223,9 +229,9 @@ async function assertSemanticCameraContract(page, viewport, beat) {
       point.x = x; point.y = y;
       return point.matrixTransform(node.getScreenCTM()).x - canvas.left;
     };
-    const extentX = Number(extentNode.getAttribute('x'));
-    const extentY = Number(extentNode.getAttribute('y'));
-    const extentWidth = Number(extentNode.getAttribute('width'));
+    const extentX = Number(extentNode?.getAttribute('x'));
+    const extentY = Number(extentNode?.getAttribute('y'));
+    const extentWidth = Number(extentNode?.getAttribute('width'));
     const locatorLabels = [...document.querySelectorAll('#scienceOverlay .science-label')]
       .filter((node) => {
         if (!rule) return false;
@@ -293,12 +299,12 @@ async function assertSemanticCameraContract(page, viewport, beat) {
       locatorLabels: locatorLabels.map((node) => node.textContent.trim()),
       rule,
       extent: extent && { ...extent, span: extentNode.dataset.visibleSpan },
-      locatorMath: {
+      locatorMath: ruleNode && extentNode ? {
         ruleLeft: transformedX(ruleNode, ruleCoordinates[0], ruleCoordinates[1]),
         ruleRight: transformedX(ruleNode, ruleCoordinates[2], ruleCoordinates[1]),
         extentLeft: transformedX(extentNode, extentX, extentY),
         extentRight: transformedX(extentNode, extentX + extentWidth, extentY),
-      },
+      } : null,
       semanticLabels,
       labelCollisions,
       bandLabelCount: document.querySelectorAll('#scienceOverlay .band-label').length,
@@ -307,16 +313,22 @@ async function assertSemanticCameraContract(page, viewport, beat) {
     };
   });
 
-  expect(audit.locatorTicks, `beat ${beat} has two Z boundaries and one M-line`).toBe(3);
-  expect(audit.locatorAnchors, `beat ${beat} locator has both titin termini`).toBe(2);
-  const stripPx = Math.max(210, Math.min(420, viewport.width - 36, viewport.width * 0.4));
-  const expectedLocatorLabels = stripPx < STAGE_LAYOUT.locator_full_labels_min_px
-    ? ['Z · N', 'M · C', 'Z', 'I-band', 'A-band']
-    : ['Z-disc · N-terminus', 'M-line · C-terminus', 'Z-disc', 'I-band', 'A-band'];
-  expect(audit.locatorLabels, `beat ${beat} locator vocabulary`)
-    .toEqual(expect.arrayContaining(expectedLocatorLabels));
-  expect(audit.semanticLabels.length, `beat ${beat} paints locator and termini labels`)
-    .toBeGreaterThanOrEqual(7);
+  if (locatorSuppressed) {
+    expect(audit.locatorTicks).toBe(0);
+    expect(audit.locatorAnchors).toBe(0);
+    expect(audit.semanticLabels.length, 'main-model termini remain labeled').toBe(2);
+  } else {
+    expect(audit.locatorTicks, `beat ${beat} has two Z boundaries and one M-line`).toBe(3);
+    expect(audit.locatorAnchors, `beat ${beat} locator has both titin termini`).toBe(2);
+    const stripPx = Math.max(210, Math.min(420, viewport.width - 36, viewport.width * 0.4));
+    const expectedLocatorLabels = stripPx < STAGE_LAYOUT.locator_full_labels_min_px
+      ? ['Z · N', 'M · C', 'Z', 'I-band', 'A-band']
+      : ['Z-disc · N-terminus', 'M-line · C-terminus', 'Z-disc', 'I-band', 'A-band'];
+    expect(audit.locatorLabels, `beat ${beat} locator vocabulary`)
+      .toEqual(expect.arrayContaining(expectedLocatorLabels));
+    expect(audit.semanticLabels.length, `beat ${beat} paints locator and termini labels`)
+      .toBeGreaterThanOrEqual(7);
+  }
   expect(audit.bandLabelCount, `beat ${beat} gives the Tour lane only to the locator`).toBe(0);
   expect(audit.labelCollisions, `beat ${beat} scientific labels do not overprint`).toEqual([]);
   for (const label of audit.semanticLabels) {
@@ -338,15 +350,17 @@ async function assertSemanticCameraContract(page, viewport, beat) {
   }
   expect(audit.reachablePathPoints, `beat ${beat} leaves titin visible and reachable`)
     .toBeGreaterThan(0);
-  const [from, to] = audit.extent.span.split(':').map(Number);
-  expect(from).toBeGreaterThanOrEqual(0);
-  expect(to).toBeLessThanOrEqual(1);
-  expect(to).toBeGreaterThanOrEqual(from);
-  const renderedRuleWidth = audit.locatorMath.ruleRight - audit.locatorMath.ruleLeft;
-  expect(audit.locatorMath.extentLeft)
-    .toBeCloseTo(audit.locatorMath.ruleLeft + renderedRuleWidth * from * 0.5, 4);
-  expect(audit.locatorMath.extentRight - audit.locatorMath.extentLeft)
-    .toBeCloseTo(Math.max(2, renderedRuleWidth * (to - from) * 0.5), 4);
+  if (!locatorSuppressed) {
+    const [from, to] = audit.extent.span.split(':').map(Number);
+    expect(from).toBeGreaterThanOrEqual(0);
+    expect(to).toBeLessThanOrEqual(1);
+    expect(to).toBeGreaterThanOrEqual(from);
+    const renderedRuleWidth = audit.locatorMath.ruleRight - audit.locatorMath.ruleLeft;
+    expect(audit.locatorMath.extentLeft)
+      .toBeCloseTo(audit.locatorMath.ruleLeft + renderedRuleWidth * from * 0.5, 4);
+    expect(audit.locatorMath.extentRight - audit.locatorMath.extentLeft)
+      .toBeCloseTo(Math.max(2, renderedRuleWidth * (to - from) * 0.5), 4);
+  }
 }
 
 for (const viewport of SC27A_VIEWPORTS) {
