@@ -66,7 +66,9 @@ async function framedGeometry(page) {
     const header = document.querySelector('#stageHeader').getBoundingClientRect();
     const story = document.querySelector('#guidedCard').getBoundingClientRect();
     const label = [...document.querySelectorAll('#scienceOverlay .science-label')]
-      .find((node) => node.textContent === 'I-band');
+      // The main-model span replaces the secondary locator when the rail would
+      // crowd the model. Either visible label still identifies the I-band.
+      .find((node) => ['I-band', 'I-band · extensible'].includes(node.textContent));
     const labelBox = label?.getBoundingClientRect();
     return {
       width: canvas.width,
