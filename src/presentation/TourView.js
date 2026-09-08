@@ -8,12 +8,13 @@ export const STRETCH_CHAPTER_ID = 'stretch_spring';
  * @param {{chapterId: string, chapterIndex: number, chapterCount: number}} state
  */
 export function tourControlBudget({ chapterId, chapterIndex, chapterCount }) {
+  const evidence = chapterCount > 0 && chapterIndex === chapterCount - 1 ? 1 : 0;
   const mechanics = chapterId === STRETCH_CHAPTER_ID ? 3 : 0;
   const previousDisabled = chapterIndex <= 0;
   const nextDisabled = chapterCount <= 0;
   return Object.freeze({
-    visibleChromeAffordances: 4 + mechanics,
-    tabbableChromeTargets: 4 + mechanics - Number(previousDisabled) - Number(nextDisabled),
+    visibleChromeAffordances: 4 + mechanics + evidence,
+    tabbableChromeTargets: 4 + mechanics + evidence - Number(previousDisabled) - Number(nextDisabled),
   });
 }
 
@@ -26,7 +27,7 @@ export class TourView {
   constructor(elements) {
     const required = [
       'progress', 'markers', 'question', 'title', 'summary',
-      'previous', 'next', 'mechanics',
+      'previous', 'next', 'mechanics', 'evidence',
     ];
     for (const id of required) {
       if (!(elements?.[id] instanceof HTMLElement)) {
@@ -45,7 +46,7 @@ export class TourView {
     const isFirst = chapterIndex === 0;
     const isFinal = chapterIndex === count - 1;
     const nextChapter = chapters[chapterIndex + 1] || chapters[0];
-    const { progress, markers, question, title, summary, previous, next, mechanics } = this.elements;
+    const { progress, markers, question, title, summary, previous, next, mechanics, evidence } = this.elements;
 
     progress.textContent = `Beat ${current} of ${count}`;
     markers.replaceChildren(...chapters.map((record, index) => {
@@ -64,6 +65,8 @@ export class TourView {
     previous.disabled = isFirst;
     previous.setAttribute('aria-label', isFirst ? 'Previous beat unavailable' : `Previous: ${chapters[chapterIndex - 1].title}`);
     next.disabled = count === 0;
+    evidence.hidden = !isFinal;
+    next.dataset.secondary = String(isFinal);
     next.textContent = isFinal ? 'Replay' : 'Next';
     next.setAttribute('aria-label', isFinal ? 'Replay the Tour' : `Next: ${nextChapter.title}`);
     mechanics.hidden = chapter.id !== STRETCH_CHAPTER_ID;

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { failOnPageErrors, waitForReady, setReducedMotion } from './helpers.js';
 
@@ -57,6 +58,12 @@ for (const [width, height] of [[1280, 720], [390, 844]]) {
     expect(heading.y).toBeGreaterThanOrEqual(tabs.y + tabs.height);
     expect(heading.y + heading.height).toBeLessThan(height);
     await expect(page.locator('.force-readout')).toContainText('literature parameter sensitivity, not a confidence interval');
+    const readout = await page.locator('.force-readout').boundingBox();
+    const chart = await page.locator('#forceCurve .force-chart').boundingBox();
+    expect(readout.y).toBeGreaterThan(heading.y);
+    expect(readout.y + readout.height).toBeLessThan(height);
+    expect(chart.y).toBeLessThan(height);
+    expect(readout.y + readout.height).toBeLessThanOrEqual(chart.y);
     await page.locator('#closeEvidence').click();
     await expect(page.locator('#stageForce')).toBeFocused();
     await expect(page.locator('#sl')).toHaveValue('2400');
@@ -70,3 +77,64 @@ for (const [width, height] of [[1280, 720], [390, 844]]) {
     await expect(page.locator('#notes')).not.toContainText('6 of 42');
   });
 }
+
+
+test('MVP Research scope matches the canonical tissue-neutral construct through both entries', async ({ page }) => {
+  const scope = JSON.parse(readFileSync(new URL('../../data/scientific_scope.json', import.meta.url)));
+  await boot(page);
+  await page.locator('#audienceEvidence').click();
+  await page.locator('#tabInspect').click();
+  await expect(page.locator('#scopeConstructStatement')).toHaveText(scope.public_badge);
+  await expect(page.locator('#scopeDetails')).toContainText('does not simulate calcium activation or active contraction');
+  await expect(page.locator('#scopeDetails')).not.toContainText('Human skeletal-muscle reference construct');
+  await page.locator('#closeEvidence').click();
+  await page.locator('#scopeBadge').click();
+  await expect(page.locator('#scopeDetails')).toBeFocused();
+  await expect(page.locator('#scopeConstructStatement')).toHaveText(scope.public_badge);
+});
+
+for (const [width, height] of [[1280, 720], [390, 844]]) {
+  test(`MVP ${width}: final evidence action selects titin and exposes the exact source route`, async ({ page }) => {
+    await setReducedMotion(page);
+    await boot(page, width, height);
+    await expect(page.locator('#chapterInspectEvidence')).toBeHidden();
+    await page.locator('#chapterNext').focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#chapterProgress')).toHaveText('Beat 4 of 5');
+    await page.locator('#chapterNext').click();
+    const button = page.locator('#chapterInspectEvidence');
+    await expect(button).toBeVisible();
+    await button.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#tabEvidence')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('#selectedEvidence')).toContainText('Titin');
+    const sources = page.locator('#selectedEvidenceSourcesLink');
+    const box = await sources.boundingBox();
+    expect(box.y).toBeGreaterThanOrEqual(0);
+    expect(box.y + box.height).toBeLessThan(height);
+    await sources.click();
+    await expect(page.locator('#bibliography')).toHaveAttribute('data-source-scope', 'object');
+    await page.locator('#bibliography .source-result summary').first().click();
+    await expect(page.locator('#bibliography .source-result').first()).toContainText('Locator');
+    await page.locator('#closeEvidence').click();
+    await expect(button).toBeFocused();
+    await page.locator('#chapterNext').click();
+    await expect(page.locator('#chapterProgress')).toHaveText('Beat 1 of 5');
+    await expect(button).toBeHidden();
+  });
+}
+
+
+test('MVP intermediate force labels retain declared precision and a stable control row', async ({ page }) => {
+  await boot(page);
+  await page.locator('#sl').fill('2200');
+  await expect(page.locator('#stageForce b')).toHaveText('≈0.5 pN');
+  const initial = await page.locator('#guidedCard').boundingBox();
+  for (const length of [2000, 2250, 2267, 2300, 2399, 2400]) {
+    await page.locator('#sl').fill(String(length));
+    await expect.poll(() => new URL(page.url()).hash).toContain(`sl=${length}`);
+    await expect(page.locator('#stageForce b')).toHaveText(/^≈(?:0\.\d{1,2}|1(?:\.\d)?) pN$/);
+    const card = await page.locator('#guidedCard').boundingBox();
+    expect(Math.abs(card.height - initial.height)).toBeLessThan(1);
+  }
+});

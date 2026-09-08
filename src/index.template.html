@@ -590,6 +590,18 @@ window.__titinBoot = { ready: false, problems: [] };
   .chapter-actions { flex-wrap: nowrap; justify-content: space-between; }
   .chapter-actions > button { flex: 0 0 auto; }
   #chapterNext { margin-left: auto; background: #d7e4f4; border-color: #d7e4f4; color: #111820; }
+  #chapterInspectEvidence { width: 100%; margin: 0 0 10px; padding: 11px 13px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: #d7e4f4; border-color: #d7e4f4; color: #111820; font-weight: 700;
+    text-align: left; }
+  #chapterInspectEvidence[hidden] { display: none; }
+  #chapterInspectEvidence:hover { background: #edf4fc; }
+  #chapterNext[data-secondary="true"] { background: transparent; color: var(--text);
+    border-color: var(--edge); }
+  #selectedEvidenceSourcesLink { margin: 0 0 8px; border-color: #8ba7c8; color: #d7e4f4; }
+  .mechanics-audit .force-readout { padding: 10px 12px; margin: 8px 0;
+    border-left: 3px solid var(--titin); border-radius: 0 6px 6px 0;
+    background: rgb(255 93 125 / 7%); line-height: 1.5; }
   #chapterPrevious:disabled { opacity: .36; }
   .tour-mechanics { display: grid; grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center; gap: 7px 9px; margin: 2px 0 12px; padding: 10px 0 11px;
@@ -598,8 +610,9 @@ window.__titinBoot = { ready: false, problems: [] };
   .tour-mechanics .stage-label { grid-column: 1; font-size: 12px; }
   .tour-mechanics #stageLengthReadout { grid-column: 2 / 4; justify-self: end; font-size: 14px; }
   .tour-mechanics #sl { grid-column: 1 / -1; min-width: 0; }
-  .tour-mechanics #stagePlay { grid-column: 1 / 3; justify-self: start; }
-  .tour-mechanics #stageForce { grid-column: 3; max-width: 220px; min-width: 0; text-align: right;
+  .tour-mechanics #stagePlay { grid-column: 1 / 3; justify-self: start;
+    min-height: 50px; white-space: nowrap; }
+  .tour-mechanics #stageForce { grid-column: 3; max-width: 200px; min-height: 64px; min-width: 0; text-align: right;
     color: #ffd7e0; font-size: 12px; white-space: normal; overflow-wrap: anywhere;
     line-height: 1.25; }
   .tour-mechanics #stageForce .force-class { font-size: 12px; letter-spacing: 0; }
@@ -775,6 +788,7 @@ window.__titinBoot = { ready: false, problems: [] };
           <button id="stagePlay" aria-pressed="false" aria-label="Play a stretch sweep across the working range">&#9654; Stretch</button>
           <button id="stageForce" title="Open the approximate passive-force evaluation in Research"></button>
         </section>
+        <button type="button" id="chapterInspectEvidence" hidden>Inspect titin’s evidence <span aria-hidden="true">→</span></button>
         <div class="chapter-actions">
           <button id="chapterPrevious">Previous</button>
           <button id="chapterNext">Next</button>
@@ -823,7 +837,8 @@ window.__titinBoot = { ready: false, problems: [] };
       <section id="scopeDetails" tabindex="-1">
       <p class="note">Scientist-feedback preview · independent scientific validation and human usability review pending.</p>
         <h2>Scope details</h2>
-        <div class="sub">Human skeletal-muscle reference construct Q8WZ42-1. Sarcomere length changes passive geometry; it does not simulate calcium activation or active contraction.</div>
+        <div class="sub" id="scopeConstructStatement"></div>
+        <div class="sub">Sarcomere length changes passive geometry; it does not simulate calcium activation or active contraction.</div>
       </section>
       <button id="researchRestoreView" hidden>Restore view before manual camera move</button>
       <h2>Selected target audit</h2>
@@ -905,11 +920,11 @@ window.__titinBoot = { ready: false, problems: [] };
       <table id="metrics"></table>
 
       <h2 id="passiveForceHeading" tabindex="-1">Passive force</h2>
+      <div class="sub" id="mechanicsScope"></div>
+      <div id="forceCurve"></div>
       <div class="sub" style="margin:0 0 6px">Regional extension remains a
         deterministic model output. Quantitative force appears only where the loaded
         SD-04 decision explicitly authorizes its regime and sensitivity policy.</div>
-      <div class="sub" id="mechanicsScope"></div>
-      <div id="forceCurve"></div>
 
       <h2>Incremental compliance</h2>
       <div class="sub" style="margin:0 0 6px">Local slope contribution at the evaluated
@@ -928,8 +943,8 @@ window.__titinBoot = { ready: false, problems: [] };
 
     <div id="panelEvidence" role="tabpanel" aria-labelledby="tabEvidence" hidden>
       <h2 id="selectedStructureHeading">Selected structure</h2>
-      <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
       <button id="selectedEvidenceSourcesLink" hidden>Sources for this object</button>
+      <div class="note" id="selectedEvidence" hidden aria-live="polite"></div>
 
       <h2>Scientific decisions</h2>
       <div class="note warn" id="scientificDecisionStatus"></div>
@@ -1020,7 +1035,7 @@ import { TitinVisualization, SCALES } from './src/api/TitinVisualization.js';
 import { VIEWS, CLOSEUPS } from './src/render/Viewer.js';
 import { COMPONENT_COLOR, EVIDENCE_STYLE, COMPONENTS } from './src/render/SarcomereScene.js';
 import { StoryController, AUDIENCE_MODES } from './src/presentation/StoryController.js';
-import { TourView } from './src/presentation/TourView.js';
+import { TourView, STRETCH_CHAPTER_ID } from './src/presentation/TourView.js';
 import { createEvidenceChip, evidenceLanguage } from './src/presentation/EvidenceChip.js';
 import { SceneController, DEPTHS, SCENE_LAYER_KEYS, sceneMatch } from './src/presentation/SceneController.js';
 import { isLongitudinalProjection } from './src/presentation/ShowcaseOverlay.js';
@@ -1105,6 +1120,7 @@ const tourView = new TourView({
   previous: $('chapterPrevious'),
   next: $('chapterNext'),
   mechanics: $('tourMechanics'),
+  evidence: $('chapterInspectEvidence'),
 });
 const componentIds = Object.keys(COMPONENTS);
 const sceneController = new SceneController(model.spec.scenes, {
@@ -1145,6 +1161,7 @@ $('appRevision').textContent = candidateIdentity.app_revision;
 $('buildInputsFingerprint').textContent = candidateIdentity.build_inputs_fingerprint;
 $('scopeIdentity').textContent = model.scientificScope.sequence.construct_label;
 $('scopeBadge').title = model.scientificScope.publicBadge;
+$('scopeConstructStatement').textContent = model.scientificScope.publicBadge;
 $('mechanicsScope').textContent = model.scientificScope.mechanics.display_label;
 $('scopeDecisions').textContent = model.scientificDecisions.summaryText;
 $('scientificDecisionStatus').textContent = `${model.scientificDecisions.badgeText} · `
@@ -1260,6 +1277,8 @@ let surfaceOpenSequence = 0;
 let pinnedOpenedAt = 0;
 let drawerOpenedAt = 0;
 
+let pendingAudienceFrame = null;
+let audienceReframePending = false;
 function syncAudienceMode() {
   const evidence = state.audienceMode === AUDIENCE_MODES.evidence;
   const drawerOpen = evidence && state.drawer !== 'closed';
@@ -1277,9 +1296,14 @@ function syncAudienceMode() {
   $('audienceEvidence').classList.toggle('on', evidence);
   $('audienceEvidence').setAttribute('aria-pressed', String(evidence));
   $('canvas').inert = mobileResearch;
-  requestAnimationFrame(() => {
+  audienceReframePending ||= reframe;
+  if (pendingAudienceFrame !== null) cancelAnimationFrame(pendingAudienceFrame);
+  pendingAudienceFrame = requestAnimationFrame(() => {
+    pendingAudienceFrame = null;
     visualization.resize();
-    if (reframe) applyCameraPreset({ animate: false });
+    measureTourCard();
+    if (audienceReframePending) applyCameraPreset({ animate: false });
+    audienceReframePending = false;
     // This callback may land inside a semantic-camera transition started later
     // in the same audience-state update. Treat it as an intermediate frame;
     // markStageDirty below guarantees a strict settled-frame measurement.
@@ -1341,6 +1365,11 @@ function openEvidence(trigger, targetTab) {
 }
 
 function closeEvidence() {
+  // The finale opens the record directly. Return to its Tour card, rather than
+  // leaving the phone's pinned explanation in place of the invoking button.
+  if (evidenceReturnFocus === $('chapterInspectEvidence')) {
+    clearPinnedSelection({ preserveBiologicalSelection: true });
+  }
   requestHistoryEntry();
   setAudienceMode(AUDIENCE_MODES.guided, {
     restoreFocus: true, drawer: 'closed',
@@ -2639,6 +2668,35 @@ function renderScienceOverlay({ transient = false } = {}) {
       }, 'A-band'));
     }
   }
+  // Two optional teaching spans, projected from the same canonical band bounds.
+  // Narrow screens retain the locator and the card's explanation instead of
+  // squeezing a second set of long labels into the molecular view.
+  if (usesStretchComparisonFrame() && showBands && width >= 900 && !inspectorRect) {
+    const spans = [
+      ['iband', 'I-band · extensible'],
+      ['aband', 'A-band span · fixed in this model'],
+    ].map(([id, label]) => ({ id, label,
+      start: projected.get(`${id}:start`), end: projected.get(`${id}:end`),
+    }));
+    if (spans.every(({ start, end }) => start?.visible && end?.visible)) {
+      const y = Math.max(...spans.flatMap(({ start, end }) => [start.y_px, end.y_px])) + 38;
+      const room = spans.every(({ start, end }) => end.x_px - start.x_px > 150
+        && start.x_px >= 12 && end.x_px <= width - 12);
+      if (room && y + 20 < (cardBox?.top ?? height - 60)) {
+        const group = svgElement('g', { 'data-stretch-comparison': 'true' });
+        for (const { label, start, end } of spans) {
+          group.append(svgElement('path', {
+            d: `M ${start.x_px} ${y - 5} V ${y} H ${end.x_px} V ${y - 5}`,
+            class: 'science-bracket minor',
+          }), svgElement('text', {
+            x: (start.x_px + end.x_px) / 2, y: y + 17,
+            'text-anchor': 'middle', class: 'science-label',
+          }, label));
+        }
+        nodes.push(group);
+      }
+    }
+  }
   if (features.has('termini')) {
     // The text baseline sits 15 px above its projected anchor. Reserve another
     // 15 px for the 12 px glyphs and halo so clamping the anchor cannot place
@@ -3269,7 +3327,7 @@ function renderForceCurve() {
   outputSourcesLink.onclick = () => selectModeledPointSources(outputSourcesLink);
   auditLinks.append(parametersLink, outputSourcesLink);
   details.append(summary, identity, equations, parameterTable);
-  wrapper.append(status, scope, limitations, ...(chart ? [chart] : []), readout,
+  wrapper.append(status, readout, scope, ...(chart ? [chart] : []), limitations,
     contributionHeading, contributionTable, auditLinks, details);
   $('forceCurve').replaceChildren(wrapper);
   renderCompliancePlot();
@@ -3311,11 +3369,22 @@ function renderChapter({ renderOverlay = true } = {}) {
   if (state.drawerTab === 'sources') renderBibliography();
   if (renderOverlay) renderScienceOverlay();
   renderProvenancePipeline();
-  requestAnimationFrame(() => {
-    const height = Math.round($('guidedCard').getBoundingClientRect().height);
-    if (height > 0) $('app').style.setProperty('--tour-card-h', `${height}px`);
-    markStageDirty();
-  });
+  // Measure the fully rendered card before a semantic camera uses its bounds.
+  // A deferred outgoing-card measurement can otherwise shift the Stretch frame.
+  measureTourCard();
+  markStageDirty();
+}
+
+function measureTourCard() {
+  const height = Math.round($('guidedCard').getBoundingClientRect().height);
+  if (height > 0) $('app').style.setProperty('--tour-card-h', `${height}px`);
+}
+
+function usesStretchComparisonFrame() {
+  return state.audienceMode === AUDIENCE_MODES.guided
+    && state.storyStep === STRETCH_CHAPTER_ID
+    && state.sceneId === 'spring'
+    && state.cameraPreset === 'view.titin_hero';
 }
 
 function applyChapterVisibility(chapterId) {
@@ -3339,7 +3408,9 @@ function applyCameraPreset({ animate = false } = {}) {
   const framing = unobscuredFrameOptions({ animate });
   if (kind === 'view') {
     state.view = name; state.closeup = null;
-    visualization.frame(name, framing);
+    if (usesStretchComparisonFrame()) {
+      visualization.frameStretchSweep(sweepRange.max, framing);
+    } else visualization.frame(name, framing);
     syncViews(); syncCloseups(null);
   } else if (kind === 'closeup') {
     state.closeup = name;
@@ -3404,12 +3475,12 @@ function restorePreviousChapterView({ focusResearch = false } = {}) {
   if (visualization.scale !== state.scale) visualization.setScale(state.scale);
   rebuild(true, { renderOverlay: false });
   visualization.highlightTitinRegion(state.region);
-  applyCameraPreset({ animate: true });
   // Update every chapter-owned surface before measuring the scientific
   // overlay. Otherwise the intermediate DOM can combine the previous beat's
   // mechanics with the next beat's lattice and temporarily cover the canvas.
   render(visualization.currentState(), { renderOverlay: false });
   renderChapter({ renderOverlay: false });
+  applyCameraPreset({ animate: true });
   renderScienceOverlay({ transient: true });
   renderPinnedSelection();
   syncScales(); syncRegions(); syncDepictionToggles(); refreshRegionReadout();
@@ -3450,11 +3521,11 @@ function applyChapter(chapterId) {
   syncAudienceMode();
   rebuild(true, { renderOverlay: false });
   visualization.highlightTitinRegion(state.region);
-  applyCameraPreset({ animate: true });
   // Render the scene attachment and chapter chrome as one measurement batch;
   // neither intermediate DOM is a user-visible or collision-auditable state.
   render(visualization.currentState(), { renderOverlay: false });
   renderChapter({ renderOverlay: false });
+  applyCameraPreset({ animate: true });
   renderScienceOverlay({ transient: true });
   renderPinnedSelection();
   syncScales(); syncRegions(); syncDepictionToggles();
@@ -3470,6 +3541,11 @@ $('chapterNext').onclick = () => {
   const index = story.chapterIndex(activeChapter().id);
   if (index < story.chapters.length - 1) applyChapter(story.chapters[index + 1].id);
   else applyChapter(story.chapters[0].id);
+};
+$('chapterInspectEvidence').onclick = () => {
+  if (selectNamedTarget('component', 'titin')) {
+    openEvidence($('chapterInspectEvidence'), 'evidence');
+  }
 };
 $('researchRestoreView').onclick = () => restorePreviousChapterView({ focusResearch: true });
 
@@ -4632,10 +4708,15 @@ function render(report, { renderOverlay = true } = {}) {
   const forceEl = $('stageForce');
   forceEl.replaceChildren();
   const forceValue = document.createElement(g.titin_force_status === 'not_evaluated' ? 'span' : 'b');
+  // Format the already-rounded estimate for display; binary floating-point
+  // tails must not invent precision or resize the Tour card during a sweep.
   forceValue.textContent = g.titin_force_status === 'not_evaluated'
     ? `force not evaluated · absolute pN withheld · SD-04 ${g.titin_mechanics_decision_status}`
     : Number.isFinite(g.titin_force_precision?.central)
-      ? `≈${g.titin_force_precision.central} pN` : 'mechanics value unavailable';
+      ? `≈${g.titin_force_precision.central.toLocaleString('en-US', {
+        maximumSignificantDigits: model.spec.mechanicalParameters.output_policy.precision.significant_digit_cap,
+        useGrouping: false,
+      })} pN` : 'mechanics value unavailable';
   if (g.titin_force_status !== 'not_evaluated') {
     const forceClass = document.createElement('span');
     forceClass.className = 'force-class';
@@ -4920,11 +5001,11 @@ function restorePresentationFromHash() {
   syncDrawerTabs(); syncAudienceMode();
   rebuild(true, { renderOverlay: false });
   visualization.highlightTitinRegion(state.region);
-  applyCameraPreset({ animate: true });
   // History can change beat, scene, drawer, and camera in one event. Measure
   // only the fully restored DOM, never a new chapter against old geometry.
   render(visualization.currentState(), { renderOverlay: false });
   renderChapter({ renderOverlay: false });
+  applyCameraPreset({ animate: true });
   renderScienceOverlay({ transient: true });
   renderPinnedSelection();
   syncViews(); syncScales(); syncRegions(); syncDepictionToggles();
@@ -5192,6 +5273,9 @@ slider.addEventListener('keydown', stopSweep);
 renderSurface.addEventListener('pointerdown', stopSweep);
 
 $('canvas').addEventListener('keydown', (event) => {
+  // Spatial navigation belongs to the focused stage, not its HTML controls.
+  // Otherwise Enter on a Tour button selects a molecule and cancels its click.
+  if (event.target !== $('canvas')) return;
   if (!['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) return;
   const annotations = availableAnnotations();
   if (!annotations.length) return;
@@ -5228,6 +5312,8 @@ function scheduleViewportSync() {
   if (pendingViewportSync !== null) return;
   pendingViewportSync = requestAnimationFrame(() => {
     pendingViewportSync = null;
+    // A resized teaching frame uses the same maximum span at the new aspect.
+    audienceReframePending ||= usesStretchComparisonFrame();
     syncAudienceMode();
     markStageDirty();
   });

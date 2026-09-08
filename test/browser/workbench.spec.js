@@ -113,7 +113,7 @@ test('SC26 all four handoff files agree at supported, extrapolated, and omitted 
   // what needs the room.
   test.slow();
   const cases = [
-    [2000, 'supported'], [2200, 'supported'], [2400, 'supported'], [1900, 'not_evaluated'],
+    [2000, 'supported'], [2200, 'supported'], [2400, 'supported'], [2450, 'extrapolated'], [1900, 'not_evaluated'],
   ];
   const selectors = [
     '#downloadStateExport', '#downloadForceExport',
@@ -174,4 +174,16 @@ test('SC26 network failure leaves local locators and claim export operational', 
   expect(claims.schema).toBe('titin-claim-support-export/1');
   expect(claims.claims.length).toBeGreaterThan(0);
   expect(claims.claims.every((claim) => claim.support.every((row) => row.locator))).toBe(true);
+});
+
+
+test('MVP Architecture identifies folded domains as titin with reference-wide metadata', async ({ page }) => {
+  await boot(page);
+  await page.locator('#sceneControls [data-scene="architecture"]').click();
+  const audit = page.locator('#inspectionWorkbench');
+  await expect(audit).toContainText('Folded titin domains');
+  await expect(audit).toContainText('Q8WZ42-1');
+  await expect(audit).toContainText('285 in the full reference');
+  await expect(audit).not.toContainText('non-titin');
+  await expect(audit.locator('dt', { hasText: 'Residue interval' }).locator('+ dd')).toHaveText('Not applicable');
 });

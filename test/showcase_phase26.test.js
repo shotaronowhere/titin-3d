@@ -126,6 +126,24 @@ test('SC26: Inspect resolves the exact construct, interval, mapped features, ren
     'sequence_length_aa', 'sequence_domain_count']) assert.equal(nonTitin[field], null, field);
 });
 
+test('MVP: titin aggregates carry reference metadata without inventing a residue interval', () => {
+  for (const id of ['titin', 'titin_domains']) {
+    const view = createInspectionView(model, { selection: { kind: 'component', id }, sarcomereLengthNm: 2200 });
+    assert.equal(view.accession, 'Q8WZ42', id);
+    assert.equal(view.isoform_id, 'Q8WZ42-1', id);
+    assert.equal(view.coordinate_frame, 'canonical', id);
+    assert.equal(view.sequence_length_aa, 34350, id);
+    assert.equal(view.sequence_domain_count, 285, id);
+    assert.equal(view.residue_interval, null, id);
+    assert.deepEqual(view.contained_domain_features, [], id);
+  }
+  for (const id of ['thin_filament', 'thick_filament']) {
+    const view = createInspectionView(model, { selection: { kind: 'component', id }, sarcomereLengthNm: 2200 });
+    for (const field of ['accession', 'isoform_id', 'construct', 'coordinate_frame',
+      'sequence_length_aa', 'sequence_domain_count', 'residue_interval']) assert.equal(view[field], null, `${id}.${field}`);
+  }
+});
+
 test('SC26: exact reference strip accounts for every residue and every domain feature', () => {
   const strip = createReferenceDomainStrip(model);
   assert.equal(strip.sequence_length_aa, 34350);

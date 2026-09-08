@@ -91,12 +91,18 @@ function slideChrome(slide, body) {
 }
 
 function drawText(slide) {
-  const body = slide.lines.flatMap((line, index) => {
-    if (!line.trim()) return [];
-    return wrap(line, 108).map((part, offset) => text(90, 262 + index * 46 + offset * 34, part,
-      { size: 28, fill: line.startsWith('·') ? INK.text : INK.dim }));
-  }).join('');
-  return slideChrome(slide, body);
+  const parts = [];
+  let y = 262;
+  for (const line of slide.lines) {
+    const lines = line.trim() ? wrap(line, 108) : [];
+    for (const part of lines) {
+      parts.push(text(90, y, part,
+        { size: 28, fill: line.startsWith('·') ? INK.text : INK.dim }));
+      y += 34;
+    }
+    y += lines.length ? 12 : 46;
+  }
+  return slideChrome(slide, parts.join(''));
 }
 
 function drawAxial(slide) {
@@ -135,8 +141,12 @@ function drawAxial(slide) {
       parts.push(`<line x1="${edge.toFixed(2)}" y1="${y - 12}" x2="${edge.toFixed(2)}" `
         + `y2="${y + 12}" stroke="${INK.accent}" stroke-width="3"/>`);
     }
-    parts.push(text((x0 + x1) / 2, y - 22, `${bracket.label} · ${bracket.evidence_class}`,
-      { size: 19, fill: INK.dim, anchor: 'middle' }));
+    // Keep edge captions inside the slide without moving their biological spans.
+    const centre = (x0 + x1) / 2;
+    const nearRight = centre > right - 200;
+    parts.push(text(nearRight ? right : centre, y - 22,
+      `${bracket.label} · ${bracket.evidence_class}`,
+      { size: 19, fill: INK.dim, anchor: nearRight ? 'end' : 'middle' }));
   }
   for (const terminus of slide.termini) {
     parts.push(text(x(terminus.x_nm), regionY + 74, terminus.label,
@@ -151,11 +161,13 @@ function drawAxial(slide) {
 
 function drawBars(slide) {
   const left = 300;
-  const width = SLIDE.width - left - 260;
+  // A fixed annotation column makes label space independent of bar magnitude.
+  const labelX = 1260;
+  const width = labelX - left - 30;
   const max = Math.max(...slide.series.flatMap((series) => series.values.map((v) => v.value_nm)));
   const parts = [];
   slide.series.forEach((series, seriesIndex) => {
-    const top = 250 + seriesIndex * 320;
+    const top = 280 + seriesIndex * 320;
     parts.push(text(90, top - 12, `${series.label} · total ${series.total_nm.toFixed(1)} nm`,
       { size: 26, weight: 650 }));
     series.values.forEach((value, index) => {
@@ -164,8 +176,9 @@ function drawBars(slide) {
       parts.push(text(280, y + 26, value.label, { size: 22, fill: INK.dim, anchor: 'end' }));
       parts.push(`<rect x="${left}" y="${y + 6}" width="${barWidth.toFixed(2)}" height="26" `
         + `rx="4" fill="${INK.titin}" opacity="0.9"/>`);
-      parts.push(text(left + barWidth + 14, y + 26, `${value.value_nm.toFixed(1)} nm · ${value.mechanism}`,
-        { size: 20, fill: INK.dim }));
+      wrap(`${value.value_nm.toFixed(1)} nm · ${value.mechanism}`, 48).forEach((line, offset) => {
+        parts.push(text(labelX, y + 26 + offset * 24, line, { size: 20, fill: INK.dim }));
+      });
     });
   });
   parts.push(text(90, 218, `Evidence: ${slide.evidence_class}`, { size: 22, fill: INK.caveat }));

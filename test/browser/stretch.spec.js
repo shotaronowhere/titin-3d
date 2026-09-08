@@ -229,3 +229,93 @@ test('SC24 reduced motion lands on the same Spring maximum without tweening', as
   await expect(page.locator('#objectAnnouncement')).toContainText('Stretch complete');
   await expectGeometryInsideUnobscuredStage(page);
 });
+
+
+async function comparisonCamera(page) {
+  return page.evaluate(() => window.titinVisualization.projectPresentationAnchors([
+    { id: 'fixed-z', anchor_nm: { x: 0, y: 0, z: 0 } },
+    { id: 'fixed-m', anchor_nm: { x: 1200, y: 0, z: 0 } },
+  ]).flatMap((point) => [point.x_px, point.y_px]));
+}
+async function settledCamera(page) {
+  await page.evaluate(() => { window.__stableCamera = null; });
+  await page.waitForFunction(() => {
+    const points = window.titinVisualization.projectPresentationAnchors([
+      { id: 'fixed-z', anchor_nm: { x: 0, y: 0, z: 0 } },
+      { id: 'fixed-m', anchor_nm: { x: 1200, y: 0, z: 0 } },
+    ]).flatMap((point) => [point.x_px, point.y_px]);
+    const signature = points.map((v) => v.toFixed(3)).join(':');
+    const previous = window.__stableCamera;
+    const count = previous?.signature === signature ? previous.count + 1 : 0;
+    window.__stableCamera = { signature, count };
+    return count >= 8;
+  });
+  return comparisonCamera(page);
+}
+async function expectSameCamera(page, baseline) {
+  await expect.poll(async () => {
+    const actual = await comparisonCamera(page);
+    return Math.max(...actual.map((v, i) => Math.abs(v - baseline[i])));
+  }).toBeLessThan(1);
+}
+for (const viewport of [DESKTOP, { width: 390, height: 844 }]) {
+  test(`MVP ${viewport.width}: Stretch comparison frame is established on entry and retained through interaction`, async ({ page }) => {
+    test.setTimeout(120_000);
+    await boot(page, viewport);
+    await enterStretch(page);
+    await expect(page.locator('#sl')).toHaveValue('2200');
+    await page.locator('#sl').fill('2000');
+    await expect.poll(() => new URL(page.url()).hash).toContain('sl=2000');
+    const baseline = await settledCamera(page);
+    await expectGeometryInsideUnobscuredStage(page);
+    await page.locator('#stagePlay').click();
+    await expect(page.locator('#stagePlay')).toHaveText('Pause');
+    await expectSameCamera(page, baseline);
+    await page.locator('#stagePlay').click();
+    await expectSameCamera(page, baseline);
+    await page.locator('#stagePlay').click();
+    await expect(page.locator('#sl')).toHaveValue('2400', { timeout: 30_000 });
+    await expectSameCamera(page, baseline);
+    await setReducedMotion(page);
+    await page.locator('#stagePlay').click();
+    await expect(page.locator('#sl')).toHaveValue('2400');
+    await expectSameCamera(page, baseline);
+    await page.locator('#sl').fill('2200');
+    await expectSameCamera(page, baseline);
+    await page.locator('#audienceEvidence').click();
+    await page.locator('#closeEvidence').click();
+    await settledCamera(page);
+    await expectSameCamera(page, baseline);
+  });
+}
+
+test('MVP direct Stretch entry and history preserve length, while manual camera remains Custom', async ({ page }) => {
+  await setReducedMotion(page);
+  await boot(page);
+  await enterStretch(page);
+  await page.locator('#sl').fill('2250');
+  await expect.poll(() => new URL(page.url()).hash).toContain('sl=2250');
+  const url = page.url();
+  const baseline = await settledCamera(page);
+  await page.locator('#chapterNext').click();
+  await page.goBack();
+  await expect(page.locator('#chapterProgress')).toHaveText('Beat 3 of 5');
+  await expect(page.locator('#sl')).toHaveValue('2250');
+  await settledCamera(page);
+  await expectSameCamera(page, baseline);
+  await page.goto(url);
+  await waitForReady(page);
+  await settledCamera(page);
+  await expectSameCamera(page, baseline);
+  await expect(page.locator('#sl')).toHaveValue('2250');
+  // Real orbit gesture; a click alone must not claim a manual camera change.
+  await page.mouse.move(950, 310);
+  await page.mouse.down();
+  await page.mouse.move(1040, 350, { steps: 8 });
+  await page.mouse.up();
+  await expect(page.locator('#objectAnnouncement')).toContainText('Camera adjusted manually');
+  const custom = await settledCamera(page);
+  expect(Math.max(...custom.map((v, i) => Math.abs(v - baseline[i])))).toBeGreaterThan(1);
+  await page.locator('#sl').fill('2300');
+  await expectSameCamera(page, custom);
+});

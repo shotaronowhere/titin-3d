@@ -635,7 +635,7 @@ test('SC27A has one five-beat route, contextual mechanics, and a truthful Replay
     if (index === 2) await expect(page.locator('#tourMechanics')).toBeVisible();
     else await expect(page.locator('#tourMechanics')).toBeHidden();
     const counts = await chromeCounts(page);
-    expect(counts.visible).toBeLessThanOrEqual(index === 2 ? 7 : 4);
+    expect(counts.visible).toBeLessThanOrEqual(index === 2 ? 7 : index === expected.length - 1 ? 5 : 4);
     if (index < expected.length - 1) await page.locator('#chapterNext').click();
   }
 

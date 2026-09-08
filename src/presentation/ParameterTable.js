@@ -167,7 +167,8 @@ export function createInspectionView(model, {
   const features = mapped?.containedFeatures || [];
   const scope = model.scientificScope.sequence;
   const isTitinTarget = annotation.target_type === 'titin_region'
-    || annotation.target_id === 'titin';
+    || annotation.target_id === 'titin'
+    || annotation.target_id === 'titin_domains';
   return Object.freeze({
     schema: 'titin-inspection-view/1',
     target: Object.freeze({ kind: annotation.target_type, id: annotation.target_id }),

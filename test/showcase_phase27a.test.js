@@ -124,10 +124,10 @@ test('SC27A: the five-beat merge preserves every v2 scientific non-claim', () =>
   for (const statement of previous) assert.ok(current.has(statement), statement);
 });
 
-test('SC27A: TourView declares four controls except for the contextual stretch beat', () => {
+test('SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat', () => {
   for (const [chapterIndex, chapterId] of BEATS.entries()) {
     const budget = tourControlBudget({ chapterId, chapterIndex, chapterCount: BEATS.length });
-    assert.equal(budget.visibleChromeAffordances, chapterId === 'stretch_spring' ? 7 : 4);
+    assert.equal(budget.visibleChromeAffordances, chapterId === 'stretch_spring' ? 7 : chapterIndex === BEATS.length - 1 ? 5 : 4);
     assert.ok(budget.tabbableChromeTargets <= budget.visibleChromeAffordances);
   }
   assert.equal(tourControlBudget({ chapterId: BEATS[0], chapterIndex: 0,
