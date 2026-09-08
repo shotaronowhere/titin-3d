@@ -1357,11 +1357,12 @@ function openEvidence(trigger, targetTab) {
   state.drawerTab = targetTab;
   syncDrawerTabs();
   if (targetTab === 'sources') renderBibliography();
-  // Entry points name a destination, so they must land at that destination's
-  // beginning even when invoked from far down another drawer section.
-  $('panel').scrollTop = 0;
   requestHistoryEntry();
   setAudienceMode(AUDIENCE_MODES.evidence, { focusDrawer: true, drawer: targetTab });
+  // Reset after the drawer is visible and its content has been rebuilt. Resetting
+  // the hidden drawer first lets scroll anchoring retain the previous section's
+  // offset, hiding the destination heading and object-source action on return.
+  $('panel').scrollTop = 0;
 }
 
 function closeEvidence() {

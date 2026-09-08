@@ -98,6 +98,11 @@ for (const [width, height] of [[1280, 720], [390, 844]]) {
     await setReducedMotion(page);
     await boot(page, width, height);
     await expect(page.locator('#chapterInspectEvidence')).toBeHidden();
+    // Rehearse the complete route: Measure scrolls the shared Research panel
+    // before the finale opens a different section. Its old offset must not leak.
+    await page.locator('#stageForce').click();
+    await expect(page.locator('#passiveForceHeading')).toBeFocused();
+    await page.locator('#closeEvidence').click();
     await page.locator('#chapterNext').focus();
     await page.keyboard.press('Enter');
     await expect(page.locator('#chapterProgress')).toHaveText('Beat 4 of 5');
@@ -107,6 +112,7 @@ for (const [width, height] of [[1280, 720], [390, 844]]) {
     await button.focus();
     await page.keyboard.press('Enter');
     await expect(page.locator('#tabEvidence')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('#closeEvidence')).toBeFocused();
     await expect(page.locator('#selectedEvidence')).toContainText('Titin');
     const sources = page.locator('#selectedEvidenceSourcesLink');
     const box = await sources.boundingBox();
