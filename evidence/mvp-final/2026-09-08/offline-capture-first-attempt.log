@@ -1,0 +1,30 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.research-inventory summary')[22m
+[2m    - locator resolved to <summary>All scenes and display controls</summary>[22m
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - performing click action[22m
+
+    at /Users/shotaro/Downloads/artifacts/evidence/mvp-final/2026-09-08/capture_final.mjs:52:55 {
+  log: [
+    "  - waiting for locator('.research-inventory summary')",
+    '    - locator resolved to <summary>All scenes and display controls</summary>',
+    '  - attempting click action',
+    '    - waiting for element to be visible, enabled and stable',
+    '    - element is visible, enabled and stable',
+    '    - scrolling into view if needed',
+    '    - done scrolling',
+    '    - performing click action'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v20.19.2

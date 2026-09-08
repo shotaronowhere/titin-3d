@@ -1,0 +1,95 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:71359) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 85 tests using 1 worker
+
+[1/85] [chromium] › test/browser/evidence.spec.js:21:1 › SC22/27A object explanation is compact and Research owns the full selected claim
+[2/85] [chromium] › test/browser/evidence.spec.js:36:1 › SC22 Guided inspector stays compact and clear of the Tour continuation
+[3/85] [chromium] › test/browser/evidence.spec.js:55:1 › SC22 contextual source controls select object, chapter, all, and exact value
+[4/85] [chromium] › test/browser/evidence.spec.js:84:1 › SC22 value clearing falls back to the selected object instead of an empty source list
+[5/85] [chromium] › test/browser/evidence.spec.js:100:1 › SC22 parameter source routing closes to its visible stage invoker
+[6/85] [chromium] › test/browser/evidence.spec.js:112:1 › SC22 selectable chart point filters sources and restores the contextual invoker
+[7/85] [chromium] › test/browser/evidence.spec.js:125:1 › SC22 ClaimView keeps citations after copy, fields, and limitations
+[8/85] [chromium] › test/browser/evidence.spec.js:148:3 › SC22 desktop Research owns full titin, PEVK, and kinase detail
+[9/85] [chromium] › test/browser/evidence.spec.js:148:3 › SC22 responsive Research owns full titin, PEVK, and kinase detail
+[10/85] [chromium] › test/browser/learn.spec.js:20:3 › SC23/27A desktop completes the silent five-beat Tour without changing length
+[11/85] [chromium] › test/browser/learn.spec.js:20:3 › SC23/27A responsive completes the silent five-beat Tour without changing length
+[12/85] [chromium] › test/browser/learn.spec.js:44:1 › SC23 out-of-range Stretch setup stays explicit and user-reversible
+[13/85] [chromium] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene
+  1) [chromium] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "view.titin_hero"
+    Received: "view.titin_story"
+
+      70 |   expect(hash).toContain('scene=spring');
+      71 |   expect(await page.evaluate(() => window.titinVisualization.currentState().camera_preset))
+    > 72 |     .toBe('view.titin_hero');
+         |      ^
+      73 |   expect(await page.evaluate(() => window.titinVisualization.currentState().highlighted_titin_region))
+      74 |     .toBe('PEVK');
+      75 | });
+        at /Users/shotaro/Downloads/artifacts/test/browser/learn.spec.js:72:6
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/learn-SC23-legacy-step-onl-1f544-ze-the-complete-final-scene-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/learn-SC23-legacy-step-onl-1f544-ze-the-complete-final-scene-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learn-SC23-legacy-step-onl-1f544-ze-the-complete-final-scene-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learn-SC23-legacy-step-onl-1f544-ze-the-complete-final-scene-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[14/85] [chromium] › test/browser/learn.spec.js:77:1 › SC23 Sources exposes the resolved semantic-scene context in Research
+[15/85] [chromium] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[16/85] [chromium] › test/browser/mvp-preview.spec.js:30:1 › MVP reduced-motion replay resets before showing the endpoint
+[17/85] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[18/85] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[19/85] [chromium] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries
+[20/85] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+[21/85] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+[22/85] [chromium] › test/browser/mvp-preview.spec.js:128:1 › MVP intermediate force labels retain declared precision and a stable control row
+  2) [chromium] › test/browser/mvp-preview.spec.js:128:1 › MVP intermediate force labels retain declared precision and a stable control row 
+
+    Test was interrupted.
+
+    TypeError: Cannot read properties of null (reading 'height')
+
+      136 |     await expect(page.locator('#stageForce b')).toHaveText(/^≈(?:0\.\d{1,2}|1(?:\.\d)?) pN$/);
+      137 |     const card = await page.locator('#guidedCard').boundingBox();
+    > 138 |     expect(Math.abs(card.height - initial.height)).toBeLessThan(1);
+          |                          ^
+      139 |   }
+      140 | });
+      141 |
+        at /Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:138:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-intermedia-4c0cf-on-and-a-stable-control-row-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-intermedia-4c0cf-on-and-a-stable-control-row-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mvp-preview-MVP-intermedia-4c0cf-on-and-a-stable-control-row-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [chromium] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene 
+  1 interrupted
+    [chromium] › test/browser/mvp-preview.spec.js:128:1 › MVP intermediate force labels retain declared precision and a stable control row 
+  63 did not run
+  20 passed (4.1m)

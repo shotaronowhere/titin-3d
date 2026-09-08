@@ -1,0 +1,146 @@
+{
+  "archive": "/Users/shotaro/Downloads/titin-sarcomere-preview-2026-09-08-4f82703.zip",
+  "zip_bytes": 568684,
+  "zip_sha256": "5f858b28f56d36d9034e63d01aa06d9a098bb89d69163b14e4085d45d1f93ff0",
+  "staging": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-stage-k17q1xgf/titin-sarcomere-preview",
+  "extracted": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-extracted-eggt5pu_/titin-sarcomere-preview",
+  "file_count": 26,
+  "manifest_entries_verified": 21,
+  "app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+  "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+  "build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+  "index_sha256": "d514b04d107491b712852b0dc728aa9229fd68a225f09eea71d91f70a56906f8",
+  "manifest_sha256": "db6934a604f52ac0af59528b1c1572544e50ee9977865f1665c7423fe0e073e1",
+  "files": [
+    {
+      "path": "DELIVERY.md",
+      "bytes": 4836,
+      "sha256": "638440213665135f6dc9b25769329cb16d092266d9597198b43ca0f68082c61c"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 18656,
+      "sha256": "5a1bbee2be37133d555e539d2a6c36117727fc0ee009ab4f9facb342617a867a"
+    },
+    {
+      "path": "SCIENTIST_NOTE.md",
+      "bytes": 3986,
+      "sha256": "c35fb01bf118266f52cbbc819a644b89f8452dafb6fe0380956773efea1027da"
+    },
+    {
+      "path": "index.html",
+      "bytes": 2222782,
+      "sha256": "d514b04d107491b712852b0dc728aa9229fd68a225f09eea71d91f70a56906f8"
+    },
+    {
+      "path": "release/BOUNDARY_WORKSHEET.md",
+      "bytes": 28352,
+      "sha256": "eae51593bf6ff08aaf0f5d4b2175c4596c73d5c8a4820a78ba4fc608c20e7284"
+    },
+    {
+      "path": "release/CLAIM_MATRIX.md",
+      "bytes": 14106,
+      "sha256": "1825f0dffad6221597b5825afab377e1312f476599fab1505e2476b5c92abc24"
+    },
+    {
+      "path": "release/LEARN_TRANSCRIPT.md",
+      "bytes": 6092,
+      "sha256": "8efe50e1f9855fcd9808151e1959c327ed092acddcb795d6d60f573100c61fa4"
+    },
+    {
+      "path": "release/LIMITATIONS.md",
+      "bytes": 8883,
+      "sha256": "3dbe0d3b29141a60fede2c1e07fc1c1f5b36023fe123fa86e57600bf63d8190a"
+    },
+    {
+      "path": "release/MANIFEST.json",
+      "bytes": 6086,
+      "sha256": "db6934a604f52ac0af59528b1c1572544e50ee9977865f1665c7423fe0e073e1"
+    },
+    {
+      "path": "release/MANIFEST.sha256",
+      "bytes": 80,
+      "sha256": "c0807df289e781ec05f48c19ec06c3162176c2b8c33c321b5b914bc02082c622"
+    },
+    {
+      "path": "release/PREFLIGHT.md",
+      "bytes": 2134,
+      "sha256": "e1f2fa3910e43aa4b593585dd95949deac597d1e96eec43a3446c05da56acbed"
+    },
+    {
+      "path": "release/PRESENTER_SCRIPT.md",
+      "bytes": 8443,
+      "sha256": "6fa8927c3a844daf68f1b46d6f5fb4cd5e2191da495dbdc723d808d61e8de208"
+    },
+    {
+      "path": "release/REPRODUCTION.md",
+      "bytes": 2522,
+      "sha256": "9fffdda2794c7b77a74eee19a93cc8efabae41bc17d8b629053473ac4f477240"
+    },
+    {
+      "path": "release/SCIENTIFIC_AUTHORITY.md",
+      "bytes": 2626,
+      "sha256": "1af3c8dc11ad66b666b07dd96cf105773b0b8225cf6f0e22df28c136c7c4f146"
+    },
+    {
+      "path": "release/SCREENSHOT_PACK.md",
+      "bytes": 10312,
+      "sha256": "48b875ca3201b019ffb9c84166c3cc4522fb798ae046a68ba35e8df43d4201b2"
+    },
+    {
+      "path": "release/SCREEN_READER_TRANSCRIPT.md",
+      "bytes": 5336,
+      "sha256": "bb3b1f9306997898d00a28c9226c1c87637cf86dd512948f8e927ccee8a59063"
+    },
+    {
+      "path": "release/export/EXPORT_CONTRACT.json",
+      "bytes": 2618,
+      "sha256": "2e60ead5236281a4ec930e5cd7591a0fd2ccb6bc46fcd644f3f7c41b10d15dec"
+    },
+    {
+      "path": "release/export/titin-claim-support-export.schema.json",
+      "bytes": 1860,
+      "sha256": "a7db19fbf9a0b132db189b38db6829154104ff67e25f5136b113e050f754eee5"
+    },
+    {
+      "path": "release/export/titin-state-export.schema.json",
+      "bytes": 6289,
+      "sha256": "a9c9acf91005c79078c52da69cbab55f413052f0bea3363ebe014404adfdf0dc"
+    },
+    {
+      "path": "release/fallback/architecture.svg",
+      "bytes": 5229,
+      "sha256": "352d7699db0661a7da9a725b7bc74b52935dd61a393cb465e156a5c94586fab3"
+    },
+    {
+      "path": "release/fallback/extension.svg",
+      "bytes": 4693,
+      "sha256": "901add44a2ea4a04216176e82e39945d560ad20ce0781e4b130f2f0bcae733f6"
+    },
+    {
+      "path": "release/fallback/lattice.svg",
+      "bytes": 13329,
+      "sha256": "8180baa18ae8b06f3af2f6777113f3e892678d2a19cbd4012a253f0b662a1c1e"
+    },
+    {
+      "path": "release/fallback/limitations.svg",
+      "bytes": 2922,
+      "sha256": "18768bbc1bc017f92ec4b55d88635a841ff1c335a89dd15fd2a6faedc1bd6413"
+    },
+    {
+      "path": "release/fallback/provenance.svg",
+      "bytes": 5611,
+      "sha256": "fb29f657fab178a12a98a5ec12d8e96f4abda888928d1f0fbe9eccdea2846f99"
+    },
+    {
+      "path": "release/fallback/scope.svg",
+      "bytes": 2868,
+      "sha256": "b07e4d8e6ad6eaf3776af4cc0472292597c181561156d60c02b8ab1fb8894c7b"
+    },
+    {
+      "path": "release/mechanical_parameters.json",
+      "bytes": 28242,
+      "sha256": "c7fbf33ce82469f1fc346526e58e84c7c5434ad2b926ed05c37d27c443414cc3"
+    }
+  ]
+}

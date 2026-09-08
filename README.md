@@ -4,18 +4,27 @@ A scientifically traceable Three.js visualization of titin in sarcomere context.
 JSON records in `data/` are the scientific source of truth; the renderer and public
 API consume those records rather than restating biological constants.
 
-**Scientist-feedback preview.** On 2026-09-05 the project owner authorized the
-bounded MVP completion plan in `evidence/mvp-review/2026-09-05/REVIEW_AND_PLAN.md`.
-This preview preserves the reference model and its scientific limits while
-correcting Tour wording, displayed counts and Stretch replay. Formal independent
-scientific validation and human usability review remain pending; `release_ready`
-stays false. Preview delivery and its exact candidate identity are recorded in
-`evidence/mvp-preview/2026-09-05/DELIVERY.md`.
+**Scientist-feedback preview — September 8, 2026.** The bounded final MVP
+preserves the scientific reference model and adds a stable Stretch comparison,
+a direct final-beat evidence route, clearer force presentation, corrected Scope
+and Architecture metadata, and readable static fallback slides. Full repository
+verification passes (618 Node tests); the final browser checks pass in Chromium
+(85 integrated + 2 keyboard/touch) and Firefox (34). WebKit verification is incomplete
+after timeout stalls; use the Chrome/Firefox preview route. A clean checkout
+reproduces the standalone and all 22 generated release files byte-for-byte.
 
-**2026-09-06 handoff:** implementation is committed; full repository verification passes
-(617 tests), but one Chromium pause-start timeout remains unresolved (69/70 passed).
-Second-browser checks and distribution packaging remain. Follow the
-[junior-engineer finish plan](docs/superpowers/plans/2026-09-06-titin-mvp-preview-finish.md).
+The [delivery record](evidence/mvp-final/2026-09-08/DELIVERY.md) describes the exact
+candidate and verification coverage. The [package record](evidence/mvp-final/2026-09-08/PACKAGE.md)
+identifies the replacement ZIP and extracted offline rehearsal. This supersedes
+the September 6 handoff; its previously reported browser and packaging work is
+complete. The [final implementation plan](docs/superpowers/plans/2026-09-08-titin-mvp-final-implementation.md)
+records the bounded scope and cuts.
+
+Independent scientific validation and human usability review remain pending;
+`release_ready` stays false. This is a preview for researcher feedback, with no
+new biological validation claim. Broader Research Large type behavior, unrelated
+object-invoker focus edge cases, extreme short-screen polish, physical-device
+certification, and hosting parity remain outside this pass.
 
 **Implementation history:** the scoped MVP is complete through Phases 0–10 and Milestones
 0–6. Phases 11–12 in `MASTER_PLAN.md` remain optional future extensions. Showcase

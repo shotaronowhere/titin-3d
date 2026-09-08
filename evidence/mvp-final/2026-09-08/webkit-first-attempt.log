@@ -1,0 +1,174 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:77187) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 34 tests using 1 worker
+
+[1/34] [webkit] › test/browser/evidence.spec.js:21:1 › SC22/27A object explanation is compact and Research owns the full selected claim
+[2/34] [webkit] › test/browser/evidence.spec.js:36:1 › SC22 Guided inspector stays compact and clear of the Tour continuation
+[3/34] [webkit] › test/browser/evidence.spec.js:55:1 › SC22 contextual source controls select object, chapter, all, and exact value
+[4/34] [webkit] › test/browser/evidence.spec.js:84:1 › SC22 value clearing falls back to the selected object instead of an empty source list
+[5/34] [webkit] › test/browser/evidence.spec.js:100:1 › SC22 parameter source routing closes to its visible stage invoker
+[6/34] [webkit] › test/browser/evidence.spec.js:112:1 › SC22 selectable chart point filters sources and restores the contextual invoker
+[7/34] [webkit] › test/browser/evidence.spec.js:125:1 › SC22 ClaimView keeps citations after copy, fields, and limitations
+[8/34] [webkit] › test/browser/evidence.spec.js:148:3 › SC22 desktop Research owns full titin, PEVK, and kinase detail
+[9/34] [webkit] › test/browser/evidence.spec.js:148:3 › SC22 responsive Research owns full titin, PEVK, and kinase detail
+[10/34] [webkit] › test/browser/learn.spec.js:20:3 › SC23/27A desktop completes the silent five-beat Tour without changing length
+[11/34] [webkit] › test/browser/learn.spec.js:20:3 › SC23/27A responsive completes the silent five-beat Tour without changing length
+[12/34] [webkit] › test/browser/learn.spec.js:44:1 › SC23 out-of-range Stretch setup stays explicit and user-reversible
+[13/34] [webkit] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene
+[14/34] [webkit] › test/browser/learn.spec.js:77:1 › SC23 Sources exposes the resolved semantic-scene context in Research
+[15/34] [webkit] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[16/34] [webkit] › test/browser/mvp-preview.spec.js:30:1 › MVP reduced-motion replay resets before showing the endpoint
+[17/34] [webkit] › test/browser/mvp-preview.spec.js:50:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[18/34] [webkit] › test/browser/mvp-preview.spec.js:50:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[19/34] [webkit] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries
+  1) [webkit] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for locator('#audienceEvidence')
+        - locator resolved to <button aria-pressed="false" id="audienceEvidence">Research</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - performing click action
+
+
+      83 |   const scope = JSON.parse(readFileSync(new URL('../../data/scientific_scope.json', import.meta.url)));
+      84 |   await boot(page);
+    > 85 |   await page.locator('#audienceEvidence').click();
+         |                                           ^
+      86 |   await page.locator('#tabInspect').click();
+      87 |   await expect(page.locator('#scopeConstructStatement')).toHaveText(scope.public_badge);
+      88 |   await expect(page.locator('#scopeDetails')).toContainText('does not simulate calcium activation or active contraction');
+        at /Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:85:43
+
+    Error Context: test-results/mvp-preview-MVP-Research-s-82ea4-struct-through-both-entries-webkit/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-Research-s-82ea4-struct-through-both-entries-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mvp-preview-MVP-Research-s-82ea4-struct-through-both-entries-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[20/34] [webkit] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+  2) [webkit] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  locator('#chapterInspectEvidence')
+    Expected: hidden
+    Received: undefined
+
+    Call log:
+      - Expect "toBeHidden" with timeout 8000ms
+      - waiting for locator('#chapterInspectEvidence')
+      - 
+
+
+       98 |     await setReducedMotion(page);
+       99 |     await boot(page, width, height);
+    > 100 |     await expect(page.locator('#chapterInspectEvidence')).toBeHidden();
+          |                                                           ^
+      101 |     // Rehearse the complete route: Measure scrolls the shared Research panel
+      102 |     // before the finale opens a different section. Its old offset must not leak.
+      103 |     await page.locator('#stageForce').click();
+        at /Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:100:59
+
+    Error Context: test-results/mvp-preview-MVP-1280-final-d4a5b-oses-the-exact-source-route-webkit/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-1280-final-d4a5b-oses-the-exact-source-route-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mvp-preview-MVP-1280-final-d4a5b-oses-the-exact-source-route-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[21/34] [webkit] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+  3) [webkit] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: keyboard.press: Protocol error (Input.dispatchKeyEvent): Page closed
+
+      111 |     await expect(button).toBeVisible();
+      112 |     await button.focus();
+    > 113 |     await page.keyboard.press('Enter');
+          |                         ^
+      114 |     await expect(page.locator('#tabEvidence')).toHaveAttribute('aria-selected', 'true');
+      115 |     await expect(page.locator('#closeEvidence')).toBeFocused();
+      116 |     await expect(page.locator('#selectedEvidence')).toContainText('Titin');
+        at /Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:113:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-390-final--0c780-oses-the-exact-source-route-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/mvp-preview-MVP-390-final--0c780-oses-the-exact-source-route-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-390-final--0c780-oses-the-exact-source-route-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mvp-preview-MVP-390-final--0c780-oses-the-exact-source-route-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[22/34] [webkit] › test/browser/mvp-preview.spec.js:134:1 › MVP intermediate force labels retain declared precision and a stable control row
+  4) [webkit] › test/browser/mvp-preview.spec.js:134:1 › MVP intermediate force labels retain declared precision and a stable control row 
+
+    Test was interrupted.
+
+    Error: page.goto: Test ended.
+    Call log:
+      - navigating to "http://127.0.0.1:4173/index.html#v=2&depth=learn&step=stretch_spring&sl=2400&drawer=closed&scene=spring&confidence=0", waiting until "load"
+
+
+       7 | async function boot(page, width = 1280, height = 720) {
+       8 |   await page.setViewportSize({ width, height });
+    >  9 |   await page.goto('/index.html#v=2&depth=learn&step=stretch_spring&sl=2400&drawer=closed&scene=spring&confidence=0');
+         |              ^
+      10 |   await waitForReady(page);
+      11 | }
+      12 |
+        at boot (/Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:9:14)
+        at /Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:135:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-intermedia-4c0cf-on-and-a-stable-control-row-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/mvp-preview-MVP-intermedia-4c0cf-on-and-a-stable-control-row-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-intermedia-4c0cf-on-and-a-stable-control-row-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mvp-preview-MVP-intermedia-4c0cf-on-and-a-stable-control-row-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  3 failed
+    [webkit] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries 
+    [webkit] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route 
+    [webkit] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route 
+  1 interrupted
+    [webkit] › test/browser/mvp-preview.spec.js:134:1 › MVP intermediate force labels retain declared precision and a stable control row 
+  12 did not run
+  18 passed (6.1m)

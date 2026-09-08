@@ -1,0 +1,30 @@
+{
+  "baseline": "32e8941",
+  "checked_paths": [
+    "data/annotations.json",
+    "data/claim_support.json",
+    "data/context_measurements.json",
+    "data/domain_backbones.json",
+    "data/geometry_sources.json",
+    "data/geometry_strategy.json",
+    "data/interdomain_measurements.json",
+    "data/mechanical_model.json",
+    "data/mechanical_parameters.json",
+    "data/presentation.json",
+    "data/references.json",
+    "data/release_gates.json",
+    "data/render_style.json",
+    "data/sarcomere.json",
+    "data/scenes.json",
+    "data/scientific_decisions.json",
+    "data/scientific_scope.json",
+    "data/showcase_claims.json",
+    "data/structural_states.json",
+    "data/structure_measurements.json",
+    "data/titin.json",
+    "data/titin_sequence_features.json",
+    "package.json",
+    "package-lock.json"
+  ],
+  "all_byte_identical": true
+}

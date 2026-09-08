@@ -1,0 +1,72 @@
+{
+  "root": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-extracted-s6fovqpj/titin-sarcomere-preview",
+  "index_sha256": "d04fbf3b9298829821d89e7fcbd9616b67d1291f3886ac9d15617764b9c4e27c",
+  "manifest_sha256": "9463727da702b0f69a2b51a45eeaf53720247fd8c68c78efde1b95f9f6b6145e",
+  "frames": [
+    {
+      "name": "desktop-beat-1",
+      "width": 1280,
+      "height": 720,
+      "sha256": "b63052b9fa772e89563e475518c63dda3779717f42583a91513e984fb2626e7a"
+    },
+    {
+      "name": "desktop-beat-2",
+      "width": 1280,
+      "height": 720,
+      "sha256": "ee52760dc67bd666b07c534c93a1961e9d332ab2ecf382960bffce3c792efd6a"
+    },
+    {
+      "name": "desktop-beat-3",
+      "width": 1280,
+      "height": 720,
+      "sha256": "74bd359143a16e11b0692d9035ed57000a2438e35c890ce3d820d580cac8b71d"
+    },
+    {
+      "name": "desktop-beat-4",
+      "width": 1280,
+      "height": 720,
+      "sha256": "a4cdea70591979b9292b9210986f473ebfd0524068ac8d92d42a18e7dab0fc05"
+    },
+    {
+      "name": "desktop-beat-5",
+      "width": 1280,
+      "height": 720,
+      "sha256": "8e9377205115f4b5135e74b29e9960e6b351ab05e4845c237a2d6d76e2675abb"
+    },
+    {
+      "name": "desktop-evidence",
+      "width": 1280,
+      "height": 720,
+      "sha256": "fdab2d15541b3ee0843b7ae7cef5ab1c7ecc983b4dc3555ba312b10a24db1f9c"
+    },
+    {
+      "name": "desktop-force",
+      "width": 1280,
+      "height": 720,
+      "sha256": "c424e6c9e067d621fd7470404154c1f5fefe21a59eca2e5a747e7f5fce1d6392"
+    },
+    {
+      "name": "desktop-scope",
+      "width": 1280,
+      "height": 720,
+      "sha256": "864925c7582b2c0a1cea48c465a9a9663149c35cf90a95dc9e95096bf7f8f71f"
+    },
+    {
+      "name": "desktop-source",
+      "width": 1280,
+      "height": 720,
+      "sha256": "ac4f998f3aef331b60e96342aaea762612b0e183e620900d5906b6cb7b253598"
+    },
+    {
+      "name": "desktop-stretch-endpoint",
+      "width": 1280,
+      "height": 720,
+      "sha256": "0593020c53af191f9510fcdf17dcebcc5a66f106de1025700bf4875faab2ab75"
+    }
+  ],
+  "core_route_completed": true,
+  "full_capture_completed": false,
+  "activation_method": "DOM button/summary activation in the second extracted attempt. The first extracted attempt used native clicks and also retained ten desktop core-route frames.",
+  "termination": "Architecture screenshot capture timed out. Phone and Architecture visual evidence comes from the earlier complete native-click capture of byte-identical standalone and manifest files.",
+  "page_errors_and_network_audit": "Not retained from the interrupted capture. The complete byte-identical candidate capture and the extracted export run provide their separately recorded audits."
+}

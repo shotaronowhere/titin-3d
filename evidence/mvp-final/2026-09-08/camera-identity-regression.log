@@ -1,0 +1,10 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:71591) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 1 test using 1 worker
+
+[1/1] [chromium] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene
+  1 passed (4.6s)

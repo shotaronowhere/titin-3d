@@ -1,0 +1,54 @@
+[
+  {
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/Users/shotaro/Downloads/artifacts",
+    "status": 0,
+    "output": "c60f34dfe204f91d31a8207b92cdf505b787c57f\n"
+  },
+  {
+    "cmd": "git",
+    "args": [
+      "worktree",
+      "add",
+      "--detach",
+      "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-QLJE10/checkout",
+      "c60f34dfe204f91d31a8207b92cdf505b787c57f"
+    ],
+    "cwd": "/Users/shotaro/Downloads/artifacts",
+    "status": 0,
+    "output": "HEAD is now at c60f34d Freeze the final titin preview artifacts\nPreparing worktree (detached HEAD c60f34d)\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "ci"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-QLJE10/checkout",
+    "status": 0,
+    "output": "\nadded 37 packages, and audited 38 packages in 1s\n\nfound 0 vulnerabilities\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "run",
+      "build:release"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-QLJE10/checkout",
+    "status": 0,
+    "output": "\n> titin-visualization@0.3.0 build:release\n> node scripts/build_standalone.mjs --release\n\nwrote index.html  2.12 MB\n  bundle: 1251 KB (three r0.185.1 inlined)\n  spec files embedded: 18\n  page-module imports collapsed: 14\n  model: 7badc8e270e7\n  app: 4f8270387aa90be6ed94e576906737a7d5b6f6be\n  build inputs: a4e3d089cfe2\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "run",
+      "pack"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-QLJE10/checkout",
+    "status": 0,
+    "output": "\n> titin-visualization@0.3.0 pack\n> node scripts/build_release_pack.mjs\n\nwrote release/  22 generated outputs, build inputs a4e3d089cfe2\n  20 claims, 173 non-claims, 6 fallback slides, 48 screenshot cells\n"
+  }
+]

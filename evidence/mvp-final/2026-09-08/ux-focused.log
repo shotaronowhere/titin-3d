@@ -1,0 +1,70 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:67416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 14 tests using 1 worker
+
+[1/14] [chromium] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+  1) [chromium] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame 
+
+    Test was interrupted.
+
+    Error: the page must raise no runtime error
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "STRETCH_CHAPTER_ID is not defined",
+    +   "STRETCH_CHAPTER_ID is not defined",
+    + ]
+
+       at helpers.js:152
+
+      150 |   });
+      151 |   test.afterEach(() => {
+    > 152 |     expect(errors, 'the page must raise no runtime error').toEqual([]);
+          |                                                            ^
+      153 |   });
+      154 | }
+      155 |
+        at /Users/shotaro/Downloads/artifacts/test/browser/helpers.js:152:60
+
+    Error: page.waitForFunction: Test ended.
+
+       at helpers.js:157
+
+      155 |
+      156 | export async function waitForReady(page) {
+    > 157 |   await page.waitForFunction(() => window.__titinBoot?.ready === true);
+          |              ^
+      158 |   await expect(page.locator('#err')).toBeHidden();
+      159 |   await expect(page.locator('#canvas canvas')).toBeVisible();
+      160 | }
+        at waitForReady (/Users/shotaro/Downloads/artifacts/test/browser/helpers.js:157:14)
+        at boot (/Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:10:9)
+        at /Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:15:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-endpoint-r-068d0-out-losing-the-Spring-frame-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/mvp-preview-MVP-endpoint-r-068d0-out-losing-the-Spring-frame-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-endpoint-r-068d0-out-losing-the-Spring-frame-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mvp-preview-MVP-endpoint-r-068d0-out-losing-the-Spring-frame-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 interrupted
+    [chromium] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame 
+  13 did not run

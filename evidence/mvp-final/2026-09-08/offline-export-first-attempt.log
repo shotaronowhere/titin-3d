@@ -1,0 +1,6 @@
+The extracted dcdb403 candidate was opened over file://. Complete four-file export sets were written at 2000, 2200, and 2400 nm; two files were written at 2450 nm. The process then exited 1 with:
+
+page.waitForEvent: Timeout 30000ms exceeded while waiting for event "download"
+at exports.mjs:50:26
+
+The three completed states are preserved. The resume invocation revalidates their bytes and candidate identities and downloads the incomplete 2450 and 1900 nm sets in a fresh browser. No application code, assertion, or timeout was changed. Promise.all now attaches rejection handling to the pending event and click together in this one-off evidence helper.

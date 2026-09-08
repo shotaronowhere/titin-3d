@@ -1,0 +1,11 @@
+
+> titin-visualization@0.3.0 build
+> node scripts/build_standalone.mjs
+
+wrote index.html  2.12 MB
+  bundle: 1251 KB (three r0.185.1 inlined)
+  spec files embedded: 18
+  page-module imports collapsed: 14
+  model: 7badc8e270e7
+  app: 4f8270387aa90be6ed94e576906737a7d5b6f6be-dirty
+  build inputs: 0d4877e8a7ce

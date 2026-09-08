@@ -1,0 +1,203 @@
+{
+  "route": "file:// standalone → Research → Sources & build → four download buttons",
+  "index_sha256": "d514b04d107491b712852b0dc728aa9229fd68a225f09eea71d91f70a56906f8",
+  "manifest_index_sha256": "d514b04d107491b712852b0dc728aa9229fd68a225f09eea71d91f70a56906f8",
+  "manifest_model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+  "manifest_app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+  "manifest_build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+  "manifest_export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+  "note": "Presenter-route download check on the standalone candidate. Not human usability evidence.",
+  "states": [
+    {
+      "sarcomere_length_nm": 2000,
+      "mechanics_status": "supported",
+      "force_cells_min_central_max": [
+        "0.0923220564196057",
+        "0.17509591693597487",
+        "0.23580040182488926"
+      ],
+      "force_cells_blank": false,
+      "force_csv_row": "2000,0.0923220564196057,0.17509591693597487,0.23580040182488926,supported,Inside the SD-04-approved supported interval.,q8wz42-1-literature-bounded-force-law-SD-04-v2,7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6,4f8270387aa90be6ed94e576906737a7d5b6f6be,a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc,a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "candidate_manifest_verified": true,
+      "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+      "app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+      "build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+      "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "claims_build_matches_state": true,
+      "pinned_inputs": 9,
+      "claim_schema": "titin-claim-support-export/1",
+      "regional_data_rows": 170,
+      "files": {
+        "titin-state.json": {
+          "bytes": 4202,
+          "sha256": "15d0ca1b5926b360d61be2d8117809f819211cb1a1431619de2ec32073a29b89"
+        },
+        "force-curve.csv": {
+          "bytes": 14072,
+          "sha256": "246ff6530544ed0270651651a878a2d8034c6529f08280aface41dd1daa686d0"
+        },
+        "regional-extension.csv": {
+          "bytes": 59165,
+          "sha256": "8a5989816bd28dc0a06428646423422bf5591f4ec08ca6ffec53f79212fba7cd"
+        },
+        "claim-support.json": {
+          "bytes": 8153,
+          "sha256": "13ed79ea2850631ca9de2f239ce633a741dc65636264869690bcbaeeb7f3f7b0"
+        }
+      }
+    },
+    {
+      "sarcomere_length_nm": 2200,
+      "mechanics_status": "supported",
+      "force_cells_min_central_max": [
+        "0.27303945257412854",
+        "0.4656801079128239",
+        "0.5906610849434377"
+      ],
+      "force_cells_blank": false,
+      "force_csv_row": "2200,0.27303945257412854,0.4656801079128239,0.5906610849434377,supported,Inside the SD-04-approved supported interval.,q8wz42-1-literature-bounded-force-law-SD-04-v2,7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6,4f8270387aa90be6ed94e576906737a7d5b6f6be,a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc,a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "candidate_manifest_verified": true,
+      "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+      "app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+      "build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+      "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "claims_build_matches_state": true,
+      "pinned_inputs": 9,
+      "claim_schema": "titin-claim-support-export/1",
+      "regional_data_rows": 170,
+      "files": {
+        "titin-state.json": {
+          "bytes": 4202,
+          "sha256": "7d39178635329f58d9eab6574df90604e4ee78da99ccdab2decc2eb83f69da52"
+        },
+        "force-curve.csv": {
+          "bytes": 14071,
+          "sha256": "17fcfbdb4d196ce5dac393b50fddc3c5701cf755a9df90f2717830d0152d55cc"
+        },
+        "regional-extension.csv": {
+          "bytes": 59163,
+          "sha256": "0ff3816d89af1d557c2042b0548686d3a365dee025516b3bc0aef5b630cfd37e"
+        },
+        "claim-support.json": {
+          "bytes": 8153,
+          "sha256": "13ed79ea2850631ca9de2f239ce633a741dc65636264869690bcbaeeb7f3f7b0"
+        }
+      }
+    },
+    {
+      "sarcomere_length_nm": 2400,
+      "mechanics_status": "supported",
+      "force_cells_min_central_max": [
+        "0.5040678350537537",
+        "1.2846779647191244",
+        "1.5370527502830522"
+      ],
+      "force_cells_blank": false,
+      "force_csv_row": "2400,0.5040678350537537,1.2846779647191244,1.5370527502830522,supported,Inside the SD-04-approved supported interval.,q8wz42-1-literature-bounded-force-law-SD-04-v2,7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6,4f8270387aa90be6ed94e576906737a7d5b6f6be,a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc,a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "candidate_manifest_verified": true,
+      "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+      "app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+      "build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+      "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "claims_build_matches_state": true,
+      "pinned_inputs": 9,
+      "claim_schema": "titin-claim-support-export/1",
+      "regional_data_rows": 170,
+      "files": {
+        "titin-state.json": {
+          "bytes": 4202,
+          "sha256": "ae8105a9f5492727750b00eb72722d6f109387b56386e46a35a95b79e1979d6c"
+        },
+        "force-curve.csv": {
+          "bytes": 14070,
+          "sha256": "131fd33bd1eda1fadf029c2768eea8ed1e8c4505b92bf93e2f812eafb5590555"
+        },
+        "regional-extension.csv": {
+          "bytes": 59160,
+          "sha256": "5051cccc33698490fca1ad9a2223275e865ee454b6369fd52f50909b28f0bb1c"
+        },
+        "claim-support.json": {
+          "bytes": 8153,
+          "sha256": "13ed79ea2850631ca9de2f239ce633a741dc65636264869690bcbaeeb7f3f7b0"
+        }
+      }
+    },
+    {
+      "sarcomere_length_nm": 2450,
+      "mechanics_status": "extrapolated",
+      "force_cells_min_central_max": [
+        "0.5807616597480745",
+        "1.6045591597184101",
+        "1.958842884203671"
+      ],
+      "force_cells_blank": false,
+      "force_csv_row": "2450,0.5807616597480745,1.6045591597184101,1.958842884203671,extrapolated,Outside the approved supported interval; quantitative output is extrapolated.,q8wz42-1-literature-bounded-force-law-SD-04-v2,7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6,4f8270387aa90be6ed94e576906737a7d5b6f6be,a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc,a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "candidate_manifest_verified": true,
+      "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+      "app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+      "build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+      "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "claims_build_matches_state": true,
+      "pinned_inputs": 9,
+      "claim_schema": "titin-claim-support-export/1",
+      "regional_data_rows": 165,
+      "files": {
+        "titin-state.json": {
+          "bytes": 4205,
+          "sha256": "f91be8b20beb43581231f7a78f996f59da3f69b9e0f25e5f0901e3d6ac841af8"
+        },
+        "force-curve.csv": {
+          "bytes": 13669,
+          "sha256": "99e03ec16aba43e785ecd7e71fb6a6932130ba81abfc4a9ebc82da5d0065cf97"
+        },
+        "regional-extension.csv": {
+          "bytes": 57399,
+          "sha256": "9fd44b465f1ca0a682fcdf5b31c848a783b6edc0c6bd16be395c7ffba51d7461"
+        },
+        "claim-support.json": {
+          "bytes": 8153,
+          "sha256": "13ed79ea2850631ca9de2f239ce633a741dc65636264869690bcbaeeb7f3f7b0"
+        }
+      }
+    },
+    {
+      "sarcomere_length_nm": 1900,
+      "mechanics_status": "not_evaluated",
+      "force_cells_min_central_max": [
+        "",
+        "",
+        ""
+      ],
+      "force_cells_blank": true,
+      "force_csv_row": "1900,,,,not_evaluated,Below the SD-04-approved slack or buckling boundary; equilibrium tensile force is not evaluated.,q8wz42-1-literature-bounded-force-law-SD-04-v2,7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6,4f8270387aa90be6ed94e576906737a7d5b6f6be,a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc,a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "candidate_manifest_verified": true,
+      "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+      "app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+      "build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+      "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843",
+      "claims_build_matches_state": true,
+      "pinned_inputs": 9,
+      "claim_schema": "titin-claim-support-export/1",
+      "regional_data_rows": 165,
+      "files": {
+        "titin-state.json": {
+          "bytes": 4206,
+          "sha256": "1fd4c69ecedfe3196d4ef09e7214c041c3e895cf95109a99e2219bbe9c1995eb"
+        },
+        "force-curve.csv": {
+          "bytes": 13669,
+          "sha256": "99e03ec16aba43e785ecd7e71fb6a6932130ba81abfc4a9ebc82da5d0065cf97"
+        },
+        "regional-extension.csv": {
+          "bytes": 57399,
+          "sha256": "9fd44b465f1ca0a682fcdf5b31c848a783b6edc0c6bd16be395c7ffba51d7461"
+        },
+        "claim-support.json": {
+          "bytes": 8153,
+          "sha256": "13ed79ea2850631ca9de2f239ce633a741dc65636264869690bcbaeeb7f3f7b0"
+        }
+      }
+    }
+  ],
+  "page_errors": []
+}

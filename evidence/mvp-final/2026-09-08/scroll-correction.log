@@ -1,0 +1,15 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:74643) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 6 tests using 1 worker
+
+[1/6] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+[2/6] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+[3/6] [firefox] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+[4/6] [firefox] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+[5/6] [webkit] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+[6/6] [webkit] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+  6 passed (1.2m)

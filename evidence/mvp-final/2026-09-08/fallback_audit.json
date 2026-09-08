@@ -1,0 +1,45 @@
+{
+  "note": "Measured getBBox geometry for every <text> in the six static fallback slides.",
+  "viewbox": {
+    "width": 1920,
+    "height": 1080
+  },
+  "slides": [
+    {
+      "slide": "scope",
+      "text_nodes": 13,
+      "overflow": [],
+      "collisions": []
+    },
+    {
+      "slide": "architecture",
+      "text_nodes": 17,
+      "overflow": [],
+      "collisions": []
+    },
+    {
+      "slide": "extension",
+      "text_nodes": 22,
+      "overflow": [],
+      "collisions": []
+    },
+    {
+      "slide": "lattice",
+      "text_nodes": 11,
+      "overflow": [],
+      "collisions": []
+    },
+    {
+      "slide": "provenance",
+      "text_nodes": 22,
+      "overflow": [],
+      "collisions": []
+    },
+    {
+      "slide": "limitations",
+      "text_nodes": 13,
+      "overflow": [],
+      "collisions": []
+    }
+  ]
+}

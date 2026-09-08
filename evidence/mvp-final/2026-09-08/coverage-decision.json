@@ -1,0 +1,14 @@
+{
+  "app_revision": "dcdb403a759bd3df1f7d7bc821f3a73aeeb10caa",
+  "decision": "Use the final-plan two-engine coverage fallback; WebKit is not verified.",
+  "plan": "docs/superpowers/plans/2026-09-08-titin-mvp-final-implementation.md, section 9.C",
+  "plan_requirement": "Protect Chromium and at least one second engine on the changed route; any omitted engine must be stated in delivery with no claim of verified support for that candidate.",
+  "verified_engines": [
+    "chromium",
+    "firefox"
+  ],
+  "webkit_status": "not_verified",
+  "reason": "Two WebKit runs encountered timeout stalls during basic element/click operations. Cause is unestablished; the fresh run also stalled on the unchanged opening Next action. Stop further engine retries to preserve the bounded delivery.",
+  "application_changed_for_retry": false,
+  "assertions_or_timeouts_weakened": false
+}

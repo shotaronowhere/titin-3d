@@ -1,0 +1,111 @@
+{
+  "schema": "titin-state-export/1",
+  "build": {
+    "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+    "app_revision": "dcdb403a759bd3df1f7d7bc821f3a73aeeb10caa",
+    "build_inputs_fingerprint": "0d4877e8a7ce243caa7f8222cbb5d6d11101c0f0c7c756c4cda58408a8aef907",
+    "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843"
+  },
+  "state": {
+    "url_version": 2,
+    "depth": "explore",
+    "scene": "spring",
+    "sarcomere_length_nm": 2450,
+    "drawer": "sources",
+    "selection": {
+      "id": "PEVK",
+      "kind": "region"
+    },
+    "story_step": "stretch_spring",
+    "confidence_display": true,
+    "custom": null
+  },
+  "mechanics": {
+    "parameter_set_id": "q8wz42-1-literature-bounded-force-law-SD-04-v2",
+    "status": "extrapolated"
+  },
+  "reproduction": {
+    "candidate_manifest_verified": true,
+    "command": "python3 scripts/mechanical_model.py --parity-json",
+    "comparison_tolerance": {
+      "extension_nm": 1e-9,
+      "force_pN": 1e-9
+    },
+    "feature_source_checksums": {
+      "candidate_sha256": "93ddde035429517cd2448182717df2177ce82e75b0f64c650bd958ad805cddc5",
+      "path": "data/titin_sequence_features.json",
+      "sequence_sha256": "9ac9f493ed92b65cc3c170bb4a20c9666f2de6cb99c223fe58d4027f1f24e8af",
+      "upstream_sha256": "3902bcfe7ccefcfc2b7dd41faafe878229fa622223aff7f09b4667062c6d81c5"
+    },
+    "generator": "python3 scripts/mechanical_model.py",
+    "instructions": [
+      "Verify every pinned input SHA-256 before running the generator.",
+      "Create the documented Python environment and install requirements.txt.",
+      "Run python3 scripts/mechanical_model.py --parity-json from the repository root.",
+      "Compare force and regional extension using the recorded absolute tolerances.",
+      "Treat not_evaluated force as null; never coerce it to zero."
+    ],
+    "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+    "parameter_set_id": "q8wz42-1-literature-bounded-force-law-SD-04-v2",
+    "pinned_inputs": [
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/sarcomere.json",
+        "sha256": "de959c99df017ab61760b0dae934e02dca2727e06b6c99cc9e56ae6815d30e0a"
+      },
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/titin.json",
+        "sha256": "7d060801a816aacd864e0c16c390154f0457b58a5881cf4caa620c2bf77fdca9"
+      },
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/titin_sequence_features.json",
+        "sha256": "93ddde035429517cd2448182717df2177ce82e75b0f64c650bd958ad805cddc5"
+      },
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/structural_states.json",
+        "sha256": "569713b992b5d3dbaa26af59afefab76a7f05763735c94b8fbef76408738cf9a"
+      },
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/geometry_sources.json",
+        "sha256": "060978ad60b8d3a36f0e13befaaa0070195d4852da16cdb0ae24a072bd36e6ff"
+      },
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/geometry_strategy.json",
+        "sha256": "7d9836233d05cec540fb67b6a908a20ac579b86c30f393865a1f0a3bbd900e0f"
+      },
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/context_measurements.json",
+        "sha256": "1a2aedd179ba16eb6cca150b7d114aeb382e1c2414dca8b52e906ae6ad9e42d7"
+      },
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/domain_backbones.json",
+        "sha256": "62ae7aea19d8ac5ae6e88e5ff41b283daefe2a5de61fb18840bb872ec8f71d82"
+      },
+      {
+        "checksum_scope": "candidate file bytes",
+        "path": "data/mechanical_parameters.json",
+        "sha256": "c7fbf33ce82469f1fc346526e58e84c7c5434ad2b926ed05c37d27c443414cc3"
+      }
+    ],
+    "runtime": {
+      "node": "20.19.2",
+      "npm": "11.5.2",
+      "python": ">=3.12"
+    },
+    "schema": "titin-reproduction-worksheet/1",
+    "supported_regime": {
+      "lower_inclusive": true,
+      "max_nm": 2400,
+      "min_nm": 2000,
+      "status": "supported",
+      "upper_inclusive": true
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "reviewer": "AI visual inspection; not independent human usability evidence",
+  "candidate_index_sha256": "d04fbf3b9298829821d89e7fcbd9616b67d1291f3886ac9d15617764b9c4e27c",
+  "candidate_manifest_sha256": "9463727da702b0f69a2b51a45eeaf53720247fd8c68c78efde1b95f9f6b6145e",
+  "inspected_frames": [
+    {
+      "name": "desktop-beat-1",
+      "sha256": "b63052b9fa772e89563e475518c63dda3779717f42583a91513e984fb2626e7a"
+    },
+    {
+      "name": "desktop-beat-2",
+      "sha256": "ee52760dc67bd666b07c534c93a1961e9d332ab2ecf382960bffce3c792efd6a"
+    },
+    {
+      "name": "desktop-beat-3",
+      "sha256": "74bd359143a16e11b0692d9035ed57000a2438e35c890ce3d820d580cac8b71d"
+    },
+    {
+      "name": "desktop-stretch-endpoint",
+      "sha256": "68460e59f2418a8e7944771d459ed263dd4bfe046c1944658fc3415f285e638b"
+    },
+    {
+      "name": "desktop-force",
+      "sha256": "b96a04921571e699a154565e54f4194ad5f1d65dfb178a810f01decfa93d766b"
+    },
+    {
+      "name": "desktop-beat-4",
+      "sha256": "6405b42164a4db5b59bb513fc11ce1199774815c96ae5e5700a8198ee2df3a36"
+    },
+    {
+      "name": "desktop-beat-5",
+      "sha256": "9504ec3d49e1e4328a0af93da75a735ab1b32df4db8acae0ea4de2bc61989d7b"
+    },
+    {
+      "name": "desktop-evidence",
+      "sha256": "d8fb210e372b61215058b64e67ba5b4686a23ae371f0822bf0eb07d562e16955"
+    },
+    {
+      "name": "desktop-source",
+      "sha256": "0a22930ddb8bd188cefe9f75414cbe920118bf5451bae748972d0c00e9ee4cba"
+    },
+    {
+      "name": "desktop-scope",
+      "sha256": "985f00f5c62d373524ef99ff184f52625510cbbf54949453c82df8dd9c55226f"
+    },
+    {
+      "name": "desktop-architecture",
+      "sha256": "06e9608eb794d92857e607bf4f653ea7f38a8222f3870a245135daf2eec1122f"
+    },
+    {
+      "name": "phone-beat-1",
+      "sha256": "69236f5e1a243c676af461782964facf12d7b04996113b84177737b90a38e842"
+    },
+    {
+      "name": "phone-beat-2",
+      "sha256": "715de5576be4bc4273c56aeaef3e06b381989c5c350bfcc41f433f2528126581"
+    },
+    {
+      "name": "phone-beat-3",
+      "sha256": "480863831b64e71a10802890247d3c922e29dda9aed765bbfcd77d50420e17ba"
+    },
+    {
+      "name": "phone-stretch-endpoint",
+      "sha256": "2ec56e1af46aebb36171b22f107dd2ba862c6e42d8734c8fdbe4d4793982c1b8"
+    },
+    {
+      "name": "phone-force",
+      "sha256": "1330f3793c78449dd045cb3982baac84951ed7413985d008ecf6e99a1fb36187"
+    },
+    {
+      "name": "phone-beat-4",
+      "sha256": "ddf61e1dca667c19f04f9487c6fef3ebee5fdedfe0e293ce65afc344ecbc31af"
+    },
+    {
+      "name": "phone-beat-5",
+      "sha256": "1d592044841b82c680965ec8012a4684db25e05818d952130fe0163d3b0b74d7"
+    },
+    {
+      "name": "phone-evidence",
+      "sha256": "1a124754782dfbdbf36c9265861f981ad7a6f040c4beee6a0f92ccf9933ab807"
+    },
+    {
+      "name": "phone-source",
+      "sha256": "4c0daf4c834c092db462c13969410d08a680f03a314b36f211f5d7b5097b3814"
+    },
+    {
+      "name": "phone-scope",
+      "sha256": "37db78577f2562b43343ddb614694d704e84cf64073e4487aa5072904c845ccc"
+    },
+    {
+      "name": "phone-architecture",
+      "sha256": "2a370fdfa1d7793754a8aee8cab73245f37eb279491b18234c77a622c90d948e"
+    }
+  ],
+  "findings": [
+    "The final evidence route now shows the object-source action above the fold after a Measure visit.",
+    "The guided Stretch entry and endpoint retain the same comparison frame and control-card geometry.",
+    "Force, parameter-sensitivity interpretation, and graph are visible on Measure arrival in both reviewed viewports.",
+    "All five Tour beats retain visible continuation controls and readable text in the reviewed viewports.",
+    "Scope shows the canonical reference construct and no tissue-specific claim.",
+    "The Architecture capture begins partway down the long audit table; final capture helper positions the table heading below sticky tabs for easier metadata review."
+  ],
+  "scope": "1280x720 and 390x844, offline Chromium, reduced motion. Known deferred limitations remain in DELIVERY.md."
+}

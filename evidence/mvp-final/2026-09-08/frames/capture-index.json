@@ -1,0 +1,183 @@
+{
+  "root": "/Users/shotaro/Downloads/artifacts",
+  "frames": [
+    {
+      "name": "desktop-beat-1",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "b63052b9fa772e89563e475518c63dda3779717f42583a91513e984fb2626e7a"
+    },
+    {
+      "name": "desktop-beat-2",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "ee52760dc67bd666b07c534c93a1961e9d332ab2ecf382960bffce3c792efd6a"
+    },
+    {
+      "name": "desktop-beat-3",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "4ad491ac899c169ee396e2e27879cd221a03f98d85b0ff8c4f032ea08db163da"
+    },
+    {
+      "name": "desktop-stretch-endpoint",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "01dde0398d9ed7cbd66c08db9eca74016d1ae89d045e8ea9b9b892a64e8225ec"
+    },
+    {
+      "name": "desktop-force",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "0f1a3220a8a1f39c09ddcb938054a733b232f188c738a95194e0e61996e96019"
+    },
+    {
+      "name": "desktop-beat-4",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "6405b42164a4db5b59bb513fc11ce1199774815c96ae5e5700a8198ee2df3a36"
+    },
+    {
+      "name": "desktop-beat-5",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "30fc32707677de162bf4acf89858e93b584451217ce52abc656d3da05021768e"
+    },
+    {
+      "name": "desktop-evidence",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "cbd648b968f1d1541a84f0a3d9d53ad8b734dba329624bda060438f6f42926d5"
+    },
+    {
+      "name": "desktop-source",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "0409221f0aa160af9780ca24dd87c24fecc34fafa3432d0f821586d6480d8c6f"
+    },
+    {
+      "name": "desktop-scope",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "85ee8af6eb004965d077f752e255cdf7fa48dab3916ef00a50454ac522947932"
+    },
+    {
+      "name": "desktop-architecture",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "06e9608eb794d92857e607bf4f653ea7f38a8222f3870a245135daf2eec1122f"
+    },
+    {
+      "name": "phone-beat-1",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "69236f5e1a243c676af461782964facf12d7b04996113b84177737b90a38e842"
+    },
+    {
+      "name": "phone-beat-2",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "715de5576be4bc4273c56aeaef3e06b381989c5c350bfcc41f433f2528126581"
+    },
+    {
+      "name": "phone-beat-3",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "1943bb8017555ca075b25667f391cadde29f0e94e07a545647b05f6cbcd565e9"
+    },
+    {
+      "name": "phone-stretch-endpoint",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "7e7a2652797899603ed40dafbd425a2f40e8f484e17c674e8895c586a98377c4"
+    },
+    {
+      "name": "phone-force",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "1330f3793c78449dd045cb3982baac84951ed7413985d008ecf6e99a1fb36187"
+    },
+    {
+      "name": "phone-beat-4",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "ddf61e1dca667c19f04f9487c6fef3ebee5fdedfe0e293ce65afc344ecbc31af"
+    },
+    {
+      "name": "phone-beat-5",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "29f3645b433a5ed9e40a6f99839d35189792a6225415bef0efc7423b171cb90d"
+    },
+    {
+      "name": "phone-evidence",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "dbf64b22e73f94453727144dc4d2bdf2db5319a65cf55f4cad56b224488fb18f"
+    },
+    {
+      "name": "phone-source",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "9934b95dbdec52836704bad0fbdcd14de75fc43c265567d548642593080e2aef"
+    },
+    {
+      "name": "phone-scope",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "0d80a4a1a9a8d53a97effb22990d684d87fca496b473752f616fe4815e67fae2"
+    },
+    {
+      "name": "phone-architecture",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "2a370fdfa1d7793754a8aee8cab73245f37eb279491b18234c77a622c90d948e"
+    }
+  ],
+  "errors": [],
+  "non_file_requests": []
+}

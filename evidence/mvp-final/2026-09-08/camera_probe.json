@@ -1,0 +1,254 @@
+[
+  {
+    "label": "entry",
+    "length": "2200",
+    "play": "▶ Stretch",
+    "elements": {
+      "guidedCard": {
+        "x": 14,
+        "y": 254.125,
+        "width": 384,
+        "height": 437.875,
+        "text": "BEAT 3 OF 5\n\nHow is titin built, and what changes during stretch?\n\nBuild and stretch the spring\n\nDuring stretch, folded-domain chains straighten and flexible I-band segments extend while titin’s A-band span stays fixed in this model and predicted passive force rises.\n\nFraming the spring and scaffold for stretch while preserving your current sarcomere length.\n\nSARCOMERE LENGTH\nThe green track segment marks the supported working range from 2000 to 2400 nanometres.\n2,200 nm\n▶ Stretch\n≈0.5 pN · supported · modeled passive force per titin\nPrevious\nNext"
+      },
+      "stagePlay": {
+        "x": 31,
+        "y": 567,
+        "width": 84.5625,
+        "height": 50,
+        "text": "▶ Stretch"
+      },
+      "stageForce": {
+        "x": 181,
+        "y": 567,
+        "width": 200,
+        "height": 50,
+        "text": "≈0.5 pN · supported · modeled passive force per titin"
+      },
+      "sl": {
+        "x": 33,
+        "y": 523,
+        "width": 350,
+        "height": 7,
+        "text": ""
+      },
+      "stageLengthReadout": {
+        "x": 297,
+        "y": 539,
+        "width": 84,
+        "height": 21,
+        "text": "2,200 nm"
+      },
+      "stageHeader": {
+        "x": 14,
+        "y": 14,
+        "width": 1252,
+        "height": 62,
+        "text": "Titin across the sarcomere\nResearch preview · titin in muscle\nSCOPE DETAILS\nHuman TTN reference sequence · Q8WZ42-1\nReference geometry · 2,200 nm\nResearch"
+      }
+    },
+    "points": [
+      {
+        "id": "z",
+        "x_px": 148.23724201393958,
+        "y_px": 158.3693786841127,
+        "visible": true
+      },
+      {
+        "id": "m",
+        "x_px": 1186.5996679653365,
+        "y_px": 167.48870148874707,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "label": "endpoint",
+    "length": "2400",
+    "play": "↻ Replay stretch",
+    "elements": {
+      "guidedCard": {
+        "x": 14,
+        "y": 254.125,
+        "width": 384,
+        "height": 437.875,
+        "text": "BEAT 3 OF 5\n\nHow is titin built, and what changes during stretch?\n\nBuild and stretch the spring\n\nDuring stretch, folded-domain chains straighten and flexible I-band segments extend while titin’s A-band span stays fixed in this model and predicted passive force rises.\n\nFraming the spring and scaffold for stretch while preserving your current sarcomere length.\n\nSARCOMERE LENGTH\nThe green track segment marks the supported working range from 2000 to 2400 nanometres.\n2,400 nm\n↻ Replay stretch\n≈1.3 pN · supported · modeled passive force per titin\nPrevious\nNext"
+      },
+      "stagePlay": {
+        "x": 31,
+        "y": 567,
+        "width": 125.8125,
+        "height": 50,
+        "text": "↻ Replay stretch"
+      },
+      "stageForce": {
+        "x": 181,
+        "y": 567,
+        "width": 200,
+        "height": 50,
+        "text": "≈1.3 pN · supported · modeled passive force per titin"
+      },
+      "sl": {
+        "x": 33,
+        "y": 523,
+        "width": 350,
+        "height": 7,
+        "text": ""
+      },
+      "stageLengthReadout": {
+        "x": 297,
+        "y": 539,
+        "width": 84,
+        "height": 21,
+        "text": "2,400 nm"
+      },
+      "stageHeader": {
+        "x": 14,
+        "y": 14,
+        "width": 1252,
+        "height": 62,
+        "text": "Titin across the sarcomere\nResearch preview · titin in muscle\nSCOPE DETAILS\nHuman TTN reference sequence · Q8WZ42-1\nUpper working-range geometry · 2,400 nm\nResearch"
+      }
+    },
+    "points": [
+      {
+        "id": "z",
+        "x_px": 148.23724201393958,
+        "y_px": 158.3693786841127,
+        "visible": true
+      },
+      {
+        "id": "m",
+        "x_px": 1186.5996679653365,
+        "y_px": 167.48870148874707,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "label": "replay endpoint",
+    "length": "2400",
+    "play": "↻ Replay stretch",
+    "elements": {
+      "guidedCard": {
+        "x": 14,
+        "y": 254.125,
+        "width": 384,
+        "height": 437.875,
+        "text": "BEAT 3 OF 5\n\nHow is titin built, and what changes during stretch?\n\nBuild and stretch the spring\n\nDuring stretch, folded-domain chains straighten and flexible I-band segments extend while titin’s A-band span stays fixed in this model and predicted passive force rises.\n\nFraming the spring and scaffold for stretch while preserving your current sarcomere length.\n\nSARCOMERE LENGTH\nThe green track segment marks the supported working range from 2000 to 2400 nanometres.\n2,400 nm\n↻ Replay stretch\n≈1.3 pN · supported · modeled passive force per titin\nPrevious\nNext"
+      },
+      "stagePlay": {
+        "x": 31,
+        "y": 567,
+        "width": 125.8125,
+        "height": 50,
+        "text": "↻ Replay stretch"
+      },
+      "stageForce": {
+        "x": 181,
+        "y": 567,
+        "width": 200,
+        "height": 50,
+        "text": "≈1.3 pN · supported · modeled passive force per titin"
+      },
+      "sl": {
+        "x": 33,
+        "y": 523,
+        "width": 350,
+        "height": 7,
+        "text": ""
+      },
+      "stageLengthReadout": {
+        "x": 297,
+        "y": 539,
+        "width": 84,
+        "height": 21,
+        "text": "2,400 nm"
+      },
+      "stageHeader": {
+        "x": 14,
+        "y": 14,
+        "width": 1252,
+        "height": 62,
+        "text": "Titin across the sarcomere\nResearch preview · titin in muscle\nSCOPE DETAILS\nHuman TTN reference sequence · Q8WZ42-1\nUpper working-range geometry · 2,400 nm\nResearch"
+      }
+    },
+    "points": [
+      {
+        "id": "z",
+        "x_px": 147.6068939394584,
+        "y_px": 152.21476118374605,
+        "visible": true
+      },
+      {
+        "id": "m",
+        "x_px": 1187.3785469155087,
+        "y_px": 160.65979367657326,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "label": "slider 2200",
+    "length": "2200",
+    "play": "▶ Stretch",
+    "elements": {
+      "guidedCard": {
+        "x": 14,
+        "y": 254.125,
+        "width": 384,
+        "height": 437.875,
+        "text": "BEAT 3 OF 5\n\nHow is titin built, and what changes during stretch?\n\nBuild and stretch the spring\n\nDuring stretch, folded-domain chains straighten and flexible I-band segments extend while titin’s A-band span stays fixed in this model and predicted passive force rises.\n\nFraming the spring and scaffold for stretch while preserving your current sarcomere length.\n\nSARCOMERE LENGTH\nThe green track segment marks the supported working range from 2000 to 2400 nanometres.\n2,200 nm\n▶ Stretch\n≈0.5 pN · supported · modeled passive force per titin\nPrevious\nNext"
+      },
+      "stagePlay": {
+        "x": 31,
+        "y": 567,
+        "width": 84.5625,
+        "height": 50,
+        "text": "▶ Stretch"
+      },
+      "stageForce": {
+        "x": 181,
+        "y": 567,
+        "width": 200,
+        "height": 50,
+        "text": "≈0.5 pN · supported · modeled passive force per titin"
+      },
+      "sl": {
+        "x": 33,
+        "y": 523,
+        "width": 350,
+        "height": 7,
+        "text": ""
+      },
+      "stageLengthReadout": {
+        "x": 297,
+        "y": 539,
+        "width": 84,
+        "height": 21,
+        "text": "2,200 nm"
+      },
+      "stageHeader": {
+        "x": 14,
+        "y": 14,
+        "width": 1252,
+        "height": 62,
+        "text": "Titin across the sarcomere\nResearch preview · titin in muscle\nSCOPE DETAILS\nHuman TTN reference sequence · Q8WZ42-1\nReference geometry · 2,200 nm\nResearch"
+      }
+    },
+    "points": [
+      {
+        "id": "z",
+        "x_px": 147.6068939394584,
+        "y_px": 152.21476118374605,
+        "visible": true
+      },
+      {
+        "id": "m",
+        "x_px": 1187.3785469155087,
+        "y_px": 160.65979367657326,
+        "visible": true
+      }
+    ]
+  }
+]

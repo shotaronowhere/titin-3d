@@ -1,0 +1,39 @@
+# Final preview implementation record
+
+Source candidate: `dcdb403a759bd3df1f7d7bc821f3a73aeeb10caa` on `codex/mvp-final-finish`.
+
+This implements the bounded September 8 final plan. The nine primary model inputs, all other tracked scientific JSON data, and dependency records were preserved; `protected-inputs.json` records the 24-file byte comparison against reviewed HEAD `32e8941`.
+
+## Retained changes
+
+- Research Scope details consumes the canonical public badge. It no longer assigns the reference construct to human skeletal muscle.
+- Folded titin domains receive reference-level titin metadata, with no fabricated aggregate residue interval. Region mappings and non-titin null semantics remain intact.
+- Guided Stretch uses the maximum comparison frame from entry. Incoming Tour layout is measured before semantic framing; audience callbacks are coalesced; manual views remain intentional. Desktop spans identify the extensible I-band and the A-band span fixed in this model. Phone retains the shorter locator and narrative.
+- The mechanics row reserves space for the longest supported value label. The stage formats its already-rounded force estimate using the existing significant-digit policy, eliminating binary floating-point tails without changing model calculations or export values.
+- The final beat offers a primary titin-evidence action. The object-source button precedes the long claim. Closing this direct finale route restores the Tour instead of leaving the mobile pinned-object card in its place.
+- Research entry resets scrolling after the destination becomes visible and is rebuilt, so visiting Measure before the final evidence action cannot hide the source action below an old scroll offset.
+- The force result and sensitivity interpretation precede the full limitations and audit table. The graph is visible on first arrival in the reviewed phone layout.
+- The stage's spatial keyboard handler only consumes keys when the stage itself has focus. Native Tour buttons, sliders, and independently handled SVG labels retain their keyboard behavior.
+- The SVG generator advances wrapped text vertically, reserves a column for bar labels, and keeps the rightmost axial caption inside the slide. All six fallback slides have zero measured text collisions/overflows and were visually inspected at 1920×1080.
+
+## Scope decisions
+
+The existing opening and scaffold close-up were retained. Further opening/scaffold labels were cut to avoid crowding and a broader overlay redesign. The two desktop Stretch spans were retained; long span labels deliberately withdraw on narrow screens. No new anatomy, scientific claim, mechanics, isoform, simulation, dependency, or evidence system was added. Formal independent scientific validation, human learning outcomes, physical-device evidence, and hosting parity remain pending. `release_ready` remains false.
+
+## Evidence boundaries
+
+`final-*.log` and `final-check-results.json` are the authoritative frozen-candidate checks. `reproduction.json`, `package.json`, extracted-frame records, and `exports.json` identify the reproduced and packaged candidate. Reproduction, package identity, and offline/export checks must exist and pass before delivery is marked complete. Browser coverage uses the explicit section 9.C fallback recorded in `coverage-decision.json`: Chromium and Firefox pass, while WebKit is not verified. All attempt statuses remain visible.
+
+Other logs are development evidence and include failed or interrupted attempts that led to fixes. The initial `task1-unit.log` was written by two overlapping early invocations and is not used as a final result; the full serial Node run supersedes it. The first standalone camera attempt exposed a missing explicit bundle export, and later browser tests exposed native-key interception, mobile return focus, and changing control-row height. Those defects were corrected rather than weakening their behavior assertions. The first frozen candidate (`e8d6eb5`) subsequently passed repository verification but failed the legacy-link camera-metadata check; its broader run was interrupted and retained in `superseded-e8d6eb5/`. The presentation controller now restores its canonical camera metadata after sweep framing; the existing legacy-link regression passes. The targeted correction run then passed all six checks. The first full development Node run passed 618 tests; fresh release results are recorded separately. Candidate `4f82703` then passed its entire automated matrix and clean reproduction, but extracted visual review revealed that visiting Measure before the final evidence action retained the old Research scroll offset. The reset now follows visibility/content rebuilding, and the expanded complete-route regression passed on desktop and phone in all three engines (6/6). The superseded candidate, logs, exports, screenshots, and archive are retained in `superseded-4f82703/`, not delivered.
+
+`frames/` and `candidate-preview-frames/` are development captures. `candidate-preview-frames/capture-index.json` reports 22 frames with no runtime errors or non-file requests and resolved/hidden overlay states. The extracted-package capture is the final byte-identified walkthrough. AI browser/visual inspection is not independent human usability evidence.
+
+The first final WebKit matrix on `dcdb403` was interrupted after three timeouts during element/click operations, coinciding with slow host tool responses. Its cause is not established. Logs, result metadata, and traces are retained as `webkit-first-attempt*`. A fresh full WebKit matrix uses the same candidate, assertions, and timeouts, with process-scoped idle-sleep prevention; its actual exit status is recorded in `final-check-results.json`, including prior-attempt metadata.
+
+The fresh WebKit attempt also timed out on the unchanged opening Next action and was interrupted after two timeouts. No source patch or timeout/assertion weakening was made for those stalls. The final delivery uses the plan’s Chromium plus Firefox coverage fallback, explicitly discloses incomplete WebKit verification, and recommends the Chrome/Firefox preview route. `webkit-final-attempt-traces/` retains the second attempt.
+
+The first final offline export rehearsal timed out during one download after three complete states. Those files were preserved and revalidated; the incomplete 2450 and 1900 nm sets were downloaded in a fresh browser. All 20 final files pass their identity and regime checks. The evidence helper now handles the click and download promise together and can resume complete states; no application code or timeout changed. The initial failure and successful resume are retained.
+
+The initial extracted screenshot walkthrough retained ten desktop images before native input automation timed out at the Research inventory summary. Final screenshots use the same buttons’ DOM activation, with this method recorded explicitly in the capture index and package record. This changes only the one-off capture helper. Frozen-candidate pointer/keyboard tests remain unchanged and passed in Chromium and Firefox; all 22 earlier `scroll-corrected-frames` captures of identical standalone bytes used native clicks. The first extracted attempt is retained as `offline-capture-first-attempt*`.
+
+Final package verification is complete under the explicit coverage boundaries in `PACKAGE.md`. The second extracted capture completed ten desktop core-route images, then timed out taking the Architecture screenshot. The complete 22-view native-click review of byte-identical standalone and manifest files supplies phone/Architecture visual evidence; a full fresh extracted screenshot set is not claimed. All 26 ZIP files, 21 manifest entries, and 20 final exported files verify. The bounded implementation is closed for researcher feedback.

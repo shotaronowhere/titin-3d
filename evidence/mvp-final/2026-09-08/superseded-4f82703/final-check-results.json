@@ -1,0 +1,96 @@
+{
+  "app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+  "build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+  "results": [
+    {
+      "name": "verify",
+      "command": "npm",
+      "args": [
+        "run",
+        "verify"
+      ],
+      "started": "2026-09-08T13:25:12.005Z",
+      "finished": "2026-09-08T13:28:13.854Z",
+      "exit_code": 0
+    },
+    {
+      "name": "identity",
+      "command": "npm",
+      "args": [
+        "run",
+        "verify:identity"
+      ],
+      "started": "2026-09-08T13:28:13.855Z",
+      "finished": "2026-09-08T13:28:14.051Z",
+      "exit_code": 0
+    },
+    {
+      "name": "chromium",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/mvp-preview.spec.js",
+        "test/browser/stretch.spec.js",
+        "test/browser/learn.spec.js",
+        "test/browser/evidence.spec.js",
+        "test/browser/workbench.spec.js",
+        "test/browser/smoke.spec.js",
+        "test/browser/ux-overhaul.spec.js",
+        "--project=chromium",
+        "--grep-invert",
+        "@sweep"
+      ],
+      "started": "2026-09-08T13:28:14.051Z",
+      "finished": "2026-09-08T13:47:40.849Z",
+      "exit_code": 0
+    },
+    {
+      "name": "keyboard-picking",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/picking.spec.js",
+        "--project=chromium",
+        "--grep",
+        "direct labels are operable|touch tap selects"
+      ],
+      "started": "2026-09-08T13:47:40.850Z",
+      "finished": "2026-09-08T13:47:58.099Z",
+      "exit_code": 0
+    },
+    {
+      "name": "firefox",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/mvp-preview.spec.js",
+        "test/browser/stretch.spec.js",
+        "test/browser/learn.spec.js",
+        "test/browser/evidence.spec.js",
+        "--project=firefox"
+      ],
+      "started": "2026-09-08T13:47:58.099Z",
+      "finished": "2026-09-08T13:52:29.656Z",
+      "exit_code": 0
+    },
+    {
+      "name": "webkit",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/mvp-preview.spec.js",
+        "test/browser/stretch.spec.js",
+        "test/browser/learn.spec.js",
+        "test/browser/evidence.spec.js",
+        "--project=webkit"
+      ],
+      "started": "2026-09-08T13:52:29.657Z",
+      "finished": "2026-09-08T13:56:51.457Z",
+      "exit_code": 0
+    }
+  ]
+}

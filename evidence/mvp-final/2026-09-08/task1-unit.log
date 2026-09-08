@@ -1,0 +1,134 @@
+TAP version 13
+# Subtest: SC26: contract fingerprint is SHA-256 of the canonical schema contract, not payload bytes
+ok 1 - SC26: contract fingerprint is SHA-256 of the canonical schema contract, not payload bytes
+  ---
+  duration_ms: 1.102917
+  ...
+# Subtest: SC26: complete parameter table exposes values, bindings, units, preparation, and transfer
+ok 2 - SC26: complete parameter table exposes values, bindings, units, preparation, and transfer
+  ---
+  duration_ms: 0.601917
+  ...
+# Subtest: SC26: Inspect resolves the exact construct, interval, mapped features, render, and claims
+ok 3 - SC26: Inspect resolves the exact construct, interval, mapped features, render, and claims
+  ---
+  duration_ms: 228.697958
+  ...
+# Subtest: MVP: titin aggregates carry reference metadata without inventing a residue interval
+ok 4 - MVP: titin aggregates carry reference metadata without inventing a residue interval
+  ---
+  duration_ms: 294.191625
+  ...
+# Subtest: SC26: exact reference strip accounts for every residue and every domain feature
+ok 5 - SC26: exact reference strip accounts for every residue and every domain feature
+  ---
+  duration_ms: 0.361916
+  ...
+# Subtest: SC26: atomic evidence groups cover every claim while render status stays orthogonal
+ok 6 - SC26: atomic evidence groups cover every claim while render status stays orthogonal
+  ---
+  duration_ms: 0.375875
+  ...
+# Subtest: SC26: compliance plot has shares at supported lengths and nulls at omission boundaries
+ok 7 - SC26: compliance plot has shares at supported lengths and nulls at omission boundaries
+  ---
+  duration_ms: 927.6685
+  ...
+# Subtest: SC26: reproduction worksheet names only fingerprinted model inputs and every required runtime
+ok 8 - SC26: reproduction worksheet names only fingerprinted model inputs and every required runtime
+  ---
+  duration_ms: 1.708292
+  ...
+# Subtest: SC26: boundary worksheet pins every exact SC27 review coordinate
+ok 9 - SC26: boundary worksheet pins every exact SC27 review coordinate
+  ---
+  duration_ms: 0.648292
+  ...
+# Subtest: SC26: 2000 nm export is byte-deterministic and agrees with direct evaluation
+ok 10 - SC26: 2000 nm export is byte-deterministic and agrees with direct evaluation
+  ---
+  duration_ms: 3862.643125
+  ...
+# Subtest: SC26: 2200 nm export is byte-deterministic and agrees with direct evaluation
+ok 11 - SC26: 2200 nm export is byte-deterministic and agrees with direct evaluation
+  ---
+  duration_ms: 3872.141709
+  ...
+# Subtest: SC26: 2400 nm export is byte-deterministic and agrees with direct evaluation
+ok 12 - SC26: 2400 nm export is byte-deterministic and agrees with direct evaluation
+  ---
+  duration_ms: 3926.848125
+  ...
+# Subtest: SC26: 1900 nm export is byte-deterministic and agrees with direct evaluation
+ok 13 - SC26: 1900 nm export is byte-deterministic and agrees with direct evaluation
+  ---
+  duration_ms: 2313.414917
+  ...
+# Subtest: SC26: CSV shapes are exact, parse cleanly, and every row carries all four identities
+ok 14 - SC26: CSV shapes are exact, parse cleanly, and every row carries all four identities
+  ---
+  duration_ms: 1564.774375
+  ...
+# Subtest: SC26: custom-state export restores every serialized presentation field
+ok 15 - SC26: custom-state export restores every serialized presentation field
+  ---
+  duration_ms: 2147.592875
+  ...
+# Subtest: SC26: selected claim subset includes local metadata and exact source locators offline
+ok 16 - SC26: selected claim subset includes local metadata and exact source locators offline
+  ---
+  duration_ms: 1564.102458
+  ...
+# Subtest: SC26: validators reject malformed, forged, drifted, and non-canonical payloads
+ok 17 - SC26: validators reject malformed, forged, drifted, and non-canonical payloads
+  ---
+  duration_ms: 9596.253792
+  ...
+# Subtest: SC26: JSON Schema records describe the two emitted JSON payloads
+ok 18 - SC26: JSON Schema records describe the two emitted JSON payloads
+  ---
+  duration_ms: 0.884041
+  ...
+# Subtest: SC26: release manifest records contract and sample byte hashes externally
+ok 19 - SC26: release manifest records contract and sample byte hashes externally
+  ---
+  duration_ms: 0.224125
+  ...
+# Subtest: SC26: serializer module remains free of browser, clock, random, and Node-only reads
+ok 20 - SC26: serializer module remains free of browser, clock, random, and Node-only reads
+  ---
+  duration_ms: 0.436791
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 30419.169459
+ SC26: JSON Schema records describe the two emitted JSON payloads
+ok 18 - SC26: JSON Schema records describe the two emitted JSON payloads
+  ---
+  duration_ms: 1.193875
+  ...
+# Subtest: SC26: release manifest records contract and sample byte hashes externally
+ok 19 - SC26: release manifest records contract and sample byte hashes externally
+  ---
+  duration_ms: 0.378709
+  ...
+# Subtest: SC26: serializer module remains free of browser, clock, random, and Node-only reads
+ok 20 - SC26: serializer module remains free of browser, clock, random, and Node-only reads
+  ---
+  duration_ms: 1.366167
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 19
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 30253.329

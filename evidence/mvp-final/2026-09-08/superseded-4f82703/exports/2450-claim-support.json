@@ -1,0 +1,191 @@
+{
+  "schema": "titin-claim-support-export/1",
+  "build": {
+    "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+    "app_revision": "4f8270387aa90be6ed94e576906737a7d5b6f6be",
+    "build_inputs_fingerprint": "a4e3d089cfe2fba77b5664d47fe5af187266fd2e22ed773490eaa40df17492cc",
+    "export_contract_fingerprint": "a081b2a893b717ea345697c27f1edb074f0cb4d50f2e93dbd0604239c1f8c843"
+  },
+  "context": {
+    "depth": "explore",
+    "scene": "spring",
+    "selection": {
+      "id": "PEVK",
+      "kind": "region"
+    }
+  },
+  "claims": [
+    {
+      "claim_class": "MODELED",
+      "id": "regional_extension_story",
+      "inventory_status": "PUBLIC",
+      "limitations": [
+        "Supports the qualitative physiological mechanism, not this model's exact per-region nanometer partition.",
+        "Computed model output is not a measured molecular trajectory."
+      ],
+      "model_dependencies": [
+        "data/mechanical_model.json"
+      ],
+      "not_claimed": [
+        "normalization of AFM-scale Ig unfolding",
+        "a measured time trajectory",
+        "activation-dependent titin stiffening"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/3/claim",
+        "data/presentation.json#/guided_chapters/2",
+        "data/presentation.json#/guided_chapters/4",
+        "data/annotations.json#/components/11",
+        "data/scenes.json#/scenes/stretch_spring",
+        "data/scenes.json#/scenes/knowledge_recap"
+      ],
+      "quantity": null,
+      "render_class": "MODELED",
+      "review": {
+        "affiliation": null,
+        "locator_verified_independently": null,
+        "publication_consent": false,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null,
+        "reviewer": null,
+        "status": "PENDING"
+      },
+      "statement": "Across the modeled range, tandem-Ig chains primarily straighten while disordered spring regions extend; ordinary length change does not require widespread folded-domain unfolding.",
+      "subject": {
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers",
+        "species": "Homo sapiens"
+      },
+      "support": [
+        {
+          "extraction_note": "in-situ folded-Ig and unfolded-PEVK extension behavior. Transfer limit: Supports the qualitative physiological mechanism, not this model's exact per-region nanometer partition.",
+          "locator": "Figs. 1–4 and Results, especially Fig. 4 segment extension versus sarcomere length",
+          "relationship": "direct",
+          "source_id": "10.1083/jcb.140.4.853",
+          "source_subject": {
+            "muscle_or_tissue": "skeletal muscle biopsy",
+            "preparation": "sarcomeres labeled with sequence-specific antibodies across imposed lengths",
+            "species": "Homo sapiens"
+          }
+        },
+        {
+          "extraction_note": "force-balanced regional extension states. Transfer limit: Computed model output is not a measured molecular trajectory.",
+          "locator": "#/per_state and #/resolved_chain_parameters",
+          "relationship": "direct",
+          "source_id": "data/mechanical_model.json",
+          "source_subject": {
+            "muscle_or_tissue": null,
+            "preparation": "repository model or validation record",
+            "species": "model-scoped; see scientific_scope.json"
+          }
+        }
+      ]
+    },
+    {
+      "claim_class": "MEASURED",
+      "id": "titin_region_architecture",
+      "inventory_status": "PUBLIC",
+      "limitations": [
+        "Sequence annotations do not determine every 3D conformation.",
+        "Supports axial organization, not a universal exact azimuth."
+      ],
+      "model_dependencies": [],
+      "not_claimed": [
+        "atom-level region surfaces",
+        "a single elastic constant for all regions",
+        "exact unresolved linker conformations"
+      ],
+      "public_bindings": [
+        "data/showcase_claims.json#/objects/2/claim",
+        "data/presentation.json#/guided_chapters/0",
+        "data/presentation.json#/guided_chapters/1",
+        "data/presentation.json#/guided_chapters/2",
+        "data/presentation.json#/guided_chapters/3",
+        "data/presentation.json#/guided_chapters/4",
+        "data/presentation.json#/expert_cards/0",
+        "data/annotations.json#/components/1",
+        "data/annotations.json#/components/11",
+        "data/scenes.json#/scenes/meet_sarcomere",
+        "data/scenes.json#/scenes/follow_titin",
+        "data/scenes.json#/scenes/stretch_spring",
+        "data/scenes.json#/scenes/scaffold_thick_filament",
+        "data/scenes.json#/scenes/knowledge_recap"
+      ],
+      "quantity": null,
+      "render_class": "SCHEMATIC",
+      "review": {
+        "affiliation": null,
+        "locator_verified_independently": null,
+        "publication_consent": false,
+        "reviewed_on": null,
+        "reviewed_payload_sha256": null,
+        "reviewer": null,
+        "status": "PENDING"
+      },
+      "statement": "Titin is regionally heterogeneous: elastic I-band segments lie in series with an A-band segment integrated with the thick filament and a terminal M-region.",
+      "subject": {
+        "accession": "Q8WZ42-1",
+        "muscle_or_tissue": null,
+        "preparation": "reference-sequence model with separately declared structural/mechanics transfers",
+        "species": "Homo sapiens"
+      },
+      "support": [
+        {
+          "extraction_note": "region sequence and domain architecture. Transfer limit: Sequence annotations do not determine every 3D conformation.",
+          "locator": "UniProtKB Q8WZ42 release 2026_02, entry version 221, sequence version 4; DOMAIN, VAR_SEQ, VARIANT, and CONFLICT feature tables",
+          "relationship": "direct",
+          "source_id": "UniProt:Q8WZ42",
+          "source_subject": {
+            "muscle_or_tissue": null,
+            "preparation": "curated reference-sequence and feature record",
+            "species": "Homo sapiens"
+          }
+        },
+        {
+          "extraction_note": "axial alignment of A-band titin with the thick filament. Transfer limit: Supports axial organization, not a universal exact azimuth.",
+          "locator": "Fig. 1 and Supplementary Table 1 (domain nomenclature); Figs. 2–6 and Results (antibody positions and axial alignment)",
+          "relationship": "direct",
+          "source_id": "10.1016/j.jmb.2020.06.025",
+          "source_subject": {
+            "muscle_or_tissue": "psoas skeletal muscle",
+            "preparation": "isolated myofibrils; super-resolution antibody localization",
+            "species": "Oryctolagus cuniculus"
+          }
+        }
+      ]
+    }
+  ],
+  "references": {
+    "10.1016/j.jmb.2020.06.025": {
+      "authors": "Bennett et al.",
+      "doi": "10.1016/j.jmb.2020.06.025",
+      "identifier": "10.1016/j.jmb.2020.06.025",
+      "journal": "J Mol Biol",
+      "title": "The Axial Alignment of Titin on the Muscle Thick Filament Supports Its Role as a Molecular Ruler",
+      "year": 2020
+    },
+    "10.1083/jcb.140.4.853": {
+      "authors": "Trombitás et al.",
+      "doi": "10.1083/jcb.140.4.853",
+      "identifier": "10.1083/jcb.140.4.853",
+      "journal": "Journal of Cell Biology",
+      "title": "Titin extensibility in situ: entropic elasticity of permanently folded and permanently unfolded molecular segments",
+      "used_for": "Physiological I-band extension: tandem-Ig domains remain folded while the PEVK segment behaves as an unfolded entropic chain over the studied range.",
+      "year": 1998
+    },
+    "UniProt:Q8WZ42": {
+      "authors": "UniProt Consortium",
+      "doi": null,
+      "identifier": "UniProt:Q8WZ42",
+      "journal": "UniProtKB",
+      "title": "Titin Q8WZ42 (human) sequence and domain architecture",
+      "year": 2024
+    },
+    "data/mechanical_model.json": {
+      "availability": "embedded in the standalone candidate; no network required",
+      "identifier": "data/mechanical_model.json",
+      "title": "Local canonical record: data/mechanical_model.json"
+    }
+  }
+}

@@ -1,0 +1,219 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:68636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 19 tests using 1 worker
+
+[1/19] [chromium] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[2/19] [chromium] › test/browser/mvp-preview.spec.js:30:1 › MVP reduced-motion replay resets before showing the endpoint
+[3/19] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[4/19] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[5/19] [chromium] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries
+[6/19] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+  1) [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('#tabEvidence')
+    Expected: "true"
+    Received: "false"
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 8000ms
+      - waiting for locator('#tabEvidence')
+        19 × locator resolved to <button role="tab" id="tabEvidence" aria-selected="false" aria-controls="panelEvidence">Evidence</button>
+           - unexpected value "false"
+
+
+      105 |     await button.focus();
+      106 |     await page.keyboard.press('Enter');
+    > 107 |     await expect(page.locator('#tabEvidence')).toHaveAttribute('aria-selected', 'true');
+          |                                                ^
+      108 |     await expect(page.locator('#selectedEvidence')).toContainText('Titin');
+      109 |     const sources = page.locator('#selectedEvidenceSourcesLink');
+      110 |     const box = await sources.boundingBox();
+        at /Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:107:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-1280-final-d4a5b-oses-the-exact-source-route-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/mvp-preview-MVP-1280-final-d4a5b-oses-the-exact-source-route-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-1280-final-d4a5b-oses-the-exact-source-route-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mvp-preview-MVP-1280-final-d4a5b-oses-the-exact-source-route-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/19] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+  2) [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('#tabEvidence')
+    Expected: "true"
+    Received: "false"
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 8000ms
+      - waiting for locator('#tabEvidence')
+        19 × locator resolved to <button role="tab" id="tabEvidence" aria-selected="false" aria-controls="panelEvidence">Evidence</button>
+           - unexpected value "false"
+
+
+      105 |     await button.focus();
+      106 |     await page.keyboard.press('Enter');
+    > 107 |     await expect(page.locator('#tabEvidence')).toHaveAttribute('aria-selected', 'true');
+          |                                                ^
+      108 |     await expect(page.locator('#selectedEvidence')).toContainText('Titin');
+      109 |     const sources = page.locator('#selectedEvidenceSourcesLink');
+      110 |     const box = await sources.boundingBox();
+        at /Users/shotaro/Downloads/artifacts/test/browser/mvp-preview.spec.js:107:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-390-final--0c780-oses-the-exact-source-route-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/mvp-preview-MVP-390-final--0c780-oses-the-exact-source-route-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mvp-preview-MVP-390-final--0c780-oses-the-exact-source-route-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/mvp-preview-MVP-390-final--0c780-oses-the-exact-source-route-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[8/19] [chromium] › test/browser/stretch.spec.js:100:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[9/19] [chromium] › test/browser/stretch.spec.js:110:1 › SC24/27A Stretch replaces a Research close-up before running
+[10/19] [chromium] › test/browser/stretch.spec.js:123:1 › SC24/27A mobile Stretch reframes before its first length frame
+[11/19] [chromium] › test/browser/stretch.spec.js:132:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[12/19] [chromium] › test/browser/stretch.spec.js:146:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[13/19] [chromium] › test/browser/stretch.spec.js:161:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[14/19] [chromium] › test/browser/stretch.spec.js:195:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[15/19] [chromium] › test/browser/stretch.spec.js:209:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[16/19] [chromium] › test/browser/stretch.spec.js:221:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+[17/19] [chromium] › test/browser/stretch.spec.js:262:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction
+  3) [chromium] › test/browser/stretch.spec.js:262:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 1
+    Received:   6.82890781217381
+
+    Call Log:
+    - Timeout 8000ms exceeded while waiting on the predicate
+
+      257 |     const actual = await comparisonCamera(page);
+      258 |     return Math.max(...actual.map((v, i) => Math.abs(v - baseline[i])));
+    > 259 |   }).toBeLessThan(1);
+          |      ^
+      260 | }
+      261 | for (const viewport of [DESKTOP, { width: 390, height: 844 }]) {
+      262 |   test(`MVP ${viewport.width}: Stretch comparison frame is established on entry and retained through interaction`, async ({ page }) => {
+        at expectSameCamera (/Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:259:6)
+        at /Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:273:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/stretch-MVP-1280-Stretch-c-0275d-etained-through-interaction-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/stretch-MVP-1280-Stretch-c-0275d-etained-through-interaction-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/stretch-MVP-1280-Stretch-c-0275d-etained-through-interaction-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/stretch-MVP-1280-Stretch-c-0275d-etained-through-interaction-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[18/19] [chromium] › test/browser/stretch.spec.js:262:3 › MVP 390: Stretch comparison frame is established on entry and retained through interaction
+  4) [chromium] › test/browser/stretch.spec.js:262:3 › MVP 390: Stretch comparison frame is established on entry and retained through interaction 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 1
+    Received:   6.391147009572364
+
+    Call Log:
+    - Timeout 8000ms exceeded while waiting on the predicate
+
+      257 |     const actual = await comparisonCamera(page);
+      258 |     return Math.max(...actual.map((v, i) => Math.abs(v - baseline[i])));
+    > 259 |   }).toBeLessThan(1);
+          |      ^
+      260 | }
+      261 | for (const viewport of [DESKTOP, { width: 390, height: 844 }]) {
+      262 |   test(`MVP ${viewport.width}: Stretch comparison frame is established on entry and retained through interaction`, async ({ page }) => {
+        at expectSameCamera (/Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:259:6)
+        at /Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:273:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/stretch-MVP-390-Stretch-co-450ad-etained-through-interaction-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/stretch-MVP-390-Stretch-co-450ad-etained-through-interaction-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/stretch-MVP-390-Stretch-co-450ad-etained-through-interaction-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/stretch-MVP-390-Stretch-co-450ad-etained-through-interaction-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[19/19] [chromium] › test/browser/stretch.spec.js:290:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom
+  5) [chromium] › test/browser/stretch.spec.js:290:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 1
+    Received:   6.82890781217381
+
+    Call Log:
+    - Timeout 8000ms exceeded while waiting on the predicate
+
+      257 |     const actual = await comparisonCamera(page);
+      258 |     return Math.max(...actual.map((v, i) => Math.abs(v - baseline[i])));
+    > 259 |   }).toBeLessThan(1);
+          |      ^
+      260 | }
+      261 | for (const viewport of [DESKTOP, { width: 390, height: 844 }]) {
+      262 |   test(`MVP ${viewport.width}: Stretch comparison frame is established on entry and retained through interaction`, async ({ page }) => {
+        at expectSameCamera (/Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:259:6)
+        at /Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:302:9
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/stretch-MVP-direct-Stretch-8d465-anual-camera-remains-Custom-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/stretch-MVP-direct-Stretch-8d465-anual-camera-remains-Custom-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/stretch-MVP-direct-Stretch-8d465-anual-camera-remains-Custom-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/stretch-MVP-direct-Stretch-8d465-anual-camera-remains-Custom-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  5 failed
+    [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route 
+    [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route 
+    [chromium] › test/browser/stretch.spec.js:262:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction 
+    [chromium] › test/browser/stretch.spec.js:262:3 › MVP 390: Stretch comparison frame is established on entry and retained through interaction 
+    [chromium] › test/browser/stretch.spec.js:290:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom 
+  14 passed (7.1m)

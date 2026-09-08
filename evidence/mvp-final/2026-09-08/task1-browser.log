@@ -1,0 +1,11 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:67237) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 2 tests using 1 worker
+
+[1/2] [chromium] › test/browser/mvp-preview.spec.js:76:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries
+[2/2] [chromium] › test/browser/workbench.spec.js:180:1 › MVP Architecture identifies folded domains as titin with reference-wide metadata
+  2 passed (16.0s)

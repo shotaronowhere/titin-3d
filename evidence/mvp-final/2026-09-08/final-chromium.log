@@ -1,0 +1,97 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:76512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 85 tests using 1 worker
+
+[1/85] [chromium] › test/browser/evidence.spec.js:21:1 › SC22/27A object explanation is compact and Research owns the full selected claim
+[2/85] [chromium] › test/browser/evidence.spec.js:36:1 › SC22 Guided inspector stays compact and clear of the Tour continuation
+[3/85] [chromium] › test/browser/evidence.spec.js:55:1 › SC22 contextual source controls select object, chapter, all, and exact value
+[4/85] [chromium] › test/browser/evidence.spec.js:84:1 › SC22 value clearing falls back to the selected object instead of an empty source list
+[5/85] [chromium] › test/browser/evidence.spec.js:100:1 › SC22 parameter source routing closes to its visible stage invoker
+[6/85] [chromium] › test/browser/evidence.spec.js:112:1 › SC22 selectable chart point filters sources and restores the contextual invoker
+[7/85] [chromium] › test/browser/evidence.spec.js:125:1 › SC22 ClaimView keeps citations after copy, fields, and limitations
+[8/85] [chromium] › test/browser/evidence.spec.js:148:3 › SC22 desktop Research owns full titin, PEVK, and kinase detail
+[9/85] [chromium] › test/browser/evidence.spec.js:148:3 › SC22 responsive Research owns full titin, PEVK, and kinase detail
+[10/85] [chromium] › test/browser/learn.spec.js:20:3 › SC23/27A desktop completes the silent five-beat Tour without changing length
+[11/85] [chromium] › test/browser/learn.spec.js:20:3 › SC23/27A responsive completes the silent five-beat Tour without changing length
+[12/85] [chromium] › test/browser/learn.spec.js:44:1 › SC23 out-of-range Stretch setup stays explicit and user-reversible
+[13/85] [chromium] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene
+[14/85] [chromium] › test/browser/learn.spec.js:77:1 › SC23 Sources exposes the resolved semantic-scene context in Research
+[15/85] [chromium] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[16/85] [chromium] › test/browser/mvp-preview.spec.js:30:1 › MVP reduced-motion replay resets before showing the endpoint
+[17/85] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[18/85] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[19/85] [chromium] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries
+[20/85] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+[21/85] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+[22/85] [chromium] › test/browser/mvp-preview.spec.js:134:1 › MVP intermediate force labels retain declared precision and a stable control row
+[23/85] [chromium] › test/browser/smoke.spec.js:22:1 › source and standalone pages boot without module, console, or WebGL errors
+[24/85] [chromium] › test/browser/smoke.spec.js:40:1 › committed standalone opens from file:// and reaches its ready marker
+[25/85] [chromium] › test/browser/smoke.spec.js:44:1 › SC20 desktop authority: consumed rulings and a claim source are visibly inspectable
+[26/85] [chromium] › test/browser/smoke.spec.js:66:3 › desktop: Research tabs open in order and return focus to the invoker
+[27/85] [chromium] › test/browser/smoke.spec.js:66:3 › responsive: Research tabs open in order and return focus to the invoker
+[28/85] [chromium] › test/browser/smoke.spec.js:80:1 › visible source links and contextual Stretch states use declared readable foregrounds
+[29/85] [chromium] › test/browser/smoke.spec.js:118:1 › region and close-up navigation never leave a false wide-view pressed state
+[30/85] [chromium] › test/browser/smoke.spec.js:140:1 › a missing WebGL context produces an actionable static-fallback message
+[31/85] [chromium] › test/browser/smoke.spec.js:153:1 › the pinned axe foundation reports no critical WCAG A/AA violation
+[32/85] [chromium] › test/browser/stretch.spec.js:100:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[33/85] [chromium] › test/browser/stretch.spec.js:110:1 › SC24/27A Stretch replaces a Research close-up before running
+[34/85] [chromium] › test/browser/stretch.spec.js:123:1 › SC24/27A mobile Stretch reframes before its first length frame
+[35/85] [chromium] › test/browser/stretch.spec.js:132:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[36/85] [chromium] › test/browser/stretch.spec.js:146:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[37/85] [chromium] › test/browser/stretch.spec.js:161:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[38/85] [chromium] › test/browser/stretch.spec.js:195:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[39/85] [chromium] › test/browser/stretch.spec.js:209:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[40/85] [chromium] › test/browser/stretch.spec.js:221:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+[41/85] [chromium] › test/browser/stretch.spec.js:262:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction
+[42/85] [chromium] › test/browser/stretch.spec.js:262:3 › MVP 390: Stretch comparison frame is established on entry and retained through interaction
+[43/85] [chromium] › test/browser/stretch.spec.js:292:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom
+[44/85] [chromium] › test/browser/ux-overhaul.spec.js:353:3 › SC27A Tour shell obeys its viewport contract at 375x812
+[45/85] [chromium] › test/browser/ux-overhaul.spec.js:353:3 › SC27A Tour shell obeys its viewport contract at 390x844
+[46/85] [chromium] › test/browser/ux-overhaul.spec.js:353:3 › SC27A Tour shell obeys its viewport contract at 768x1024
+[47/85] [chromium] › test/browser/ux-overhaul.spec.js:353:3 › SC27A Tour shell obeys its viewport contract at 1024x768
+[48/85] [chromium] › test/browser/ux-overhaul.spec.js:353:3 › SC27A Tour shell obeys its viewport contract at 1280x720
+[49/85] [chromium] › test/browser/ux-overhaul.spec.js:353:3 › SC27A Tour shell obeys its viewport contract at 1440x900
+[50/85] [chromium] › test/browser/ux-overhaul.spec.js:428:3 › SC27A browser history restores complete overlay frames at 375x812
+[51/85] [chromium] › test/browser/ux-overhaul.spec.js:428:3 › SC27A browser history restores complete overlay frames at 390x844
+[52/85] [chromium] › test/browser/ux-overhaul.spec.js:428:3 › SC27A browser history restores complete overlay frames at 768x1024
+[53/85] [chromium] › test/browser/ux-overhaul.spec.js:428:3 › SC27A browser history restores complete overlay frames at 1024x768
+[54/85] [chromium] › test/browser/ux-overhaul.spec.js:428:3 › SC27A browser history restores complete overlay frames at 1280x720
+[55/85] [chromium] › test/browser/ux-overhaul.spec.js:428:3 › SC27A browser history restores complete overlay frames at 1440x900
+[56/85] [chromium] › test/browser/ux-overhaul.spec.js:452:3 › SC27A Research resynchronizes the stage across 768x1024 ↔ 1024x768
+[57/85] [chromium] › test/browser/ux-overhaul.spec.js:452:3 › SC27A Research resynchronizes the stage across 375x812 ↔ 1280x720
+[58/85] [chromium] › test/browser/ux-overhaul.spec.js:488:1 › SC27A compact-height coverage sits below the declared release envelope
+[59/85] [chromium] › test/browser/ux-overhaul.spec.js:498:3 › SC27A compact-height inspection guidance remains visible at 375x667
+[60/85] [chromium] › test/browser/ux-overhaul.spec.js:498:3 › SC27A compact-height inspection guidance remains visible at 390x684
+[61/85] [chromium] › test/browser/ux-overhaul.spec.js:498:3 › SC27A compact-height inspection guidance remains visible at 360x640
+[62/85] [chromium] › test/browser/ux-overhaul.spec.js:545:3 › SC27A semantic cameras clear chrome at 375x812
+[63/85] [chromium] › test/browser/ux-overhaul.spec.js:545:3 › SC27A semantic cameras clear chrome at 390x844
+[64/85] [chromium] › test/browser/ux-overhaul.spec.js:545:3 › SC27A semantic cameras clear chrome at 768x1024
+[65/85] [chromium] › test/browser/ux-overhaul.spec.js:545:3 › SC27A semantic cameras clear chrome at 1024x768
+[66/85] [chromium] › test/browser/ux-overhaul.spec.js:545:3 › SC27A semantic cameras clear chrome at 1280x720
+[67/85] [chromium] › test/browser/ux-overhaul.spec.js:545:3 › SC27A semantic cameras clear chrome at 1440x900
+[68/85] [chromium] › test/browser/ux-overhaul.spec.js:585:3 › SC27A a pinned explanation never covers a scientific label at 1280x720
+[69/85] [chromium] › test/browser/ux-overhaul.spec.js:585:3 › SC27A a pinned explanation never covers a scientific label at 1024x768
+[70/85] [chromium] › test/browser/ux-overhaul.spec.js:585:3 › SC27A a pinned explanation never covers a scientific label at 375x812
+[71/85] [chromium] › test/browser/ux-overhaul.spec.js:609:1 › SC27A has one five-beat route, contextual mechanics, and a truthful Replay
+[72/85] [chromium] › test/browser/ux-overhaul.spec.js:654:1 › SC27A presenter x accelerator enters the complete Stretch beat from anywhere
+[73/85] [chromium] › test/browser/ux-overhaul.spec.js:670:1 › SC27A Research defaults and contextual routes preserve the Tour return point
+[74/85] [chromium] › test/browser/ux-overhaul.spec.js:699:1 › SC27A object explanation reaches contextual Evidence and Sources
+[75/85] [chromium] › test/browser/ux-overhaul.spec.js:728:1 › SC27A mobile Research is one full-screen scroll sheet and leaves no stage target active
+[76/85] [chromium] › test/browser/ux-overhaul.spec.js:764:1 › SC27A 200% browser-zoom layout equivalent preserves the Tour route
+[77/85] [chromium] › test/browser/ux-overhaul.spec.js:779:3 › SC27A automated accessibility has no WCAG finding at 375x812
+[78/85] [chromium] › test/browser/ux-overhaul.spec.js:779:3 › SC27A automated accessibility has no WCAG finding at 1280x720
+[79/85] [chromium] › test/browser/workbench.spec.js:27:3 › SC26 1280x720 expert route exposes inspect, measure, evidence, and handoff
+[80/85] [chromium] › test/browser/workbench.spec.js:27:3 › SC26 1440x900 expert route exposes inspect, measure, evidence, and handoff
+[81/85] [chromium] › test/browser/workbench.spec.js:74:1 › SC26 Inspect never attributes titin sequence metadata to actin or myosin
+[82/85] [chromium] › test/browser/workbench.spec.js:88:1 › SC26 browser downloads deterministic bytes and unsupported force is blank, not zero
+[83/85] [chromium] › test/browser/workbench.spec.js:108:1 › SC26 all four handoff files agree at supported, extrapolated, and omitted states
+[84/85] [chromium] › test/browser/workbench.spec.js:165:1 › SC26 network failure leaves local locators and claim export operational
+[85/85] [chromium] › test/browser/workbench.spec.js:180:1 › MVP Architecture identifies folded domains as titin with reference-wide metadata
+  Slow test file: [chromium] › test/browser/ux-overhaul.spec.js (7.5m)
+  Slow test file: [chromium] › test/browser/stretch.spec.js (5.2m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  85 passed (19.5m)

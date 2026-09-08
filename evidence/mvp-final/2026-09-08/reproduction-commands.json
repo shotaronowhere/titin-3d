@@ -1,0 +1,54 @@
+[
+  {
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/Users/shotaro/Downloads/artifacts",
+    "status": 0,
+    "output": "34395fbb2a6119db016c9527c75ad741359de3f1\n"
+  },
+  {
+    "cmd": "git",
+    "args": [
+      "worktree",
+      "add",
+      "--detach",
+      "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-KFWV3r/checkout",
+      "34395fbb2a6119db016c9527c75ad741359de3f1"
+    ],
+    "cwd": "/Users/shotaro/Downloads/artifacts",
+    "status": 0,
+    "output": "HEAD is now at 34395fb Regenerate the final preview with destination scroll restoration\nPreparing worktree (detached HEAD 34395fb)\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "ci"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-KFWV3r/checkout",
+    "status": 0,
+    "output": "\nadded 37 packages, and audited 38 packages in 3s\n\nfound 0 vulnerabilities\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "run",
+      "build:release"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-KFWV3r/checkout",
+    "status": 0,
+    "output": "\n> titin-visualization@0.3.0 build:release\n> node scripts/build_standalone.mjs --release\n\nwrote index.html  2.12 MB\n  bundle: 1251 KB (three r0.185.1 inlined)\n  spec files embedded: 18\n  page-module imports collapsed: 14\n  model: 7badc8e270e7\n  app: dcdb403a759bd3df1f7d7bc821f3a73aeeb10caa\n  build inputs: 0d4877e8a7ce\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "run",
+      "pack"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-KFWV3r/checkout",
+    "status": 0,
+    "output": "\n> titin-visualization@0.3.0 pack\n> node scripts/build_release_pack.mjs\n\nwrote release/  22 generated outputs, build inputs 0d4877e8a7ce\n  20 claims, 173 non-claims, 6 fallback slides, 48 screenshot cells\n"
+  }
+]
