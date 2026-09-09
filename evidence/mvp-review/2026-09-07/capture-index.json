@@ -1,0 +1,99 @@
+{
+  "review_date": "2026-09-07/08",
+  "repository_head": "32e8941",
+  "standalone_sha256": "b5ee9beb2ea4f7b9c26dd25d5574018952a4f1518c6af12573e4b758086f4f5e",
+  "capture_method": "Live Codex in-app browser via CUA; no image generation or retouching. Saved frames are review evidence, not a full automated matrix or physical-device test.",
+  "frames": [
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/architecture-classification.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "394016afba20c430ebb23c76b9503b87c8e30dfb06ec386df9c111032665201d",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/desktop-evidence.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "9528ab4fbe2555794b6e010d072433618141aa04cc4227e73e71d7da331f0b46",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/desktop-opening.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "1baddfebef48b17d6fa611141c00f4724c15d153eecb66db24df9822be299e48",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/desktop-recap.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "aef30b12e878f535ac88169a8ff42851face5dd522828af4a89ca01d717fcf16",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/desktop-route.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "68e0739d5e33345984b0ffd4774b06c546a43665283932f56693465e7dc28092",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/desktop-scaffold.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "313f7d6b0479981fd60923ead1bd50d83401c5ec52e0784ccdb52ed06154b621",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/desktop-source-locator.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "6fb824788c98d120b7de0737ddb9d6a9bb8f92546c6c62bb898ec7c2288c1cdc",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/desktop-stretch-2200.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "9e7e2ad345ece7a6254852b3fa955061d345b17f5ffb77a7deabe6b901193141",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/desktop-stretch-2400.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "9633e20a854df5d8895bd077b6c0de79422aca981dbe4f24c35a2f973945fa54",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/mobile-force.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "014fd0ce9b32f05da8b7fcb1ef76ef4d79bfb7e9ea8feac682df07ed21145c1d",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/mobile-opening.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "20802c0b5dfb5a295e42940d8903402a1f2b773a31f2fb854b338537b740198d",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/mobile-stretch.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "1e3a9c45eeb9bbcf0b1462b5d91c1b864960d52719294ff513fb80f037bc6751",
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "/Users/shotaro/Downloads/artifacts/evidence/mvp-review/2026-09-07/frames/scope-contradiction.jpg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "e235a8f8094e86c76a631987f276649c365e24617c80aa81b943ff09a2c0d2cd",
+      "mime_type": "image/jpeg"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+
+> titin-visualization@0.3.0 check:build
+> node scripts/build_standalone.mjs --check
+
+index.html is current
+  bundle: 1251 KB (three r0.185.1 inlined)
+  spec files embedded: 18
+  page-module imports collapsed: 14
+  model: 7badc8e270e7
+  app: 557f09aaa6f663b4e1bf958ef6c44357861a4d16
+  build inputs: d7970b235a73

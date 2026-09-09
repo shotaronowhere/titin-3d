@@ -1,0 +1,160 @@
+[
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "fontUserUnits": 12,
+    "chartWidth": 359.796875,
+    "drawerWidth": 396.796875,
+    "effectiveFontPx": 6.924999999999999,
+    "clipped": [],
+    "collisions": []
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "fontUserUnits": 18,
+    "chartWidth": 359.796875,
+    "drawerWidth": 396.796875,
+    "effectiveFontPx": 10.3875,
+    "clipped": [
+      {
+        "text": "approximate passive force per titin (pN)",
+        "box": {
+          "x": 901.284912109375,
+          "y": 429.543212890625,
+          "width": 12,
+          "height": 194.109375
+        }
+      }
+    ],
+    "collisions": [
+      [
+        "1,900",
+        "0.0"
+      ]
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "fontUserUnits": 24,
+    "chartWidth": 359.796875,
+    "drawerWidth": 396.796875,
+    "effectiveFontPx": 13.849999999999998,
+    "clipped": [
+      {
+        "text": "3,000",
+        "box": {
+          "x": 1229.9500732421875,
+          "y": 588.0416870117188,
+          "width": 36.703125,
+          "height": 15.99993896484375
+        }
+      },
+      {
+        "text": "approximate passive force per titin (pN)",
+        "box": {
+          "x": 898.284912109375,
+          "y": 401.269775390625,
+          "width": 16,
+          "height": 250.65625
+        }
+      }
+    ],
+    "collisions": [
+      [
+        "1,900",
+        "0.0"
+      ],
+      [
+        "0.50",
+        "approximate passive force per titin (pN)"
+      ]
+    ]
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "fontUserUnits": 12,
+    "chartWidth": 354,
+    "drawerWidth": 390,
+    "effectiveFontPx": 6.8125,
+    "clipped": [],
+    "collisions": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "fontUserUnits": 18,
+    "chartWidth": 354,
+    "drawerWidth": 390,
+    "effectiveFontPx": 10.21875,
+    "clipped": [
+      {
+        "text": "approximate passive force per titin (pN)",
+        "box": {
+          "x": 16.95833396911621,
+          "y": 429.90887451171875,
+          "width": 11.999998092651367,
+          "height": 190.921875
+        }
+      }
+    ],
+    "collisions": [
+      [
+        "1,900",
+        "0.0"
+      ]
+    ]
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "fontUserUnits": 24,
+    "chartWidth": 354,
+    "drawerWidth": 390,
+    "effectiveFontPx": 13.625,
+    "clipped": [
+      {
+        "text": "3,000",
+        "box": {
+          "x": 340.453125,
+          "y": 585.6041259765625,
+          "width": 36.09375,
+          "height": 16
+        }
+      },
+      {
+        "text": "approximate passive force per titin (pN)",
+        "box": {
+          "x": 13.958332061767578,
+          "y": 402.11981201171875,
+          "width": 15.999996185302734,
+          "height": 246.5
+        }
+      }
+    ],
+    "collisions": [
+      [
+        "1,900",
+        "0.0"
+      ],
+      [
+        "0.50",
+        "approximate passive force per titin (pN)"
+      ]
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "index_sha256": "d04fbf3b9298829821d89e7fcbd9616b67d1291f3886ac9d15617764b9c4e27c",
+  "zip_index_sha256": "d04fbf3b9298829821d89e7fcbd9616b67d1291f3886ac9d15617764b9c4e27c",
+  "zip_sha256": "0cd5139013767d8dae4df297a4c42cf7ab057c6a0cc72a8b065296b36e8488aa",
+  "manifest_json_sha256": "9463727da702b0f69a2b51a45eeaf53720247fd8c68c78efde1b95f9f6b6145e",
+  "capture_matches_current_index": true,
+  "verified_frame_hashes": 22,
+  "frame_hash_failures": []
+}

@@ -1,0 +1,5 @@
+
+> titin-visualization@0.3.0 check:pack
+> node scripts/build_release_pack.mjs --check
+
+release pack is current (22 generated outputs, build inputs d7970b235a73)
