@@ -1,0 +1,33 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:12904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 24 tests using 1 worker
+
+[1/24] [chromium] › test/browser/evidence.spec.js:21:1 › SC22/27A object explanation is compact and Research owns the full selected claim
+[2/24] [chromium] › test/browser/evidence.spec.js:36:1 › SC22 Guided inspector stays compact and clear of the Tour continuation
+[3/24] [chromium] › test/browser/evidence.spec.js:55:1 › SC22 contextual source controls select object, chapter, all, and exact value
+[4/24] [chromium] › test/browser/evidence.spec.js:84:1 › SC22 value clearing falls back to the selected object instead of an empty source list
+[5/24] [chromium] › test/browser/evidence.spec.js:100:1 › SC22 parameter source routing closes to its visible stage invoker
+[6/24] [chromium] › test/browser/evidence.spec.js:112:1 › SC22 selectable chart point filters sources and restores the contextual invoker
+[7/24] [chromium] › test/browser/evidence.spec.js:125:1 › SC22 ClaimView keeps citations after copy, fields, and limitations
+[8/24] [chromium] › test/browser/evidence.spec.js:148:3 › SC22 desktop Research owns full titin, PEVK, and kinase detail
+[9/24] [chromium] › test/browser/evidence.spec.js:148:3 › SC22 responsive Research owns full titin, PEVK, and kinase detail
+[10/24] [chromium] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[11/24] [chromium] › test/browser/mvp-preview.spec.js:30:1 › MVP reduced-motion replay resets before showing the endpoint
+[12/24] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[13/24] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[14/24] [chromium] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries
+[15/24] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+[16/24] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+[17/24] [chromium] › test/browser/mvp-preview.spec.js:134:1 › MVP intermediate force labels retain declared precision and a stable control row
+[18/24] [chromium] › test/browser/workbench.spec.js:27:3 › SC26 1280x720 expert route exposes inspect, measure, evidence, and handoff
+[19/24] [chromium] › test/browser/workbench.spec.js:27:3 › SC26 1440x900 expert route exposes inspect, measure, evidence, and handoff
+[20/24] [chromium] › test/browser/workbench.spec.js:74:1 › SC26 Inspect never attributes titin sequence metadata to actin or myosin
+[21/24] [chromium] › test/browser/workbench.spec.js:88:1 › SC26 browser downloads deterministic bytes and unsupported force is blank, not zero
+[22/24] [chromium] › test/browser/workbench.spec.js:108:1 › SC26 all four handoff files agree at supported, extrapolated, and omitted states
+[23/24] [chromium] › test/browser/workbench.spec.js:165:1 › SC26 network failure leaves local locators and claim export operational
+[24/24] [chromium] › test/browser/workbench.spec.js:180:1 › MVP Architecture identifies folded domains as titin with reference-wide metadata
+  24 passed (5.2m)

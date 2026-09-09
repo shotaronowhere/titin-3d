@@ -1,0 +1,15 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:13108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 6 tests using 1 worker
+
+[1/6] [chromium] › test/browser/ux-overhaul.spec.js:559:3 › SC27A semantic cameras clear chrome at 375x812
+[2/6] [chromium] › test/browser/ux-overhaul.spec.js:559:3 › SC27A semantic cameras clear chrome at 390x844
+[3/6] [chromium] › test/browser/ux-overhaul.spec.js:559:3 › SC27A semantic cameras clear chrome at 768x1024
+[4/6] [chromium] › test/browser/ux-overhaul.spec.js:559:3 › SC27A semantic cameras clear chrome at 1024x768
+[5/6] [chromium] › test/browser/ux-overhaul.spec.js:559:3 › SC27A semantic cameras clear chrome at 1280x720
+[6/6] [chromium] › test/browser/ux-overhaul.spec.js:559:3 › SC27A semantic cameras clear chrome at 1440x900
+  6 passed (1.3m)

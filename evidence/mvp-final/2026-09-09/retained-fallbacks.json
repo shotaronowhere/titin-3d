@@ -1,0 +1,35 @@
+{
+  "files": [
+    {
+      "path": "release/fallback/architecture.svg",
+      "sha256": "352d7699db0661a7da9a725b7bc74b52935dd61a393cb465e156a5c94586fab3",
+      "byte_identical_to": "dcdb403"
+    },
+    {
+      "path": "release/fallback/extension.svg",
+      "sha256": "901add44a2ea4a04216176e82e39945d560ad20ce0781e4b130f2f0bcae733f6",
+      "byte_identical_to": "dcdb403"
+    },
+    {
+      "path": "release/fallback/lattice.svg",
+      "sha256": "8180baa18ae8b06f3af2f6777113f3e892678d2a19cbd4012a253f0b662a1c1e",
+      "byte_identical_to": "dcdb403"
+    },
+    {
+      "path": "release/fallback/limitations.svg",
+      "sha256": "18768bbc1bc017f92ec4b55d88635a841ff1c335a89dd15fd2a6faedc1bd6413",
+      "byte_identical_to": "dcdb403"
+    },
+    {
+      "path": "release/fallback/provenance.svg",
+      "sha256": "fb29f657fab178a12a98a5ec12d8e96f4abda888928d1f0fbe9eccdea2846f99",
+      "byte_identical_to": "dcdb403"
+    },
+    {
+      "path": "release/fallback/scope.svg",
+      "sha256": "b07e4d8e6ad6eaf3776af4cc0472292597c181561156d60c02b8ab1fb8894c7b",
+      "byte_identical_to": "dcdb403"
+    }
+  ],
+  "note": "These six slides are byte-identical to the previously rendered and reviewed candidate; no new slide-render review is claimed."
+}

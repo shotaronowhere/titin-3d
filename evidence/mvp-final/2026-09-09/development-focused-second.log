@@ -1,0 +1,48 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:4865) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 6 tests using 1 worker
+
+[1/6] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 1280: force labels are readable and Large type actually enlarges them
+[2/6] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 390: force labels are readable and Large type actually enlarges them
+[3/6] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 320: force labels are readable and Large type actually enlarges them
+  1) [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 320: force labels are readable and Large type actually enlarges them 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1
+    Received:    15
+
+      45 |     expect(ordinary.clipped).toEqual([]);
+      46 |     expect(ordinary.intersections).toEqual([]);
+    > 47 |     expect(ordinary.overflow).toBeLessThanOrEqual(1);
+         |                               ^
+      48 |     const ordinaryText = await page.locator('#mechanicsScope').evaluate(node => parseFloat(getComputedStyle(node).fontSize));
+      49 |     await page.locator('#textScale').click();
+      50 |     await expect(page.locator('#textScale')).toHaveAttribute('aria-pressed', 'true');
+        at /Users/shotaro/Downloads/artifacts/test/browser/final-polish.spec.js:47:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--c3877-type-actually-enlarges-them-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/final-polish-Final-polish--c3877-type-actually-enlarges-them-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--c3877-type-actually-enlarges-them-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/final-polish-Final-polish--c3877-type-actually-enlarges-them-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/6] [chromium] › test/browser/final-polish.spec.js:63:1 › Final polish: withdraw the colliding locator while keeping the main model labels
+[5/6] [chromium] › test/browser/final-polish.spec.js:82:1 › Final polish: phone Tour retains its locator and explains the opposite path
+[6/6] [chromium] › test/browser/final-polish.spec.js:91:1 › Final polish: selected scientific sources precede build identifiers on phone
+  1 failed
+    [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 320: force labels are readable and Large type actually enlarges them 
+  5 passed (49.6s)

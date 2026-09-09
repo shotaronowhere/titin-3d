@@ -1,0 +1,11 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:10737) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 2 tests using 1 worker
+
+[1/2] [chromium] › test/browser/picking.spec.js:348:1 › SC25 direct labels are operable by pointer and keyboard
+[2/2] [chromium] › test/browser/picking.spec.js:385:1 › SC25 a touch tap selects titin and the Research structure key on a phone
+  2 passed (16.9s)

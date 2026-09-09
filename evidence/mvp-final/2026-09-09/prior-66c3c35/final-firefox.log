@@ -1,0 +1,225 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:10776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 41 tests using 1 worker
+
+[1/41] [firefox] › test/browser/evidence.spec.js:21:1 › SC22/27A object explanation is compact and Research owns the full selected claim
+[2/41] [firefox] › test/browser/evidence.spec.js:36:1 › SC22 Guided inspector stays compact and clear of the Tour continuation
+[3/41] [firefox] › test/browser/evidence.spec.js:55:1 › SC22 contextual source controls select object, chapter, all, and exact value
+[4/41] [firefox] › test/browser/evidence.spec.js:84:1 › SC22 value clearing falls back to the selected object instead of an empty source list
+[5/41] [firefox] › test/browser/evidence.spec.js:100:1 › SC22 parameter source routing closes to its visible stage invoker
+[6/41] [firefox] › test/browser/evidence.spec.js:112:1 › SC22 selectable chart point filters sources and restores the contextual invoker
+[7/41] [firefox] › test/browser/evidence.spec.js:125:1 › SC22 ClaimView keeps citations after copy, fields, and limitations
+[8/41] [firefox] › test/browser/evidence.spec.js:148:3 › SC22 desktop Research owns full titin, PEVK, and kinase detail
+[9/41] [firefox] › test/browser/evidence.spec.js:148:3 › SC22 responsive Research owns full titin, PEVK, and kinase detail
+[10/41] [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 1280: force labels are readable and Large type actually enlarges them
+  1) [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 1280: force labels are readable and Large type actually enlarges them 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Array [
+    +     "1,900",
+    +     "0.0",
+    +   ],
+    + ]
+
+      52 |     expect(large.minFontPx).toBeGreaterThan(ordinary.minFontPx);
+      53 |     expect(large.clipped).toEqual([]);
+    > 54 |     expect(large.intersections).toEqual([]);
+         |                                 ^
+      55 |     expect(large.overflow).toBeLessThanOrEqual(1);
+      56 |     const largeText = await page.locator('#mechanicsScope').evaluate(node => parseFloat(getComputedStyle(node).fontSize));
+      57 |     expect(largeText).toBeGreaterThan(ordinaryText);
+        at /Users/shotaro/Downloads/artifacts/test/browser/final-polish.spec.js:54:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--d1276-type-actually-enlarges-them-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/final-polish-Final-polish--d1276-type-actually-enlarges-them-firefox/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--d1276-type-actually-enlarges-them-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/final-polish-Final-polish--d1276-type-actually-enlarges-them-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[11/41] [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 390: force labels are readable and Large type actually enlarges them
+  2) [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 390: force labels are readable and Large type actually enlarges them 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Array [
+    +     "1,900",
+    +     "0.0",
+    +   ],
+    + ]
+
+      52 |     expect(large.minFontPx).toBeGreaterThan(ordinary.minFontPx);
+      53 |     expect(large.clipped).toEqual([]);
+    > 54 |     expect(large.intersections).toEqual([]);
+         |                                 ^
+      55 |     expect(large.overflow).toBeLessThanOrEqual(1);
+      56 |     const largeText = await page.locator('#mechanicsScope').evaluate(node => parseFloat(getComputedStyle(node).fontSize));
+      57 |     expect(largeText).toBeGreaterThan(ordinaryText);
+        at /Users/shotaro/Downloads/artifacts/test/browser/final-polish.spec.js:54:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--cf4c9-type-actually-enlarges-them-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/final-polish-Final-polish--cf4c9-type-actually-enlarges-them-firefox/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--cf4c9-type-actually-enlarges-them-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/final-polish-Final-polish--cf4c9-type-actually-enlarges-them-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[12/41] [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 320: force labels are readable and Large type actually enlarges them
+  3) [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 320: force labels are readable and Large type actually enlarges them 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 18
+
+    - Array []
+    + Array [
+    +   Array [
+    +     "1,900",
+    +     "0.0",
+    +   ],
+    +   Array [
+    +     "2,340",
+    +     "2,560",
+    +   ],
+    +   Array [
+    +     "2,560",
+    +     "2,780",
+    +   ],
+    +   Array [
+    +     "2,780",
+    +     "3,000",
+    +   ],
+    + ]
+
+      52 |     expect(large.minFontPx).toBeGreaterThan(ordinary.minFontPx);
+      53 |     expect(large.clipped).toEqual([]);
+    > 54 |     expect(large.intersections).toEqual([]);
+         |                                 ^
+      55 |     expect(large.overflow).toBeLessThanOrEqual(1);
+      56 |     const largeText = await page.locator('#mechanicsScope').evaluate(node => parseFloat(getComputedStyle(node).fontSize));
+      57 |     expect(largeText).toBeGreaterThan(ordinaryText);
+        at /Users/shotaro/Downloads/artifacts/test/browser/final-polish.spec.js:54:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--c3877-type-actually-enlarges-them-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/final-polish-Final-polish--c3877-type-actually-enlarges-them-firefox/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--c3877-type-actually-enlarges-them-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/final-polish-Final-polish--c3877-type-actually-enlarges-them-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[13/41] [firefox] › test/browser/final-polish.spec.js:63:1 › Final polish: withdraw the colliding locator while keeping the main model labels
+[14/41] [firefox] › test/browser/final-polish.spec.js:85:1 › Final polish: phone Tour retains its locator and explains the opposite path
+[15/41] [firefox] › test/browser/final-polish.spec.js:94:1 › Final polish: selected scientific sources precede build identifiers on phone
+[16/41] [firefox] › test/browser/final-polish.spec.js:109:1 › Final polish: chart labels fit across supported and extrapolated states
+  4) [firefox] › test/browser/final-polish.spec.js:109:1 › Final polish: chart labels fit across supported and extrapolated states 
+
+    Error: 2000 nm, large=true
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Array [
+    +     "1,900",
+    +     "0.0",
+    +   ],
+    + ]
+
+      116 |       const layout = await chartLayout(page);
+      117 |       expect(layout.clipped, `${length} nm, large=${large}`).toEqual([]);
+    > 118 |       expect(layout.intersections, `${length} nm, large=${large}`).toEqual([]);
+          |                                                                    ^
+      119 |     }
+      120 |     await expect(page.locator('.force-readout')).toContainText(length === 2450 ? 'extrapolated' : 'supported');
+      121 |     await page.locator('#textScale').click();
+        at /Users/shotaro/Downloads/artifacts/test/browser/final-polish.spec.js:118:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--6f5b6-ted-and-extrapolated-states-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/final-polish-Final-polish--6f5b6-ted-and-extrapolated-states-firefox/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/final-polish-Final-polish--6f5b6-ted-and-extrapolated-states-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/final-polish-Final-polish--6f5b6-ted-and-extrapolated-states-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[17/41] [firefox] › test/browser/learn.spec.js:20:3 › SC23/27A desktop completes the silent five-beat Tour without changing length
+[18/41] [firefox] › test/browser/learn.spec.js:20:3 › SC23/27A responsive completes the silent five-beat Tour without changing length
+[19/41] [firefox] › test/browser/learn.spec.js:44:1 › SC23 out-of-range Stretch setup stays explicit and user-reversible
+[20/41] [firefox] › test/browser/learn.spec.js:62:1 › SC23 legacy step-only links restore and canonicalize the complete final scene
+[21/41] [firefox] › test/browser/learn.spec.js:77:1 › SC23 Sources exposes the resolved semantic-scene context in Research
+[22/41] [firefox] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[23/41] [firefox] › test/browser/mvp-preview.spec.js:30:1 › MVP reduced-motion replay resets before showing the endpoint
+[24/41] [firefox] › test/browser/mvp-preview.spec.js:50:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[25/41] [firefox] › test/browser/mvp-preview.spec.js:50:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[26/41] [firefox] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries
+[27/41] [firefox] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+[28/41] [firefox] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+[29/41] [firefox] › test/browser/mvp-preview.spec.js:134:1 › MVP intermediate force labels retain declared precision and a stable control row
+[30/41] [firefox] › test/browser/stretch.spec.js:102:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[31/41] [firefox] › test/browser/stretch.spec.js:112:1 › SC24/27A Stretch replaces a Research close-up before running
+[32/41] [firefox] › test/browser/stretch.spec.js:125:1 › SC24/27A mobile Stretch reframes before its first length frame
+[33/41] [firefox] › test/browser/stretch.spec.js:134:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[34/41] [firefox] › test/browser/stretch.spec.js:148:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[35/41] [firefox] › test/browser/stretch.spec.js:163:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[36/41] [firefox] › test/browser/stretch.spec.js:197:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[37/41] [firefox] › test/browser/stretch.spec.js:211:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[38/41] [firefox] › test/browser/stretch.spec.js:223:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+[39/41] [firefox] › test/browser/stretch.spec.js:264:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction
+[40/41] [firefox] › test/browser/stretch.spec.js:264:3 › MVP 390: Stretch comparison frame is established on entry and retained through interaction
+[41/41] [firefox] › test/browser/stretch.spec.js:294:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom
+  4 failed
+    [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 1280: force labels are readable and Large type actually enlarges them 
+    [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 390: force labels are readable and Large type actually enlarges them 
+    [firefox] › test/browser/final-polish.spec.js:38:3 › Final polish 320: force labels are readable and Large type actually enlarges them 
+    [firefox] › test/browser/final-polish.spec.js:109:1 › Final polish: chart labels fit across supported and extrapolated states 
+  37 passed (5.0m)

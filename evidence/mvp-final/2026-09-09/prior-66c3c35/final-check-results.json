@@ -1,0 +1,50 @@
+{
+  "app_revision": "66c3c359bc84c581b122814c46008d1ad320f1ba",
+  "build_inputs_fingerprint": "39d9d9465d18969b42b8b4b412398aafa4498de04f27484b24563334618d8aa2",
+  "results": [
+    {
+      "name": "verify",
+      "command": "npm",
+      "args": [
+        "run",
+        "verify"
+      ],
+      "started": "2026-09-08T23:29:25.794Z",
+      "finished": "2026-09-08T23:32:46.618Z",
+      "exit_code": 0
+    },
+    {
+      "name": "identity",
+      "command": "npm",
+      "args": [
+        "run",
+        "verify:identity"
+      ],
+      "started": "2026-09-08T23:32:46.619Z",
+      "finished": "2026-09-08T23:32:46.812Z",
+      "exit_code": 0
+    },
+    {
+      "name": "chromium",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/final-polish.spec.js",
+        "test/browser/mvp-preview.spec.js",
+        "test/browser/stretch.spec.js",
+        "test/browser/learn.spec.js",
+        "test/browser/evidence.spec.js",
+        "test/browser/workbench.spec.js",
+        "test/browser/smoke.spec.js",
+        "test/browser/ux-overhaul.spec.js",
+        "--project=chromium",
+        "--grep-invert",
+        "@sweep"
+      ],
+      "started": "2026-09-08T23:32:46.812Z",
+      "finished": "2026-09-08T23:58:37.144Z",
+      "exit_code": 1
+    }
+  ]
+}

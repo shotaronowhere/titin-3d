@@ -1,0 +1,147 @@
+{
+  "reviewed_at": "2026-09-09T00:22:07.904262+00:00",
+  "reviewer": "Codex visual inspection of all 24 fresh screenshots of the extracted final ZIP",
+  "index_sha256": "021fa46cb9df3957554fc2b238d5b3f39ab1083c607402263707deb6758957db",
+  "manifest_sha256": "68058894b0380c0b19335e35f39999d4eb8b11e2c39f4771a0acb9b820872555",
+  "frames": [
+    {
+      "name": "desktop-beat-1",
+      "sha256": "b63052b9fa772e89563e475518c63dda3779717f42583a91513e984fb2626e7a",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-beat-2",
+      "sha256": "9f0bc499797bde90818476961498485ca43a1cad60f911279acd6db077c87bac",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-beat-3",
+      "sha256": "3c4c06115b2dd4d910bb150e7e746fa01d5904f0081bab57a4bd9b020df264ce",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-stretch-endpoint",
+      "sha256": "a9ffada3c28cc2332abd324029811354fb98bedd7a3ff40e7a91ae5a09cef533",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-force",
+      "sha256": "07a1f0c95440b7238087aacc5d0baf33fc7e95e0f7c2c815e6ccf94fe3a51def",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-force-large",
+      "sha256": "1e146d566b751d973ccd4fa78ab0e4562e73b31a3d2ec4291aea4274fe7c4fc1",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-beat-4",
+      "sha256": "6405b42164a4db5b59bb513fc11ce1199774815c96ae5e5700a8198ee2df3a36",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-beat-5",
+      "sha256": "fae0b6c0adad57dae6100964892a495fb484fb3afafbd04d99650fc6016641d7",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-evidence",
+      "sha256": "d8fb210e372b61215058b64e67ba5b4686a23ae371f0822bf0eb07d562e16955",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-source",
+      "sha256": "bd44fde77e7a3bc4f7035c003026a80f44ff206a3f684f4188c6eea2daa660d0",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-scope",
+      "sha256": "985f00f5c62d373524ef99ff184f52625510cbbf54949453c82df8dd9c55226f",
+      "reviewed": true
+    },
+    {
+      "name": "desktop-architecture",
+      "sha256": "12d680c70adbfdb97e575cad381d05b6dfdcf7ccfa508920700bc9a8311841e3",
+      "reviewed": true
+    },
+    {
+      "name": "phone-beat-1",
+      "sha256": "69236f5e1a243c676af461782964facf12d7b04996113b84177737b90a38e842",
+      "reviewed": true
+    },
+    {
+      "name": "phone-beat-2",
+      "sha256": "0035f1bf3d9d275a11573c403fafbb7f4af1bf44260f93e0d7cabc1dee041062",
+      "reviewed": true
+    },
+    {
+      "name": "phone-beat-3",
+      "sha256": "480863831b64e71a10802890247d3c922e29dda9aed765bbfcd77d50420e17ba",
+      "reviewed": true
+    },
+    {
+      "name": "phone-stretch-endpoint",
+      "sha256": "2ec56e1af46aebb36171b22f107dd2ba862c6e42d8734c8fdbe4d4793982c1b8",
+      "reviewed": true
+    },
+    {
+      "name": "phone-force",
+      "sha256": "7a4f03fab14f043de09a24ffd1743ed06dc1a6dd1b0b4e77e4f6a8c43ce38955",
+      "reviewed": true
+    },
+    {
+      "name": "phone-force-large",
+      "sha256": "e0895c0b4643d78d31270a15113c177d1326851411d2356b9fcced3f8fc9f3b6",
+      "reviewed": true
+    },
+    {
+      "name": "phone-beat-4",
+      "sha256": "ddf61e1dca667c19f04f9487c6fef3ebee5fdedfe0e293ce65afc344ecbc31af",
+      "reviewed": true
+    },
+    {
+      "name": "phone-beat-5",
+      "sha256": "1d592044841b82c680965ec8012a4684db25e05818d952130fe0163d3b0b74d7",
+      "reviewed": true
+    },
+    {
+      "name": "phone-evidence",
+      "sha256": "1a124754782dfbdbf36c9265861f981ad7a6f040c4beee6a0f92ccf9933ab807",
+      "reviewed": true
+    },
+    {
+      "name": "phone-source",
+      "sha256": "932fd35bc16438eab060f3e174a88e0a2264cf010e4f5d9b9143371b1f6f2d91",
+      "reviewed": true
+    },
+    {
+      "name": "phone-scope",
+      "sha256": "37db78577f2562b43343ddb614694d704e84cf64073e4487aa5072904c845ccc",
+      "reviewed": true
+    },
+    {
+      "name": "phone-architecture",
+      "sha256": "a7ff0822f038d50d5b0563850292dc6d89a6c16a9e82430144ec1f3458a20723",
+      "reviewed": true
+    }
+  ],
+  "findings": [
+    "Force labels are readable at drawer scale; long axis titles wrap in HTML. Large type enlarges Research copy and chart labels.",
+    "Desktop Stretch and finale suppress the secondary locator where it crowds the model. Main termini and Stretch spans remain. Phone locator remains separate.",
+    "The opposite-half titin explanation fits beat 2 without obscuring navigation.",
+    "Selected sources and expandable locators precede raw build identifiers.",
+    "Tour navigation, final evidence action, scope and Architecture views remain usable.",
+    "Final chart uses five x ticks and extra baseline clearance; automated label-box checks pass in Chromium and Firefox at 1280, 390 and 320 pixel widths."
+  ],
+  "accepted_limits": [
+    "Long Research content requires scrolling; Large type increases the scroll height. Chart caption can fall below the first desktop viewport.",
+    "Opening/scaffold camera, lighting and established composition were retained.",
+    "Reduced-motion screenshots are a visual review, not certification of animated readability, human learning outcomes, projector readability or physical-device performance.",
+    "Locator clearance is a conservative screen-space heuristic, not exhaustive rendered-mesh collision detection."
+  ],
+  "capture_errors": [],
+  "non_file_requests": [],
+  "app_revision": "5d5f02d1a8699579cc775103c0cba793619aaa57",
+  "zip_sha256": "b835d8a7edc9106e1534d73374cc89f9404dfce7ece4c34d4b646d20c1a5bdde",
+  "capture_root": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-extracted-f65dbqfa/titin-sarcomere-preview"
+}

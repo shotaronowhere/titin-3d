@@ -1,0 +1,11 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:5794) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 2 tests using 1 worker
+
+[1/2] [chromium] › test/browser/final-polish.spec.js:63:1 › Final polish: withdraw the colliding locator while keeping the main model labels
+[2/2] [chromium] › test/browser/stretch.spec.js:264:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction
+  2 passed (1.0m)

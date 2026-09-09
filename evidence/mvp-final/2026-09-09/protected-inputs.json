@@ -1,0 +1,102 @@
+{
+  "baseline": "dcdb403a759bd3df1f7d7bc821f3a73aeeb10caa",
+  "all_byte_identical": true,
+  "files": [
+    {
+      "path": "data/annotations.json",
+      "sha256": "f184b6c181cb5aaa0e2e4c8c112ed79ea88357c45f5077caf9c4035ec5249a4e"
+    },
+    {
+      "path": "data/claim_support.json",
+      "sha256": "f4fb9575dbdabad76d9eadc57bde0fa9dc46d6d3b5df3081abf592351a6227d4"
+    },
+    {
+      "path": "data/context_measurements.json",
+      "sha256": "1a2aedd179ba16eb6cca150b7d114aeb382e1c2414dca8b52e906ae6ad9e42d7"
+    },
+    {
+      "path": "data/domain_backbones.json",
+      "sha256": "62ae7aea19d8ac5ae6e88e5ff41b283daefe2a5de61fb18840bb872ec8f71d82"
+    },
+    {
+      "path": "data/geometry_sources.json",
+      "sha256": "060978ad60b8d3a36f0e13befaaa0070195d4852da16cdb0ae24a072bd36e6ff"
+    },
+    {
+      "path": "data/geometry_strategy.json",
+      "sha256": "7d9836233d05cec540fb67b6a908a20ac579b86c30f393865a1f0a3bbd900e0f"
+    },
+    {
+      "path": "data/interdomain_measurements.json",
+      "sha256": "8129a98ab41eda57adbffeafed77036e80440a981193dbb6fe811e183fd5d145"
+    },
+    {
+      "path": "data/mechanical_model.json",
+      "sha256": "5ca320215e506b57f356a8baa7a5a6c8d947371e8392b226b77a76daefde5ee4"
+    },
+    {
+      "path": "data/mechanical_parameters.json",
+      "sha256": "c7fbf33ce82469f1fc346526e58e84c7c5434ad2b926ed05c37d27c443414cc3"
+    },
+    {
+      "path": "data/presentation.json",
+      "sha256": "5aec06808f88cc84731ce4d1e1fcbedf427b9a9d51fa0c8885f6573387d8ac33"
+    },
+    {
+      "path": "data/references.json",
+      "sha256": "08bfc621ba36c02f2524a400e0e1cfbaebe91f265894af5769ab4d7772791149"
+    },
+    {
+      "path": "data/release_gates.json",
+      "sha256": "02a7b69a68001081d15cd7c72982cec93ddde69eaf896ae8b73515af63e4e6c3"
+    },
+    {
+      "path": "data/render_style.json",
+      "sha256": "ed386effe5121eef1047bbb520580d2694010b5234a09541dfe04c23e68f9346"
+    },
+    {
+      "path": "data/sarcomere.json",
+      "sha256": "de959c99df017ab61760b0dae934e02dca2727e06b6c99cc9e56ae6815d30e0a"
+    },
+    {
+      "path": "data/scenes.json",
+      "sha256": "1406b6389c63a3b1f512b77406d2146326fa483db6c1e98012fcb60a43112e65"
+    },
+    {
+      "path": "data/scientific_decisions.json",
+      "sha256": "52e6a97c3cb8001c685d04d3684cc835ef8f58b44749ef522777f664d3118de5"
+    },
+    {
+      "path": "data/scientific_scope.json",
+      "sha256": "090da3ac5564adb47bdcfbc96baff242d42f59b239b90abb194953271ef4be13"
+    },
+    {
+      "path": "data/showcase_claims.json",
+      "sha256": "988a8edd408cd6db24346076121bfeb1345658d87afe24aced05823c9db77290"
+    },
+    {
+      "path": "data/structural_states.json",
+      "sha256": "569713b992b5d3dbaa26af59afefab76a7f05763735c94b8fbef76408738cf9a"
+    },
+    {
+      "path": "data/structure_measurements.json",
+      "sha256": "03831e045dd83cdcb2efeb72039c7caa8e9fb14e9d339d2b66484baeb07a0d9d"
+    },
+    {
+      "path": "data/titin.json",
+      "sha256": "7d060801a816aacd864e0c16c390154f0457b58a5881cf4caa620c2bf77fdca9"
+    },
+    {
+      "path": "data/titin_sequence_features.json",
+      "sha256": "93ddde035429517cd2448182717df2177ce82e75b0f64c650bd958ad805cddc5"
+    },
+    {
+      "path": "package.json",
+      "sha256": "841a689f36a0d16c4607aab59a54575e8bf105d068b772ae3c0180441cdf296d"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "108ea84c65ceff44d050d93d6ece22d0131ab296b886238571fd1dabcf1a5645"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "capture",
+    "args": [
+      "node",
+      "evidence/mvp-final/2026-09-09/capture_final.mjs",
+      "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-extracted-f65dbqfa/titin-sarcomere-preview",
+      "frames"
+    ],
+    "exit_code": 0,
+    "finished": "2026-09-09T00:21:15.137988+00:00"
+  },
+  {
+    "name": "exports",
+    "args": [
+      "node",
+      "evidence/mvp-final/2026-09-09/exports.mjs",
+      "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-extracted-f65dbqfa/titin-sarcomere-preview"
+    ],
+    "exit_code": 0,
+    "finished": "2026-09-09T00:22:05.004000+00:00"
+  }
+]

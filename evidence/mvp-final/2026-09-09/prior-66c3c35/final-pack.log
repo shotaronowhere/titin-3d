@@ -1,0 +1,6 @@
+
+> titin-visualization@0.3.0 pack
+> node scripts/build_release_pack.mjs
+
+wrote release/  22 generated outputs, build inputs 39d9d9465d18
+  20 claims, 173 non-claims, 6 fallback slides, 48 screenshot cells

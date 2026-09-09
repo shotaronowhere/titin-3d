@@ -1,0 +1,6 @@
+Starting verify at 2026-09-08T23:29:25.794Z
+verify: exit 0
+Starting identity at 2026-09-08T23:32:46.619Z
+identity: exit 0
+Starting chromium at 2026-09-08T23:32:46.812Z
+chromium: exit 1

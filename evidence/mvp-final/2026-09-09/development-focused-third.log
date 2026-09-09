@@ -1,0 +1,64 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:5151) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 19 tests using 1 worker
+
+[1/19] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 1280: force labels are readable and Large type actually enlarges them
+[2/19] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 390: force labels are readable and Large type actually enlarges them
+[3/19] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 320: force labels are readable and Large type actually enlarges them
+[4/19] [chromium] › test/browser/final-polish.spec.js:63:1 › Final polish: withdraw the colliding locator while keeping the main model labels
+[5/19] [chromium] › test/browser/final-polish.spec.js:82:1 › Final polish: phone Tour retains its locator and explains the opposite path
+[6/19] [chromium] › test/browser/final-polish.spec.js:91:1 › Final polish: selected scientific sources precede build identifiers on phone
+[7/19] [chromium] › test/browser/final-polish.spec.js:106:1 › Final polish: chart labels fit across supported and extrapolated states
+[8/19] [chromium] › test/browser/stretch.spec.js:102:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[9/19] [chromium] › test/browser/stretch.spec.js:112:1 › SC24/27A Stretch replaces a Research close-up before running
+[10/19] [chromium] › test/browser/stretch.spec.js:125:1 › SC24/27A mobile Stretch reframes before its first length frame
+[11/19] [chromium] › test/browser/stretch.spec.js:134:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[12/19] [chromium] › test/browser/stretch.spec.js:148:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[13/19] [chromium] › test/browser/stretch.spec.js:163:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[14/19] [chromium] › test/browser/stretch.spec.js:197:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[15/19] [chromium] › test/browser/stretch.spec.js:211:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[16/19] [chromium] › test/browser/stretch.spec.js:223:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+[17/19] [chromium] › test/browser/stretch.spec.js:264:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction
+  1) [chromium] › test/browser/stretch.spec.js:264:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction 
+
+    Error: expect(received).not.toBeNull()
+
+    Received: null
+
+    Call Log:
+    - Timeout 8000ms exceeded while waiting on the predicate
+
+      85 |
+      86 | async function expectGeometryInsideUnobscuredStage(page) {
+    > 87 |   await expect.poll(async () => (await framedGeometry(page)).iBandLabel).not.toBeNull();
+         |                                                                              ^
+      88 |   const geometry = await framedGeometry(page);
+      89 |   for (const point of geometry.points) {
+      90 |     expect(point.visible, point.id).toBe(true);
+        at expectGeometryInsideUnobscuredStage (/Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:87:78)
+        at /Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:272:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/stretch-MVP-1280-Stretch-c-0275d-etained-through-interaction-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/stretch-MVP-1280-Stretch-c-0275d-etained-through-interaction-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/stretch-MVP-1280-Stretch-c-0275d-etained-through-interaction-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/stretch-MVP-1280-Stretch-c-0275d-etained-through-interaction-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[18/19] [chromium] › test/browser/stretch.spec.js:264:3 › MVP 390: Stretch comparison frame is established on entry and retained through interaction
+[19/19] [chromium] › test/browser/stretch.spec.js:294:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom
+  1 failed
+    [chromium] › test/browser/stretch.spec.js:264:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction 
+  18 passed (7.1m)

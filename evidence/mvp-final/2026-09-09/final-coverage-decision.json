@@ -1,0 +1,24 @@
+{
+  "app_revision": "5d5f02d1a8699579cc775103c0cba793619aaa57",
+  "build_inputs_fingerprint": "0b16efc4b581fd91a7b07112f0f8989ed463990363ff288e56d60241e782e720",
+  "repository_verify": "passed; 618/618 Node tests; no skips; validators and identity passed",
+  "browser_cases": {
+    "chromium-polish": 7,
+    "firefox-polish": 7,
+    "chromium-routes": 24,
+    "camera": 6,
+    "keyboard-picking": 2,
+    "firefox-routes": 17
+  },
+  "browser_total": 63,
+  "chromium_cases": 39,
+  "firefox_cases": 24,
+  "selection": "Final-polish in both engines; evidence/preview in both; Chromium workbench, six camera layouts, keyboard/touch. The complete selection and exact commands are in final-check-results.json.",
+  "broader_prior_candidate": "prior-66c3c35/ retains the 92-case Chromium coverage set after six corrected camera reruns, two keyboard/touch cases and Firefox 37/41. Four Firefox chart failures prompted the final spacing fix. These earlier results are not final-byte tests.",
+  "webkit": "unverified; not rerun after prior candidate timeout stalls; existing plan section 9.C two-engine fallback",
+  "parameterized_sweep": "not run",
+  "formal_release_ready": false,
+  "independent_scientific_validation": "pending",
+  "human_usability_and_learning_outcomes": "pending",
+  "physical_device_projector_and_hosting_parity": "unverified"
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/Users/shotaro/Downloads/artifacts",
+    "status": 0,
+    "output": "30e5ecc398077363cd8423d4d590cf786b194dcd\n"
+  },
+  {
+    "cmd": "git",
+    "args": [
+      "worktree",
+      "add",
+      "--detach",
+      "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-3MHqzD/checkout",
+      "30e5ecc398077363cd8423d4d590cf786b194dcd"
+    ],
+    "cwd": "/Users/shotaro/Downloads/artifacts",
+    "status": 0,
+    "output": "HEAD is now at 30e5ecc Generate final researcher preview artifacts for 66c3c35\nPreparing worktree (detached HEAD 30e5ecc)\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "ci"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-3MHqzD/checkout",
+    "status": 0,
+    "output": "\nadded 37 packages, and audited 38 packages in 2s\n\nfound 0 vulnerabilities\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "run",
+      "build:release"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-3MHqzD/checkout",
+    "status": 0,
+    "output": "\n> titin-visualization@0.3.0 build:release\n> node scripts/build_standalone.mjs --release\n\nwrote index.html  2.12 MB\n  bundle: 1251 KB (three r0.185.1 inlined)\n  spec files embedded: 18\n  page-module imports collapsed: 14\n  model: 7badc8e270e7\n  app: 66c3c359bc84c581b122814c46008d1ad320f1ba\n  build inputs: 39d9d9465d18\n"
+  },
+  {
+    "cmd": "npm",
+    "args": [
+      "run",
+      "pack"
+    ],
+    "cwd": "/var/folders/6w/qg8btj197n9fzqd7lwxgwhb00000gn/T/titin-final-reproduction-3MHqzD/checkout",
+    "status": 0,
+    "output": "\n> titin-visualization@0.3.0 pack\n> node scripts/build_release_pack.mjs\n\nwrote release/  22 generated outputs, build inputs 39d9d9465d18\n  20 claims, 173 non-claims, 6 fallback slides, 48 screenshot cells\n"
+  }
+]

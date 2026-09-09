@@ -1,0 +1,11 @@
+
+> titin-visualization@0.3.0 verify:identity
+> node scripts/verify_artifact_identity.mjs --file index.html --manifest release/MANIFEST.json && node scripts/validate_artifact_boundary.mjs
+
+artifact identity verified: /Users/shotaro/Downloads/artifacts/index.html
+  model 7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6
+  app 66c3c359bc84c581b122814c46008d1ad320f1ba
+  build inputs 39d9d9465d18969b42b8b4b412398aafa4498de04f27484b24563334618d8aa2
+  index.html 0b10156ce1462cb5b2e798eb8163cacc98b09f05fae1cdbf6bbd1e9bd82d873b
+  manifest d511db20f8e1eb371b6179e01b4a7b545ef68c297cd79c84edaa56dc77437ac0
+artifact boundary validated: embedded inputs and post-candidate evidence are disjoint

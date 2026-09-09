@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: SC17: a presentation text scale exists and is user-controlled
+ok 1 - SC17: a presentation text scale exists and is user-controlled
+  ---
+  duration_ms: 0.894084
+  ...
+# Subtest: SC17/SC27A: default type meets the design floor and large mode raises it
+ok 2 - SC17/SC27A: default type meets the design floor and large mode raises it
+  ---
+  duration_ms: 0.443791
+  ...
+# Subtest: SC17: every declared presenter shortcut is bound to a key
+ok 3 - SC17: every declared presenter shortcut is bound to a key
+  ---
+  duration_ms: 0.89675
+  ...
+# Subtest: SC17/SC27A: shortcut accelerators remain in the accessible canvas description
+ok 4 - SC17/SC27A: shortcut accelerators remain in the accessible canvas description
+  ---
+  duration_ms: 0.29325
+  ...
+# Subtest: SC17: the printed script names the keys the page binds
+ok 5 - SC17: the printed script names the keys the page binds
+  ---
+  duration_ms: 0.81275
+  ...
+# Subtest: SC17: orientation is claim-bound while titin retains one identity colour
+ok 6 - SC17: orientation is claim-bound while titin retains one identity colour
+  ---
+  duration_ms: 0.407833
+  ...
+# Subtest: SC21: the parameter record is required, model-identifying, and decision-bound
+ok 7 - SC21: the parameter record is required, model-identifying, and decision-bound
+  ---
+  duration_ms: 2.680291
+  ...
+# Subtest: SC21: every law parameter carries units, uncertainty, source, preparation, and transfer
+ok 8 - SC21: every law parameter carries units, uncertainty, source, preparation, and transfer
+  ---
+  duration_ms: 0.306375
+  ...
+# Subtest: SC21: JavaScript contains algorithms but no duplicated material constants
+ok 9 - SC21: JavaScript contains algorithms but no duplicated material constants
+  ---
+  duration_ms: 0.240958
+  ...
+# Subtest: SC21: approved SD-04 emits force only inside its length regimes
+ok 10 - SC21: approved SD-04 emits force only inside its length regimes
+  ---
+  duration_ms: 77.535834
+  ...
+# Subtest: SC21: target evaluation cannot be confused with the development geometry solve
+ok 11 - SC21: target evaluation cannot be confused with the development geometry solve
+  ---
+  duration_ms: 33.894042
+  ...
+# Subtest: SC21: both solver ports reject targets outside their configured force bracket
+ok 12 - SC21: both solver ports reject targets outside their configured force bracket
+  ---
+  duration_ms: 189.002292
+  ...
+# Subtest: SC21: decision validation admits honest citation-backed and qualified-human provenance
+ok 13 - SC21: decision validation admits honest citation-backed and qualified-human provenance
+  ---
+  duration_ms: 80.609542
+  ...
+# Subtest: SC21: generated outputs contain identities and regime-authorized evaluations
+ok 14 - SC21: generated outputs contain identities and regime-authorized evaluations
+  ---
+  duration_ms: 0.196459
+  ...
+# Subtest: SC21: release pack exports the exact canonical parameter record
+ok 15 - SC21: release pack exports the exact canonical parameter record
+  ---
+  duration_ms: 2.245667
+  ...
+# Subtest: SC21: release validation supports a complete approved authority but rejects partial approval
+ok 16 - SC21: release validation supports a complete approved authority but rejects partial approval
+  ---
+  duration_ms: 277.810667
+  ...
+# Subtest: SC21: every sensitivity scenario is source-bound and remains non-probabilistic
+ok 17 - SC21: every sensitivity scenario is source-bound and remains non-probabilistic
+  ---
+  duration_ms: 0.289625
+  ...
+# Subtest: SC21: approved-regime scaffold honors both omission boundaries and PEVK-rise scenarios
+ok 18 - SC21: approved-regime scaffold honors both omission boundaries and PEVK-rise scenarios
+  ---
+  duration_ms: 1081.805041
+  ...
+# Subtest: SC21: approved evaluations conserve length and stay continuous and monotone by regime
+ok 19 - SC21: approved evaluations conserve length and stay continuous and monotone by regime
+  ---
+  duration_ms: 371.400917
+  ...
+# Subtest: SC21: uncertainty formatting obeys sensitivity place and significant-digit cap
+ok 20 - SC21: uncertainty formatting obeys sensitivity place and significant-digit cap
+  ---
+  duration_ms: 0.921084
+  ...
+# Subtest: SC21: approved presenter data includes regimes, marker precision, and sensitivity
+ok 21 - SC21: approved presenter data includes regimes, marker precision, and sensitivity
+  ---
+  duration_ms: 540.965791
+  ...
+# Subtest: SC21: validators and destructive controls pass
+ok 22 - SC21: validators and destructive controls pass
+  ---
+  duration_ms: 114.71525
+  ...
+# Subtest: SC21: the public mechanics surface is status-bearing and one-click auditable
+ok 23 - SC21: the public mechanics surface is status-bearing and one-click auditable
+  ---
+  duration_ms: 3.355875
+  ...
+# Subtest: SC27A: the public Tour is exactly five ordered beats with one transition each
+ok 24 - SC27A: the public Tour is exactly five ordered beats with one transition each
+  ---
+  duration_ms: 1.162291
+  ...
+# Subtest: SC27A: every v1 chapter alias canonicalizes directly to a final v3 beat
+ok 25 - SC27A: every v1 chapter alias canonicalizes directly to a final v3 beat
+  ---
+  duration_ms: 0.0875
+  ...
+# Subtest: SC27A: protected public claim bindings migrate without editing the claim ledger
+ok 26 - SC27A: protected public claim bindings migrate without editing the claim ledger
+  ---
+  duration_ms: 0.100958
+  ...
+# Subtest: SC27A: one presentation mapping covers every canonical evidence class
+ok 27 - SC27A: one presentation mapping covers every canonical evidence class
+  ---
+  duration_ms: 0.368208
+  ...
+# Subtest: SC27A: the five-beat merge preserves every v2 scientific non-claim
+ok 28 - SC27A: the five-beat merge preserves every v2 scientific non-claim
+  ---
+  duration_ms: 0.700375
+  ...
+# Subtest: SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat
+ok 29 - SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat
+  ---
+  duration_ms: 0.107625
+  ...
+# Subtest: SC27A: a zero-height first layout is deferred rather than treated as corrupt
+ok 30 - SC27A: a zero-height first layout is deferred rather than treated as corrupt
+  ---
+  duration_ms: 0.110458
+  ...
+# Subtest: SC27A: the presentation palette names its contrast and non-claim contracts
+ok 31 - SC27A: the presentation palette names its contrast and non-claim contracts
+  ---
+  duration_ms: 0.193917
+  ...
+# Subtest: SC27A: user-facing vocabulary and accessible grouping use Tour and Research
+ok 32 - SC27A: user-facing vocabulary and accessible grouping use Tour and Research
+  ---
+  duration_ms: 0.727041
+  ...
+# Subtest: SC27A: every protected scientific input remains byte-identical to SC-26
+ok 33 - SC27A: every protected scientific input remains byte-identical to SC-26
+  ---
+  duration_ms: 2.826584
+  ...
+# Subtest: SC27A: implementation never claims human or release evidence
+ok 34 - SC27A: implementation never claims human or release evidence
+  ---
+  duration_ms: 0.087875
+  ...
+# Subtest: SC27A: history, viewport, and all-family overlay truth share atomic runtime gates
+ok 35 - SC27A: history, viewport, and all-family overlay truth share atomic runtime gates
+  ---
+  duration_ms: 0.620666
+  ...
+# Subtest: SC27A: Large type never makes any visible text smaller
+ok 36 - SC27A: Large type never makes any visible text smaller
+  ---
+  duration_ms: 0.704833
+  ...
+# Subtest: SC27A: the generated review checklist uses current vocabulary
+ok 37 - SC27A: the generated review checklist uses current vocabulary
+  ---
+  duration_ms: 0.331542
+  ...
+# Subtest: SC27A: Escape closes the last-opened surface and never focuses an inert canvas
+ok 38 - SC27A: Escape closes the last-opened surface and never focuses an inert canvas
+  ---
+  duration_ms: 0.247542
+  ...
+# Subtest: SC27A: the Tour-return accelerator uses the focus-restoring close path
+ok 39 - SC27A: the Tour-return accelerator uses the focus-restoring close path
+  ---
+  duration_ms: 0.198833
+  ...
+# Subtest: SC27A: every surface that can hide a scientific label is an overlay obstacle
+ok 40 - SC27A: every surface that can hide a scientific label is an overlay obstacle
+  ---
+  duration_ms: 0.327125
+  ...
+# Subtest: SC27A: the retired Guided provenance band leaves nothing behind
+ok 41 - SC27A: the retired Guided provenance band leaves nothing behind
+  ---
+  duration_ms: 0.654875
+  ...
+# Subtest: SC27A: the compact-stage envelope is one governed threshold, not a repeated literal
+ok 42 - SC27A: the compact-stage envelope is one governed threshold, not a repeated literal
+  ---
+  duration_ms: 0.740833
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3279.766875

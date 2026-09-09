@@ -1,0 +1,113 @@
+{
+  "app_revision": "5d5f02d1a8699579cc775103c0cba793619aaa57",
+  "build_inputs_fingerprint": "0b16efc4b581fd91a7b07112f0f8989ed463990363ff288e56d60241e782e720",
+  "results": [
+    {
+      "name": "chromium-polish",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/final-polish.spec.js",
+        "--project=chromium"
+      ],
+      "started": "2026-09-09T00:06:49.147Z",
+      "finished": "2026-09-09T00:07:40.322Z",
+      "exit_code": 0
+    },
+    {
+      "name": "firefox-polish",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/final-polish.spec.js",
+        "--project=firefox"
+      ],
+      "started": "2026-09-09T00:07:40.322Z",
+      "finished": "2026-09-09T00:08:08.825Z",
+      "exit_code": 0
+    },
+    {
+      "name": "verify",
+      "command": "npm",
+      "args": [
+        "run",
+        "verify"
+      ],
+      "started": "2026-09-09T00:08:08.826Z",
+      "finished": "2026-09-09T00:11:10.739Z",
+      "exit_code": 0
+    },
+    {
+      "name": "identity",
+      "command": "npm",
+      "args": [
+        "run",
+        "verify:identity"
+      ],
+      "started": "2026-09-09T00:11:10.739Z",
+      "finished": "2026-09-09T00:11:10.927Z",
+      "exit_code": 0
+    },
+    {
+      "name": "chromium-routes",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/mvp-preview.spec.js",
+        "test/browser/evidence.spec.js",
+        "test/browser/workbench.spec.js",
+        "--project=chromium"
+      ],
+      "started": "2026-09-09T00:11:10.927Z",
+      "finished": "2026-09-09T00:16:23.167Z",
+      "exit_code": 0
+    },
+    {
+      "name": "camera",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/ux-overhaul.spec.js",
+        "--project=chromium",
+        "--grep",
+        "semantic cameras clear chrome"
+      ],
+      "started": "2026-09-09T00:16:23.168Z",
+      "finished": "2026-09-09T00:17:39.290Z",
+      "exit_code": 0
+    },
+    {
+      "name": "keyboard-picking",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/picking.spec.js",
+        "--project=chromium",
+        "--grep",
+        "direct labels are operable|touch tap selects"
+      ],
+      "started": "2026-09-09T00:17:39.291Z",
+      "finished": "2026-09-09T00:17:59.070Z",
+      "exit_code": 0
+    },
+    {
+      "name": "firefox-routes",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "test",
+        "test/browser/mvp-preview.spec.js",
+        "test/browser/evidence.spec.js",
+        "--project=firefox"
+      ],
+      "started": "2026-09-09T00:17:59.071Z",
+      "finished": "2026-09-09T00:19:43.778Z",
+      "exit_code": 0
+    }
+  ]
+}
