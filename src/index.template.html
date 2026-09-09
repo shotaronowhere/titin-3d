@@ -3021,8 +3021,8 @@ function numericForceChart(curve, selectCurrentPoint) {
   if (!numeric.length) return null;
   // A drawer-sized coordinate system keeps SVG text readable after scaling.
   // Long axis titles live in HTML so they wrap rather than clip when enlarged.
-  const width = 360; const height = 220;
-  const margin = { left: 58, right: 30, top: 16, bottom: 36 };
+  const width = 360; const height = 228;
+  const margin = { left: 58, right: 30, top: 16, bottom: 44 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
   const xMin = curve.axes.x.min; const xMax = curve.axes.x.max;
@@ -3047,17 +3047,20 @@ function numericForceChart(curve, selectCurrentPoint) {
       fill: '#4fb39f', opacity: 0.10,
     }));
   }
-  for (let index = 0; index <= 5; index += 1) {
-    const xValue = xMin + ((xMax - xMin) * index) / 5;
+  // Five x ticks leave room for enlarged labels across browser font metrics.
+  for (let index = 0; index <= 4; index += 1) {
+    const xValue = xMin + ((xMax - xMin) * index) / 4;
     const xPosition = x(xValue);
     svg.append(svgElement('line', {
       x1: xPosition, y1: margin.top, x2: xPosition, y2: margin.top + plotHeight,
       stroke: '#2b3440', 'stroke-width': 1,
     }));
     const label = svgElement('text', {
-      x: xPosition, y: margin.top + plotHeight + 26, 'text-anchor': 'middle',
+      x: xPosition, y: margin.top + plotHeight + 32, 'text-anchor': 'middle',
     }, Math.round(xValue).toLocaleString());
     svg.append(label);
+  }
+  for (let index = 0; index <= 5; index += 1) {
     const yValue = yMin + ((yMax - yMin) * index) / 5;
     const yPosition = y(yValue);
     svg.append(svgElement('line', {
