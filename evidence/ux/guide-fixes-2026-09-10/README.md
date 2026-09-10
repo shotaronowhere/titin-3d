@@ -1,6 +1,6 @@
 # Mobile guide review fixes — 2026-09-10
 
-Final standalone SHA-256: `cabd8ee8391f53d10dd2318b4911c8f32442727535139a7613eb72d5643b7d51`.
+Reviewed standalone SHA-256: `cabd8ee8391f53d10dd2318b4911c8f32442727535139a7613eb72d5643b7d51`.
 Build inputs: `7622f3da5393`; scientific model: `7badc8e270e7`.
 
 ## Changes
@@ -24,3 +24,7 @@ Build inputs: `7622f3da5393`; scientific model: `7badc8e270e7`.
 The retained browser logs include superseded test failures: the first playback test allowed real animation time to complete during slow automation; its replacement freezes time. WebKit then exposed a race between host time and the installed browser clock before playback started. The final test uses an explicit clock epoch and passed in all three engines. No application assertion was removed to hide a failure.
 
 Screenshots and `verification.json` are tied to the final standalone hash. The initial broad browser runs overlapped small layout refinements; the final guide matrix, playback rerun and all 12 captures exercised the final application build. Validation used automated desktop browser engines and emulated viewports, not physical phones.
+
+## Committed build
+
+The standalone and release pack were regenerated after source commit `1481235db6298b9c6055fa16e0d8f75936fe64f0`. The committed standalone SHA-256 is `f9e9039ac7641f3253b7d30c0e8d92a1ac23ef720ea9fa313d2c51d83754c2f4`. Its only change from the captured and tested candidate is the embedded app revision: replacing the clean commit ID with the previous development revision reproduces the reviewed file hash exactly. See `committed-build.json`.
