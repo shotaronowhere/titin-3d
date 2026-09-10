@@ -1,0 +1,474 @@
+{
+  "capturedAt": "2026-09-10T00:37:55.621Z",
+  "indexSha256": "cabd8ee8391f53d10dd2318b4911c8f32442727535139a7613eb72d5643b7d51",
+  "results": [
+    {
+      "width": 320,
+      "height": 568,
+      "state": "collapsed",
+      "layout": {
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 9,
+          "y": 257.96875,
+          "width": 302,
+          "height": 301.03125,
+          "top": 257.96875,
+          "right": 311,
+          "bottom": 559,
+          "left": 9
+        },
+        "guide": {
+          "x": 22,
+          "y": 339,
+          "width": 276,
+          "height": 164,
+          "top": 339,
+          "right": 298,
+          "bottom": 503,
+          "left": 22
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "state": "expanded",
+      "layout": {
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 9,
+          "y": 231,
+          "width": 302,
+          "height": 328,
+          "top": 231,
+          "right": 311,
+          "bottom": 559,
+          "left": 9
+        },
+        "guide": {
+          "x": 22,
+          "y": 317.390625,
+          "width": 276,
+          "height": 159.609375,
+          "top": 317.390625,
+          "right": 298,
+          "bottom": 477,
+          "left": 22
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "collapsed",
+      "layout": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 9,
+          "y": 533.96875,
+          "width": 372,
+          "height": 301.03125,
+          "top": 533.96875,
+          "right": 381,
+          "bottom": 835,
+          "left": 9
+        },
+        "guide": {
+          "x": 22,
+          "y": 615,
+          "width": 346,
+          "height": 164,
+          "top": 615,
+          "right": 368,
+          "bottom": 779,
+          "left": 22
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "expanded",
+      "layout": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 9,
+          "y": 387.796875,
+          "width": 372,
+          "height": 447.203125,
+          "top": 387.796875,
+          "right": 381,
+          "bottom": 835,
+          "left": 9
+        },
+        "guide": {
+          "x": 22,
+          "y": 474.1875,
+          "width": 346,
+          "height": 304.8125,
+          "top": 474.1875,
+          "right": 368,
+          "bottom": 779,
+          "left": 22
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "collapsed",
+      "layout": {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 9,
+          "y": 713.96875,
+          "width": 750,
+          "height": 301.03125,
+          "top": 713.96875,
+          "right": 759,
+          "bottom": 1015,
+          "left": 9
+        },
+        "guide": {
+          "x": 22,
+          "y": 795,
+          "width": 724,
+          "height": 164,
+          "top": 795,
+          "right": 746,
+          "bottom": 959,
+          "left": 22
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "expanded",
+      "layout": {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 9,
+          "y": 628.828125,
+          "width": 750,
+          "height": 386.171875,
+          "top": 628.828125,
+          "right": 759,
+          "bottom": 1015,
+          "left": 9
+        },
+        "guide": {
+          "x": 22,
+          "y": 715.21875,
+          "width": 724,
+          "height": 243.78125,
+          "top": 715.21875,
+          "right": 746,
+          "bottom": 959,
+          "left": 22
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "collapsed",
+      "layout": {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 572,
+          "y": 8,
+          "width": 264,
+          "height": 283.53125,
+          "top": 8,
+          "right": 836,
+          "bottom": 291.53125,
+          "left": 572
+        },
+        "guide": {
+          "x": 583,
+          "y": 88.03125,
+          "width": 242,
+          "height": 148.5,
+          "top": 88.03125,
+          "right": 825,
+          "bottom": 236.53125,
+          "left": 583
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "expanded",
+      "layout": {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 572,
+          "y": 8,
+          "width": 264,
+          "height": 374,
+          "top": 8,
+          "right": 836,
+          "bottom": 382,
+          "left": 572
+        },
+        "guide": {
+          "x": 583,
+          "y": 88.03125,
+          "width": 242,
+          "height": 212.96875,
+          "top": 88.03125,
+          "right": 825,
+          "bottom": 301,
+          "left": 583
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 640,
+      "height": 360,
+      "state": "collapsed",
+      "layout": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 368,
+          "y": 8,
+          "width": 264,
+          "height": 283.53125,
+          "top": 8,
+          "right": 632,
+          "bottom": 291.53125,
+          "left": 368
+        },
+        "guide": {
+          "x": 379,
+          "y": 88.03125,
+          "width": 242,
+          "height": 148.5,
+          "top": 88.03125,
+          "right": 621,
+          "bottom": 236.53125,
+          "left": 379
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 640,
+      "height": 360,
+      "state": "expanded",
+      "layout": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 368,
+          "y": 8,
+          "width": 264,
+          "height": 344,
+          "top": 8,
+          "right": 632,
+          "bottom": 352,
+          "left": 368
+        },
+        "guide": {
+          "x": 379,
+          "y": 88.03125,
+          "width": 242,
+          "height": 182.96875,
+          "top": 88.03125,
+          "right": 621,
+          "bottom": 271,
+          "left": 379
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "collapsed",
+      "layout": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 14,
+          "y": 346.125,
+          "width": 384,
+          "height": 345.875,
+          "top": 346.125,
+          "right": 398,
+          "bottom": 692,
+          "left": 14
+        },
+        "guide": {
+          "x": 31,
+          "y": 443,
+          "width": 350,
+          "height": 198,
+          "top": 443,
+          "right": 381,
+          "bottom": 641,
+          "left": 31
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "expanded",
+      "layout": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "overflow": {
+          "width": 0,
+          "height": 0
+        },
+        "verdict": "resolved",
+        "findings": "",
+        "card": {
+          "x": 14,
+          "y": 212.125,
+          "width": 384,
+          "height": 479.875,
+          "top": 212.125,
+          "right": 398,
+          "bottom": 692,
+          "left": 14
+        },
+        "guide": {
+          "x": 31,
+          "y": 309,
+          "width": 350,
+          "height": 332,
+          "top": 309,
+          "right": 381,
+          "bottom": 641,
+          "left": 31
+        }
+      },
+      "pageErrors": [],
+      "axeViolations": []
+    }
+  ]
+}

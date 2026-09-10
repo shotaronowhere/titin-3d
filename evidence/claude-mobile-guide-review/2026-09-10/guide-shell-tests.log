@@ -1,0 +1,6 @@
+
+Running 2 tests using 1 worker
+
+[1/2] [chromium] › test/browser/ux-overhaul.spec.js:367:3 › SC27A Tour shell obeys its viewport contract at 375x812
+[2/2] [chromium] › test/browser/ux-overhaul.spec.js:367:3 › SC27A Tour shell obeys its viewport contract at 1280x720
+  2 passed (2.0m)

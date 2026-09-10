@@ -708,13 +708,64 @@ window.__titinBoot = { ready: false, problems: [] };
     #scopeBadge { grid-column: 1 / -1; grid-row: 2; width: max-content;
       max-width: 100%; justify-self: end; }
   }
-  /* A 1280x720 display at 200% browser zoom has a 640x360 CSS viewport. Keep
-     the Tour as one document scroll surface instead of shrinking text or adding
-     an internal story-card scrollbar. */
-  @media (max-height: 500px) {
-    html, body { height: auto; min-height: 100%; }
-    body { overflow-x: hidden; overflow-y: auto; }
-    #app { height: 680px; min-height: 680px; }
+  /* Keep the guide optional while the lesson controls stay within reach. */
+  #guideToggle { min-height: 44px; flex: none; padding: 6px 10px; }
+  #guidedCardBody[hidden] { display: none; }
+  #guidedCard { max-height: calc(100dvh - 130px); display: flex; flex-direction: column; }
+  #guidedCard > * { flex-shrink: 0; }
+  #guideContent { position: relative; min-height: 0; flex: 0 1 auto; overflow-y: auto; overscroll-behavior: contain; }
+  #guidedCardBody { overflow: visible; }
+  .tour-mechanics .stage-label { grid-row: 1; }
+  .tour-mechanics #stageLengthReadout { grid-row: 1; }
+  .tour-mechanics #sl { grid-row: 2; width: 100%; min-height: 44px; margin: 0; }
+  .tour-mechanics #stagePlay, .tour-mechanics #stageForce { grid-row: 3; }
+  @media (max-width: 767px), (orientation: portrait) and (max-width: 1024px) {
+    #guidedCard { max-height: min(70dvh, calc(100dvh - 240px));
+      bottom: max(9px, env(safe-area-inset-bottom)); }
+    #guidedCard[data-collapsed="true"] #chapterTitle { font-size: 17px; margin: 0 0 5px; }
+    .tour-mechanics { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .tour-mechanics .stage-label { letter-spacing: 0; text-transform: none; }
+    .tour-mechanics #stageForce { width: 100%; max-width: none; padding: 6px; }
+    .tour-mechanics #stagePlay { white-space: normal; }
+    #guidedCard[data-collapsed="true"] #stageForce > :not(.force-compact) { display: none; }
+    #guidedCard[data-collapsed="true"] #stageForce .force-compact { display: inline; }
+    .tour-mechanics #stagePlay, .tour-mechanics #stageForce { min-height: 44px; }
+    .tour-mechanics #sl { min-height: 44px; }
+  }
+  .force-compact { display: none; }
+  #stageExtensionReadout { display: block; font-size: 12px; color: #ffd7e0; }
+  #guideScrollHint { margin: 2px 0 6px; font-size: 12px; color: #c9d2dd; }
+  #guideHintSlot:empty { display: none; }
+  #guideHintSlot #inspectHint { margin: 2px 0 0; padding: 0; border: 0;
+    background: none; box-shadow: none; font-size: 12px; line-height: 16px; }
+  /* A short landscape viewport (including desktop browser zoom) gets a side
+     panel. The stage stays visible while the explanation scrolls beside it. */
+  @media (max-height: 500px) and (min-width: 600px) {
+    #app { height: 100dvh; min-height: 0; }
+    #app[data-mode="guided"] { grid-template-columns: minmax(0, 1fr) 280px; }
+    #canvas { overflow: visible; }
+    #canvas > canvas, #scienceOverlay, #objectLeader { overflow: hidden; }
+    #guidedCard { position: absolute; left: calc(100% + 8px); right: auto; top: 8px; bottom: auto;
+      width: 264px; max-height: calc(100dvh - 16px); margin: 0; padding: 10px; }
+    #chapterTitle { font-size: 17px; margin: 0 0 5px; }
+    .tour-mechanics { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 3px 6px; margin: 0 0 5px; padding: 5px 0; }
+    .tour-mechanics .stage-label { font-size: 12px; letter-spacing: 0; text-transform: none; }
+    .tour-mechanics #stageLengthReadout { grid-column: 2; font-size: 13px; }
+    .tour-mechanics #stagePlay { grid-column: 1; min-height: 44px; white-space: normal; padding: 5px; }
+    .tour-mechanics #stageForce { grid-column: 2; min-height: 44px; padding: 5px; }
+    #stageForce > :not(.force-compact) { display: none; }
+    #stageForce .force-compact { display: inline; }
+    #stageHeader { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px; }
+    .brand-block { grid-column: 1; grid-row: 1; min-width: 0; padding: 7px; }
+    .brand-title { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-sub { display: none; }
+    .header-actions { display: contents; }
+    #audienceEvidence { grid-column: 2; grid-row: 1; padding-inline: 8px; }
+    #scopeBadge { grid-column: 1 / -1; grid-row: 2; max-width: 100%; justify-self: end; }
+    #scopeBadge .scope-kicker, #scopeIdentity, #scopeState { display: none; }
+    #scopeCompact { display: block; font-size: 12px; }
+    #inspectHint { bottom: 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; }
@@ -790,35 +841,41 @@ window.__titinBoot = { ready: false, problems: [] };
           <div>
             <div class="chapter-meta"><span id="chapterProgress">Beat —</span></div>
             <div id="tourProgressMarkers" class="tour-progress-markers" aria-hidden="true"></div>
+            <div id="guideHintSlot"></div>
           </div>
+          <button type="button" id="guideToggle" aria-expanded="true"
+            aria-controls="guidedCardBody">Hide guide</button>
         </div>
-        <p id="chapterQuestion" class="chapter-question"></p>
         <h1 id="chapterTitle" tabindex="-1">Loading Tour…</h1>
         <!-- On a phone the Tour card becomes a compact bottom sheet so the
              scientific stage retains the visual priority. -->
+        <div id="guideContent" role="region" aria-label="Guide explanation and stretch controls" tabindex="-1">
         <div id="guidedCardBody">
+        <p id="chapterQuestion" class="chapter-question"></p>
         <p id="chapterSummary"></p>
         <p id="oppositeTitinNote" hidden>The pink path beyond the M-line belongs to the opposite half’s titin: a separate representative path.</p>
         <div id="tourEvidenceRecap" class="tour-evidence-recap" role="group" aria-label="Tour evidence labels" hidden></div>
-        <p id="chapterStateAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
         <div id="guidedSelection" hidden><b id="guidedSelectionLabel"></b><span id="guidedSelectionText"></span></div>
+        <div id="guidedLattice" hidden></div>
+        </div><!-- /guidedCardBody -->
+        <p id="chapterStateAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
         <section id="tourMechanics" class="tour-mechanics" aria-label="Stretch demonstration" hidden>
           <label class="stage-label" for="sl">Sarcomere length</label>
           <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres"
             aria-describedby="supportedRangeDescription">
           <span id="supportedRangeDescription" class="sr-only">The green track segment marks the supported working range.</span>
-          <output class="stage-readout" id="stageLengthReadout" for="sl" aria-live="off">— nm</output>
+          <output class="stage-readout" id="stageLengthReadout" for="sl" aria-live="off"><span id="stageLengthValue">— nm</span><span id="stageExtensionReadout"></span></output>
           <div class="row stage-presets" id="presets" role="group" aria-label="Reviewed sarcomere length presets"></div>
           <button id="stagePlay" aria-pressed="false" aria-label="Play a stretch sweep across the working range">&#9654; Stretch</button>
           <button id="stageForce" title="Open the approximate passive-force evaluation in Research"></button>
         </section>
+        </div><!-- /guideContent -->
+        <p id="guideScrollHint" hidden>Scroll for explanation and controls ↓</p>
         <button type="button" id="chapterInspectEvidence" hidden>Inspect titin’s evidence <span aria-hidden="true">→</span></button>
         <div class="chapter-actions">
           <button id="chapterPrevious">Previous</button>
           <button id="chapterNext">Next</button>
         </div>
-        <div id="guidedLattice" hidden></div>
-        </div><!-- /guidedCardBody -->
       </section>
     </div>
     <div id="interactionHelp" class="sr-only">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
@@ -1123,6 +1180,7 @@ try {
 
 const { min, max } = model.slRange();
 const presentation = model.spec.presentation;
+const stretchBaselineX = model.geometryAt(presentation.scope.working_range_nm[0]).thick_filament.X_start;
 const presentationTheme = model.spec.renderStyle.presentation;
 document.documentElement.style.setProperty('--accent', presentationTheme.chrome.accent);
 document.documentElement.style.setProperty('--focus', presentationTheme.chrome.focus);
@@ -1286,6 +1344,30 @@ function announceUrlIssues(issues) {
  */
 const MOBILE_RESEARCH_QUERY = '(max-width: 767px), (orientation: portrait) and (max-width: 1024px)';
 const mobileResearchMedia = window.matchMedia(MOBILE_RESEARCH_QUERY);
+// Remember an explicit choice through chapter changes and Research round trips.
+// Until then, adapt the default to the available screen.
+let guideCollapsed = mobileResearchMedia.matches || window.innerHeight <= 500;
+let guidePreferenceChosen = false;
+function syncGuideDisclosure() {
+  const body = $('guidedCardBody');
+  const changed = body.hidden !== guideCollapsed;
+  if (changed && guideCollapsed && $('guideContent').contains(document.activeElement)) $('guideToggle').focus({ preventScroll: true });
+  body.hidden = guideCollapsed;
+  if (changed) $('guideContent').scrollTop = 0;
+  $('guidedCard').dataset.collapsed = String(guideCollapsed);
+  $('guideToggle').setAttribute('aria-expanded', String(!guideCollapsed));
+  $('guideToggle').textContent = guideCollapsed ? 'Show guide' : 'Hide guide';
+}
+syncGuideDisclosure();
+$('guideToggle').onclick = () => {
+  guideCollapsed = !guideCollapsed;
+  guidePreferenceChosen = true;
+  syncGuideDisclosure();
+  measureTourCard();
+  if (!visualization.isCameraManuallyAdjusted()) applyCameraPreset();
+  renderScienceOverlay();
+  markStageDirty();
+};
 
 /** Whether Research currently replaces the stage with its full-screen sheet. */
 function mobileResearchActive(drawerOpen) {
@@ -1327,7 +1409,7 @@ function syncAudienceMode() {
     pendingAudienceFrame = null;
     visualization.resize();
     measureTourCard();
-    if (audienceReframePending) applyCameraPreset({ animate: false });
+    if (audienceReframePending && !visualization.isCameraManuallyAdjusted()) applyCameraPreset({ animate: false });
     audienceReframePending = false;
     // This callback may land inside a semantic-camera transition started later
     // in the same audience-state update. Treat it as an intermediate frame;
@@ -2022,6 +2104,7 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, chrome }) {
   const inside = (box) => box && box.left >= canvas.left && box.right <= canvas.right
     && box.top >= canvas.top && box.bottom <= canvas.bottom;
   const unresolved = [];
+  const modelBoxes = [...svg.querySelectorAll('[data-model-protection]')].map(visibleBox).filter(Boolean);
   for (const label of svg.querySelectorAll('.terminus-label[data-terminus-label]')) {
     const id = label.dataset.terminusLabel;
     const hit = svg.querySelector(`.label-hit[data-terminus-label="${id}"]`);
@@ -2062,6 +2145,7 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, chrome }) {
         && (!target || (!overlaps(target, header, 0)
           && chrome.every(({ box: over }) => !overlaps(target, over, 0))))
         && otherLabelBoxes.every((otherBox) => !overlaps(box, otherBox))
+        && modelBoxes.every((modelBox) => !overlaps(box, modelBox, 0))
         && (!target || otherHitBoxes.every((otherBox) => !overlaps(target, otherBox, 0)));
     };
 
@@ -2092,6 +2176,7 @@ function resolveTerminusLabelCollisions(svg, { canvas, header, chrome }) {
       addObstacleEdges(hitBox, obstacle, 0);
     }
     for (const otherBox of otherLabelBoxes) addObstacleEdges(labelBox, otherBox, tolerance);
+    for (const modelBox of modelBoxes) addObstacleEdges(labelBox, modelBox, 1);
     for (const otherBox of otherHitBoxes) addObstacleEdges(hitBox, otherBox, 0);
     const candidates = [];
     for (const dx of xDeltas) {
@@ -2155,6 +2240,18 @@ function auditPaintedOverlayLayout(svg, { canvas, header, chrome }) {
       if (overlaps(box, over, 0)) findings.push(`${name(node)} is covered by ${what}`);
     }
   }
+  for (const node of svg.querySelectorAll('[data-stretch-comparison] path')) {
+    const rect = node.getBoundingClientRect();
+    const stroke = Number(node.getAttribute('stroke-width')) || 1.2;
+    const box = { left: rect.left - stroke / 2, right: rect.right + stroke / 2,
+      top: rect.top - stroke / 2, bottom: rect.bottom + stroke / 2 };
+    if (box.left < canvas.left || box.right > canvas.right || box.top < canvas.top || box.bottom > canvas.bottom) {
+      findings.push('Stretch comparison is outside the canvas');
+    }
+    if (overlaps(box, header, 0) || chrome.some(({ box: over }) => overlaps(box, over, 0))) {
+      findings.push('Stretch comparison is covered by stage chrome');
+    }
+  }
   for (let index = 0; index < labels.length; index += 1) {
     for (let other = index + 1; other < labels.length; other += 1) {
       if (overlaps(labels[index].box, labels[other].box)) {
@@ -2176,8 +2273,8 @@ function syncInspectHintSurface(canvas, compactHeight) {
   const inline = compactHeight && !hint.hidden
     && state.audienceMode === AUDIENCE_MODES.guided;
   if (inline) {
-    if (hint.parentElement !== $('guidedCardBody')) $('guidedCardBody').prepend(hint);
-    $('inspectHintText').textContent = 'Inspect a label';
+    if (hint.parentElement !== $('guideHintSlot')) $('guideHintSlot').append(hint);
+    $('inspectHintText').textContent = 'Tap a structure';
     hint.dataset.copyVariant = 'inline';
     hint.style.removeProperty('left');
     hint.style.removeProperty('top');
@@ -2220,9 +2317,11 @@ function resolveInspectHintPosition(svg, { canvas, header, chrome }) {
     hint.dataset.overlayLayout = 'resolved';
     return;
   }
-  const labelBoxes = [...svg.querySelectorAll('text')].flatMap((node) => {
+  const labelBoxes = [...svg.querySelectorAll('text, [data-stretch-comparison] path, [data-model-protection]')].flatMap((node) => {
     const rect = node.getBoundingClientRect();
-    return rect.width > 0 && rect.height > 0 ? [rect] : [];
+    const stroke = Number(node.getAttribute('stroke-width')) || 1.2;
+    return rect.width > 0 ? [{ left: rect.left - stroke / 2, right: rect.right + stroke / 2,
+      top: rect.top - stroke / 2, bottom: rect.bottom + stroke / 2 }] : [];
   });
   const chromeGap = 6;
   const labelGap = 2;
@@ -2448,8 +2547,9 @@ function renderScienceOverlay({ transient = false } = {}) {
   // The guided chapter card owns the bottom-left corner and its size depends on
   // the chapter's copy, so where the ruler can go is measured, not assumed.
   const guidedCard = $('guidedCard');
-  const cardRect = guidedCard.offsetParent === null ? null
-    : guidedCard.getBoundingClientRect();
+  const guideRect = guidedCard.offsetParent === null ? null : guidedCard.getBoundingClientRect();
+  const cardRect = guideRect && guideRect.left < canvasRect.right && guideRect.right > canvasRect.left
+    ? guideRect : null;
   const cardBox = cardRect ? {
     top: cardRect.top - canvasRect.top,
     right: cardRect.right - canvasRect.left,
@@ -2709,10 +2809,20 @@ function renderScienceOverlay({ transient = false } = {}) {
       }, 'A-band'));
     }
   }
-  // Two optional teaching spans, projected from the same canonical band bounds.
-  // Narrow screens retain the locator and the card's explanation instead of
-  // squeezing a second set of long labels into the molecular view.
-  if (usesStretchComparisonFrame() && showBands && width >= 900 && !inspectorRect) {
+  if (usesStretchComparisonFrame()) {
+    const ends = ['n_terminus', 'c_terminus'].map(id => projected.get(id));
+    if (ends.every(point => point?.visible)) {
+      const left = Math.min(...ends.map(point => point.x_px));
+      const top = Math.min(...ends.map(point => point.y_px));
+      nodes.push(svgElement('rect', { x: left, y: top - 12,
+        width: Math.max(...ends.map(point => point.x_px)) - left,
+        height: Math.max(...ends.map(point => point.y_px)) - top + 24,
+        fill: 'none', 'pointer-events': 'none', 'data-model-protection': 'true' }));
+    }
+  }
+  // Teaching spans use canonical band bounds. Phones get thicker bars, short
+  // labels and a measured change from the working minimum on the same scale.
+  if (usesStretchComparisonFrame() && showBands && !inspectorRect) {
     const spans = [
       ['iband', 'I-band · extensible'],
       ['aband', 'A-band span · fixed in this model'],
@@ -2720,10 +2830,12 @@ function renderScienceOverlay({ transient = false } = {}) {
       start: projected.get(`${id}:start`), end: projected.get(`${id}:end`),
     }));
     if (spans.every(({ start, end }) => start?.visible && end?.visible)) {
-      const y = Math.max(...spans.flatMap(({ start, end }) => [start.y_px, end.y_px])) + 38;
-      const room = spans.every(({ id, start, end }) => end.x_px - start.x_px > (id === 'iband' ? 96 : 260)
+      const y = Math.max(...spans.flatMap(({ start, end }) => [start.y_px, end.y_px]))
+        + (height < STAGE_LAYOUT.compact_stage_height_px ? 24 : 38);
+      const compactComparison = width < 900;
+      const room = spans.every(({ id, start, end }) => end.x_px - start.x_px > (compactComparison ? (id === 'iband' ? 20 : 110) : id === 'iband' ? 96 : 260)
         && start.x_px >= 12 && end.x_px <= width - 12);
-      if (room && y + 20 < (cardBox?.top ?? height - 60)) {
+      if (room && y + 24 < (cardBox?.top ?? height - 60)) {
         const group = svgElement('g', { 'data-stretch-comparison': 'true' });
         for (const { id, label, start, end } of spans) {
           group.append(svgElement('path', {
@@ -2732,7 +2844,13 @@ function renderScienceOverlay({ transient = false } = {}) {
           }), svgElement('text', {
             x: (start.x_px + end.x_px) / 2, y: y + 17,
             'text-anchor': 'middle', class: 'science-label',
-          }, id === 'iband' && end.x_px - start.x_px < 150 ? 'I-band' : label));
+          }, compactComparison ? (id === 'iband' ? 'I-band' : 'A-band half · fixed')
+            : id === 'iband' && end.x_px - start.x_px < 150 ? 'I-band' : label));
+          if (compactComparison) group.append(svgElement('path', {
+            d: `M ${start.x_px} ${y - 5} H ${end.x_px}`,
+            stroke: id === 'iband' ? '#ff7797' : '#aebdce',
+            'stroke-width': 6, 'stroke-linecap': 'round',
+          }));
         }
         nodes.push(group);
       }
@@ -2784,10 +2902,13 @@ function renderScienceOverlay({ transient = false } = {}) {
   // ruler, and the camera sitting on its own target has no scale to state.
   if (pxPerNm !== null) {
     const bar = scaleBar(pxPerNm, Math.max(100, Math.min(180, width * 0.14)));
-    const { left: barX, baseline: barY } = scaleBarPlacement({
+    const { left, baseline } = scaleBarPlacement({
       barPx: bar.px, canvas: { width, height }, card: cardBox, safeTopPx,
       bottomInsetPx: STAGE_LAYOUT.scale_bar_baseline_px,
     });
+    const shortStretch = usesStretchComparisonFrame() && height < STAGE_LAYOUT.compact_stage_height_px;
+    const barX = shortStretch ? width - bar.px - 12 : left;
+    const barY = shortStretch ? safeTopPx + 18 : baseline;
     nodes.push(svgElement('path', {
       d: `M ${barX} ${barY - 4} V ${barY} H ${barX + bar.px} V ${barY - 4}`,
       class: 'science-bracket scale-bar',
@@ -3430,6 +3551,11 @@ function renderChapter({ renderOverlay = true } = {}) {
 }
 
 function measureTourCard() {
+  $('guideScrollHint').hidden = true;
+  const content = $('guideContent');
+  const scrolling = content.scrollHeight > content.clientHeight + 1;
+  content.tabIndex = scrolling ? 0 : -1;
+  $('guideScrollHint').hidden = !scrolling;
   const height = Math.round($('guidedCard').getBoundingClientRect().height);
   if (height > 0) $('app').style.setProperty('--tour-card-h', `${height}px`);
 }
@@ -4740,7 +4866,7 @@ function render(report, { renderOverlay = true } = {}) {
   $('slReadout').innerHTML = `${g.sarcomere_length_nm} <small>nm${report.clamped ? ' (clamped)' : ''}</small>`;
   // The contextual Tour mechanics row reports the same value and clamp state as
   // the slider beside it.
-  $('stageLengthReadout').textContent = `${g.sarcomere_length_nm.toLocaleString()} nm`
+  $('stageLengthValue').textContent = `${g.sarcomere_length_nm.toLocaleString()} nm`
     + (report.clamped ? ' (clamped)' : '');
   const statePreset = presentation.length_presets
     .find((preset) => preset.sarcomere_length_nm === g.sarcomere_length_nm);
@@ -4760,6 +4886,10 @@ function render(report, { renderOverlay = true } = {}) {
   caveat.textContent = disclosure || '';
   syncPresets(g.sarcomere_length_nm);
   syncDepictionToggles();
+
+  const extension = Math.round(g.thick_filament.X_start - stretchBaselineX);
+  $('stageExtensionReadout').textContent = `I-band ${extension >= 0 ? '+' : '−'}${Math.abs(extension)} nm`;
+  $('stageExtensionReadout').title = `Change in this half-sarcomere’s I-band from a ${presentation.scope.working_range_nm[0].toLocaleString()} nm sarcomere`;
 
   // SC-21: render the evaluator's status, never the internal geometry scalar.
   const forceEl = $('stageForce');
@@ -4782,6 +4912,13 @@ function render(report, { renderOverlay = true } = {}) {
   } else {
     forceEl.append(forceValue);
   }
+  forceEl.setAttribute('aria-label', `${forceEl.textContent}. Open passive-force evaluation in Research`);
+  const compactForce = document.createElement('span');
+  compactForce.className = 'force-compact';
+  compactForce.setAttribute('aria-hidden', 'true');
+  compactForce.textContent = g.titin_force_status === 'not_evaluated'
+    ? 'Force not evaluated' : `${forceValue.textContent} · modeled`;
+  forceEl.append(compactForce);
   forceEl.dataset.evaluationStatus = g.titin_force_status;
   syncSweepControl();
 
@@ -5252,8 +5389,10 @@ function unobscuredFrameOptions({ animate = false } = {}) {
   const canvasBox = $('canvas').getBoundingClientRect();
   const headerBox = $('stageHeader').getBoundingClientRect();
   const storyCard = $('guidedCard');
-  const storyBox = !storyCard.hidden && storyCard.getClientRects().length
+  const guideBox = !storyCard.hidden && storyCard.getClientRects().length
     ? storyCard.getBoundingClientRect() : null;
+  const storyBox = guideBox && guideBox.left < canvasBox.right && guideBox.right > canvasBox.left
+    ? guideBox : null;
   const safeTop = Math.max(0, headerBox.bottom - canvasBox.top);
   const safeBottom = Math.min(
     canvasBox.height,
@@ -5369,8 +5508,12 @@ function scheduleViewportSync() {
   if (pendingViewportSync !== null) return;
   pendingViewportSync = requestAnimationFrame(() => {
     pendingViewportSync = null;
-    // A resized teaching frame uses the same maximum span at the new aspect.
-    audienceReframePending ||= usesStretchComparisonFrame();
+    if (!guidePreferenceChosen) {
+      guideCollapsed = mobileResearchMedia.matches || window.innerHeight <= 500;
+      syncGuideDisclosure();
+    }
+    // Recenter the model when the guide changes its size or docking position.
+    audienceReframePending ||= !visualization.isCameraManuallyAdjusted();
     syncAudienceMode();
     markStageDirty();
   });

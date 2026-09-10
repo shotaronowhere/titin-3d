@@ -280,6 +280,7 @@ export class Viewer {
     // for an ordinary click that moved nothing — and threw away a shareable
     // semantic link. The gesture is bracketed instead: the announcement waits
     // for the first real camera change between 'start' and 'end'.
+    this.cameraManuallyAdjusted = false;
     this._gestureActive = false;
     this._gestureAnnounced = false;
     this._onControlStart = () => {
@@ -300,6 +301,7 @@ export class Viewer {
       this._controlsMoved = true;
       if (this._gestureActive && !this._gestureAnnounced) {
         this._gestureAnnounced = true;
+        this.cameraManuallyAdjusted = true;
         this.container.dispatchEvent(new CustomEvent('titin:manual-camera-change'));
       }
     };
@@ -938,6 +940,7 @@ export class Viewer {
    * deterministic; Phase-10 controls request it explicitly.
    */
   _moveCamera(position, target, opts = {}) {
+    this.cameraManuallyAdjusted = false;
     const durationMs = opts.durationMs ?? CAMERA_TRANSITION_MS;
     const animate = Boolean(opts.animate) && !this.prefersReducedMotion && durationMs > 0;
     if (!animate) {

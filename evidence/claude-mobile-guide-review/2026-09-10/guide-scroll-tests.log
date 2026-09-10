@@ -1,0 +1,5 @@
+
+Running 1 test using 1 worker
+
+[1/1] [webkit] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320
+  1 passed (9.7s)

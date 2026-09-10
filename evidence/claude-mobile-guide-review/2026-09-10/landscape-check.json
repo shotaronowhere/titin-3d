@@ -1,0 +1,69 @@
+{
+  "viewport": {
+    "width": 844,
+    "height": 390
+  },
+  "scrollHeight": 680,
+  "elements": {
+    "guidedCard": {
+      "x": 14,
+      "y": 274.25,
+      "width": 253.1875,
+      "height": 377.75,
+      "top": 274.25,
+      "right": 267.1875,
+      "bottom": 652,
+      "left": 14
+    },
+    "guideToggle": {
+      "x": 155.015625,
+      "y": 291.25,
+      "width": 95.171875,
+      "height": 44,
+      "top": 291.25,
+      "right": 250.1875,
+      "bottom": 335.25,
+      "left": 155.015625
+    },
+    "stagePlay": {
+      "x": 31,
+      "y": 512,
+      "width": 84.5625,
+      "height": 50,
+      "top": 512,
+      "right": 115.5625,
+      "bottom": 562,
+      "left": 31
+    },
+    "sl": {
+      "x": 31,
+      "y": 454,
+      "width": 219.1875,
+      "height": 44,
+      "top": 454,
+      "right": 250.1875,
+      "bottom": 498,
+      "left": 31
+    },
+    "chapterNext": {
+      "x": 197.390625,
+      "y": 593,
+      "width": 52.796875,
+      "height": 44,
+      "top": 593,
+      "right": 250.1875,
+      "bottom": 637,
+      "left": 197.390625
+    },
+    "canvas": {
+      "x": 0,
+      "y": 0,
+      "width": 844,
+      "height": 680,
+      "top": 0,
+      "right": 844,
+      "bottom": 680,
+      "left": 0
+    }
+  }
+}

@@ -1,0 +1,97 @@
+
+Running 49 tests using 2 workers
+
+[1/49] [chromium] › test/browser/controls.spec.js:35:3 › SC24/27A Tour hierarchy remains bounded at 375x812
+[2/49] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 1280: force labels are readable and Large type actually enlarges them
+[3/49] [chromium] › test/browser/controls.spec.js:35:3 › SC24/27A Tour hierarchy remains bounded at 390x844
+[4/49] [chromium] › test/browser/controls.spec.js:35:3 › SC24/27A Tour hierarchy remains bounded at 768x1024
+[5/49] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 390: force labels are readable and Large type actually enlarges them
+[6/49] [chromium] › test/browser/controls.spec.js:35:3 › SC24/27A Tour hierarchy remains bounded at 1024x768
+[7/49] [chromium] › test/browser/final-polish.spec.js:38:3 › Final polish 320: force labels are readable and Large type actually enlarges them
+[8/49] [chromium] › test/browser/controls.spec.js:35:3 › SC24/27A Tour hierarchy remains bounded at 1280x720
+[9/49] [chromium] › test/browser/final-polish.spec.js:63:1 › Final polish: withdraw the colliding locator while keeping the main model labels
+[10/49] [chromium] › test/browser/controls.spec.js:35:3 › SC24/27A Tour hierarchy remains bounded at 1440x900
+[11/49] [chromium] › test/browser/controls.spec.js:50:1 › SC24/27A tablet rotation preserves semantic state and operability
+[12/49] [chromium] › test/browser/controls.spec.js:61:1 › SC24/27A Tour stays visible and Research restores its invoking focus
+[13/49] [chromium] › test/browser/final-polish.spec.js:85:1 › Final polish: phone Tour retains its locator and explains the opposite path
+[14/49] [chromium] › test/browser/final-polish.spec.js:95:1 › Final polish: selected scientific sources precede build identifiers on phone
+[15/49] [chromium] › test/browser/controls.spec.js:74:1 › SC24 scene truth, contextual layers, URL, and browser history agree
+[16/49] [chromium] › test/browser/final-polish.spec.js:110:1 › Final polish: chart labels fit across supported and extrapolated states
+[17/49] [chromium] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale
+[18/49] [chromium] › test/browser/controls.spec.js:98:1 › SC24 object selection immediately makes scene truth and URL agree
+[19/49] [chromium] › test/browser/controls.spec.js:109:1 › SC24 a fresh Custom lattice link restores its Research controls
+[20/49] [chromium] › test/browser/controls.spec.js:122:1 › SC24 slider is contextual to Stretch and describes the supported range
+[21/49] [chromium] › test/browser/controls.spec.js:140:1 › SC24 visible mechanics tables keep human labels in Research
+  1) [chromium] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('#stagePlay')
+    Expected: "Pause"
+    Received: "↻ Replay stretch"
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 8000ms
+      - waiting for locator('#stagePlay')
+        18 × locator resolved to <button class="" id="stagePlay" aria-pressed="false" aria-label="Replay stretch: reset to the working-range minimum and stretch again">↻ Replay stretch</button>
+           - unexpected value "↻ Replay stretch"
+
+
+      20 |   expect(await distance()).toBeCloseTo(before, 4);
+      21 |   await page.locator('#guideToggle').click();
+    > 22 |   await expect(page.locator('#stagePlay')).toHaveText('Pause');
+         |                                            ^
+      23 |   expect(await distance()).toBeCloseTo(before, 4);
+      24 |   await page.locator('#stagePlay').click();
+      25 |   const stopped = await page.locator('#sl').inputValue();
+        at /Users/shotaro/Downloads/artifacts/test/browser/guide-playback.spec.js:22:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/guide-fix-regression-results/guide-playback-guide-discl-760c0--the-fixed-comparison-scale-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/guide-fix-regression-results/guide-playback-guide-discl-760c0--the-fixed-comparison-scale-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/guide-fix-regression-results/guide-playback-guide-discl-760c0--the-fixed-comparison-scale-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/guide-fix-regression-results/guide-playback-guide-discl-760c0--the-fixed-comparison-scale-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[22/49] [chromium] › test/browser/mvp-preview.spec.js:13:1 › MVP endpoint replay traverses the working range twice without losing the Spring frame
+[23/49] [chromium] › test/browser/controls.spec.js:155:1 › SC24 exact legacy links migrate silently to canonical v2 and final v3 story state
+[24/49] [chromium] › test/browser/controls.spec.js:170:1 › SC24 impossible v2 display state is repaired with a visible notice
+[25/49] [chromium] › test/browser/controls.spec.js:182:1 › SC24 coarse-pointer Guided controls meet the 44px target floor
+[26/49] [chromium] › test/browser/controls.spec.js:194:1 › SC24 the myosin detail control changes model state from Research
+[27/49] [chromium] › test/browser/controls.spec.js:208:1 › SC24 every Research scene that offers myosin detail round-trips model and URL truth
+[28/49] [chromium] › test/browser/controls.spec.js:237:1 › SC24 a shared Custom close-up link restores its disabled detail layer exactly
+[29/49] [chromium] › test/browser/mvp-preview.spec.js:30:1 › MVP reduced-motion replay resets before showing the endpoint
+[30/49] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 1280: modeled force opens above the fold with sensitivity explained
+[31/49] [chromium] › test/browser/controls.spec.js:254:1 › SC24 Research detail switches keep the stage alive on a close-up
+[32/49] [chromium] › test/browser/controls.spec.js:264:1 › SC24 only a camera that actually moves makes the scene Custom
+[33/49] [chromium] › test/browser/mvp-preview.spec.js:50:3 › MVP 390: modeled force opens above the fold with sensitivity explained
+[34/49] [chromium] › test/browser/stretch.spec.js:102:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[35/49] [chromium] › test/browser/mvp-preview.spec.js:82:1 › MVP Research scope matches the canonical tissue-neutral construct through both entries
+[36/49] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 1280: final evidence action selects titin and exposes the exact source route
+[37/49] [chromium] › test/browser/stretch.spec.js:112:1 › SC24/27A Stretch replaces a Research close-up before running
+[38/49] [chromium] › test/browser/mvp-preview.spec.js:97:3 › MVP 390: final evidence action selects titin and exposes the exact source route
+[39/49] [chromium] › test/browser/stretch.spec.js:125:1 › SC24/27A mobile Stretch reframes before its first length frame
+[40/49] [chromium] › test/browser/mvp-preview.spec.js:134:1 › MVP intermediate force labels retain declared precision and a stable control row
+[41/49] [chromium] › test/browser/stretch.spec.js:134:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[42/49] [chromium] › test/browser/stretch.spec.js:148:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[43/49] [chromium] › test/browser/stretch.spec.js:163:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[44/49] [chromium] › test/browser/stretch.spec.js:197:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[45/49] [chromium] › test/browser/stretch.spec.js:211:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[46/49] [chromium] › test/browser/stretch.spec.js:223:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+[47/49] [chromium] › test/browser/stretch.spec.js:264:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction
+[48/49] [chromium] › test/browser/stretch.spec.js:264:3 › MVP 390: Stretch comparison frame is established on entry and retained through interaction
+[49/49] [chromium] › test/browser/stretch.spec.js:294:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom
+  Slow test file: [chromium] › test/browser/stretch.spec.js (9.8m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    [chromium] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale 
+  48 passed (14.1m)

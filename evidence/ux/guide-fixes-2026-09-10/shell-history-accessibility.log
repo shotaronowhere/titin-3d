@@ -1,0 +1,24 @@
+
+Running 18 tests using 1 worker
+
+[1/18] [chromium] › test/browser/ux-overhaul.spec.js:367:3 › SC27A Tour shell obeys its viewport contract at 375x812
+[2/18] [chromium] › test/browser/ux-overhaul.spec.js:367:3 › SC27A Tour shell obeys its viewport contract at 390x844
+[3/18] [chromium] › test/browser/ux-overhaul.spec.js:367:3 › SC27A Tour shell obeys its viewport contract at 768x1024
+[4/18] [chromium] › test/browser/ux-overhaul.spec.js:367:3 › SC27A Tour shell obeys its viewport contract at 1024x768
+[5/18] [chromium] › test/browser/ux-overhaul.spec.js:367:3 › SC27A Tour shell obeys its viewport contract at 1280x720
+[6/18] [chromium] › test/browser/ux-overhaul.spec.js:367:3 › SC27A Tour shell obeys its viewport contract at 1440x900
+[7/18] [chromium] › test/browser/ux-overhaul.spec.js:441:3 › SC27A browser history restores complete overlay frames at 375x812
+[8/18] [chromium] › test/browser/ux-overhaul.spec.js:441:3 › SC27A browser history restores complete overlay frames at 390x844
+[9/18] [chromium] › test/browser/ux-overhaul.spec.js:441:3 › SC27A browser history restores complete overlay frames at 768x1024
+[10/18] [chromium] › test/browser/ux-overhaul.spec.js:441:3 › SC27A browser history restores complete overlay frames at 1024x768
+[11/18] [chromium] › test/browser/ux-overhaul.spec.js:441:3 › SC27A browser history restores complete overlay frames at 1280x720
+[12/18] [chromium] › test/browser/ux-overhaul.spec.js:441:3 › SC27A browser history restores complete overlay frames at 1440x900
+[13/18] [chromium] › test/browser/ux-overhaul.spec.js:511:3 › SC27A compact-height inspection guidance remains visible at 375x667
+[14/18] [chromium] › test/browser/ux-overhaul.spec.js:511:3 › SC27A compact-height inspection guidance remains visible at 390x684
+[15/18] [chromium] › test/browser/ux-overhaul.spec.js:511:3 › SC27A compact-height inspection guidance remains visible at 360x640
+[16/18] [chromium] › test/browser/ux-overhaul.spec.js:777:1 › SC27A 200% browser-zoom layout equivalent preserves the Tour route
+[17/18] [chromium] › test/browser/ux-overhaul.spec.js:792:3 › SC27A automated accessibility has no WCAG finding at 375x812
+[18/18] [chromium] › test/browser/ux-overhaul.spec.js:792:3 › SC27A automated accessibility has no WCAG finding at 1280x720
+  Slow test file: [chromium] › test/browser/ux-overhaul.spec.js (10.1m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  18 passed (10.1m)

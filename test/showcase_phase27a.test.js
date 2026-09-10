@@ -127,11 +127,11 @@ test('SC27A: the five-beat merge preserves every v2 scientific non-claim', () =>
 test('SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat', () => {
   for (const [chapterIndex, chapterId] of BEATS.entries()) {
     const budget = tourControlBudget({ chapterId, chapterIndex, chapterCount: BEATS.length });
-    assert.equal(budget.visibleChromeAffordances, chapterId === 'stretch_spring' ? 7 : chapterIndex === BEATS.length - 1 ? 5 : 4);
+    assert.equal(budget.visibleChromeAffordances, chapterId === 'stretch_spring' ? 8 : chapterIndex === BEATS.length - 1 ? 6 : 5);
     assert.ok(budget.tabbableChromeTargets <= budget.visibleChromeAffordances);
   }
   assert.equal(tourControlBudget({ chapterId: BEATS[0], chapterIndex: 0,
-    chapterCount: BEATS.length }).tabbableChromeTargets, 3);
+    chapterCount: BEATS.length }).tabbableChromeTargets, 4);
 });
 
 test('SC27A: a zero-height first layout is deferred rather than treated as corrupt', () => {
@@ -315,9 +315,9 @@ test('SC27A: the compact-stage envelope is one governed threshold, not a repeate
   }
   // The hint surface, the occluded-stage withdrawal, the tablet locator shift,
   // the two secondary locator names, the reading-width caption, and the
-  // terminus suppression are the six branches the envelope governs.
+  // terminus suppression, comparison spacing and ruler replacement are governed.
   const uses = page.match(/height (?:<|>=) STAGE_LAYOUT\.compact_stage_height_px/g) || [];
-  assert.equal(uses.length, 6, 'every compact-stage branch reads the governed threshold');
+  assert.equal(uses.length, 8, 'every compact-stage branch reads the governed threshold');
   assert.ok(!/height (?:<|>=) 700\b/.test(page),
     'no compact-stage branch may restate the threshold as a literal');
 });

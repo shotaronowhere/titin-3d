@@ -1,0 +1,5 @@
+
+Running 1 test using 1 worker
+
+[1/1] [chromium] › test/browser/stretch.spec.js:294:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom
+  1 passed (1.1m)

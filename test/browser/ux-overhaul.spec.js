@@ -376,10 +376,10 @@ for (const viewport of SC27A_VIEWPORTS) {
 
     const counts = await chromeCounts(page);
     expect(counts.visibleIds).toEqual([
-      'scopeBadge', 'audienceEvidence', 'chapterPrevious', 'chapterNext',
+      'scopeBadge', 'audienceEvidence', 'guideToggle', 'chapterPrevious', 'chapterNext',
     ]);
-    expect(counts.visible).toBeLessThanOrEqual(4);
-    expect(counts.tabbable).toBeLessThanOrEqual(3);
+    expect(counts.visible).toBeLessThanOrEqual(5);
+    expect(counts.tabbable).toBeLessThanOrEqual(4);
     expect(await horizontalOverflow(page)).toEqual({ document: 0, body: 0, canvas: 0 });
     expect(await visibleWordCount(page)).toBeLessThanOrEqual(110);
     if (viewport.width <= 767 || (viewport.height > viewport.width && viewport.width <= 1024)) {
@@ -392,7 +392,7 @@ for (const viewport of SC27A_VIEWPORTS) {
     const card = page.locator('#guidedCard');
     const body = page.locator('#guidedCardBody');
     await assertInViewport(card, viewport);
-    expect(await body.evaluate((node) => node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+    await expect(page.locator('#guideContent')).toHaveCSS('overflow-y', 'auto');
     await assertCentreUnobscured(page.locator('#chapterNext'));
     await expect(page.getByRole('button', { name: /^Next:/ })).toHaveCount(1);
     await assertShellFocusContainment(page, viewport);
@@ -424,8 +424,7 @@ for (const viewport of SC27A_VIEWPORTS) {
       await assertInViewport(page.locator('#chapterNext'), viewport);
       await assertCentreUnobscured(page.locator('#chapterNext'));
       expect(await boxesCollide(page.locator('#stageHeader'), page.locator('#guidedCard'))).toBe(false);
-      expect(await page.locator('#guidedCardBody')
-        .evaluate((node) => node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+      await expect(page.locator('#guideContent')).toHaveCSS('overflow-y', 'auto');
       expect(await horizontalOverflow(page)).toEqual({ document: 0, body: 0, canvas: 0 });
       if (beat === 3) {
         await expect(page.locator('#tourMechanics')).toBeVisible();
@@ -649,7 +648,7 @@ test('SC27A has one five-beat route, contextual mechanics, and a truthful Replay
     if (index === 2) await expect(page.locator('#tourMechanics')).toBeVisible();
     else await expect(page.locator('#tourMechanics')).toBeHidden();
     const counts = await chromeCounts(page);
-    expect(counts.visible).toBeLessThanOrEqual(index === 2 ? 7 : index === expected.length - 1 ? 5 : 4);
+    expect(counts.visible).toBeLessThanOrEqual(index === 2 ? 8 : index === expected.length - 1 ? 6 : 5);
     if (index < expected.length - 1) await page.locator('#chapterNext').click();
   }
 

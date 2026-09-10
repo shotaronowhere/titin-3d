@@ -1,0 +1,16 @@
+
+Running 12 tests using 1 worker
+
+[1/12] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320
+[2/12] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 390
+[3/12] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 768
+[4/12] [chromium] › test/browser/guide-disclosure.spec.js:58:1 › desktop guide is keyboard collapsible and retains the explicit choice after resize
+[5/12] [firefox] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320
+[6/12] [firefox] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 390
+[7/12] [firefox] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 768
+[8/12] [firefox] › test/browser/guide-disclosure.spec.js:58:1 › desktop guide is keyboard collapsible and retains the explicit choice after resize
+[9/12] [webkit] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320
+[10/12] [webkit] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 390
+[11/12] [webkit] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 768
+[12/12] [webkit] › test/browser/guide-disclosure.spec.js:58:1 › desktop guide is keyboard collapsible and retains the explicit choice after resize
+  12 passed (3.6m)

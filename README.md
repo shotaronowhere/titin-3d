@@ -89,6 +89,16 @@ and evidence-aware recap without dumping the raw inventory. Mechanics appear con
 the Stretch beat. Choose **Research** to open the full Inspect, Measure, Evidence, and Sources &
 build workbench.
 
+Use **Hide guide / Show guide** to collapse or expand the explanation. Phones and portrait
+tablets start collapsed; your choice stays in place across beats and Research round trips.
+Previous/Next and the disclosure button stay visible. The collapsed Stretch panel keeps the
+slider, playback and a compact modeled-force readout available; expanded explanations and
+mechanics share a keyboard-accessible scroll region with a visible scroll cue. Short landscape
+screens put the panel beside the stage, including the 640×360 browser-zoom layout.
+The mobile Stretch view adds thick, proportional I-band/A-band spans. The I-band extension
+relative to the 2,000 nm sarcomere baseline appears next to the length readout, while the scale
+ruler remains on the stage. Manual orbit, pan and zoom survive guide changes and resizing.
+
 The four named length buttons are explicitly geometry presets. Sarcomere length
 does not set calcium activation. The 1,900 nm and 3,000 nm reference states are
 visibly marked outside the declared 2,000–2,400 nm working range; the 3,000 nm

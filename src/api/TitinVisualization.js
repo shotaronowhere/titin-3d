@@ -776,6 +776,10 @@ export class TitinVisualization {
     return Number.isFinite(x) ? Number(x) : null;
   }
 
+  /** Whether direct manipulation currently owns the camera framing. */
+  isCameraManuallyAdjusted() { return this.viewer.cameraManuallyAdjusted === true; }
+
+
   /**
    * SC-25 onboarding cue: pulse titin's identity colour to show the model is
    * inspectable. Colour only — evidence opacity is never read or written — and it

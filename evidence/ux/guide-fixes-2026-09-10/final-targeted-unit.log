@@ -1,0 +1,200 @@
+TAP version 13
+# Subtest: SC1: presentation.json is required and cross-file validated at runtime
+ok 1 - SC1: presentation.json is required and cross-file validated at runtime
+  ---
+  duration_ms: 2.809333
+  ...
+# Subtest: SC1: every supported public URL state round-trips exactly
+ok 2 - SC1: every supported public URL state round-trips exactly
+  ---
+  duration_ms: 2.85075
+  ...
+# Subtest: SC1: bad URL fields fail visibly and use documented defaults
+ok 3 - SC1: bad URL fields fail visibly and use documented defaults
+  ---
+  duration_ms: 1.380375
+  ...
+# Subtest: SC1: public facade reports audience/story/selection without adding activation
+ok 4 - SC1: public facade reports audience/story/selection without adding activation
+  ---
+  duration_ms: 0.746917
+  ...
+# Subtest: SC1/SC27A: Tour owns contextual mechanics and Research owns the raw inspector
+ok 5 - SC1/SC27A: Tour owns contextual mechanics and Research owns the raw inspector
+  ---
+  duration_ms: 3.050125
+  ...
+# Subtest: SC1: length presets distinguish geometry, activation, and working-range status
+ok 6 - SC1: length presets distinguish geometry, activation, and working-range status
+  ---
+  duration_ms: 0.956458
+  ...
+# Subtest: SC1: runtime validation rejects a presentation target that does not exist
+ok 7 - SC1: runtime validation rejects a presentation target that does not exist
+  ---
+  duration_ms: 41.482209
+  ...
+# Subtest: SC27A: the public Tour is exactly five ordered beats with one transition each
+ok 8 - SC27A: the public Tour is exactly five ordered beats with one transition each
+  ---
+  duration_ms: 1.555791
+  ...
+# Subtest: SC27A: every v1 chapter alias canonicalizes directly to a final v3 beat
+ok 9 - SC27A: every v1 chapter alias canonicalizes directly to a final v3 beat
+  ---
+  duration_ms: 0.118917
+  ...
+# Subtest: SC27A: protected public claim bindings migrate without editing the claim ledger
+ok 10 - SC27A: protected public claim bindings migrate without editing the claim ledger
+  ---
+  duration_ms: 0.135167
+  ...
+# Subtest: SC27A: one presentation mapping covers every canonical evidence class
+ok 11 - SC27A: one presentation mapping covers every canonical evidence class
+  ---
+  duration_ms: 0.501625
+  ...
+# Subtest: SC27A: the five-beat merge preserves every v2 scientific non-claim
+ok 12 - SC27A: the five-beat merge preserves every v2 scientific non-claim
+  ---
+  duration_ms: 0.740042
+  ...
+# Subtest: SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat
+ok 13 - SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat
+  ---
+  duration_ms: 0.148333
+  ...
+# Subtest: SC27A: a zero-height first layout is deferred rather than treated as corrupt
+ok 14 - SC27A: a zero-height first layout is deferred rather than treated as corrupt
+  ---
+  duration_ms: 0.153792
+  ...
+# Subtest: SC27A: the presentation palette names its contrast and non-claim contracts
+ok 15 - SC27A: the presentation palette names its contrast and non-claim contracts
+  ---
+  duration_ms: 0.264875
+  ...
+# Subtest: SC27A: user-facing vocabulary and accessible grouping use Tour and Research
+ok 16 - SC27A: user-facing vocabulary and accessible grouping use Tour and Research
+  ---
+  duration_ms: 1.307
+  ...
+# Subtest: SC27A: every protected scientific input remains byte-identical to SC-26
+ok 17 - SC27A: every protected scientific input remains byte-identical to SC-26
+  ---
+  duration_ms: 1.857917
+  ...
+# Subtest: SC27A: implementation never claims human or release evidence
+ok 18 - SC27A: implementation never claims human or release evidence
+  ---
+  duration_ms: 0.116708
+  ...
+# Subtest: SC27A: history, viewport, and all-family overlay truth share atomic runtime gates
+ok 19 - SC27A: history, viewport, and all-family overlay truth share atomic runtime gates
+  ---
+  duration_ms: 0.90575
+  ...
+# Subtest: SC27A: Large type never makes any visible text smaller
+ok 20 - SC27A: Large type never makes any visible text smaller
+  ---
+  duration_ms: 0.950208
+  ...
+# Subtest: SC27A: the generated review checklist uses current vocabulary
+ok 21 - SC27A: the generated review checklist uses current vocabulary
+  ---
+  duration_ms: 0.249958
+  ...
+# Subtest: SC27A: Escape closes the last-opened surface and never focuses an inert canvas
+ok 22 - SC27A: Escape closes the last-opened surface and never focuses an inert canvas
+  ---
+  duration_ms: 0.339583
+  ...
+# Subtest: SC27A: the Tour-return accelerator uses the focus-restoring close path
+ok 23 - SC27A: the Tour-return accelerator uses the focus-restoring close path
+  ---
+  duration_ms: 0.279709
+  ...
+# Subtest: SC27A: every surface that can hide a scientific label is an overlay obstacle
+ok 24 - SC27A: every surface that can hide a scientific label is an overlay obstacle
+  ---
+  duration_ms: 0.460833
+  ...
+# Subtest: SC27A: the retired Guided provenance band leaves nothing behind
+ok 25 - SC27A: the retired Guided provenance band leaves nothing behind
+  ---
+  duration_ms: 0.774625
+  ...
+# Subtest: SC27A: the compact-stage envelope is one governed threshold, not a repeated literal
+ok 26 - SC27A: the compact-stage envelope is one governed threshold, not a repeated literal
+  ---
+  duration_ms: 0.89
+  ...
+# Subtest: standalone: no live reference to sibling files can survive
+ok 27 - standalone: no live reference to sibling files can survive
+  ---
+  duration_ms: 4.224209
+  ...
+# Subtest: standalone: HTML script elements are balanced
+ok 28 - standalone: HTML script elements are balanced
+  ---
+  duration_ms: 5.734708
+  ...
+# Subtest: standalone: the $& splice corruption never recurs
+ok 29 - standalone: the $& splice corruption never recurs
+  ---
+  duration_ms: 1.188666
+  ...
+# Subtest: standalone: every page binding is exposed by the inlined bundle namespace
+ok 30 - standalone: every page binding is exposed by the inlined bundle namespace
+  ---
+  duration_ms: 5.754792
+  ...
+# Subtest: standalone: embedded spec matches data/ byte-for-byte
+ok 31 - standalone: embedded spec matches data/ byte-for-byte
+  ---
+  duration_ms: 21.003875
+  ...
+# Subtest: standalone: every spec file the loader requests is embedded
+ok 32 - standalone: every spec file the loader requests is embedded
+  ---
+  duration_ms: 18.804125
+  ...
+# Subtest: standalone: model and scene build from the shipped file alone
+ok 33 - standalone: model and scene build from the shipped file alone
+  ---
+  duration_ms: 242.440917
+  ...
+# Subtest: standalone: the science matches the served page exactly
+ok 34 - standalone: the science matches the served page exactly
+  ---
+  duration_ms: 270.231375
+  ...
+# Subtest: standalone: the boot advice is not the served-page advice
+ok 35 - standalone: the boot advice is not the served-page advice
+  ---
+  duration_ms: 1.079042
+  ...
+# Subtest: standalone: the real boot scripts permit a healthy file:// launch
+ok 36 - standalone: the real boot scripts permit a healthy file:// launch
+  ---
+  duration_ms: 3.352208
+  ...
+# Subtest: standalone: spec discovery is redundant, not single-point
+ok 37 - standalone: spec discovery is redundant, not single-point
+  ---
+  duration_ms: 0.517084
+  ...
+# Subtest: standalone: build refuses rather than emit a file missing a spec
+ok 38 - standalone: build refuses rather than emit a file missing a spec
+  ---
+  duration_ms: 97.195
+  ...
+1..38
+# tests 38
+# suites 0
+# pass 38
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1600.840709

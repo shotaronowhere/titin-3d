@@ -1,0 +1,99 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:36492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 16 tests using 1 worker
+
+[1/16] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320
+  1) [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('[data-stretch-comparison]')
+    Expected substring: "I-band +0 nm"
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 8000ms
+      - waiting for locator('[data-stretch-comparison]')
+
+
+      37 |     await page.locator('#sl').fill('2000');
+      38 |     const comparison = page.locator('[data-stretch-comparison]');
+    > 39 |     await expect(comparison).toContainText('I-band +0 nm');
+         |                              ^
+      40 |     const startBar = await comparison.locator('path[stroke="#ff7797"]').boundingBox();
+      41 |     await page.locator('#stagePlay').click();
+      42 |     await expect(page.locator('#sl')).toHaveValue('2400');
+        at /Users/shotaro/Downloads/artifacts/test/browser/guide-disclosure.spec.js:39:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/guide-disclosure-mobile-gu-84b9c-and-stretch-controls-at-320-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/guide-disclosure-mobile-gu-84b9c-and-stretch-controls-at-320-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/guide-disclosure-mobile-gu-84b9c-and-stretch-controls-at-320-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/guide-disclosure-mobile-gu-84b9c-and-stretch-controls-at-320-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/16] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 390
+[3/16] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 768
+[4/16] [chromium] › test/browser/guide-disclosure.spec.js:58:1 › desktop guide is keyboard collapsible and retains the explicit choice after resize
+[5/16] [chromium] › test/browser/stretch.spec.js:102:1 › MVP Stretch opens in the Spring scene and keeps its geometry framed
+[6/16] [chromium] › test/browser/stretch.spec.js:112:1 › SC24/27A Stretch replaces a Research close-up before running
+[7/16] [chromium] › test/browser/stretch.spec.js:125:1 › SC24/27A mobile Stretch reframes before its first length frame
+[8/16] [chromium] › test/browser/stretch.spec.js:134:1 › SC24/27A Stretch reaches the supported maximum with geometry retained
+[9/16] [chromium] › test/browser/stretch.spec.js:148:1 › SC24/27A Pause freezes the sweep at an exact slider value
+[10/16] [chromium] › test/browser/stretch.spec.js:163:1 › SC24/27A resuming a paused stretch continues instead of resetting
+[11/16] [chromium] › test/browser/stretch.spec.js:197:1 › SC24/27A leaving Stretch stops mechanics without stale state
+[12/16] [chromium] › test/browser/stretch.spec.js:211:1 › SC24/27A Research round-trip retains the Stretch teaching state
+[13/16] [chromium] › test/browser/stretch.spec.js:223:1 › SC24 reduced motion lands on the same Spring maximum without tweening
+[14/16] [chromium] › test/browser/stretch.spec.js:264:3 › MVP 1280: Stretch comparison frame is established on entry and retained through interaction
+[15/16] [chromium] › test/browser/stretch.spec.js:264:3 › MVP 390: Stretch comparison frame is established on entry and retained through interaction
+[16/16] [chromium] › test/browser/stretch.spec.js:294:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom
+  2) [chromium] › test/browser/stretch.spec.js:294:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.waitForFunction: Test timeout of 60000ms exceeded.
+
+      242 | async function settledCamera(page) {
+      243 |   await page.evaluate(() => { window.__stableCamera = null; });
+    > 244 |   await page.waitForFunction(() => {
+          |              ^
+      245 |     const points = window.titinVisualization.projectPresentationAnchors([
+      246 |       { id: 'fixed-z', anchor_nm: { x: 0, y: 0, z: 0 } },
+      247 |       { id: 'fixed-m', anchor_nm: { x: 1200, y: 0, z: 0 } },
+        at settledCamera (/Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:244:14)
+        at /Users/shotaro/Downloads/artifacts/test/browser/stretch.spec.js:320:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/stretch-MVP-direct-Stretch-8d465-anual-camera-remains-Custom-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/stretch-MVP-direct-Stretch-8d465-anual-camera-remains-Custom-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/stretch-MVP-direct-Stretch-8d465-anual-camera-remains-Custom-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/stretch-MVP-direct-Stretch-8d465-anual-camera-remains-Custom-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  Slow test file: [chromium] › test/browser/stretch.spec.js (7.5m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  2 failed
+    [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320 
+    [chromium] › test/browser/stretch.spec.js:294:1 › MVP direct Stretch entry and history preserve length, while manual camera remains Custom 
+  14 passed (8.6m)

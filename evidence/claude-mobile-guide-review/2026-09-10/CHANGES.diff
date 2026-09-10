@@ -1,0 +1,281 @@
+diff --git a/README.md b/README.md
+index dd0b40f..85f21a0 100644
+--- a/README.md
++++ b/README.md
+@@ -89,6 +89,13 @@ and evidence-aware recap without dumping the raw inventory. Mechanics appear con
+ the Stretch beat. Choose **Research** to open the full Inspect, Measure, Evidence, and Sources &
+ build workbench.
+ 
++Use **Hide guide / Show guide** to collapse or expand the explanation. Phones and portrait
++tablets start collapsed; your choice stays in place across beats and Research round trips.
++Previous/Next and the Stretch slider and playback button remain available. On mobile, expand
++the guide to see the force readout. Long explanations scroll independently of the controls.
++The mobile Stretch view adds thick, proportional I-band/A-band spans and the I-band extension
++relative to the 2,000 nm sarcomere baseline.
++
+ The four named length buttons are explicitly geometry presets. Sarcomere length
+ does not set calcium activation. The 1,900 nm and 3,000 nm reference states are
+ visibly marked outside the declared 2,000–2,400 nm working range; the 3,000 nm
+diff --git a/src/index.template.html b/src/index.template.html
+index 056edfd..51aa23f 100644
+--- a/src/index.template.html
++++ b/src/index.template.html
+@@ -716,6 +716,33 @@ window.__titinBoot = { ready: false, problems: [] };
+     body { overflow-x: hidden; overflow-y: auto; }
+     #app { height: 680px; min-height: 680px; }
+   }
++  /* Keep the guide optional while the lesson controls stay within reach. */
++  #guideToggle { min-height: 44px; flex: none; padding: 6px 10px; }
++  #guidedCardBody[hidden] { display: none; }
++  #guidedCard { max-height: calc(100dvh - 130px); display: flex; flex-direction: column; }
++  #guidedCard > * { flex-shrink: 0; }
++  #guidedCardBody { min-height: 0; flex-shrink: 1; overflow-y: auto;
++    overscroll-behavior: contain; }
++  .tour-mechanics .stage-label { grid-row: 1; }
++  .tour-mechanics #stageLengthReadout { grid-row: 1; }
++  .tour-mechanics #sl { grid-row: 2; width: 100%; margin: 0; }
++  .tour-mechanics #stagePlay, .tour-mechanics #stageForce { grid-row: 3; }
++  @media (max-width: 767px), (orientation: portrait) and (max-width: 1024px) {
++    #guidedCard { max-height: min(70dvh, calc(100dvh - 130px));
++      bottom: max(9px, env(safe-area-inset-bottom)); }
++    #guidedCard[data-collapsed="true"] #chapterTitle { font-size: 17px; margin: 0 0 5px; }
++    .tour-mechanics { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
++    .tour-mechanics .stage-label { letter-spacing: 0; text-transform: none; }
++    .tour-mechanics #stageForce { width: 100%; max-width: none; padding: 6px; }
++    .tour-mechanics #stagePlay { white-space: normal; }
++    #guidedCard[data-collapsed="true"] #stageForce { display: none; }
++    #guidedCard[data-collapsed="true"] #stagePlay { grid-column: 1 / -1; width: 100%; }
++    .tour-mechanics #stagePlay, .tour-mechanics #stageForce { min-height: 44px; }
++    .tour-mechanics #sl { min-height: 44px; }
++  }
++  @media (max-height: 500px) {
++    #guidedCard { max-height: 550px; }
++  }
+   @media (prefers-reduced-motion: reduce) {
+     *, *::before, *::after { scroll-behavior: auto !important; }
+   }
+@@ -791,17 +818,21 @@ window.__titinBoot = { ready: false, problems: [] };
+             <div class="chapter-meta"><span id="chapterProgress">Beat —</span></div>
+             <div id="tourProgressMarkers" class="tour-progress-markers" aria-hidden="true"></div>
+           </div>
++          <button type="button" id="guideToggle" aria-expanded="true"
++            aria-controls="guidedCardBody stageForce">Hide guide</button>
+         </div>
+-        <p id="chapterQuestion" class="chapter-question"></p>
+         <h1 id="chapterTitle" tabindex="-1">Loading Tour…</h1>
+         <!-- On a phone the Tour card becomes a compact bottom sheet so the
+              scientific stage retains the visual priority. -->
+-        <div id="guidedCardBody">
++        <div id="guidedCardBody" role="region" aria-label="Guide explanation" tabindex="0">
++        <p id="chapterQuestion" class="chapter-question"></p>
+         <p id="chapterSummary"></p>
+         <p id="oppositeTitinNote" hidden>The pink path beyond the M-line belongs to the opposite half’s titin: a separate representative path.</p>
+         <div id="tourEvidenceRecap" class="tour-evidence-recap" role="group" aria-label="Tour evidence labels" hidden></div>
+-        <p id="chapterStateAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
+         <div id="guidedSelection" hidden><b id="guidedSelectionLabel"></b><span id="guidedSelectionText"></span></div>
++        <div id="guidedLattice" hidden></div>
++        </div><!-- /guidedCardBody -->
++        <p id="chapterStateAnnouncement" class="sr-only" role="status" aria-live="polite"></p>
+         <section id="tourMechanics" class="tour-mechanics" aria-label="Stretch demonstration" hidden>
+           <label class="stage-label" for="sl">Sarcomere length</label>
+           <input type="range" id="sl" step="1" aria-label="Sarcomere length in nanometres"
+@@ -817,8 +848,6 @@ window.__titinBoot = { ready: false, problems: [] };
+           <button id="chapterPrevious">Previous</button>
+           <button id="chapterNext">Next</button>
+         </div>
+-        <div id="guidedLattice" hidden></div>
+-        </div><!-- /guidedCardBody -->
+       </section>
+     </div>
+     <div id="interactionHelp" class="sr-only">drag: orbit · wheel/pinch: zoom · right-drag: pan<span
+@@ -1286,6 +1315,26 @@ function announceUrlIssues(issues) {
+  */
+ const MOBILE_RESEARCH_QUERY = '(max-width: 767px), (orientation: portrait) and (max-width: 1024px)';
+ const mobileResearchMedia = window.matchMedia(MOBILE_RESEARCH_QUERY);
++// Remember an explicit choice through chapter changes and Research round trips.
++// Until then, adapt the default to the available screen.
++let guideCollapsed = mobileResearchMedia.matches || window.innerHeight <= 500;
++let guidePreferenceChosen = false;
++function syncGuideDisclosure() {
++  $('guidedCardBody').hidden = guideCollapsed;
++  $('guidedCard').dataset.collapsed = String(guideCollapsed);
++  $('guideToggle').setAttribute('aria-expanded', String(!guideCollapsed));
++  $('guideToggle').textContent = guideCollapsed ? 'Show guide' : 'Hide guide';
++}
++syncGuideDisclosure();
++$('guideToggle').onclick = () => {
++  guideCollapsed = !guideCollapsed;
++  guidePreferenceChosen = true;
++  syncGuideDisclosure();
++  measureTourCard();
++  applyCameraPreset();
++  renderScienceOverlay();
++  markStageDirty();
++};
+ 
+ /** Whether Research currently replaces the stage with its full-screen sheet. */
+ function mobileResearchActive(drawerOpen) {
+@@ -2709,10 +2758,10 @@ function renderScienceOverlay({ transient = false } = {}) {
+       }, 'A-band'));
+     }
+   }
+-  // Two optional teaching spans, projected from the same canonical band bounds.
+-  // Narrow screens retain the locator and the card's explanation instead of
+-  // squeezing a second set of long labels into the molecular view.
+-  if (usesStretchComparisonFrame() && showBands && width >= 900 && !inspectorRect) {
++  // Teaching spans use canonical band bounds. Phones get thicker bars, short
++  // labels and a measured change from the working minimum on the same scale.
++  let compactStretchComparisonShown = false;
++  if (usesStretchComparisonFrame() && showBands && !inspectorRect) {
+     const spans = [
+       ['iband', 'I-band · extensible'],
+       ['aband', 'A-band span · fixed in this model'],
+@@ -2720,10 +2769,12 @@ function renderScienceOverlay({ transient = false } = {}) {
+       start: projected.get(`${id}:start`), end: projected.get(`${id}:end`),
+     }));
+     if (spans.every(({ start, end }) => start?.visible && end?.visible)) {
+-      const y = Math.max(...spans.flatMap(({ start, end }) => [start.y_px, end.y_px])) + 38;
+-      const room = spans.every(({ id, start, end }) => end.x_px - start.x_px > (id === 'iband' ? 96 : 260)
++      const y = Math.max(...spans.flatMap(({ start, end }) => [start.y_px, end.y_px]))
++        + (height < STAGE_LAYOUT.compact_stage_height_px ? 24 : 38);
++      const compactComparison = width < 900;
++      const room = spans.every(({ id, start, end }) => end.x_px - start.x_px > (compactComparison ? (id === 'iband' ? 20 : 110) : id === 'iband' ? 96 : 260)
+         && start.x_px >= 12 && end.x_px <= width - 12);
+-      if (room && y + 20 < (cardBox?.top ?? height - 60)) {
++      if (room && y + (compactComparison ? 48 : 20) < (cardBox?.top ?? height - 60)) {
+         const group = svgElement('g', { 'data-stretch-comparison': 'true' });
+         for (const { id, label, start, end } of spans) {
+           group.append(svgElement('path', {
+@@ -2732,7 +2783,21 @@ function renderScienceOverlay({ transient = false } = {}) {
+           }), svgElement('text', {
+             x: (start.x_px + end.x_px) / 2, y: y + 17,
+             'text-anchor': 'middle', class: 'science-label',
+-          }, id === 'iband' && end.x_px - start.x_px < 150 ? 'I-band' : label));
++          }, compactComparison ? (id === 'iband' ? 'I-band' : 'A-band · fixed')
++            : id === 'iband' && end.x_px - start.x_px < 150 ? 'I-band' : label));
++          if (compactComparison) group.append(svgElement('path', {
++            d: `M ${start.x_px} ${y - 5} H ${end.x_px}`,
++            stroke: id === 'iband' ? '#ff7797' : '#aebdce',
++            'stroke-width': 6, 'stroke-linecap': 'round',
++          }));
++        }
++        if (compactComparison) {
++          compactStretchComparisonShown = height < STAGE_LAYOUT.compact_stage_height_px;
++          const base = model.geometryAt(presentation.scope.working_range_nm[0]);
++          const change = Math.round(bracketById('iband').end_nm - base.thick_filament.X_start);
++          group.append(svgElement('text', {
++            x: width / 2, y: y + 40, 'text-anchor': 'middle', class: 'science-label',
++          }, `I-band ${change >= 0 ? '+' : '−'}${Math.abs(change)} nm vs ${presentation.scope.working_range_nm[0].toLocaleString()} nm sarcomere`));
+         }
+         nodes.push(group);
+       }
+@@ -2782,7 +2847,8 @@ function renderScienceOverlay({ transient = false } = {}) {
+   // an honest LOD withdrawal from a missing feature. Drawn only when the stage
+   // has a measurable span — a ruler stating a wrong number is worse than no
+   // ruler, and the camera sitting on its own target has no scale to state.
+-  if (pxPerNm !== null) {
++  // On short phones the measured extension occupies the ruler's only lane.
++  if (pxPerNm !== null && !compactStretchComparisonShown) {
+     const bar = scaleBar(pxPerNm, Math.max(100, Math.min(180, width * 0.14)));
+     const { left: barX, baseline: barY } = scaleBarPlacement({
+       barPx: bar.px, canvas: { width, height }, card: cardBox, safeTopPx,
+@@ -5369,8 +5435,12 @@ function scheduleViewportSync() {
+   if (pendingViewportSync !== null) return;
+   pendingViewportSync = requestAnimationFrame(() => {
+     pendingViewportSync = null;
+-    // A resized teaching frame uses the same maximum span at the new aspect.
+-    audienceReframePending ||= usesStretchComparisonFrame();
++    if (!guidePreferenceChosen) {
++      guideCollapsed = mobileResearchMedia.matches || window.innerHeight <= 500;
++      syncGuideDisclosure();
++    }
++    // Recenter the model when the guide changes its size or docking position.
++    audienceReframePending = true;
+     syncAudienceMode();
+     markStageDirty();
+   });
+diff --git a/src/presentation/TourView.js b/src/presentation/TourView.js
+index dfe044b..17130df 100644
+--- a/src/presentation/TourView.js
++++ b/src/presentation/TourView.js
+@@ -13,8 +13,8 @@ export function tourControlBudget({ chapterId, chapterIndex, chapterCount }) {
+   const previousDisabled = chapterIndex <= 0;
+   const nextDisabled = chapterCount <= 0;
+   return Object.freeze({
+-    visibleChromeAffordances: 4 + mechanics + evidence,
+-    tabbableChromeTargets: 4 + mechanics + evidence - Number(previousDisabled) - Number(nextDisabled),
++    visibleChromeAffordances: 5 + mechanics + evidence,
++    tabbableChromeTargets: 5 + mechanics + evidence - Number(previousDisabled) - Number(nextDisabled),
+   });
+ }
+ 
+diff --git a/test/browser/ux-overhaul.spec.js b/test/browser/ux-overhaul.spec.js
+index 15060cf..3f218cc 100644
+--- a/test/browser/ux-overhaul.spec.js
++++ b/test/browser/ux-overhaul.spec.js
+@@ -376,10 +376,10 @@ for (const viewport of SC27A_VIEWPORTS) {
+ 
+     const counts = await chromeCounts(page);
+     expect(counts.visibleIds).toEqual([
+-      'scopeBadge', 'audienceEvidence', 'chapterPrevious', 'chapterNext',
++      'scopeBadge', 'audienceEvidence', 'guideToggle', 'chapterPrevious', 'chapterNext',
+     ]);
+-    expect(counts.visible).toBeLessThanOrEqual(4);
+-    expect(counts.tabbable).toBeLessThanOrEqual(3);
++    expect(counts.visible).toBeLessThanOrEqual(5);
++    expect(counts.tabbable).toBeLessThanOrEqual(4);
+     expect(await horizontalOverflow(page)).toEqual({ document: 0, body: 0, canvas: 0 });
+     expect(await visibleWordCount(page)).toBeLessThanOrEqual(110);
+     if (viewport.width <= 767 || (viewport.height > viewport.width && viewport.width <= 1024)) {
+@@ -429,7 +429,11 @@ for (const viewport of SC27A_VIEWPORTS) {
+       expect(await horizontalOverflow(page)).toEqual({ document: 0, body: 0, canvas: 0 });
+       if (beat === 3) {
+         await expect(page.locator('#tourMechanics')).toBeVisible();
+-        await assertContainedBy(page.locator('#stageForce'), page.locator('#guidedCard'));
++        if (await page.locator('#stageForce').isVisible()) {
++          await assertContainedBy(page.locator('#stageForce'), page.locator('#guidedCard'));
++        } else {
++          await expect(page.locator('#guideToggle')).toHaveAttribute('aria-expanded', 'false');
++        }
+       } else {
+         await expect(page.locator('#tourMechanics')).toBeHidden();
+       }
+@@ -649,7 +653,7 @@ test('SC27A has one five-beat route, contextual mechanics, and a truthful Replay
+     if (index === 2) await expect(page.locator('#tourMechanics')).toBeVisible();
+     else await expect(page.locator('#tourMechanics')).toBeHidden();
+     const counts = await chromeCounts(page);
+-    expect(counts.visible).toBeLessThanOrEqual(index === 2 ? 7 : index === expected.length - 1 ? 5 : 4);
++    expect(counts.visible).toBeLessThanOrEqual(index === 2 ? 8 : index === expected.length - 1 ? 6 : 5);
+     if (index < expected.length - 1) await page.locator('#chapterNext').click();
+   }
+ 
+diff --git a/test/showcase_phase27a.test.js b/test/showcase_phase27a.test.js
+index 28184da..662f63b 100644
+--- a/test/showcase_phase27a.test.js
++++ b/test/showcase_phase27a.test.js
+@@ -127,11 +127,11 @@ test('SC27A: the five-beat merge preserves every v2 scientific non-claim', () =>
+ test('SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat', () => {
+   for (const [chapterIndex, chapterId] of BEATS.entries()) {
+     const budget = tourControlBudget({ chapterId, chapterIndex, chapterCount: BEATS.length });
+-    assert.equal(budget.visibleChromeAffordances, chapterId === 'stretch_spring' ? 7 : chapterIndex === BEATS.length - 1 ? 5 : 4);
++    assert.equal(budget.visibleChromeAffordances, chapterId === 'stretch_spring' ? 8 : chapterIndex === BEATS.length - 1 ? 6 : 5);
+     assert.ok(budget.tabbableChromeTargets <= budget.visibleChromeAffordances);
+   }
+   assert.equal(tourControlBudget({ chapterId: BEATS[0], chapterIndex: 0,
+-    chapterCount: BEATS.length }).tabbableChromeTargets, 3);
++    chapterCount: BEATS.length }).tabbableChromeTargets, 4);
+ });
+ 
+ test('SC27A: a zero-height first layout is deferred rather than treated as corrupt', () => {
+@@ -315,9 +315,9 @@ test('SC27A: the compact-stage envelope is one governed threshold, not a repeate
+   }
+   // The hint surface, the occluded-stage withdrawal, the tablet locator shift,
+   // the two secondary locator names, the reading-width caption, and the
+-  // terminus suppression are the six branches the envelope governs.
++  // terminus suppression, comparison spacing and ruler replacement are governed.
+   const uses = page.match(/height (?:<|>=) STAGE_LAYOUT\.compact_stage_height_px/g) || [];
+-  assert.equal(uses.length, 6, 'every compact-stage branch reads the governed threshold');
++  assert.equal(uses.length, 8, 'every compact-stage branch reads the governed threshold');
+   assert.ok(!/height (?:<|>=) 700\b/.test(page),
+     'no compact-stage branch may restate the threshold as a literal');
+ });

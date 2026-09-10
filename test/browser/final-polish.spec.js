@@ -84,6 +84,7 @@ test('Final polish: withdraw the colliding locator while keeping the main model 
 
 test('Final polish: phone Tour retains its locator and explains the opposite path', async ({ page }) => {
   await open(page, 390, 844, 'follow_titin');
+  await page.locator('#guideToggle').click();
   await expect(page.locator('#oppositeTitinNote')).toBeVisible();
   await page.locator('#chapterNext').click();
   await expect(page.locator('#oppositeTitinNote')).toBeHidden();

@@ -1,0 +1,7 @@
+
+Running 3 tests using 1 worker
+
+[1/3] [chromium] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale
+[2/3] [firefox] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale
+[3/3] [webkit] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale
+  3 passed (20.3s)

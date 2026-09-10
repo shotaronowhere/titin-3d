@@ -38,8 +38,8 @@ for (const viewport of SC27A_VIEWPORTS) {
       await expect(page.locator('#panel')).toBeHidden();
       await expect(page.locator('#guidedCard')).toBeVisible();
       const counts = await chromeCounts(page);
-      expect(counts.visible).toBeLessThanOrEqual(4);
-      expect(counts.tabbable).toBeLessThanOrEqual(3);
+      expect(counts.visible).toBeLessThanOrEqual(5);
+      expect(counts.tabbable).toBeLessThanOrEqual(4);
       expect((await horizontalOverflow(page)).document).toBeLessThanOrEqual(1);
       expect(await page.locator('#guidedCardBody').evaluate(
         (node) => node.scrollHeight <= node.clientHeight + 1,

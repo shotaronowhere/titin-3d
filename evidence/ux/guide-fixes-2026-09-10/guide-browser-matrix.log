@@ -1,0 +1,64 @@
+
+Running 30 tests using 1 worker
+
+[1/30] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320
+[2/30] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 390
+[3/30] [chromium] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 768
+[4/30] [chromium] › test/browser/guide-disclosure.spec.js:80:1 › desktop guide is keyboard collapsible and retains the explicit choice after resize
+[5/30] [chromium] › test/browser/guide-disclosure.spec.js:118:1 › manual orbit survives disclosure, resize, and Research; explicit navigation restores automatic framing
+[6/30] [chromium] › test/browser/guide-disclosure.spec.js:146:3 › short landscape 844: stage and controls stay on screen while the guide scrolls
+[7/30] [chromium] › test/browser/guide-disclosure.spec.js:146:3 › short landscape 640: stage and controls stay on screen while the guide scrolls
+[8/30] [chromium] › test/browser/guide-disclosure.spec.js:173:1 › inspection invitation avoids the stretch bars and molecular span in both guide states
+[9/30] [chromium] › test/browser/guide-disclosure.spec.js:195:1 › auto-collapse moves focus from guide content to its disclosure button
+[10/30] [chromium] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale
+[11/30] [firefox] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320
+[12/30] [firefox] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 390
+[13/30] [firefox] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 768
+[14/30] [firefox] › test/browser/guide-disclosure.spec.js:80:1 › desktop guide is keyboard collapsible and retains the explicit choice after resize
+[15/30] [firefox] › test/browser/guide-disclosure.spec.js:118:1 › manual orbit survives disclosure, resize, and Research; explicit navigation restores automatic framing
+[16/30] [firefox] › test/browser/guide-disclosure.spec.js:146:3 › short landscape 844: stage and controls stay on screen while the guide scrolls
+[17/30] [firefox] › test/browser/guide-disclosure.spec.js:146:3 › short landscape 640: stage and controls stay on screen while the guide scrolls
+[18/30] [firefox] › test/browser/guide-disclosure.spec.js:173:1 › inspection invitation avoids the stretch bars and molecular span in both guide states
+[19/30] [firefox] › test/browser/guide-disclosure.spec.js:195:1 › auto-collapse moves focus from guide content to its disclosure button
+[20/30] [firefox] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale
+[21/30] [webkit] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 320
+[22/30] [webkit] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 390
+[23/30] [webkit] › test/browser/guide-disclosure.spec.js:7:3 › mobile guide preserves space, navigation and stretch controls at 768
+[24/30] [webkit] › test/browser/guide-disclosure.spec.js:80:1 › desktop guide is keyboard collapsible and retains the explicit choice after resize
+[25/30] [webkit] › test/browser/guide-disclosure.spec.js:118:1 › manual orbit survives disclosure, resize, and Research; explicit navigation restores automatic framing
+[26/30] [webkit] › test/browser/guide-disclosure.spec.js:146:3 › short landscape 844: stage and controls stay on screen while the guide scrolls
+[27/30] [webkit] › test/browser/guide-disclosure.spec.js:146:3 › short landscape 640: stage and controls stay on screen while the guide scrolls
+[28/30] [webkit] › test/browser/guide-disclosure.spec.js:173:1 › inspection invitation avoids the stretch bars and molecular span in both guide states
+[29/30] [webkit] › test/browser/guide-disclosure.spec.js:195:1 › auto-collapse moves focus from guide content to its disclosure button
+[30/30] [webkit] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale
+  1) [webkit] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale 
+
+    Error: clock.pauseAt: Error: Cannot fast-forward to the past
+
+      11 |   // cannot complete the sweep between the two disclosure clicks.
+      12 |   await page.clock.install();
+    > 13 |   await page.clock.pauseAt(new Date());
+         |                    ^
+      14 |   const distance = () => page.evaluate(() => {
+      15 |     const v = window.titinVisualization.viewer;
+      16 |     return v.camera.position.distanceTo(v.controls.target);
+        at /Users/shotaro/Downloads/artifacts/test/browser/guide-playback.spec.js:13:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/guide-verified-cross-results/guide-playback-guide-discl-760c0--the-fixed-comparison-scale-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/guide-verified-cross-results/guide-playback-guide-discl-760c0--the-fixed-comparison-scale-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/guide-verified-cross-results/guide-playback-guide-discl-760c0--the-fixed-comparison-scale-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/guide-verified-cross-results/guide-playback-guide-discl-760c0--the-fixed-comparison-scale-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [webkit] › test/browser/guide-playback.spec.js:5:1 › guide disclosure keeps a running stretch controllable and preserves the fixed comparison scale 
+  29 passed (5.5m)

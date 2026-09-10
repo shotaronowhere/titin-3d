@@ -1,0 +1,63 @@
+{
+  "initial": [
+    {
+      "id": "a",
+      "x_px": 148.03159160145057,
+      "y_px": 156.36144103997304,
+      "visible": true
+    },
+    {
+      "id": "b",
+      "x_px": 639.9999999999999,
+      "y_px": 160.57611611501474,
+      "visible": true
+    },
+    {
+      "id": "c",
+      "x_px": 1186.8537519509623,
+      "y_px": 165.26099188893554,
+      "visible": true
+    }
+  ],
+  "manual": [
+    {
+      "id": "a",
+      "x_px": 61.17135799691553,
+      "y_px": 373.36285741140927,
+      "visible": true
+    },
+    {
+      "id": "b",
+      "x_px": 640,
+      "y_px": 179.2041825904081,
+      "visible": true
+    },
+    {
+      "id": "c",
+      "x_px": 988.5085987400765,
+      "y_px": 62.30262868503531,
+      "visible": true
+    }
+  ],
+  "afterDisclosure": [
+    {
+      "id": "a",
+      "x_px": 89.52079051727665,
+      "y_px": 222.67019717084003,
+      "visible": true
+    },
+    {
+      "id": "b",
+      "x_px": 693.3088119305836,
+      "y_px": 232.20195703313868,
+      "visible": true
+    },
+    {
+      "id": "c",
+      "x_px": 1381.3887621745923,
+      "y_px": 243.06439984284583,
+      "visible": false
+    }
+  ],
+  "announcement": "Camera adjusted manually. Scene is now Custom."
+}

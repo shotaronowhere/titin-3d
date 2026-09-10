@@ -13,8 +13,8 @@ export function tourControlBudget({ chapterId, chapterIndex, chapterCount }) {
   const previousDisabled = chapterIndex <= 0;
   const nextDisabled = chapterCount <= 0;
   return Object.freeze({
-    visibleChromeAffordances: 4 + mechanics + evidence,
-    tabbableChromeTargets: 4 + mechanics + evidence - Number(previousDisabled) - Number(nextDisabled),
+    visibleChromeAffordances: 5 + mechanics + evidence,
+    tabbableChromeTargets: 5 + mechanics + evidence - Number(previousDisabled) - Number(nextDisabled),
   });
 }
 
