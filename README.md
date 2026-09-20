@@ -1,329 +1,111 @@
-# Titin 3D Visualization
+# Titin-3D
 
-A scientifically traceable Three.js visualization of titin in sarcomere context. The
-JSON records in `data/` are the scientific source of truth; the renderer and public
-API consume those records rather than restating biological constants.
+Explore where titin sits in a muscle's sarcomere, how the model changes during
+stretch, and the scientific sources behind the visualization.
 
-**Scientist-feedback preview — September 9, 2026.** The final presentation pass
-improves force-chart readability and Large type, prevents the optional locator
-from crowding the model, explains the opposite titin path, and puts scientific
-sources before build details. The scientific model and dependencies are unchanged.
+**[Open interactive demo](https://shotaronowhere.github.io/titin-3d/)** ·
+[Try the stretch view](https://shotaronowhere.github.io/titin-3d/#v=2&depth=learn&step=stretch_spring&sl=2000&drawer=closed&scene=spring&confidence=0)
 
-The final candidate passes full repository verification (618 Node tests) and
-63 targeted browser checks (39 Chromium, 24 Firefox). A clean checkout reproduces
-the standalone and all 22 generated release files byte-for-byte. The extracted
-ZIP passed its desktop/phone walkthrough, 24-frame visual review and 20 offline
-exports. WebKit remains unverified; use the Chrome/Firefox preview route.
+[![Titin in sarcomere context. Educational research preview.](assets/social/titin-3d-linkedin-v1.png)](https://shotaronowhere.github.io/titin-3d/)
 
-The [delivery record](evidence/mvp-final/2026-09-09/DELIVERY.md) identifies the exact
-candidate and check coverage. The [package record](evidence/mvp-final/2026-09-09/PACKAGE.md)
-identifies the replacement ZIP and extracted offline rehearsal. This supersedes
-the September 8 handoff; earlier broad regression results are retained separately
-from the final candidate's checks. The [final implementation plan](docs/superpowers/plans/2026-09-08-titin-mvp-final-implementation.md)
-records the bounded scope and cuts.
+AI-assisted educational research preview. Independent scientific validation
+and human usability review remain pending.
 
-Independent scientific validation and human usability review remain pending;
-`release_ready` stays false. This is a preview for researcher feedback, with no
-new biological validation claim. Unrelated object-invoker focus edge cases,
-extreme short-screen polish, physical-device/projector certification and hosting
-parity remain outside this pass.
+## What to try
 
-**Implementation history:** the scoped MVP is complete through Phases 0–10 and Milestones
-0–6. Phases 11–12 in `MASTER_PLAN.md` remain optional future extensions. Showcase
-completion now follows
-`docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md`. SC-18 and
-SC-19 reached their required historical `CODE_COMPLETE_BLOCKED_SCIENCE` handoffs.
-On 2026-08-12 the project owner authorized citation-backed AI adjudication of
-SD-01–SD-05 without representing it as independent human review. SC-20 is complete:
-SD-01, SD-03, and SD-05 were `APPROVED`; SD-02 and SD-04 were initially `DEFERRED` with
-enforced public caveats. A later owner-authorized citation-backed ruling completed SC-21 mechanics,
-and SC-22 completed the canonical responsive claim/source presenter. SC-23 through SC-26 are
-**ENGINEERING COMPLETE**: the presentation curriculum and semantic scenes, responsive controls,
-deterministic picking, and the expert/reproducible-research workbench are implemented. SC-27A is
-**IMPLEMENTATION COMPLETE; FINAL FREEZE BLOCKED**: the public route is a five-beat Tour with
-contextual mechanics and a four-tab Research workbench, and all automated engineering gates pass,
-but its real-human target/formative prerequisites have not occurred.
-On 2026-08-14 the project owner approved the evidence-backed opening sarcomere and actomyosin
-claims; their provenance explicitly records that independent human review was not performed. The handoffs are
-summarized in `docs/sprint-reports/SC-18.md`, `docs/sprint-reports/SC-19.md`,
-`docs/sprint-reports/SC-20.md`, `docs/sprint-reports/SC-21.md`,
-`docs/sprint-reports/SC-22.md`, `docs/sprint-reports/SC-23.md`,
-`docs/sprint-reports/SC-24.md`, `docs/sprint-reports/SC-25.md`,
-`docs/sprint-reports/SC-26.md`, and `docs/sprint-reports/SC-27A.md`.
+1. Follow the five-beat **Tour** from muscle structure to the path of one titin
+   molecule. On phones, choose **Show guide** to read the explanation; **Next**
+   and **Previous** remain available with the guide closed.
+2. At **Build and stretch the spring**, choose **Stretch**. Watch the extensible
+   I-band beside the fixed A-band span, then use **Replay stretch** or the slider
+   to compare lengths.
+3. Click or tap a structure and choose **Why we know this**. Its **Evidence**
+   record opens in **Research**; follow the sources to inspect the claim's basis
+   and limitations. **Sources & build** also links back to this repository.
 
-The release pack in `release/` is generated and staleness-gated. The complete final
-release definition is tracked in `data/release_gates.json`; claim entailment,
-mechanical validity, human/browser review, target-hardware evidence, deployment
-parity, and final release work remain outstanding. The showcase is not yet
-release-ready, `release_ready` remains `false`, and `npm run validate:gates` rejects
-any unsupported readiness claim.
+![Same-camera comparison at 2,000 and 2,400 nm sarcomere length: the I-band extends and the A-band span stays fixed.](docs/media/titin-stretch-comparison.png)
 
-## Open the visualization
+**The I-band extends while the A-band span stays fixed in this model.**
+The comparison combines two real application frames at the same camera and scale.
+These are length states, not activation or contraction states.
 
-`index.html` is the complete application. It embeds Three.js, the project modules,
-and all scientific JSON records, so it makes no network requests and has no runtime
-installation step.
+**[View static diagrams](release/fallback/scope.svg)** ·
+[Static stretch diagram](release/fallback/extension.svg) ·
+[Read the text Tour](release/LEARN_TRANSCRIPT.md)
 
-On macOS:
+## Engineering choices
+
+- **Scientific records feed the renderer.** Geometry, provenance, and model
+  assumptions live in structured records. The
+  [specification loader](src/model/SpecLoader.js) validates them before use.
+- **Explanations lead to evidence.** The
+  [claim presenter](src/presentation/ClaimViewRenderer.js) connects an object's
+  explanation to source records, evidence classes, and limitations.
+- **One HTML file contains the application.** The
+  [standalone build](scripts/build_standalone.mjs) embeds Three.js, project
+  modules, and scientific data for online and offline viewing. Ordinary startup
+  needs no network requests or runtime installation.
+
+[Read the implementation](docs/DEVELOPMENT.md) for setup, API entry points, test
+selection, and build identity. [Architecture](ARCHITECTURE.md) documents the
+model and renderer in more detail.
+
+## My role and development process
+
+I developed this project with substantial AI assistance. The repository contains
+the scientific source records, model assumptions, implementation, and verification
+evidence. Independent scientific review remains pending.
+
+## Scientific scope
+
+The sequence reference is human TTN **Q8WZ42-1**, without an assigned
+tissue-specific construct. This is a representative, partly schematic depiction
+with passive geometry and force estimates; it does not simulate active muscle
+contraction or establish measured human forces. Independent validation is pending.
+See the [model limitations](release/LIMITATIONS.md) and
+[scientific authority record](release/SCIENTIFIC_AUTHORITY.md) for applicability
+ranges, source transfers, and the distinction between parameter sensitivity and
+confidence intervals.
+
+## Run locally
+
+**View without installing dependencies:** download the repository and open the
+committed [index.html](index.html) in a WebGL-capable browser. On macOS:
 
 ```sh
 open index.html
 ```
 
-Alternatively, double-click `index.html`, or serve the repository and open
-<http://localhost:8000/>:
+The application and embedded data work offline. External scientific citations,
+the GitHub link, and the error panel's online recovery links need an internet
+connection. Keep the companion `release/` directory to use the static diagrams
+offline.
 
-```sh
-npm run serve
-```
+**Develop or rebuild:** follow the [development setup](docs/DEVELOPMENT.md#setup)
+with Node.js 20.19.2, npm 11.5.2, and Python 3.12+. Edit the template and source
+modules, then regenerate the standalone and companion materials.
 
-The same committed root file can be published directly with GitHub Pages using
-**Deploy from a branch → `main` → `/(root)`**. No Pages-specific build workflow is
-required.
+## Project status and verification
 
-## Tour and Research modes
+**Not yet release-ready for scientific use; independent scientific validation
+and formal human usability review remain outstanding.**
+The [formal gate record](data/release_gates.json) keeps `release_ready: false`.
+Portfolio presentation and scientific release are separate decisions.
 
-The application opens in **Tour** mode: the 3D stage remains the hero and a concise five-beat
-card moves from the sarcomere through titin's route, passive spring, thick-filament scaffold,
-and evidence-aware recap without dumping the raw inventory. Mechanics appear contextually in
-the Stretch beat. Choose **Research** to open the full Inspect, Measure, Evidence, and Sources &
-build workbench.
+The [September 20 readiness record](evidence/linkedin-readiness/2026-09-20/READINESS.md)
+records this presentation pass's candidate identity, actual checks, image
+provenance, review scope, and publication status. Owner review and publication
+are tracked separately from local engineering verification.
 
-Use **Hide guide / Show guide** to collapse or expand the explanation. Phones and portrait
-tablets start collapsed; your choice stays in place across beats and Research round trips.
-Previous/Next and the disclosure button stay visible. The collapsed Stretch panel keeps the
-slider, playback and a compact modeled-force readout available; expanded explanations and
-mechanics share a keyboard-accessible scroll region with a visible scroll cue. Short landscape
-screens put the panel beside the stage, including the 640×360 browser-zoom layout.
-The mobile Stretch view adds thick, proportional I-band/A-band spans. The I-band extension
-relative to the 2,000 nm sarcomere baseline appears next to the length readout, while the scale
-ruler remains on the stage. Manual orbit, pan and zoom survive guide changes and resizing.
+Earlier evidence is retained with its original scope:
+[September 9 delivery](evidence/mvp-final/2026-09-09/DELIVERY.md) and
+[September 10 mobile-guide checks](evidence/ux/guide-fixes-2026-09-10/README.md).
+The September 10 WebKit results cover targeted desktop-engine tests and emulated
+viewports; they do not certify physical Safari/iPhone or LinkedIn's in-app browser.
 
-The four named length buttons are explicitly geometry presets. Sarcomere length
-does not set calcium activation. The 1,900 nm and 3,000 nm reference states are
-visibly marked outside the declared 2,000–2,400 nm working range; the 3,000 nm
-state is illustrative. The URL hash records the supported presentation state, so
-copying the browser address preserves audience mode, beat, length, scale,
-named camera, selected region/component, and evidence display. Invalid shared
-state is reported visibly and replaced with a documented safe default.
+## License
 
-Hover a visible structure for a concise explanation, or click/tap it to pin the compact Tour
-explanation. Its single “Why we know this” route opens the full evidence-linked record and exact
-sources in Research. Keyboard users can focus the 3D stage, move through currently visible
-structures with Left/Right Arrow, pin with Enter or Space, and close with Escape.
-
-## The stage and its controls
-
-Tour keeps Previous/Next and Research as its persistent controls. The Stretch beat adds the
-sarcomere-length slider, **▶ Stretch**, and a status-bearing force route, while all scene, camera,
-layer, region, measurement, and source controls remain in Research. Stretch sweeps the sarcomere
-across the declared working range so the difference between regions that straighten and regions
-that extend is something to watch rather than something to read. The
-sweep stops on any other interaction and, under `prefers-reduced-motion`, moves
-between the two endpoint states instead of animating between them. The Measure tab retains the
-status-bearing force curve, regional extension, incremental compliance, and the exact SD-04
-validity/non-claim disclosures. Beat 3 starts in the full Spring view. At the upper endpoint,
-**Replay stretch** explicitly resets to the working-range minimum before stretching again;
-pausing partway and ordinary beat navigation preserve the current length. The Tour force button
-opens the force explanation directly. Its detailed ± values describe literature-parameter
-sensitivity, not a confidence interval. Molecular architecture and the paired lattice comparison
-remain available in Research.
-
-A presenter can drive the route from the keyboard: digits 1–5 enter the matching beats, `r`
-restarts, `x` enters the complete Stretch beat, `e` opens Research, `g` returns to Tour, and the
-space bar runs the stretch sweep. The accelerators are included in the accessible canvas
-description rather than painted as a second navigation vocabulary, and the presenter script
-resolves them from `data/presentation.json`.
-
-The Research workbench is **tabbed** — Inspect, Measure, Evidence, and *Sources &
-build* last — so the controls are reachable without scrolling past two screens of
-prose, and the bibliography, which lists every record in the canonical registry
-and marks the ones this build actually cites, is where a reader looks for it
-rather than where they first trip over it. The drawer head also carries a **Large
-type** toggle for a projector or the back of a room.
-
-## Development requirements
-
-- Node.js 20.19 or newer
-- Python 3.12 or newer
-
-Install the exact JavaScript and Python environments:
-
-```sh
-npm ci
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-```
-
-Run the complete repository gate:
-
-```sh
-npm run verify
-```
-
-This checks production JavaScript with strict TypeScript analysis, rejects a stale
-generated `index.html`, tests the standalone artifact, runs the Node test suite,
-validates the scientific specification, and exercises the Gemmi/NumPy
-structural-coordinate pipeline with an offline synthetic fixture. It also runs the
-destructive-in-memory/on-restored-copy negative controls that prove the scientific
-guards reject invalid geometry.
-
-For routine showcase work on a local laptop, use a bounded serial gate instead of the
-exhaustive destructive suite:
-
-```sh
-npm run build
-npm run verify:sc2
-npm run verify:sc3
-npm run verify:sc4
-npm run verify:sc5
-npm run verify:sc6
-npm run verify:sc7
-npm run verify:sc8
-```
-
-The exhaustive `npm run verify` command is intended for release/CI validation.
-For the focused current gate, run `npm run verify:sc27a`.
-
-### Choosing a browser gate
-
-Every browser test boots a real WebGL page, and each semantic scene change costs the app
-1.5–3 seconds of geometry rebuild. That floor is the app's own render work, not test overhead,
-so the only way to keep the loop short is to run the narrowest gate that covers what changed.
-Measured durations on a developer laptop:
-
-| Gate | Scope | Time |
-|---|---|---|
-| `npx playwright test test/browser/smoke.spec.js --project=chromium` | boot, static fallback, axe foundation — 9 tests | ~1.5 min |
-| `npx playwright test test/browser/ux-overhaul.spec.js --project=chromium --grep-invert @sweep` | every bounded Tour/Research shell, overlay, history, viewport and accessibility contract — 32 tests | ~9 min |
-| `npx playwright test --project=chromium --grep @sweep` | the exhaustive beat × scene × viewport label matrix — 45 tests | ~25 min |
-| `npm run test:browser:sc27a` | the complete Chromium SC-27A surface — 135 tests | ~50 min |
-
-Run the smoke gate while iterating, the overlay gate after changing stage, overlay, or shell
-code, and the sweep plus the complete surface only when preparing a candidate for review. The
-exhaustive tests carry the `@sweep` tag, so `--grep`/`--grep-invert @sweep` selects or excludes
-them anywhere. These are deliberately not `package.json` scripts: `package.json` is a build input,
-so adding one would change the candidate's build-input fingerprint and require the whole
-verification matrix to be re-run to keep the recorded identity truthful.
-
-`playwright.config.js` deliberately pins `workers: 1`. These tests measure rendered label boxes
-to a 3 px tolerance, and concurrent workers shift those measurements; the suite has been observed
-failing purely from host memory pressure, always as timeouts rather than failed assertions. If a
-browser run fails, check `sysctl -n vm.swapusage` before suspecting the code.
-
-To reproduce the coordinate-derived measurements from the pinned RCSB inputs, fetch
-the optional raw-structure cache and verify it before running the measurement scripts:
-
-```sh
-npm run fetch:structures
-npm run check:structures
-```
-
-`data/structures/manifest.json` records the URL, byte count, and SHA-256 digest of
-every input. The large downloaded coordinate files are a reproducible cache and are
-not required by the clean-checkout release gate.
-
-The page uses `TitinVisualization`, the supported browser facade. Its biological
-controls set sarcomere length, structural state, component visibility, scale,
-close-up target, and titin-region selection/focus. Region selection is a separate
-colour channel from evidence opacity, persists through rebuilds, and follows the
-region's live mechanical span. Evidence-aware annotations are available through the
-same facade. Camera moves are smooth and interruptible, while the operating-system
-reduced-motion preference is honored immediately.
-The default intermediate-length partition is the common-force mechanical solution;
-the historical keyframe interpolation remains available only as an explicitly named
-reference/audit mode. Interactive clamping and interpolation caveats are disclosed
-in the visible readout.
-
-After changing `src/index.template.html`, application modules, dependencies, or
-scientific data, regenerate the committed application:
-
-```sh
-npm run build
-```
-
-`npm run check:build` verifies that `index.html` exactly matches its current inputs.
-`npm run build:standalone` remains as a compatibility alias for `npm run build`.
-
-## Release and handoff pack
-
-`release/` is a generated package, not a written one. Regenerate it whenever the
-scientific data, the narrative, or the standalone build changes:
-
-```sh
-npm run pack
-```
-
-`npm run check:pack` fails if the committed pack is stale, so the leave-behind
-cannot drift away from the science it describes.
-
-| Artifact | What it is |
-|---|---|
-| `release/CLAIM_MATRIX.md` | every reviewed claim with its decision, evidence classes, sources, and non-claims |
-| `release/LIMITATIONS.md` | every recorded non-claim in the project, grouped by the record that holds it |
-| `release/PRESENTER_SCRIPT.md` | the Tour route as a presenter reads it, with per-beat timings |
-| `release/LEARN_TRANSCRIPT.md` | the complete text-only Tour generated from presentation v3 (the path is retained for compatibility) |
-| `release/SCREEN_READER_TRANSCRIPT.md` | the same conceptual sequence with spoken state announcements and actions |
-| `release/PREFLIGHT.md` | the demo-day checklist, including the build fingerprint to compare |
-| `release/SCREENSHOT_PACK.md` | the 48-cell deterministic capture set, each a viewport plus a URL hash |
-| `release/fallback/*.svg` | six static slides generated from this build; no GPU, browser engine, or network |
-| `release/MANIFEST.json` | the build fingerprint and artifact inventory |
-
-Research → Sources & build shows the candidate identity. Before a demonstration,
-confirm the hosted page and the offline `index.html` show the same model, app, and
-build-input fingerprints; a page served from unpinned source says so instead.
-
-## Public modules
-
-- `src/api/titinApi.js` — headless biological API
-- `src/api/TitinVisualization.js` — supported Three.js/browser facade
-- `src/api/TitinAnnotations.js` — evidence-aware annotation descriptors
-- `src/model/` — specification loading, provenance, and model state
-- `src/geometry/` — representation, lattice, and mechanical geometry
-- `src/geometry/ZDiscDetail.js` and `src/geometry/MBandDetail.js` — SC-3
-  source-limited, target-gated terminal-anchor detail descriptors
-- `src/geometry/MyBPCContext.js` — SC-5 optional schematic MyBP-C C-zone context;
-  Research-only, off by default, and structurally unable to reach a thin filament,
-  depict a rigid thick-to-thin bridge, or claim a titin contact
-- `src/geometry/LatticeCrossSection.js` — SC-6 two-panel orthographic lattice comparison;
-  plane coordinates plus one shared scale, so the educational cross-section cannot
-  foreshorten and the two panels cannot be normalised independently
-- `src/render/` — Three.js scene and viewer
-- `src/presentation/StoryController.js` — validated narrative state and URL codec
-- `src/presentation/ShowcaseOverlay.js` — SC-2 continuity, landmark, and live extension descriptors derived from canonical geometry
-- `src/presentation/ProvenancePipeline.js` — SC-7 build pipeline whose every figure is
-  counted from the loaded records at render time rather than written into the copy
-- `src/presentation/VisualMatrix.js` — SC-8 deterministic capture set; every cell is a
-  viewport plus a URL hash that is round-trip checked, so a screenshot can be returned to
-- `src/presentation/AnnotationCatalog.js` — SC-4 annotation validation and citation/link resolution
-- `data/presentation.json` — sourced SC-1/SC-2 presentation contract and SC-5 Research-only expert cards (no authoritative geometry)
-- `data/annotations.json` — validated SC-4 dual-audience object explanations and scientific bindings
-- `data/geometry_strategy.json` — current defect/completion register
-- `data/release_gates.json` — SC-8 release-gate record; a gate cannot be marked passed
-  without the evidence that earned it (`npm run validate:gates`)
-
-`placeDomainsAlongPath` accepts only canonical, already-computed paths. It rejects
-partial, reordered, shifted, uniformly resampled, or otherwise caller-invented
-geometry. Headless APIs reject out-of-range sarcomere lengths; the interactive facade
-may clamp them only while disclosing the requested and applied values.
-
-## Scientific scope
-
-Every displayed claim carries an evidence class and source record. `MEASURED`,
-`STRONGLY INFERRED`, `MODELED`, `INFERRED`, `SCHEMATIC`, and `UNKNOWN` are distinct
-and must not be silently promoted. Every adopted quantitative geometry source has
-been checked against its primary record; each row records whether that check used
-full text, an abstract, a database record, coordinates, or an executable model.
-`data/scientific_scope.json` is the sole public identity ledger: the displayed
-sequence is the pinned human TTN reference sequence Q8WZ42-1, not a claimed
-tissue-specific human isoform. Mechanics transferred from rat-psoas preparations
-remain identified as cross-preparation transfers: approximate passive pN per titin is
-shown at 2,000–2,400 nm, labeled extrapolated above 2,400 and below 2,500 nm, and
-withheld below 2,000 or at/above 2,500 nm. These are model estimates, not measured
-human forces; parameter sensitivity is not a confidence interval.
-`data/claim_support.json` records exact locators and limitations separately from
-human entailment status; all independent human entailment reviews are still pending.
-`PHASE0_REVIEW.md` records the completed research audit and the remaining scientific
-uncertainties, which are model limits rather than unfinished provenance work.
-
-The project content is licensed under CC BY 4.0; see `LICENSE`.
+Project content is licensed under **CC BY 4.0**; see [LICENSE](LICENSE).
+Bundled dependencies retain their own licenses and attribution notices,
+including Three.js under the MIT license. Those notices remain in the generated
+standalone; project licensing does not relicense upstream code.

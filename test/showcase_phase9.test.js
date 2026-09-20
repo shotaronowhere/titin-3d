@@ -281,13 +281,17 @@ test('SC9: the rehearsal record claims nothing that has not been rehearsed', () 
 // Handoff documentation
 // ---------------------------------------------------------------------------
 
-test('SC9/18: the README and progress record hand the current project over accurately', () => {
+test('SC9/18: the public and development docs hand the current project over accurately', () => {
   const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
+  const development = readFileSync(new URL('../docs/DEVELOPMENT.md', import.meta.url), 'utf8');
   const progress = readFileSync(new URL('../PROGRESS.md', import.meta.url), 'utf8');
-  for (const needle of ['Tour', 'Research', 'Evidence', 'npm run verify', 'index.html',
-    'GitHub Pages', 'release/', 'SC-18', 'CODE_COMPLETE_BLOCKED_SCIENCE',
-    'docs/superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md']) {
+  for (const needle of ['Tour', 'Research', 'Evidence', 'index.html']) {
     assert.ok(readme.includes(needle), `README does not mention ${needle}`);
+  }
+  for (const needle of ['npm run verify', 'index.html',
+    'GitHub Pages', 'release/', 'SC-18', 'CODE_COMPLETE_BLOCKED_SCIENCE',
+    'superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md']) {
+    assert.ok(development.includes(needle), `Development reference does not mention ${needle}`);
   }
   assert.ok(!readme.includes('completion sequence is complete through SC-17'),
     'README still presents SC-17 as the terminal showcase sprint');
