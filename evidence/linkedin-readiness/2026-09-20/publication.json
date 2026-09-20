@@ -1,0 +1,118 @@
+{
+  "checked_at": "2026-09-20T04:29:24.736Z",
+  "published_commit": "b215a87fe959e8c05988034718f52cd11b66a63b",
+  "previous_publication": "aaa069864187179bd03b54bbc3f59d898ef18c7a",
+  "deployment": {
+    "result": "success",
+    "run_url": "https://github.com/shotaronowhere/titin-3d/actions/runs/35489211634",
+    "pages_source": {
+      "branch": "main",
+      "path": "/"
+    }
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "url": "https://shotaronowhere.github.io/titin-3d/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 2237836,
+      "local_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+      "public_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+      "matches_local": true
+    },
+    {
+      "path": "assets/social/titin-3d-linkedin-v1.png",
+      "url": "https://shotaronowhere.github.io/titin-3d/assets/social/titin-3d-linkedin-v1.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 160247,
+      "local_sha256": "d4c21b18ee49b573a04ecb424478a8fa004a49ce454bf976c033e31fb14d44ab",
+      "public_sha256": "d4c21b18ee49b573a04ecb424478a8fa004a49ce454bf976c033e31fb14d44ab",
+      "matches_local": true
+    },
+    {
+      "path": "assets/social/titin-3d-github-v1.png",
+      "url": "https://shotaronowhere.github.io/titin-3d/assets/social/titin-3d-github-v1.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 171672,
+      "local_sha256": "302c005ecc8e5811c78150b49349228ed0fafdcb798505e1e07c9a0ceb5f4fab",
+      "public_sha256": "302c005ecc8e5811c78150b49349228ed0fafdcb798505e1e07c9a0ceb5f4fab",
+      "matches_local": true
+    },
+    {
+      "path": "release/fallback/extension.svg",
+      "url": "https://shotaronowhere.github.io/titin-3d/release/fallback/extension.svg",
+      "status": 200,
+      "content_type": "image/svg+xml",
+      "bytes": 4693,
+      "local_sha256": "901add44a2ea4a04216176e82e39945d560ad20ce0781e4b130f2f0bcae733f6",
+      "public_sha256": "901add44a2ea4a04216176e82e39945d560ad20ce0781e4b130f2f0bcae733f6",
+      "matches_local": true
+    },
+    {
+      "path": "release/fallback/scope.svg",
+      "url": "https://shotaronowhere.github.io/titin-3d/release/fallback/scope.svg",
+      "status": 200,
+      "content_type": "image/svg+xml",
+      "bytes": 2868,
+      "local_sha256": "b07e4d8e6ad6eaf3776af4cc0472292597c181561156d60c02b8ab1fb8894c7b",
+      "public_sha256": "b07e4d8e6ad6eaf3776af4cc0472292597c181561156d60c02b8ab1fb8894c7b",
+      "matches_local": true
+    },
+    {
+      "path": "release/LEARN_TRANSCRIPT.md",
+      "url": "https://shotaronowhere.github.io/titin-3d/release/LEARN_TRANSCRIPT.md",
+      "status": 200,
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 6092,
+      "local_sha256": "09d49c0a8792633cd2b9e22dae25ada585e3560071f1d25311d53029e018b887",
+      "public_sha256": "09d49c0a8792633cd2b9e22dae25ada585e3560071f1d25311d53029e018b887",
+      "matches_local": true
+    }
+  ],
+  "github_settings_changed": false,
+  "linkedin_changed": false,
+  "github_readme": {
+    "checked_at": "2026-09-20T04:30:20.604Z",
+    "reviewer": "Codex implementer; fresh unauthenticated Chromium context",
+    "browser": "151.0.7922.34",
+    "http_status": 200,
+    "images": [
+      {
+        "alt": "Titin in sarcomere context. Educational research preview.",
+        "url": "https://github.com/shotaronowhere/titin-3d/raw/main/assets/social/titin-3d-linkedin-v1.png",
+        "width": 1200,
+        "height": 630
+      },
+      {
+        "alt": "Same-camera comparison at 2,000 and 2,400 nm sarcomere length: the I-band extends and the A-band span stays fixed.",
+        "url": "https://github.com/shotaronowhere/titin-3d/raw/main/docs/media/titin-stretch-comparison.png",
+        "width": 1280,
+        "height": 550
+      }
+    ],
+    "screenshot": "published-readme.png",
+    "screenshot_sha256": "8fafd8d3fb9d09ed0ba3cc8868dfa5d24d5c1b7e3be1f7699acbab3f1b5ac237"
+  },
+  "live_browser": {
+    "checked_at": "2026-09-20T04:30:27.336Z",
+    "browser": "151.0.7922.34",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "reduced_motion": "reduce",
+    "route": [
+      "clean load",
+      "Tour Next twice",
+      "Stretch to 2400",
+      "Research",
+      "Sources and visible repository link"
+    ],
+    "result": "pass",
+    "page_errors": [],
+    "physical_device": false
+  }
+}

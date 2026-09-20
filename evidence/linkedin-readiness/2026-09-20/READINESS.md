@@ -1,12 +1,14 @@
 # LinkedIn presentation readiness — September 20, 2026
 
 Local implementation and engineering verification are complete.
-Owner review and publication are pending. This record does not claim a scientific
+GitHub/Pages publication is complete; LinkedIn Featured and human review remain
+pending. This record does not claim a scientific
 release, independent human validation, or a saved LinkedIn Featured item.
 
 Tasks 1–3 and Task 4's local checks are complete. Task 5's review package and
-local integration are complete; owner review and all external publication steps
-remain pending. The optional video was omitted from this still-image package.
+local integration are complete. The owner authorized pushing the verified
+repository, and its Pages deployment passed. Repository settings and LinkedIn
+editing remain separate steps. The optional video was omitted from this still-image package.
 
 ## Candidate
 
@@ -141,7 +143,23 @@ separately.
 
 ## Publication
 
-Prepared but unpublished. The implementation was fast-forwarded into local
+The owner authorized a push on September 20, 2026. Application candidate
+`b215a87fe959e8c05988034718f52cd11b66a63b` was published to the existing `main` Pages
+source at `/`. The [Pages deployment](https://github.com/shotaronowhere/titin-3d/actions/runs/35489211634)
+succeeded. [Publication evidence](publication.json) records the clean public
+HTML, both social PNGs, both linked fallback SVGs, and text Tour: each returned
+HTTP 200 and matched the verified local bytes. Subsequent evidence-only commits
+preserve this application candidate.
+
+An unauthenticated Chromium inspection of the public repository loaded both
+README images at their expected intrinsic dimensions; its
+[rendered README](published-readme.png) was visually reviewed by the Codex
+implementer. The public demo also passed a clean-load → Tour → Stretch →
+Research → Sources check at 390 × 844 with reduced motion and no page errors.
+This is desktop browser automation at a phone-sized viewport, not a physical
+phone or human-comprehension review.
+
+The implementation was previously fast-forwarded into local
 `main` at `6cf5f530172032a7ccbaa9c4207d9f3f9f98e3ef`; source ancestry was retained.
 [Integration evidence](integration.json) records fresh build, pack, and identity
 passes from `/Users/shotaro/proj/titin-3d`. The app revision and HTML bytes remain
@@ -153,15 +171,11 @@ The first integrated pack check rejected a pre-existing, ignored
 backup. All three checks then passed; no generated file or checker was changed.
 The initial failure and final results are retained in the integration record.
 
-See [the publication package](PUBLICATION.md) for the
-reviewable files, exact Featured copy, GitHub About fields, and remaining steps.
-No commits were pushed and no GitHub or LinkedIn settings were changed. The
-remote `main` was still `aaa069864187179bd03b54bbc3f59d898ef18c7a` when checked
-before integration. The live site remains on the prior publication until an
-authorized deployment.
-GitHub's final rendered README, public image URLs, LinkedIn Post Inspector, the
-actual Featured draft, and the saved Featured item require post-publication
-inspection. Local engineering checks cannot establish those external results.
+See [the publication package](PUBLICATION.md) for the reviewable files, exact
+Featured copy, GitHub About fields, and remaining steps. The push did not change
+repository settings or LinkedIn. Post Inspector, the actual Featured draft, and
+the saved Featured item still require inspection and authorization. Local
+engineering checks cannot establish those external results.
 
 Scientific review and formal human-usability gates remain pending; portfolio
 presentation readiness does not satisfy them.

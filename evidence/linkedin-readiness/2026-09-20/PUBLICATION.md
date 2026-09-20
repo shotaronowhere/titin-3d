@@ -1,11 +1,13 @@
-# Publication package — prepared, not published
+# Publication package — GitHub/Pages published; Featured pending
 
 Use the [readiness record](READINESS.md) to check local verification and review
 scope. Owner review of the desktop/phone opening, README account, and images is
-still required before featuring. No GitHub setting, remote branch, Pages source,
-or LinkedIn profile was changed during local implementation.
-Local `main` now contains the verified, ancestry-preserving integration;
-[integration checks](integration.json) passed in the original checkout.
+still required before featuring. The owner authorized pushing the verified
+repository on September 20, 2026. Commit `b215a87fe959e8c05988034718f52cd11b66a63b`
+was pushed to `main` and its existing Pages deployment succeeded; the public
+application and linked assets match the local candidate. See
+[publication evidence](publication.json). Repository settings and LinkedIn were
+not changed by this push.
 
 ## Reviewable material
 
@@ -43,22 +45,25 @@ stretch demonstration and inspectable scientific sources. Educational research p
 
 This setting is separate from the demo's static Open Graph image.
 
-## After owner approval
+## Publication progress and remaining steps
 
-1. Publish the locally verified, ancestry-preserving integration to the existing
-   `main` Pages source at `/`. Prior publication commit:
+1. **Complete:** published the locally verified, ancestry-preserving integration
+   to the existing `main` Pages source at `/`. Prior publication commit:
    `aaa069864187179bd03b54bbc3f59d898ef18c7a`. Do not change Pages configuration.
-2. Apply the About fields and separate repository social image above.
-3. Wait for Pages deployment and run the HTML identity verifier against the
-   clean demo URL. Fetch both social images and both linked fallback diagrams;
-   compare their bytes to the verified local files. Check the text transcript too.
-4. Inspect GitHub's actual rendered README and images as a logged-out reader.
-5. Inspect the clean URL in LinkedIn Post Inspector, then inspect the actual
+2. **Pending:** apply the About fields and separate repository social image above
+   under the applicable authorization.
+3. **Complete:** Pages deployment succeeded. The HTML identity verifier passed
+   against the clean demo URL; both social images, both linked fallback diagrams,
+   and the text transcript returned HTTP 200 and matched local bytes.
+4. **Complete:** inspected GitHub's actual rendered README and both images in a
+   fresh unauthenticated Chromium context. The public demo's Tour, Stretch, and
+   Sources route also passed at a phone-sized viewport.
+5. **Pending:** inspect the clean URL in LinkedIn Post Inspector, then inspect the actual
    Featured draft. A cached preview or Post Inspector result alone does not prove
    the personal Featured card. Use a custom image only if that editor offers it.
-6. Save the owner-approved Featured item and check its card, destination,
+6. **Pending:** save the owner-approved Featured item and check its card, destination,
    Stretch, source route, and public repository access.
-7. Record deployment commit, served-byte parity, actual preview observations,
+7. Record remaining actual LinkedIn preview observations,
    reviewers and prompting, and any physical-phone/in-app-browser results in
    READINESS.md. Do not change scientific gates as a side effect.
 
