@@ -4,6 +4,8 @@ Use the [readiness record](READINESS.md) to check local verification and review
 scope. Owner review of the desktop/phone opening, README account, and images is
 still required before featuring. No GitHub setting, remote branch, Pages source,
 or LinkedIn profile was changed during local implementation.
+Local `main` now contains the verified, ancestry-preserving integration;
+[integration checks](integration.json) passed in the original checkout.
 
 ## Reviewable material
 

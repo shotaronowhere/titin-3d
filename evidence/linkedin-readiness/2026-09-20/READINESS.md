@@ -4,6 +4,10 @@ Local implementation and engineering verification are complete.
 Owner review and publication are pending. This record does not claim a scientific
 release, independent human validation, or a saved LinkedIn Featured item.
 
+Tasks 1–3 and Task 4's local checks are complete. Task 5's review package and
+local integration are complete; owner review and all external publication steps
+remain pending. The optional video was omitted from this still-image package.
+
 ## Candidate
 
 - Source-input commit: `57154ebb183f61713561c03b4bc2e75dac042c88`.
@@ -125,9 +129,24 @@ separately.
 
 ## Publication
 
-Prepared but unpublished. See [the publication package](PUBLICATION.md) for the
+Prepared but unpublished. The implementation was fast-forwarded into local
+`main` at `6cf5f530172032a7ccbaa9c4207d9f3f9f98e3ef`; source ancestry was retained.
+[Integration evidence](integration.json) records fresh build, pack, and identity
+passes from `/Users/shotaro/proj/titin-3d`. The app revision and HTML bytes remain
+the candidate above. This integration record is a subsequent evidence-only
+commit and is outside the application input boundary.
+
+The first integrated pack check rejected a pre-existing, ignored
+`release/.DS_Store` Finder metadata file. Only that file was moved to a temporary
+backup. All three checks then passed; no generated file or checker was changed.
+The initial failure and final results are retained in the integration record.
+
+See [the publication package](PUBLICATION.md) for the
 reviewable files, exact Featured copy, GitHub About fields, and remaining steps.
-The live site still serves the prior candidate until an authorized publication.
+No commits were pushed and no GitHub or LinkedIn settings were changed. The
+remote `main` was still `aaa069864187179bd03b54bbc3f59d898ef18c7a` when checked
+before integration. The live site remains on the prior publication until an
+authorized deployment.
 GitHub's final rendered README, public image URLs, LinkedIn Post Inspector, the
 actual Featured draft, and the saved Featured item require post-publication
 inspection. Local engineering checks cannot establish those external results.

@@ -1,0 +1,54 @@
+{
+  "integrated_checkout": "/Users/shotaro/proj/titin-3d",
+  "branch": "main",
+  "method": "fast-forward; source ancestry retained",
+  "previous_main": "aaa069864187179bd03b54bbc3f59d898ef18c7a",
+  "integrated_commit": "6cf5f530172032a7ccbaa9c4207d9f3f9f98e3ef",
+  "app_revision": "57154ebb183f61713561c03b4bc2e75dac042c88",
+  "html_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+  "node": "v20.19.2",
+  "npm": "11.5.2",
+  "python": "3.14.3",
+  "python_executable": "/Users/shotaro/proj/titin-3d/.venv/bin/python3",
+  "pushed": false,
+  "external_settings_changed": false,
+  "commands": [
+    {
+      "command": "npm run check:build",
+      "started_at": "2026-09-20T03:35:35.052422+00:00",
+      "seconds": 0.36,
+      "exit_status": 0,
+      "result_log": "checks/integrated-check-build.log"
+    },
+    {
+      "command": "npm run check:pack",
+      "started_at": "2026-09-20T03:35:35.411642+00:00",
+      "seconds": 5.9,
+      "exit_status": 1,
+      "result_log": "checks/integrated-check-pack.log"
+    },
+    {
+      "command": "npm run check:build",
+      "started_at": "2026-09-20T03:36:20.323354+00:00",
+      "seconds": 0.54,
+      "exit_status": 0,
+      "result_log": "checks/integrated-check-build-final.log"
+    },
+    {
+      "command": "npm run check:pack",
+      "started_at": "2026-09-20T03:36:20.864784+00:00",
+      "seconds": 5.8,
+      "exit_status": 0,
+      "result_log": "checks/integrated-check-pack-final.log"
+    },
+    {
+      "command": "npm run verify:identity",
+      "started_at": "2026-09-20T03:36:26.666403+00:00",
+      "seconds": 0.19,
+      "exit_status": 0,
+      "result_log": "checks/integrated-verify-identity-final.log"
+    }
+  ],
+  "integration_diagnosis": "The original checkout contained ignored release/.DS_Store predating integration. The strict release inventory rejects every extra file. Moved only that Finder metadata to a temporary backup; no generated content or checker changed.",
+  "final_result": "All three integrated-checkout checks passed; app revision and HTML bytes unchanged. Publication pending."
+}
