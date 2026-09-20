@@ -1,0 +1,99 @@
+{
+  "tool": "Pillow 12.3.0",
+  "font_files": [
+    "/System/Library/Fonts/Supplemental/Arial.ttf",
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+  ],
+  "outputs": [
+    {
+      "path": "assets/social/titin-3d-linkedin-v1.png",
+      "dimensions": [
+        1200,
+        630
+      ],
+      "mode": "RGB",
+      "bytes": 160247,
+      "sha256": "d4c21b18ee49b573a04ecb424478a8fa004a49ce454bf976c033e31fb14d44ab",
+      "composition": {
+        "source": "raw/architecture.png",
+        "crop_xyxy": [
+          0,
+          175,
+          1280,
+          397
+        ],
+        "uniform_resize_to": [
+          1104,
+          191
+        ],
+        "paste_xy": [
+          48,
+          220
+        ],
+        "operations": "Opaque canvas, cropped real frame, uniform resize, editorial text. No scale bar or force value in this crop."
+      }
+    },
+    {
+      "path": "assets/social/titin-3d-github-v1.png",
+      "dimensions": [
+        1280,
+        640
+      ],
+      "mode": "RGB",
+      "bytes": 171672,
+      "sha256": "302c005ecc8e5811c78150b49349228ed0fafdcb798505e1e07c9a0ceb5f4fab",
+      "composition": {
+        "source": "raw/architecture.png",
+        "crop_xyxy": [
+          0,
+          175,
+          1280,
+          397
+        ],
+        "uniform_resize_to": [
+          1184,
+          205
+        ],
+        "paste_xy": [
+          48,
+          220
+        ],
+        "operations": "Opaque canvas, cropped real frame, uniform resize, editorial text. No scale bar or force value in this crop."
+      }
+    },
+    {
+      "path": "docs/media/titin-stretch-comparison.png",
+      "dimensions": [
+        1280,
+        550
+      ],
+      "mode": "RGB",
+      "bytes": 93926,
+      "sha256": "4bd20b4e1be6aebf0fe08af689e20f521d181f4977d2af9388231a1adcf5a01d",
+      "composition": {
+        "sources": [
+          "raw/spring-2000.png",
+          "raw/spring-2400.png"
+        ],
+        "crop_xyxy_each": [
+          90,
+          93,
+          1240,
+          202
+        ],
+        "resize": "none",
+        "paste_xy_each": [
+          [
+            65,
+            89
+          ],
+          [
+            65,
+            309
+          ]
+        ],
+        "operations": "Two real endpoint frames with identical crop, camera, zoom and pixel scale; editorial labels and caption. Not a single raw screenshot."
+      }
+    }
+  ]
+}

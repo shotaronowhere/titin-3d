@@ -1,0 +1,222 @@
+{
+  "captured_at": "2026-09-20T03:03:02.397Z",
+  "html_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+  "identity": {
+    "model_fingerprint": "7badc8e270e73e8bae3d84420448e6c79fee9e41bfdb0ca790484750ef329ef6",
+    "app_revision": "57154ebb183f61713561c03b4bc2e75dac042c88",
+    "build_inputs_fingerprint": "24fdc3fd3b569f4d0ac45e03f36767a518deea55fa75065ab5d5a41b7477a2f5"
+  },
+  "browser": "Chromium 151.0.7922.34",
+  "captures": [
+    {
+      "filename": "raw/default-desktop.png",
+      "sha256": "f5536a9d9734336895c3954e7eb40b86eeadc9c7bf3d18dfeb82aeaaaad607d0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "state": {
+        "url": "http://127.0.0.1:4174/#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+        "chapter": "Meet the sarcomere",
+        "length_nm": 2200,
+        "guide_expanded": "true",
+        "camera": {
+          "position": [
+            677.0792063829306,
+            151.23350288110532,
+            1058.9933865244216
+          ],
+          "target": [
+            550,
+            -113.51484375000003,
+            0
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "zoom": 1,
+          "fov": 35,
+          "aspect": 1.7777777777777777
+        },
+        "document_overflow": false,
+        "overlay_layout": "resolved"
+      },
+      "requests": [
+        "http://127.0.0.1:4174/"
+      ],
+      "errors": [],
+      "reduced_motion": true,
+      "manual_camera_operations": []
+    },
+    {
+      "filename": "raw/default-phone.png",
+      "sha256": "4b9a45728d155cd68ebfc21f1188d0066a090603a0f3c5e1910d7d9ee1198f48",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": {
+        "url": "http://127.0.0.1:4174/#v=2&depth=learn&step=meet_sarcomere&sl=2200&drawer=closed&scene=overview&confidence=0",
+        "chapter": "Meet the sarcomere",
+        "length_nm": 2200,
+        "guide_expanded": "false",
+        "camera": {
+          "position": [
+            1038.9109980043006,
+            939.5408612269092,
+            4074.25831670251
+          ],
+          "target": [
+            550,
+            -79.02371794871796,
+            0
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "zoom": 1,
+          "fov": 35,
+          "aspect": 0.46208530805687204
+        },
+        "document_overflow": false,
+        "overlay_layout": "resolved"
+      },
+      "requests": [
+        "http://127.0.0.1:4174/"
+      ],
+      "errors": [],
+      "reduced_motion": true,
+      "manual_camera_operations": []
+    },
+    {
+      "filename": "raw/spring-2000.png",
+      "sha256": "7baae76e94c09eb766c1af3e4b62a4f983d7afc01cf8264a2ee9697f393d97af",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "state": {
+        "url": "http://127.0.0.1:4174/#v=2&depth=learn&step=stretch_spring&sl=2000&drawer=closed&scene=spring&confidence=0",
+        "chapter": "Build and stretch the spring",
+        "length_nm": 2000,
+        "guide_expanded": "true",
+        "camera": {
+          "position": [
+            758.4364131527446,
+            70.95086073488466,
+            1320.3034429395389
+          ],
+          "target": [
+            600,
+            -259.125,
+            0
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "zoom": 1,
+          "fov": 35,
+          "aspect": 1.7777777777777777
+        },
+        "document_overflow": false,
+        "overlay_layout": "resolved"
+      },
+      "requests": [
+        "http://127.0.0.1:4174/"
+      ],
+      "errors": [],
+      "reduced_motion": true,
+      "manual_camera_operations": []
+    },
+    {
+      "filename": "raw/spring-2400.png",
+      "sha256": "d0b0d1b115f74430f7de830489ba61d6ae44e04f0e10ddb0aa089b4586288c57",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "state": {
+        "url": "http://127.0.0.1:4174/#v=2&depth=learn&step=stretch_spring&sl=2400&drawer=closed&scene=spring&confidence=0",
+        "chapter": "Build and stretch the spring",
+        "length_nm": 2400,
+        "guide_expanded": "true",
+        "camera": {
+          "position": [
+            758.4364131527446,
+            70.95086073488466,
+            1320.3034429395389
+          ],
+          "target": [
+            600,
+            -259.125,
+            0
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "zoom": 1,
+          "fov": 35,
+          "aspect": 1.7777777777777777
+        },
+        "document_overflow": false,
+        "overlay_layout": "resolved"
+      },
+      "requests": [
+        "http://127.0.0.1:4174/"
+      ],
+      "errors": [],
+      "reduced_motion": true,
+      "manual_camera_operations": []
+    },
+    {
+      "filename": "raw/architecture.png",
+      "sha256": "8945197744fde47a312ca6f03e2a0e4b2cf99e325387a0c03c64458a3b810951",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "state": {
+        "url": "http://127.0.0.1:4174/#v=2&depth=learn&step=follow_titin&sl=2000&drawer=closed&scene=architecture&confidence=0",
+        "chapter": "Follow one giant molecule",
+        "length_nm": 2000,
+        "guide_expanded": "true",
+        "camera": {
+          "position": [
+            232.98259528559333,
+            65.96519057118667,
+            219.88396857062227
+          ],
+          "target": [
+            200,
+            0,
+            0
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "zoom": 1,
+          "fov": 35,
+          "aspect": 1.7777777777777777
+        },
+        "document_overflow": false,
+        "overlay_layout": "resolved"
+      },
+      "requests": [
+        "http://127.0.0.1:4174/"
+      ],
+      "errors": [],
+      "reduced_motion": true,
+      "manual_camera_operations": []
+    }
+  ]
+}
