@@ -19,14 +19,22 @@ async function cleanBoot(page, url) {
   expect(failures).toEqual([]);
 }
 
+function linkTabKey(page, backwards = false) {
+  // macOS WebKit follows Safari's default Option-Tab navigation for native links.
+  // Plain Tab may visit only form fields; do not change the user's browser preferences.
+  const option = process.platform === 'darwin'
+    && page.context().browser().browserType().name() === 'webkit' ? 'Alt+' : '';
+  return `${option}${backwards ? 'Shift+' : ''}Tab`;
+}
+
 async function expectReadableKeyboardLink(page, link) {
   await expect(link).toBeVisible();
   expect(contrastRatio(await computedStyle(link, 'color'),
     await effectiveBackground(link))).toBeGreaterThanOrEqual(4.5);
   await expect(link).toHaveCSS('text-decoration-line', 'underline');
   await link.focus();
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press(linkTabKey(page));
+  await page.keyboard.press(linkTabKey(page, true));
   await expect(link).toBeFocused();
   expect(await link.evaluate((node) => node.matches(':focus-visible'))).toBe(true);
   expect(await computedStyle(link, 'outline-style')).not.toBe('none');
@@ -92,14 +100,16 @@ for (const viewport of Object.keys(VIEWPORTS)) {
     await setReviewViewport(page, viewport);
     await cleanBoot(page, '/index.html');
     await page.locator('#audienceEvidence').click();
-    await page.locator('#tabSources').click();
+    // Start from keyboard focus: Safari does not focus a button on pointer click.
+    await page.locator('#tabSources').focus();
+    await page.keyboard.press('Enter');
     const link = page.locator('#projectRepository');
     await expect(link).toHaveAttribute('href', 'https://github.com/shotaronowhere/titin-3d');
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     // Check before focusing/scrolling: the link must appear in the initial panel view.
     await expect(link).toBeInViewport({ ratio: 1 });
-    await page.keyboard.press('Tab');
+    await page.keyboard.press(linkTabKey(page));
     await expect(link).toBeFocused();
     await expectReadableKeyboardLink(page, link);
   });
