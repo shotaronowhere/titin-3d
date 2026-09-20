@@ -1,0 +1,139 @@
+{
+  "html_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+  "reviewer": "Codex implementer; not a human comprehension review",
+  "route_record": "route-review.json",
+  "offline_record": "offline-review.json",
+  "readme_render": {
+    "source": "README.md",
+    "source_sha256": "5442d7fad74a9308336ae18bfe607617b7c52bd01e51319ee1147343f7355026",
+    "method": "Local marked Markdown rendering with GitHub-like CSS, Chromium at 1024x900, full-page capture after both image.decode() promises resolved; actual GitHub renderer not tested."
+  },
+  "captures": [
+    {
+      "filename": "raw/opening-1280x720.png",
+      "sha256": "c7389b751fa58be8312f13b5b3f34c2afc8fca299a5adf0ae09b4247108c6426",
+      "bytes": 236756,
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "filename": "raw/opening-320x568.png",
+      "sha256": "e7f60d618cf324ab40f505b317e03316686ad22fad8bb915c402e30585214af8",
+      "bytes": 62680,
+      "dimensions": [
+        320,
+        568
+      ]
+    },
+    {
+      "filename": "raw/opening-390x844.png",
+      "sha256": "ab9653df4848d1774ceb91ad548f3e29a6eaa3de7411baf932967679f71723d8",
+      "bytes": 91863,
+      "dimensions": [
+        390,
+        844
+      ]
+    },
+    {
+      "filename": "raw/opening-640x360.png",
+      "sha256": "77a7750b09951248bcbfeb6075402fa157e5e82887d49b43a05a3f1e20d82f65",
+      "bytes": 67284,
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "filename": "raw/recovery-phone.png",
+      "sha256": "bdaef0b344623cd7cb313d30b44d9239431a5d0b815d8593db7de9ad54da0cf0",
+      "bytes": 62537,
+      "dimensions": [
+        320,
+        568
+      ]
+    },
+    {
+      "filename": "raw/sources-1280x720.png",
+      "sha256": "4eab3eebb933b4c030f13c34807d3937a27202cdb9ae512aab3a78d56a80d2d4",
+      "bytes": 250388,
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "filename": "raw/sources-320x568.png",
+      "sha256": "66a1d9814d5121c45d09a9b27c6ffaa7f11ae44af05a915c90b4be7105d58920",
+      "bytes": 41467,
+      "dimensions": [
+        320,
+        568
+      ]
+    },
+    {
+      "filename": "raw/sources-390x844.png",
+      "sha256": "dcf9bb431e64d82758c4d9153628138a88c188e498b27b2fb3911bc9fe8a1a25",
+      "bytes": 74594,
+      "dimensions": [
+        390,
+        844
+      ]
+    },
+    {
+      "filename": "raw/sources-640x360.png",
+      "sha256": "be20ed93c941273737af671492bfadba3ada6294b1e726959e483605d5f04f22",
+      "bytes": 37819,
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "filename": "raw/stretch-1280x720.png",
+      "sha256": "ad3b0260ac2f7f7758ef330845ad9be545a7b1b4ec8c7d9a297b6cb1031ed0d6",
+      "bytes": 231087,
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "filename": "raw/stretch-320x568.png",
+      "sha256": "9e6438438d3162b16267abcd7aad2443f7e2a8558fbd8a7af4a630d01008db59",
+      "bytes": 61376,
+      "dimensions": [
+        320,
+        568
+      ]
+    },
+    {
+      "filename": "raw/stretch-390x844.png",
+      "sha256": "8e91e46b79ba7c36dc3e00553ced2dbedec09eb97cfcfa03dfcb9cfbab1e4bc0",
+      "bytes": 93276,
+      "dimensions": [
+        390,
+        844
+      ]
+    },
+    {
+      "filename": "raw/stretch-640x360.png",
+      "sha256": "596a015e4674130f47f25abfc1a83d13d93bb2b00742b96319d0a5ed89d87eac",
+      "bytes": 77973,
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "filename": "readme-render.png",
+      "sha256": "6f341fa1c8321a9371939140ca94491813637ad47d96a130c8d61407cdb3935f",
+      "bytes": 599474,
+      "dimensions": [
+        1024,
+        3065
+      ]
+    }
+  ]
+}

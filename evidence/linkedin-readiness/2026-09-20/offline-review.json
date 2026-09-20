@@ -1,0 +1,14 @@
+{
+  "file_boot": "pass",
+  "initial_requests": [
+    "file:///Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/index.html"
+  ],
+  "startup_http_requests": [],
+  "repository_click": "Correct HTTPS popup (exact destination intercepted; remote availability not tested)",
+  "recovery_viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "recovery_links_visible": true,
+  "recovery_panel_horizontal_overflow": false
+}

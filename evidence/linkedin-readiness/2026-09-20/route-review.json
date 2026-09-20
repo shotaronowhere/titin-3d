@@ -1,0 +1,107 @@
+{
+  "reviewer": "Codex implementer, automated interaction plus screenshot inspection; no human participant",
+  "browser": "Chromium 151.0.7922.34",
+  "html_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+  "reviews": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "reduced_motion": "no-preference",
+      "opening_title_fits": true,
+      "initial_guide_expanded": "true",
+      "actions": [
+        "fresh load",
+        "keyboard Next/Previous",
+        "guide expanded/collapsed",
+        "Stretch and replay",
+        "Research Sources link visible",
+        "close and focus return",
+        "object explanation to source locator",
+        "browser Back"
+      ],
+      "page_errors": [],
+      "requests": [
+        "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/"
+      ],
+      "result": "pass"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "reduced_motion": "no-preference",
+      "opening_title_fits": true,
+      "initial_guide_expanded": "false",
+      "actions": [
+        "fresh load",
+        "keyboard Next/Previous",
+        "guide expanded/collapsed",
+        "Stretch and replay",
+        "Research Sources link visible",
+        "close and focus return",
+        "object explanation to source locator",
+        "browser Back"
+      ],
+      "page_errors": [],
+      "requests": [
+        "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/"
+      ],
+      "result": "pass"
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "reduced_motion": "reduce",
+      "opening_title_fits": true,
+      "initial_guide_expanded": "false",
+      "actions": [
+        "fresh load",
+        "keyboard Next/Previous",
+        "guide expanded/collapsed",
+        "Stretch and replay",
+        "Research Sources link visible",
+        "close and focus return",
+        "object explanation to source locator",
+        "browser Back"
+      ],
+      "page_errors": [],
+      "requests": [
+        "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/"
+      ],
+      "result": "pass"
+    },
+    {
+      "viewport": {
+        "width": 640,
+        "height": 360
+      },
+      "reduced_motion": "reduce",
+      "opening_title_fits": true,
+      "initial_guide_expanded": "false",
+      "actions": [
+        "fresh load",
+        "keyboard Next/Previous",
+        "guide expanded/collapsed",
+        "Stretch and replay",
+        "Research Sources link visible",
+        "close and focus return",
+        "object explanation to source locator",
+        "browser Back"
+      ],
+      "page_errors": [],
+      "requests": [
+        "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/"
+      ],
+      "result": "pass"
+    }
+  ]
+}

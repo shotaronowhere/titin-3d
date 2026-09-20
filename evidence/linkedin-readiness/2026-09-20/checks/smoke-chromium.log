@@ -1,0 +1,21 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:346) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 12 tests using 1 worker
+
+[1/12] [chromium] › test/browser/smoke.spec.js:47:1 › source and standalone pages boot without module, console, or WebGL errors
+[2/12] [chromium] › test/browser/smoke.spec.js:65:1 › committed standalone opens from file:// and reaches its ready marker
+[3/12] [chromium] › test/browser/smoke.spec.js:69:1 › SC20 desktop authority: consumed rulings and a claim source are visibly inspectable
+[4/12] [chromium] › test/browser/smoke.spec.js:91:3 › desktop: project repository is visible on entering Sources and keyboard accessible
+[5/12] [chromium] › test/browser/smoke.spec.js:107:3 › desktop: Research tabs open in order and return focus to the invoker
+[6/12] [chromium] › test/browser/smoke.spec.js:91:3 › responsive: project repository is visible on entering Sources and keyboard accessible
+[7/12] [chromium] › test/browser/smoke.spec.js:107:3 › responsive: Research tabs open in order and return focus to the invoker
+[8/12] [chromium] › test/browser/smoke.spec.js:121:1 › visible source links and contextual Stretch states use declared readable foregrounds
+[9/12] [chromium] › test/browser/smoke.spec.js:159:1 › region and close-up navigation never leave a false wide-view pressed state
+[10/12] [chromium] › test/browser/smoke.spec.js:181:1 › a missing WebGL context produces an actionable static-fallback message
+[11/12] [chromium] › test/browser/smoke.spec.js:201:1 › a blocked source module preserves recovery links in the classic-script diagnostic
+[12/12] [chromium] › test/browser/smoke.spec.js:213:1 › the pinned axe foundation reports no critical WCAG A/AA violation
+  12 passed (1.3m)

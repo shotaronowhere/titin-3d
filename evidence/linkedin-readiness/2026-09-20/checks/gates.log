@@ -1,0 +1,45 @@
+  PASS lattice_legible: statement exists
+  PASS lattice_legible: blocker names a gate section
+  PASS lattice_legible: blocker 'visual_matrix' is genuinely outstanding
+  PASS novice_comprehension: status is valid
+  PASS novice_comprehension: statement exists
+  PASS novice_comprehension: blocker names a gate section
+  PASS novice_comprehension: blocker 'lay_comprehension' is genuinely outstanding
+  PASS expert_clear: status is valid
+  PASS expert_clear: statement exists
+  PASS expert_clear: blocker names a gate section
+  PASS expert_clear: blocker 'expert_review' is genuinely outstanding
+  PASS outputs_agree: status is valid
+  PASS outputs_agree: statement exists
+  PASS outputs_agree: blocker names a gate section
+  PASS outputs_agree: blocker 'deployment_parity' is genuinely outstanding
+  PASS rehearsal_and_fallback: status is valid
+  PASS rehearsal_and_fallback: statement exists
+  PASS rehearsal_and_fallback: blocker names a gate section
+  PASS rehearsal_and_fallback: blocker 'demo_rehearsal' is genuinely outstanding
+  PASS release blocker IDs are unique
+  PASS blocker 'claim_entailment' is a real section
+  PASS blocker 'claim_entailment' is not already PASS
+  PASS blocker 'mechanical_validity' is a real section
+  PASS blocker 'mechanical_validity' is not already PASS
+  PASS blocker 'deployment_parity' is a real section
+  PASS blocker 'deployment_parity' is not already PASS
+  PASS blocker 'visual_matrix' is a real section
+  PASS blocker 'visual_matrix' is not already PASS
+  PASS blocker 'accessibility' is a real section
+  PASS blocker 'accessibility' is not already PASS
+  PASS blocker 'performance' is a real section
+  PASS blocker 'performance' is not already PASS
+  PASS blocker 'demo_rehearsal' is a real section
+  PASS blocker 'demo_rehearsal' is not already PASS
+  PASS blocker 'lay_comprehension' is a real section
+  PASS blocker 'lay_comprehension' is not already PASS
+  PASS blocker 'expert_review' is a real section
+  PASS blocker 'expert_review' is not already PASS
+  PASS blocker 'final_release_definition' is a real section
+  PASS blocker 'final_release_definition' is not already PASS
+  PASS every outstanding gate is visible (missing: [])
+  PASS release_ready is false because at least one gate is outstanding
+
+============================================
+ALL RELEASE-GATE V2 CHECKS PASSED

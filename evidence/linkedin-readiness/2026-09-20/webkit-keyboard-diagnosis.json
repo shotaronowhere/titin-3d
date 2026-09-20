@@ -1,0 +1,32 @@
+{
+  "engine": "26.5",
+  "platform": "darwin",
+  "fixture": "Native button / anchor / anchor / button; no application code or styles",
+  "results": [
+    {
+      "keys": [
+        "Tab"
+      ],
+      "focus": ""
+    },
+    {
+      "keys": [
+        "Alt+Tab"
+      ],
+      "focus": "first"
+    },
+    {
+      "keys": [
+        "Alt+Tab",
+        "Alt+Tab",
+        "Alt+Shift+Tab"
+      ],
+      "focus": "first"
+    },
+    {
+      "action": "click button while a link has focus",
+      "focus": ""
+    }
+  ],
+  "documentation": "https://support.apple.com/guide/safari/keyboard-shortcuts-and-gestures-cpsh003/mac"
+}

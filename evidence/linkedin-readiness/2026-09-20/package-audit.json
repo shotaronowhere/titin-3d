@@ -1,0 +1,285 @@
+{
+  "html_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+  "static_head": "pass",
+  "metadata_tags": 13,
+  "canonical": "https://shotaronowhere.github.io/titin-3d/",
+  "image": "https://shotaronowhere.github.io/titin-3d/assets/social/titin-3d-linkedin-v1.png",
+  "images": "dimensions, RGB, size and hashes pass",
+  "capture_candidate_match": true,
+  "local_links_checked": 68,
+  "local_links": [
+    {
+      "from": "README.md",
+      "target": "assets/social/titin-3d-linkedin-v1.png"
+    },
+    {
+      "from": "README.md",
+      "target": "docs/media/titin-stretch-comparison.png"
+    },
+    {
+      "from": "README.md",
+      "target": "release/fallback/scope.svg"
+    },
+    {
+      "from": "README.md",
+      "target": "release/fallback/extension.svg"
+    },
+    {
+      "from": "README.md",
+      "target": "release/LEARN_TRANSCRIPT.md"
+    },
+    {
+      "from": "README.md",
+      "target": "src/model/SpecLoader.js"
+    },
+    {
+      "from": "README.md",
+      "target": "src/presentation/ClaimViewRenderer.js"
+    },
+    {
+      "from": "README.md",
+      "target": "scripts/build_standalone.mjs"
+    },
+    {
+      "from": "README.md",
+      "target": "docs/DEVELOPMENT.md"
+    },
+    {
+      "from": "README.md",
+      "target": "ARCHITECTURE.md"
+    },
+    {
+      "from": "README.md",
+      "target": "release/LIMITATIONS.md"
+    },
+    {
+      "from": "README.md",
+      "target": "release/SCIENTIFIC_AUTHORITY.md"
+    },
+    {
+      "from": "README.md",
+      "target": "index.html"
+    },
+    {
+      "from": "README.md",
+      "target": "docs/DEVELOPMENT.md#setup"
+    },
+    {
+      "from": "README.md",
+      "target": "data/release_gates.json"
+    },
+    {
+      "from": "README.md",
+      "target": "evidence/linkedin-readiness/2026-09-20/READINESS.md"
+    },
+    {
+      "from": "README.md",
+      "target": "evidence/mvp-final/2026-09-09/DELIVERY.md"
+    },
+    {
+      "from": "README.md",
+      "target": "evidence/ux/guide-fixes-2026-09-10/README.md"
+    },
+    {
+      "from": "README.md",
+      "target": "LICENSE"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../README.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../ARCHITECTURE.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../.node-version"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../package.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../package-lock.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../requirements.txt"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../index.html"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/index.template.html"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../scripts/build_identity.mjs"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/CLAIM_MATRIX.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/LIMITATIONS.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/SCIENTIFIC_AUTHORITY.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/PRESENTER_SCRIPT.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/LEARN_TRANSCRIPT.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/SCREEN_READER_TRANSCRIPT.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/PREFLIGHT.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/SCREENSHOT_PACK.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/fallback/"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../release/MANIFEST.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../data/structures/manifest.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/api/titinApi.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/api/TitinVisualization.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/api/TitinAnnotations.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/model/"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/geometry/"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/geometry/ZDiscDetail.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/geometry/MBandDetail.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/geometry/MyBPCContext.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/geometry/LatticeCrossSection.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/render/"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/presentation/StoryController.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/presentation/ShowcaseOverlay.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/presentation/ProvenancePipeline.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/presentation/VisualMatrix.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../src/presentation/AnnotationCatalog.js"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../data/presentation.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../data/annotations.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../data/geometry_strategy.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../data/release_gates.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../data/scientific_scope.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../MASTER_PLAN.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "superpowers/plans/2026-08-09-titin-mvp-readiness-synthesis.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "sprint-reports/"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../PROGRESS.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../data/release_gates.json"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../evidence/mvp-final/2026-09-09/DELIVERY.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../evidence/ux/guide-fixes-2026-09-10/README.md"
+    },
+    {
+      "from": "docs/DEVELOPMENT.md",
+      "target": "../evidence/linkedin-readiness/2026-09-20/READINESS.md"
+    }
+  ],
+  "release_ready": false
+}

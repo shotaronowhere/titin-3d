@@ -1,0 +1,148 @@
+{
+  "source_input_commit": "57154ebb183f61713561c03b4bc2e75dac042c88",
+  "artifact_commit": "ade56a5cd174f17c90596409736d218310b30bb0",
+  "checkout_commit": "5d6a3c3e1fdae9161559a4e100dc91db6e10053e",
+  "html_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+  "commands": [
+    {
+      "command": "npm run check:build",
+      "started_at": "2026-09-20T03:08:28.085690+00:00",
+      "seconds": 0.54,
+      "exit_status": 0,
+      "result_log": "checks/build.log"
+    },
+    {
+      "command": "npm run check:pack",
+      "started_at": "2026-09-20T03:08:28.622636+00:00",
+      "seconds": 5.88,
+      "exit_status": 0,
+      "result_log": "checks/pack.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "started_at": "2026-09-20T03:08:34.503884+00:00",
+      "seconds": 1.94,
+      "exit_status": 0,
+      "result_log": "checks/types.log"
+    },
+    {
+      "command": "npm test",
+      "started_at": "2026-09-20T03:08:36.442786+00:00",
+      "seconds": 118.11,
+      "exit_status": 0,
+      "result_log": "checks/node.log"
+    },
+    {
+      "command": "npm run verify:identity",
+      "started_at": "2026-09-20T03:10:34.552262+00:00",
+      "seconds": 0.24,
+      "exit_status": 0,
+      "result_log": "checks/identity.log"
+    },
+    {
+      "command": "npm run validate:gates",
+      "started_at": "2026-09-20T03:10:34.794437+00:00",
+      "seconds": 0.19,
+      "exit_status": 0,
+      "result_log": "checks/gates.log"
+    },
+    {
+      "command": "npx playwright test test/browser/smoke.spec.js --project=chromium",
+      "started_at": "2026-09-20T03:10:34.980315+00:00",
+      "seconds": 79.23,
+      "exit_status": 0,
+      "result_log": "checks/smoke-chromium.log"
+    },
+    {
+      "command": "npx playwright test test/browser/smoke.spec.js --project=firefox",
+      "started_at": "2026-09-20T03:11:54.204588+00:00",
+      "seconds": 44.11,
+      "exit_status": 0,
+      "result_log": "checks/smoke-firefox.log"
+    },
+    {
+      "command": "npx playwright test test/browser/smoke.spec.js --project=webkit",
+      "started_at": "2026-09-20T03:12:38.310071+00:00",
+      "seconds": 80.13,
+      "exit_status": 1,
+      "result_log": "checks/smoke-webkit.log"
+    },
+    {
+      "command": "npx playwright test test/browser/workbench.spec.js test/browser/evidence.spec.js --project=chromium",
+      "started_at": "2026-09-20T03:13:58.436159+00:00",
+      "seconds": 184.79,
+      "exit_status": 0,
+      "result_log": "checks/research-chromium.log"
+    },
+    {
+      "command": "npx playwright test test/browser/smoke.spec.js --project=chromium",
+      "started_at": "2026-09-20T03:18:53.893743+00:00",
+      "seconds": 74.37,
+      "exit_status": 0,
+      "result_log": "checks/smoke-chromium-final.log",
+      "test_commit": "f60f13ded96af38b1fa71347122a118261ab213b"
+    },
+    {
+      "command": "npx playwright test test/browser/smoke.spec.js --project=firefox",
+      "started_at": "2026-09-20T03:20:08.265793+00:00",
+      "seconds": 40.05,
+      "exit_status": 0,
+      "result_log": "checks/smoke-firefox-final.log",
+      "test_commit": "f60f13ded96af38b1fa71347122a118261ab213b"
+    },
+    {
+      "command": "npx playwright test test/browser/smoke.spec.js --project=webkit",
+      "started_at": "2026-09-20T03:20:48.331485+00:00",
+      "seconds": 40.03,
+      "exit_status": 0,
+      "result_log": "checks/smoke-webkit-final.log",
+      "test_commit": "f60f13ded96af38b1fa71347122a118261ab213b"
+    },
+    {
+      "command": "node evidence/linkedin-readiness/2026-09-20/review-route.mjs",
+      "started_at": "2026-09-20T03:21:28.381501+00:00",
+      "seconds": 163.02,
+      "exit_status": 1,
+      "result_log": "checks/route-review.log",
+      "test_commit": "f60f13ded96af38b1fa71347122a118261ab213b"
+    },
+    {
+      "command": "node evidence/linkedin-readiness/2026-09-20/review-route.mjs",
+      "started_at": "2026-09-20T03:26:00.629407+00:00",
+      "seconds": 195.44,
+      "exit_status": 0,
+      "result_log": "checks/route-review-final.log",
+      "test_commit": "f60f13ded96af38b1fa71347122a118261ab213b"
+    },
+    {
+      "command": "node .superpowers/sdd/2026-09-20-linkedin-readiness/inspect-extra.mjs",
+      "started_at": "2026-09-20T03:29:16.082665+00:00",
+      "seconds": 3.43,
+      "exit_status": 0,
+      "result_log": "checks/offline-review.log",
+      "test_commit": "f60f13ded96af38b1fa71347122a118261ab213b"
+    },
+    {
+      "command": "node .superpowers/sdd/2026-09-20-linkedin-readiness/render-readme.mjs",
+      "started_at": "2026-09-20T03:29:19.522067+00:00",
+      "seconds": 0.58,
+      "exit_status": 0,
+      "result_log": "checks/readme-render.log",
+      "test_commit": "f60f13ded96af38b1fa71347122a118261ab213b"
+    }
+  ],
+  "final_test_commit": "f60f13ded96af38b1fa71347122a118261ab213b",
+  "final_result": "All required local engineering checks passed; earlier failed attempts retained with diagnoses in READINESS.md.",
+  "script_archive": {
+    ".superpowers/sdd/2026-09-20-linkedin-readiness/inspect-extra.mjs": "inspect-offline.mjs"
+  },
+  "environment": {
+    "node": "20.19.2",
+    "npm": "11.5.2",
+    "python": "3.14.3",
+    "python_selection": "Checkout .venv activated in every Node/Python verification shell",
+    "playwright_workers": 1,
+    "browser_suites": "serial"
+  },
+  "log_format": "Result logs retain output and failures; trailing line whitespace and extra blank lines at EOF normalized."
+}

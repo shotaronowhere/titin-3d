@@ -1,0 +1,25 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:2944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 16 tests using 1 worker
+
+[1/16] [chromium] › test/browser/evidence.spec.js:21:1 › SC22/27A object explanation is compact and Research owns the full selected claim
+[2/16] [chromium] › test/browser/evidence.spec.js:36:1 › SC22 Guided inspector stays compact and clear of the Tour continuation
+[3/16] [chromium] › test/browser/evidence.spec.js:55:1 › SC22 contextual source controls select object, chapter, all, and exact value
+[4/16] [chromium] › test/browser/evidence.spec.js:84:1 › SC22 value clearing falls back to the selected object instead of an empty source list
+[5/16] [chromium] › test/browser/evidence.spec.js:100:1 › SC22 parameter source routing closes to its visible stage invoker
+[6/16] [chromium] › test/browser/evidence.spec.js:112:1 › SC22 selectable chart point filters sources and restores the contextual invoker
+[7/16] [chromium] › test/browser/evidence.spec.js:125:1 › SC22 ClaimView keeps citations after copy, fields, and limitations
+[8/16] [chromium] › test/browser/evidence.spec.js:148:3 › SC22 desktop Research owns full titin, PEVK, and kinase detail
+[9/16] [chromium] › test/browser/evidence.spec.js:148:3 › SC22 responsive Research owns full titin, PEVK, and kinase detail
+[10/16] [chromium] › test/browser/workbench.spec.js:27:3 › SC26 1280x720 expert route exposes inspect, measure, evidence, and handoff
+[11/16] [chromium] › test/browser/workbench.spec.js:27:3 › SC26 1440x900 expert route exposes inspect, measure, evidence, and handoff
+[12/16] [chromium] › test/browser/workbench.spec.js:74:1 › SC26 Inspect never attributes titin sequence metadata to actin or myosin
+[13/16] [chromium] › test/browser/workbench.spec.js:88:1 › SC26 browser downloads deterministic bytes and unsupported force is blank, not zero
+[14/16] [chromium] › test/browser/workbench.spec.js:108:1 › SC26 all four handoff files agree at supported, extrapolated, and omitted states
+[15/16] [chromium] › test/browser/workbench.spec.js:165:1 › SC26 network failure leaves local locators and claim export operational
+[16/16] [chromium] › test/browser/workbench.spec.js:180:1 › MVP Architecture identifies folded domains as titin with reference-wide metadata
+  16 passed (3.1m)

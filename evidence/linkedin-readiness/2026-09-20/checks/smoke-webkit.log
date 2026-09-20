@@ -1,0 +1,190 @@
+[WebServer] browser test server listening on http://127.0.0.1:4173
+
+[WebServer] (node:1577) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 12 tests using 1 worker
+
+[1/12] [webkit] › test/browser/smoke.spec.js:47:1 › source and standalone pages boot without module, console, or WebGL errors
+[2/12] [webkit] › test/browser/smoke.spec.js:65:1 › committed standalone opens from file:// and reaches its ready marker
+[3/12] [webkit] › test/browser/smoke.spec.js:69:1 › SC20 desktop authority: consumed rulings and a claim source are visibly inspectable
+[4/12] [webkit] › test/browser/smoke.spec.js:91:3 › desktop: project repository is visible on entering Sources and keyboard accessible
+  1) [webkit] › test/browser/smoke.spec.js:91:3 › desktop: project repository is visible on entering Sources and keyboard accessible
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('#projectRepository')
+    Expected: focused
+    Received: inactive
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toBeFocused" with timeout 8000ms
+      - waiting for locator('#projectRepository')
+        19 × locator resolved to <a target="_blank" id="projectRepository" rel="noopener noreferrer" href="https://github.com/shotaronowhere/titin-3d">Project explanation and source code on GitHub</a>
+           - unexpected value "inactive"
+
+
+      101 |     await expect(link).toBeInViewport({ ratio: 1 });
+      102 |     await page.keyboard.press('Tab');
+    > 103 |     await expect(link).toBeFocused();
+          |                        ^
+      104 |     await expectReadableKeyboardLink(page, link);
+      105 |   });
+      106 |
+        at /Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/test/browser/smoke.spec.js:103:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-desktop-project-repo-0523e-ces-and-keyboard-accessible-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-desktop-project-repo-0523e-ces-and-keyboard-accessible-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-desktop-project-repo-0523e-ces-and-keyboard-accessible-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-desktop-project-repo-0523e-ces-and-keyboard-accessible-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[5/12] [webkit] › test/browser/smoke.spec.js:107:3 › desktop: Research tabs open in order and return focus to the invoker
+[6/12] [webkit] › test/browser/smoke.spec.js:91:3 › responsive: project repository is visible on entering Sources and keyboard accessible
+  2) [webkit] › test/browser/smoke.spec.js:91:3 › responsive: project repository is visible on entering Sources and keyboard accessible
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('#projectRepository')
+    Expected: focused
+    Received: inactive
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toBeFocused" with timeout 8000ms
+      - waiting for locator('#projectRepository')
+        20 × locator resolved to <a target="_blank" id="projectRepository" rel="noopener noreferrer" href="https://github.com/shotaronowhere/titin-3d">Project explanation and source code on GitHub</a>
+           - unexpected value "inactive"
+
+
+      101 |     await expect(link).toBeInViewport({ ratio: 1 });
+      102 |     await page.keyboard.press('Tab');
+    > 103 |     await expect(link).toBeFocused();
+          |                        ^
+      104 |     await expectReadableKeyboardLink(page, link);
+      105 |   });
+      106 |
+        at /Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/test/browser/smoke.spec.js:103:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-responsive-project-r-f7a58-ces-and-keyboard-accessible-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-responsive-project-r-f7a58-ces-and-keyboard-accessible-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-responsive-project-r-f7a58-ces-and-keyboard-accessible-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-responsive-project-r-f7a58-ces-and-keyboard-accessible-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/12] [webkit] › test/browser/smoke.spec.js:107:3 › responsive: Research tabs open in order and return focus to the invoker
+[8/12] [webkit] › test/browser/smoke.spec.js:121:1 › visible source links and contextual Stretch states use declared readable foregrounds
+[9/12] [webkit] › test/browser/smoke.spec.js:159:1 › region and close-up navigation never leave a false wide-view pressed state
+[10/12] [webkit] › test/browser/smoke.spec.js:181:1 › a missing WebGL context produces an actionable static-fallback message
+  3) [webkit] › test/browser/smoke.spec.js:181:1 › a missing WebGL context produces an actionable static-fallback message
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('link', { name: 'View static stretch diagram' })
+    Expected: focused
+    Received: inactive
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toBeFocused" with timeout 8000ms
+      - waiting for getByRole('link', { name: 'View static stretch diagram' })
+        20 × locator resolved to <a href="https://shotaronowhere.github.io/titin-3d/release/fallback/extension.svg">View static stretch diagram</a>
+           - unexpected value "inactive"
+
+
+      28 |   await page.keyboard.press('Tab');
+      29 |   await page.keyboard.press('Shift+Tab');
+    > 30 |   await expect(link).toBeFocused();
+         |                      ^
+      31 |   expect(await link.evaluate((node) => node.matches(':focus-visible'))).toBe(true);
+      32 |   expect(await computedStyle(link, 'outline-style')).not.toBe('none');
+      33 |   expect(parseFloat(await computedStyle(link, 'outline-width'))).toBeGreaterThanOrEqual(2);
+        at expectReadableKeyboardLink (/Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/test/browser/smoke.spec.js:30:22)
+        at expectRecoveryLinks (/Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/test/browser/smoke.spec.js:44:46)
+        at /Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/test/browser/smoke.spec.js:193:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-a-missing-WebGL-cont-1738d-ble-static-fallback-message-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-a-missing-WebGL-cont-1738d-ble-static-fallback-message-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-a-missing-WebGL-cont-1738d-ble-static-fallback-message-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-a-missing-WebGL-cont-1738d-ble-static-fallback-message-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[11/12] [webkit] › test/browser/smoke.spec.js:201:1 › a blocked source module preserves recovery links in the classic-script diagnostic
+  4) [webkit] › test/browser/smoke.spec.js:201:1 › a blocked source module preserves recovery links in the classic-script diagnostic
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('link', { name: 'View static stretch diagram' })
+    Expected: focused
+    Received: inactive
+    Timeout:  8000ms
+
+    Call log:
+      - Expect "toBeFocused" with timeout 8000ms
+      - waiting for getByRole('link', { name: 'View static stretch diagram' })
+        20 × locator resolved to <a href="https://shotaronowhere.github.io/titin-3d/release/fallback/extension.svg">View static stretch diagram</a>
+           - unexpected value "inactive"
+
+
+      28 |   await page.keyboard.press('Tab');
+      29 |   await page.keyboard.press('Shift+Tab');
+    > 30 |   await expect(link).toBeFocused();
+         |                      ^
+      31 |   expect(await link.evaluate((node) => node.matches(':focus-visible'))).toBe(true);
+      32 |   expect(await computedStyle(link, 'outline-style')).not.toBe('none');
+      33 |   expect(parseFloat(await computedStyle(link, 'outline-width'))).toBeGreaterThanOrEqual(2);
+        at expectReadableKeyboardLink (/Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/test/browser/smoke.spec.js:30:22)
+        at expectRecoveryLinks (/Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/test/browser/smoke.spec.js:44:46)
+        at /Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/test/browser/smoke.spec.js:209:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-a-blocked-source-mod-bf53f-e-classic-script-diagnostic-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-a-blocked-source-mod-bf53f-e-classic-script-diagnostic-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-a-blocked-source-mod-bf53f-e-classic-script-diagnostic-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-a-blocked-source-mod-bf53f-e-classic-script-diagnostic-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[12/12] [webkit] › test/browser/smoke.spec.js:213:1 › the pinned axe foundation reports no critical WCAG A/AA violation
+  4 failed
+    [webkit] › test/browser/smoke.spec.js:91:3 › desktop: project repository is visible on entering Sources and keyboard accessible
+    [webkit] › test/browser/smoke.spec.js:91:3 › responsive: project repository is visible on entering Sources and keyboard accessible
+    [webkit] › test/browser/smoke.spec.js:181:1 › a missing WebGL context produces an actionable static-fallback message
+    [webkit] › test/browser/smoke.spec.js:201:1 › a blocked source module preserves recovery links in the classic-script diagnostic
+  8 passed (1.3m)

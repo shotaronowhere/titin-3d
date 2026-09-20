@@ -1,0 +1,45 @@
+  ...
+# Subtest: standalone: every spec file the loader requests is embedded
+ok 612 - standalone: every spec file the loader requests is embedded
+  ---
+  duration_ms: 6.613333
+  ...
+# Subtest: standalone: model and scene build from the shipped file alone
+ok 613 - standalone: model and scene build from the shipped file alone
+  ---
+  duration_ms: 114.000792
+  ...
+# Subtest: standalone: the science matches the served page exactly
+ok 614 - standalone: the science matches the served page exactly
+  ---
+  duration_ms: 123.993833
+  ...
+# Subtest: standalone: the boot advice is not the served-page advice
+ok 615 - standalone: the boot advice is not the served-page advice
+  ---
+  duration_ms: 0.365833
+  ...
+# Subtest: standalone: the real boot scripts permit a healthy file:// launch
+ok 616 - standalone: the real boot scripts permit a healthy file:// launch
+  ---
+  duration_ms: 1.6255
+  ...
+# Subtest: standalone: spec discovery is redundant, not single-point
+ok 617 - standalone: spec discovery is redundant, not single-point
+  ---
+  duration_ms: 0.375958
+  ...
+# Subtest: standalone: build refuses rather than emit a file missing a spec
+ok 618 - standalone: build refuses rather than emit a file missing a spec
+  ---
+  duration_ms: 50.844625
+  ...
+1..618
+# tests 618
+# suites 0
+# pass 618
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 117966.946708
