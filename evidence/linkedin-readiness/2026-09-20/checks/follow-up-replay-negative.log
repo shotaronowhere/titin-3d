@@ -1,0 +1,22 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Replay must reset and start again
++ actual - expected
+
+  {
++   length: '2400',
++   playing: 'false'
+-   length: '2000',
+-   playing: 'true'
+  }
+    at file:///Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/evidence/linkedin-readiness/2026-09-20/.review-route-negative.mjs:82:12 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: { length: '2400', playing: 'false' },
+  expected: { length: '2000', playing: 'true' },
+  operator: 'deepStrictEqual'
+}
+
+Node.js v20.19.2

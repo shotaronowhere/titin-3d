@@ -1,0 +1,74 @@
+{
+  "base_commit": "a4a70b517b86092109500c9c307b3d5786bea215",
+  "html_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+  "commands": [
+    {
+      "command": "node evidence/linkedin-readiness/2026-09-20/.review-route-negative.mjs --results-only",
+      "fixture": "Temporary copy of review-route.mjs with button.onclick replaced by a no-op immediately before replay observation; removed after run.",
+      "started_at": "2026-09-20T04:19:53.014312+00:00",
+      "seconds": 28.7,
+      "exit_status": 1,
+      "expected_failure": true,
+      "result_log": "checks/follow-up-replay-negative.log"
+    },
+    {
+      "command": "node evidence/linkedin-readiness/2026-09-20/review-route.mjs --results-only",
+      "started_at": "2026-09-20T04:20:43.569857+00:00",
+      "seconds": 210.91,
+      "exit_status": 0,
+      "result_log": "checks/follow-up-route.log"
+    },
+    {
+      "command": "node --test --test-concurrency=1 test/phase9.test.js test/showcase_phase9.test.js test/showcase_phase27a.test.js",
+      "started_at": "2026-09-20T04:24:14.471297+00:00",
+      "seconds": 1.75,
+      "exit_status": 0,
+      "result_log": "checks/follow-up-node.log"
+    },
+    {
+      "command": "npm run verify:identity",
+      "started_at": "2026-09-20T04:24:16.222560+00:00",
+      "seconds": 0.24,
+      "exit_status": 0,
+      "result_log": "checks/follow-up-identity.log"
+    }
+  ],
+  "finding": {
+    "severity": "Minor verification gap; fixed",
+    "file": "evidence/linkedin-readiness/2026-09-20/review-route.mjs",
+    "problem": "The second activation asserted only an endpoint that was already displayed. A no-op Replay satisfied it.",
+    "correction": "Observe the real click resetting the slider to 2000 and setting aria-pressed=true before requiring return to 2400.",
+    "negative_control": "The strengthened complete rehearsal rejects a no-op Replay at the reset/start assertion. A separate focused probe observed actual reset in both normal and reduced motion."
+  },
+  "independent_code_review": {
+    "scope": [
+      "template changes",
+      "generated shell and input identity",
+      "startup failure and recovery paths",
+      "source-link accessibility",
+      "migrated documentation contracts"
+    ],
+    "critical": [],
+    "important": [],
+    "minor_application_findings": [],
+    "verification": "Recomputed all 76 input-row hashes, identities, HTML and manifest checksums; dependency bundle and embedded scientific specs match baseline bytes.",
+    "node_check_note": "Reviewer supplemental 68-test run did not explicitly activate .venv and was not retained. The implementer repeated that exact command with activated .venv; the recorded follow-up-node.log is the conforming verification.",
+    "not_established": [
+      "Physical devices and assistive technology",
+      "Human newcomer comprehension",
+      "Independent scientific validity",
+      "Public byte parity and actual LinkedIn Featured rendering"
+    ],
+    "preexisting_outside_scope": [
+      "JavaScript-disabled or globally script-blocked application loading; this change addresses module-startup/WebGL failures and crawler-readable metadata."
+    ]
+  },
+  "environment": {
+    "node": "v20.19.2",
+    "npm": "11.5.2",
+    "python": "3.14.3",
+    "python_executable": "/Users/shotaro/.codex/worktrees/linkedin-readiness/titin-3d/.venv/bin/python3",
+    "browser_runs": "serial"
+  },
+  "result": "All four strengthened viewport routes, the 68 targeted Node checks, and artifact identity passed. No further actionable application or presentation issue found. Original images and hashes preserved; publication pending."
+}

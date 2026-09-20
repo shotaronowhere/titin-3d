@@ -1,0 +1,126 @@
+{
+  "reviewer": "Codex implementer, automated interaction plus screenshot inspection; no human participant",
+  "browser": "Chromium 151.0.7922.34",
+  "checked_at": "2026-09-20T04:24:14.407Z",
+  "screenshots_captured": false,
+  "script_sha256": "8301798608e3588fe7202a0b2ca7e76b30007ba02b6c92d183c81e9ad688ff35",
+  "html_sha256": "522ec60119db4d04c32147ad2ddee1ac6f764ffd6239e48767583c38a336fabb",
+  "reviews": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "reduced_motion": "no-preference",
+      "opening_title_fits": true,
+      "initial_guide_expanded": "true",
+      "replay_start": {
+        "length": "2000",
+        "playing": "true"
+      },
+      "actions": [
+        "fresh load",
+        "keyboard Next/Previous",
+        "guide expanded/collapsed",
+        "Stretch and replay",
+        "Research Sources link visible",
+        "close and focus return",
+        "object explanation to source locator",
+        "browser Back"
+      ],
+      "page_errors": [],
+      "requests": [
+        "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/"
+      ],
+      "result": "pass"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "reduced_motion": "no-preference",
+      "opening_title_fits": true,
+      "initial_guide_expanded": "false",
+      "replay_start": {
+        "length": "2000",
+        "playing": "true"
+      },
+      "actions": [
+        "fresh load",
+        "keyboard Next/Previous",
+        "guide expanded/collapsed",
+        "Stretch and replay",
+        "Research Sources link visible",
+        "close and focus return",
+        "object explanation to source locator",
+        "browser Back"
+      ],
+      "page_errors": [],
+      "requests": [
+        "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/"
+      ],
+      "result": "pass"
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "reduced_motion": "reduce",
+      "opening_title_fits": true,
+      "initial_guide_expanded": "false",
+      "replay_start": {
+        "length": "2000",
+        "playing": "true"
+      },
+      "actions": [
+        "fresh load",
+        "keyboard Next/Previous",
+        "guide expanded/collapsed",
+        "Stretch and replay",
+        "Research Sources link visible",
+        "close and focus return",
+        "object explanation to source locator",
+        "browser Back"
+      ],
+      "page_errors": [],
+      "requests": [
+        "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/"
+      ],
+      "result": "pass"
+    },
+    {
+      "viewport": {
+        "width": 640,
+        "height": 360
+      },
+      "reduced_motion": "reduce",
+      "opening_title_fits": true,
+      "initial_guide_expanded": "false",
+      "replay_start": {
+        "length": "2000",
+        "playing": "true"
+      },
+      "actions": [
+        "fresh load",
+        "keyboard Next/Previous",
+        "guide expanded/collapsed",
+        "Stretch and replay",
+        "Research Sources link visible",
+        "close and focus return",
+        "object explanation to source locator",
+        "browser Back"
+      ],
+      "page_errors": [],
+      "requests": [
+        "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/"
+      ],
+      "result": "pass"
+    }
+  ]
+}

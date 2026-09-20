@@ -1,4 +1,6 @@
-/** Bounded first-visit rehearsal; this is implementer evidence, not a human study. */
+/** Bounded first-visit rehearsal; this is implementer evidence, not a human study.
+ * --results-only writes follow-up-route-review.json without replacing archived screenshots.
+ */
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
@@ -7,6 +9,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { chromium, expect } from '@playwright/test';
 import { waitForReady, clickProjectedLabel } from '../../../test/browser/helpers.js';
 const root = new URL('../../../', import.meta.url), out = new URL('.', import.meta.url);
+const resultsOnly = process.argv.includes('--results-only');
+const resultFile = new URL(resultsOnly ? 'follow-up-route-review.json' : 'route-review.json', out);
 const origin = 'http://127.0.0.1:4174';
 const server = spawn(process.execPath, ['scripts/serve_browser_tests.mjs', '--port', '4174'],
   { cwd: root, stdio: ['ignore', 'pipe', 'inherit'] });
@@ -29,6 +33,9 @@ try {
       await expect(page.locator(id)).toBeInViewport({ ratio: 1 });
     };
     const activate = async (id) => { await page.locator(id).scrollIntoViewIfNeeded(); await visible(id); await page.locator(id).focus(); await page.keyboard.press('Enter'); };
+    const capture = async (name) => {
+      if (!resultsOnly) await page.screenshot({ path: new URL(`raw/${name}-${width}x${height}.png`, out).pathname });
+    };
     await page.goto(`${origin}/`);
     await waitForReady(page);
     await page.waitForTimeout(1200);
@@ -38,7 +45,7 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     const titleFits = await page.locator('.brand-title').evaluate((node) => node.scrollWidth <= node.clientWidth);
     assert.equal(titleFits, true, 'opening subject must not be ellipsized');
-    await page.screenshot({ path: new URL(`raw/opening-${width}x${height}.png`, out).pathname });
+    await capture('opening');
     // Both disclosure states, navigable without shortcuts or changing chapter.
     const initialGuide = await page.locator('#guideToggle').getAttribute('aria-expanded');
     await activate('#guideToggle');
@@ -57,7 +64,21 @@ try {
     await activate('#stagePlay');
     await expect(page.locator('#sl')).toHaveValue('2400', { timeout: 45000 });
     await expect(page.locator('#stagePlay')).toHaveText(/Replay stretch/);
+    // Observe the reset during the real click, before a reduced-motion frame
+    // can return to 2400. An endpoint-only check also accepts a no-op Replay.
+    await page.evaluate(() => {
+      window.__readinessReplayStart = null;
+      const button = document.querySelector('#stagePlay');
+      button.addEventListener('click', () => {
+        window.__readinessReplayStart = {
+          length: document.querySelector('#sl').value,
+          playing: button.getAttribute('aria-pressed'),
+        };
+      }, { once: true });
+    });
     await activate('#stagePlay');
+    const replayStart = await page.evaluate(() => window.__readinessReplayStart);
+    assert.deepEqual(replayStart, { length: '2000', playing: 'true' }, 'Replay must reset and start again');
     await expect(page.locator('#sl')).toHaveValue('2400', { timeout: 45000 });
     await expect(page.locator('#stagePlay')).toHaveText(/Replay stretch/);
     const length = await page.locator('#sl').inputValue();
@@ -67,12 +88,12 @@ try {
     await page.locator('#stagePlay').scrollIntoViewIfNeeded();
     await visible('#stagePlay');
     await activate('#guideToggle');
-    await page.screenshot({ path: new URL(`raw/stretch-${width}x${height}.png`, out).pathname });
+    await capture('stretch');
     // Entering Sources through Research keeps the source link visible and returns focus.
     await activate('#audienceEvidence');
     await activate('#tabSources');
     await visible('#projectRepository');
-    await page.screenshot({ path: new URL(`raw/sources-${width}x${height}.png`, out).pathname });
+    await capture('sources');
     await activate('#closeEvidence');
     await expect(page.locator('#audienceEvidence')).toBeFocused();
     // Return to the actual opening and use an object to reach its source records.
@@ -103,13 +124,16 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     reviews.push({ viewport: { width, height }, reduced_motion: reducedMotion,
       opening_title_fits: titleFits, initial_guide_expanded: initialGuide,
+      replay_start: replayStart,
       actions: ['fresh load', 'keyboard Next/Previous', 'guide expanded/collapsed',
         'Stretch and replay', 'Research Sources link visible', 'close and focus return',
         'object explanation to source locator', 'browser Back'],
       page_errors: errors, requests, result: 'pass' });
-    writeFileSync(new URL('route-review.json', out), JSON.stringify({
+    writeFileSync(resultFile, JSON.stringify({
       reviewer: 'Codex implementer, automated interaction plus screenshot inspection; no human participant',
       browser: `Chromium ${browser.version()}`,
+      checked_at: new Date().toISOString(), screenshots_captured: !resultsOnly,
+      script_sha256: createHash('sha256').update(readFileSync(new URL(import.meta.url))).digest('hex'),
       html_sha256: createHash('sha256').update(readFileSync(new URL('index.html', root))).digest('hex'),
       reviews,
     }, null, 2) + '\n');

@@ -1,0 +1,350 @@
+TAP version 13
+# Subtest: PHASE9: every API name the plan specifies is exported and callable
+ok 1 - PHASE9: every API name the plan specifies is exported and callable
+  ---
+  duration_ms: 0.679459
+  ...
+# Subtest: PHASE9: createSarcomere returns verified geometry, not a bare mesh spec
+ok 2 - PHASE9: createSarcomere returns verified geometry, not a bare mesh spec
+  ---
+  duration_ms: 35.297458
+  ...
+# Subtest: PHASE9: the API passes model numbers through unchanged (no re-derivation)
+ok 3 - PHASE9: the API passes model numbers through unchanged (no re-derivation)
+  ---
+  duration_ms: 29.106958
+  ...
+# Subtest: PHASE9: headless biological queries reject out-of-range lengths instead of mislabelling clamps
+ok 4 - PHASE9: headless biological queries reject out-of-range lengths instead of mislabelling clamps
+  ---
+  duration_ms: 0.451333
+  ...
+# Subtest: PHASE9: placeDomainsAlongPath refuses explicit uniform-spacing arguments
+ok 5 - PHASE9: placeDomainsAlongPath refuses explicit uniform-spacing arguments
+  ---
+  duration_ms: 15.106542
+  ...
+# Subtest: PHASE9: placeDomainsAlongPath refuses a rescaled path
+ok 6 - PHASE9: placeDomainsAlongPath refuses a rescaled path
+  ---
+  duration_ms: 29.418459
+  ...
+# Subtest: PHASE9: placeDomainsAlongPath refuses an even redistribution that preserves the total
+ok 7 - PHASE9: placeDomainsAlongPath refuses an even redistribution that preserves the total
+  ---
+  duration_ms: 29.911
+  ...
+# Subtest: PHASE9: the fidelity gate is not merely strict — sub-tolerance noise passes
+ok 8 - PHASE9: the fidelity gate is not merely strict — sub-tolerance noise passes
+  ---
+  duration_ms: 45.690708
+  ...
+# Subtest: PHASE9: path fidelity requires complete ordered segments and actual control points
+ok 9 - PHASE9: path fidelity requires complete ordered segments and actual control points
+  ---
+  duration_ms: 58.836625
+  ...
+# Subtest: PHASE9: path placement rejects invalid and unknown options even when false or zero
+ok 10 - PHASE9: path placement rejects invalid and unknown options even when false or zero
+  ---
+  duration_ms: 14.83675
+  ...
+# Subtest: PHASE9: region extension stays non-uniform across the modelled range
+ok 11 - PHASE9: region extension stays non-uniform across the modelled range
+  ---
+  duration_ms: 9.396583
+  ...
+# Subtest: PHASE9: defined keyframes are never labelled interpolated
+ok 12 - PHASE9: defined keyframes are never labelled interpolated
+  ---
+  duration_ms: 0.155875
+  ...
+# Subtest: PHASE9: every non-keyframe length carries a caveat naming its bracketing states
+ok 13 - PHASE9: every non-keyframe length carries a caveat naming its bracketing states
+  ---
+  duration_ms: 0.255584
+  ...
+# Subtest: PHASE9: describeLength refuses a non-finite length
+ok 14 - PHASE9: describeLength refuses a non-finite length
+  ---
+  duration_ms: 0.152958
+  ...
+# Subtest: PHASE9: an explicit length and a named state together are refused
+ok 15 - PHASE9: an explicit length and a named state together are refused
+  ---
+  duration_ms: 0.091834
+  ...
+# Subtest: PHASE9: an unknown structural state names the states that exist
+ok 16 - PHASE9: an unknown structural state names the states that exist
+  ---
+  duration_ms: 0.150708
+  ...
+# Subtest: PHASE9: placeDomainsAlongPath refuses a path with no provenance
+ok 17 - PHASE9: placeDomainsAlongPath refuses a path with no provenance
+  ---
+  duration_ms: 0.098625
+  ...
+# Subtest: PHASE9: domain-to-region attribution prefers the longest matching id
+ok 18 - PHASE9: domain-to-region attribution prefers the longest matching id
+  ---
+  duration_ms: 15.515041
+  ...
+# Subtest: PHASE9: every built object is owned by exactly one component
+ok 19 - PHASE9: every built object is owned by exactly one component
+  ---
+  duration_ms: 261.934709
+  ...
+# Subtest: PHASE9: hiding filaments does not move titin
+ok 20 - PHASE9: hiding filaments does not move titin
+  ---
+  duration_ms: 69.416375
+  ...
+# Subtest: PHASE9: the detail view hides all non-titin structure and keeps titin
+ok 21 - PHASE9: the detail view hides all non-titin structure and keeps titin
+  ---
+  duration_ms: 226.269667
+  ...
+# Subtest: PHASE9: an unknown component name is refused, not ignored
+ok 22 - PHASE9: an unknown component name is refused, not ignored
+  ---
+  duration_ms: 52.080917
+  ...
+# Subtest: PHASE9: setComponentVisibility before build is refused
+ok 23 - PHASE9: setComponentVisibility before build is refused
+  ---
+  duration_ms: 0.1145
+  ...
+# Subtest: PHASE9: the two scales the plan names are the two scales offered
+ok 24 - PHASE9: the two scales the plan names are the two scales offered
+  ---
+  duration_ms: 0.058209
+  ...
+# Subtest: PHASE9: DETAIL_HIDDEN names only real components and never hides titin
+ok 25 - PHASE9: DETAIL_HIDDEN names only real components and never hides titin
+  ---
+  duration_ms: 0.064375
+  ...
+# Subtest: PHASE9: detail scale invariants cannot be overridden through build options
+ok 26 - PHASE9: detail scale invariants cannot be overridden through build options
+  ---
+  duration_ms: 0.082959
+  ...
+# Subtest: PHASE9: a user visibility preference cannot leak filaments into detail scale
+ok 27 - PHASE9: a user visibility preference cannot leak filaments into detail scale
+  ---
+  duration_ms: 50.5475
+  ...
+# Subtest: PHASE9: annotations carry anchors, evidence, and resolved sources without detached markers
+ok 28 - PHASE9: annotations carry anchors, evidence, and resolved sources without detached markers
+  ---
+  duration_ms: 270.929917
+  ...
+# Subtest: PHASE9: the page source consumes the biological visualization facade
+ok 29 - PHASE9: the page source consumes the biological visualization facade
+  ---
+  duration_ms: 0.319375
+  ...
+# Subtest: PHASE9: the page source visibly consumes the interpolation caveat
+ok 30 - PHASE9: the page source visibly consumes the interpolation caveat
+  ---
+  duration_ms: 0.368584
+  ...
+# Subtest: PHASE9: isolated-titin scale cannot retain a context-only close-up claim
+ok 31 - PHASE9: isolated-titin scale cannot retain a context-only close-up claim
+  ---
+  duration_ms: 0.7005
+  ...
+# Subtest: PHASE9: the page source imports the evidence vocabulary instead of restating it
+ok 32 - PHASE9: the page source imports the evidence vocabulary instead of restating it
+  ---
+  duration_ms: 0.322333
+  ...
+# Subtest: PHASE9: all seven plan-named API entry points exist
+ok 33 - PHASE9: all seven plan-named API entry points exist
+  ---
+  duration_ms: 0.188209
+  ...
+# Subtest: PHASE9: the page reports boot failure visibly, not only to the console
+ok 34 - PHASE9: the page reports boot failure visibly, not only to the console
+  ---
+  duration_ms: 0.606
+  ...
+# Subtest: PHASE9: package.json documents how to serve the page
+ok 35 - PHASE9: package.json documents how to serve the page
+  ---
+  duration_ms: 0.294458
+  ...
+# Subtest: PHASE9: the boot diagnostic fires on failure and stays silent on success
+ok 36 - PHASE9: the boot diagnostic fires on failure and stays silent on success
+  ---
+  duration_ms: 0.560416
+  ...
+# Subtest: PHASE9: describeLength explains the options-object mistake instead of printing [object Object]
+ok 37 - PHASE9: describeLength explains the options-object mistake instead of printing [object Object]
+  ---
+  duration_ms: 0.131833
+  ...
+# Subtest: SC27A: the public Tour is exactly five ordered beats with one transition each
+ok 38 - SC27A: the public Tour is exactly five ordered beats with one transition each
+  ---
+  duration_ms: 1.283417
+  ...
+# Subtest: SC27A: every v1 chapter alias canonicalizes directly to a final v3 beat
+ok 39 - SC27A: every v1 chapter alias canonicalizes directly to a final v3 beat
+  ---
+  duration_ms: 0.081042
+  ...
+# Subtest: SC27A: protected public claim bindings migrate without editing the claim ledger
+ok 40 - SC27A: protected public claim bindings migrate without editing the claim ledger
+  ---
+  duration_ms: 0.09375
+  ...
+# Subtest: SC27A: one presentation mapping covers every canonical evidence class
+ok 41 - SC27A: one presentation mapping covers every canonical evidence class
+  ---
+  duration_ms: 0.344333
+  ...
+# Subtest: SC27A: the five-beat merge preserves every v2 scientific non-claim
+ok 42 - SC27A: the five-beat merge preserves every v2 scientific non-claim
+  ---
+  duration_ms: 0.308834
+  ...
+# Subtest: SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat
+ok 43 - SC27A: TourView budgets mechanics on Stretch and one evidence action on the final beat
+  ---
+  duration_ms: 0.101875
+  ...
+# Subtest: SC27A: a zero-height first layout is deferred rather than treated as corrupt
+ok 44 - SC27A: a zero-height first layout is deferred rather than treated as corrupt
+  ---
+  duration_ms: 0.104125
+  ...
+# Subtest: SC27A: the presentation palette names its contrast and non-claim contracts
+ok 45 - SC27A: the presentation palette names its contrast and non-claim contracts
+  ---
+  duration_ms: 0.1765
+  ...
+# Subtest: SC27A: user-facing vocabulary and accessible grouping use Tour and Research
+ok 46 - SC27A: user-facing vocabulary and accessible grouping use Tour and Research
+  ---
+  duration_ms: 0.751958
+  ...
+# Subtest: SC27A: every protected scientific input remains byte-identical to SC-26
+ok 47 - SC27A: every protected scientific input remains byte-identical to SC-26
+  ---
+  duration_ms: 1.668042
+  ...
+# Subtest: SC27A: implementation never claims human or release evidence
+ok 48 - SC27A: implementation never claims human or release evidence
+  ---
+  duration_ms: 0.088458
+  ...
+# Subtest: SC27A: history, viewport, and all-family overlay truth share atomic runtime gates
+ok 49 - SC27A: history, viewport, and all-family overlay truth share atomic runtime gates
+  ---
+  duration_ms: 0.655584
+  ...
+# Subtest: SC27A: Large type never makes any visible text smaller
+ok 50 - SC27A: Large type never makes any visible text smaller
+  ---
+  duration_ms: 0.723958
+  ...
+# Subtest: SC27A: the generated review checklist uses current vocabulary
+ok 51 - SC27A: the generated review checklist uses current vocabulary
+  ---
+  duration_ms: 0.352917
+  ...
+# Subtest: SC27A: Escape closes the last-opened surface and never focuses an inert canvas
+ok 52 - SC27A: Escape closes the last-opened surface and never focuses an inert canvas
+  ---
+  duration_ms: 0.253041
+  ...
+# Subtest: SC27A: the Tour-return accelerator uses the focus-restoring close path
+ok 53 - SC27A: the Tour-return accelerator uses the focus-restoring close path
+  ---
+  duration_ms: 0.255417
+  ...
+# Subtest: SC27A: every surface that can hide a scientific label is an overlay obstacle
+ok 54 - SC27A: every surface that can hide a scientific label is an overlay obstacle
+  ---
+  duration_ms: 0.332958
+  ...
+# Subtest: SC27A: the retired Guided provenance band leaves nothing behind
+ok 55 - SC27A: the retired Guided provenance band leaves nothing behind
+  ---
+  duration_ms: 0.544459
+  ...
+# Subtest: SC27A: the compact-stage envelope is one governed threshold, not a repeated literal
+ok 56 - SC27A: the compact-stage envelope is one governed threshold, not a repeated literal
+  ---
+  duration_ms: 0.638583
+  ...
+# Subtest: SC9: every named release artifact exists and is generated, not written
+ok 57 - SC9: every named release artifact exists and is generated, not written
+  ---
+  duration_ms: 2.450541
+  ...
+# Subtest: SC9: the claim matrix restates the audit exactly, with resolvable citations
+ok 58 - SC9: the claim matrix restates the audit exactly, with resolvable citations
+  ---
+  duration_ms: 0.627708
+  ...
+# Subtest: SC9: the limitations sheet carries every recorded non-claim
+ok 59 - SC9: the limitations sheet carries every recorded non-claim
+  ---
+  duration_ms: 0.487875
+  ...
+# Subtest: SC9: the presenter script matches the shipped route and its pacing
+ok 60 - SC9: the presenter script matches the shipped route and its pacing
+  ---
+  duration_ms: 0.443583
+  ...
+# Subtest: SC9: the preflight keeps its seven steps and points at a real fallback
+ok 61 - SC9: the preflight keeps its seven steps and points at a real fallback
+  ---
+  duration_ms: 0.303084
+  ...
+# Subtest: SC9/18: the standalone reports three non-self-referential candidate identities
+ok 62 - SC9/18: the standalone reports three non-self-referential candidate identities
+  ---
+  duration_ms: 0.2365
+  ...
+# Subtest: SC9/18: the model fingerprint tracks only explicit primary model inputs
+ok 63 - SC9/18: the model fingerprint tracks only explicit primary model inputs
+  ---
+  duration_ms: 1.765625
+  ...
+# Subtest: SC9: the fallback deck says what the application says, without a GPU
+ok 64 - SC9: the fallback deck says what the application says, without a GPU
+  ---
+  duration_ms: 1.733417
+  ...
+# Subtest: SC9: a release pack missing its provenance is rejected
+ok 65 - SC9: a release pack missing its provenance is rejected
+  ---
+  duration_ms: 4.259375
+  ...
+# Subtest: SC9: the twelve release conditions are tracked and none is over-claimed
+ok 66 - SC9: the twelve release conditions are tracked and none is over-claimed
+  ---
+  duration_ms: 0.229208
+  ...
+# Subtest: SC9: the rehearsal record claims nothing that has not been rehearsed
+ok 67 - SC9: the rehearsal record claims nothing that has not been rehearsed
+  ---
+  duration_ms: 0.262417
+  ...
+# Subtest: SC9/18: the public and development docs hand the current project over accurately
+ok 68 - SC9/18: the public and development docs hand the current project over accurately
+  ---
+  duration_ms: 1.474667
+  ...
+1..68
+# tests 68
+# suites 0
+# pass 68
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1644.214875

@@ -91,6 +91,18 @@ A [separate fresh-context AI code reviewer](code-review.json) inspected `aaa0698
 recorded hashes, and the evidence drafts, finding no actionable issues. This
 review is distinct from independent scientific or human-usability review.
 
+An owner-requested follow-up review found one gap in the supplemental rehearsal:
+its Replay check accepted the unchanged 2,400 nm endpoint even if Replay did
+nothing. A no-op click-handler control reproduced that false pass. The rehearsal
+now observes the real click's reset to 2,000 nm and active playback before waiting
+for 2,400 nm again, including under reduced motion. The new assertion rejects
+the no-op control. [Follow-up review evidence](follow-up-review.json) records the
+fresh code review, diagnosis, and checks; [follow-up route results](follow-up-route-review.json)
+record each viewport's observed replay reset. The results-only rerun preserves
+all earlier screenshots and their recorded hashes. All four repeated viewport
+routes, 68 targeted Node checks, and the identity verifier passed. Application code, generated
+bytes, media, and scientific status did not change in this follow-up.
+
 ## Media and review scope
 
 [captures.json](captures.json) pins the HTML, browser, viewport, URL, camera,
