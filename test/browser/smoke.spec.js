@@ -19,6 +19,31 @@ async function cleanBoot(page, url) {
   expect(failures).toEqual([]);
 }
 
+async function expectReadableKeyboardLink(page, link) {
+  await expect(link).toBeVisible();
+  expect(contrastRatio(await computedStyle(link, 'color'),
+    await effectiveBackground(link))).toBeGreaterThanOrEqual(4.5);
+  await expect(link).toHaveCSS('text-decoration-line', 'underline');
+  await link.focus();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Shift+Tab');
+  await expect(link).toBeFocused();
+  expect(await link.evaluate((node) => node.matches(':focus-visible'))).toBe(true);
+  expect(await computedStyle(link, 'outline-style')).not.toBe('none');
+  expect(parseFloat(await computedStyle(link, 'outline-width'))).toBeGreaterThanOrEqual(2);
+  expect(contrastRatio(await computedStyle(link, 'outline-color'),
+    await effectiveBackground(link))).toBeGreaterThanOrEqual(3);
+}
+
+async function expectRecoveryLinks(page) {
+  const diagram = page.getByRole('link', { name: 'View static stretch diagram' });
+  const explanation = page.getByRole('link', { name: 'Read the project explanation', exact: true });
+  await expect(diagram).toHaveAttribute('href',
+    'https://shotaronowhere.github.io/titin-3d/release/fallback/extension.svg');
+  await expect(explanation).toHaveAttribute('href', 'https://github.com/shotaronowhere/titin-3d');
+  for (const link of [diagram, explanation]) await expectReadableKeyboardLink(page, link);
+}
+
 test('source and standalone pages boot without module, console, or WebGL errors', async ({ page }) => {
   await cleanBoot(page, '/source.html');
   for (const button of await page.locator('.research-actions button').all()) {
@@ -63,6 +88,22 @@ test('SC20 desktop authority: consumed rulings and a claim source are visibly in
 });
 
 for (const viewport of Object.keys(VIEWPORTS)) {
+  test(`${viewport}: project repository is visible on entering Sources and keyboard accessible`, async ({ page }) => {
+    await setReviewViewport(page, viewport);
+    await cleanBoot(page, '/index.html');
+    await page.locator('#audienceEvidence').click();
+    await page.locator('#tabSources').click();
+    const link = page.locator('#projectRepository');
+    await expect(link).toHaveAttribute('href', 'https://github.com/shotaronowhere/titin-3d');
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    // Check before focusing/scrolling: the link must appear in the initial panel view.
+    await expect(link).toBeInViewport({ ratio: 1 });
+    await page.keyboard.press('Tab');
+    await expect(link).toBeFocused();
+    await expectReadableKeyboardLink(page, link);
+  });
+
   test(`${viewport}: Research tabs open in order and return focus to the invoker`, async ({ page }) => {
     await setReviewViewport(page, viewport);
     await cleanBoot(page, '/index.html');
@@ -138,6 +179,7 @@ test('region and close-up navigation never leave a false wide-view pressed state
 });
 
 test('a missing WebGL context produces an actionable static-fallback message', async ({ page }) => {
+  await page.clock.install();
   await page.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function getContext(kind, ...args) {
@@ -148,6 +190,24 @@ test('a missing WebGL context produces an actionable static-fallback message', a
   await page.goto('/index.html');
   await expect(page.locator('#err')).toBeVisible();
   await expect(page.locator('#err')).toContainText('release/fallback/');
+  await expectRecoveryLinks(page);
+  const diagnostic = await page.locator('#errMessage').textContent();
+  expect(diagnostic).toMatch(/WebGL is unavailable/);
+  await page.clock.runFor(7000);
+  await expect(page.locator('#errMessage')).toHaveText(diagnostic);
+  await expectRecoveryLinks(page);
+});
+
+test('a blocked source module preserves recovery links in the classic-script diagnostic', async ({ page }) => {
+  await page.clock.install();
+  await page.route('**/src/api/TitinVisualization.js', (route) => route.abort('failed'));
+  await page.goto('/source.html');
+  await page.clock.runFor(7000);
+  await expect(page.locator('#err')).toBeVisible();
+  await expect(page.locator('#err')).toContainText('The visualization did not start.');
+  await expect(page.locator('#err')).toContainText('module did not finish');
+  await expectRecoveryLinks(page);
+  expect(await page.evaluate(() => window.__titinBoot.ready)).toBe(false);
 });
 
 test('the pinned axe foundation reports no critical WCAG A/AA violation', async ({ page }) => {

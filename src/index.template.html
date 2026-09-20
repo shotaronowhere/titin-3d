@@ -4,7 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
-<title>Sarcomere context view — titin in situ</title>
+<title>Titin-3D | Explore muscle structure and stretch</title>
+<meta name="description" content="Explore titin in an interactive 3D sarcomere, change its length, and inspect scientific sources and model assumptions. An educational research preview.">
+<link rel="canonical" href="https://shotaronowhere.github.io/titin-3d/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Titin-3D | Explore muscle structure and stretch">
+<meta property="og:description" content="An interactive 3D view of titin, with a stretch demonstration and inspectable scientific sources. Educational research preview.">
+<meta property="og:url" content="https://shotaronowhere.github.io/titin-3d/">
+<meta property="og:image" content="https://shotaronowhere.github.io/titin-3d/assets/social/titin-3d-linkedin-v1.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Titin-3D: an interactive view of titin within a sarcomere. Educational research preview.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Titin-3D | Explore muscle structure and stretch">
+<meta name="twitter:description" content="Explore titin, stretch the model, and inspect its scientific sources and assumptions.">
+<meta name="twitter:image" content="https://shotaronowhere.github.io/titin-3d/assets/social/titin-3d-linkedin-v1.png">
 <!--
   Editable page source. scripts/build_standalone.mjs replaces this import map and
   the browser JSON reader while generating the self-contained root index.html.
@@ -22,7 +36,7 @@
   Boot diagnostic. A CLASSIC script, deliberately: it must run even when the module
   below never executes, which is exactly the failure it exists to report.
 
-  The module's own fail() writes into #err — but that is unreachable if the module
+  The module's own fail() writes into #errMessage — but that is unreachable if the module
   itself never starts. The generated page has no external module or JSON requests,
   while the source graph still needs HTTP. This diagnostic handles both modes and
   makes either failure visible. A scientific tool that fails silently is worse than
@@ -41,9 +55,11 @@ window.__titinBoot = { ready: false, problems: [] };
 
   function show(title, detail) {
     var box = document.getElementById('err');
-    if (!box) return;
+    var message = document.getElementById('errMessage');
+    // Preserve a more specific module failure if the watchdog runs afterward.
+    if (!box || !message || message.textContent) return;
     box.style.display = 'block';
-    box.textContent = title + '\n\n' + detail
+    message.textContent = title + '\n\n' + detail
       + (window.__titinBoot.problems.length
         ? '\n\nBrowser reported:\n  ' + window.__titinBoot.problems.join('\n  ')
         : '');
@@ -180,7 +196,8 @@ window.__titinBoot = { ready: false, problems: [] };
   .warn { border-left-color: #d0a24c; }
   #err { display: none; position: absolute; inset: 16px; z-index: 30; background: #2a1416;
     border: 1px solid #6b2a2a; border-radius: 6px; padding: 16px; overflow: auto;
-    font-family: ui-monospace, monospace; font-size: 13px; white-space: pre-wrap; }
+    font-family: ui-monospace, monospace; font-size: 13px; }
+  #errMessage { white-space: pre-wrap; overflow-wrap: anywhere; }
   .ev { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 2px; }
   .ev b { font-weight: 500; color: var(--text); }
   /* SC-17. Presenter accelerators stay in the accessible canvas description
@@ -277,6 +294,11 @@ window.__titinBoot = { ready: false, problems: [] };
   #chapterSources a, #expertCards a, #selectedEvidence a, #bibliography a {
     color: var(--source-link); text-decoration: underline;
     text-underline-offset: 2px; }
+  #projectRepository, #err a {
+    color: var(--source-link); text-decoration: underline;
+    text-underline-offset: 2px; overflow-wrap: anywhere; }
+  #projectRepository:focus-visible, #err a:focus-visible {
+    outline: 2px solid var(--focus); outline-offset: 3px; }
   .object-inspector-nav { display: flex; gap: 4px; margin-left: auto; }
   /* One full-width contextual route keeps the short explanation subordinate to
      the structure instead of turning its foot into a second toolbar. */
@@ -777,7 +799,11 @@ window.__titinBoot = { ready: false, problems: [] };
   <div id="canvas" role="region" tabindex="0"
     aria-label="Interactive 3D titin and sarcomere model. Use the pointer to inspect a structure, or Left and Right Arrow to move through structures and Enter to pin an explanation."
     aria-describedby="interactionHelp objectAnnouncement">
-    <div id="err" role="alert"></div>
+    <div id="err" role="alert">
+      <p><a href="https://shotaronowhere.github.io/titin-3d/release/fallback/extension.svg">View static stretch diagram</a></p>
+      <p><a href="https://github.com/shotaronowhere/titin-3d">Read the project explanation</a></p>
+      <div id="errMessage"></div>
+    </div>
     <svg id="scienceOverlay" aria-label="Projected sarcomere landmarks, titin termini, and the stage scale bar"></svg>
     <svg id="objectLeader" aria-hidden="true"></svg>
     <div id="objectTooltip" role="tooltip" hidden>
@@ -1060,6 +1086,8 @@ window.__titinBoot = { ready: false, problems: [] };
     </div>
 
     <div id="panelSources" role="tabpanel" aria-labelledby="tabSources" hidden>
+      <p class="sub"><a id="projectRepository" href="https://github.com/shotaronowhere/titin-3d"
+        target="_blank" rel="noopener noreferrer">Project explanation and source code on GitHub</a></p>
       <h2>Sources</h2>
       <div class="sub" id="sourceContextLabel" style="margin:0 0 6px"></div>
       <div class="source-filters" id="sourceFilters" role="group"
@@ -1147,7 +1175,7 @@ function fail(e) {
     ? '\n\nWebGL is unavailable. Use the generated static fallback in release/fallback/; '
       + 'it carries the same reviewed descriptors without requiring a GPU.'
     : '';
-  box.textContent = `${message}${fallback}\n\n${e.stack || ''}`;
+  $('errMessage').textContent = `${message}${fallback}\n\n${e.stack || ''}`;
   throw e;
 }
 

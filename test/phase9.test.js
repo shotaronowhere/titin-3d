@@ -644,11 +644,16 @@ const boot = (html.match(/<script>([\s\S]*?)<\/script>/g) || []).find(function (
 
 function fakeDom(protocol) {
   const err = { style: { display: 'none' }, textContent: '' };
+  const errMessage = { textContent: '' };
   const listeners = {}; const domListeners = [];
   const ctx = {
     location: { protocol },
     document: {
-      getElementById: function (id) { if (id === 'err') { return err; } return null; },
+      getElementById: function (id) {
+        if (id === 'err') return err;
+        if (id === 'errMessage') return errMessage;
+        return null;
+      },
       addEventListener: function (ev, fn) { if (ev === 'DOMContentLoaded') { domListeners.push(fn); } },
     },
     window: null,
@@ -656,7 +661,7 @@ function fakeDom(protocol) {
     addEventListener: function (ev, fn) { if (!listeners[ev]) { listeners[ev] = []; } listeners[ev].push(fn); },
   };
   ctx.window = ctx;
-  return { ctx: ctx, err: err, domListeners: domListeners, listeners: listeners };
+  return { ctx: ctx, err: err, errMessage: errMessage, domListeners: domListeners, listeners: listeners };
 }
 
 function run(protocol, finishModule, timerFires) {
@@ -669,7 +674,7 @@ function run(protocol, finishModule, timerFires) {
   d.domListeners.forEach(function (fn) { fn(); });
   if (finishModule) { d.ctx.window.__titinBoot.ready = true; }
   if (timerFires && d.ctx.__timer) { d.ctx.__timer.fn(); }
-  return { shown: d.err.style.display === 'block', text: d.err.textContent, timer: d.ctx.__timer };
+  return { shown: d.err.style.display === 'block', text: d.errMessage.textContent, timer: d.ctx.__timer };
 }
   // 1. file:// — blocks ES modules and fetch(); nothing can run.
   const fileUrl = run('file:', false, false);
